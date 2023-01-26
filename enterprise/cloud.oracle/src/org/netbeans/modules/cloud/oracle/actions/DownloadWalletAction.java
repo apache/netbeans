@@ -62,8 +62,8 @@ import org.openide.util.NbBundle;
         category = "Tools",
         id = "org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction"
 )
-@ActionRegistration( 
-        displayName = "#CTL_DownloadWalletAction", 
+@ActionRegistration(
+        displayName = "#CTL_DownloadWalletAction",
         asynchronous = true,
         lazy = true
 )
@@ -107,68 +107,70 @@ public class DownloadWalletAction extends AbstractAction implements ContextAware
     @Override
     public void actionPerformed(ActionEvent ev) {
         Optional<DownloadWalletDialog.WalletInfo> result = DownloadWalletDialog.showDialog(context);
-        result.ifPresent((p) -> {
-            try {
-                Path walletPath = session.downloadWallet(context, new String(p.getWalletPassword()), p.getPath());
-                if (p.getDbUser() != null && p.getDbPassword() != null) {
-                    
-                    JDBCDriver[] drivers = JDBCDriverManager.getDefault().getDrivers("oracle.jdbc.OracleDriver"); //NOI18N
-                    JDBCDriver jarsPresent = null;
-                    
-                    if (drivers.length > 0) {
-                        
-                        // prefer a driver that actually defines some JARs.
-                        for (JDBCDriver d : drivers) {
-                            if (isAvailable(d)) {
-                                jarsPresent = d;
-                                break;
-                            }
+        result.ifPresent(p ->  addConnection(p));
+    }
+
+    void addConnection(DownloadWalletDialog.WalletInfo p) {
+        try {
+            Path walletPath = session.downloadWallet(context, new String(p.getWalletPassword()), p.getPath());
+            if (p.getDbUser() != null && p.getDbPassword() != null) {
+
+                JDBCDriver[] drivers = JDBCDriverManager.getDefault().getDrivers("oracle.jdbc.OracleDriver"); //NOI18N
+                JDBCDriver jarsPresent = null;
+
+                if (drivers.length > 0) {
+
+                    // prefer a driver that actually defines some JARs.
+                    for (JDBCDriver d : drivers) {
+                        if (isAvailable(d)) {
+                            jarsPresent = d;
+                            break;
                         }
-                        if (jarsPresent == null) {
-                            jarsPresent = drivers[0];
-                            LOG.log(Level.WARNING, "Unable to find driver JARs for wallet {0}, using fallback driver: {1}", new Object[] { walletPath, jarsPresent.getName() });
-                            NotifyDescriptor.Confirmation msg = new NotifyDescriptor.Confirmation(Bundle.WARN_DriverWithoutJars(jarsPresent.getName()), 
-                                NotifyDescriptor.WARNING_MESSAGE, NotifyDescriptor.YES_NO_OPTION);
-                            Object choice = DialogDisplayer.getDefault().notify(msg);
-                            if (choice != NotifyDescriptor.YES_OPTION && choice != NotifyDescriptor.OK_OPTION) {
-                                return;
-                            }
-                        }
-                        String connectionName = context.getConnectionName();
-                        if (connectionName == null) {
-                            Optional<String> n = parseConnectionNames(walletPath).stream().findFirst();
-                            if (n.isPresent()) {
-                                connectionName = n.get();
-                            } else {
-                                StatusDisplayer.getDefault().setStatusText(Bundle.MSG_WalletNoConnection());
-                                return;
-                            }
-                        }
-                        String dbUrl = MessageFormat.format(URL_TEMPLATE, connectionName, BaseUtilities.escapeParameters(new String[] { walletPath.toString() }));
-                        DatabaseConnection dbConn = DatabaseConnection.create(
-                                drivers[0], 
-                                dbUrl, 
-                                p.getDbUser(), 
-                                p.getDbUser(), 
-                                new String(p.getDbPassword()), 
-                                true, 
-                                context.getName());
-                        ConnectionManager.getDefault().addConnection(dbConn);
                     }
-                    
-                    // PENDING: what should happen, if the driver is not found at all - display an info message ?
-                    
-                    DialogDisplayer.getDefault().notifyLater(
-                            new NotifyDescriptor.Message(
-                                    Bundle.MSG_WalletDownloadedPassword(
-                                            new String(p.getWalletPassword()))));
-                } else {
-                    StatusDisplayer.getDefault().setStatusText(Bundle.MSG_WalletDownloaded(walletPath.toString()));
+                    if (jarsPresent == null) {
+                        jarsPresent = drivers[0];
+                        LOG.log(Level.WARNING, "Unable to find driver JARs for wallet {0}, using fallback driver: {1}", new Object[] { walletPath, jarsPresent.getName() });
+                        NotifyDescriptor.Confirmation msg = new NotifyDescriptor.Confirmation(Bundle.WARN_DriverWithoutJars(jarsPresent.getName()), 
+                            NotifyDescriptor.WARNING_MESSAGE, NotifyDescriptor.YES_NO_OPTION);
+                        Object choice = DialogDisplayer.getDefault().notify(msg);
+                        if (choice != NotifyDescriptor.YES_OPTION && choice != NotifyDescriptor.OK_OPTION) {
+                            return;
+                        }
+                    }
+                    String connectionName = context.getConnectionName();
+                    if (connectionName == null) {
+                        Optional<String> n = parseConnectionNames(walletPath).stream().findFirst();
+                        if (n.isPresent()) {
+                            connectionName = n.get();
+                        } else {
+                            StatusDisplayer.getDefault().setStatusText(Bundle.MSG_WalletNoConnection());
+                            return;
+                        }
+                    }
+                    String dbUrl = MessageFormat.format(URL_TEMPLATE, connectionName, BaseUtilities.escapeParameters(new String[] { walletPath.toString() }));
+                    DatabaseConnection dbConn = DatabaseConnection.create(
+                            drivers[0], 
+                            dbUrl, 
+                            p.getDbUser(), 
+                            p.getDbUser(), 
+                            new String(p.getDbPassword()), 
+                            true, 
+                            context.getName());
+                    ConnectionManager.getDefault().addConnection(dbConn);
                 }
-            } catch (DatabaseException | IOException ex) {
-                Exceptions.printStackTrace(ex);
+
+                // PENDING: what should happen, if the driver is not found at all - display an info message ?
+
+                DialogDisplayer.getDefault().notifyLater(
+                        new NotifyDescriptor.Message(
+                                Bundle.MSG_WalletDownloadedPassword(
+                                        new String(p.getWalletPassword()))));
+            } else {
+                StatusDisplayer.getDefault().setStatusText(Bundle.MSG_WalletDownloaded(walletPath.toString()));
             }
-        });
+        } catch (DatabaseException | IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
     
     static boolean isAvailable(JDBCDriver driver) {

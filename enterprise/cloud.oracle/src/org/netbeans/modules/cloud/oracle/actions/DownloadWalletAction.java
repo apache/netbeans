@@ -76,7 +76,10 @@ import org.openide.util.NbBundle;
     "CTL_DownloadWalletAction=Download Wallet",
     "MSG_WalletDownloaded=Database Wallet was downloaded to {0}",
     "MSG_WalletDownloadedPassword=Database Wallet was downloaded. \nGenerated wallet password is: {0}",
-    "MSG_WalletNoConnection=Wallet doesn't contain any connection"
+    "MSG_WalletNoConnection=Wallet doesn't contain any connection",
+    "WARN_DriverWithoutJars=No matching JDBC drivers are configured with code location(s). Driver {0} will be associated with the connection, but the " +
+            "connection may fail because driver's code is not loadable. Continue ?"
+    
 })
 public class DownloadWalletAction extends AbstractAction implements ContextAwareAction {
     private static final Logger LOG = Logger.getLogger(DownloadWalletAction.class.getName());
@@ -123,8 +126,13 @@ public class DownloadWalletAction extends AbstractAction implements ContextAware
                         }
                         if (jarsPresent == null) {
                             jarsPresent = drivers[0];
-                            // PENDING: should be shown to the user ?
                             LOG.log(Level.WARNING, "Unable to find driver JARs for wallet {0}, using fallback driver: {1}", new Object[] { walletPath, jarsPresent.getName() });
+                            NotifyDescriptor.Confirmation msg = new NotifyDescriptor.Confirmation(Bundle.WARN_DriverWithoutJars(jarsPresent.getName()), 
+                                NotifyDescriptor.WARNING_MESSAGE, NotifyDescriptor.YES_NO_OPTION);
+                            Object choice = DialogDisplayer.getDefault().notify(msg);
+                            if (choice != NotifyDescriptor.YES_OPTION && choice != NotifyDescriptor.OK_OPTION) {
+                                return;
+                            }
                         }
                         String connectionName = context.getConnectionName();
                         if (connectionName == null) {

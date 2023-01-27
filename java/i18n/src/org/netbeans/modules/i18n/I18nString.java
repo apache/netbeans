@@ -23,6 +23,8 @@ package org.netbeans.modules.i18n;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
 
@@ -124,7 +126,7 @@ public class I18nString {
 
     /** Setter for <code>key</code>. */
     public void setKey(String key) {
-        if ((this.key == key) || ((this.key != null) && this.key.equals(key))) {
+        if (Objects.equals(this.key, key)) {
             return;
         }
 
@@ -138,7 +140,7 @@ public class I18nString {
 
     /** Setter for <code>value</code>. */
     public void setValue(String value) {
-        if ((this.value == value) || ((this.value != null) && (this.value.equals(value)))) {
+        if (Objects.equals(this.value, value)) {
             return;
         }
 
@@ -152,7 +154,7 @@ public class I18nString {
 
     /** Setter for <code>comment</code>. */
     public void setComment(String comment) {
-        if ((this.comment == comment) || ((this.comment != null) && (this.comment.equals(comment)))) {
+        if (Objects.equals(this.comment, comment)) {
             return;
         }
 

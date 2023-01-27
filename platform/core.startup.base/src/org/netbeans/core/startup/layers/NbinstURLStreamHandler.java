@@ -19,6 +19,7 @@
 
 package org.netbeans.core.startup.layers;
 
+import java.util.Objects;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -75,8 +76,7 @@ public class NbinstURLStreamHandler extends URLStreamHandler {
             return false;
 
         // Compare the files.
-        if (!(u1.getFile() == u2.getFile() ||
-              (u1.getFile() != null && u1.getFile().equals(u2.getFile()))))
+        if (!Objects.equals(u1.getFile(), u2.getFile()))
             return false;
 
         // Compare the hosts.

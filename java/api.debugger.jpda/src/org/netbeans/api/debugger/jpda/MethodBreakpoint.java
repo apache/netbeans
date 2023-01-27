@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -134,9 +135,7 @@ public class MethodBreakpoint extends JPDABreakpoint {
         if (mn != null) {
             mn = mn.trim();
         }
-        if ( (mn == methodName) ||
-             ((mn != null) && (methodName != null) && methodName.equals (mn))
-        ) return;
+        if (Objects.equals(mn, methodName)) return;
         String old = methodName;
         methodName = mn;
         firePropertyChange (PROP_METHOD_NAME, old, mn);
@@ -162,9 +161,7 @@ public class MethodBreakpoint extends JPDABreakpoint {
         if (signature != null) {
             signature = signature.trim();
         }
-        if ((signature == methodSignature) ||
-            ((signature != null) && signature.equals (methodSignature))) {
-            
+        if (Objects.equals(signature, methodSignature)) {
             return;
         }
         String old = methodSignature;

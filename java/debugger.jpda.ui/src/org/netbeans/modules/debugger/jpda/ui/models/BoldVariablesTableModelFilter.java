@@ -21,6 +21,7 @@ package org.netbeans.modules.debugger.jpda.ui.models;
 
 import java.awt.Color;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -183,9 +184,7 @@ Constants {
     private String bold (Object variable, String value, Map<Object, String> map) {
         if (map.containsKey (variable)) {
             String oldValue = (String) map.get (variable);
-            if (oldValue == value ||
-                oldValue != null && oldValue.equals (value)) {
-                
+            if (Objects.equals(oldValue, value)) {
                 return toHTML (value, false, false, null);
             }
             map.put (variable, value);

@@ -29,6 +29,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.net.UnknownServiceException;
+import java.util.Objects;
+
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -69,14 +71,13 @@ public class NbinstURLStreamHandler extends URLStreamHandler {
     @Override
     protected boolean sameFile(URL u1, URL u2) {
         // Compare the protocols.
-        if (!((u1.getProtocol() == u2.getProtocol()) ||
+        if (!(Objects.equals(u1.getProtocol(), u2.getProtocol()) ||
               (u1.getProtocol() != null &&
                u1.getProtocol().equalsIgnoreCase(u2.getProtocol()))))
             return false;
 
         // Compare the files.
-        if (!(u1.getFile() == u2.getFile() ||
-              (u1.getFile() != null && u1.getFile().equals(u2.getFile()))))
+        if (!Objects.equals(u1.getFile(), u2.getFile()))
             return false;
 
         // Compare the hosts.

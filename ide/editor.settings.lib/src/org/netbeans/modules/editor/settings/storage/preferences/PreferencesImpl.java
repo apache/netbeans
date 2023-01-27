@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -268,7 +269,7 @@ public final class PreferencesImpl extends AbstractPreferences implements Prefer
         // This hack is here for refiring preferenceChange events from 'inherited'.
         // Comparing the key strings by == is ok here. Please see firePreferenceChange()
         // for details.
-        if (refiringChangeKey.get() != key) {
+        if (!Objects.equals(refiringChangeKey.get(), key)) {
             if (!key.startsWith(JAVATYPE_KEY_PREFIX)) {
                 getLocal().put(key, new TypedValue(value, putValueJavaType.get()));
                 asyncInvocationOfFlushSpi();

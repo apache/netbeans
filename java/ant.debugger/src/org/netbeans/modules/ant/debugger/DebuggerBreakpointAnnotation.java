@@ -61,19 +61,19 @@ public class DebuggerBreakpointAnnotation extends BreakpointAnnotation {
     
     @Override
     public String getShortDescription () {
-        if (type == BREAKPOINT_ANNOTATION_TYPE)
+        if (BREAKPOINT_ANNOTATION_TYPE.equals(type))
             return NbBundle.getMessage 
                 (DebuggerBreakpointAnnotation.class, "TOOLTIP_BREAKPOINT");
         else 
-        if (type == DISABLED_BREAKPOINT_ANNOTATION_TYPE)
+        if (DISABLED_BREAKPOINT_ANNOTATION_TYPE.equals(type))
             return NbBundle.getMessage 
                 (DebuggerBreakpointAnnotation.class, "TOOLTIP_DISABLED_BREAKPOINT");
         else 
-        if (type == CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE)
+        if (CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE.equals(type))
             return NbBundle.getMessage 
                 (DebuggerBreakpointAnnotation.class, "TOOLTIP_CONDITIONAL_BREAKPOINT");
         else
-        if (type == DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE)
+        if (DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE.equals(type))
             return NbBundle.getMessage 
                 (DebuggerBreakpointAnnotation.class, "TOOLTIP_DISABLED_CONDITIONAL_BREAKPOINT");
         return null;

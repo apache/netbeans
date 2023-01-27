@@ -87,7 +87,7 @@ public class ToggleMethodFieldBreakpointAction extends AbstractAction {//impleme
     
     @Override
     public Object getValue(String key) {
-        if (key == Action.NAME) {
+        if (Action.NAME.equals(key)) {
             return NbBundle.getMessage (ToggleMethodFieldBreakpointAction.class, "CTL_ToggleMethodFieldBreakpointAction");
         }
         return super.getValue(key);

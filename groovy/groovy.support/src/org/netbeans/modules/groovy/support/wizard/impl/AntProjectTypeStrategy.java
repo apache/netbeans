@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -251,8 +252,8 @@ public class AntProjectTypeStrategy extends ProjectTypeStrategy {
             }
             String verNumToRemove = (jUnit == JUnit.JUNIT3) ? "4" : "3"; //NOI18N
             if (name.equals("junit")) {                                  //NOI18N
-                add    = (verNumToAdd    == "3");                        //NOI18N
-                remove = (verNumToRemove == "3");                        //NOI18N
+                add    = (Objects.equals(verNumToAdd, "3"));                        //NOI18N
+                remove = (verNumToRemove.equals("3"));                        //NOI18N
             } else if ((matcher = pattern.matcher(name)).matches()) {
                 String verNum = matcher.group(1);
                 add    = verNum.equals(verNumToAdd);

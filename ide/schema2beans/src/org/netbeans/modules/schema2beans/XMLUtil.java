@@ -565,7 +565,7 @@ public class XMLUtil {
                         textNode = (Text) childNode;
                         // Need to make sure it has the correct whitespace
                         if (i == length-1) {
-                            if (idealFinalWhitespace != childNodeValue) {
+                            if (!idealFinalWhitespace.equals(childNodeValue)) {
                                 //System.out.println("!Incorrect whitespace on final!");
                                 if (textNode.getLength() > 0)
                                     textNode.deleteData(0, textNode.getLength());
@@ -573,7 +573,7 @@ public class XMLUtil {
                             }
                             
                         } else {
-                            if (idealChildWhitespace != childNodeValue) {
+                            if (!idealChildWhitespace.equals(childNodeValue)) {
                                 //System.out.println("!Incorrect whitespace: '"+childNodeValue+"' versus ideal of '"+idealChildWhitespace+"'");
                                 textNode.deleteData(0, textNode.getLength());
                                 textNode.appendData(idealChildWhitespace);
@@ -613,7 +613,7 @@ public class XMLUtil {
                             // Go back and fix up the last node.
                             childNode = children.item(i);
                             String childNodeValue = childNode.getNodeValue().intern();
-                            if (idealFinalWhitespace != childNodeValue) {
+                            if (!idealFinalWhitespace.equals(childNodeValue)) {
                                 textNode = (Text) childNode;
                                 //System.out.println("!Incorrect whitespace on final!");
                                 if (textNode.getLength() > 0)

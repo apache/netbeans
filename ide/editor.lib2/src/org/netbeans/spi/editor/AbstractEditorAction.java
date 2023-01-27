@@ -522,7 +522,7 @@ public abstract class AbstractEditorAction extends TextAction implements
     }
 
     private Object getValueLocal(String key) {
-        if ("enabled" == key) { // Same == in AbstractAction
+        if ("enabled".equals(key)) { // Same == in AbstractAction
             return enabled;
         }
         synchronized (properties) {
@@ -589,7 +589,7 @@ public abstract class AbstractEditorAction extends TextAction implements
             return;
         }
         Object oldValue;
-        if ("enabled" == key) { // Same == in AbstractAction
+        if ("enabled".equals(key)) { // Same == in AbstractAction
             oldValue = enabled;
             enabled = Boolean.TRUE.equals(value);
         } else {

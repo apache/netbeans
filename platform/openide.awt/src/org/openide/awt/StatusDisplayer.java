@@ -23,6 +23,8 @@ import org.openide.util.Lookup;
 import org.openide.util.ChangeSupport;
 import org.openide.util.RequestProcessor;
 
+import java.util.Objects;
+
 
 /** Permits control of a status line.
  * The default instance may correspond to the NetBeans status line in the main window.
@@ -120,7 +122,7 @@ public abstract class StatusDisplayer {
             public void clear(int timeInMillis) {
                 RequestProcessor.getDefault().post(new Runnable() {
                     public void run() {
-                        if( text == getStatusText() )
+                        if(Objects.equals(text, getStatusText()))
                             setStatusText("");
                     }
                 }, timeInMillis);
@@ -128,7 +130,7 @@ public abstract class StatusDisplayer {
 
             @Override
             protected void finalize() throws Throwable {
-                if( text == getStatusText() )
+                if(Objects.equals(text, getStatusText()))
                     setStatusText("");
             }
         };

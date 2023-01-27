@@ -517,7 +517,7 @@ public final class MavenExecuteUtils {
     }
     
     public static boolean isEnvRemovedValue(String value) {
-        return value == ENV_REMOVED; // It's crutial to test the instance identity
+        return ENV_REMOVED.equals(value); // It's crutial to test the instance identity
     }
     
     /**

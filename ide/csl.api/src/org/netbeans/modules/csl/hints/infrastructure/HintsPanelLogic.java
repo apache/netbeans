@@ -31,6 +31,7 @@ import java.awt.event.MouseListener;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.AbstractPreferences;
@@ -188,7 +189,7 @@ class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectionListen
 
             Boolean currentEnabled = mn.getBoolean(HintsSettings.ENABLED_KEY, hint.getDefaultEnabled());
             Boolean savedEnabled = HintsSettings.isEnabled(manager, hint);
-            isChanged |= currentEnabled != savedEnabled;
+            isChanged |= !Objects.equals(currentEnabled, savedEnabled);
             if (isChanged) {
                 return true;
             }

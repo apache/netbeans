@@ -104,7 +104,7 @@ public class EntityOverviewPanel extends EntityOverviewForm {
 
                 public void setItemValue(String value) {
                     try {
-                        entityHelper.setPrimkeyField(value == PK_COMPOUND ? null : value);
+                        entityHelper.setPrimkeyField(PK_COMPOUND.equals(value) ? null : value);
                     } catch (ClassNotFoundException e) {
                         Utils.notifyError(e);
                     }

@@ -25,6 +25,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.util.Objects;
 
 /**
  * A widget representing a text. The widget is not opaque and is checking clipping for by default.
@@ -214,7 +215,7 @@ public class LabelWidget extends Widget {
     private void assureGlyphVector () {
         Font font = getFont ();
         FontRenderContext fontRenderContext = getGraphics ().getFontRenderContext ();
-        if (cacheGlyphVector != null  &&  cacheFont == font  &&  cacheLabel == label)
+        if (cacheGlyphVector != null &&  cacheFont == font && Objects.equals(cacheLabel, label))
             return;
         cacheFont = font;
         cacheLabel = label;

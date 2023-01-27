@@ -541,7 +541,7 @@ public abstract class AbstractCodeGeneratorClass {
             mutable = false;
             needToCallClone = false;
         }
-        if (type == "java.io.File") {
+        if ("java.io.File".equals(type)) {
             return true;
         } else if (needToCallClone) {
             return true;

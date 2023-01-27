@@ -209,7 +209,7 @@ public class Binding {
 	public String nameChild(Object childObj, boolean returnConstName, boolean returnSchemaName, boolean returnXPathName) {
 		if (childObj instanceof java.lang.String) {
 			java.lang.String child = (java.lang.String) childObj;
-			if (child == _OrigLocation) {
+			if (child.equals(_OrigLocation)) {
 				if (returnConstName) {
 					return ORIGLOCATION;
 				} else if (returnSchemaName) {
@@ -220,7 +220,7 @@ public class Binding {
 					return "OrigLocation";
 				}
 			}
-			if (child == _Location) {
+			if (child.equals(_Location)) {
 				if (returnConstName) {
 					return LOCATION;
 				} else if (returnSchemaName) {

@@ -105,7 +105,7 @@ public class J2SELibrarySourceLevelQueryImpl implements SourceLevelQueryImplemen
             slevel = getSourceLevel(lib.getContent(J2SELibraryTypeProvider.VOLUME_TYPE_CLASSPATH));
             this.sourceLevelCache.put (lib,slevel);
         }
-        return slevel == JDK_UNKNOWN ? null : slevel;                
+        return JDK_UNKNOWN.equals(slevel) ? null : slevel;
     }
     
     private String getSourceLevel (List cpRoots) {

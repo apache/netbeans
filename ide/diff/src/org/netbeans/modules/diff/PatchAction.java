@@ -375,7 +375,7 @@ public class PatchAction extends NodeAction {
         @Override
         public void actionPerformed(ActionEvent e){
             String command  = e.getActionCommand();
-            if(command == JFileChooser.APPROVE_SELECTION){
+            if (JFileChooser.APPROVE_SELECTION.equals(command)) {
                 if(dialog != null) {
                     file = chooser.getSelectedFile();
                     dialog.setVisible(false);

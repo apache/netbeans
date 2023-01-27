@@ -512,7 +512,7 @@ public class CompletionUtil {
             ae = findOriginal(ae);
             String defaultNS = context.getDefaultNamespace();
             String targetNS = ae.getTargetNamespace();
-            if((defaultNS != targetNS) &&  // in case both are null, go away
+            if (!Objects.equals(defaultNS, targetNS) &&  // in case both are null, go away
                (defaultNS == null || targetNS == null ||
                 !context.getDefaultNamespace().equals(ae.getTargetNamespace()))) {
                 prefixes = getPrefixesAgainstNamespace(context, ae.getTargetNamespace());

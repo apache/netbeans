@@ -26,6 +26,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
+
 import org.netbeans.api.debugger.*;
 import org.netbeans.api.debugger.jpda.*;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
@@ -231,7 +233,7 @@ public class JspLineBreakpoint extends Breakpoint {
      * @param printText a new value of print text property
      */
     public void setPrintText (String printText) {
-        if (this.printText == printText) return;
+        if (Objects.equals(this.printText, printText)) return;
         String old = this.printText;
         this.printText = printText;
         if (javalb != null) {
@@ -291,9 +293,7 @@ public class JspLineBreakpoint extends Breakpoint {
      * @param cn a new name of class to stop on
      */
     public void setURL (String url) {
-        if ( (url == this.url) ||
-             ((url != null) && (this.url != null) && url.equals (this.url))
-        ) return;
+        if (Objects.equals(url, this.url)) return;
         String old = this.url;
         this.url = url;
         addFileURLListener(url);
@@ -340,9 +340,7 @@ public class JspLineBreakpoint extends Breakpoint {
      */
     public void setCondition (String c) {
         if (c != null) c = c.trim ();
-        if ( (c == condition) ||
-             ((c != null) && (condition != null) && condition.equals (c))
-        ) return;
+        if (Objects.equals(c, condition)) return;
         String old = condition;
         condition = c;
         if (javalb != null) {

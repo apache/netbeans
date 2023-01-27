@@ -117,7 +117,7 @@ public class SelectHandlerPanel extends JPanel implements ExplorerManager.Provid
         protected Node[] createNodes(String key) {
             Node n = null;
             List<Node> sourceNodes = new LinkedList<Node>();
-            if (key == KEY_SOURCES) {
+            if (KEY_SOURCES.equals(key)) {
                 Sources sources = ProjectUtils.getSources(project);
                 SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
                 for(int i = 0; i < groups.length; i++){

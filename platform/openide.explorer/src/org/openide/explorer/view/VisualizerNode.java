@@ -182,7 +182,7 @@ final class VisualizerNode extends EventListenerList implements NodeListener, Tr
     public String getShortDescription() {
         String desc = shortDescription;
 
-        if (desc == UNKNOWN) {
+        if (UNKNOWN.equals(desc)) {
             shortDescription = desc = node.getShortDescription();
         }
         String toolTip = ImageUtilities.getImageToolTip(ImageUtilities.icon2Image(icon != null ? icon : getIcon(false, false)));
@@ -199,7 +199,7 @@ final class VisualizerNode extends EventListenerList implements NodeListener, Tr
      * @return display name of represented node
      */
     public String getDisplayName() {
-        if (displayName == UNKNOWN) {
+        if (UNKNOWN.equals(displayName)) {
             displayName = (node == null) ? null : node.getDisplayName();
         }
 
@@ -210,7 +210,7 @@ final class VisualizerNode extends EventListenerList implements NodeListener, Tr
      * @return name of represented node
      */
     public String getName() {
-        if (name == UNKNOWN) {
+        if (UNKNOWN.equals(name)) {
             name = (node == null) ? null : node.getName();
         }
 
@@ -399,7 +399,7 @@ final class VisualizerNode extends EventListenerList implements NodeListener, Tr
         }
 
         // bugfix #37748, VisualizerNode ignores change of short desc if it is not read yet (set to UNKNOWN)
-        if (Node.PROP_SHORT_DESCRIPTION.equals(name) && (shortDescription != UNKNOWN)) {
+        if (Node.PROP_SHORT_DESCRIPTION.equals(name) && !UNKNOWN.equals(shortDescription)) {
             QUEUE.runSafe(this);
             return;
         }
@@ -519,7 +519,7 @@ final class VisualizerNode extends EventListenerList implements NodeListener, Tr
             }
         }
 
-        return (htmlDisplayName == NO_HTML_DISPLAYNAME) ? null : htmlDisplayName;
+        return NO_HTML_DISPLAYNAME.equals(htmlDisplayName) ? null : htmlDisplayName;
     }
 
     Icon getIcon(boolean opened, boolean large) {

@@ -86,7 +86,7 @@ public class SchemaRep implements PrefixGuesser {
                     String parentFullContentName = parentExpr.getFullContentName();
                     if (contentName == null)
                         fullContentName = parentFullContentName;
-                    else if (parentFullContentName == "/")
+                    else if ("/".equals(parentFullContentName))
                         fullContentName = (parentFullContentName + contentName).intern();
                     else
                         fullContentName = (parentFullContentName + "/" + contentName).intern();
@@ -123,7 +123,7 @@ public class SchemaRep implements PrefixGuesser {
                     while (it.hasNext()) {
                         ElementExpr otherElement = (ElementExpr) it.next();
                         String otherElementFullContentName = otherElement.getFullContentName();
-                        if (subElementFullContentName == otherElementFullContentName) {
+                        if (Objects.equals(subElementFullContentName, otherElementFullContentName)) {
                             if (debug)
                                 System.out.println("Found duplicate fullContentName for "+otherElement.getName()+" : "+subElementFullContentName);
                             subElement.uniquifyFullContentName();

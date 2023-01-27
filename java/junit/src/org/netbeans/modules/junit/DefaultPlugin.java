@@ -1590,8 +1590,8 @@ public final class DefaultPlugin extends JUnitPlugin {
             // style. This means only junit-3.x can be removed no matter what.
             String verNumToRemove = "3";                        //NOI18N
             if (name.equals("junit")) {                                 //NOI18N
-                add    = (verNumToAdd    == "3");                       //NOI18N
-                remove = (verNumToRemove == "3");                       //NOI18N
+                add    = "3".equals(verNumToAdd);                       //NOI18N
+                remove = true;
             } else if ((matcher = pattern.matcher(name)).matches()) {
                 String verNum = matcher.group(1);
                 add    = verNum.equals(verNumToAdd   );

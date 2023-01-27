@@ -107,7 +107,7 @@ public class J2SELibrarySourceJavadocAttacher implements SourceJavadocAttacherIm
                         final Map<String,List<URI>> volumes = new HashMap<String, List<URI>>();
                         for (String currentVolume : J2SELibraryTypeProvider.VOLUME_TYPES) {
                             List<URI> content = lib.getURIContent(currentVolume);
-                            if (volume == currentVolume) {
+                            if (Objects.equals(volume, currentVolume)) {
                                 final List<URI> newContent = new ArrayList<>(selected);
                                 content = newContent;
                             }

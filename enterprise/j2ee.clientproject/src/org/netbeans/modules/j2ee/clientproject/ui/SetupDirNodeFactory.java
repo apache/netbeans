@@ -77,7 +77,7 @@ public final class SetupDirNodeFactory implements NodeFactory {
         }
 
         public Node node(String key) {
-            if (key == SETUP_DIR) {
+            if (SETUP_DIR.equals(key)) {
                 return J2eeProjectView.createServerResourcesNode(project);
             }
             assert false: "No node for key: " + key;

@@ -1093,7 +1093,7 @@ public abstract class Properties {
                 if (!typeID.startsWith ("# ")) { // NOI18N
                     if (typeID.startsWith ("\"")) { // NOI18N
                         String s = getString (propertyName, BAD_STRING);
-                        if (s == BAD_STRING) {
+                        if (BAD_STRING.equals(s)) {
                             return defaultValue;
                         }
                         return s;

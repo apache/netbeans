@@ -55,6 +55,7 @@ import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Function;
+import java.util.Objects;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
@@ -490,7 +491,7 @@ public final class RunUtils {
         Map<Object, Integer>  options = new HashMap<>();
         Object def = null;
         for (String opt : TRUST_DIALOG_OPTION_IDS) {
-            if (opt == TRUST_DIALOG_OPTION_IDS.get(2) && !allowPermanent) {
+            if (Objects.equals(opt, TRUST_DIALOG_OPTION_IDS.get(2)) && !allowPermanent) {
                 continue;
             }
             String key = BRANDING_API_PREFIX + opt;

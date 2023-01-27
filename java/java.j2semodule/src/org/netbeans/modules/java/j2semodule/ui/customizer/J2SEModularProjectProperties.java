@@ -821,10 +821,10 @@ public class J2SEModularProjectProperties {
     //Hotfix of the issue #70058
     //Should be removed when the StoreGroup SPI will be extended to allow false default value in ToggleButtonModel
     private static String encodeBoolean (boolean value, Integer kind) {
-        if ( kind == BOOLEAN_KIND_ED ) {
+        if (BOOLEAN_KIND_ED.equals(kind)) {
             return value ? "on" : "off"; // NOI18N
         }
-        else if ( kind == BOOLEAN_KIND_YN ) { // NOI18N
+        else if (BOOLEAN_KIND_YN.equals(kind)) { // NOI18N
             return value ? "yes" : "no";
         }
         else {

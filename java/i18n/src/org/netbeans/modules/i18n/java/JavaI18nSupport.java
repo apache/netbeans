@@ -391,7 +391,7 @@ public class JavaI18nSupport extends I18nSupport {
 
     /** Getter for identifier. */    
     public String getIdentifier() {
-        if ((identifier == null) || (identifier == "")) {               //NOI18N
+        if ((identifier == null) || identifier.isEmpty()) {               //NOI18N
             createIdentifier();
         }
         return identifier;

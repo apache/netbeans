@@ -31,6 +31,7 @@ import java.beans.VetoableChangeListener;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -262,7 +263,7 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
         String txt = getText();
         html = val ? Boolean.TRUE : Boolean.FALSE;
 
-        if ((html != wasHtml) || (swingRendering || !cellRenderer)) {
+        if (!Objects.equals(html, wasHtml) || (swingRendering || !cellRenderer)) {
             //Ensure label UI gets updated and builds its little document tree...
             firePropertyChange("text", txt, getText()); //NOI18N
         }

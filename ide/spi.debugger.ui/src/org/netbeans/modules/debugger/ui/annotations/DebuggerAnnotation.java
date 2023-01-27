@@ -80,7 +80,7 @@ public class DebuggerAnnotation extends Annotation implements Lookup.Provider {
     @NbBundle.Messages("TOOLTIP_WATCH_PIN=Watch")
     @Override
     public String getShortDescription () {
-        if (type == WATCH_ANNOTATION_TYPE) {
+        if (WATCH_ANNOTATION_TYPE.equals(type)) {
             return Bundle.TOOLTIP_WATCH_PIN();
         }
         ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, new IllegalStateException("Unknown annotation type '"+type+"'."));

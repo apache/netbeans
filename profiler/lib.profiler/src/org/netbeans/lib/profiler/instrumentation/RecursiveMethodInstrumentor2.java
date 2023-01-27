@@ -224,7 +224,7 @@ public class RecursiveMethodInstrumentor2 extends RecursiveMethodInstrumentor {
 
                 for (int i = 0; i < methodNames.length; i++) {
                     if (clazz.isMethodReachable(i)
-                            || (!normallyFilteredOut && instrumentClinit && (methodNames[i] == "<clinit>"))) { // NOI18N
+                            || (!normallyFilteredOut && instrumentClinit && "<clinit>".equals(methodNames[i]))) { // NOI18N
                         checkAndScanMethod(clazz, methodNames[i], methodSignatures[i], false, false, false);
                     }
                 }
@@ -357,15 +357,15 @@ public class RecursiveMethodInstrumentor2 extends RecursiveMethodInstrumentor {
                 clazz.setMethodReachable(idx);
 
                 if (!clazz.isMethodStatic(idx) && !clazz.isMethodPrivate(idx) && !clazz.isMethodFinal(idx)
-                        && (methodName != "<init>")) { //NOI18N
+                        && !"<init>".equals(methodName)) { //NOI18N
                     clazz.setMethodVirtual(idx);
                 }
 
                 if (clazz.isMethodNative(idx) || clazz.isMethodAbstract(idx)
                         || (!clazz.isMethodRoot(idx) && !clazz.isMethodMarker(idx) && !instrFilter.passes(className))
-                        || (className == OBJECT_SLASHED_CLASS_NAME)) {  // Actually, just the Object.<init> method?
+                        || OBJECT_SLASHED_CLASS_NAME.equals(className)) {  // Actually, just the Object.<init> method?
                     clazz.setMethodUnscannable(idx);
-                } else if (methodName == "<init>" && !status.canInstrumentConstructor && clazz.getMajorVersion()>50) {
+                } else if ("<init>".equals(methodName) && !status.canInstrumentConstructor && clazz.getMajorVersion() > 50) {
                     clazz.setMethodUnscannable(idx);
                     constructorNotInstrumented = true;
                 } else {

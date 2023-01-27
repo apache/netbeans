@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import org.netbeans.lib.profiler.classfile.ClassInfo.StackMapFrame.FrameType;
 import org.netbeans.lib.profiler.global.CommonConstants;
 import org.netbeans.lib.profiler.instrumentation.JavaClassConstants;
@@ -924,7 +926,7 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
             return -1;
         }
         for (int i = 0; i < methodNames.length; i++) {
-            if ((methodNames[i] == name) && (methodSignatures[i] == sig)) {
+            if (Objects.equals(methodNames[i], name) && Objects.equals(methodSignatures[i], sig)) {
                 return i;
             }
         }
@@ -1160,7 +1162,7 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
         // initializers, we may well get a constructor as the "best match" for the given line. Thus, we first
         // search normal methods, and only if this fails - constructors and class initializer.
         for (int i = 0; i < nMethods; i++) {
-            if ((methodNames[i] == "<init>") || (methodNames[i] == "<clinit>")) { // NOI18N
+            if ("<init>".equals(methodNames[i]) || "<clinit>".equals(methodNames[i])) { // NOI18N
                 continue;
             }
 
@@ -1173,7 +1175,7 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
 
         // No success with ordinary methods - try constructors now
         for (int i = 0; i < nMethods; i++) {
-            if ((methodNames[i] != "<init>") && (methodNames[i] != "<clinit>")) { // NOI18N
+            if (!"<init>".equals(methodNames[i]) && !"<clinit>".equals(methodNames[i])) { // NOI18N
                 continue;
             }
 
@@ -1199,7 +1201,7 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
 
         if (superClass.isMethodPublic(superMethodIdx) || superClass.isMethodProtected(superMethodIdx)) {
             return idx;
-        } else if (superClass.packageName == this.packageName) {
+        } else if (Objects.equals(superClass.packageName, this.packageName)) {
             return idx;
         } else {
             return -1;

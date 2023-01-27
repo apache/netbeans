@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Objects;
 
 import java.text.MessageFormat;
 
@@ -344,7 +345,7 @@ public class CharsetMapping implements Comparable {
 	public static void setDisplayOption(Integer option) {
 		Integer newDisplayOption = getDisplayOptionEnum(option);
 		
-		if(newDisplayOption != null && newDisplayOption != displayOption) {
+		if(!Objects.equals(newDisplayOption, displayOption)) {
 			Integer oldDisplayOption = displayOption;
 			displayOption = newDisplayOption;
 			updateInternalState();
@@ -354,7 +355,7 @@ public class CharsetMapping implements Comparable {
 	}
 	
 	private static void updateInternalState() {
-		if(displayOption == CHARSET_CANONICAL) {
+		if(CHARSET_CANONICAL.equals(displayOption)) {
 			useAliases = false;
                         if(sortedCanonicalCharsetMappings == null){
                             sortedCanonicalCharsetMappings = getSortedCanonicalCharsetMappings();
@@ -365,7 +366,7 @@ public class CharsetMapping implements Comparable {
 				mapping.showAliases = false;
 				mapping.updateDisplayText();
 			}
-		} else if(displayOption == CHARSET_ALIAS_ASIDE) {
+		} else if(CHARSET_ALIAS_ASIDE.equals(displayOption)) {
 			useAliases = false;
                         if(sortedCanonicalCharsetMappings == null){
                             sortedCanonicalCharsetMappings = getSortedCanonicalCharsetMappings();
@@ -376,7 +377,7 @@ public class CharsetMapping implements Comparable {
 				mapping.showAliases = true;
 				mapping.updateDisplayText();
 			}
-		} else if(displayOption == CHARSET_ALIAS_SELECTION) {
+		} else if(CHARSET_ALIAS_SELECTION.equals(displayOption)) {
 			useAliases = true;
 		}
 	}

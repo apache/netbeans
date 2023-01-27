@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,7 +73,7 @@ class ServletData extends DeployData {
     }
 
     void setName(String name) {
-        if (name != this.name) {
+        if (!Objects.equals(name, this.name)) {
             if (fileType == FileType.FILTER) {
                 updateFilterMappings(getName(), name);
             }

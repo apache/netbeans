@@ -41,6 +41,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -629,7 +630,7 @@ public class JavadocCompletionTask<T> extends UserTask {
                 if (typeElement == null) {
                     continue;
                 }
-                items.add(factory.createJavaTypeItem(jdctx.javac, typeElement, (DeclaredType) typeElement.asType(), substitutionOffset, /*XXX:*/ typeName != qualTypeName ? jdctx.getReferencesCount() : null, elements.isDeprecated(typeElement), true));
+                items.add(factory.createJavaTypeItem(jdctx.javac, typeElement, (DeclaredType) typeElement.asType(), substitutionOffset, /*XXX:*/ !Objects.equals(typeName, qualTypeName) ? jdctx.getReferencesCount() : null, elements.isDeprecated(typeElement), true));
                 excludes.add(typeElement);
             }
         }

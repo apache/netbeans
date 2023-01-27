@@ -290,7 +290,7 @@ public abstract class TransferFile {
 
     public final String getRemoteAbsolutePath() {
         String remotePath = getRemotePath();
-        if (remotePath == REMOTE_PROJECT_ROOT) {
+        if (REMOTE_PROJECT_ROOT.equals(remotePath)) {
             return getBaseRemoteDirectoryPath();
         }
         String baseRemotePath = getBaseRemoteDirectoryPath();
@@ -318,7 +318,7 @@ public abstract class TransferFile {
      * @return {@code true} if the remote file is the project root
      */
     public boolean isProjectRoot() {
-        return REMOTE_PROJECT_ROOT == getRemotePath();
+        return REMOTE_PROJECT_ROOT.equals(getRemotePath());
     }
 
     /**

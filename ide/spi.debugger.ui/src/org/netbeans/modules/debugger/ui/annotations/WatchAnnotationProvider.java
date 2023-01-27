@@ -46,6 +46,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -729,7 +730,7 @@ public class WatchAnnotationProvider implements AnnotationProvider, LazyDebugger
         private String getWatchValueText(Watch watch, ValueProvider vp, boolean[] isEvaluating) {
             String value = vp.getValue(watch);
             //System.err.println("WatchAnnotationProvider.getWatchText("+watch.getExpression()+"): value = "+value+", lastValue = "+lastValue);
-            if (value == evaluatingValue) {
+            if (Objects.equals(value, evaluatingValue)) {
                 if (isEvaluating != null) {
                     isEvaluating[0] = true;
                 }

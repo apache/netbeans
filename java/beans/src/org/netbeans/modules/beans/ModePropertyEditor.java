@@ -20,6 +20,8 @@
 package org.netbeans.modules.beans;
 
 import java.beans.*;
+import java.util.Objects;
+
 import static org.netbeans.modules.beans.BeanUtils.*;
 
 /** property editor for mode property of Prperty patterns
@@ -62,7 +64,7 @@ public class ModePropertyEditor extends PropertyEditorSupport {
     /** @param text A text for the current value. */
     public void setAsText (String text) {
         for (int i = 0; i < getTags().length ; i++)
-            if (getTags()[i] == text) {
+            if (Objects.equals(getTags()[i], text)) {
                 setValue(values[i]);
                 return;
             }

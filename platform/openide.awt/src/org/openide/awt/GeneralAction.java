@@ -26,6 +26,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -267,7 +268,7 @@ final class GeneralAction {
             } else {
                 ns = Boolean.TRUE.equals(fallback.getValue(SELECTED_KEY));
             }
-            if (os != ns) {
+            if (!Objects.equals(os, ns)) {
                 putValue(SELECTED_KEY, ns);
             }
         }

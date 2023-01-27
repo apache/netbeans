@@ -355,7 +355,7 @@ public final class TimelineSupport {
                                     sameFactorUnits = false;
                                 lastDataFactor = dataFactor;
                                 
-                                if (lastUnitsString == LAST_UNITS_STRING)
+                                if (LAST_UNITS_STRING.equals(lastUnitsString))
                                     lastUnitsString = unitsString;
                                 else if (!equals(lastUnitsString, unitsString))
                                     sameFactorUnits = false;

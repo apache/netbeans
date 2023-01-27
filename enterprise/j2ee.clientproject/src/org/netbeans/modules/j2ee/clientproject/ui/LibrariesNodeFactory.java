@@ -118,7 +118,7 @@ public final class LibrariesNodeFactory implements NodeFactory {
         }
 
         public Node node(String key) {
-            if (key == LIBRARIES) {
+            if (LIBRARIES.equals(key)) {
                 //Libraries Node
                 return  
                     new LibrariesNode(
@@ -141,7 +141,7 @@ public final class LibrariesNodeFactory implements NodeFactory {
                         cs,
                         new ExtraLibrariesNode(project, evaluator, AppClientProjectProperties.J2EE_SERVER_INSTANCE, cs)
                     );
-            } else if (key == TEST_LIBRARIES) {
+            } else if (TEST_LIBRARIES.equals(key)) {
                 return  
                     new LibrariesNode(
                         NbBundle.getMessage(LibrariesNodeFactory.class,"CTL_TestLibrariesNode"),

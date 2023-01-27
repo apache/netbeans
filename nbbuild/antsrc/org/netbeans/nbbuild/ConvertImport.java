@@ -90,7 +90,7 @@ public class ConvertImport extends Task {
                 } 
                 
             } // while 
-            if (oldXml != xml) {
+            if (!oldXml.equals(xml)) {
                 // changed file
                 try ( PrintStream ps = new PrintStream(file)) {
                     ps.print(xml);

@@ -29,6 +29,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
+
 import org.openide.util.Exceptions;
 
 
@@ -117,7 +119,7 @@ public class NbObjectInputStream extends ObjectInputStream {
         String name = ose.getName();
         String newN = BaseUtilities.translate(name);
 
-        if (name == newN) {
+        if (Objects.equals(name, newN)) {
             // no translation
             return ose;
         }

@@ -67,7 +67,7 @@ public class DebuggerAction extends AbstractAction {
     
     @Override
     public Object getValue(String key) {
-        if (key == Action.NAME && nameInBundle) {
+        if (Action.NAME.equals(key) && nameInBundle) {
             return NbBundle.getMessage (DebuggerAction.class, (String) super.getValue(key));
         }
         return super.getValue(key);

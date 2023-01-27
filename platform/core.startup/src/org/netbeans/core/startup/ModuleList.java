@@ -415,14 +415,14 @@ final class ModuleList implements Stamps.Updater {
      * @return some parsed value suitable for the status map
      */
     private Object processStatusParam(String k, String v) throws NumberFormatException {
-        if (k == "enabled" // NOI18N
-                   || k == "autoload" // NOI18N
-                   || k == "eager" // NOI18N
-                   || k == "reloadable" // NOI18N
+        if ("enabled".equals(k) // NOI18N
+            || "autoload".equals(k) // NOI18N
+            || "eager".equals(k) // NOI18N
+            || "reloadable".equals(k) // NOI18N
                    ) {
             return Boolean.valueOf(v);
         } else {
-            if (k == "startlevel") { // NOI18N 
+            if ("startlevel".equals(k)) { // NOI18N
                 return Integer.valueOf(v);
             }
             // Other properties are of type String.

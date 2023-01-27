@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -196,7 +197,7 @@ public class ClassFileCache {
     private byte[] get(String nameAndLocation) {
         int pos = (nameAndLocation.hashCode() & 0x7FFFFFFF) % capacity;
 
-        while ((classNameAndLocation[pos] != null) && (classNameAndLocation[pos] != nameAndLocation)) {
+        while (!Objects.equals(classNameAndLocation[pos], nameAndLocation)) {
             pos = (pos + 1) % capacity;
         }
 

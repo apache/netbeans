@@ -162,7 +162,7 @@ public class JSplitPaneSupport extends AbstractLayoutSupport {
             Component left = splitPane.getLeftComponent();
             Component right = splitPane.getRightComponent();
             
-            if (position == JSplitPane.LEFT) {
+            if (JSplitPane.LEFT.equals(position)) {
                 if ((right == null) || (right == component)) {
                     rect.width = sz.width / 2;
                 }
@@ -185,7 +185,7 @@ public class JSplitPaneSupport extends AbstractLayoutSupport {
             Component top = splitPane.getTopComponent();
             Component bottom = splitPane.getBottomComponent();
             
-            if (position == JSplitPane.TOP) {
+            if (JSplitPane.TOP.equals(position)) {
                 if ((bottom == null) || (bottom == component)) {
                     rect.height /= 2;
                 }

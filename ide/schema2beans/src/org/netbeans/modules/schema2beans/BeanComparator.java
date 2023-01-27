@@ -88,13 +88,9 @@ public class BeanComparator {
 			String curValue = curBean.getAttributeValue(attrName);
 			String otherValue = newBean.getAttributeValue(attrName);
 
-			if (curValue != otherValue) {
-			    if (curValue == null || otherValue == null ||
-				!curValue.equals(otherValue)) {
-			
+			if (!Objects.equals(curValue, otherValue)) {
 				//  Diffenrence found - not the same bean
 				return newBean;
-			    }
 			}
 		    }
 		}
@@ -208,7 +204,7 @@ public class BeanComparator {
                         ret = newValue;
                         break;
                     }
-                } else if (v2 != v1) {
+                } else if (!Objects.equals(v2, v1)) {
                     ret = newValue;
                     break;
                 }

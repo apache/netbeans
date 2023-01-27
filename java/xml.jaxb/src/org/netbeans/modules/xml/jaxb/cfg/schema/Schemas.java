@@ -583,7 +583,7 @@ public class Schemas {
 		}
 		if (childObj instanceof java.lang.String) {
 			java.lang.String child = (java.lang.String) childObj;
-			if (child == _Destdir) {
+			if (child.equals(_Destdir)) {
 				if (returnConstName) {
 					return DESTDIR;
 				} else if (returnSchemaName) {
@@ -594,7 +594,7 @@ public class Schemas {
 					return "Destdir";
 				}
 			}
-			if (child == _ProjectName) {
+			if (child.equals(_ProjectName)) {
 				if (returnConstName) {
 					return PROJECTNAME;
 				} else if (returnSchemaName) {
@@ -608,7 +608,7 @@ public class Schemas {
 		}
 		if (childObj instanceof java.math.BigDecimal) {
 			java.math.BigDecimal child = (java.math.BigDecimal) childObj;
-			if (child == _Version) {
+			if (child.equals(_Version)) {
 				if (returnConstName) {
 					return VERSION;
 				} else if (returnSchemaName) {

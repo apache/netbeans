@@ -27,6 +27,8 @@
 
 package org.netbeans.modules.xml.jaxb.cfg.schema;
 
+import java.util.Objects;
+
 public class SchemaSource {
 	public static final String LOCATION = "Location";	// NOI18N
 	public static final String ORIGLOCATION = "OrigLocation";	// NOI18N
@@ -235,7 +237,7 @@ public class SchemaSource {
 	public String nameChild(Object childObj, boolean returnConstName, boolean returnSchemaName, boolean returnXPathName) {
 		if (childObj instanceof java.lang.String) {
 			java.lang.String child = (java.lang.String) childObj;
-			if (child == _Location) {
+			if (child.equals(_Location)) {
 				if (returnConstName) {
 					return LOCATION;
 				} else if (returnSchemaName) {
@@ -246,7 +248,7 @@ public class SchemaSource {
 					return "Location";
 				}
 			}
-			if (child == _OrigLocation) {
+			if (Objects.equals(child, _OrigLocation)) {
 				if (returnConstName) {
 					return ORIGLOCATION;
 				} else if (returnSchemaName) {
@@ -257,7 +259,7 @@ public class SchemaSource {
 					return "OrigLocation";
 				}
 			}
-			if (child == _OrigLocationType) {
+			if (child.equals(_OrigLocationType)) {
 				if (returnConstName) {
 					return ORIGLOCATIONTYPE;
 				} else if (returnSchemaName) {

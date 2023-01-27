@@ -262,7 +262,7 @@ public final class ContextView extends JPanel {
      */
     private void displayMessage(String message) {
         lblMessage.setText(message);
-        if (displayedCard != MESSAGE_VIEW) {
+        if (!MESSAGE_VIEW.equals(displayedCard)) {
             cardLayout.show(this, displayedCard = MESSAGE_VIEW);
         }
     }
@@ -456,7 +456,7 @@ public final class ContextView extends JPanel {
             }
             editorPane.setText(text);
             
-            if (displayedCard != FILE_VIEW) {
+            if (!FILE_VIEW.equals(displayedCard)) {
                 cardLayout.show(ContextView.this, displayedCard = FILE_VIEW);
             }
             

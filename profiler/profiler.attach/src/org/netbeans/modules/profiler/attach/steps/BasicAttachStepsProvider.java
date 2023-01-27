@@ -348,7 +348,7 @@ public class BasicAttachStepsProvider extends AttachStepsProvider {
     protected static String getOS(AttachSettings settings, String arch) {
 //        if (!settings.isRemote()) return settings.getHostOS();
         if (!settings.isRemote()) {
-            return IntegrationUtils.getLocalPlatform(arch == LINK_64ARCH ? 64 : 32);
+            return IntegrationUtils.getLocalPlatform(LINK_64ARCH.equals(arch) ? 64 : 32);
         } else {
             String hostOS = settings.getHostOS();
             if (IntegrationUtils.PLATFORM_WINDOWS_CVM.equals(hostOS))

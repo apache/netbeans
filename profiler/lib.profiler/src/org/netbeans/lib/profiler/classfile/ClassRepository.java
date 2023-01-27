@@ -208,7 +208,7 @@ public abstract class ClassRepository implements CommonConstants {
         if (methodIdx >= 0) {
             String methodName = clazz.getMethodNames()[methodIdx];
 
-            if ((methodName == "<init>") || (methodName == "<clinit>")) { // NOI18N
+            if ("<init>".equals(methodName) || "<clinit>".equals(methodName)) { // NOI18N
                                                                           // See the comment in ClassInfo.methodIdxAndBestBCIForLineNo() regarding initializers scattered about the class text.
                                                                           // Check if a method in a nested class matches the same spot in the source code.
 

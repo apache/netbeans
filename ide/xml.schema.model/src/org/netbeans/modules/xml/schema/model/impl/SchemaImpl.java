@@ -408,7 +408,7 @@ public class SchemaImpl extends SchemaComponentImpl implements Schema {
         
        private static String translateNamespace(String s) {
             // == comparison is deliberate
-            return s == NO_NAMESPACE_PLACEHOLDER ? null : s;
+            return NO_NAMESPACE_PLACEHOLDER.equals(s) ? null : s;
         }
 
         public String getTargetNamespace() {

@@ -59,16 +59,16 @@ public class DebuggerAnnotation extends Annotation {
     
     @Override
     public String getShortDescription () {
-        if (type == CURRENT_LINE_ANNOTATION_TYPE)
+        if (CURRENT_LINE_ANNOTATION_TYPE.equals(type))
             return NbBundle.getMessage(DebuggerAnnotation.class, "TOOLTIP_CURRENT_PC");
         else
-        if (type == CURRENT_LINE_ANNOTATION_TYPE2)
+        if (CURRENT_LINE_ANNOTATION_TYPE2.equals(type))
             return NbBundle.getMessage(DebuggerAnnotation.class, "TOOLTIP_CURRENT_PC_2");
         else
-        if (type == CURRENT_LINE_PART_ANNOTATION_TYPE)
+        if (CURRENT_LINE_PART_ANNOTATION_TYPE.equals(type))
             return NbBundle.getMessage(DebuggerAnnotation.class, "TOOLTIP_CURRENT_PC");
         else
-        if (type == CALL_STACK_FRAME_ANNOTATION_TYPE)
+        if (CALL_STACK_FRAME_ANNOTATION_TYPE.equals(type))
             return NbBundle.getMessage(DebuggerAnnotation.class, "TOOLTIP_CALLSITE");
         return null;
     }

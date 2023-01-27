@@ -526,7 +526,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
     public   void readAttributeHeader(java.lang.String name, org.xml.sax.AttributeList atts)
     {
         //@olsen+MBO: intended to compare strings by '==' instead of equals()?
-        if (name == "_.METHOD"  || name == "_.CALLBACK")
+        if ("_.METHOD".equals(name) || "_.CALLBACK".equals(name))
         {
             this.pushAttrName(atts.getValue("NAME"));
             this.pushAttrName(name);

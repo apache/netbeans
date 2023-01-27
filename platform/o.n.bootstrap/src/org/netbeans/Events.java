@@ -133,8 +133,8 @@ public abstract class Events {
      * listed as the constant in this class, not a copy.
      */
     public final void log(String message, Object ... args) {
-        if (Util.err.isLoggable(Level.FINE) &&
-                message != PERF_START && message != PERF_TICK && message != PERF_END) {
+        if (Util.err.isLoggable(Level.FINE)
+            && !PERF_START.equals(message) && !PERF_TICK.equals(message) && !PERF_END.equals(message)) {
             Util.err.fine("EVENT -> " + message + " " + Arrays.asList(args));
         }
         try {

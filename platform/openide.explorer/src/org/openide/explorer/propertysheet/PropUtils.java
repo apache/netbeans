@@ -641,7 +641,7 @@ final class PropUtils {
         String locMsg = Exceptions.findLocalizedMessage(throwable);
 
         if (locMsg != null
-            && (throwable.getLocalizedMessage() != throwable.getMessage())) { //XXX See issue 34569
+            && !Objects.equals(throwable.getLocalizedMessage(), throwable.getMessage())) { //XXX See issue 34569
 
             String msg = NbBundle.getMessage(
                     PropUtils.class, "FMT_ErrorSettingProperty", newValue, title); //NOI18N
@@ -672,7 +672,7 @@ final class PropUtils {
                 return null;
             }
 
-            if (throwable.getLocalizedMessage() != throwable.getMessage()) {
+            if (!Objects.equals(throwable.getLocalizedMessage(), throwable.getMessage())) {
                 return throwable.getLocalizedMessage();
             }
 
@@ -1834,7 +1834,7 @@ final class PropUtils {
             String s1 = (String) o1;
             String s2 = (String) o2;
 
-            if (s1 == s2) {
+            if (Objects.equals(s1, s2)) {
                 return 0;
             }
 

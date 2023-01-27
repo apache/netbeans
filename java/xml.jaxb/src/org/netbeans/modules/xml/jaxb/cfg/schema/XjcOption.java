@@ -208,7 +208,7 @@ public class XjcOption {
 	public String nameChild(Object childObj, boolean returnConstName, boolean returnSchemaName, boolean returnXPathName) {
 		if (childObj instanceof java.lang.String) {
 			java.lang.String child = (java.lang.String) childObj;
-			if (child == _Name) {
+			if (child.equals(_Name)) {
 				if (returnConstName) {
 					return NAME;
 				} else if (returnSchemaName) {
@@ -219,7 +219,7 @@ public class XjcOption {
 					return "Name";
 				}
 			}
-			if (child == _Value) {
+			if (child.equals(_Value)) {
 				if (returnConstName) {
 					return VALUE;
 				} else if (returnSchemaName) {

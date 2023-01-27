@@ -72,16 +72,16 @@ public final class LineBreakpointAnnotation extends BreakpointAnnotation {
             }
             return Bundle.TOOLTIP_BREAKPOINT_BROKEN();
         }
-        if (type == BREAKPOINT_ANNOTATION_TYPE) {
+        if (BREAKPOINT_ANNOTATION_TYPE.equals(type)) {
             return Bundle.TOOLTIP_BREAKPOINT();
         }
-        if (type == DISABLED_BREAKPOINT_ANNOTATION_TYPE) {
+        if (DISABLED_BREAKPOINT_ANNOTATION_TYPE.equals(type)) {
             return Bundle.TOOLTIP_DISABLED_BREAKPOINT();
         }
-        if (type == CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE) {
+        if (CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE.equals(type)) {
             return Bundle.TOOLTIP_CONDITIONAL_BREAKPOINT();
         }
-        if (type == DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE) {
+        if (DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE.equals(type)) {
             return Bundle.TOOLTIP_DISABLED_CONDITIONAL_BREAKPOINT();
         }
         if (type.endsWith(DEACTIVATED_BREAKPOINT_SUFFIX)) {

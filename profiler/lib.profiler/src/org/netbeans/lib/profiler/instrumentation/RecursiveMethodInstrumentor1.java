@@ -21,6 +21,8 @@ package org.netbeans.lib.profiler.instrumentation;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
+
 import org.netbeans.lib.profiler.ProfilerEngineSettings;
 import org.netbeans.lib.profiler.classfile.BaseClassInfo;
 import org.netbeans.lib.profiler.classfile.DynamicClassInfo;
@@ -95,7 +97,7 @@ public class RecursiveMethodInstrumentor1 extends RecursiveMethodInstrumentor {
                         isMatch = true;
                     }
                 } else {
-                    if (className == rootClassName) { // precise match
+                    if (Objects.equals(className, rootClassName)) { // precise match
                         isMatch = true;
                     }
                 }
@@ -154,7 +156,7 @@ public class RecursiveMethodInstrumentor1 extends RecursiveMethodInstrumentor {
                     break;
                 }
             } else {
-                if (className == rootClassName) {
+                if (className.equals(rootClassName)) {
                     isRootClass = true;
 
                     break;
@@ -195,7 +197,7 @@ public class RecursiveMethodInstrumentor1 extends RecursiveMethodInstrumentor {
                         isMatch = true;
                     }
                 } else {
-                    if (className == rootClassName) { // precise match
+                    if (className.equals(rootClassName)) { // precise match
                         isMatch = true;
                     }
                 }
@@ -414,15 +416,15 @@ public class RecursiveMethodInstrumentor1 extends RecursiveMethodInstrumentor {
             clazz.setMethodReachable(idx);
 
             if (!clazz.isMethodStatic(idx) && !clazz.isMethodPrivate(idx) && !clazz.isMethodFinal(idx)
-                    && (methodName != "<init>")) {  // NOI18N
+                    && !"<init>".equals(methodName)) {  // NOI18N
                 clazz.setMethodVirtual(idx);
             }
 
             if (clazz.isMethodNative(idx) || clazz.isMethodAbstract(idx)
                     || (!clazz.isMethodRoot(idx) && !clazz.isMethodMarker(idx) && !instrFilter.passes(className))
-                    || (className == OBJECT_SLASHED_CLASS_NAME)) {  // Actually, just the Object.<init> method?
+                    || OBJECT_SLASHED_CLASS_NAME.equals(className)) {  // Actually, just the Object.<init> method?
                 clazz.setMethodUnscannable(idx);
-            } else if (methodName == "<init>" && !status.canInstrumentConstructor && clazz.getMajorVersion()>50) {
+            } else if ("<init>".equals(methodName) && !status.canInstrumentConstructor && clazz.getMajorVersion() > 50) {
                 clazz.setMethodUnscannable(idx);
                 constructorNotInstrumented = true;
             } else {

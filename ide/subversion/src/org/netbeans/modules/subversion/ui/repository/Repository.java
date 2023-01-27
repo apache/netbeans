@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Objects;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -452,19 +453,19 @@ public class Repository implements ActionListener, DocumentListener, ItemListene
     private void updateVisibility(String connPanelTypeId,
                                   String selectedUrlString) {
 
-        if (connPanelTypeId == HTTP_PANEL) {
+        if (HTTP_PANEL.equals(connPanelTypeId)) {
             currentPanel = http;
-        } else if (connPanelTypeId == SSH_PANEL) {
+        } else if (SSH_PANEL.equals(connPanelTypeId)) {
             currentPanel = svnSSH;
-        } else if (connPanelTypeId == FILE_PANEL) {
+        } else if (FILE_PANEL.equals(connPanelTypeId)) {
             currentPanel = file;
-        } else if (connPanelTypeId == INVALID_URL_PANEL) {
+        } else if (INVALID_URL_PANEL.equals(connPanelTypeId)) {
             currentPanel = invalidUrlPanel;
         } else {
             assert false;
         }
 
-        if (connPanelTypeId != currentConnPanelType) {
+        if (!Objects.equals(connPanelTypeId, currentConnPanelType)) {
             ((CardLayout) repositoryPanel.connPanel.getLayout()).show(repositoryPanel.connPanel, connPanelTypeId);
             currentConnPanelType = connPanelTypeId;
         }

@@ -283,7 +283,7 @@ public class Utilities {
             List<String> targetNSList = null;
             try {
                 targetNSList = runXPathQuery(file, xpathQuery);
-                String targetNS = null;
+                String targetNS;
                 FileObject fobj = FileUtil.toFileObject(file);
                 if(targetNSList.size() > 0){
                     //just take the first and ignore rest
@@ -291,7 +291,7 @@ public class Utilities {
                 } else{
                     targetNS = NO_NAME_SPACE;
                 }
-                if((docType == docType.wsdl) && (targetNS == NO_NAME_SPACE))
+                if((docType == docType.wsdl) && NO_NAME_SPACE.equals(targetNS))
                     //this is wsdl and it must have NS so ignore this file
                     continue;
                 result.put(fobj, targetNS);

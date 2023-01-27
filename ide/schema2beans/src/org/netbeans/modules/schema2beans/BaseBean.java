@@ -1248,7 +1248,7 @@ public abstract class BaseBean implements Cloneable, Bean {
                 String a = attrs[j];
                 if (!this.beanProp().getAttrProp(a).isFixed()) {
                     String v = this.getAttributeValue(a);
-                    if (bean.getAttributeValue(a) != v)
+                    if (!Objects.equals(bean.getAttributeValue(a), v))
                         bean.setAttributeValue(a, v);
                 }
             }
@@ -1288,7 +1288,7 @@ public abstract class BaseBean implements Cloneable, Bean {
                         if (!prop.getAttrProp(a).isFixed()) {
                             for(int i=0; i<size; i++) {
                                 String v = prop.getAttributeValue(i, a);
-                                if (bean.getAttributeValue(name, i, a) != v)
+                                if (!Objects.equals(bean.getAttributeValue(name, i, a), v))
                                     bean.setAttributeValue(name, i, a, v);
                                 
                             }
@@ -1310,7 +1310,7 @@ public abstract class BaseBean implements Cloneable, Bean {
                         String a = attrs[j];
                         if (!prop.getAttrProp(a).isFixed()) {
                             String v = prop.getAttributeValue(0, a);
-                            if (bean.getAttributeValue(name, 0, a) != v)
+                            if (!Objects.equals(bean.getAttributeValue(name, 0, a), v))
                                 bean.setAttributeValue(name, a, v);
                         }
                     }
@@ -1469,15 +1469,13 @@ public abstract class BaseBean implements Cloneable, Bean {
                     String curValue = this.getAttributeValue(attrName);
                     String otherValue = bean.getAttributeValue(attrName);
 
-                    if (curValue != otherValue) {
+                    if (!Objects.equals(curValue, otherValue)) {
                         // Might have one of the two null, not both
-                        if (curValue == null || otherValue == null || !curValue.equals(otherValue)) {
-                            if ((mode & MERGE_COMPARE) == MERGE_COMPARE) {
-                                return false;
-                            }
-                            if ((mode & MERGE_UNION) == MERGE_UNION) {
-                                this.setAttributeValue(attrName, otherValue);
-                            }
+                        if ((mode & MERGE_COMPARE) == MERGE_COMPARE) {
+                            return false;
+                        }
+                        if ((mode & MERGE_UNION) == MERGE_UNION) {
+                            this.setAttributeValue(attrName, otherValue);
                         }
                     }
                 }

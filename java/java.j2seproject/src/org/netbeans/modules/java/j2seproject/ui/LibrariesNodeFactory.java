@@ -116,7 +116,7 @@ public final class LibrariesNodeFactory implements NodeFactory {
         }
 
         public Node node(String key) {
-            if (key == LIBRARIES) {
+            if (LIBRARIES.equals(key)) {
                 //Libraries Node
                 return new LibrariesNode.Builder(project,evaluator, helper, resolver, cs).
                     setName(NbBundle.getMessage(LibrariesNodeFactory.class,"CTL_LibrariesNode")).
@@ -135,7 +135,7 @@ public final class LibrariesNodeFactory implements NodeFactory {
                     setModuleInfoBasedPath(project.getClassPathProvider().getProjectClassPaths(ClassPath.EXECUTE)[0]).
                     setSourcePath(project.getClassPathProvider().getProjectClassPaths(ClassPath.SOURCE)[0]).
                     build();
-            } else if (key == TEST_LIBRARIES) {
+            } else if (TEST_LIBRARIES.equals(key)) {
                 return new LibrariesNode.Builder(project,evaluator, helper, resolver, cs).
                     setName(NbBundle.getMessage(LibrariesNodeFactory.class,"CTL_TestLibrariesNode")).
                     addClassPathProperties(ProjectProperties.RUN_TEST_CLASSPATH).

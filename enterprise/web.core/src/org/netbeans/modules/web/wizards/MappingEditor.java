@@ -258,14 +258,14 @@ public class MappingEditor extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent evt) {
-        if (evt.getActionCommand() == URL) {
+        if (URL.equals(evt.getActionCommand())) {
             fmd.setType(FilterMappingData.Type.URL);
             fmd.setPattern(mappingField.getText().trim());
             mappingField.requestFocus();
             return;
         }
 
-        if (evt.getActionCommand() == SERVLET) {
+        if (SERVLET.equals(evt.getActionCommand())) {
             if (!haveNames) {
                 return;
             }
@@ -275,7 +275,7 @@ public class MappingEditor extends JPanel implements ActionListener {
             return;
         }
 
-        if (evt.getActionCommand() == SELECT_SERVLET) {
+        if (SELECT_SERVLET.equals(evt.getActionCommand())) {
             if (!haveNames) {
                 return;
             }

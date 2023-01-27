@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import org.netbeans.modules.mercurial.util.HgUtils;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -753,7 +754,8 @@ public class MercurialInterceptor extends VCSInterceptor {
                 for (Map.Entry<String, Long> e : interestingTimestamps.entrySet()) {
                     // has a newer (higher) ts or the file is deleted
                     if (e.getValue() > other.interestingTimestamps.get(e.getKey())
-                            || e.getValue() == 0 && other.interestingTimestamps.get(e.getKey()) != e.getValue()) {
+                        || e.getValue() == 0
+                           && !Objects.equals(other.interestingTimestamps.get(e.getKey()), e.getValue())) {
                         newer = true;
                         break;
                     }

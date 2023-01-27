@@ -2058,10 +2058,10 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         @Override
         public void propertyChange(PropertyChangeEvent e) {
             String prop = e.getPropertyName();
-            if(prop == JFileChooser.CHOOSABLE_FILE_FILTER_CHANGED_PROPERTY) {
+            if (JFileChooser.CHOOSABLE_FILE_FILTER_CHANGED_PROPERTY.equals(prop)) {
                 filters = (FileFilter[]) e.getNewValue();
                 fireContentsChanged(this, -1, -1);
-            } else if (prop == JFileChooser.FILE_FILTER_CHANGED_PROPERTY) {
+            } else if (JFileChooser.FILE_FILTER_CHANGED_PROPERTY.equals(prop)) {
                 fireContentsChanged(this, -1, -1);
             }
         }

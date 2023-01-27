@@ -569,7 +569,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     private void cbAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbAddActionPerformed
         if (!comboReady) return;
         String action = availableActionsModel.getElementAt(cbAdd.getSelectedIndex());
-        if (action != CUSTOM_ACTION) {
+        if (!CUSTOM_ACTION.equals(action)) {
             availableActionsModel.removeElement(action);
         } else {
             action = actionRegistry.findNewCustonActionId();

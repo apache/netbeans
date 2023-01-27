@@ -187,17 +187,17 @@ class InitParamPanel extends JPanel implements ActionListener,
     public void actionPerformed(ActionEvent evt) {
         int row = -1;
         if (evt.getSource() instanceof JButton) {
-            if (evt.getActionCommand() == ADD) {
+            if (ADD.equals(evt.getActionCommand())) {
                 String[] values = {
                     NbBundle.getMessage(InitParamPanel.class, "LBL_paramname"),
                     NbBundle.getMessage(InitParamPanel.class, "LBL_paramvalue"),};
                 row = table.addRow(values);
                 table.setRowSelectionInterval(row, row);
-            } else if (evt.getActionCommand() == REMOVE) {
+            } else if (REMOVE.equals(evt.getActionCommand())) {
                 row = table.getSelectedRow();
                 table.removeRow(row);
                 setEnabled();
-            } else if (evt.getActionCommand() == EDIT) {
+            } else if (EDIT.equals(evt.getActionCommand())) {
                 row = table.getSelectedRow();
                 String name = (String) (table.getValueAt(row, 0));
                 String value = (String) (table.getValueAt(row, 1));

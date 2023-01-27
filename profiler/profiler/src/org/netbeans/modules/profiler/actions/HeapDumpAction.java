@@ -453,7 +453,7 @@ public final class HeapDumpAction extends ProfilingAwareAction {
                         String dumpFileName = askForDestination ? selectTargetDirectory() : getCurrentHeapDumpFilename(null);
 
                         // Selecting destination cancelled by the user
-                        if (dumpFileName == SELECTING_TARGET_CANCELLED) {
+                        if (SELECTING_TARGET_CANCELLED.equals(dumpFileName)) {
                             return;
                         }
 

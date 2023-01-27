@@ -24,6 +24,8 @@ import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 import org.netbeans.spi.debugger.ContextProvider;
 
 
@@ -422,7 +424,7 @@ public final class Session implements ContextProvider {
             oldL,
             newL
         );
-        if (oldCurrentL != newCurrentL) {
+        if (!Objects.equals(oldCurrentL, newCurrentL)) {
             pcs.firePropertyChange (
                 PROP_CURRENT_LANGUAGE,
                 oldCurrentL,

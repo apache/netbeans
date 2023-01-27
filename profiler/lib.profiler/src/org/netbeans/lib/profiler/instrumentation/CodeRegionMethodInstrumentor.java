@@ -29,6 +29,7 @@ import org.netbeans.lib.profiler.global.ProfilingSessionStatus;
 import org.netbeans.lib.profiler.utils.MiscUtils;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 /**
@@ -82,7 +83,7 @@ public class CodeRegionMethodInstrumentor extends ClassManager {
         for (int i = 0; i < loadedClasses.length; i++) {
             String loadedClassName = loadedClasses[i];
 
-            if (className == loadedClassName) {
+            if (Objects.equals(className, loadedClassName)) {
                 clazz = javaClassForName(loadedClasses[i], loadedClassLoaderIds[i]);
 
                 if (clazz != null) {

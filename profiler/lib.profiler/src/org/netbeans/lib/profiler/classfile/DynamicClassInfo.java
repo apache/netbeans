@@ -21,6 +21,7 @@ package org.netbeans.lib.profiler.classfile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 /**
@@ -459,7 +460,7 @@ public class DynamicClassInfo extends ClassInfo {
 
         if (intfs != null) {
             for (int i = 0; i < intfs.length; i++) {
-                if (intfName == intfs[i]) {
+                if (Objects.equals(intfName, intfs[i])) {
                     return true;
                 }
             }

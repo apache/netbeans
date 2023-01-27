@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
+import java.util.Objects;
 import java.util.logging.Logger;
 import org.openide.cookies.OpenCookie;
 import org.openide.cookies.SaveCookie;
@@ -442,7 +443,7 @@ public final class PropertiesDataObject extends MultiDataObject implements Cooki
         protected void mySetKeys() {
             TreeSet<String> newKeys = new TreeSet<String>(new Comparator<String>() {
                 public int compare(String o1, String o2) {
-                    if (o1 == o2) {
+                    if (Objects.equals(o1, o2)) {
                         return 0;
                     }
                     if (o1 == null) {

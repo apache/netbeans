@@ -261,7 +261,7 @@ public final class NamingFactory {
                     return null;
                 }
                 fileIsDirectory = file.isDirectory();
-                if (cachedIsDirectory != fileIsDirectory) {
+                if (!Objects.equals(cachedIsDirectory, fileIsDirectory)) {
                     cachedElement = null;
                 }
             }

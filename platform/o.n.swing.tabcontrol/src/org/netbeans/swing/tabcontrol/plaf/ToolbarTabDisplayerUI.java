@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
+import java.util.Objects;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
@@ -359,7 +360,7 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
             boolean result = false;
             String txt = lastKnownText;
             String nu = doGetText();
-            if (nu != txt) { //Equality compare probably not needed
+            if (!Objects.equals(nu, txt)) { //Equality compare probably not needed
                 firePropertyChange ("text", lastKnownText, doGetText()); //NOI18N
                 result = true;
             }

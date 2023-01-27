@@ -32,6 +32,8 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Objects;
+
 import org.netbeans.swing.tabcontrol.TabData;
 
 /** Common UI for sliding tabs.  Simply uses JToggleButtons for displayers,
@@ -398,7 +400,7 @@ public final class BasicSlidingTabDisplayerUI extends AbstractTabDisplayerUI {
             }
             String txt = lastKnownText;
             String nu = getText();
-            if (nu != txt) { //Equality compare probably not needed
+            if (!Objects.equals(nu, txt)) { //Equality compare probably not needed
                 firePropertyChange ("text", lastKnownText, getText()); //NOI18N
                 result = true;
             }

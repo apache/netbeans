@@ -37,6 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -764,7 +765,7 @@ public class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectio
                 if (e.enabledOverride != null) {
                     Boolean currentEnabled = e.enabledOverride;
                     Boolean savedEnabled = delegate.isEnabled(hint);
-                    isChanged |= currentEnabled != savedEnabled;
+                    isChanged |= !Objects.equals(currentEnabled, savedEnabled);
                     if(isChanged) {
                         return true;
                     }

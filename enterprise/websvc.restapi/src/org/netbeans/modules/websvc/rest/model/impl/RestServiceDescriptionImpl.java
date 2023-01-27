@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -125,14 +126,14 @@ public class RestServiceDescriptionImpl extends PersistentObject implements Rest
         
         
         // Refresh the resource name.
-        if (this.name != newValue) {
+        if (!Objects.equals(this.name, newValue)) {
             this.name = newValue;
             isModified = true;
         }
         
         // Refresh the class name.
         newValue = typeElement.getQualifiedName().toString();
-        if (this.className != newValue) {
+        if (!Objects.equals(this.className, newValue)) {
             this.className = newValue;
             isModified = true;
         }

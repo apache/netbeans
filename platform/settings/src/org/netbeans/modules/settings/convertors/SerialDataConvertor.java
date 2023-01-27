@@ -239,10 +239,10 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
         if (name == null)
             return;
         // setting was changed
-        else if (name == SaveSupport.PROP_SAVE)
+        else if (SaveSupport.PROP_SAVE.equals(name))
             provideSaveCookie();
         // .settings file was changed
-        else if (name == SaveSupport.PROP_FILE_CHANGED) {
+        else if (SaveSupport.PROP_FILE_CHANGED.equals(name)) {
             miUnInitialized = true;
             if (moduleCodeBase != null) {
                 ModuleInfo mi = ModuleInfoManager.getDefault().getModule(moduleCodeBase);

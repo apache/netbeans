@@ -161,7 +161,7 @@ public class CheckBoxRenderrer extends JCheckBox implements ListCellRenderer, Se
     @Override
     protected void firePropertyChange (String propertyName, Object oldValue, Object newValue) {
         // Strings get interned...
-        if (propertyName == "text" || ((propertyName == "font" || propertyName == "foreground") &&
+        if ("text".equals(propertyName) || (("font".equals(propertyName) || "foreground".equals(propertyName)) &&
             oldValue != newValue &&
             getClientProperty (javax.swing.plaf.basic.BasicHTML.propertyKey) != null)
         ) {

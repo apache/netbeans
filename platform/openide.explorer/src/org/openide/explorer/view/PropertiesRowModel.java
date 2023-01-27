@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.WeakHashMap;
 import javax.swing.JLabel;
+import java.util.Objects;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TableModelEvent;
@@ -348,7 +349,7 @@ class PropertiesRowModel implements RowModel {
         String locMsg = Exceptions.findLocalizedMessage(throwable);
 
         if (locMsg != null
-            && (throwable.getLocalizedMessage() != throwable.getMessage())) { //XXX See issue 34569
+            && !Objects.equals(throwable.getLocalizedMessage(), throwable.getMessage())) { //XXX See issue 34569
 
             String msg = NbBundle.getMessage(
                     PropertiesRowModel.class, "FMT_ErrorSettingValue", newValue, title); //NOI18N

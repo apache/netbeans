@@ -368,7 +368,7 @@ public class JavaTypeDescription extends TypeDescriptor {
             }
             cachedRelPath = relativePath;
         }
-        if (relativePath == PATH_FROM_HANDLE) {
+        if (PATH_FROM_HANDLE.equals(relativePath)) {
                 relativePath = binaryName;
                 int lastDot = relativePath.lastIndexOf('.');    //NOI18N
                 int csIndex = relativePath.indexOf('$', lastDot);     //NOI18N

@@ -103,7 +103,7 @@ public class ImportantFilesNodeFactory implements NodeFactory {
 
         @Override
         public Node node(String key) {
-            assert key == IMPORTANT_FILES_NAME;
+            assert IMPORTANT_FILES_NAME.equals(key);
             return new ImportantFilesNode(project);
         }
 

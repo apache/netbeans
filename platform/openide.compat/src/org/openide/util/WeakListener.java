@@ -18,6 +18,7 @@
  */
 package org.openide.util;
 
+import java.util.Objects;
 import java.util.logging.Logger;
 import org.openide.filesystems.*;
 import org.openide.nodes.*;
@@ -949,7 +950,7 @@ public abstract class WeakListener implements java.util.EventListener {
             String methodName = ref.removeMethodName();
 
             synchronized (LOCK) {
-                if ((lastClass == methodClass) && (lastMethodName == methodName) && (lastRemove != null)) {
+                if ((lastClass == methodClass) && Objects.equals(lastMethodName, methodName) && (lastRemove != null)) {
                     remove = lastRemove;
                 }
             }

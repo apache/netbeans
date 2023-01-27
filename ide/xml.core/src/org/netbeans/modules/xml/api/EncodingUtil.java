@@ -162,7 +162,7 @@ public class EncodingUtil {
             
             String detectedEnc = detectDeclaredEncoding(bytes, enc, size);
             if (detectedEnc == null) {
-                return enc == UTF8_DEFAULT ? null : enc;
+                return UTF8_DEFAULT.equals(enc) ? null : enc;
             }
             
             return getIANA2JavaMapping(detectedEnc);
@@ -188,7 +188,7 @@ public class EncodingUtil {
      * canonicalization with other UTF8 constants.
      */
     @SuppressWarnings("")
-    static final String UTF8_DEFAULT = new String("UTF8"); // NOI18N
+    static final String UTF8_DEFAULT = "UTF8"; // NOI18N
     
     private static String autoDetectEncoding(byte[] buf, int len) throws IOException {
         if (len >= 4) {

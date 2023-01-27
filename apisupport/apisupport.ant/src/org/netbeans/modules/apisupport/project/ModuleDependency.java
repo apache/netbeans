@@ -146,7 +146,7 @@ public final class ModuleDependency implements Comparable<ModuleDependency> {
         if (result != 0) { return result; }
         
         // do not force resolution of SPEC_VERSION_LAZY for comparisons, unnecessary
-        if (specVersion != SPEC_VERSION_LAZY || other.specVersion != SPEC_VERSION_LAZY) {
+        if (!SPEC_VERSION_LAZY.equals(specVersion) || !SPEC_VERSION_LAZY.equals(other.specVersion)) {
             String otherSpec = other.getSpecificationVersion();
             String spec = getSpecificationVersion();
             result = spec == null // spec versions may be null
@@ -167,7 +167,7 @@ public final class ModuleDependency implements Comparable<ModuleDependency> {
             ModuleDependency other = (ModuleDependency) o;
             return getCodeNameBase().equals(other.getCodeNameBase()) &&
                     Utilities.compareObjects(getReleaseVersion(), other.getReleaseVersion()) &&
-                    ((specVersion == SPEC_VERSION_LAZY && other.specVersion == SPEC_VERSION_LAZY) ||
+                    ((SPEC_VERSION_LAZY.equals(specVersion) && SPEC_VERSION_LAZY.equals(other.specVersion)) ||
                     Utilities.compareObjects(getSpecificationVersion(), other.getSpecificationVersion())) &&
                     (hasImplementationDependency() == other.hasImplementationDependency()) &&
                     (hasCompileDependency() == other.hasCompileDependency());

@@ -90,6 +90,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
@@ -804,8 +805,8 @@ public class Flow {
             switch (node.getKind()) {
                 case AND: case CONDITIONAL_AND: return left && right;
                 case OR: case CONDITIONAL_OR: return left || right;
-                case EQUAL_TO: return left == right;
-                case NOT_EQUAL_TO: return left != right;
+                case EQUAL_TO: return Objects.equals(left, right);
+                case NOT_EQUAL_TO: return !Objects.equals(left, right);
             }
             
             return null;

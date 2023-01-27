@@ -54,7 +54,7 @@ public class ReflectionInfo implements Comparable<ReflectionInfo> {
 
     @Override
     public int compareTo(ReflectionInfo o) {
-        if (index != o.index) {
+        if (!Objects.equals(index, o.index)) {
             if (index == null) {
                 return -1;
             }
@@ -67,7 +67,7 @@ public class ReflectionInfo implements Comparable<ReflectionInfo> {
             }
         }
 
-        if (propertyName != o.propertyName) {
+        if (!Objects.equals(propertyName, o.propertyName)) {
             if (propertyName == null) {
                 return -1;
             }

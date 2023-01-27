@@ -308,14 +308,14 @@ public final class Util extends Object {
         }
 
         String defaultLangName = null;
-        if (language == "") {                                           //NOI18N
+        if (language.isEmpty()) {                                           //NOI18N
             defaultLangName = NbBundle.getMessage(
                     Util.class,
                     "LAB_defaultLanguage");                             //NOI18N
         }
 
         /* Simple case #1 - the default locale */
-        if (language == "" && country == "" && variant == "") {         //NOI18N
+        if (language.isEmpty() && country.isEmpty() && variant.isEmpty()) {         //NOI18N
             return defaultLangName;
         }
 
@@ -324,7 +324,7 @@ public final class Util extends Object {
 
         /* - language name: */
         String langName;
-        if (language == "") {                                           //NOI18N
+        if (language.isEmpty()) {                                           //NOI18N
             langName = defaultLangName;
         } else {
             langName = locale.getDisplayLanguage();
@@ -336,7 +336,7 @@ public final class Util extends Object {
         }
 
         /* Simple case #2 - language specification only */
-        if (country == "" && variant == "") {                           //NOI18N
+        if (country.isEmpty() && variant.isEmpty()) {                           //NOI18N
             return NbBundle.getMessage(Util.class,
                                        "LAB_localeSpecLang",            //NOI18N
                                        localeSpec,
@@ -345,7 +345,7 @@ public final class Util extends Object {
 
         /* - country name: */
         String countryName = "";                                        //NOI18N
-        if (country != "") {                                            //NOI18N
+        if (!country.isEmpty()) {                                            //NOI18N
             countryName = locale.getDisplayCountry();
             if (countryName.equals(country)) {
                 countryName = NbBundle.getMessage(Util.class,
@@ -355,14 +355,14 @@ public final class Util extends Object {
         }
 
         /* - variant name: */
-        String variantName = variant == "" ? ""                         //NOI18N
+        String variantName = variant.isEmpty() ? ""                         //NOI18N
                                            : locale.getDisplayVariant();
 
         /* Last case - country and/or variant specification */
         String countryAndVariant;
-        if (variantName == "") {                                        //NOI18N
+        if (variantName.isEmpty()) {                                        //NOI18N
             countryAndVariant = countryName;
-        } else if (countryName == "") {                                 //NOI18N
+        } else if (countryName.isEmpty()) {                                 //NOI18N
             countryAndVariant = variantName;
         } else {
             countryAndVariant = countryName + ", " + variantName;       //NOI18N

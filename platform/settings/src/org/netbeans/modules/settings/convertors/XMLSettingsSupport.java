@@ -220,7 +220,7 @@ final class XMLSettingsSupport {
             String name = ose.getName();
             String newN = org.openide.util.Utilities.translate(name);
 
-            if (name == newN) {
+            if (Objects.equals(name, newN)) {
                 // no translation
                 return ose;
             }

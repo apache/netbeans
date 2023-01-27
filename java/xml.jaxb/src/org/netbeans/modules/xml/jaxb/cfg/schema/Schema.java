@@ -448,7 +448,7 @@ public class Schema {
 		}
 		if (childObj instanceof java.lang.String) {
 			java.lang.String child = (java.lang.String) childObj;
-			if (child == _Type) {
+			if (child.equals(_Type)) {
 				if (returnConstName) {
 					return TYPE;
 				} else if (returnSchemaName) {
@@ -459,7 +459,7 @@ public class Schema {
 					return "Type";
 				}
 			}
-			if (child == _Package) {
+			if (child.equals(_Package)) {
 				if (returnConstName) {
 					return PACKAGE;
 				} else if (returnSchemaName) {
@@ -470,7 +470,7 @@ public class Schema {
 					return "Package";
 				}
 			}
-			if (child == _Name) {
+			if (child.equals(_Name)) {
 				if (returnConstName) {
 					return NAME;
 				} else if (returnSchemaName) {

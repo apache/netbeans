@@ -201,14 +201,14 @@ class MappingPanel extends JPanel implements ActionListener,
 
     public void actionPerformed(ActionEvent evt) {
         if (evt.getSource() instanceof JButton) {
-            if (evt.getActionCommand() == ADD) {
+            if (ADD.equals(evt.getActionCommand())) {
                 FilterMappingData fmd = new FilterMappingData(deployData.getName());
                 MappingEditor editor = new MappingEditor(fmd, deployData.getServletNames());
                 editor.showEditor();
                 if (editor.isOK()) {
                     table.addRow(0, fmd);
                 }
-            } else if (evt.getActionCommand() == EDIT) {
+            } else if (EDIT.equals(evt.getActionCommand())) {
                 int index = table.getSelectedRow();
                 FilterMappingData fmd, fmd2;
                 fmd = table.getRow(index);
@@ -218,16 +218,16 @@ class MappingPanel extends JPanel implements ActionListener,
                 if (editor.isOK()) {
                     table.setRow(index, fmd2);
                 }
-            } else if (evt.getActionCommand() == REMOVE) {
+            } else if (REMOVE.equals(evt.getActionCommand())) {
                 int index = table.getSelectedRow();
                 table.removeRow(index);
                 table.clearSelection();
-            } else if (evt.getActionCommand() == UP) {
+            } else if (UP.equals(evt.getActionCommand())) {
                 int index = table.getSelectedRow();
                 table.moveRowUp(index);
                 table.setRowSelectionInterval(index - 1, index - 1);
 
-            } else if (evt.getActionCommand() == DOWN) {
+            } else if (DOWN.equals(evt.getActionCommand())) {
                 int index = table.getSelectedRow();
                 table.moveRowDown(index);
                 table.setRowSelectionInterval(index + 1, index + 1);

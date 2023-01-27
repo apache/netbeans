@@ -446,11 +446,11 @@ public final class CustomizerSupport {
             c.weighty = 1.0;
             ((GridBagLayout)this.getLayout()).setConstraints(spane,c);
             add(spane);
-            if (type == SOURCES || type == JAVADOC) {
+            if (SOURCES.equals(type) || JAVADOC.equals(type)) {
                 this.addButton = new JButton ();
                 String text;
                 char mne;
-                if (type == SOURCES) {
+                if (SOURCES.equals(type)) {
                     text = NbBundle.getMessage(CustomizerSupport.class, "CTL_Add");
                     mne = NbBundle.getMessage(CustomizerSupport.class, "MNE_Add").charAt(0);
                     ad = NbBundle.getMessage(CustomizerSupport.class, "AD_Add");
@@ -709,7 +709,7 @@ public final class CustomizerSupport {
         }
 
         private void selectionChanged () {
-            if (this.type == CLASSPATH) {
+            if (CLASSPATH.equals(this.type)) {
                 return;
             }
             int indices[] = this.resources.getSelectedIndices();

@@ -44,7 +44,7 @@ public class ViewActions extends AbstractAction {
     }
 
     public Object getValue(String key) {
-        if (key == Action.NAME) {
+        if (Action.NAME.equals(key)) {
             return NbBundle.getMessage (ViewActions.class, (String) super.getValue(key));
         }
         Object value = super.getValue(key);

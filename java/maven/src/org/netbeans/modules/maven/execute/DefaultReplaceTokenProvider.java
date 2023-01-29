@@ -135,7 +135,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                 if (first) {
                     first = false;
                 } else {
-                    if (!isTest && !(ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) ||
+                    if (!isTest && !(ActionProvider.COMMAND_INTEGRATION_TEST_SINGLE.equals(actionName) ||
                                      ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName) ||
                                      ActionProvider.COMMAND_PROFILE_TEST_SINGLE.equals(actionName) ||
                                      ActionProvider.COMMAND_TEST.equals(actionName))) {
@@ -156,7 +156,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                         packClassname.append(pkg).append(".**."); // test everything under this package recusively
                     }
                     packClassname.append("*");
-                    if (ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) || ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName)) {
+                    if (ActionProvider.COMMAND_INTEGRATION_TEST_SINGLE.equals(actionName) || ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName)) {
                         packClassname.append("Test");
                     }
                     classname.append(pkg); // ?
@@ -179,7 +179,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                     }
                     classnameExt.append(file.getNameExt());
                     if (MavenSourcesImpl.NAME_SOURCE.equals(group.getName()) &&
-                        (ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) ||
+                        (ActionProvider.COMMAND_INTEGRATION_TEST_SINGLE.equals(actionName) ||
                          ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName) ||
                          ActionProvider.COMMAND_PROFILE_TEST_SINGLE.equals(actionName))) {
                         String fix = "Test";
@@ -208,7 +208,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
         } else {
             // not all of the selected files are under one source root, so maybe they were
             // selected from both source and test packages and "Test Files" action was invoked on them?
-            if (ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) ||
+            if (ActionProvider.COMMAND_INTEGRATION_TEST_SINGLE.equals(actionName) ||
                 ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE.equals(actionName) ||
                 ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName)) 
             {
@@ -368,9 +368,9 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
             if (isIntegrationTestTarget(lookup)) {
                 return ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE;
             }
-            return ActionProvider.COMMAND_TEST_SINGLE;
+            return ActionProvider.COMMAND_INTEGRATION_TEST_SINGLE;
         }
-        if (ActionProvider.COMMAND_TEST_SINGLE.equals(action) && isIntegrationTestTarget(lookup)) {
+        if (ActionProvider.COMMAND_INTEGRATION_TEST_SINGLE.equals(action) && isIntegrationTestTarget(lookup)) {
             return ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE;
         }
         if (ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(action) && isIntegrationTestTarget(lookup)) {

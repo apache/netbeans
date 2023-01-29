@@ -186,20 +186,10 @@ jobs:
         run: ant $OPTS -Dcluster.config=release commit-validation
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
-          paths: "./nbbuild/build/test/commit-validation/results/*.xml"
-
-# the test-summary action above is currently only looking for failures and ignores errors,
-# this step can be removed as soon this is fixed upstream
-      - name: Upload Test Results
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: validation-log-linux-${{ matrix.java }}
-          path: /home/runner/work/netbeans/netbeans/nbbuild/build/test/commit-validation/results/
-          retention-days: 1
+          paths: "./nbbuild/build/test/commit-validation/results/TEST-*.xml"
 
 
   # commit related checks - some steps run even when the build is dissabled
@@ -677,7 +667,7 @@ jobs:
         run: ant $OPTS -f ide/xsl test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -780,7 +770,7 @@ jobs:
         run: ant $OPTS -f extide/o.apache.tools.ant.module test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -983,7 +973,7 @@ jobs:
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/netbinox test -Dtest.config=stableBTD
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1138,7 +1128,7 @@ jobs:
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/o.n.bootstrap test
  
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1206,7 +1196,7 @@ jobs:
         run: ant $OPTS -f nb/welcome test
         
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1408,7 +1398,7 @@ jobs:
         run: ant $OPTS -f java/javadoc test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1462,7 +1452,7 @@ jobs:
         run: ant $OPTS -f apisupport/timers test -Dtest.config=stable
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1513,7 +1503,7 @@ jobs:
         run: ant $OPTS -f java/spi.java.hints test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1555,7 +1545,7 @@ jobs:
         run: ant $OPTS -f profiler/profiler.oql test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1691,7 +1681,7 @@ jobs:
         run: ant $OPTS -f webcommon/web.inspect test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1732,12 +1722,12 @@ jobs:
         run: ant $OPTS -Dcluster.config=release commit-validation
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: |
             "./*/*/build/test/*/results/TEST-*.xml"
-            "./nbbuild/build/test/commit-validation/results/*.xml"
+            "./nbbuild/build/test/commit-validation/results/TEST-*.xml"
 
 
   javafx-test:
@@ -1776,7 +1766,7 @@ jobs:
 #        run: ant $OPTS -f javafx/javafx2.project test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1832,7 +1822,7 @@ jobs:
 #        run: ant $OPTS -f groovy/groovy.kit test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1886,7 +1876,7 @@ jobs:
         run: ant $OPTS -f enterprise/websvc.wsstackapi test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1951,7 +1941,7 @@ jobs:
           ant $OPTS -f ide/versioning test-qa-functional
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2008,7 +1998,7 @@ jobs:
         run: .github/retry.sh ant $OPTS $OPTS_TEST -f ide/db.mysql test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2152,7 +2142,7 @@ jobs:
         run: ant $OPTS -f php/spellchecker.bindings.php test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2193,7 +2183,7 @@ jobs:
         run: .github/retry.sh ant $OPTS -f java/java.lsp.server test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2260,7 +2250,7 @@ jobs:
         run: .github/retry.sh ant $OPTS -f java/debugger.jpda.truffle test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"

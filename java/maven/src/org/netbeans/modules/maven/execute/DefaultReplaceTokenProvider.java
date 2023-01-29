@@ -84,20 +84,25 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
     }
 
     private static FileObject[] extractFileObjectsfromLookup(Lookup lookup) {
-        List<FileObject> files = new ArrayList<FileObject>(lookup.lookupAll(FileObject.class));
-        if (files.isEmpty()) { // fallback to old nodes
-            for (DataObject d : lookup.lookupAll(DataObject.class)) {
-                files.add(d.getPrimaryFile());
-            }
+    List<FileObject> files = new ArrayList<FileObject>(lookup.lookupAll(FileObject.class));
+    if (files.isEmpty()) { // fallback to old nodes
+        for (DataObject d : lookup.lookupAll(DataObject.class)) {
+            files.add(d.getPrimaryFile());
         }
-        Collection<? extends SingleMethod> methods = lookup.lookupAll(SingleMethod.class);
-        if (methods.size() == 1) {
-            SingleMethod method = methods.iterator().next();
-            files.add(method.getFile());
-        }
+    }
+    Collection<? extends SingleMethod> methods = lookup.lookupAll(SingleMethod.class);
+    if (methods.size() == 1) {
+        SingleMethod method = methods.iterator().next();
+        files.add(method.getFile());
+    }
 
+    if (files.isEmpty()) {
+        return new FileObject[0];
+    } else {
         return files.toArray(new FileObject[files.size()]);
     }
+}
+
 
     @Override public Map<String, String> createReplacements(String actionName, Lookup lookup) {
         FileObject[] fos = extractFileObjectsfromLookup(lookup);

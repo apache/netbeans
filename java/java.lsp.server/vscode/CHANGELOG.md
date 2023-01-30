@@ -20,6 +20,12 @@
     under the License.
 
 -->
+## Version 16.0.301
+* Multistep wizard added to connect to Autonomous DB 
+* Fixes for obtaining projects information
+* Temporary fix: Support extra cluster directories.
+* Support for GraalVM MX projects updated
+
 ## Version 16.0.1
 * Gradle 7.6 support to work on JDK 19
 * Proxy autodection and configuration for Maven & Gradle

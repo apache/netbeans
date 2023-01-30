@@ -20,6 +20,9 @@
     under the License.
 
 -->
+## Version 17.0.0
+* Various bug fixes
+
 ## Version 16.0.301
 * Multistep wizard added to connect to Autonomous DB 
 * Fixes for obtaining projects information

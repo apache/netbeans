@@ -62,15 +62,15 @@ import org.openide.util.Parameters;
  */
 class NodeWidget<I extends GraphNodeImplementation> extends Widget implements ActionListener {
 
-    static final Color ROOT = new Color(178, 228, 255);
-    static final Color DIRECTS = new Color(178, 228, 255);
-    static final Color DIRECTS_CONFLICT = new Color(235, 88, 194);
-    static final Color DISABLE_HIGHTLIGHT = new Color(255, 255, 194);
-    static final Color HIGHTLIGHT = new Color(255, 255, 129);
-    static final Color DISABLE_CONFLICT = new Color(219, 155, 153);
-    static final Color CONFLICT = new Color(219, 11, 5);
-    static final Color MANAGED = new Color(30, 255, 150);
-    static final Color WARNING = new Color(255, 150, 20);
+    static final Color ROOT = new Color(178, 228, 255, 180);
+    static final Color DIRECTS = new Color(178, 228, 255, 180);
+    static final Color DIRECTS_CONFLICT = new Color(235, 88, 194, 180);
+    static final Color DISABLE_HIGHTLIGHT = new Color(255, 255, 194, 180);
+    static final Color HIGHTLIGHT = new Color(255, 255, 129, 180);
+    static final Color DISABLE_CONFLICT = new Color(219, 155, 153, 180);
+    static final Color CONFLICT = new Color(219, 11, 5, 180);
+    static final Color MANAGED = new Color(30, 255, 150, 180);
+    static final Color WARNING = new Color(255, 150, 20, 180);
     static final Color DISABLE_WARNING = EdgeWidget.deriveColor(WARNING, 0.7f);
 
     private static final int LEFT_TOP = 1;
@@ -206,13 +206,21 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
 
     public void highlightText(String searchTerm) {
         if (searchTerm != null && node.getName().contains(searchTerm)) {
-            nodeW.setBackground(HIGHTLIGHT);
+            Color bgC = UIManager.getColor("TextPane.selectionBackground");
+            if (bgC == null) {
+                bgC = HIGHTLIGHT;
+            }
+            nodeW.setBackground(bgC);
             nodeW.setOpaque(true);
             setPaintState(EdgeWidget.REGULAR);
             setReadable(true);
         } else {
             //reset
-            nodeW.setBackground(Color.WHITE);
+            Color bgC = UIManager.getColor("TextArea.background");
+            if (bgC == null) {
+                bgC = Color.WHITE;
+            }
+            nodeW.setBackground(bgC);
             nodeW.setOpaque(false);
             setPaintState(EdgeWidget.GRAYED);
             setReadable(false);
@@ -264,6 +272,9 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
         if(versionW != null) {
             versionW.setForeground(foreC);
         }
+        if (node.isRoot()) {
+            versionW.setForeground(Color.BLACK);
+        }
         if (lockW != null) {
             lockW.setPaintAsDisabled(paintState == EdgeWidget.GRAYED);
             lockW.setVisible(!isDisabled);
@@ -304,6 +315,9 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
             versionW = new LabelWidget(scene);
             versionW.setLabel(scene.getVersion(node.getImpl()));
             versionW.setUseGlyphVector(true);
+            if (node.isRoot()) {
+                 versionW.setForeground(Color.BLACK);
+            }
             int mngState = node.getManagedState();
             if (mngState != GraphNode.UNMANAGED) { 
                  lockW = new ImageWidget(scene,
@@ -365,11 +379,11 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
         Rectangle bounds = getClientArea();
 
         if (node.isRoot()) {
-            paintBottom(g, bounds, ROOT, Color.WHITE, bounds.height / 2);
+            paintBottom(g, bounds, ROOT, ROOT, bounds.height / 2);
         } else {
             Color scopeC = scene.getColor(node);
             if(scopeC != null) {
-                paintCorner(RIGHT_BOTTOM, g, bounds, scopeC, Color.WHITE, bounds.width / 2, bounds.height / 2);
+                paintCorner(RIGHT_BOTTOM, g, bounds, scopeC, scopeC, bounds.width / 2, bounds.height / 2);
             }
             int conflictType = scene.supportsVersions() ? node.getConflictType(scene::isConflict, scene::compareVersions) : VERSION_NO_CONFLICT;
             Color leftTopC = null;
@@ -384,11 +398,11 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
                 }
             }
             if (leftTopC != null) {
-                paintCorner(LEFT_TOP, g, bounds, leftTopC, Color.WHITE, bounds.width, bounds.height / 2);
+                paintCorner(LEFT_TOP, g, bounds, leftTopC, leftTopC, bounds.width, bounds.height / 2);
             }
 
             if (node.getPrimaryLevel() == 1) {
-                paintBottom(g, bounds, DIRECTS, Color.WHITE, bounds.height / 6);
+                paintBottom(g, bounds, DIRECTS, DIRECTS, bounds.height / 6);
             }
         }
 

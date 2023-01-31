@@ -72,7 +72,7 @@
     </folder>
     <folder name="Templates">
         <folder name="Other">
-            <file name="EmptyYAML.yml" url="EmptyYAML.yml">
+            <file name="EmptyYAML.yaml" url="EmptyYAML.yaml">
                 <attr name="position" intvalue="850"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="templateCategory" stringvalue="simple-files"/>

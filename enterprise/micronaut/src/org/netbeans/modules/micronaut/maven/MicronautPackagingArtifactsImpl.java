@@ -66,11 +66,6 @@ public class MicronautPackagingArtifactsImpl implements ProjectArtifactsImplemen
      */
     public static final String PLUGIN_PARAM_SHAREDLIBRARY = "sharedLibrary"; // NOI18N
     
-    /**
-     * Maven goal that does the native-image compilation.
-     */
-    private static final String GOAL_NATIVE_COMPILE = "native:compile"; // NOI18N
-
     private static final Set<String> SUPPORTED_ARTIFACT_TYPES = new HashSet<>(Arrays.asList(
             MicronautMavenConstants.TYPE_DYNAMIC_LIBRARY, MicronautMavenConstants.TYPE_EXECUTABLE
     ));
@@ -122,6 +117,21 @@ public class MicronautPackagingArtifactsImpl implements ProjectArtifactsImplemen
     public boolean computeSupportsChanges(R r) {
         return true;
     }
+    
+    /**
+     * Goals that actually trigger native artifact generation. As they are compared by name with
+     * configurations, use both unprefixed and prefixed forms
+     */
+    private static final String[] NATIVE_ARTIFACT_BUILDERS = new String[] {
+        MicronautMavenConstants.PLUGIN_GOAL_COMPILE,
+        MicronautMavenConstants.PLUGIN_GOAL_COMPILE_NOFORK,
+        "native:" + MicronautMavenConstants.PLUGIN_GOAL_COMPILE,    // NOI18N
+        "native:" + MicronautMavenConstants.PLUGIN_GOAL_COMPILE_NOFORK, // NOI18N
+        
+        // Compatibility with plugin 0.9.13 and earlier:
+        MicronautMavenConstants.PLUGIN_GOAL_COMPILE_NOFORK_OLD,
+        "native:" + MicronautMavenConstants.PLUGIN_GOAL_COMPILE_NOFORK_OLD, // NOI18N
+    };
 
     static class R extends AbstractMicronautArtifacts {
 
@@ -173,9 +183,13 @@ public class MicronautPackagingArtifactsImpl implements ProjectArtifactsImplemen
             boolean explicitGraalvmGoal = false;
             if (buildCtx.getProjectAction() != null) {
                 RunConfig cfg = RunUtils.createRunConfig(buildCtx.getProjectAction(), getProject(), null, Lookup.EMPTY);
-                if (cfg != null && cfg.getGoals().contains(GOAL_NATIVE_COMPILE)) {
-                    LOG.log(Level.FINE, "Go explicit native compilation goal from the action");
-                    explicitGraalvmGoal = true;
+                Set<String> triggerGoals = new HashSet<>(Arrays.asList(NATIVE_ARTIFACT_BUILDERS));
+                if (cfg != null) {
+                    triggerGoals.retainAll(cfg.getGoals());
+                    if (!triggerGoals.isEmpty()) {
+                        LOG.log(Level.FINE, "Go explicit native compilation goal from the action");
+                        explicitGraalvmGoal = true;
+                    }
                 }
             }
             if (!explicitGraalvmGoal && !MicronautMavenConstants.PACKAGING_NATIVE.equals(model.getPackaging())) {
@@ -194,8 +208,11 @@ public class MicronautPackagingArtifactsImpl implements ProjectArtifactsImplemen
                 }
                 LOG.log(Level.FINE, "Configured executions: {0}", p.getExecutions());
                 for (PluginExecution pe : p.getExecutions()) {
-                    if (pe.getGoals().contains(MicronautMavenConstants.PLUGIN_GOAL_COMPILE_NOFORK)) { // NOI18N
-                        Xpp3Dom dom = model.getGoalConfiguration(MicronautMavenConstants.NATIVE_BUILD_PLUGIN_GROUP, MicronautMavenConstants.NATIVE_BUILD_PLUGIN_ID, pe.getId(), MicronautMavenConstants.PLUGIN_GOAL_COMPILE_NOFORK); // NOI18N
+                    Set<String> triggerGoals = new HashSet<>(Arrays.asList(NATIVE_ARTIFACT_BUILDERS));
+                    triggerGoals.retainAll(pe.getGoals());
+                    if (!triggerGoals.isEmpty()) {
+                        String goalName = triggerGoals.iterator().next();
+                        Xpp3Dom dom = model.getGoalConfiguration(MicronautMavenConstants.NATIVE_BUILD_PLUGIN_GROUP, MicronautMavenConstants.NATIVE_BUILD_PLUGIN_ID, pe.getId(), goalName); // NOI18N
                         if (dom != null) {
                             LOG.log(Level.FINE, "Found bound execution for goals {0}", pe.getGoals());
                             addNativeExecutable(nativeStuff, model, dom, pe);

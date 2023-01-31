@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.73
+#Version 1.74
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -9,6 +9,12 @@ CLSS public abstract interface java.io.Serializable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -510,6 +516,7 @@ meth public abstract void setDestructor(org.netbeans.api.debugger.DebuggerEngine
 supr java.lang.Object
 
 CLSS public abstract org.netbeans.spi.debugger.DelegatingSessionProvider
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth public abstract org.netbeans.api.debugger.Session getSession(org.netbeans.api.debugger.DebuggerInfo)
 supr java.lang.Object

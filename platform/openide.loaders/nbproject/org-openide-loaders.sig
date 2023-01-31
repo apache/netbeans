@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.88
+#Version 7.89
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -3334,6 +3334,7 @@ CLSS public abstract interface org.openide.loaders.CreateFromTemplateAttributesP
 meth public abstract java.util.Map<java.lang.String,?> attributesFor(org.openide.loaders.DataObject,org.openide.loaders.DataFolder,java.lang.String)
 
 CLSS public abstract org.openide.loaders.CreateFromTemplateHandler
+ anno 0 java.lang.Deprecated()
 cons public init()
 fld public final static java.lang.String FREE_FILE_EXTENSION = "freeFileExtension"
 meth protected abstract boolean accept(org.openide.filesystems.FileObject)

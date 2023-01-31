@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.1.0
+#Version 2.2.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -28,7 +28,7 @@ meth public java.awt.Dialog createDialog(org.openide.DialogDescriptor)
 meth public java.lang.Object notify(org.openide.NotifyDescriptor)
 meth public void notifyLater(org.openide.NotifyDescriptor)
 supr org.openide.DialogDisplayer
-hfds context
+hfds LOG
 
 CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractGlobalActionContext
 cons public init()

@@ -435,7 +435,7 @@ public final class VariousUtils {
             if (scalarType.equals(Scalar.Type.STRING)) {
                 String stringValue = scalar.getStringValue().toLowerCase();
                 if (stringValue.equals("false") || stringValue.equals("true")) { //NOI18N
-                    return Type.BOOLEAN;
+                    return Type.BOOL;
                 }
                 if (stringValue.equals(Type.NULL)) {
                     return Type.NULL;

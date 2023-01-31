@@ -186,7 +186,7 @@ public class UsedNamesCollector {
         @Override
         public void visit(PHPDocTypeNode node) {
             UsedNamespaceName usedName = new UsedNamespaceName(node);
-            if (isValidTypeName(usedName.getName())) {
+            if (isValidTypeName(usedName.getName()) && isValidAliasTypeName(usedName.getName())) {
                 processUsedName(usedName);
             }
         }
@@ -194,6 +194,10 @@ public class UsedNamesCollector {
         private boolean isValidTypeName(final String typeName) {
             return !SPECIAL_NAMES.contains(typeName) && !Type.isPrimitive(typeName);
         }
+        
+        private boolean isValidAliasTypeName(final String typeName) {
+            return !SPECIAL_NAMES.contains(typeName) && !Type.isPrimitiveAlias(typeName);
+        }        
 
         private void processUsedName(final UsedNamespaceName usedName) {
             List<UsedNamespaceName> usedNames = existingNames.get(usedName.getName());

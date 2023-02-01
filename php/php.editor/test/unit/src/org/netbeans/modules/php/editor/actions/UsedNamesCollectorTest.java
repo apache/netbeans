@@ -75,6 +75,14 @@ public class UsedNamesCollectorTest extends PHPTestBase {
     public void testUseCase_08() throws Exception {
         performTest("useCase_08", "class Class^Name {");
     }
+    
+    public void testUseCase_09() throws Exception {
+        performTest("useCase_09", "class Class^Name {");
+    }    
+    
+    public void testUseCase_10() throws Exception {
+        performTest("useCase_10", "class Class^Name {");
+    }       
 
     public void testIssue209755() throws Exception {
         performTest("issue209755", "class Class^Name {");

@@ -227,7 +227,7 @@ public class RatReportTask extends Task {
             if (repo != null) {
                 sb.append(repo).append("/tree/master/");
             }
-            sb.append(fileentry.replaceAll(" ", "%20"));
+            sb.append(fileentry.replace(" ", "%20"));
         }
         return sb.toString();
     }

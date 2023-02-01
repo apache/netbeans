@@ -289,7 +289,7 @@ public class JSFClientGenerator {
             if(wm.getDocumentBase().getFileObject(WELCOME_JSF_FL_PAGE)==null)//also there is no default facelet
             {
                 String content = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(RESOURCE_FOLDER + WELCOME_JSF_JSP_PAGE), "UTF-8"); //NOI18N
-                content = content.replaceAll(ENCODING_VAR, Matcher.quoteReplacement(projectEncoding));
+                content = content.replace(ENCODING_VAR, Matcher.quoteReplacement(projectEncoding));
                 FileObject target = FileUtil.createData(wm.getDocumentBase(), WELCOME_JSF_JSP_PAGE);
                 JSFFrameworkProvider.createFile(target, content, projectEncoding);
             }
@@ -307,7 +307,7 @@ public class JSFClientGenerator {
         if (pagesRootFolder.getFileObject(JSFCRUD_JAVASCRIPT) == null) {
             String content = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(RESOURCE_FOLDER + JSFCRUD_JAVASCRIPT), "UTF-8"); //NOI18N
             FileObject target = FileUtil.createData(pagesRootFolder, JSFCRUD_JAVASCRIPT);//NOI18N
-            content = content.replaceAll("__WEB_BUSY_ICON_PATH__", Matcher.quoteReplacement(busyIconPath));//NOI18N
+            content = content.replace("__WEB_BUSY_ICON_PATH__", Matcher.quoteReplacement(busyIconPath));//NOI18N
             JSFFrameworkProvider.createFile(target, content, projectEncoding);  //NOI18N
         }
 
@@ -451,8 +451,8 @@ public class JSFClientGenerator {
                 replaceCrux.append(endLine);
                 String managedBeanName = getManagedBeanName(simpleEntityName);
                 String commandLink = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + COMMAND_LINK_TEMPLATE), "UTF-8"); //NOI18N
-                commandLink = commandLink.replaceAll(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBeanName));
-                commandLink = commandLink.replaceAll(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
+                commandLink = commandLink.replace(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBeanName));
+                commandLink = commandLink.replace(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
                 if (content.indexOf(replaceCrux.toString()) > -1) {
                     //return, indicating welcomeJsp exists
                     return true;
@@ -510,12 +510,12 @@ public class JSFClientGenerator {
                 String commandLink = "";
                 if (pageLink == null || "".equals(pageLink)) {
                     commandLink = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + COMMAND_LINK_TEMPLATE), "UTF-8"); //NOI18N
-                    commandLink = commandLink.replaceAll(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBeanName));
-                    commandLink = commandLink.replaceAll(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
+                    commandLink = commandLink.replace(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBeanName));
+                    commandLink = commandLink.replace(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
                 } else {
                     commandLink = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + COMMAND_LINK_TEMPLATE2), "UTF-8"); //NOI18N
-                    commandLink = commandLink.replaceAll("\\_\\_PAGE\\_LINK\\_\\_", Matcher.quoteReplacement(pageLink));
-                    commandLink = commandLink.replaceAll(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
+                    commandLink = commandLink.replace("__PAGE_LINK__", Matcher.quoteReplacement(pageLink));
+                    commandLink = commandLink.replace(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
                 }
                 if (content.indexOf(commandLink) > -1) {
                     //return, indicating welcomeJsp exists
@@ -544,12 +544,12 @@ public class JSFClientGenerator {
         final Charset encoding = JpaControllerUtil.getProjectEncoding(project, jsfRoot);
 
         String content = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + LIST_JSP_TEMPLATE), "UTF-8"); //NOI18N
-        content = content.replaceAll(ENCODING_VAR, Matcher.quoteReplacement(encoding.name()));
-        content = content.replaceAll(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
-        content = content.replaceAll(LINK_TO_SS_VAR, Matcher.quoteReplacement(styleAndScriptTags));
-        content = content.replaceAll(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
-        content = content.replaceAll(FIELD_NAME_VAR, Matcher.quoteReplacement(fieldName+"Items"));  //NOI18N
-        content = content.replaceAll("__TABLE_VAR_NAME__", Matcher.quoteReplacement(tableVarName));
+        content = content.replace(ENCODING_VAR, Matcher.quoteReplacement(encoding.name()));
+        content = content.replace(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
+        content = content.replace(LINK_TO_SS_VAR, Matcher.quoteReplacement(styleAndScriptTags));
+        content = content.replace(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
+        content = content.replace(FIELD_NAME_VAR, Matcher.quoteReplacement(fieldName+"Items"));  //NOI18N
+        content = content.replace("__TABLE_VAR_NAME__", Matcher.quoteReplacement(tableVarName));
         
         final StringBuffer tableBody = new StringBuffer();
 
@@ -558,10 +558,10 @@ public class JSFClientGenerator {
         String jsfUtilClass = utilPackage + "." + PersistenceClientIterator.UTIL_CLASS_NAMES[1];
         
         String commands = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + COMMANDS_TEMPLATE), "UTF-8"); //NOI18N
-        commands = commands.replaceAll(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
-        commands = commands.replaceAll(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
-        commands = commands.replaceAll(JSF_UTIL_CLASS_VAR, Matcher.quoteReplacement(jsfUtilClass));
-        commands = commands.replaceAll("__REMOVE_METHOD__", useSessionBean ? "remove" : "destroy");
+        commands = commands.replace(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
+        commands = commands.replace(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
+        commands = commands.replace(JSF_UTIL_CLASS_VAR, Matcher.quoteReplacement(jsfUtilClass));
+        commands = commands.replace("__REMOVE_METHOD__", useSessionBean ? "remove" : "destroy");
 
         final String allCommands = commands;
 
@@ -574,8 +574,8 @@ public class JSFClientGenerator {
             }
         }, true);
 
-        content = content.replaceAll(TABLE_BODY_VAR, Matcher.quoteReplacement(tableBody.toString()));
-        content = content.replaceAll(LINK_TO_INDEX_VAR, Matcher.quoteReplacement(linkToIndex));
+        content = content.replace(TABLE_BODY_VAR, Matcher.quoteReplacement(tableBody.toString()));
+        content = content.replace(LINK_TO_INDEX_VAR, Matcher.quoteReplacement(linkToIndex));
         
         try {
             content = reformat(content, doc);
@@ -592,10 +592,10 @@ public class JSFClientGenerator {
             List<ElementHandle<ExecutableElement>> toOneRelMethods, boolean fieldAccess, String linkToIndex, BaseDocument doc, final FileObject jsfRoot, EmbeddedPkSupport embeddedPkSupport, String controllerClass, String styleAndScriptTags, String controllerPackage) throws FileStateInvalidException, IOException {
         final Charset encoding = JpaControllerUtil.getProjectEncoding(project, jsfRoot);
         String content = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + NEW_JSP_TEMPLATE), "UTF-8"); //NOI18N
-        content = content.replaceAll(ENCODING_VAR, Matcher.quoteReplacement(encoding.name()));
-        content = content.replaceAll(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
-        content = content.replaceAll(LINK_TO_SS_VAR, Matcher.quoteReplacement(styleAndScriptTags));
-        content = content.replaceAll(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
+        content = content.replace(ENCODING_VAR, Matcher.quoteReplacement(encoding.name()));
+        content = content.replace(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
+        content = content.replace(LINK_TO_SS_VAR, Matcher.quoteReplacement(styleAndScriptTags));
+        content = content.replace(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
 
         StringBuffer formBody = new StringBuffer();
         String utilPackage = controllerPackage == null || controllerPackage.length() == 0 ? PersistenceClientIterator.UTIL_FOLDER_NAME : controllerPackage + "." + PersistenceClientIterator.UTIL_FOLDER_NAME;
@@ -603,9 +603,9 @@ public class JSFClientGenerator {
 
         TypeElement typeElement = controller.getElements().getTypeElement(entityClass);
         JsfForm.createForm(controller, typeElement, JsfForm.FORM_TYPE_NEW, managedBean + "." + fieldName, formBody, entityClass, embeddedPkSupport, controllerClass, jsfUtilClass);
-        content = content.replaceAll(FORM_BODY_VAR, Matcher.quoteReplacement(formBody.toString()));
-        content = content.replaceAll(FIELD_NAME_VAR, Matcher.quoteReplacement(fieldName));
-        content = content.replaceAll(LINK_TO_INDEX_VAR, Matcher.quoteReplacement(linkToIndex));
+        content = content.replace(FORM_BODY_VAR, Matcher.quoteReplacement(formBody.toString()));
+        content = content.replace(FIELD_NAME_VAR, Matcher.quoteReplacement(fieldName));
+        content = content.replace(LINK_TO_INDEX_VAR, Matcher.quoteReplacement(linkToIndex));
 
         try {
             content = reformat(content, doc);
@@ -622,10 +622,10 @@ public class JSFClientGenerator {
         final Charset encoding = JpaControllerUtil.getProjectEncoding(project, jsfRoot);
 
         String content  = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + EDIT_JSP_TEMPLATE), "UTF-8"); //NOI18N
-        content = content.replaceAll(ENCODING_VAR, Matcher.quoteReplacement(encoding.name()));
-        content = content.replaceAll(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
-        content = content.replaceAll(LINK_TO_SS_VAR, Matcher.quoteReplacement(styleAndScriptTags));
-        content = content.replaceAll(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
+        content = content.replace(ENCODING_VAR, Matcher.quoteReplacement(encoding.name()));
+        content = content.replace(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
+        content = content.replace(LINK_TO_SS_VAR, Matcher.quoteReplacement(styleAndScriptTags));
+        content = content.replace(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
 
         StringBuffer formBody = new StringBuffer();
         
@@ -634,10 +634,10 @@ public class JSFClientGenerator {
         
         TypeElement typeElement = controller.getElements().getTypeElement(entityClass);        
         JsfForm.createForm(controller, typeElement, JsfForm.FORM_TYPE_EDIT, managedBean + "." + fieldName, formBody, entityClass, embeddedPkSupport, controllerClass, jsfUtilClass);
-        content = content.replaceAll(FORM_BODY_VAR, Matcher.quoteReplacement(formBody.toString()));
-        content = content.replaceAll(FIELD_NAME_VAR, Matcher.quoteReplacement(fieldName));
-        content = content.replaceAll(JSF_UTIL_CLASS_VAR, Matcher.quoteReplacement(jsfUtilClass));
-        content = content.replaceAll(LINK_TO_INDEX_VAR, Matcher.quoteReplacement(linkToIndex));
+        content = content.replace(FORM_BODY_VAR, Matcher.quoteReplacement(formBody.toString()));
+        content = content.replace(FIELD_NAME_VAR, Matcher.quoteReplacement(fieldName));
+        content = content.replace(JSF_UTIL_CLASS_VAR, Matcher.quoteReplacement(jsfUtilClass));
+        content = content.replace(LINK_TO_INDEX_VAR, Matcher.quoteReplacement(linkToIndex));
 
         try {
             content = reformat(content, doc);
@@ -655,10 +655,10 @@ public class JSFClientGenerator {
         final Charset encoding = JpaControllerUtil.getProjectEncoding(project, jsfRoot);
 
         String content  = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + DETAIL_JSP_TEMPLATE), "UTF-8"); //NOI18N
-        content = content.replaceAll(ENCODING_VAR, Matcher.quoteReplacement(encoding.name()));
-        content = content.replaceAll(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
-        content = content.replaceAll(LINK_TO_SS_VAR, Matcher.quoteReplacement(styleAndScriptTags));
-        content = content.replaceAll(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
+        content = content.replace(ENCODING_VAR, Matcher.quoteReplacement(encoding.name()));
+        content = content.replace(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
+        content = content.replace(LINK_TO_SS_VAR, Matcher.quoteReplacement(styleAndScriptTags));
+        content = content.replace(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
 
         String utilPackage = controllerPackage == null || controllerPackage.length() == 0 ? PersistenceClientIterator.UTIL_FOLDER_NAME : controllerPackage + "." + PersistenceClientIterator.UTIL_FOLDER_NAME;
         String jsfUtilClass = utilPackage + "." + PersistenceClientIterator.UTIL_CLASS_NAMES[1];
@@ -668,15 +668,15 @@ public class JSFClientGenerator {
         StringBuffer formBody = new StringBuffer();
         JsfForm.createForm(controller, typeElement, JsfForm.FORM_TYPE_DETAIL, managedBean + "." + fieldName, formBody, entityClass, embeddedPkSupport, controllerClass, jsfUtilClass);
 
-        content = content.replaceAll(FORM_BODY_VAR, Matcher.quoteReplacement(formBody.toString()));
+        content = content.replace(FORM_BODY_VAR, Matcher.quoteReplacement(formBody.toString()));
 
         StringBuffer tableBody = new StringBuffer();
         JsfForm.createTablesForRelated(controller, typeElement, JsfForm.FORM_TYPE_DETAIL, managedBean + "." + fieldName, idProperty, isInjection, tableBody, embeddedPkSupport, controllerClass, entities, jsfUtilClass);
-        content = content.replaceAll(TABLE_BODY_VAR, Matcher.quoteReplacement(tableBody.toString()));
-        content = content.replaceAll(FIELD_NAME_VAR,Matcher.quoteReplacement(fieldName));
-        content = content.replaceAll("__REMOVE_VALUE__", useSessionBean ? "remove" : "destroy");
-        content = content.replaceAll(JSF_UTIL_CLASS_VAR, Matcher.quoteReplacement(jsfUtilClass));
-        content = content.replaceAll(LINK_TO_INDEX_VAR, Matcher.quoteReplacement(linkToIndex));
+        content = content.replace(TABLE_BODY_VAR, Matcher.quoteReplacement(tableBody.toString()));
+        content = content.replace(FIELD_NAME_VAR,Matcher.quoteReplacement(fieldName));
+        content = content.replace("__REMOVE_VALUE__", useSessionBean ? "remove" : "destroy");
+        content = content.replace(JSF_UTIL_CLASS_VAR, Matcher.quoteReplacement(jsfUtilClass));
+        content = content.replace(LINK_TO_INDEX_VAR, Matcher.quoteReplacement(linkToIndex));
         try {
             content = reformat(content,doc);
         } catch (BadLocationException e) {

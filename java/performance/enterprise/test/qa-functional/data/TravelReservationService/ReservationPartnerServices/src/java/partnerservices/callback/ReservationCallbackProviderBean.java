@@ -103,7 +103,7 @@ public class ReservationCallbackProviderBean implements MessageDrivenBean, Messa
             } else {
                 return;
             }
-            soapStr = soapStr.replaceAll("ENTER_ID_HERE", uniqueID);
+            soapStr = soapStr.replace("ENTER_ID_HERE", uniqueID);
             sendSOAPMsg(cbURL, soapStr);
             
         } catch( javax.jms.JMSException  jmse) {

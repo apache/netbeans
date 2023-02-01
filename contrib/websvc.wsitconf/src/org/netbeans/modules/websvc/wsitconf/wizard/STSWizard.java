@@ -239,7 +239,7 @@ public class STSWizard implements TemplateWizard.Iterator {
 
                         for (String line : lines) {
                             if ((index = line.indexOf(SERVICENAME_TAG)) != -1) {
-                                line = line.replaceAll(SERVICENAME_TAG, serviceName);
+                                line = line.replace(SERVICENAME_TAG, serviceName);
                             }
                             writer.write(line);
                             writer.newLine();

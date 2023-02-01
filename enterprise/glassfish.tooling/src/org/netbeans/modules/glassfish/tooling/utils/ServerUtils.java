@@ -621,7 +621,7 @@ public class ServerUtils {
         if (str == null) {
             return null;
         }
-        return str.replaceAll(MANIFEST_EOL, "\n");
+        return str.replace(MANIFEST_EOL, "\n");
     }
 
     /**

@@ -208,7 +208,7 @@ public class GsettingsNetworkProxy {
             for (int i = 2; i < splittedLine.length; i++) {
                 value.append(splittedLine[i]);
             }
-            return value.toString().replaceAll(SINGLE_QUOTE, EMPTY_STRING);
+            return value.toString().replace(SINGLE_QUOTE, EMPTY_STRING);
         } else {
             return null;
         }

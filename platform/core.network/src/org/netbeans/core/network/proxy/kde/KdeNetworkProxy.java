@@ -123,9 +123,9 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
             LOGGER.log(Level.INFO, "KDE system proxy resolver: no proxy ({0})", noProxyFor); //NOI18N
             
             if (proxyType.equals(KIOSLAVERC_PROXY_TYPE_MANUAL)) {
-                httpProxy = httpProxy == null ? EMPTY_STRING : httpProxy.trim().replaceAll(SPACE, COLON);
-                httpsProxy = httpsProxy == null ? EMPTY_STRING : httpsProxy.trim().replaceAll(SPACE, COLON);
-                socksProxy = socksProxy == null ? EMPTY_STRING : socksProxy.trim().replaceAll(SPACE, COLON);
+                httpProxy = httpProxy == null ? EMPTY_STRING : httpProxy.trim().replace(SPACE, COLON);
+                httpsProxy = httpsProxy == null ? EMPTY_STRING : httpsProxy.trim().replace(SPACE, COLON);
+                socksProxy = socksProxy == null ? EMPTY_STRING : socksProxy.trim().replace(SPACE, COLON);
             }
             
             String[] noProxyHosts = getNoProxyHosts(noProxyFor);

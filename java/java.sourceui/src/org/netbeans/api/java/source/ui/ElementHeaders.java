@@ -104,7 +104,7 @@ public final class ElementHeaders {
                 return ElementHeaderFormater.getVariableHeader((VariableTree)tree, info, formatString);
             }
         }
-        return formatString.replaceAll(NAME, element.getSimpleName().toString()).replaceAll("%[a-z]*%", ""); //NOI18N
+        return formatString.replace(NAME, element.getSimpleName().toString()).replaceAll("%[a-z]*%", ""); //NOI18N
     }
     
      /** Computes distance between strings

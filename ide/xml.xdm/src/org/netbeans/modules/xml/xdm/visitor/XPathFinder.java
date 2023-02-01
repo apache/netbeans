@@ -265,7 +265,7 @@ public class XPathFinder extends ChildVisitor {
             if (hasConditions() && !prefix.startsWith(XPNS)) {
                 String prefixing = AT + prefix + COLON;
                 //TODO: a better RE to skip those already prefixed
-                xpath.append(remaining.replaceAll(AT, prefixing));
+                xpath.append(remaining.replace(AT, prefixing));
             } else {
                 xpath.append(remaining);
             }

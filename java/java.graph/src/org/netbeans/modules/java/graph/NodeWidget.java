@@ -20,7 +20,6 @@ package org.netbeans.modules.java.graph;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -43,6 +42,8 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.LevelOfDetailsWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
+import org.netbeans.api.visual.widget.general.IconNodeWidget;
+import org.netbeans.api.visual.widget.general.IconNodeWidget.TextOrientation;
 import static org.netbeans.modules.java.graph.Bundle.ACT_FixVersionConflict;
 import static org.netbeans.modules.java.graph.Bundle.TIP_MultipleConflict;
 import static org.netbeans.modules.java.graph.Bundle.TIP_MultipleWarning;
@@ -50,8 +51,6 @@ import static org.netbeans.modules.java.graph.Bundle.TIP_SingleConflict;
 import static org.netbeans.modules.java.graph.Bundle.TIP_SingleWarning;
 import static org.netbeans.modules.java.graph.DependencyGraphScene.VersionProvider.VERSION_CONFLICT;
 import static org.netbeans.modules.java.graph.DependencyGraphScene.VersionProvider.VERSION_NO_CONFLICT;
-import org.netbeans.api.visual.widget.general.IconNodeWidget;
-import org.netbeans.api.visual.widget.general.IconNodeWidget.TextOrientation;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Parameters;
@@ -67,8 +66,8 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
     static final Color DIRECTS_CONFLICT = new Color(235, 88, 194);
     static final Color DISABLE_HIGHTLIGHT = new Color(255, 255, 194);
     static final Color HIGHTLIGHT = new Color(255, 255, 129);
-    static final Color DISABLE_CONFLICT = new Color(219, 155, 153);
     static final Color CONFLICT = new Color(219, 11, 5);
+    static final Color DISABLE_CONFLICT = EdgeWidget.deriveColor(CONFLICT, 0.7f);
     static final Color MANAGED = new Color(30, 255, 150);
     static final Color WARNING = new Color(255, 150, 20);
     static final Color DISABLE_WARNING = EdgeWidget.deriveColor(WARNING, 0.7f);
@@ -85,6 +84,7 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
 
     private GraphNode<I> node;
     private boolean readable = false;
+    private boolean isHighlighted = false;
     private boolean enlargedFromHover = false;
 
     private Timer hoverTimer;
@@ -130,7 +130,7 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
             }
         }) : null;
         this.sceneHoverActionAction = sceneHoverActionAction;
-        
+
         setLayout(LayoutFactory.createVerticalFlowLayout());
 
         updateTooltip();
@@ -144,7 +144,7 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
             hoverBorderC = Color.GRAY;
         }
     }
-    
+
     @Messages({"TIP_Text=<html>{0}<br>{1}</html>",
                "TIP_SingleConflict=Conflict with <b>{0}</b> version required by <b>{1}</b>",
                "TIP_SingleWarning=Warning, older version <b>{0}</b> requested by <b>{1}</b>",
@@ -206,14 +206,15 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
 
     public void highlightText(String searchTerm) {
         if (searchTerm != null && node.getName().contains(searchTerm)) {
-            nodeW.setBackground(HIGHTLIGHT);
+            isHighlighted = true;
             nodeW.setOpaque(true);
             setPaintState(EdgeWidget.REGULAR);
             setReadable(true);
         } else {
             //reset
-            nodeW.setBackground(Color.WHITE);
+            isHighlighted = false;
             nodeW.setOpaque(false);
+            nodeW.getLabelWidget().setForeground(origForeground);
             setPaintState(EdgeWidget.GRAYED);
             setReadable(false);
         }
@@ -235,11 +236,11 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
     void setFixed(boolean fixed) {
         this.fixed = fixed;
     }
-    
+
     boolean isFixed() {
         return fixed;
     }
-    
+
     void updatePaintContent() {
         if (origForeground == null) {
             origForeground = getForeground();
@@ -254,15 +255,32 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
                 foreC = Color.LIGHT_GRAY;
             }
             if (isDisabled) {
-                foreC = new Color ((int)(foreC.getAlpha() / 1.3f), foreC.getRed(),
-                        foreC.getGreen(), foreC.getBlue());
+                foreC = new Color(foreC.getRed(), foreC.getGreen(), foreC.getBlue(), (int) (foreC.getAlpha() / 1.3f));
             }
         }
-
-        contentW.setBorder(BorderFactory.createLineBorder(10, foreC));
         nodeW.setForeground(foreC);
-        if(versionW != null) {
+        DependencyGraphScene scene = getDependencyGraphScene();
+        int conflictType = scene.supportsVersions() ? node.getConflictType(scene::isConflict, scene::compareVersions) : VERSION_NO_CONFLICT;
+        if (isHighlighted) {
+            nodeW.getLabelWidget().setForeground(Color.BLACK);
+        } else {
+            nodeW.getLabelWidget().setForeground(origForeground);
+            if (conflictType != VERSION_NO_CONFLICT) {
+                nodeW.getLabelWidget().setForeground(Color.BLACK);
+            } else {
+                int state = node.getManagedState();
+                if (GraphNode.OVERRIDES_MANAGED == state) {
+                    nodeW.getLabelWidget().setForeground(Color.BLACK);
+                }
+            }
+        }
+        contentW.setBorder(BorderFactory.createLineBorder(10, foreC));
+
+        if (versionW != null) {
             versionW.setForeground(foreC);
+        }
+        if (node.isRoot()) {
+            versionW.setForeground(Color.BLACK);
         }
         if (lockW != null) {
             lockW.setPaintAsDisabled(paintState == EdgeWidget.GRAYED);
@@ -284,6 +302,8 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
         //Artifact name (with optional project icon on the left)
         nodeW = new IconNodeWidget(scene, TextOrientation.RIGHT_CENTER);
         nodeW.setLabel(node.getImpl().getQualifiedName() + "  ");
+        nodeW.setBackground(HIGHTLIGHT);
+        nodeW.setOpaque(false);
 
         if (null != icon) {
             nodeW.setImage(ImageUtilities.icon2Image(icon));
@@ -291,12 +311,14 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
 
         nodeW.getLabelWidget().setUseGlyphVector(true);
 
+        Font defF = scene.getDefaultFont();
         if (node.isRoot()) {
-            Font defF = scene.getDefaultFont();
             nodeW.getLabelWidget().setFont(defF.deriveFont(Font.BOLD, defF.getSize() + 3f));
+        } else {
+            nodeW.getLabelWidget().setFont(defF);
         }
         contentW.addChild(nodeW);
-        
+
         if(getDependencyGraphScene().supportsVersions()) {
             Widget versionDetW = new LevelOfDetailsWidget(scene, 0.5, 0.7, Double.MAX_VALUE, Double.MAX_VALUE);
             versionDetW.setLayout(LayoutFactory.createHorizontalFlowLayout(LayoutFactory.SerialAlignment.CENTER, 2));
@@ -304,6 +326,9 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
             versionW = new LabelWidget(scene);
             versionW.setLabel(scene.getVersion(node.getImpl()));
             versionW.setUseGlyphVector(true);
+            if (node.isRoot()) {
+                 versionW.setForeground(Color.BLACK);
+            }
             int mngState = node.getManagedState();
             if (mngState != GraphNode.UNMANAGED) { 
                  lockW = new ImageWidget(scene,
@@ -357,19 +382,19 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
         super.paintBackground();
 
         if (paintState == EdgeWidget.DISABLED) {
+            nodeW.getLabelWidget().setForeground(origForeground);
             return;
         }
-
         DependencyGraphScene scene = getDependencyGraphScene();
         Graphics2D g = scene.getGraphics();
         Rectangle bounds = getClientArea();
 
         if (node.isRoot()) {
-            paintBottom(g, bounds, ROOT, Color.WHITE, bounds.height / 2);
+            paintBottom(g, bounds, ROOT, bounds.height / 2);
         } else {
             Color scopeC = scene.getColor(node);
-            if(scopeC != null) {
-                paintCorner(RIGHT_BOTTOM, g, bounds, scopeC, Color.WHITE, bounds.width / 2, bounds.height / 2);
+            if (scopeC != null) {
+                paintCorner(RIGHT_BOTTOM, g, bounds, scopeC, bounds.width / 2, bounds.height / 2);
             }
             int conflictType = scene.supportsVersions() ? node.getConflictType(scene::isConflict, scene::compareVersions) : VERSION_NO_CONFLICT;
             Color leftTopC = null;
@@ -384,11 +409,11 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
                 }
             }
             if (leftTopC != null) {
-                paintCorner(LEFT_TOP, g, bounds, leftTopC, Color.WHITE, bounds.width, bounds.height / 2);
+                paintCorner(LEFT_TOP, g, bounds, leftTopC, bounds.width, bounds.height / 2);
             }
 
             if (node.getPrimaryLevel() == 1) {
-                paintBottom(g, bounds, DIRECTS, Color.WHITE, bounds.height / 6);
+                paintBottom(g, bounds, DIRECTS, bounds.height / 6);
             }
         }
 
@@ -397,12 +422,7 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
         }
     }
 
-    private static void paintCorner (int corner, Graphics2D g, Rectangle bounds,
-            Color c1, Color c2, int x, int y) {
-        double h = y*y + x*x;
-        int gradX = (int)(y*y*x / h);
-        int gradY = (int)(y*x*x / h);
-
+    private static void paintCorner(int corner, Graphics2D g, Rectangle bounds, Color clr, int x, int y) {
         Point startPoint = new Point();
         Point direction = new Point();
         switch (corner) {
@@ -433,19 +453,15 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
             default:
                 throw new IllegalArgumentException("Corner id not valid"); //NOI18N
         }
-        
-        g.setPaint(new GradientPaint(startPoint.x, startPoint.y, c1,
-                startPoint.x + direction.x * gradX,
-                startPoint.y + direction.y * gradY, c2));
+        g.setPaint(clr);
         g.fillRect(
                 Math.min(startPoint.x, startPoint.x + direction.x * x),
                 Math.min(startPoint.y, startPoint.y + direction.y * y),
                 x, y);
     }
 
-    private static void paintBottom (Graphics2D g, Rectangle bounds, Color c1, Color c2, int thickness) {
-        g.setPaint(new GradientPaint(bounds.x, bounds.y + bounds.height, c1,
-                bounds.x, bounds.y + bounds.height - thickness, c2));
+    private static void paintBottom(Graphics2D g, Rectangle bounds, Color clr, int thickness) {
+        g.setPaint(clr);
         g.fillRect(bounds.x, bounds.y + bounds.height - thickness, bounds.width, thickness);
     }
 
@@ -484,7 +500,7 @@ class NodeWidget<I extends GraphNodeImplementation> extends Widget implements Ac
                 enlargedFromHover = false;
             }
         }
-        
+
         if (previousState.isSelected() != state.isSelected()) {
             updateNeeded = true;
         }

@@ -47,6 +47,7 @@ package org.netbeans.editor;
  *  by {@link org.netbeans.lib.editor.util.swing.DocumentUtilities#getText(javax.swing.text.Document)}.
  */
 
+@Deprecated
 public interface GapStart {
 
     /**

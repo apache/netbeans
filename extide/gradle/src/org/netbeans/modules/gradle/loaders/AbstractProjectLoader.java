@@ -25,9 +25,9 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.gradle.GradleProject;
-import org.netbeans.modules.gradle.GradleReport;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
@@ -118,7 +118,7 @@ public abstract class AbstractProjectLoader {
             }
         }
         for (String s : problems) {
-            reps.add(GradleReport.simple(gf.getBuildScript().toPath(), s));
+            reps.add(GradleProject.createGradleReport(gf.getBuildScript().toPath(), s));
         }
         return new GradleProject(info.getQuality(), reps, results.values());
 

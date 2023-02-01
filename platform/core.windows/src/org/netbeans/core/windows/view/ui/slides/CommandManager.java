@@ -204,7 +204,7 @@ final class CommandManager implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (TabbedContainer.COMMAND_POPUP_REQUEST.equals(e.getActionCommand())) {
             TabActionEvent tae = (TabActionEvent) e;
-            if (curSlidedComp != null && curSlidedComp instanceof TopComponent) {
+            if (curSlidedComp instanceof TopComponent) {
                 TopComponent tc = (TopComponent)curSlidedComp;
                 Action[] actions = slideBar.getTabbed().getPopupActions(tc.getActions(), curSlidedIndex);
                 if (actions == null) {

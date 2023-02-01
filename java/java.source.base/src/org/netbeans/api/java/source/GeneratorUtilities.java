@@ -133,6 +133,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
+
 /**
  *
  * @author Jan Lahoda, Dusan Balek
@@ -1048,6 +1049,22 @@ public final class GeneratorUtilities {
         } catch (Exception e) {}
         return copy.getTreeMaker().Block(Collections.emptyList(), false);
     }
+
+    /**
+     * Creates a default lambda expression.
+     *
+     * @param lambda a lambda to generate the expression for
+     * @param method a method of a functional interface to be implemented by the lambda expression
+     * @return the lambda expression
+     * @since 2.57
+     */
+    public ExpressionTree createDefaultLambdaExpression(LambdaExpressionTree lambda, ExecutableElement method) {
+        try {
+            String bodyTemplate = readFromTemplate(LAMBDA_EXPRESSION, createBindings(null, method)); //NOI18N
+            return copy.getTreeMaker().createLambdaExpression(lambda, bodyTemplate);
+        } catch (Exception e) {}
+        return null;
+    }
     
     private boolean isStarImport(ImportTree imp) {
         Tree qualIdent = imp.getQualifiedIdentifier();        
@@ -1260,9 +1277,8 @@ public final class GeneratorUtilities {
                     if (sym.getKind().isClass() || sym.getKind().isInterface()) {
                         if (sym != element) {
                             explicitNamedImports.add(element);
+                            break;// break if explicitNameImport was added
                         }
-                        // break if explicitNameImport was added, or when the symbol is correctly resolved.
-                        break;
                     }
                 }
             }
@@ -1329,6 +1345,7 @@ public final class GeneratorUtilities {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     if (currentToImportElement.getEnclosingElement().getKind() == ElementKind.PACKAGE)
                         el = currentToImportElement.getEnclosingElement();
                     break;
@@ -2175,6 +2192,7 @@ public final class GeneratorUtilities {
     private static final String GENERATED_METHOD_BODY = "Templates/Classes/Code/GeneratedMethodBody"; //NOI18N
     private static final String OVERRIDDEN_METHOD_BODY = "Templates/Classes/Code/OverriddenMethodBody"; //NOI18N
     private static final String LAMBDA_BODY = "Templates/Classes/Code/LambdaBody"; //NOI18N
+    private static final String LAMBDA_EXPRESSION = "Templates/Classes/Code/LambdaExpression"; //NOI18N
     private static final String METHOD_RETURN_TYPE = "method_return_type"; //NOI18N
     private static final String DEFAULT_RETURN_TYPE_VALUE = "default_return_value"; //NOI18N
     private static final String SUPER_METHOD_CALL = "super_method_call"; //NOI18N

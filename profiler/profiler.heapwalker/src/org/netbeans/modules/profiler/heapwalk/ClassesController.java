@@ -39,12 +39,12 @@ public class ClassesController extends AbstractTopLevelController implements Fie
         //~ Instance fields ------------------------------------------------------------------------------------------------------
 
         private final long javaClassID;
-        private final List expandedStaticFields;
+        private final List<TreePath> expandedStaticFields;
         private final TreePath selectedStaticField;
 
         //~ Constructors ---------------------------------------------------------------------------------------------------------
 
-        public Configuration(long javaClassID, List expandedStaticFields, TreePath selectedStaticField) {
+        public Configuration(long javaClassID, List<TreePath> expandedStaticFields, TreePath selectedStaticField) {
             this.javaClassID = javaClassID;
             this.expandedStaticFields = expandedStaticFields;
             this.selectedStaticField = selectedStaticField;
@@ -56,7 +56,7 @@ public class ClassesController extends AbstractTopLevelController implements Fie
             return javaClassID;
         }
         
-        public List getExpandedStaticFields() {
+        public List<TreePath> getExpandedStaticFields() {
             return expandedStaticFields;
         }
         
@@ -92,7 +92,7 @@ public class ClassesController extends AbstractTopLevelController implements Fie
     public Configuration getCurrentConfiguration() {
         // Selected class
         long selectedClassID = -1;
-        List expandedStaticFields = null;
+        List<TreePath> expandedStaticFields = null;
         TreePath selectedStaticField = null;
         JavaClass selectedClass = getSelectedClass();
 

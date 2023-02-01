@@ -33,13 +33,13 @@ import org.openide.util.lookup.ServiceProvider;
 public class DefaultOutputProcessorFactory implements ContextOutputProcessorFactory {
     
     @Override public Set<OutputProcessor> createProcessorsSet(Project project) {
-        Set<OutputProcessor> toReturn = new HashSet<OutputProcessor>();
+        Set<OutputProcessor> toReturn = new HashSet<>();
         if (project != null) {
             toReturn.add(new JavadocOutputProcessor());
             toReturn.add(new TestOutputListenerProvider());
             toReturn.add(new SiteOutputProcessor(project));
             NbMavenProjectImpl nbprj = project.getLookup().lookup(NbMavenProjectImpl.class);
-            toReturn.add(new ExecPluginOutputListenerProvider(nbprj));
+            toReturn.add(new JavaStacktraceOutputProcessor(nbprj));
             toReturn.add(new DependencyAnalyzeOutputProcessor(nbprj));
         }
         return toReturn;

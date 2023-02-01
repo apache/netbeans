@@ -35,9 +35,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLStreamHandler;
+import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -538,7 +540,8 @@ public final class FileUtil extends Object {
     }
 
     /** Copies file to the selected folder.
-     * This implementation simply copies the file by stream content.
+    * This implementation simply copies the file by stream content. Since version
+    * 9.32, the file POSIX permissions are copied as well.
     * @param source source file object
     * @param destFolder destination folder
     * @param newName file name (without extension) of destination file
@@ -567,6 +570,7 @@ public final class FileUtil extends Object {
             }
 
             copy(bufIn, bufOut);
+            copyPosixPerms(source, dest);
             copyAttributes(source, dest);
         } finally {
             if (bufIn != null) {
@@ -583,6 +587,17 @@ public final class FileUtil extends Object {
         }
 
         return dest;
+    }
+    
+    static void copyPosixPerms(FileObject source, FileObject dest) throws IOException {
+        Path src = toPath(source);
+        Path dst = toPath(dest);
+        if ((src != null) && (dst != null)) {
+            try {
+                Set<PosixFilePermission> perms = Files.getPosixFilePermissions(src);
+                Files.setPosixFilePermissions(dst, perms);
+            } catch (UnsupportedOperationException ex) {}
+        }
     }
 
     //
@@ -605,7 +620,9 @@ public final class FileUtil extends Object {
     }
 
     /** Copies file to the selected folder.
-    * This implementation simply copies the file by stream content.
+    * This implementation simply copies the file by stream content. Since version
+    * 9.32, the file POSIX permissions are copied as well.
+    *
     * @param source source file object
     * @param destFolder destination folder
     * @param newName file name (without extension) of destination file
@@ -620,7 +637,8 @@ public final class FileUtil extends Object {
     }
 
     /** Copies file to the selected folder.
-    * This implementation simply copies the file by stream content.
+    * This implementation simply copies the file by stream content. Since version
+    * 9.32, the file POSIX permissions are copied as well.
     * Uses the extension of the source file.
     * @param source source file object
     * @param destFolder destination folder
@@ -832,10 +850,22 @@ public final class FileUtil extends Object {
         assert assertNormalized(retVal, BaseUtilities.isMac()); // #240180
         return retVal;
     }
+    
+    /** Finds appropriate java.nio.file.Path to FileObject if possible.
+     * If not possible then null is returned.
+     * This is the inverse operation of {@link #toFileObject}.
+     * @param fo FileObject whose corresponding Path will be looked for
+     * @return java.nio.file.Path or null if no corresponding File exists.
+     * @since 9.32
+     */
+    public static Path toPath(FileObject fo) {
+        File f = toFile(fo);
+        return f != null ? f.toPath() : null;
+    }
 
     /**
      * Converts a disk file to a matching file object.
-     * This is the inverse operation of {@link #toFile}.
+     * This is the inverse operation of {@link #toFile(org.openide.filesystems.FileObject) }.
      * <p class="nonnormative">
      * If you are running with {@code org.netbeans.modules.masterfs} enabled,
      * this method should never return null for a file which exists on disk.
@@ -896,7 +926,24 @@ public final class FileUtil extends Object {
         }
         return retVal;
     }
-        
+    
+    /**
+     * Converts a Path to a FileObject if that is possible. It uses the
+     * {@link #toFileObject(java.io.File)} method with {@code path.toFile()}.
+     * if the conversion is not possible for some reason {@code null} is returned.
+     * 
+     * @param path the {@link Path} to be converted
+     * @return the {@link FileObject} representing the {@code path} or {@code null}
+     * @since 9.32
+     */
+    public static FileObject toFileObject(Path path) {
+        try {
+            return toFileObject(path.toFile());
+        } catch (UnsupportedOperationException ex) {
+            return null;
+        }
+    }
+    
     /** Finds appropriate FileObjects to java.io.File if possible.
      * If not possible then empty array is returned. More FileObjects may
      * correspond to one java.io.File that`s why array is returned.

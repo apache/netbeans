@@ -155,12 +155,16 @@ public class ServerSelectionHelper {
         // If <No Server> option was selected, show all supported profiles except Java EE 7 profiles
         if (ExecutionChecker.DEV_NULL.equals(serverInstance)) {
             if (J2eeModule.Type.WAR.equals(projectType)) {
+                profiles.add(Profile.JAKARTA_EE_10_WEB);
+                profiles.add(Profile.JAKARTA_EE_9_1_WEB);
                 profiles.add(Profile.JAKARTA_EE_9_WEB);
                 profiles.add(Profile.JAKARTA_EE_8_WEB);
                 profiles.add(Profile.JAVA_EE_8_WEB);
                 profiles.add(Profile.JAVA_EE_7_WEB);
                 profiles.add(Profile.JAVA_EE_6_WEB);
             } else {
+                profiles.add(Profile.JAKARTA_EE_10_FULL);
+                profiles.add(Profile.JAKARTA_EE_9_1_FULL);
                 profiles.add(Profile.JAKARTA_EE_9_FULL);
                 profiles.add(Profile.JAKARTA_EE_8_FULL);
                 profiles.add(Profile.JAVA_EE_8_FULL);
@@ -172,7 +176,7 @@ public class ServerSelectionHelper {
             try {
                 J2eePlatform pfm = findServerInstance(serverInstance).getJ2eePlatform();
                 Set<Profile> supported = pfm.getSupportedProfiles(projectType);
-                profiles.addAll(findServerInstance(serverInstance).getJ2eePlatform().getSupportedProfiles(projectType));
+                profiles.addAll(supported);
             } catch (InstanceRemovedException ex) {
                 // If selected instance was removed during the process we can easily refresh Server model list and update versions again
                 initServerModel(null);
@@ -184,12 +188,16 @@ public class ServerSelectionHelper {
 
             // We want to have Java EE 6 Full profile for all project types except Web project
             if (J2eeModule.Type.WAR.equals(projectType)) {
+                profiles.remove(Profile.JAKARTA_EE_10_FULL);
+                profiles.remove(Profile.JAKARTA_EE_9_1_FULL);
                 profiles.remove(Profile.JAKARTA_EE_9_FULL);
                 profiles.remove(Profile.JAKARTA_EE_8_FULL);
                 profiles.remove(Profile.JAVA_EE_8_FULL);
                 profiles.remove(Profile.JAVA_EE_7_FULL);
                 profiles.remove(Profile.JAVA_EE_6_FULL);
             } else {
+                profiles.remove(Profile.JAKARTA_EE_10_WEB);
+                profiles.remove(Profile.JAKARTA_EE_9_1_WEB);
                 profiles.remove(Profile.JAKARTA_EE_9_WEB);
                 profiles.remove(Profile.JAKARTA_EE_8_WEB);
                 profiles.remove(Profile.JAVA_EE_8_WEB);

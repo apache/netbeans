@@ -100,6 +100,12 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.languages.toml</code-name-base>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.languages.yaml</code-name-base>
                     <run-dependency>
                         <specification-version>2.1</specification-version>

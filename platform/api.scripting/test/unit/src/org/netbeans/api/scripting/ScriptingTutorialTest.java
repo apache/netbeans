@@ -27,13 +27,13 @@ public class ScriptingTutorialTest extends NbTestCase {
     }
 
     public void testFourtyTwo() throws Exception {
-        // BEGIN: org.netbeans.api.scripting.ScriptingTutorialTest#testFourtyTwo
+        // @start region="testFourtyTwo"
         ScriptEngine js = Scripting.createManager().getEngineByMimeType("text/javascript");
         assert js != null;
 
         Number x = (Number) js.eval("6 * 7");
 
         assert x.intValue() == 42;
-        // END: org.netbeans.api.scripting.ScriptingTutorialTest#testFourtyTwo
+        // @end region="testFourtyTwo"
     }
 }

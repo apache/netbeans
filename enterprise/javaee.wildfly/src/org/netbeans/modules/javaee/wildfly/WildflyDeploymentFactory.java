@@ -142,6 +142,7 @@ public class WildflyDeploymentFactory implements DeploymentFactory {
                     String path = name.replace('.', '/').concat(".class"); // NOI18N
                     try (InputStream is = super.getResourceAsStream(path)) {
                         ClassReader cr = new ClassReader(is);
+                        final ClassLoader ld = this;
                         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES) {
 
                             @Override
@@ -152,6 +153,13 @@ public class WildflyDeploymentFactory implements DeploymentFactory {
                                 }
                                 return super.getCommonSuperClass(string, string1);
                             }
+
+                            @Override
+                            protected ClassLoader getClassLoader() {
+                                return ld;
+                            }
+                            
+                            
                         };
                         ClassNode node = new ClassNode(Opcodes.ASM9);
                         cr.accept(node, 0);

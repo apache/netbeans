@@ -42,6 +42,7 @@ public class MarkFactory {
      * ends.
      * @deprecated syntax marks are no longer used to hold lexer states.
      */
+    @Deprecated
     public static class SyntaxMark extends Mark {
 
         /** Syntax mark state info */

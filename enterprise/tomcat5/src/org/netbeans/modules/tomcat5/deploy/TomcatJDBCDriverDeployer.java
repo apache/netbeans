@@ -74,10 +74,12 @@ public class TomcatJDBCDriverDeployer implements JDBCDriverDeployer {
         this.manager = manager;
     }
 
+    @Override
     public boolean supportsDeployJDBCDrivers(Target target) {
         return manager.getTomcatProperties().getDriverDeployment();
     }
 
+    @Override
     public ProgressObject deployJDBCDrivers(Target target, Set<Datasource> datasources) {
         return new DriverDeploymentProgressObject(datasources);
     }
@@ -96,6 +98,7 @@ public class TomcatJDBCDriverDeployer implements JDBCDriverDeployer {
             RequestProcessor.getDefault().post(this);
         }
 
+        @Override
         public void run() {
             List<FileObject> jdbcDriverFiles = jdbcDriversToDeploy();
             // deploy the driers if needed
@@ -104,19 +107,11 @@ public class TomcatJDBCDriverDeployer implements JDBCDriverDeployer {
                 for (FileObject file : jdbcDriverFiles) {
                     File libsDir = tp.getLibsDir();
                     File toJar = new File(libsDir, file.getNameExt());
-                    try {
-                        BufferedInputStream is = new BufferedInputStream(file.getInputStream());
-                        try {
-                            String msg = NbBundle.getMessage(TomcatJDBCDriverDeployer.class, "MSG_DeployingJDBCDrivers", toJar.getPath());
-                            eventSupport.fireHandleProgressEvent(null, new Status(ActionType.EXECUTE, CommandType.DISTRIBUTE, msg, StateType.RUNNING));
-                            BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(toJar));
-                            try {
-                                FileUtil.copy(is, os);
-                            } finally {
-                                os.close();
-                            }
-                        } finally {
-                            is.close();
+                    try (BufferedInputStream is = new BufferedInputStream(file.getInputStream())) {
+                        String msg = NbBundle.getMessage(TomcatJDBCDriverDeployer.class, "MSG_DeployingJDBCDrivers", toJar.getPath());
+                        eventSupport.fireHandleProgressEvent(null, new Status(ActionType.EXECUTE, CommandType.DISTRIBUTE, msg, StateType.RUNNING));
+                        try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(toJar))) {
+                            FileUtil.copy(is, os);
                         }
                     } catch (IOException e) {
                         LOG.log(Level.INFO, null, e);
@@ -133,7 +128,7 @@ public class TomcatJDBCDriverDeployer implements JDBCDriverDeployer {
 
         /** Returns a list of jdbc drivers that need to be deployed. */
         private List<FileObject> jdbcDriversToDeploy() {
-            List<FileObject> jdbcDriverFiles = new ArrayList<FileObject>();
+            List<FileObject> jdbcDriverFiles = new ArrayList<>();
             Collection<File> driverCP = getJDBCDriverClasspath();
             for (Datasource datasource : datasources) {
                 String className = datasource.getDriverClassName();
@@ -174,38 +169,47 @@ public class TomcatJDBCDriverDeployer implements JDBCDriverDeployer {
             return Arrays.asList(tp.getLibsDir().listFiles());
         }
 
+        @Override
         public DeploymentStatus getDeploymentStatus() {
             return eventSupport.getDeploymentStatus();
         }
 
+        @Override
         public TargetModuleID[] getResultTargetModuleIDs() {
             return null;
         }
 
+        @Override
         public ClientConfiguration getClientConfiguration(TargetModuleID targetModuleID) {
             return null;
         }
 
+        @Override
         public boolean isCancelSupported() {
             return false;
         }
 
+        @Override
         public void cancel() throws OperationUnsupportedException {
             throw new OperationUnsupportedException("Cancel is not supported"); // NOI18N
         }
 
+        @Override
         public boolean isStopSupported() {
             return false;
         }
 
+        @Override
         public void stop() throws OperationUnsupportedException {
             throw new OperationUnsupportedException("Stop is not supported"); // NOI18N
         }
 
+        @Override
         public void addProgressListener(ProgressListener progressListener) {
             eventSupport.addProgressListener(progressListener);
         }
 
+        @Override
         public void removeProgressListener(ProgressListener progressListener) {
             eventSupport.removeProgressListener(progressListener);
         }

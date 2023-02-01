@@ -20,9 +20,9 @@ METHOD     ceil(x: Number): Number         [PUBLIC,   JS Platform
 METHOD     clz32(x: Number): Number        [PUBLIC,   JS Platform
 METHOD     cos(x: Number): Number          [PUBLIC,   JS Platform
 METHOD     cosh(x: Number): Number         [PUBLIC,   JS Platform
-METHOD     create(o:  nul|Object , proper  [PUBLIC,   JS Platform
+METHOD     create(o: null|Object, propert  [PUBLIC,   JS Platform
 METHOD     defineProperties(o: Object, pr  [PUBLIC,   JS Platform
-METHOD     defineProperty(o: Object, p: S  [PUBLIC,   JS Platform
+METHOD     defineProperty(o: Object, p: N  [PUBLIC,   JS Platform
 METHOD     entries(o: Object): Object      [PUBLIC,   JS Platform
 METHOD     exp(x: Number): Number          [PUBLIC,   JS Platform
 METHOD     expm1(x: Number): Number        [PUBLIC,   JS Platform
@@ -35,8 +35,8 @@ METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
 METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
 METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
 METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
-METHOD     hasOwn(o: Object, v: String |   [PUBLIC,   JS Platform
-METHOD     hasOwnProperty(v: String | Sym  [PUBLIC]   JS Platform
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
 METHOD     hypot(values: Number): Number   [PUBLIC,   JS Platform
 METHOD     imul(x: Number, y: Number): Nu  [PUBLIC,   JS Platform
 METHOD     is(value1: Object, value2: Obj  [PUBLIC,   JS Platform
@@ -53,7 +53,7 @@ METHOD     max(values: Number): Number     [PUBLIC,   JS Platform
 METHOD     min(values: Number): Number     [PUBLIC,   JS Platform
 METHOD     pow(x: Number, y: Number): Num  [PUBLIC,   JS Platform
 METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(v: String  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 METHOD     random(): Number                [PUBLIC,   JS Platform
 METHOD     round(x: Number): Number        [PUBLIC,   JS Platform
 METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform

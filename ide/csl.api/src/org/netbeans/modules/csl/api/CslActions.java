@@ -100,6 +100,7 @@ public final class CslActions {
      * @deprecated use {@link CamelCaseInterceptor} instead
      * @return the action; never {@code null}.
      */
+    @Deprecated
     public static Action createCamelCasePositionAction(Action originalAction, boolean next) {
         return next
                 ? new NextCamelCasePosition(originalAction)
@@ -114,6 +115,7 @@ public final class CslActions {
      * @deprecated use {@link CamelCaseInterceptor} instead
      * @return the action; never {@code null}.
      */
+    @Deprecated
     public static Action createDeleteToCamelCasePositionAction(Action originalAction, boolean next) {
         return next
                 ? new DeleteToNextCamelCasePosition(originalAction)
@@ -128,6 +130,7 @@ public final class CslActions {
      * @deprecated use {@link CamelCaseInterceptor} instead
      * @return the action; never {@code null}.
      */
+    @Deprecated
     public static Action createSelectCamelCasePositionAction(Action originalAction, boolean next) {
         return next
                 ? new SelectNextCamelCasePosition(originalAction)

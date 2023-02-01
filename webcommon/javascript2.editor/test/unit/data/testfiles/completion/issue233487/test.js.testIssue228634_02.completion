@@ -5,6 +5,6 @@ myvar.p|
 CLASS      p                               [PUBLIC]   <font color=#999999>index.html</font>
 CLASS      prototype                       [PUBLIC]   JS Platform
 METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(v: String  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 FIELD      prop1: String                   [PUBLIC]   definition.js
 FIELD      prop2: String                   [PUBLIC]   definition.js

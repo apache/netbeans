@@ -335,6 +335,7 @@ public final class J2eePlatform implements Lookup.Provider {
      * @since 1.16
      * @deprecated {@link #getLookup()} should be used to obtain tool specifics
      */
+    @Deprecated
     public String getToolProperty(String toolName, String propertyName) {
         return impl.getToolProperty(toolName, propertyName);
     }
@@ -348,6 +349,7 @@ public final class J2eePlatform implements Lookup.Provider {
      *         <code>false</code> otherwise.
      * @deprecated {@link #getLookup()} should be used to obtain tool specifics
      */
+    @Deprecated
     public boolean isToolSupported(String toolName) {
         return impl.isToolSupported(toolName);
     }
@@ -390,6 +392,7 @@ public final class J2eePlatform implements Lookup.Provider {
      * @deprecated use {@link #getServerHome()} or {@link #getDomainHome()}
      *             or {@link #getMiddlewareHome()}
      */
+    @Deprecated
     public File[] getPlatformRoots() {
         return impl.getPlatformRoots();
     }
@@ -457,6 +460,7 @@ public final class J2eePlatform implements Lookup.Provider {
      * @return list of supported J2EE specification versions.
      * @deprecated use {@link #getSupportedProfiles()}
      */
+    @Deprecated
     public Set/*<String>*/ getSupportedSpecVersions() {
         boolean assertsEnabled = false;
         assert assertsEnabled = true;
@@ -477,6 +481,7 @@ public final class J2eePlatform implements Lookup.Provider {
      * @return list of supported J2EE specification versions.
      * @deprecated use {@link #getSupportedProfiles(java.lang.Object)}
      */
+    @Deprecated
     public Set<String> getSupportedSpecVersions(Object moduleType) {
         boolean assertsEnabled = false;
         assert assertsEnabled = true;
@@ -531,6 +536,7 @@ public final class J2eePlatform implements Lookup.Provider {
      * @return list of supported J2EE module types.
      * @deprecated use {@link #getSupportedTypes()}
      */
+    @Deprecated
     public Set getSupportedModuleTypes() {
         boolean assertsEnabled = false;
         assert assertsEnabled = true;

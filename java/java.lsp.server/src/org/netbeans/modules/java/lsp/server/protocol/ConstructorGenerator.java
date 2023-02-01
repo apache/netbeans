@@ -60,7 +60,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
-import org.netbeans.modules.java.lsp.server.input.LspInputServiceImpl;
+import org.netbeans.modules.java.lsp.server.input.InputService;
 import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.QuickPickStep;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
@@ -209,10 +209,10 @@ public final class ConstructorGenerator extends CodeActionsProvider {
                 }
                 future.complete(codeAction);
             } else {
-                LspInputServiceImpl inputService = Lookup.getDefault().lookup(LspInputServiceImpl.class);
-                if (inputService != null) {
+                InputService.Registry inputServiceRegistry = Lookup.getDefault().lookup(InputService.Registry.class);
+                if (inputServiceRegistry != null) {
                     int totalSteps = constructors.size() > 1 ? 2 : 1;
-                    String inputId = inputService.registerInput(params -> {
+                    String inputId = inputServiceRegistry.registerInput(params -> {
                         if (params.getStep() < totalSteps) {
                             Either<List<QuickPickItem>, String> constructorData = params.getData().get(CONSTRUCTORS);
                             if (constructorData != null) {
@@ -234,9 +234,8 @@ public final class ConstructorGenerator extends CodeActionsProvider {
                         } else {
                             return CompletableFuture.completedFuture(null);
                         }
-                    }, null);
+                    });
                     client.showMultiStepInput(new ShowMutliStepInputParams(inputId, Bundle.DN_GenerateConstructor())).thenAccept(result -> {
-                        inputService.unregisterInput(inputId);
                         Either<List<QuickPickItem>, String> selectedConstructors = result.get(CONSTRUCTORS);
                         Either<List<QuickPickItem>, String> selectedFields = result.get(FIELDS);
                         if (selectedFields != null) {

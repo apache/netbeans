@@ -34,15 +34,6 @@
     </folder>
     <folder name="jshell-snippets"/>
     <folder name="Editors">
-        <folder name="Popup">
-            <folder name="text">
-                <attr name="position" intvalue="9800"/>
-                <folder name="x-repl">
-                    <attr name="position" intvalue="9800"/>
-                </folder>
-            </folder>
-        </folder>
-
         <folder name="text">
             <folder name="x-repl">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.jshell.resources.Bundle"/>

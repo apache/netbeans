@@ -43,7 +43,7 @@ import org.openide.util.NbBundle;
  */
 public class JavaNetRepositoryErrorCustomizer extends javax.swing.JPanel {
     private final Preferences preferences;
-    private final Map<String, Object> id2Saved = new HashMap<String, Object>();
+    private final Map<String, Object> id2Saved = new HashMap<>();
 
     /** Creates new form ReleaseVersionErrorCustomizer */
     public JavaNetRepositoryErrorCustomizer(Preferences prefs) {
@@ -116,8 +116,7 @@ public class JavaNetRepositoryErrorCustomizer extends javax.swing.JPanel {
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -127,18 +126,17 @@ public class JavaNetRepositoryErrorCustomizer extends javax.swing.JPanel {
                             .addComponent(rbAny)
                             .addComponent(rbSelected)
                             .addComponent(jLabel1))
-                        .addGap(0, 124, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(rbAny)
                 .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addComponent(rbSelected)
                 .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addContainerGap())

@@ -2,3 +2,4 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.agent/1
 OpenIDE-Module-Name: Hello World Agent
 Agent-Class: org.agent.HelloWorldAgent
+OpenIDE-Module-Public-Packages: org.agent.*

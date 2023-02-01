@@ -243,7 +243,7 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
         checkPasswordLogic(passwd1, passwd2, (m) -> errorMessage(m));
     }
     
-    private static File getWalletsDir() throws IOException {
+    static File getWalletsDir() throws IOException {
         FileObject fo = FileUtil.createFolder(FileUtil.getConfigRoot(), WALLETS_PATH);
         return FileUtil.toFile(fo);
     }

@@ -163,6 +163,11 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
         }
 
         if (id == GroovyTokenId.STRING_LITERAL || id == GroovyTokenId.STRING_CH && offset < ts.offset()+ts.token().length()) {
+            String tokenText = token.text().toString();
+            if (id == GroovyTokenId.STRING_LITERAL 
+                    && (tokenText.startsWith("\"\"\"") || tokenText.startsWith("'''"))) {
+                return;
+            }
             String str = (id != GroovyTokenId.STRING_LITERAL || offset > ts.offset()) ? "\\n\\\n"  : "\\\n";
             context.setText(str, -1, str.length());
             return;

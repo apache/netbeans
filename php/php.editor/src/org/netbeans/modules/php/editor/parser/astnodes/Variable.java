@@ -19,11 +19,12 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * Holds a variable.
- * note that the variable name can be expression,
- * <pre>e.g.<pre> $a
- *
- * Subclasses: {@link ArrayAccess}, {@link ReflectionVariable}, {@link StaticFieldAccess}
+ * Holds a variable. note that the variable name can be expression.
+ * <pre>
+ * e.g.
+ * $a
+ * </pre> Subclasses: {@link ArrayAccess}, {@link ReflectionVariable}, {@link StaticFieldAccess},
+ * {@link ConstantVariable}
  */
 public class Variable extends VariableBase {
 

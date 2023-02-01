@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.68
+#Version 2.72
 
 CLSS public abstract interface !annotation com.google.common.annotations.Beta
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -1635,6 +1635,7 @@ fld protected org.apache.maven.project.ProjectBuilder projectBuilder
 fld protected org.codehaus.plexus.PlexusContainer container
  anno 0 org.codehaus.plexus.component.annotations.Requirement(boolean optional=false, java.lang.Class<?> role=class java.lang.Object, java.lang.String hint="", java.lang.String[] hints=[])
 intf org.apache.maven.Maven
+meth protected <%0 extends java.lang.Object> java.util.Collection<{%%0}> getProjectScopedExtensionComponents(java.util.Collection<org.apache.maven.project.MavenProject>,java.lang.Class<{%%0}>)
 meth protected org.codehaus.plexus.logging.Logger getLogger()
  anno 0 java.lang.Deprecated()
 meth public org.apache.maven.execution.MavenExecutionResult execute(org.apache.maven.execution.MavenExecutionRequest)
@@ -2413,6 +2414,7 @@ hfds merged,metadata
 hcls MetadataRepository
 
 CLSS public org.apache.maven.artifact.repository.metadata.Plugin
+ anno 0 java.lang.Deprecated()
 cons public init()
 intf java.io.Serializable
 intf java.lang.Cloneable
@@ -2505,10 +2507,13 @@ CLSS public org.apache.maven.artifact.repository.metadata.SnapshotVersion
 cons public init()
 intf java.io.Serializable
 intf java.lang.Cloneable
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
 meth public java.lang.String getClassifier()
 meth public java.lang.String getExtension()
 meth public java.lang.String getUpdated()
 meth public java.lang.String getVersion()
+meth public java.lang.String toString()
 meth public org.apache.maven.artifact.repository.metadata.SnapshotVersion clone()
 meth public void setClassifier(java.lang.String)
 meth public void setExtension(java.lang.String)
@@ -3067,6 +3072,35 @@ meth public java.lang.String getLocation()
 meth public java.lang.String toString()
 supr java.lang.Object
 hfds file
+
+CLSS public abstract interface org.apache.maven.building.Problem
+innr public final static !enum Severity
+meth public abstract int getColumnNumber()
+meth public abstract int getLineNumber()
+meth public abstract java.lang.Exception getException()
+meth public abstract java.lang.String getLocation()
+meth public abstract java.lang.String getMessage()
+meth public abstract java.lang.String getSource()
+meth public abstract org.apache.maven.building.Problem$Severity getSeverity()
+
+CLSS public final static !enum org.apache.maven.building.Problem$Severity
+ outer org.apache.maven.building.Problem
+fld public final static org.apache.maven.building.Problem$Severity ERROR
+fld public final static org.apache.maven.building.Problem$Severity FATAL
+fld public final static org.apache.maven.building.Problem$Severity WARNING
+meth public static org.apache.maven.building.Problem$Severity valueOf(java.lang.String)
+meth public static org.apache.maven.building.Problem$Severity[] values()
+supr java.lang.Enum<org.apache.maven.building.Problem$Severity>
+
+CLSS public abstract interface org.apache.maven.building.ProblemCollector
+meth public abstract java.util.List<org.apache.maven.building.Problem> getProblems()
+meth public abstract void add(org.apache.maven.building.Problem$Severity,java.lang.String,int,int,java.lang.Exception)
+meth public abstract void setSource(java.lang.String)
+
+CLSS public org.apache.maven.building.ProblemCollectorFactory
+cons public init()
+meth public static org.apache.maven.building.ProblemCollector newInstance(java.util.List<org.apache.maven.building.Problem>)
+supr java.lang.Object
 
 CLSS public abstract interface org.apache.maven.building.Source
 meth public abstract java.io.InputStream getInputStream() throws java.io.IOException
@@ -4906,6 +4940,7 @@ meth public org.apache.maven.model.building.DefaultModelBuilder setModelUrlNorma
 meth public org.apache.maven.model.building.DefaultModelBuilder setModelValidator(org.apache.maven.model.validation.ModelValidator)
 meth public org.apache.maven.model.building.DefaultModelBuilder setPluginConfigurationExpander(org.apache.maven.model.plugin.PluginConfigurationExpander)
 meth public org.apache.maven.model.building.DefaultModelBuilder setPluginManagementInjector(org.apache.maven.model.management.PluginManagementInjector)
+meth public org.apache.maven.model.building.DefaultModelBuilder setProfileActivationFilePathInterpolator(org.apache.maven.model.path.ProfileActivationFilePathInterpolator)
 meth public org.apache.maven.model.building.DefaultModelBuilder setProfileInjector(org.apache.maven.model.profile.ProfileInjector)
 meth public org.apache.maven.model.building.DefaultModelBuilder setProfileSelector(org.apache.maven.model.profile.ProfileSelector)
 meth public org.apache.maven.model.building.DefaultModelBuilder setReportConfigurationExpander(org.apache.maven.model.plugin.ReportConfigurationExpander)
@@ -4915,7 +4950,7 @@ meth public org.apache.maven.model.building.ModelBuildingResult build(org.apache
 meth public org.apache.maven.model.building.ModelBuildingResult build(org.apache.maven.model.building.ModelBuildingRequest,org.apache.maven.model.building.ModelBuildingResult) throws org.apache.maven.model.building.ModelBuildingException
 meth public org.apache.maven.model.building.Result<? extends org.apache.maven.model.Model> buildRawModel(java.io.File,int,boolean)
 supr java.lang.Object
-hfds dependencyManagementImporter,dependencyManagementInjector,inheritanceAssembler,lifecycleBindingsInjector,modelInterpolator,modelNormalizer,modelPathTranslator,modelProcessor,modelUrlNormalizer,modelValidator,pluginConfigurationExpander,pluginManagementInjector,profileInjector,profileSelector,reportConfigurationExpander,reportingConverter,superPomProvider
+hfds dependencyManagementImporter,dependencyManagementInjector,inheritanceAssembler,lifecycleBindingsInjector,modelInterpolator,modelNormalizer,modelPathTranslator,modelProcessor,modelUrlNormalizer,modelValidator,pluginConfigurationExpander,pluginManagementInjector,profileActivationFilePathInterpolator,profileInjector,profileSelector,reportConfigurationExpander,reportingConverter,superPomProvider
 
 CLSS public org.apache.maven.model.building.DefaultModelBuilderFactory
 cons public init()
@@ -4923,6 +4958,7 @@ meth protected org.apache.maven.model.building.ModelProcessor newModelProcessor(
 meth protected org.apache.maven.model.composition.DependencyManagementImporter newDependencyManagementImporter()
 meth protected org.apache.maven.model.inheritance.InheritanceAssembler newInheritanceAssembler()
 meth protected org.apache.maven.model.interpolation.ModelInterpolator newModelInterpolator()
+meth protected org.apache.maven.model.interpolation.ModelVersionProcessor newModelVersionPropertiesProcessor()
 meth protected org.apache.maven.model.io.ModelReader newModelReader()
 meth protected org.apache.maven.model.locator.ModelLocator newModelLocator()
 meth protected org.apache.maven.model.management.DependencyManagementInjector newDependencyManagementInjector()
@@ -4931,6 +4967,7 @@ meth protected org.apache.maven.model.normalization.ModelNormalizer newModelNorm
 meth protected org.apache.maven.model.path.ModelPathTranslator newModelPathTranslator()
 meth protected org.apache.maven.model.path.ModelUrlNormalizer newModelUrlNormalizer()
 meth protected org.apache.maven.model.path.PathTranslator newPathTranslator()
+meth protected org.apache.maven.model.path.ProfileActivationFilePathInterpolator newProfileActivationFilePathInterpolator()
 meth protected org.apache.maven.model.path.UrlNormalizer newUrlNormalizer()
 meth protected org.apache.maven.model.plugin.LifecycleBindingsInjector newLifecycleBindingsInjector()
 meth protected org.apache.maven.model.plugin.PluginConfigurationExpander newPluginConfigurationExpander()
@@ -5304,8 +5341,12 @@ meth public void write(java.io.Writer,org.apache.maven.model.Model) throws java.
 supr java.lang.Object
 hfds NAMESPACE,fileComment
 
+CLSS abstract interface org.apache.maven.model.io.xpp3.package-info
+
 CLSS public abstract interface org.apache.maven.model.locator.ModelLocator
 meth public abstract java.io.File locatePom(java.io.File)
+
+CLSS abstract interface org.apache.maven.model.package-info
 
 CLSS public org.apache.maven.model.resolution.InvalidRepositoryException
 cons public init(java.lang.String,org.apache.maven.model.Repository)
@@ -7608,6 +7649,109 @@ meth public void write(java.io.Writer,org.apache.maven.settings.Settings) throws
 supr java.lang.Object
 hfds NAMESPACE,fileComment
 
+CLSS public abstract interface org.apache.maven.shared.dependency.graph.DependencyGraphBuilder
+meth public abstract org.apache.maven.shared.dependency.graph.DependencyNode buildDependencyGraph(org.apache.maven.project.MavenProject,org.apache.maven.artifact.resolver.filter.ArtifactFilter) throws org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException
+meth public abstract org.apache.maven.shared.dependency.graph.DependencyNode buildDependencyGraph(org.apache.maven.project.MavenProject,org.apache.maven.artifact.resolver.filter.ArtifactFilter,java.util.Collection<org.apache.maven.project.MavenProject>) throws org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException
+
+CLSS public org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+supr java.lang.Exception
+hfds serialVersionUID
+
+CLSS public abstract interface org.apache.maven.shared.dependency.graph.DependencyNode
+meth public abstract boolean accept(org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor)
+meth public abstract java.lang.String getPremanagedScope()
+meth public abstract java.lang.String getPremanagedVersion()
+meth public abstract java.lang.String getVersionConstraint()
+meth public abstract java.lang.String toNodeString()
+meth public abstract java.util.List<org.apache.maven.shared.dependency.graph.DependencyNode> getChildren()
+meth public abstract org.apache.maven.artifact.Artifact getArtifact()
+meth public abstract org.apache.maven.shared.dependency.graph.DependencyNode getParent()
+
+CLSS public org.apache.maven.shared.dependency.graph.filter.AncestorOrSelfDependencyNodeFilter
+cons public init(java.util.List<org.apache.maven.shared.dependency.graph.DependencyNode>)
+cons public init(org.apache.maven.shared.dependency.graph.DependencyNode)
+intf org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter
+meth public boolean accept(org.apache.maven.shared.dependency.graph.DependencyNode)
+supr java.lang.Object
+hfds descendantNodes
+
+CLSS public org.apache.maven.shared.dependency.graph.filter.AndDependencyNodeFilter
+cons public init(java.util.List<org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter>)
+cons public init(org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter,org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter)
+intf org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter
+meth public boolean accept(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public java.util.List<org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter> getDependencyNodeFilters()
+supr java.lang.Object
+hfds filters
+
+CLSS public org.apache.maven.shared.dependency.graph.filter.ArtifactDependencyNodeFilter
+cons public init(org.apache.maven.artifact.resolver.filter.ArtifactFilter)
+intf org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter
+meth public boolean accept(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public org.apache.maven.artifact.resolver.filter.ArtifactFilter getArtifactFilter()
+supr java.lang.Object
+hfds filter
+
+CLSS public abstract interface org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter
+meth public abstract boolean accept(org.apache.maven.shared.dependency.graph.DependencyNode)
+
+CLSS public org.apache.maven.shared.dependency.graph.traversal.BuildingDependencyNodeVisitor
+cons public init()
+cons public init(org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor)
+intf org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor
+meth public boolean endVisit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public boolean visit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public org.apache.maven.shared.dependency.graph.DependencyNode getDependencyTree()
+meth public org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor getDependencyNodeVisitor()
+supr java.lang.Object
+hfds parentNodes,rootNode,visitor
+
+CLSS public org.apache.maven.shared.dependency.graph.traversal.CollectingDependencyNodeVisitor
+cons public init()
+intf org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor
+meth public boolean endVisit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public boolean visit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public java.util.List<org.apache.maven.shared.dependency.graph.DependencyNode> getNodes()
+supr java.lang.Object
+hfds nodes
+
+CLSS public abstract interface org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor
+meth public abstract boolean endVisit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public abstract boolean visit(org.apache.maven.shared.dependency.graph.DependencyNode)
+
+CLSS public org.apache.maven.shared.dependency.graph.traversal.FilteringDependencyNodeVisitor
+cons public init(org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor,org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter)
+intf org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor
+meth public boolean endVisit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public boolean visit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter getDependencyNodeFilter()
+meth public org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor getDependencyNodeVisitor()
+supr java.lang.Object
+hfds filter,visitor
+
+CLSS public org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor
+cons public init(java.io.Writer)
+cons public init(java.io.Writer,org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor$GraphTokens)
+fld public final static org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor$GraphTokens EXTENDED_TOKENS
+fld public final static org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor$GraphTokens STANDARD_TOKENS
+fld public final static org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor$GraphTokens WHITESPACE_TOKENS
+innr public static GraphTokens
+intf org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor
+meth public boolean endVisit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public boolean visit(org.apache.maven.shared.dependency.graph.DependencyNode)
+supr java.lang.Object
+hfds depth,tokens,writer
+
+CLSS public static org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor$GraphTokens
+ outer org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public java.lang.String getFillIndent(boolean)
+meth public java.lang.String getNodeIndent(boolean)
+supr java.lang.Object
+hfds fillIndent,lastFillIndent,lastNodeIndent,nodeIndent
+
 CLSS public org.apache.maven.shared.dependency.tree.DefaultDependencyTreeBuilder
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.shared.dependency.tree.DependencyTreeBuilder, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
 cons public init()
@@ -8188,7 +8332,6 @@ supr org.apache.maven.wagon.StreamWagon
 
 CLSS public org.apache.maven.wagon.providers.http.HttpWagon
 cons public init()
-meth public java.util.List<java.lang.String> getFileList(java.lang.String) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
 supr org.apache.maven.wagon.providers.http.wagon.shared.AbstractHttpClientWagon
 
 CLSS public abstract interface !annotation org.apache.maven.wagon.providers.http.httpclient.annotation.Contract
@@ -8299,12 +8442,6 @@ meth public static java.lang.String encodeURLToString(java.lang.String,java.lang
 meth public static java.net.URI encodeURL(java.lang.String) throws java.net.MalformedURLException,java.net.URISyntaxException
  anno 0 java.lang.Deprecated()
 supr java.lang.Object
-
-CLSS public org.apache.maven.wagon.providers.http.wagon.shared.HtmlFileListParser
-cons public init()
-meth public static java.util.List<java.lang.String> parseFileList(java.lang.String,java.io.InputStream) throws org.apache.maven.wagon.TransferFailedException
-supr java.lang.Object
-hfds APACHE_INDEX_SKIP,MAILTO_URLS,SKIPS,URLS_TO_PARENT,URLS_WITH_PATHS
 
 CLSS public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration
 cons public init()
@@ -12461,10 +12598,14 @@ meth public abstract java.io.File resolve(org.eclipse.aether.artifact.Artifact)
 CLSS public org.netbeans.modules.maven.embedder.DependencyTreeFactory
 cons public init()
 meth public static org.apache.maven.shared.dependency.tree.DependencyNode createDependencyTree(org.apache.maven.project.MavenProject,org.netbeans.modules.maven.embedder.MavenEmbedder,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public static org.apache.maven.shared.dependency.tree.DependencyNode createDependencyTree(org.apache.maven.project.MavenProject,org.netbeans.modules.maven.embedder.MavenEmbedder,java.util.Collection<java.lang.String>) throws org.apache.maven.MavenExecutionException
 supr java.lang.Object
+hfds LOG
 
 CLSS public final org.netbeans.modules.maven.embedder.EmbedderFactory
 fld public final static java.lang.String PROP_COMMANDLINE_PATH = "commandLineMavenPath"
+meth public static boolean isOfflineException(java.lang.Throwable)
 meth public static boolean isProjectEmbedderLoaded()
 meth public static java.io.File getDefaultMavenHome()
 meth public static java.io.File getEffectiveMavenHome()
@@ -12775,6 +12916,7 @@ fld public final static java.lang.String LOG_KEY_PREFIX = "org.slf4j.simpleLogge
 fld public final static java.lang.String SHOW_DATE_TIME_KEY = "org.slf4j.simpleLogger.showDateTime"
 fld public final static java.lang.String SHOW_LOG_NAME_KEY = "org.slf4j.simpleLogger.showLogName"
 fld public final static java.lang.String SHOW_SHORT_LOG_NAME_KEY = "org.slf4j.simpleLogger.showShortLogName"
+fld public final static java.lang.String SHOW_THREAD_ID_KEY = "org.slf4j.simpleLogger.showThreadId"
 fld public final static java.lang.String SHOW_THREAD_NAME_KEY = "org.slf4j.simpleLogger.showThreadName"
 fld public final static java.lang.String SYSTEM_PREFIX = "org.slf4j.simpleLogger."
 fld public final static java.lang.String WARN_LEVEL_STRING_KEY = "org.slf4j.simpleLogger.warnLevelString"
@@ -12813,12 +12955,12 @@ meth public void warn(java.lang.String,java.lang.Object)
 meth public void warn(java.lang.String,java.lang.Object,java.lang.Object)
 meth public void warn(java.lang.String,java.lang.Throwable)
 supr org.slf4j.helpers.MarkerIgnoringBase
-hfds CONFIG_PARAMS,INITIALIZED,START_TIME,serialVersionUID,shortLogName
+hfds CONFIG_PARAMS,INITIALIZED,START_TIME,TID_PREFIX,serialVersionUID,shortLogName
 
 CLSS public org.slf4j.impl.SimpleLoggerConfiguration
 cons public init()
 supr java.lang.Object
-hfds CACHE_OUTPUT_STREAM_DEFAULT,CONFIGURATION_FILE,DATE_TIME_FORMAT_STR_DEFAULT,DEFAULT_LOG_LEVEL_DEFAULT,LEVEL_IN_BRACKETS_DEFAULT,LOG_FILE_DEFAULT,SHOW_DATE_TIME_DEFAULT,SHOW_LOG_NAME_DEFAULT,SHOW_SHORT_LOG_NAME_DEFAULT,SHOW_THREAD_NAME_DEFAULT,WARN_LEVELS_STRING_DEFAULT,cacheOutputStream,dateFormatter,dateTimeFormatStr,defaultLogLevel,levelInBrackets,logFile,outputChoice,properties,showDateTime,showLogName,showShortLogName,showThreadName,warnLevelString
+hfds CACHE_OUTPUT_STREAM_DEFAULT,CONFIGURATION_FILE,DATE_TIME_FORMAT_STR_DEFAULT,DEFAULT_LOG_LEVEL_DEFAULT,LEVEL_IN_BRACKETS_DEFAULT,LOG_FILE_DEFAULT,SHOW_DATE_TIME_DEFAULT,SHOW_LOG_NAME_DEFAULT,SHOW_SHORT_LOG_NAME_DEFAULT,SHOW_THREAD_ID_DEFAULT,SHOW_THREAD_NAME_DEFAULT,WARN_LEVELS_STRING_DEFAULT,cacheOutputStream,dateFormatter,dateTimeFormatStr,defaultLogLevel,levelInBrackets,logFile,outputChoice,properties,showDateTime,showLogName,showShortLogName,showThreadId,showThreadName,warnLevelString
 
 CLSS public org.slf4j.impl.SimpleLoggerFactory
 cons public init()

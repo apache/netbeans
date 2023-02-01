@@ -42,7 +42,6 @@ import java.util.Set;
 import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.project.JavaProjectConstants;
-import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;

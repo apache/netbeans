@@ -4,19 +4,19 @@ console.log("cat".|startsWith("ca", 0));
 ------------------------------------
 CLASS      prototype                       [PUBLIC]   JS Platform
 METHOD     anchor(name: String): String    [PUBLIC]   JS Platform
-METHOD     at(index: Number): String | un  [PUBLIC]   JS Platform
+METHOD     at(index: Number): String|unde  [PUBLIC]   JS Platform
 METHOD     big(): String                   [PUBLIC]   JS Platform
 METHOD     blink(): String                 [PUBLIC]   JS Platform
 METHOD     bold(): String                  [PUBLIC]   JS Platform
 METHOD     charAt(pos: Number): String     [PUBLIC]   JS Platform
 METHOD     charCodeAt(index: Number): Num  [PUBLIC]   JS Platform
-METHOD     codePointAt(pos: Number):  und  [PUBLIC]   JS Platform
+METHOD     codePointAt(pos: Number): Numb  [PUBLIC]   JS Platform
 METHOD     concat(strings: String): Strin  [PUBLIC]   JS Platform
 METHOD     endsWith(searchString: String)  [PUBLIC]   JS Platform
 METHOD     fixed(): String                 [PUBLIC]   JS Platform
 METHOD     fontcolor(color: String): Stri  [PUBLIC]   JS Platform
 METHOD     fontsize(size: String): String  [PUBLIC]   JS Platform
-METHOD     hasOwnProperty(v: String | Sym  [PUBLIC]   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
 METHOD     includes(searchString: String)  [PUBLIC]   JS Platform
 METHOD     indexOf(searchString: String):  [PUBLIC]   JS Platform
 METHOD     isPrototypeOf(v: Object): Bool  [PUBLIC]   JS Platform
@@ -24,15 +24,15 @@ METHOD     italics(): String               [PUBLIC]   JS Platform
 METHOD     lastIndexOf(searchString: Stri  [PUBLIC]   JS Platform
 METHOD     link(url: String): String       [PUBLIC]   JS Platform
 METHOD     localeCompare(that: String): N  [PUBLIC]   JS Platform
-METHOD     match(matcher: Object):  nul|R  [PUBLIC]   JS Platform
+METHOD     match(matcher: Object): null|R  [PUBLIC]   JS Platform
 METHOD     matchAll(regexp: RegExp): Iter  [PUBLIC]   JS Platform
 METHOD     normalize(): String             [PUBLIC]   JS Platform
 METHOD     padEnd(maxLength: Number): Str  [PUBLIC]   JS Platform
 METHOD     padStart(maxLength: Number): S  [PUBLIC]   JS Platform
-METHOD     propertyIsEnumerable(v: String  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 METHOD     repeat(count: Number): String   [PUBLIC]   JS Platform
 METHOD     replace(searchValue: Object, r  [PUBLIC]   JS Platform
-METHOD     replaceAll(searchValue: String  [PUBLIC]   JS Platform
+METHOD     replaceAll(searchValue: RegExp  [PUBLIC]   JS Platform
 METHOD     search(searcher: Object): Numb  [PUBLIC]   JS Platform
 METHOD     slice(): String                 [PUBLIC]   JS Platform
 METHOD     small(): String                 [PUBLIC]   JS Platform

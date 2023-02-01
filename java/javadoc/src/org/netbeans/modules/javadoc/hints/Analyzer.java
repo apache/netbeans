@@ -77,6 +77,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -676,8 +677,8 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
         DocSourcePositions sp = (DocSourcePositions) javac.getTrees().getSourcePositions();
         int start = (int) sp.getStartPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), tree);
         int end = (int) sp.getEndPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), tree);
-        if (ex == null || (ex.asType().getKind() == TypeKind.DECLARED
-                && types.isAssignable(ex.asType(), throwable))) {
+        boolean isType = ex != null && (ex.asType().getKind() == TypeKind.DECLARED || ex.asType().getKind() == TypeKind.TYPEVAR);
+        if (ex == null || (isType && types.isAssignable(ex.asType(), throwable))) {
             switch (currentElement.getKind()) {
                 case CONSTRUCTOR:
                 case METHOD:
@@ -685,12 +686,14 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
                             || types.isAssignable(ex.asType(), runtime))) {
                         ExecutableElement ee = (ExecutableElement) currentElement;
                         String fqn;
-                        if (ex != null) {
-                            fqn = ((TypeElement) ex).getQualifiedName().toString();
-                        } else {
+                        if (ex == null) {
                             ExpressionTree referenceClass = javac.getTreeUtilities().getReferenceClass(new DocTreePath(currentDocPath, exName));
                             if(referenceClass == null) break;
                             fqn = referenceClass.toString();
+                        } else if (ex.asType().getKind() == TypeKind.TYPEVAR) {
+                            fqn = ex.getSimpleName().toString();
+                        } else {
+                            fqn = ((TypeElement) ex).getQualifiedName().toString();
                         }
                         checkThrowsDeclared(tree, ex, fqn, ee.getThrownTypes(), dtph, start, end, errors);
                     }

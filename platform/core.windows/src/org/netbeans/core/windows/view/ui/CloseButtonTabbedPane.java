@@ -281,9 +281,9 @@ final class CloseButtonTabbedPane extends JTabbedPane implements PropertyChangeL
     }
 
     private boolean hideCloseButton(Component c) {
-        if (c!=null && c instanceof JComponent) {
+        if (c instanceof JComponent) {
             Object prop = ((JComponent) c).getClientProperty(TabbedPaneFactory.NO_CLOSE_BUTTON);
-            if (prop!=null && prop instanceof Boolean && (Boolean) prop) {
+            if (prop instanceof Boolean && (Boolean) prop) {
                 return true;
             }
         }

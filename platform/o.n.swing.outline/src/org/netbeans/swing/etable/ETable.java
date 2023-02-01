@@ -2701,7 +2701,7 @@ public class ETable extends JTable {
         if (c == editorComp) {
             return true;
         }
-        if (editorComp != null && (editorComp instanceof Container) &&
+        if (editorComp instanceof Container &&
             ((Container) editorComp).isAncestorOf(c)) {
                 return true;
         }

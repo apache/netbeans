@@ -23,6 +23,7 @@ import { NbLanguageClient } from './extension';
 import { NodeChangedParams, NodeInfoNotification, NodeInfoRequest, GetResourceParams } from './protocol';
 
 const doLog : boolean = false;
+const EmptyIcon = "EMPTY_ICON";
 
 /**
  * Cached image information.
@@ -176,6 +177,9 @@ export class TreeViewService extends vscode.Disposable {
       const r = this.findProductIcon(nodeData.iconDescriptor.baseUri, nodeData.name, nodeData.contextValue);
       // override the icon with local.
       if (r) {
+        if (r === EmptyIcon) {
+          ci = new CachedImage(nodeData.iconDescriptor.baseUri, undefined, undefined, [ nodeData.name, nodeData.contextValue ]);
+        }
         ci = new CachedImage(nodeData.iconDescriptor.baseUri, undefined, r, [ nodeData.name, nodeData.contextValue ]);
         this.images.set(nodeData.iconIndex, ci);
       }
@@ -211,10 +215,19 @@ export class TreeViewService extends vscode.Disposable {
           return ThemeIcon.File;
         } else if (e.codeicon == '*folder') {
           return ThemeIcon.Folder;
+        } else if (e.codeicon == '') {
+          return EmptyIcon;
         } else if (e.iconPath) {
           return e.iconPath;
         }
-        return new ThemeIcon(e.codeicon);
+        let resultIcon;
+        if (e.color) {
+          resultIcon = new ThemeIcon(e.codeicon, new vscode.ThemeColor(e.color));
+        } else {
+          resultIcon = new ThemeIcon(e.codeicon);
+        }
+        
+        return resultIcon;
       }
     }
     return undefined;
@@ -237,7 +250,7 @@ export class TreeViewService extends vscode.Disposable {
                   vals.push(re);
                 }
               }
-              newEntries.push(new ImageEntry(re, m?.codeicon, m?.iconPath, vals));
+              newEntries.push(new ImageEntry(re, m?.codeicon, m?.iconPath, vals, m?.color));
             } catch (e) {
               console.log("Invalid icon mapping in extension %s: %s -> %s", ext.id, reString, m?.codicon);
             }
@@ -717,7 +730,8 @@ class ImageEntry {
     readonly uriRegexp : RegExp,
     readonly codeicon : string,
     readonly iconPath? : string,
-    readonly valueRegexps? : RegExp[]
+    readonly valueRegexps? : RegExp[],
+    readonly color?: string
     ) {}
 }
 class ImageTranslator {

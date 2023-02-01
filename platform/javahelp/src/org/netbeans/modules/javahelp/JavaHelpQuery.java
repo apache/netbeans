@@ -126,7 +126,7 @@ class JavaHelpQuery implements Comparator<SearchTOCItem> {
     private SearchEngine createSearchEngine() {
         SearchEngine se = null;
         Help h = (Help)Lookup.getDefault().lookup(Help.class);
-        if (h != null && h instanceof JavaHelp ) {
+        if (h instanceof JavaHelp) {
             JavaHelp jh = (JavaHelp)h;
             se = jh.createSearchEngine();
             if( null == se ) {

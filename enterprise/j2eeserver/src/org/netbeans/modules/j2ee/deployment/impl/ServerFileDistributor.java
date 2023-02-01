@@ -594,6 +594,7 @@ public class ServerFileDistributor extends ServerProgress {
          * @param relativePath
          * @deprecated use {@link #record(java.io.File, java.lang.String)}
          */
+        @Deprecated
         private void record(String relativePath) {
             record(null, relativePath);
         }

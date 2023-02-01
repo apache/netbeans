@@ -141,6 +141,45 @@ public final class BaseExecutionService {
     }
 
     /**
+     * Infers the output encoding from the relevant system properties, if those should all be <code>null</code>
+     * then this will fallback to <code>Charset.defaultCharset()</code>
+     * 
+     * Since JDK 18 and JEP400 Console.charset() is used for the console's encoding instead of <code>Charset.defaultCharset()</code>. 
+     * Console.charset() is exposed via stdout.encoding/sun.stdout.encoding.
+     * If ran with JDK<=16 stdout.encoding and native.encoding should be null and the old default of <code>Charset.defaultCharset()</code> will be used to match pre JEP400 behavior.
+     * 
+     * The checking order for the encoding is stdout.encoding, sun.stdout.encoding, native.encoding, <code>Charset.defaultCharset()</code>
+     * 
+     * @see org.netbeans.modules.maven.execute.CommandLineOutputHandler#getPreferredCharset
+     * 
+     * @return inferred encoding as Charset
+     */
+    private static Charset getInputOutputEncoding(){
+        String[] encodingSystemProperties = new String[]{"stdout.encoding", "sun.stdout.encoding", "native.encoding"};
+
+        Charset preferredCharset = null;
+        for (String encodingProperty : encodingSystemProperties) {
+            String encodingPropertyValue = System.getProperty(encodingProperty);
+            if (encodingPropertyValue == null) {
+                continue;
+            }
+
+            try {
+                preferredCharset = Charset.forName(encodingPropertyValue);
+            } catch (IllegalArgumentException ex) {
+                LOGGER.log(java.util.logging.Level.WARNING, "Failed to get charset for '" + encodingProperty + "' value : '" + encodingPropertyValue + "'", ex);
+            }
+
+            if (preferredCharset != null) {
+                return preferredCharset;
+            }
+
+        }
+
+        return Charset.defaultCharset();
+    }
+
+    /**
      * Runs the process described by this service. The call does not block
      * and the task is represented by the returned value. Integer returned
      * as a result of the {@link Future} is exit code of the process.
@@ -209,28 +248,17 @@ public final class BaseExecutionService {
                     executor = Executors.newFixedThreadPool(in != null ? 3 : 2);
 
                     Charset charset = descriptor.getCharset();
+                    // The CommandLineOutputHandler used the default charset to convert
+                    // output from command line invocations to strings. That encoding is
+                    // derived from the system file.encoding. From JDK 18 onwards its
+                    // default value changed to UTF-8.
+                    // JDK 17+ exposes the native encoding as the new system property
+                    // native.encoding, prior versions don't have that property and will
+                    // report NULL for it.
+                    // To account for the behavior of JEP400 the following order is used to determine the encoding:
+                    // stdout.encoding, sun.stdout.encoding, native.encoding, Charset.defaultCharset()
                     if (charset == null) {
-                        // If charset is not set for the descriptor, the
-                        // BaseExecutionService used the default charset to convert
-                        // output from command line invocations to strings. That encoding is
-                        // derived from the system file.encoding. From JDK 18 onwards its
-                        // default value changed to UTF-8.
-                        // JDK 18+ exposes the native encoding as the new system property
-                        // native.encoding, prior versions don't have that property and will
-                        // report NULL for it.
-                        // The algorithm is simple: If native.encoding is set, it will be used
-                        // else the old default will be queried via Charset#defaultCharset.
-                        String nativeEncoding = System.getProperty("native.encoding");
-                        if (nativeEncoding != null) {
-                            try {
-                                charset = Charset.forName(nativeEncoding);
-                            } catch (Exception ex) {
-                                LOGGER.log(java.util.logging.Level.WARNING, "Failed to get charset for native.encoding value : '" + nativeEncoding + "'", ex);
-                            }
-                        }
-                        if (charset == null) {
-                            charset = Charset.defaultCharset();
-                        }
+                        charset = BaseExecutionService.getInputOutputEncoding();
                     }
 
                     tasks.add(InputReaderTask.newDrainingTask(

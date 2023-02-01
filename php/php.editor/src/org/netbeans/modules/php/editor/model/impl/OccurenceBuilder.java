@@ -1006,12 +1006,12 @@ class OccurenceBuilder {
             if (EnumSet.<Occurence.Accuracy>of(Accuracy.EXACT, Accuracy.EXACT_TYPE,
                     Accuracy.UNIQUE, Accuracy.EXACT_TYPE, Accuracy.MORE_MEMBERS, Accuracy.MORE).contains(accuracy)) {
                 buildMethodInvocations(elementInfo, fileScope, accuracy, cachedOccurences);
-                if (OptionsUtils.codeCompletionNonStaticMethods()) {
-                    buildStaticMethodInvocations(elementInfo, fileScope, cachedOccurences, false);
-                } else {
-                    // we need to build also static methods on parent (syntax is always 'parent::...')
-                    buildStaticMethodInvocations(elementInfo, fileScope, cachedOccurences, true);
-                }
+                // these static invocations are valid
+                // previous fix: #208309
+                // $test->publicStaticMethod();
+                // $test::publicStaticMethod();
+                // Test::publicStaticMethod();
+                buildStaticMethodInvocations(elementInfo, fileScope, cachedOccurences, false);
                 buildMethodDeclarations(elementInfo, fileScope, cachedOccurences);
                 buildMagicMethodDeclarations(elementInfo, fileScope, cachedOccurences);
             } else if (!accuracy.equals(Accuracy.NO)) {
@@ -1773,6 +1773,12 @@ class OccurenceBuilder {
                 matchingTypeNames.add(constantElement.getType().getFullyQualifiedName());
                 QualifiedName typeQualifiedName = nodeCtxInfo.getTypeQualifiedName();
                 if (typeQualifiedName != null) {
+                    if (isParent(typeQualifiedName)) {
+                        TypeScope scope = ModelUtils.getTypeScope(nodeCtxInfo.getModelElemnt());
+                        if (scope != null) {
+                            typeQualifiedName = resolveClassName(typeQualifiedName, scope);
+                        }
+                    }
                     matchingTypeNames.add(typeQualifiedName);
                 }
                 final Exact constantName = NameKind.exact(phpElement.getName());
@@ -1783,6 +1789,11 @@ class OccurenceBuilder {
                     ASTNodeInfo<StaticConstantAccess> nodeInfo = entry.getKey();
                     final Expression dispatcher = nodeInfo.getOriginalNode().getDispatcher();
                     QualifiedName clzName = QualifiedName.create(dispatcher);
+                    // $this::CONSTANT;
+                    if (dispatcher instanceof Variable
+                            && "this".equalsIgnoreCase(CodeUtils.extractQualifiedName(((Variable) dispatcher).getName()))) { // NOI18N
+                        clzName = QualifiedName.create(Type.SELF);
+                    }
                     if (clzName != null) {
                         final TypeScope scope = ModelUtils.getTypeScope(entry.getValue());
                         clzName = resolveClassName(clzName, scope);

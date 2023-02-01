@@ -32,6 +32,7 @@ import javax.swing.text.Position.Bias;
 * @version 1.00
 * @deprecated Use {@link Position} instead.
 */
+@Deprecated
 public class Mark {
 
     private static final MarkComparator MARK_COMPARATOR = new MarkComparator();

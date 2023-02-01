@@ -594,7 +594,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                     if(nn != null && nn.getName().equals("JoinTable")) { //NOI18N
                         Map attrs = nn.getAttributes();
                         Object val = attrs.get("table"); //NOI18N
-                        if(val != null && val instanceof CCParser.CC) {
+                        if(val instanceof CCParser.CC) {
                             CCParser.CC tableNN = (CCParser.CC)val;
                             if(tableNN.getName().equals("Table")) {//NOI18N
                                 tblNN = tableNN;
@@ -643,7 +643,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
         
         if ("mappedBy".equals(completedMember)) { // NOI18N
             Element type = null;//ctx.getSyntaxSupport().getTypeFromName(resolvedClassName, false, null, false);
-            if(type != null && type instanceof TypeElement) {
+            if(type instanceof TypeElement) {
                 TypeElement cdef = (TypeElement)type;
                 Entity entity = PersistenceUtils.getEntity(cdef.getQualifiedName().toString(), ctx.getEntityMappings());
                 if(entity != null) {

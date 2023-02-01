@@ -216,7 +216,7 @@ public class ResourceLibraryIterator implements TemplateWizard.Iterator {
     private String[] createSteps() {
         String[] beforeSteps = null;
         Object prop = descriptor.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
 

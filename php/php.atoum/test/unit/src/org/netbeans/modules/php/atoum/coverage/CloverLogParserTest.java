@@ -28,14 +28,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.regex.Matcher;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.php.spi.testing.coverage.Coverage;
 import org.netbeans.modules.php.spi.testing.coverage.FileMetrics;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 
 public class CloverLogParserTest extends NbTestCase {
 

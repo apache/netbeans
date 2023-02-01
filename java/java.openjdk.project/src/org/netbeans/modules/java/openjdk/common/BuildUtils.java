@@ -99,4 +99,8 @@ public class BuildUtils {
 
         return pos < relpath.length() ? dir.getFileObject(relpath.substring(pos)) : dir;
     }
+
+    public interface ExtraMakeTargets {
+        public String[] getExtraMakeTargets();
+    }
 }

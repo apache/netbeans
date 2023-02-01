@@ -29,7 +29,7 @@ import java.util.*;
 *
 * @author Jaroslav Tulach
 * @since 3.30
-* @see BaseMutexUtilities#topologicalSort
+* @see Utilities#topologicalSort
 */
 public final class TopologicalSortException extends Exception {
     /** all vertexes */
@@ -60,7 +60,7 @@ public final class TopologicalSortException extends Exception {
     public final List partialSort() {
         Set[] all = topologicalSets();
 
-        ArrayList<Object> res = new ArrayList<Object>(vertexes.size());
+        List<Object> res = new ArrayList<Object>(vertexes.size());
 
         for (int i = 0; i < all.length; i++) {
             for (Object e : all[i]) {

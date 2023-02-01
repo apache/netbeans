@@ -41,15 +41,18 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
     public static final String WARN_SET_JDK_6 = "warnSetJdk6"; // NOI18N
     public static final String WARN_SET_JDK_7 = "warnSetJdk7"; // NOI18N
     public static final String WARN_SET_JDK_8 = "warnSetJdk8"; // NOI18N
+    public static final String WARN_SET_JDK_11 = "warnSetJdk11"; // NOI18N
 
     public static final String WARN_SET_SOURCE_LEVEL_15 = "warnSetSourceLevel15"; // NOI18N
     public static final String WARN_SET_SOURCE_LEVEL_6 = "warnSetSourceLevel6"; // NOI18N
     public static final String WARN_SET_SOURCE_LEVEL_7 = "warnSetSourceLevel7"; // NOI18N
-    public static final String WARN_SET_SOURCE_LEVEL_8 = "warnSetSourceLevel8";
+    public static final String WARN_SET_SOURCE_LEVEL_8 = "warnSetSourceLevel8"; // NOI18N
+    public static final String WARN_SET_SOURCE_LEVEL_11 = "warnSetSourceLevel11"; // NOI18N
 
     public static final String WARN_JDK_6_REQUIRED = "warnJdk6Required"; // NOI18N
     public static final String WARN_JDK_7_REQUIRED = "warnJdk7Required"; // NOI18N
     public static final String WARN_JDK_8_REQUIRED = "warnJdk8Required"; // NOI18N
+    public static final String WARN_JDK_11_REQUIRED = "warnJdk11Required"; // NOI18N
 
     private String warningType;
 
@@ -65,70 +68,119 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
     public void setWarningType(String warningType) {
         String labelText = "";
         this.warningType = warningType;
-        if (WARN_SET_JDK_15.equals(warningType)) {
-            labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetJdk15");
-        } else if (WARN_SET_SOURCE_LEVEL_15.equals(warningType)) {
-            labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel15");
-        } else if (WARN_SET_JDK_6.equals(warningType)) {
-            labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetJdk6");
-        } else if (WARN_SET_JDK_7.equals(warningType)) {
-            labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetJdk7");
-        } else if (WARN_SET_JDK_8.equals(warningType)) {
-            labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetJdk8");
-        } else if (WARN_SET_SOURCE_LEVEL_6.equals(warningType)) {
-            labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel6");
-        } else if (WARN_SET_SOURCE_LEVEL_7.equals(warningType)) {
-            labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel7");
-        } else if (WARN_SET_SOURCE_LEVEL_8.equals(warningType)) {
-            labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel8");
-        } else if (WARN_JDK_6_REQUIRED.equals(warningType)) {
-            labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationJDK6");
-        } else if (WARN_JDK_7_REQUIRED.equals(warningType)) {
-            labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationJDK7");
-        } else if (WARN_JDK_8_REQUIRED.equals(warningType)) {
-            labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationJDK8");
+        if (null != warningType) {
+            switch (warningType) {
+                case WARN_SET_JDK_15:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetJdk15");
+                    break;
+                case WARN_SET_JDK_6:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetJdk6");
+                    break;
+                case WARN_SET_JDK_7:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetJdk7");
+                    break;
+                case WARN_SET_JDK_8:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetJdk8");
+                    break;
+                case WARN_SET_JDK_11:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetJdk11");
+                    break;
+                case WARN_SET_SOURCE_LEVEL_15:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel15");
+                    break;
+                case WARN_SET_SOURCE_LEVEL_6:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel6");
+                    break;
+                case WARN_SET_SOURCE_LEVEL_7:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel7");
+                    break;
+                case WARN_SET_SOURCE_LEVEL_8:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel8");
+                    break;
+                case WARN_SET_SOURCE_LEVEL_11:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel11");
+                    break;
+                case WARN_JDK_6_REQUIRED:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationJDK6");
+                    break;
+                case WARN_JDK_7_REQUIRED:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationJDK7");
+                    break;
+                case WARN_JDK_8_REQUIRED:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationJDK8");
+                    break;
+                case WARN_JDK_11_REQUIRED:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationJDK11");
+                    break;
+                default:
+                    break;
+            }
         }
         jLabel.setText(labelText);
     }
 
     public String getSuggestedJavaPlatformName() {
-        if (WARN_SET_JDK_15.equals(warningType) ) {
-            JavaPlatform[] javaPlatforms = getJavaPlatforms("1.5");
-            return getPreferredPlatform(javaPlatforms).getDisplayName();
+        if (null == warningType ) {
+            return JavaPlatform.getDefault().getDisplayName();
         }
-        if (WARN_SET_JDK_6.equals(warningType) ) {
-            JavaPlatform[] javaPlatforms = getJavaPlatforms("1.6");
-            return getPreferredPlatform(javaPlatforms).getDisplayName();
+        else {
+            switch (warningType) {
+                case WARN_SET_JDK_15: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("1.5");
+                    return getPreferredPlatform(javaPlatforms).getDisplayName();
+                }
+                case WARN_SET_JDK_6: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("1.6");
+                    return getPreferredPlatform(javaPlatforms).getDisplayName();
+                }
+                case WARN_SET_JDK_7: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("1.7");
+                    return getPreferredPlatform(javaPlatforms).getDisplayName();
+                }
+                case WARN_SET_JDK_8: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("1.8");
+                    return getPreferredPlatform(javaPlatforms).getDisplayName();
+                }
+                case WARN_SET_JDK_11: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("11");
+                    return getPreferredPlatform(javaPlatforms).getDisplayName();
+                }
+                default:
+                    return JavaPlatform.getDefault().getDisplayName();
+            }
         }
-        if (WARN_SET_JDK_7.equals(warningType) ) {
-            JavaPlatform[] javaPlatforms = getJavaPlatforms("1.7");
-            return getPreferredPlatform(javaPlatforms).getDisplayName();
-        }
-        if (WARN_SET_JDK_8.equals(warningType) ) {
-            JavaPlatform[] javaPlatforms = getJavaPlatforms("1.8");
-            return getPreferredPlatform(javaPlatforms).getDisplayName();
-        }
-        return JavaPlatform.getDefault().getDisplayName();
     }
 
     public Specification getSuggestedJavaPlatformSpecification() {
-        if (WARN_SET_JDK_15.equals(warningType) ) {
-            JavaPlatform[] javaPlatforms = getJavaPlatforms("1.5");
-            return getPreferredPlatform(javaPlatforms).getSpecification();
+        if (null == warningType ) {
+            return JavaPlatform.getDefault().getSpecification();
         }
-        if (WARN_SET_JDK_6.equals(warningType) ) {
-            JavaPlatform[] javaPlatforms = getJavaPlatforms("1.6");
-            return getPreferredPlatform(javaPlatforms).getSpecification();
+        else {
+            switch (warningType) {
+                case WARN_SET_JDK_15: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("1.5");
+                    return getPreferredPlatform(javaPlatforms).getSpecification();
+                }
+                case WARN_SET_JDK_6: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("1.6");
+                    return getPreferredPlatform(javaPlatforms).getSpecification();
+                }
+                case WARN_SET_JDK_7: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("1.7");
+                    return getPreferredPlatform(javaPlatforms).getSpecification();
+                }
+                case WARN_SET_JDK_8: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("1.8");
+                    return getPreferredPlatform(javaPlatforms).getSpecification();
+                }
+                case WARN_SET_JDK_11: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("11");
+                    return getPreferredPlatform(javaPlatforms).getSpecification();
+                }
+                default:
+                    return JavaPlatform.getDefault().getSpecification();
+            }
         }
-        if (WARN_SET_JDK_7.equals(warningType) ) {
-            JavaPlatform[] javaPlatforms = getJavaPlatforms("1.7");
-            return getPreferredPlatform(javaPlatforms).getSpecification();
-        }
-        if (WARN_SET_JDK_8.equals(warningType) ) {
-            JavaPlatform[] javaPlatforms = getJavaPlatforms("1.8");
-            return getPreferredPlatform(javaPlatforms).getSpecification();
-        }
-        return JavaPlatform.getDefault().getSpecification();
     }
 
     private static JavaPlatform getPreferredPlatform(@NullAllowed final JavaPlatform[] platforms) {
@@ -148,7 +200,7 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
         JavaPlatform defaultPlatform = JavaPlatformManager.getDefault().getDefaultPlatform();
         SpecificationVersion version = defaultPlatform.getSpecification().getVersion();
         String sourceLevel = version.toString();
-
+        
         // no warning if 1.5 is the default for jee5
         if (j2eeProfile == Profile.JAVA_EE_5 && isAcceptableSourceLevel("1.5", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
@@ -168,14 +220,27 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                 isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
         }
+        // no warning if 1.8 is the default for jakartaee8
         if ((j2eeProfile == Profile.JAKARTA_EE_8_FULL || j2eeProfile == Profile.JAKARTA_EE_8_WEB) &&
                 isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
         }
+        // no warning if 1.8 is the default for jakartaee9
         if ((j2eeProfile == Profile.JAKARTA_EE_9_FULL || j2eeProfile == Profile.JAKARTA_EE_9_WEB) &&
                 isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
         }
+        // no warning if 11 is the default for jakartaee9.1
+        if ((j2eeProfile == Profile.JAKARTA_EE_9_1_FULL || j2eeProfile == Profile.JAKARTA_EE_9_1_WEB) &&
+                isAcceptableSourceLevel("11", sourceLevel, acceptableSourceLevels)) { // NOI18N
+            return null;
+        }
+        // no warning if 11 is the default for jakartaee10
+        if ((j2eeProfile == Profile.JAKARTA_EE_10_FULL || j2eeProfile == Profile.JAKARTA_EE_10_WEB) &&
+                isAcceptableSourceLevel("11", sourceLevel, acceptableSourceLevels)) { // NOI18N
+            return null;
+        }
+        
         if (j2eeProfile == Profile.JAVA_EE_5) {
             JavaPlatform[] java15Platforms = getJavaPlatforms("1.5"); //NOI18N
             if (java15Platforms.length > 0) {
@@ -205,7 +270,9 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                     return WARN_JDK_7_REQUIRED;
                 }
             }
-        } else if (j2eeProfile == Profile.JAVA_EE_8_FULL || j2eeProfile == Profile.JAVA_EE_8_WEB) {
+        } else if (j2eeProfile == Profile.JAVA_EE_8_FULL || j2eeProfile == Profile.JAVA_EE_8_WEB ||
+                    j2eeProfile == Profile.JAKARTA_EE_8_FULL || j2eeProfile == Profile.JAKARTA_EE_8_WEB ||
+                    j2eeProfile == Profile.JAKARTA_EE_9_FULL || j2eeProfile == Profile.JAKARTA_EE_9_WEB) {
             JavaPlatform[] java18Platforms = getJavaPlatforms("1.8"); //NOI18N
             if (java18Platforms.length > 0) {
                 return WARN_SET_JDK_8;
@@ -216,27 +283,16 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                     return WARN_JDK_8_REQUIRED;
                 }
             }
-        } else if (j2eeProfile == Profile.JAKARTA_EE_8_FULL || j2eeProfile == Profile.JAKARTA_EE_8_WEB) {
-            JavaPlatform[] java18Platforms = getJavaPlatforms("1.8"); //NOI18N
-            if (java18Platforms.length > 0) {
-                return WARN_SET_JDK_8;
-            }  else {
-                    if (canSetSourceLevel("1.8")) {
-                        return WARN_SET_SOURCE_LEVEL_8;
-                    } else {
-                        return WARN_JDK_8_REQUIRED;
-                    }
-                }
-        } else if (j2eeProfile == Profile.JAKARTA_EE_9_FULL || j2eeProfile == Profile.JAKARTA_EE_9_WEB) {
-            JavaPlatform[] java18Platforms = getJavaPlatforms("1.8"); //NOI18N
-            if (java18Platforms.length > 0) {
-                return WARN_SET_JDK_8;
-
+        } else if (j2eeProfile == Profile.JAKARTA_EE_9_1_FULL || j2eeProfile == Profile.JAKARTA_EE_9_1_WEB
+                || j2eeProfile == Profile.JAKARTA_EE_10_FULL || j2eeProfile == Profile.JAKARTA_EE_10_WEB) {
+            JavaPlatform[] java11Platforms = getJavaPlatforms("11"); //NOI18N
+            if (java11Platforms.length > 0) {
+                return WARN_SET_JDK_11;
             } else {
-                if (canSetSourceLevel("1.8")) {
-                    return WARN_SET_SOURCE_LEVEL_8;
+                if (canSetSourceLevel("11")) {
+                    return WARN_SET_SOURCE_LEVEL_11;
                 } else {
-                    return WARN_JDK_8_REQUIRED;
+                    return WARN_JDK_11_REQUIRED;
                 }
             }
         } else {

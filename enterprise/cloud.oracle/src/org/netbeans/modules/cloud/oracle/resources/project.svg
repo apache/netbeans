@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg
+   width="16"
+   height="16"
+   viewBox="0 0 4.2333332 4.2333335"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (b8e25be8, 2022-02-05)"
+   sodipodi:docname="project.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="10.552603"
+     inkscape:cx="8.860373"
+     inkscape:cy="13.409014"
+     inkscape:window-width="1312"
+     inkscape:window-height="969"
+     inkscape:window-x="599"
+     inkscape:window-y="214"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     units="px" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       aria-label=""
+       id="text1376"
+       style="font-size:10.5833px;line-height:1.25;fill:#989b00;fill-opacity:0;stroke:#9d9d9d;stroke-width:0.264583;stroke-opacity:1"
+       transform="matrix(0.44412456,0,0,0.44412196,-2.4507629,-49.298491)">
+      <path
+         d="m 5.944659,111.11756 h 8.60775 l 0.317499,0.3175 v 8.60775 l -0.317499,0.3175 h -8.60775 l -0.317499,-0.3175 v -8.60775 z m 0.3527767,8.57247 H 14.23491 v -7.93747 H 6.2974357 Z m 0.6349979,-7.26719 h 1.3405513 v 6.6322 H 6.9324336 Z m 3.9863764,0 H 9.5782586 v 3.98637 H 10.91881 Z m 1.305273,0 h 1.340552 v 5.29165 h -1.340552 z"
+         style="font-family:codicon;-inkscape-font-specification:codicon;fill:#989b00;fill-opacity:0;stroke:#9d9d9d;stroke-opacity:1"
+         id="path3064" />
+    </g>
+  </g>
+</svg>

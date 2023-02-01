@@ -188,6 +188,7 @@ final class JBossDataSourceRefModifier {
      *
      * @deprecated
      */
+    @Deprecated
     static void modifyMsgDrv(Jboss modifiedJboss, String resRefName, Map beans, String jndiName) {
 
         assert(beans.size() > 0);
@@ -209,6 +210,7 @@ final class JBossDataSourceRefModifier {
      *
      * @deprecated
      */
+    @Deprecated
     private static void addMsgDrvResReference(Jboss modifiedJboss, String resRefName, Map beans, String jndiName) {
 
         List/*<Entity>*/ msgdrvsWithoutReference = new LinkedList();

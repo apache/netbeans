@@ -77,6 +77,7 @@ public class StringParserInput extends SimpleCharStream implements CharStream {
      * @deprecated
      * @see #getEndColumn
      */
+    @Deprecated
     public int getColumn() {
         return 0;
     }
@@ -86,6 +87,7 @@ public class StringParserInput extends SimpleCharStream implements CharStream {
      * @deprecated
      * @see #getEndLine
      */
+    @Deprecated
     public int getLine() {
         return 0;
     }

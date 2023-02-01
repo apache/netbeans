@@ -1812,7 +1812,7 @@ public class TreeTableView extends BeanTreeView {
 
             Object o = p.getValue(NodeTableModel.ATTR_COMPARABLE_COLUMN);
 
-            if ((o != null) && o instanceof Boolean) {
+            if (o instanceof Boolean) {
                 return ((Boolean) o).booleanValue();
             }
 
@@ -1826,7 +1826,7 @@ public class TreeTableView extends BeanTreeView {
 
             Object o = p.getValue(NodeTableModel.ATTR_SORTING_COLUMN);
 
-            if ((o != null) && o instanceof Boolean) {
+            if (o instanceof Boolean) {
                 return ((Boolean) o).booleanValue();
             }
 
@@ -1848,7 +1848,7 @@ public class TreeTableView extends BeanTreeView {
 
             Object o = p.getValue(NodeTableModel.ATTR_DESCENDING_ORDER);
 
-            if ((o != null) && o instanceof Boolean) {
+            if (o instanceof Boolean) {
                 return ((Boolean) o).booleanValue();
             }
 

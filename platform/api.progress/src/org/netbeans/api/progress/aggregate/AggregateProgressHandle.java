@@ -174,6 +174,7 @@ public final class AggregateProgressHandle implements AutoCloseable {
     /**
      * @deprecated do, not use, for tests only
      */
+    @Deprecated
     int getCurrentProgress() {
         return current;
     }

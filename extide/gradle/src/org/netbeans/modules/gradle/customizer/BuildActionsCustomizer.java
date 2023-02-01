@@ -21,7 +21,6 @@ package org.netbeans.modules.gradle.customizer;
 
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
-import org.netbeans.modules.gradle.execute.GradleCliEditorKit;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Font;
@@ -41,7 +40,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.actions.CustomActionRegistrationSupport;
@@ -58,6 +56,9 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages("TXT_CUSTOM=Custom...")
 public class BuildActionsCustomizer extends javax.swing.JPanel {
+
+    //TODO: Move this one to GradleCommandLine in NetBeans 17
+    public static final String GRADLE_PROJECT_PROPERTY = "gradle-project"; //NOI18N
 
     private static final String CUSTOM_ACTION = Bundle.TXT_CUSTOM();
     private static final String CARD_NOSELECT = "empty"; //NOI18N
@@ -102,9 +103,9 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         actionRegistry = new CustomActionRegistrationSupport(project);
         lsActions.setCellRenderer(new MyListCellRenderer());
         tfLabel.getDocument().addDocumentListener(applyListener);
-        EditorKit kit = CloneableEditorSupport.getEditorKit(GradleCliEditorKit.MIME_TYPE);
+        EditorKit kit = CloneableEditorSupport.getEditorKit("text/x-gradle-cli"); //NOI18N
         taArgs.setEditorKit(kit);
-        taArgs.getDocument().putProperty(Document.StreamDescriptionProperty, project);
+        taArgs.getDocument().putProperty(GRADLE_PROJECT_PROPERTY, project);
         taArgs.getDocument().addDocumentListener(applyListener);
         initDefaultModels();
         comboReady = true;
@@ -127,6 +128,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         });
         cbConfiguration.setModel(configModel);
         cbConfiguration.addActionListener(this::configurationChanged);
+        btRemove.setEnabled(getSelectedMapping() != null);
     }
     
     private void configurationChanged(ActionEvent e) {
@@ -185,7 +187,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
             // in the other panel.
             GradleExecConfiguration cur = (GradleExecConfiguration)configModel.getSelectedItem();
             GradleExecConfiguration act = configSnapshot.getActiveConfiguration();
-            configModel.removeAllElements();;
+            configModel.removeAllElements();
             for (GradleExecConfiguration c : configSnapshot.getConfigurations()) {
                 configModel.addElement(c);
                 if (cur != null) {
@@ -520,6 +522,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         autoApply = true;
         GradleExecConfiguration cfg = (GradleExecConfiguration)cbConfiguration.getSelectedItem();
         btnDisableAction.setEnabled(!cfg.isDefault());
+        btRemove.setEnabled(getSelectedMapping() != null);
     }
     
     private void btRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed

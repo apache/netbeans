@@ -159,8 +159,24 @@ case "`uname`" in
 
        # See longer comments in nb/ide.launcher/unix/netbeans.
        if [ ! -z "$KDE_FULL_SESSION" ] ; then
-           echo "Detected KDE; adding awt.useSystemAAFontSettings=on"
-           extra_automatic_options="-J-Dawt.useSystemAAFontSettings=on"
+           case "`command xrdb -query 2> /dev/null | grep Xft.rgba | cut -d ':' -f2 | xargs`" in
+               rgb)
+                   extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_hrgb"
+                   ;;
+               bgr)
+                   extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_hbgr"
+                   ;;
+               vrgb)
+                   extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_vrgb"
+                   ;;
+               vbgr)
+                   extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_vbgr"
+                   ;;
+               *)
+                   extra_automatic_options="-J-Dawt.useSystemAAFontSettings=on"
+                   ;;
+           esac
+           echo "Detected KDE; use explicit setting for font antialiasing ($extra_automatic_options)"
        fi
 
        # Add extra_automatic_options before default_options, to allow system

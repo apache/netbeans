@@ -21,7 +21,6 @@ package tests;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import junit.framework.*;
 import org.netbeans.junit.*;
 
 import org.netbeans.modules.schema2beans.*;
@@ -481,6 +480,7 @@ public class MainTest extends NbTestCase {
     //protected File dataDir;
     protected String theClassPath = "";
     
+    @Override
     protected void setUp() {
         // when running this code inside IDE, getResource method returns URL in NBFS
         // format, so we need to convert it to filename
@@ -517,6 +517,7 @@ public class MainTest extends NbTestCase {
         }
     }
     
+    @Override
     protected void tearDown() {
         compareReferenceFiles();
     }
@@ -524,6 +525,7 @@ public class MainTest extends NbTestCase {
     // XXX: temporarily overriding compareReferenceFiles() to dump differences as
     // I do not know what problem there is on javaee continual tester as there is
     // no access to diff files
+    @Override
     public void compareReferenceFiles(String testFilename, String goldenFilename, String diffFilename) {
         try {
             File goldenFile = getGoldenFile(goldenFilename);
@@ -535,10 +537,10 @@ public class MainTest extends NbTestCase {
                 message += "; check "+diffFile;
             }
             try {
-            assertFile(message, testFile, goldenFile, diffFile);
+                assertFile(message, testFile, goldenFile, diffFile);
             } catch (AssertionFileFailedError e) {
                 BufferedReader diffFileReader = new BufferedReader(new FileReader(diffFile));
-                StringBuffer diff = new StringBuffer();
+                StringBuilder diff = new StringBuilder();
                 try {
                     String ss = diffFileReader.readLine();
                     while (ss != null) {
@@ -558,20 +560,20 @@ public class MainTest extends NbTestCase {
 
 
     public void ref(File f) throws IOException {
-        Reader r = new FileReader(f);
-        char buf[] = new char[1024];
-        StringBuffer s = new StringBuffer();
-        int len;
-        while ((len = r.read(buf, 0, 1024)) > 0) {
-            s.append(buf, 0, len);
+        try (Reader r = new FileReader(f)) {
+            char buf[] = new char[1024];
+            StringBuilder s = new StringBuilder();
+            int len;
+            while ((len = r.read(buf, 0, 1024)) > 0) {
+                s.append(buf, 0, len);
+            }
+            ref(s.toString());
         }
-        r.close();
-        ref(s.toString());
     }
     
     private String getJdkHome(){
-        if (Utilities.isMac())
-            return System.getProperty("java.home") + File.separator + "bin" + File.separator;
+        if (Utilities.isMac() || System.getProperty("java.version").startsWith("1.") == false)
+            return System.getProperty("java.home") + File.separator + "bin" + File.separator;  // mac or JDK 9+
         else
             return System.getProperty("java.home") + File.separator + ".." + File.separator + "bin" + File.separator;
 

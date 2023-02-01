@@ -29,11 +29,6 @@
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
     <fileset>
-        <file>src/org/netbeans/modules/java/lsp/server/refactoring/ui/codicon.ttf</file>
-        <file>src/org/netbeans/modules/java/lsp/server/refactoring/ui/codicon.css</file>
-        <license ref="MIT" />
-    </fileset>
-    <fileset>
         <file>vscode/.vscodeignore</file>
         <file>vscode/.eslintrc.json</file>
         <file>vscode/.vscode/extensions.json</file>

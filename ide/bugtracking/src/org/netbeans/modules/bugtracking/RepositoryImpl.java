@@ -426,7 +426,7 @@ public final class RepositoryImpl<R, Q, I> {
     public Collection<IssueImpl> getUnsubmittedIssues () {
         Collection<I> issues = issueStatusProvider != null ? issueStatusProvider.getUnsubmittedIssues(r) : null;
         if (issues == null || issues.isEmpty()) {
-            return Collections.<IssueImpl>emptyList();
+            return Collections.emptyList();
         }
         List<IssueImpl> ret = new ArrayList<>(issues.size());
         for (I i : issues) {

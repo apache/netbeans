@@ -52,6 +52,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = BreakpointStratifier.class)
 public final class GroovyBreakpointStratifier implements BreakpointStratifier {
 
+    public final static String GROOVY_STRATUM = "Groovy"; //NOI18N
     private static final Logger LOGGER = Logger.getLogger(GroovyBreakpointStratifier.class.getName());
 
     public GroovyBreakpointStratifier() {
@@ -78,7 +79,7 @@ public final class GroovyBreakpointStratifier implements BreakpointStratifier {
                 String printText = pt.replace("{groovyName}", (groovyName != null) ? groovyName : "?"); // NOI18N
                 String groovyPath = getGroovyPath(url, fo);
 
-                lb.setStratum("Groovy"); // NOI18N
+                lb.setStratum(GROOVY_STRATUM);
                 lb.setSourceName(groovyName);
                 lb.setSourcePath(groovyPath);
                 lb.setPreferredClassName(findGroovyClassName(groovyPath, fo, lineNumber));

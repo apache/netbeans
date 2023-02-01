@@ -112,6 +112,7 @@ public final class FoldOperation {
      * @deprecated please use {@link #addToHierarchy(org.netbeans.api.editor.fold.FoldType, int, int, java.lang.Boolean, org.netbeans.api.editor.fold.FoldTemplate, java.lang.String, java.lang.Object, org.netbeans.spi.editor.fold.FoldHierarchyTransaction)}.
      * This form of call does not support automatic state assignment and fold templates.
      */
+    @Deprecated
     public Fold addToHierarchy(FoldType type, String description, boolean collapsed,
     int startOffset, int endOffset, int startGuardedLength, int endGuardedLength,
     Object extraInfo, FoldHierarchyTransaction transaction)

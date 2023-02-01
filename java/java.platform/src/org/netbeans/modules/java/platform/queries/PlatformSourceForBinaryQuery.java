@@ -94,20 +94,42 @@ public class PlatformSourceForBinaryQuery implements SourceForBinaryQueryImpleme
             this.cache.put (binaryRoot, res);
             return res;
         }
-        String binaryRootS = binaryRoot.toExternalForm();
+        return searchUnregisteredPlatform(binaryRoot.toExternalForm());
+    }
+
+    static SourceForBinaryQueryImplementation2.Result searchUnregisteredPlatform(String binaryRootS) {
+        String srcZipS = null;
+        String srcZipIn = null;
         if (binaryRootS.startsWith(JAR_FILE)) {
             if (binaryRootS.endsWith(RTJAR_PATH)) {
                 //Unregistered platform
-                String srcZipS = binaryRootS.substring(4,binaryRootS.length() - RTJAR_PATH.length()) + SRC_ZIP;
-                try {
-                    URL srcZip = FileUtil.getArchiveRoot(new URL(srcZipS));
-                    FileObject fo = URLMapper.findFileObject(srcZip);
-                    if (fo != null) {
-                        return new UnregisteredPlatformResult (fo);
-                    }
-                } catch (MalformedURLException mue) {
-                    Exceptions.printStackTrace(mue);
+                srcZipS = binaryRootS.substring(4, binaryRootS.length() - RTJAR_PATH.length()) + SRC_ZIP;
+            }
+        } else if (binaryRootS.startsWith("nbjrt:")) {
+            int end = binaryRootS.indexOf('!');
+            if (end >= 0) {
+                srcZipS = binaryRootS.substring(6, end) + "lib/" + SRC_ZIP;
+                String reminder = binaryRootS.substring(end + 1);
+                final String prefix = "/modules/";
+                if (reminder.startsWith(prefix)) {
+                    srcZipIn = reminder.substring(prefix.length());
                 }
+            }
+        }
+        if (srcZipS != null) {
+            try {
+                URL srcZip = FileUtil.getArchiveRoot(new URL(srcZipS));
+                FileObject fo = URLMapper.findFileObject(srcZip);
+                if (fo != null) {
+                    if (srcZipIn != null) {
+                        fo = fo.getFileObject(srcZipIn);
+                    }
+                    if (fo != null) {
+                        return new UnregisteredPlatformResult(fo);
+                    }
+                }
+            } catch (MalformedURLException mue) {
+                Exceptions.printStackTrace(mue);
             }
         }
         return null;

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.152
+#Version 2.156
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1133,6 +1133,8 @@ meth public java.net.URI getEarAppDirectory()
 meth public java.net.URI getWebAppDirectory()
 meth public java.net.URI[] getResources(boolean)
 meth public org.apache.maven.model.Model getRawModel() throws org.apache.maven.model.building.ModelBuildingException
+meth public org.apache.maven.project.MavenProject getEvaluatedProject(org.netbeans.api.project.ProjectActionContext)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.apache.maven.project.MavenProject getMavenProject()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.apache.maven.project.MavenProject loadAlternateMavenProject(org.netbeans.modules.maven.embedder.MavenEmbedder,java.util.List<java.lang.String>,java.util.Properties)
@@ -1155,7 +1157,7 @@ meth public void synchronousDependencyDownload()
 meth public void triggerDependencyDownload()
 meth public void triggerSourceJavadocDownload(boolean)
 supr java.lang.Object
-hfds BINARYRP,NONBINARYRP,files,listener,project,support,task
+hfds BINARYRP,LOG,NONBINARYRP,files,listener,project,support,task
 hcls AccessorImpl,FCHSL
 
 CLSS public org.netbeans.modules.maven.api.PluginPropertyUtils
@@ -1469,7 +1471,7 @@ meth public void removePOMModification(org.netbeans.modules.maven.model.ModelOpe
 meth public void setActiveConfiguration(org.netbeans.modules.maven.api.customizer.ModelHandle2$Configuration)
 meth public void setRawAuxiliaryProperty(java.lang.String,java.lang.String,boolean)
 supr java.lang.Object
-hfds active,auxiliaryProps,configurations,mappings,modConfig,model,modifiedMappings,pomOperations,project,transPropsPrivate,transPropsShared
+hfds active,allActions,auxiliaryProps,configurations,mappings,modConfig,model,modifiedMappings,pomOperations,project,transPropsPrivate,transPropsShared
 hcls AccessorImpl
 
 CLSS public static org.netbeans.modules.maven.api.customizer.ModelHandle2$Configuration
@@ -1847,6 +1849,9 @@ meth public static org.netbeans.modules.maven.execute.AbstractOutputHandler$Leve
 meth public static org.netbeans.modules.maven.execute.AbstractOutputHandler$Level[] values()
 supr java.lang.Enum<org.netbeans.modules.maven.execute.AbstractOutputHandler$Level>
 
+CLSS public abstract interface org.netbeans.modules.maven.execute.ActionNameProvider
+meth public abstract java.util.ResourceBundle getTranslations()
+
 CLSS public final org.netbeans.modules.maven.execute.ActionToGoalUtils
 fld public static org.netbeans.modules.maven.execute.ActionToGoalUtils$ContextAccessor ACCESSOR
 innr public abstract static ContextAccessor
@@ -1955,6 +1960,7 @@ hfds currentProject,executionTree
 CLSS public org.netbeans.modules.maven.execute.DefaultActionGoalProvider
 cons public init()
 meth protected java.io.InputStream getActionDefinitionStream()
+meth public static org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Reader createI18nReader(java.util.ResourceBundle)
 supr org.netbeans.modules.maven.spi.actions.AbstractMavenActionsProvider
 hfds MAPPINGS
 

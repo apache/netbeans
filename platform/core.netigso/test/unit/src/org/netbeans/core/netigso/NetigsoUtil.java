@@ -19,8 +19,7 @@
 package org.netbeans.core.netigso;
 
 import java.lang.reflect.Method;
-import java.util.regex.Pattern;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
 import org.osgi.framework.Bundle;

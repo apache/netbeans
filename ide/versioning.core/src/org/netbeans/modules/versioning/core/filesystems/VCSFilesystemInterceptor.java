@@ -421,7 +421,7 @@ public final class VCSFilesystemInterceptor {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || !(o instanceof FileEx)) return false;
+            if (!(o instanceof FileEx)) return false;
             FileEx fileEx = (FileEx) o;
             return isFolder == fileEx.isFolder && name.equals(fileEx.name) && parent.equals(fileEx.parent);
         }

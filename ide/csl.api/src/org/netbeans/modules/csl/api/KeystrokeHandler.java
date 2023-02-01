@@ -53,12 +53,14 @@ public interface KeystrokeHandler {
      * XXX Fix javadoc.
      * @deprecated  {@link DeletedTextInterceptor} {@link TypedTextInterceptor} {@link TypedBreakInterceptor} instead.
      */
+    @Deprecated
     boolean beforeCharInserted(@NonNull Document doc, int caretOffset, @NonNull JTextComponent target, char ch)
         throws BadLocationException;
 
     /** @todo Rip out the boolean return value? What does it mean? 
      * @deprecated  {@link DeletedTextInterceptor} {@link TypedTextInterceptor} {@link TypedBreakInterceptor} instead.
      */
+    @Deprecated
     boolean afterCharInserted(@NonNull Document doc, int caretOffset, @NonNull JTextComponent target, char ch)
         throws BadLocationException;
 
@@ -87,6 +89,7 @@ public interface KeystrokeHandler {
      * @todo Document why both caretOffset and caret is passed in!
      * @deprecated  {@link DeletedTextInterceptor} {@link TypedTextInterceptor} {@link TypedBreakInterceptor} instead.
      */
+    @Deprecated
     int beforeBreak(@NonNull Document doc, int caretOffset, @NonNull JTextComponent target)
         throws BadLocationException;
 
@@ -96,6 +99,7 @@ public interface KeystrokeHandler {
      * @deprecated  {@link DeletedTextInterceptor} {@link TypedTextInterceptor} {@link TypedBreakInterceptor} instead.
      */
     @NonNull
+    @Deprecated
     OffsetRange findMatching(@NonNull Document doc, int caretOffset);
     
     /**
@@ -117,5 +121,6 @@ public interface KeystrokeHandler {
      * @deprecated use interceptor {@link CamelCaseInterceptor} instead
      */
     @CheckForNull
+    @Deprecated
     int getNextWordOffset(Document doc, int caretOffset, boolean reverse);
 }

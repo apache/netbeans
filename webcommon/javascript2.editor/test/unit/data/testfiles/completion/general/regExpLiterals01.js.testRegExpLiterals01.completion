@@ -4,10 +4,10 @@ console.log(/a/.|test('xaxa'));
 ------------------------------------
 CLASS      prototype                       [PUBLIC]   JS Platform
 METHOD     compile(pattern: String): RegE  [PUBLIC]   JS Platform
-METHOD     exec(string: String): RegExpEx  [PUBLIC]   JS Platform
-METHOD     hasOwnProperty(v: String | Sym  [PUBLIC]   JS Platform
+METHOD     exec(string: String): null|Reg  [PUBLIC]   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
 METHOD     isPrototypeOf(v: Object): Bool  [PUBLIC]   JS Platform
-METHOD     propertyIsEnumerable(v: String  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 METHOD     test(string: String): Boolean   [PUBLIC]   JS Platform
 METHOD     toLocaleString(): String        [PUBLIC]   JS Platform
 METHOD     toString(): String              [PUBLIC]   JS Platform

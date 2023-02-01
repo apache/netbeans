@@ -49,7 +49,7 @@
  <answer id="arch-quality">
   <p>
    There is a lot of unit tests in 
-   <a href="http://hg.netbeans.org/main-golden/openide.util.lookup/test/unit/src/">version control</a>
+   <a href="https://github.com/apache/netbeans/tree/master/platform/openide.util.lookup/test/unit/src">version control</a>
    system.
   </p>
  </answer>
@@ -64,7 +64,7 @@
 
 
  <answer id="arch-usecases">
-     <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">
+     <a href="https://leanpub.com/nbp4beginners">
      <img src="http://wiki.apidesign.org/images/0/03/NetBeansPlatformForBeginners.jpg"
         style="float: right"
           width="60" height="70" alt="Cover of NetBeans Platform for Beginners book"/>
@@ -74,7 +74,7 @@
     <a href="@TOP@/org/openide/util/Lookup.html">javadoc</a>. 
     For details on this topic, 
     together with code samples, see chapter 4, 
-    of <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
+    of <a href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
     by Jason Wexbridge and Walter Nyland.
     In addition to that here is
     a list of frequently asked or interesting questions slowly expanding as
@@ -214,9 +214,10 @@ org.my.netbeans.extramodule.ExtraTip
     <api name="ProviderRegistrationMechanism"
       type="import"
       category="standard"
-      url="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#Provider%20Configuration%20File"
+      url="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Provider%20Configuration%20File"
       group="java" 
     />
+    <!-- ref to 1.5.0 as 1.3 is not reacheable -->
     but enhances it to also support the 
     <api 
       name="ProviderRegistrationRemoval" 

@@ -3250,7 +3250,23 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                             }
                         }
                     }
-                    ParserManager.parse(sources.keySet(), new T());
+
+                    // Performance of ParserManager#parse suffers if the sources
+                    // are of mixed mimetype. ParserManager will then generate
+                    // snapshots with mixed mimetypes, which violates the
+                    // ParserFactory contract and leads to slower code paths.
+                    //
+                    // To work around this the sources are passed to the
+                    // ParserManager grouped by their mimetype
+
+                    Map<String,List<Source>> sourcesByMimeType = sources
+                            .keySet()
+                            .stream()
+                            .collect(Collectors.groupingBy(s->s.getMimeType()));
+
+                    for(List<Source> l: sourcesByMimeType.values()) {
+                        ParserManager.parse(l, new T());
+                    }
                 } catch (final ParseException e) {
                     LOGGER.log(Level.WARNING, null, e);
                 } finally {

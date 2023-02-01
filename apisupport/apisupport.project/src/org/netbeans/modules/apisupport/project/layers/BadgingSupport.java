@@ -212,7 +212,7 @@ final class BadgingSupport implements SynchronousStatus, FileChangeListener {
             }
             if (fo.hasExt("shadow")) { // NOI18N
                 Object originalFile = fo.getAttribute("originalFile"); // NOI18N
-                if (originalFile != null && originalFile instanceof String) {
+                if (originalFile instanceof String) {
                     FileObject orig;
                     try {
                         orig = fo.getFileSystem().findResource((String) originalFile);

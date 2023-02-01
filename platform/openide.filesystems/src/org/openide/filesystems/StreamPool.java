@@ -69,7 +69,7 @@ final class StreamPool extends Object {
             }
         }
 
-        if ((retVal != null) && (retVal instanceof NotifyInputStream)) {
+        if (retVal instanceof NotifyInputStream) {
             AbstractFileSystem abstractFileSystem = ((AbstractFileSystem) fo.getFileSystem());
             ((NotifyInputStream) retVal).setOriginal(abstractFileSystem.info.inputStream(fo.getPath()));
         } else {
@@ -112,7 +112,7 @@ final class StreamPool extends Object {
             }
         }
 
-        if ((retVal != null) && (retVal instanceof NotifyOutputStream)) {
+        if (retVal instanceof NotifyOutputStream) {
             AbstractFileSystem abstractFileSystem = ((AbstractFileSystem) fo.getFileSystem());
             ((NotifyOutputStream) retVal).setOriginal(abstractFileSystem.info.outputStream(fo.getPath()));
         } else {

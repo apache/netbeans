@@ -458,13 +458,11 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
             
             installationSizeLabel.setText(
                     panel.getProperty(INSTALLATION_SIZE_PROPERTY));
-            installationSizeValue.setText(StringUtils.formatSize(
-                    installationSize));
+            installationSizeValue.setText(StringUtils.formatSize(installationSize));
             
             downloadSizeLabel.setText(
                     panel.getProperty(DOWNLOAD_SIZE_PROPERTY));
-            downloadSizeValue.setText(StringUtils.formatSize(
-                    downloadSize));
+            downloadSizeValue.setText(StringUtils.formatSize(downloadSize));
             
             if (registry.getProductsToInstall().isEmpty()) {
                 locationsPane.setVisible(false);

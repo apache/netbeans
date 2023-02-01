@@ -101,7 +101,7 @@ public class OccurrenceBuilder {
         JsObject parameter = null;
         DeclarationScope scope = item.scope;
         JsObject parent = item.currentParent;
-        if (!(parent instanceof JsWith || (parent.getParent() != null && parent.getParent() instanceof JsWith))) {
+        if (!(parent instanceof JsWith || parent.getParent() instanceof JsWith)) {
             while (scope != null && property == null && parameter == null) {
                 if (scope instanceof JsFunction) {
                     parameter = ((JsFunction) scope).getParameter(name);
@@ -119,7 +119,7 @@ public class OccurrenceBuilder {
                 }
             }
         } else {
-            if (!(parent instanceof JsWith) && (parent.getParent() != null && parent.getParent() instanceof JsWith)) {
+            if (!(parent instanceof JsWith) && parent.getParent() instanceof JsWith) {
                 parent = parent.getParent();
             }
             property = parent.getProperty(name);

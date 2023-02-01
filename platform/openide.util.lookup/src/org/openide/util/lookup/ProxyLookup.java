@@ -151,7 +151,6 @@ public class ProxyLookup extends Lookup {
          * If called before a {@link ProxyLookup} has been attached to this
          * controller, an IllegalStateException will be thrown.
          *
-         * @param exe An executor to notify in
          * @param lookups An array of Lookups to be proxied
          * @throws IllegalStateException if called before this instance
          * has been passed to the constructor of (exactly one) {@link ProxyLookup}

@@ -158,6 +158,8 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
     static {
         JSF_SEEKING_MAP.put(false, JSFUtils.EJB_STATELESS);    //NOI18N
         JSF_SEEKING_MAP.put(true, JSFUtils.FACES_EXCEPTION);   //NOI18N
+        JSF_SEEKING_MAP.put(false, JSFUtils.JAKARTAEE_EJB_STATELESS);    //NOI18N
+        JSF_SEEKING_MAP.put(true, JSFUtils.JAKARTAEE_FACES_EXCEPTION);   //NOI18N
     }
 
     /**
@@ -396,7 +398,7 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
 
 //        libsInitialized = true;
         repaint();
-        LOG.finest("Time spent in "+this.getClass().getName() +" setLibraryModel = "+(System.currentTimeMillis()-time) +" ms");   //NOI18N
+        LOG.log(Level.FINEST, "Time spent in {0} setLibraryModel = {1} ms", new Object[]{this.getClass().getName(), System.currentTimeMillis()-time});   //NOI18N
     }
 
     private void setServerLibraryModel(Collection<ServerLibraryItem> items) {
@@ -1805,7 +1807,11 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                     setServerLibraryModel(serverJsfLibraries);
                     if (serverJsfLibraries.isEmpty()) {
                         Library preferredLibrary;
-                        if (getProfile() != null && getProfile().isAtLeast(Profile.JAVA_EE_5)) {
+                        if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_4_0_NAME);
+                        } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_3_0_NAME);
+                        } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAVA_EE_5)) {
                             preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_2_0_NAME);
                         } else {
                             preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_1_2_NAME);

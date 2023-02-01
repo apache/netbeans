@@ -709,9 +709,9 @@ public class Reindenter implements IndentTask {
                 }
                     if (t != null) {
                         int i = getCurrentIndent(t, path);
-                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree) last).getExpression()), currentIndent) : i;
+                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree) last).getExpression()), currentIndent) : i; // TODO
                     } else {
-                        currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree) last).getExpression()), currentIndent);
+                        currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree) last).getExpression()), currentIndent); // TODO
                     }
 
                 break;
@@ -881,10 +881,10 @@ public class Reindenter implements IndentTask {
                     }
                     if (t != null) {
                         int i = getCurrentIndent(t, path);
-                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.COLON), getEndPosition(ct.getExpression()), currentIndent) : i;
+                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.COLON), getEndPosition(ct.getExpression()), currentIndent) : i; // TODO
                     } else {
                         int i = getCurrentIndent(ct, path);
-                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.COLON), getEndPosition(ct.getExpression()), currentIndent) : i;
+                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.COLON), getEndPosition(ct.getExpression()), currentIndent) : i; // TODO
                         currentIndent += cs.getIndentSize();
                     }
                 } else {

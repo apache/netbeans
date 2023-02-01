@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.navigator.NavigatorTCTest.GlobalLookup4TestImpl;

@@ -134,7 +134,7 @@ public class NodeTableModel extends AbstractTableModel {
             Object o = props[i].getValue(ATTR_TREE_COLUMN);
             boolean x;
 
-            if ((o != null) && o instanceof Boolean) {
+            if (o instanceof Boolean) {
                 if (((Boolean) o).booleanValue()) {
                     treeColumnProperty = props[i];
                     size--;
@@ -162,7 +162,7 @@ public class NodeTableModel extends AbstractTableModel {
 
                     Object o = props[i].getValue(ATTR_ORDER_NUMBER);
 
-                    if ((o != null) && o instanceof Integer) {
+                    if (o instanceof Integer) {
                         sort.put(new Double(((Integer) o).doubleValue()), Integer.valueOf(ia));
                     } else {
                         sort.put(new Double(ia + 0.1), new Integer(ia));
@@ -172,7 +172,7 @@ public class NodeTableModel extends AbstractTableModel {
 
                     Object o = props[i].getValue(ATTR_SORTING_COLUMN);
 
-                    if ((o != null) && o instanceof Boolean) {
+                    if (o instanceof Boolean) {
                         props[i].setValue(ATTR_SORTING_COLUMN, Boolean.FALSE);
                     }
                 }
@@ -180,7 +180,7 @@ public class NodeTableModel extends AbstractTableModel {
                 if (!existsComparableColumn) {
                     Object o = props[i].getValue(ATTR_COMPARABLE_COLUMN);
 
-                    if ((o != null) && o instanceof Boolean) {
+                    if (o instanceof Boolean) {
                         existsComparableColumn = ((Boolean) o).booleanValue();
                     }
                 }
@@ -240,7 +240,7 @@ public class NodeTableModel extends AbstractTableModel {
 
                 Object o = p.getValue(ATTR_SORTING_COLUMN);
 
-                if ((o != null) && o instanceof Boolean) {
+                if (o instanceof Boolean) {
                     if (((Boolean) o).booleanValue()) {
                         p.setValue(ATTR_SORTING_COLUMN, Boolean.FALSE);
                         p.setValue(ATTR_DESCENDING_ORDER, Boolean.FALSE);
@@ -322,7 +322,7 @@ public class NodeTableModel extends AbstractTableModel {
         Property p = allPropertyColumns[column].getProperty();
         Object o = p.getValue(ATTR_COMPARABLE_COLUMN);
 
-        if ((o != null) && o instanceof Boolean) {
+        if (o instanceof Boolean) {
             return ((Boolean) o).booleanValue();
         }
 
@@ -357,7 +357,7 @@ public class NodeTableModel extends AbstractTableModel {
         Property p = allPropertyColumns[column].getProperty();
         Object o = p.getValue(ATTR_SORTING_COLUMN);
 
-        if ((o != null) && o instanceof Boolean) {
+        if (o instanceof Boolean) {
             return ((Boolean) o).booleanValue();
         }
 
@@ -443,7 +443,7 @@ public class NodeTableModel extends AbstractTableModel {
         Property p = allPropertyColumns[sortColumn].getProperty();
         Object o = p.getValue(ATTR_DESCENDING_ORDER);
 
-        if ((o != null) && o instanceof Boolean) {
+        if (o instanceof Boolean) {
             return ((Boolean) o).booleanValue();
         }
 
@@ -544,7 +544,7 @@ public class NodeTableModel extends AbstractTableModel {
     private boolean isVisible(Property p) {
         Object o = p.getValue(ATTR_INVISIBLE);
 
-        if ((o != null) && o instanceof Boolean) {
+        if (o instanceof Boolean) {
             return !((Boolean) o).booleanValue();
         }
 

@@ -24,7 +24,7 @@ import org.openide.filesystems.FileObject;
 
 /**Specify a different JDK on which selected Java editor features may be run.
  *
- * @since 2.56
+ * @since 2.62
  */
 public interface RemoteEditorPlatform {
 

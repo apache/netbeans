@@ -318,9 +318,9 @@ imports
 	(
             ( importItem ws? SEMI ws? )
             |
-            ( sass_use ws? SEMI ws? )
+            {isScssSource()}? ( sass_use ws? SEMI ws? )
             |
-            ( sass_forward ws? SEMI ws? )
+            {isScssSource()}? ( sass_forward ws? SEMI ws? )
         )+
 	;
 
@@ -336,7 +336,7 @@ importItem
 
 sass_use
     :
-        {isScssSource()}? SASS_USE ws resourceIdentifier (ws sass_use_as)? (ws sass_use_with)?
+        SASS_USE ws resourceIdentifier (ws sass_use_as)? (ws sass_use_with)?
     ;
 
 sass_use_as
@@ -357,7 +357,7 @@ sass_use_with_declaration
 
 sass_forward
     :
-        {isScssSource()}? SASS_FORWARD ws resourceIdentifier ( ws ( sass_forward_hide |  sass_forward_show))? ({tokenNameEquals2("as")}? ws sass_forward_as)? ({tokenNameEquals2("with")}? ws sass_forward_with)?
+        SASS_FORWARD ws resourceIdentifier ( ws ( sass_forward_hide |  sass_forward_show))? ({tokenNameEquals2("as")}? ws sass_forward_as)? ({tokenNameEquals2("with")}? ws sass_forward_with)?
     ;
 
 sass_forward_as
@@ -1082,7 +1082,7 @@ cp_variable_declaration
 cp_variable
     :
         //every token which might possibly begin with the at sign
-        {isLessSource()}? ( AT_IDENT | IMPORT_SYM | PAGE_SYM | MEDIA_SYM | NAMESPACE_SYM | CHARSET_SYM | COUNTER_STYLE_SYM | FONT_FACE_SYM | TOPLEFTCORNER_SYM | TOPLEFT_SYM | TOPCENTER_SYM | TOPRIGHT_SYM | TOPRIGHTCORNER_SYM | BOTTOMLEFTCORNER_SYM | BOTTOMLEFT_SYM | BOTTOMCENTER_SYM | BOTTOMRIGHT_SYM | BOTTOMRIGHTCORNER_SYM | LEFTTOP_SYM | LEFTMIDDLE_SYM | LEFTBOTTOM_SYM | RIGHTTOP_SYM | RIGHTMIDDLE_SYM | RIGHTBOTTOM_SYM | MOZ_DOCUMENT_SYM | WEBKIT_KEYFRAMES_SYM | SASS_CONTENT | SASS_MIXIN | SASS_INCLUDE | SASS_EXTEND | SASS_DEBUG | SASS_WARN | SASS_IF | SASS_ELSE | SASS_FOR | SASS_FUNCTION | SASS_RETURN | SASS_EACH | SASS_WHILE | SASS_AT_ROOT )
+        {isLessSource()}? ( AT_IDENT | IMPORT_SYM | PAGE_SYM | MEDIA_SYM | NAMESPACE_SYM | CHARSET_SYM | COUNTER_STYLE_SYM | FONT_FACE_SYM | TOPLEFTCORNER_SYM | TOPLEFT_SYM | TOPCENTER_SYM | TOPRIGHT_SYM | TOPRIGHTCORNER_SYM | BOTTOMLEFTCORNER_SYM | BOTTOMLEFT_SYM | BOTTOMCENTER_SYM | BOTTOMRIGHT_SYM | BOTTOMRIGHTCORNER_SYM | LEFTTOP_SYM | LEFTMIDDLE_SYM | LEFTBOTTOM_SYM | RIGHTTOP_SYM | RIGHTMIDDLE_SYM | RIGHTBOTTOM_SYM | MOZ_DOCUMENT_SYM | WEBKIT_KEYFRAMES_SYM | SASS_CONTENT | SASS_MIXIN | SASS_INCLUDE | SASS_EXTEND | SASS_DEBUG | SASS_WARN | SASS_IF | SASS_ELSE | SASS_FOR | SASS_FUNCTION | SASS_RETURN | SASS_EACH | SASS_WHILE | SASS_AT_ROOT | SASS_USE | SASS_FORWARD )
         |
         {isScssSource()}? ( SASS_VAR | IDENT DOT SASS_VAR )
     ;

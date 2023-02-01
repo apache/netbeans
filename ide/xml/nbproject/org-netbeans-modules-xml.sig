@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.48
+#Version 1.51
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -931,7 +931,7 @@ CLSS public abstract interface static org.netbeans.modules.xml.actions.CollectDT
 
 CLSS public abstract org.netbeans.modules.xml.actions.CollectSystemAction
 cons public init()
-fld protected final java.util.List registeredAction
+fld protected final java.util.List<java.lang.Object> registeredAction
 intf org.openide.util.actions.Presenter$Popup
 meth protected abstract java.lang.Class getActionLookClass()
 meth protected abstract void addRegisteredAction()
@@ -1481,7 +1481,10 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
+innr public final static PasswordLine
+innr public final static QuickPick
 innr public static Confirmation
 innr public static InputLine
 innr public static Message
@@ -1610,6 +1613,7 @@ CLSS public abstract interface static org.openide.cookies.EditorCookie$Observabl
 fld public final static java.lang.String PROP_DOCUMENT = "document"
 fld public final static java.lang.String PROP_MODIFIED = "modified"
 fld public final static java.lang.String PROP_OPENED_PANES = "openedPanes"
+fld public final static java.lang.String PROP_RELOADING = "reloading"
 intf org.openide.cookies.EditorCookie
 meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)

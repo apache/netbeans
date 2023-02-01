@@ -1514,7 +1514,7 @@ final class PropUtils {
      * Just a helper method which delegates to shallBeRDVEnabled(Node.Property).
      */
     static boolean shallBeRDVEnabled(FeatureDescriptor fd) {
-        if ((fd != null) && fd instanceof Node.Property) {
+        if (fd instanceof Property) {
             return shallBeRDVEnabled((Node.Property) fd);
         }
 

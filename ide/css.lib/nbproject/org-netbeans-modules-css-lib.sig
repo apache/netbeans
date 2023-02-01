@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.98
+#Version 1.101
 
 CLSS public abstract interface java.io.Serializable
 
@@ -970,6 +970,7 @@ fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCate
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory MULTI_COLUMN_LAYOUT
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory OPERA
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory PAGED_MEDIA
+fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory POSITIONING
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory RUBY
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory SAFARI
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory SPEECH

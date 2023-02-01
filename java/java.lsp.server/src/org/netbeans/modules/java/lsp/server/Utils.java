@@ -19,12 +19,9 @@
 package org.netbeans.modules.java.lsp.server;
 
 import com.google.gson.stream.JsonWriter;
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
@@ -50,11 +47,14 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.SymbolTag;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.modules.editor.java.Utilities;
+import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
+import org.netbeans.spi.jumpto.type.SearchType;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -95,6 +95,59 @@ public class Utils {
             case Struct: return SymbolKind.Struct;
             case TypeParameter: return SymbolKind.TypeParameter;
             case Variable: return SymbolKind.Variable;
+        }
+        return SymbolKind.Object;
+    }
+    
+    @NonNull
+    public static QuerySupport.Kind searchType2QueryKind(@NonNull final SearchType searchType) {
+        // copy of org.netbeans.modules.jumpto.common.Utils.toQueryKind
+        switch (searchType) {
+            case CAMEL_CASE:
+                return QuerySupport.Kind.CAMEL_CASE;
+            case CASE_INSENSITIVE_CAMEL_CASE:
+                return QuerySupport.Kind.CASE_INSENSITIVE_CAMEL_CASE;
+            case CASE_INSENSITIVE_EXACT_NAME:
+            case EXACT_NAME:
+                return QuerySupport.Kind.EXACT;
+            case CASE_INSENSITIVE_PREFIX:
+                return QuerySupport.Kind.CASE_INSENSITIVE_PREFIX;
+            case CASE_INSENSITIVE_REGEXP:
+                return QuerySupport.Kind.CASE_INSENSITIVE_REGEXP;
+            case PREFIX:
+                return QuerySupport.Kind.PREFIX;
+            case REGEXP:
+                return QuerySupport.Kind.REGEXP;
+            default:
+                throw new IllegalThreadStateException(String.valueOf(searchType));
+        }
+    }
+    
+    public static SymbolKind cslElementKind2SymbolKind(final org.netbeans.modules.csl.api.ElementKind elementKind) {
+        // copy of org.netbeans.modules.csl.navigation.GsfStructureProvider.convertKind
+        switch(elementKind) {
+            case ATTRIBUTE: return SymbolKind.Property;
+            case CALL: return SymbolKind.Event;
+            case CLASS: return SymbolKind.Class;
+            case CONSTANT: return SymbolKind.Constant;
+            case CONSTRUCTOR: return SymbolKind.Constructor;
+            case DB: return SymbolKind.File;
+            case ERROR: return SymbolKind.Event;
+            case METHOD: return SymbolKind.Method;
+            case FILE: return SymbolKind.File;
+            case FIELD: return SymbolKind.Field;
+            case MODULE: return SymbolKind.Module;
+            case VARIABLE: return SymbolKind.Variable;
+            case GLOBAL: return SymbolKind.Module;
+            case INTERFACE: return SymbolKind.Interface;
+            case KEYWORD: return SymbolKind.Key;
+            case OTHER: return SymbolKind.Object;
+            case PACKAGE: return SymbolKind.Package;
+            case PARAMETER: return SymbolKind.Variable;
+            case PROPERTY: return SymbolKind.Property;
+            case RULE: return SymbolKind.Event;
+            case TAG: return SymbolKind.Operator;
+            case TEST: return SymbolKind.Function;
         }
         return SymbolKind.Object;
     }

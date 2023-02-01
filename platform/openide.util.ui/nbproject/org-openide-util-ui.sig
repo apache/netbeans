@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.24
+#Version 9.26
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -649,6 +649,8 @@ fld public final static int OS_UNIX_MASK = 1709048
 fld public final static int OS_UNIX_OTHER = 524288
 fld public final static int OS_VMS = 16384
 fld public final static int OS_WIN2000 = 8192
+fld public final static int OS_WIN95 = 2
+fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 303111
  anno 0 java.lang.Deprecated()
 fld public final static int OS_WINNT = 1
@@ -1261,6 +1263,8 @@ fld public final static int OS_UNIX_MASK = 1709048
 fld public final static int OS_UNIX_OTHER = 524288
 fld public final static int OS_VMS = 16384
 fld public final static int OS_WIN2000 = 8192
+fld public final static int OS_WIN95 = 2
+fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 303111
  anno 0 java.lang.Deprecated()
 fld public final static int OS_WINNT = 1
@@ -1282,6 +1286,7 @@ meth public static int arrayHashCode(java.lang.Object[])
 meth public static int getOperatingSystem()
 meth public static int showJFileChooser(javax.swing.JFileChooser,java.awt.Component,java.lang.String)
  anno 0 java.lang.Deprecated()
+meth public static java.awt.Component findDialogParent()
 meth public static java.awt.Component getFocusTraversableComponent(java.awt.Component)
 meth public static java.awt.Cursor createCustomCursor(java.awt.Component,java.awt.Image,java.lang.String)
 meth public static java.awt.Cursor createProgressCursor(java.awt.Component)

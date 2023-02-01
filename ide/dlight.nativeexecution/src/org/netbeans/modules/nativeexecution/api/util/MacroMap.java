@@ -237,7 +237,7 @@ public final class MacroMap implements Cloneable {
 
         String oldpath = get(name);
         String newPath = path + (oldpath == null ? "" : (isWindows ? ';' : ':') + oldpath); // NOI18N
-        newPath = newPath.replaceAll("::", ":"); // NOI18N
+        newPath = newPath.replace("::", ":"); // NOI18N
         newPath = newPath.replaceAll("^:", ""); // NOI18N
         newPath = newPath.replaceAll(":$", ""); // NOI18N
         put(name, newPath);

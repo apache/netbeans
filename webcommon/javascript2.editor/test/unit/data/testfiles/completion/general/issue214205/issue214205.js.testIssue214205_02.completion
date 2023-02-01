@@ -12,9 +12,9 @@ CLASS      NaN                             [PUBLIC]   <font color=#999999>_.Numb
 CLASS      POSITIVE_INFINITY               [PUBLIC]   <font color=#999999>_.Number.js</font>
 CLASS      prototype                       [PUBLIC]   JS Platform
 METHOD     assign(target: Object, sources  [PUBLIC,   JS Platform
-METHOD     create(o:  nul|Object , proper  [PUBLIC,   JS Platform
+METHOD     create(o: null|Object, propert  [PUBLIC,   JS Platform
 METHOD     defineProperties(o: Object, pr  [PUBLIC,   JS Platform
-METHOD     defineProperty(o: Object, p: S  [PUBLIC,   JS Platform
+METHOD     defineProperty(o: Object, p: N  [PUBLIC,   JS Platform
 METHOD     entries(o: Object): Object      [PUBLIC,   JS Platform
 METHOD     freeze(o: Object): Object       [PUBLIC,   JS Platform
 METHOD     fromEntries(entries: Iterable)  [PUBLIC,   JS Platform
@@ -23,8 +23,8 @@ METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
 METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
 METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
 METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
-METHOD     hasOwn(o: Object, v: String |   [PUBLIC,   JS Platform
-METHOD     hasOwnProperty(v: String | Sym  [PUBLIC]   JS Platform
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
 METHOD     is(value1: Object, value2: Obj  [PUBLIC,   JS Platform
 METHOD     isExtensible(o: Object): Boole  [PUBLIC,   JS Platform
 METHOD     isFinite()                      [PUBLIC]   <font color=#999999>_.Number.js</font>
@@ -38,7 +38,7 @@ METHOD     keys(o: Object): String         [PUBLIC,   JS Platform
 METHOD     parseFloat()                    [PUBLIC]   <font color=#999999>_.Number.js</font>
 METHOD     parseInt()                      [PUBLIC]   <font color=#999999>_.Number.js</font>
 METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(v: String  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform
 METHOD     setPrototypeOf(o: Object, prot  [PUBLIC,   JS Platform
 METHOD     toFixed()                       [PUBLIC]   <font color=#999999>numberLiterals01.js</font>

@@ -634,6 +634,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (isCancelled()) {
                 return;
             }
+            addToPath(node);
             scan(node.getAttributes());
             typeInfo = new TypeDeclarationTypeInfo(node);
             Identifier name = node.getName();
@@ -646,6 +647,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 }
                 addColoringForUnusedPrivateFields();
             }
+            removeFromPath();
         }
 
         @Override
@@ -810,13 +812,14 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
             if (parentNode instanceof ClassDeclaration
                     || parentNode instanceof InterfaceDeclaration
+                    || parentNode instanceof TraitDeclaration
                     || parentNode instanceof ClassInstanceCreation
                     || parentNode instanceof EnumDeclaration) {
                 boolean isPrivate = Modifier.isPrivate(node.getModifier());
                 List<Identifier> names = node.getNames();
                 for (Identifier identifier : names) {
                     Set<ColoringAttributes> coloring = createConstantDeclarationColoring(identifier);
-                    if (!isPrivate) {
+                    if (!isPrivate || parentNode instanceof TraitDeclaration) {
                         addColoringForNode(identifier, coloring);
                     } else {
                         privateUnusedConstants.put(new UnusedIdentifier(identifier.getName(), typeInfo), new ASTNodeColoring(identifier, coloring));

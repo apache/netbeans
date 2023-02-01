@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.71
+#Version 1.75
 
 CLSS public abstract java.awt.AWTEvent
 cons public init(java.awt.Event)
@@ -2132,6 +2132,7 @@ meth protected final boolean isSelected()
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected final void setState(int)
 meth protected int getCaptionYAdjustment()
+meth protected int getCaptionYPosition(java.awt.Graphics)
 meth protected int getIconYAdjustment()
 meth protected int stateChanged(int,int)
 meth protected void paintIconAndText(java.awt.Graphics)

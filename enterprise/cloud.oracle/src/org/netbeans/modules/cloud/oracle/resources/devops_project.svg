@@ -52,8 +52,8 @@
    inkscape:cy="5.109304"
    inkscape:window-width="1570"
    inkscape:window-height="1049"
-   inkscape:window-x="167"
-   inkscape:window-y="74"
+   inkscape:window-x="202"
+   inkscape:window-y="77"
    inkscape:window-maximized="0"
    inkscape:current-layer="Vector_Icons" />
 <style
@@ -123,25 +123,14 @@
 	.st61{fill:#303030;}
 </style>
 
-<g
-   inkscape:groupmode="layer"
-   id="layer1"
-   inkscape:label="Layer 1" /><rect
-   style="fill:none;stroke:#9d9d9d;stroke-width:0.5;stroke-miterlimit:2.2;paint-order:markers stroke fill"
-   id="rect1110"
-   width="4.0132489"
-   height="13.793435"
-   x="0.64077079"
-   y="0.80939466" /><rect
-   style="fill:none;stroke:#9d9d9d;stroke-width:0.5;stroke-miterlimit:2.20000005;paint-order:markers stroke fill;stroke-dasharray:none"
-   id="rect1110-9"
-   width="4.1202073"
-   height="8.3020802"
-   x="5.957962"
-   y="0.7559157" /><rect
-   style="fill:none;stroke:#9d9d9d;stroke-width:0.5;stroke-miterlimit:2.20000005;paint-order:markers stroke fill;stroke-dasharray:none"
-   id="rect1110-9-6"
-   width="4.0579982"
-   height="11.308826"
-   x="11.359737"
-   y="0.78702015" /></svg>
+<circle
+   style="fill:none;stroke:#9d9d9d;stroke-width:0.5;stroke-miterlimit:2.2;stroke-dasharray:none;paint-order:markers stroke fill"
+   id="circle1256"
+   cx="4.5191202"
+   cy="4.6877437"
+   r="3.7097256" /><circle
+   style="fill:none;stroke:#9d9d9d;stroke-width:0.5;stroke-miterlimit:2.2;stroke-dasharray:none;paint-order:markers stroke fill"
+   id="circle1256-3"
+   cx="11.533875"
+   cy="11.466424"
+   r="3.7097256" /></svg>

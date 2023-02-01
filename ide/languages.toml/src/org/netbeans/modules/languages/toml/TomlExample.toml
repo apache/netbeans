@@ -1,0 +1,17 @@
+# This line is a comment
+
+environment = "production"
+
+[application]
+name = "hello_world"
+message = "TOML Says:\nHello World!"
+description = """
+This application says
+
+Hello World!
+"""
+release.version  = '1.1'
+release.revision = 42
+release.snapshot = true
+release.date     = 2022-07-20T18:20:00Z
+

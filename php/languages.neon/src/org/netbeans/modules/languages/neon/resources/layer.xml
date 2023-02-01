@@ -125,6 +125,13 @@
                             </file>
                         </folder>
                     </folder>
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="FontAndColors-FlatLafDark.xml" url="FontAndColors-FlatLafDark.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.languages.neon.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
                 </folder>
             </folder>
         </folder>

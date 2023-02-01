@@ -192,7 +192,7 @@ public class CompletionContext {
             //user enters an attribute name
             case ARGUMENT:
                 completionType = CompletionType.ATTRIBUTE;
-                typedChars = token.text().toString().substring(0, caretOffset - tOffset);;
+                typedChars = token.text().toString().substring(0, caretOffset - tOffset);
                 break;
 
             //some random character

@@ -837,9 +837,9 @@ public class DataEditorSupport extends CloneableEditorSupport {
         }
         
         /**
-         * default threshold for big file to warn user (default is 1MB)
+         * default threshold for big file to warn user (default is 5MB)
          */
-        private final transient long BIG_FILE_THRESHOLD_MB = Integer.getInteger("org.openide.text.big.file.size", 1) * 1024 * 1024;
+        private final transient long BIG_FILE_THRESHOLD_MB = Integer.getInteger("org.openide.text.big.file.size", 5) * 1024 * 1024;
         
         /** Obtains the input stream.
         * @exception IOException if an I/O error occurs

@@ -59,9 +59,9 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
 public class BoldVariablesTableModelFilter implements TableHTMLModelFilter,
 Constants {
     
-    private Map variableToValueType = new WeakHashMap ();
-    private Map variableToValueValue = new WeakHashMap ();
-    private Map variableToValueToString = new WeakHashMap ();
+    private Map<Object, String> variableToValueType = new WeakHashMap<>();
+    private Map<Object, String> variableToValueValue = new WeakHashMap<>();
+    private Map<Object, String> variableToValueToString = new WeakHashMap<>();
     
     
     
@@ -180,7 +180,7 @@ Constants {
     public void removeModelListener (ModelListener l) {
     }
     
-    private String bold (Object variable, String value, Map map) {
+    private String bold (Object variable, String value, Map<Object, String> map) {
         if (map.containsKey (variable)) {
             String oldValue = (String) map.get (variable);
             if (oldValue == value ||

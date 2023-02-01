@@ -85,7 +85,7 @@ public class OpenInEditorActionProvider extends ExternalCommandActionProvider {
             URL url = null;
             try {
 
-                if (key != null && (key instanceof String)) {
+                if (key instanceof String) {
                     ExecutionEnvironment env = ExecutionEnvironmentFactory.fromUniqueID((String) key);
                     if (env.isRemote()) {
                         url = new URL("rfs://" + key + filePath); //NOI18N

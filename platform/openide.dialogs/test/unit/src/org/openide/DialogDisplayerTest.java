@@ -76,7 +76,7 @@ public class DialogDisplayerTest extends NbTestCase {
         td.inputs.add("Answer One");
         td.inputs.add("Answer Two");
 
-        // BEGIN:dialogdisplayer-notifyFuture
+        // @start region="notifyFuture"
         NotifyDescriptor.InputLine nd = new NotifyDescriptor.InputLine("Question", "Title");
         
         CompletableFuture<UserData> resultFuture = DialogDisplayer.getDefault().notifyFuture(nd).
@@ -110,7 +110,7 @@ public class DialogDisplayerTest extends NbTestCase {
                     }
                     return null;
                 });
-        // END:dialogdisplayer-notifyFuture
+        // @end region="notifyFuture"
         UserData d = resultFuture.get();
         assertNotNull(d);
     }

@@ -148,6 +148,7 @@ public interface RunOffEDTProvider {
          * @since 1.30
          * @deprecated interface SwingProgress should be used instead.
          */
+        @Deprecated
         public void runOffEventThreadWithCustomDialogContent(
             final Runnable operation,
             final String dialogTitle,

@@ -47,6 +47,7 @@ import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 /**
  * @deprecated use {@link CslActions#createToggleBlockCommentAction() } instead.
  */
+@Deprecated
 public class ToggleBlockCommentAction extends BaseAction {
 
     // -J-Dorg.netbeans.modules.csl.api.ToggleBlockCommentAction.level=FINE

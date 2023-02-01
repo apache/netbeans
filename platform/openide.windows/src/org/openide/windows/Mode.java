@@ -48,20 +48,24 @@ public interface Mode extends Serializable {
 
     /** Name of property for the unique programmatic name of this mode.
      * @deprecated Do not use. It is redundant, name can not be changed.*/
+    @Deprecated
     public static final String PROP_NAME = "name"; // NOI18N
 
     /** Name of property for the display name of this mode.
      * @deprecated Do not use. It is redundant. */
+    @Deprecated
     public static final String PROP_DISPLAY_NAME = "displayName"; // NOI18N
 
     /** @deprecated Only public by accident. */
 
+    @Deprecated
     /* public static final */ long serialVersionUID = -2650968323666215654L;
 
     /** Get the diplay name of the mode.
      * This name will be used by a container to create its title.
      * @return human-presentable name of the mode
      * @deprecated Do not use. It is redudant. */
+    @Deprecated
     public String getDisplayName();
 
     /** Get the programmatic name of the mode.
@@ -73,6 +77,7 @@ public interface Mode extends Serializable {
      * implementations as the icon (e.g. for display in tabs).
      * @return the icon of the mode (or <code>null</code> if no icon was specified)
      * @deprecated Do not use. It is redundant. */
+    @Deprecated
     public Image getIcon();
 
     /** Attaches a component to a mode for this workspace.
@@ -104,6 +109,7 @@ public interface Mode extends Serializable {
     /** Getter for asociated workspace.
      * @return The workspace instance to which is this mode asociated.
      * @deprecated Do not use. Worskpaces are not supporeted anymore. */
+    @Deprecated
     public Workspace getWorkspace();
 
     /** Get all top components currently docked into this mode.

@@ -22,11 +22,11 @@
 
 
 <dependencies>
-    // BEGIN: CharSequencesPomDependency
+    // @start region="CharSequencesPomDependency"
     <dependency>
         <groupId>org.netbeans.api</groupId>
         <artifactId>org-openide-util</artifactId>
         <version>RELEASE110</version>
     </dependency>
-    // END: CharSequencesPomDependency
+    // @end region="CharSequencesPomDependency"
 </dependencies>

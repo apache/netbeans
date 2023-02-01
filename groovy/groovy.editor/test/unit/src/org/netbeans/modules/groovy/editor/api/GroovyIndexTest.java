@@ -57,6 +57,27 @@ public class GroovyIndexTest extends GroovyTestBase {
         assertEquals(5, classes.size());
     }
 
+    public void testMatchCamelCase() throws Exception {
+        assertTrue(GroovyIndex.matchCamelCase("RegExPars", "RegExParser", false));
+        assertFalse(GroovyIndex.matchCamelCase("REGExPars", "RegExParser", false));
+        assertTrue(GroovyIndex.matchCamelCase("REGExPars", "RegExParser", true));
+        assertTrue(GroovyIndex.matchCamelCase("MarkerPattern", "markerPattern", true));
+        assertFalse(GroovyIndex.matchCamelCase("MarkerPattern", "markerPattern", false));
+        assertTrue(GroovyIndex.matchCamelCase("markerPattern", "markerPattern", false));
+        assertFalse(GroovyIndex.matchCamelCase("maRKerPattern", "markerPattern", false));
+        assertTrue(GroovyIndex.matchCamelCase("maRKerPattern", "markerPattern", true));
+        assertFalse(GroovyIndex.matchCamelCase("markeRPattern", "markerPattern", false));
+        assertFalse(GroovyIndex.matchCamelCase("markerRPattern", "markerPattern", true));
+        assertTrue(GroovyIndex.matchCamelCase("markeRPattern", "markerPattern", true));
+        assertTrue(GroovyIndex.matchCamelCase("kNaD", "koleckoNaDruhou", true));
+        assertTrue(GroovyIndex.matchCamelCase("kNaD", "koleckoNaDruhou", false));
+        assertTrue(GroovyIndex.matchCamelCase("WVSN", "WithVeryStrangeName", true));
+        assertTrue(GroovyIndex.matchCamelCase("WVSN", "WithVeryStrangeName", false));
+        assertFalse(GroovyIndex.matchCamelCase("WVSNE", "WithVeryStrangeName", false));
+        assertTrue(GroovyIndex.matchCamelCase("WVSNE", "WithVeryStrangeName", true));
+    }
+    
+    
     private GroovyIndex initIndex() throws Exception {
         indexFile(getTestPath());
         return GroovyIndex.get(createSourceClassPathsForTest());

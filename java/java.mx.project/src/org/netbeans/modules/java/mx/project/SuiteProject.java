@@ -19,9 +19,13 @@
 package org.netbeans.modules.java.mx.project;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Future;
+import javax.swing.event.ChangeListener;
 import org.netbeans.modules.java.mx.project.suitepy.MxSuite;
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -46,7 +50,8 @@ final class SuiteProject implements Project {
                 new SuiteLogicalView(this),
                 new SuiteClassPathProvider(this, jdks),
                 new SuiteProperties(),
-                new SuiteActionProvider(this)
+                new SuiteActionProvider(this),
+                new SuiteCompilerOptionsQueryImpl()
             );
         } catch (RuntimeException ex) {
             throw Exceptions.attachMessage(ex, "Error parsing " + suitePy);
@@ -104,4 +109,24 @@ final class SuiteProject implements Project {
         return null;
     }
 
+    private class SuiteCompilerOptionsQueryImpl implements CompilerOptionsQueryImplementation {
+
+        private CompilerOptionsQueryImplementation.Result RESULT = new Result() {
+            @Override
+            public List<? extends String> getArguments() {
+                return Arrays.asList("--add-modules", "ALL-MODULE-PATH", "--limit-modules", "java.se,jdk.unsupported,jdk.management");
+            }
+
+            @Override
+            public void addChangeListener(ChangeListener listener) {}
+
+            @Override
+            public void removeChangeListener(ChangeListener listener) {}
+        };
+
+        @Override
+        public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
+            return RESULT;
+        }
+    }
 }

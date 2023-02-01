@@ -100,7 +100,7 @@ public class NetworkAccess {
                         listener.notifyException (ix);
                     } catch (ExecutionException ex) {
                         Throwable t = ex.getCause();
-                        if(t!=null && t instanceof Exception) {
+                        if(t instanceof Exception) {
                             listener.notifyException ((Exception) t);
                         } else {
                             listener.notifyException (ex);

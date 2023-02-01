@@ -24,7 +24,6 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.bugtracking.RepositoryImpl;

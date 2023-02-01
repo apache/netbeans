@@ -31,7 +31,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.21</specification-version>
+                        <specification-version>2.28</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -306,6 +306,14 @@
                         <specification-version>9.4.1</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <implementation-version/>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -316,6 +324,7 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.gradle</code-name-base>
+                        <recursive/>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
@@ -326,10 +335,12 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
+                        <recursive/>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.projectui</code-name-base>
+                        <recursive/>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
@@ -360,6 +371,10 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
                         <recursive/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
+                        <compile-dependency/>
                     </test-dependency>
                 </test-type>
             </test-dependencies>

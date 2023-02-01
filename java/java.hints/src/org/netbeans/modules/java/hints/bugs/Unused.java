@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.hints.bugs;
 
 import com.sun.source.tree.Tree.Kind;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
@@ -46,11 +47,18 @@ public class Unused {
 
     @TriggerTreeKind(Kind.COMPILATION_UNIT)
     public static List<ErrorDescription> unused(HintContext ctx) {
-         return UnusedDetector.findUnused(ctx.getInfo())
-                             .stream()
-                             .map(ud -> convertUnused(ctx, ud))
-                             .filter(err -> err != null)
-                             .collect(Collectors.toList());
+        List<UnusedDescription> unused = UnusedDetector.findUnused(ctx.getInfo(), () -> ctx.isCanceled());
+        List<ErrorDescription> result = new ArrayList<>(unused.size());
+        for (UnusedDescription ud : unused) {
+            if (ctx.isCanceled()) {
+                break;
+            }
+            ErrorDescription err = convertUnused(ctx, ud);
+            if (err != null) {
+                result.add(err);
+            }
+        }
+        return result;
     }
 
     @Messages({

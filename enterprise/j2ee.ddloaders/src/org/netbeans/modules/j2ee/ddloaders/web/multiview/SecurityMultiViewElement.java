@@ -29,7 +29,13 @@ import org.netbeans.modules.j2ee.ddloaders.web.DDDataLoader;
 import org.netbeans.modules.j2ee.ddloaders.web.DDDataObject;
 import org.netbeans.modules.j2ee.ddloaders.web.DDWeb25DataLoader;
 import org.netbeans.modules.j2ee.ddloaders.web.DDWeb30DataLoader;
+import org.netbeans.modules.j2ee.ddloaders.web.DDWeb40DataLoader;
+import org.netbeans.modules.j2ee.ddloaders.web.DDWeb50DataLoader;
+import org.netbeans.modules.j2ee.ddloaders.web.DDWeb60DataLoader;
 import org.netbeans.modules.j2ee.ddloaders.web.DDWebFragment30DataLoader;
+import org.netbeans.modules.j2ee.ddloaders.web.DDWebFragment40DataLoader;
+import org.netbeans.modules.j2ee.ddloaders.web.DDWebFragment50DataLoader;
+import org.netbeans.modules.j2ee.ddloaders.web.DDWebFragment60DataLoader;
 import org.netbeans.modules.xml.multiview.ToolBarMultiViewElement;
 import org.netbeans.modules.xml.multiview.ui.ConfirmDialog;
 import org.netbeans.modules.xml.multiview.ui.SectionContainer;
@@ -58,8 +64,12 @@ import org.openide.windows.TopComponent;
     iconBase="org/netbeans/modules/j2ee/ddloaders/web/resources/DDDataIcon.gif",
     persistenceType=TopComponent.PERSISTENCE_NEVER,
     preferredID=DDDataObject.DD_MULTIVIEW_PREFIX + DDDataObject.MULTIVIEW_SECURITY,
-    mimeType={DDDataLoader.REQUIRED_MIME_1, DDWeb25DataLoader.REQUIRED_MIME, DDWeb30DataLoader.REQUIRED_MIME,
-        DDWebFragment30DataLoader.REQUIRED_MIME, DDWeb30DataLoader.REQUIRED_MIME_31, DDWebFragment30DataLoader.REQUIRED_MIME_31},
+    mimeType={DDDataLoader.REQUIRED_MIME_1, DDWeb25DataLoader.REQUIRED_MIME, 
+        DDWeb30DataLoader.REQUIRED_MIME, DDWebFragment30DataLoader.REQUIRED_MIME, 
+        DDWeb30DataLoader.REQUIRED_MIME_31, DDWebFragment30DataLoader.REQUIRED_MIME_31,
+        DDWeb40DataLoader.REQUIRED_MIME_40, DDWebFragment40DataLoader.REQUIRED_MIME_40, 
+        DDWeb50DataLoader.REQUIRED_MIME_50, DDWebFragment50DataLoader.REQUIRED_MIME_50, 
+        DDWeb60DataLoader.REQUIRED_MIME_60, DDWebFragment60DataLoader.REQUIRED_MIME_60},
     position=1000
 )
 public class SecurityMultiViewElement extends ToolBarMultiViewElement

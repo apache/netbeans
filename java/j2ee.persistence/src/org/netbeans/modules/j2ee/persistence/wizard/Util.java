@@ -319,7 +319,7 @@ public class Util {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
                     Object newvalue = evt.getNewValue();
-                    if ((newvalue != null) && (newvalue instanceof Boolean)) {
+                    if (newvalue instanceof Boolean) {
                         nd.setValid(((Boolean) newvalue).booleanValue());
                         createPUButton.setEnabled(((Boolean) newvalue).booleanValue());
                     }

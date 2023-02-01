@@ -192,6 +192,11 @@ public class PageIterator implements TemplateWizard.Iterator {
         ClassPath classpath = ClassPath.getClassPath(wm.getDocumentBase(), ClassPath.COMPILE);
         return classpath != null && classpath.findResource("javax/faces/flow/Flow.class") != null; //NOI18N
     }
+    
+    private static boolean isJSF30(WebModule wm) {
+        ClassPath classpath = ClassPath.getClassPath(wm.getDocumentBase(), ClassPath.COMPILE);
+        return classpath != null && classpath.findResource("jakarta/faces/flow/Flow.class") != null; //NOI18N
+    }
 
     public Set<DataObject> instantiate(TemplateWizard wiz) throws IOException {
         // Here is the default plain behavior. Simply takes the selected
@@ -208,7 +213,7 @@ public class PageIterator implements TemplateWizard.Iterator {
         FileObject template = Templates.getTemplate(wiz);
         FileObject templateParent = template.getParent();
         
-        Map<String, Object> wizardProps = new HashMap<String, Object>();
+        Map<String, Object> wizardProps = new HashMap<>();
         String defaultNamespace = null;
 
         if (FileType.JSP.equals(fileType) || FileType.JSF.equals(fileType)) {
@@ -226,7 +231,9 @@ public class PageIterator implements TemplateWizard.Iterator {
                     template = templateParent.getFileObject("JSP", "xhtml"); //NOI18N
                     WebModule wm = WebModule.getWebModule(df.getPrimaryFile());
                     if (wm != null) {
-                        if (isJSF22(wm)) {
+                        if (isJSF30(wm)) {
+                            wizardProps.put("isJSF30", Boolean.TRUE);
+                        } else if (isJSF22(wm)) {
                             wizardProps.put("isJSF22", Boolean.TRUE);
                         } else if (isJSF20(wm)) {
                             wizardProps.put("isJSF20", Boolean.TRUE);
@@ -354,7 +361,7 @@ public class PageIterator implements TemplateWizard.Iterator {
         // Creating steps.
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = Utilities.createSteps(beforeSteps, panels);

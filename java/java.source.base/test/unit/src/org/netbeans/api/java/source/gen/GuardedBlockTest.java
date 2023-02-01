@@ -137,7 +137,7 @@ public class GuardedBlockTest extends GeneratorTestMDRCompat {
                     if (type.equals(ClassPath.COMPILE))
                         return ClassPathSupport.createClassPath(new FileObject[0]);
                     if (type.equals(ClassPath.BOOT))
-                        return BootClassPathUtil.getBootClassPath();;
+                        return BootClassPathUtil.getBootClassPath();
                     return null;
             }
         };

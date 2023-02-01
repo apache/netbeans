@@ -396,7 +396,7 @@ public class PersistenceToolBarMVElement extends ToolBarMultiViewElement impleme
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
                         Object newvalue = evt.getNewValue();
-                        if (newvalue != null && newvalue instanceof Boolean) {
+                        if (newvalue instanceof Boolean) {
                             validateUnitName(panel);
                             nd.setValid((Boolean) newvalue);
                             

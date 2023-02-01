@@ -453,4 +453,40 @@ public class GotoDeclarationPHP81Test extends GotoDeclarationTestBase {
         checkDeclaration(getTestPath(), "            static::CAS^E3 => 'Case3',", "    case ^CASE3 = 1 << 3;");
     }
 
+    public void testFirstClassCallableSyntax_01a() throws Exception {
+        checkDeclaration(getTestPath(), "t^est(...); // test", "function ^test($param1, $param2, $param3) {");
+    }
+
+    public void testFirstClassCallableSyntax_01b() throws Exception {
+        checkDeclaration(getTestPath(), "$fn = tes^t(...);", "function ^test($param1, $param2, $param3) {");
+    }
+
+    public void testFirstClassCallableSyntax_02() throws Exception {
+        checkDeclaration(getTestPath(), "        $fn = $this->te^st(...);", "    private function ^test(): void {");
+    }
+
+    public void testFirstClassCallableSyntax_03() throws Exception {
+        checkDeclaration(getTestPath(), "        $fn = self::testStat^ic(...);", "    private static function ^testStatic(): void {");
+    }
+
+    public void testFirstClassCallableSyntax_04a() throws Exception {
+        checkDeclaration(getTestPath(), "$fn = $test->publicMetho^d(...);", "    public function ^publicMethod(int $param): int {");
+    }
+
+    public void testFirstClassCallableSyntax_4b() throws Exception {
+        checkDeclaration(getTestPath(), "$fn = (new Test)->publicMet^hod(...);", "    public function ^publicMethod(int $param): int {");
+    }
+
+    public void testFirstClassCallableSyntax_05a() throws Exception {
+        checkDeclaration(getTestPath(), "$fn = $test->publicStati^cMethod(...);", "    public static function ^publicStaticMethod(): void {");
+    }
+
+    public void testFirstClassCallableSyntax_05b() throws Exception {
+        checkDeclaration(getTestPath(), "$fn = $test::publicStatic^Method(...);", "    public static function ^publicStaticMethod(): void {");
+    }
+
+    public void testFirstClassCallableSyntax_05c() throws Exception {
+        checkDeclaration(getTestPath(), "$fn = Test::publi^cStaticMethod(...);", "    public static function ^publicStaticMethod(): void {");
+    }
+
 }

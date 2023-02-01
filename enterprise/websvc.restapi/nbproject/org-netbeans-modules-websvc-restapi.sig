@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.51
+#Version 1.55
 
 CLSS public abstract interface java.io.Serializable
 
@@ -330,6 +330,8 @@ meth public boolean isEE8()
 meth public boolean isEESpecWithJaxRS()
 meth public boolean isJakartaEE8()
 meth public boolean isJakartaEE9()
+meth public boolean isJakartaEE91()
+meth public boolean isJakartaEE10()
 meth public boolean isRestSupportOn()
 meth public boolean isServerGFV2()
 meth public boolean isServerGFV3()

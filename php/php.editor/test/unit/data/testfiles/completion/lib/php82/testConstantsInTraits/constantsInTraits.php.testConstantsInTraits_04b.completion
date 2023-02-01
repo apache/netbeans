@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo $this::PROTECTED_TR|AIT . PHP_EOL;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   PROTECTED_TRAIT 'ExampleTrait   [PROTECTE  ExampleTrait

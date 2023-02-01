@@ -36,7 +36,7 @@ package org.netbeans.junit.diff;
  *
  * @author Jan Becicka
  * @version 0.1
- * @see junit.framework.Assert Assert class
+ * @see org.junit.Assert Assert class
  */
 public interface Diff {
     

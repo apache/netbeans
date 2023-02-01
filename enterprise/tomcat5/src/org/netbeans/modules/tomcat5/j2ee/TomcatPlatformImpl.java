@@ -572,7 +572,7 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         } else {
             switch (manager.getTomcatVersion()) {
                 case TOMCAT_110:
-                    versions = versionRange(11, 21);
+                    versions = versionRange(17, 21);
                     break;
                 case TOMCAT_101:
                     versions = versionRange(11, 21);

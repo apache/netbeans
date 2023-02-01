@@ -187,7 +187,7 @@ public class EmbeddedSanityTest extends GeneralJSP {
 
             evt.waitNoEvent(500);
             eo.pressKey(KeyEvent.VK_ENTER);
-            assertTrue("Wrong completion result", eo.getText(lineNumber).contains(config[6].replaceAll("|", "")));
+            assertTrue("Wrong completion result", eo.getText(lineNumber).contains(config[6]/*.replaceAll("|", "")*/));
 
         }
 

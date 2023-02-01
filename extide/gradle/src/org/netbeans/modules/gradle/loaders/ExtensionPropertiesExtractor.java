@@ -170,7 +170,7 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
             if (c == null) {
                 return null;
             }
-            return Arrays.asList(c.split(";;")).stream().map(s -> s.replaceAll("\\;", ";")).collect(Collectors.toList());
+            return Arrays.asList(c.split(";;"));
         }
 
         @Override

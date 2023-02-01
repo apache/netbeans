@@ -316,7 +316,7 @@ public class CustomComponentTest extends GeneralKnockout {
                 evt.waitNoEvent(500);
                 cjo.clickOnItem(config[5]);
                 eo.pressKey(KeyEvent.VK_ENTER);
-                assertTrue("Wrong completion result", eo.getText(lineNumber + 1).contains(config[6].replaceAll("|", "")));
+                assertTrue("Wrong completion result", eo.getText(lineNumber + 1).contains(config[6]/*.replaceAll("|", "")*/));
                 completion.listItself.hideAll();
             } catch (Exception ex) {
                 Logger.getLogger(CustomComponentTest.class.getName()).log(Level.INFO, "", ex);

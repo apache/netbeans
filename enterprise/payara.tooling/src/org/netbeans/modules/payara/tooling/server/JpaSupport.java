@@ -25,6 +25,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraVersion;
  * Payara server JPA support matrix.
  * <p/>
  * @author Tomas Kraus
+ * @deprecated
  */
 @Deprecated
 public class JpaSupport {

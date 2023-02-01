@@ -150,7 +150,9 @@ public class I18nOptions {
                                     replaceResourceValue);
     }
 
-    /** Getter for last resource property. */
+    /** Getter for last resource property.
+     * @deprecated
+     */
     @Deprecated
     public DataObject getLastResource2() {
         return getLastResource2(null);

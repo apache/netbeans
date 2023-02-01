@@ -24,6 +24,7 @@ import java.util.Collection;
 /**
  *
  * @author marekfukala
+ * @deprecated
  */
 public interface HtmlModel {
 

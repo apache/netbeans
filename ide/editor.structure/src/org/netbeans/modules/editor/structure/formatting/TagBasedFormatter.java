@@ -38,6 +38,7 @@ import org.openide.ErrorManager;
 /**
  *
  * @author Tomasz.Slota@Sun.COM
+ * @deprecated
  */
 @Deprecated // use TagBasedLexerFormatter instead
 public abstract class TagBasedFormatter extends ExtFormatter  {

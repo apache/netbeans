@@ -557,6 +557,7 @@ public class SyntaxAnalyzerResult {
     /**
      * Returns a map of namespace URI to prefix used in the document Not only
      * globaly registered namespace (root tag) are taken into account.
+     * @deprecated
      */
     // URI to prefix map
     @Deprecated

@@ -24,6 +24,7 @@ import org.netbeans.modules.xml.xam.dom.Attribute;
 /**
  *
  * @author mkleint
+ * @deprecated
  */
 @Deprecated
 public enum SettingsAttribute implements Attribute {

@@ -105,7 +105,7 @@ public abstract class Retriever {
      * in this project. This must be called after retrieveResource is called to get the
      * most latest entries (along with the old ones that are already in this project).
      *
-     * The #retrieveResource(FileObject,URI,URI) method should be
+     * @deprecated The #retrieveResource(FileObject,URI,URI) method should be
      * used instead of this method to control the catalog file used.
      */
     @Deprecated()

@@ -26,6 +26,7 @@ import org.netbeans.api.annotations.common.NullUnknown;
 /**
  *
  * @author sdedic
+ * @deprecated
  */
 @Deprecated
 public interface XmlTreeNode {

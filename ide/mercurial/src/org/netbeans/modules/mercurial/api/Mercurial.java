@@ -72,6 +72,7 @@ public class Mercurial {
      *                    (name of the root folder of the clone)
      * @param  defaultPull  initial URL for pulling updates
      * @param  defaultPush  initial URL for pushing updates
+     * @deprecated
      */
     @Deprecated
     public static void cloneRepository(String repositoryUrl,
@@ -133,6 +134,7 @@ public class Mercurial {
      * @param  defaultPush  initial URL for pushing updates
      * @param  username  username for access to the given repository
      * @param  password  password for access to the given repository
+     * @deprecated
      */
     @Deprecated
     public static void cloneRepository(String repositoryUrl,

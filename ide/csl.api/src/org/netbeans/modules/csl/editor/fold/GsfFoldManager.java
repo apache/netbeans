@@ -108,8 +108,8 @@ public class GsfFoldManager implements FoldManager {
     private static final FoldTemplate TEMPLATE_CODEBLOCK = new org.netbeans.api.editor.fold.FoldTemplate(1, 1, "{...}"); // NOI18N
    
     /**
-     * This definition and all Fold types defined in CSL are deprecated and for backward
-     * compatibility only. 
+     * @deprecated This definition and all Fold types defined in CSL are deprecated and for backward
+     * compatibility only.
      */
     @Deprecated
     public static final FoldType CODE_BLOCK_FOLD_TYPE = FoldType.CODE_BLOCK;
@@ -119,6 +119,7 @@ public class GsfFoldManager implements FoldManager {
     
     /**
      * Note: this FoldType's code was changed from 'imports' to 'import' to match the used preference key.
+     * @deprecated
      */
     @NbBundle.Messages("FT_label_imports=Imports or Includes")
     @Deprecated
@@ -132,6 +133,7 @@ public class GsfFoldManager implements FoldManager {
     
     /**
      * This type's code was renamed from inner-class to innerclass to match the preference value
+     * @deprecated
      */
     @NbBundle.Messages("FT_label_innerclass=Inner Classes")
     @Deprecated

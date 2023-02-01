@@ -104,6 +104,7 @@ public class AppClientProjectGenerator {
      *
      * @return the helper object permitting it to be further customized
      * @throws IOException in case something went wrong
+     * @deprecated
      */
     @Deprecated
     public static AntProjectHelper createProject(File dir, final String name, 
@@ -242,6 +243,7 @@ public class AppClientProjectGenerator {
      *
      * @return the helper object permitting it to be further customized
      * @throws IOException in case something went wrong
+     * @deprecated
      */
     @Deprecated
     public static AntProjectHelper importProject(final File dir, final String name,

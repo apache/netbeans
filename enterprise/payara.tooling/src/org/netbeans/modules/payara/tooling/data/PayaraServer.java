@@ -134,6 +134,7 @@ public interface PayaraServer {
     /** Get Payara server version.
      * <p/>
      * @return The version
+     * @deprecated
      */
     @Deprecated
     public PayaraVersion getVersion();

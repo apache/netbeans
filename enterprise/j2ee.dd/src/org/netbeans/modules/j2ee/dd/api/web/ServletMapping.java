@@ -34,12 +34,14 @@ public interface ServletMapping extends org.netbeans.modules.j2ee.dd.api.common.
          */
 	public java.lang.String getServletName();
         /** Getter for url-pattern property. Use ServletMapping25.setUrlPattern(int, String) instead.
-         * @return property value 
+         * @return property value
+         * @deprecated
          */
         @Deprecated
 	public void setUrlPattern(java.lang.String value);
         /** Getter for url-patern property. Use ServletMapping25.getUrlPattern(int) instead.
          * @return property value
+         * @deprecated
          */
         @Deprecated
 	public java.lang.String getUrlPattern();

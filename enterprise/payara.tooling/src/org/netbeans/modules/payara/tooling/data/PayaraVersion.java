@@ -33,6 +33,7 @@ import org.openide.util.Parameters;
  * <p/>
  * @author Tomas Kraus, Peter Benedikovic
  * @author Gaurav Gupta
+ * @deprecated use PayaraPlatformVersion
  */
 @Deprecated
 public enum PayaraVersion implements PayaraPlatformVersionAPI {

@@ -5280,7 +5280,7 @@ public class Term extends JComponent implements Accessible {
                 firsta);
     }
 
-    /*
+    /**
      *
      * Move the cursor to the given (absolute) coordinates
      *

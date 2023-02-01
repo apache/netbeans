@@ -22,6 +22,7 @@ package org.netbeans.modules.web.jsfapi.api;
 /**
  *
  * @author marekfukala
+ * @deprecated
  */
 @Deprecated
 public enum LibraryType {

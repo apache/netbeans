@@ -29,6 +29,7 @@ public interface ProcessDispatcher {
     /**
      * Force process termination. Deprecated since in any case of implementation 
      * it will deal with thread.stop() which is deprecated
+     * @deprecated
      */
     @Deprecated
     void terminate(Process process);

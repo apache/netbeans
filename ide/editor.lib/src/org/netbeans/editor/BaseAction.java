@@ -327,6 +327,7 @@ public abstract class BaseAction extends TextAction {
     
     /**
      * Use MacroRecording from editor.lib2
+     * @deprecated
      */
     @Deprecated
     boolean startRecording( JTextComponent target ) {
@@ -341,6 +342,7 @@ public abstract class BaseAction extends TextAction {
     
     /**
      * Use MacroRecording from editor.lib2
+     * @deprecated
      */
     @Deprecated
     String stopRecording( JTextComponent target ) {

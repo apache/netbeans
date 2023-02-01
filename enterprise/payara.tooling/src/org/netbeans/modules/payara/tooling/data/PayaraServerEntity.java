@@ -87,6 +87,7 @@ public class PayaraServerEntity implements PayaraServer {
 
     /**
      * Payara server version.
+     * @deprecated
      */
     @Deprecated
     private PayaraVersion version;
@@ -379,6 +380,7 @@ public class PayaraServerEntity implements PayaraServer {
      * Get Payara server version.
      * <p/>
      * @return The version.
+     * @deprecated
      */
     @Deprecated
     @Override
@@ -400,6 +402,7 @@ public class PayaraServerEntity implements PayaraServer {
      * Set Payara server version.
      * <p/>
      * @param version The version to set.
+     * @deprecated
      */
     @Deprecated
     public void setVersion(final PayaraVersion version) {

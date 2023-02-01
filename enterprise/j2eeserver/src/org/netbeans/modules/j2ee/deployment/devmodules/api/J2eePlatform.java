@@ -75,6 +75,7 @@ public final class J2eePlatform implements Lookup.Provider {
      * Type of the library created by {@link #createLibrary(File, String)}.
      * 
      * @since 1.40
+     * @deprecated
      */
     @Deprecated
     public static final String LIBRARY_TYPE = ServerLibraryTypeProvider.LIBRARY_TYPE;
@@ -637,6 +638,7 @@ public final class J2eePlatform implements Lookup.Provider {
      * @return created library
      * @throws java.io.IOException if the library can't be created for some reason
      * @since 1.40
+     * @deprecated 
      */
     @Deprecated
     public Library createLibrary(File location, String libraryName) throws IOException {

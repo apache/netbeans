@@ -732,6 +732,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      * <p/>
      * This is always version of local Payara related to JavaEE
      * platform, even when registered domain is remote.
+     * @deprecated
      */
     @Deprecated
     private PayaraVersion version;

@@ -47,6 +47,7 @@ import org.openide.filesystems.FileObject;
  * - expressions (<%= ... %>)
  *
  * @author Tomasz.Slota@Sun.COM
+ * @deprecated
  */
 @Deprecated
 public class JavaJspCompletionProvider implements CompletionProvider {

@@ -26,6 +26,7 @@ import org.openide.util.Lookup;
 /**
  *
  * @author Kirill Sorokin <Kirill.Sorokin@Sun.COM>
+ * @deprecated
  */
 @Deprecated
 public class WildflyRegistryNodeFactory implements RegistryNodeFactory {

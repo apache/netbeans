@@ -847,6 +847,7 @@ public class JavaUtil {
      * no lists (or chaining) being done in a HashMap.Entry.
      *
      * @param maxSize the point at which to give up (the maximum size to try)
+     * @deprecated
      */
     @Deprecated
     public static int getOptimialHashMapSize(Object[] keys, int maxSize) {

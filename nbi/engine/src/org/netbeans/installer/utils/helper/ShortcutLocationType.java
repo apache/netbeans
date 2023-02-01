@@ -21,7 +21,7 @@ package org.netbeans.installer.utils.helper;
 
 /**
  * Class is depricated since NetBeans M9.<br>
- * Use <code>org.netbeans.installer.utils.system.shortcut.LocationType</code> instead
+ * @deprecated Use <code>org.netbeans.installer.utils.system.shortcut.LocationType</code> instead
  */
  
 @Deprecated

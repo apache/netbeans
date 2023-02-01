@@ -150,6 +150,7 @@ public final class RunUtils {
      *
      * @param project
      * @return true if compile on save is allowed for running the application.
+     * @deprecated
      */
     @Deprecated
     public static boolean hasApplicationCompileOnSaveEnabled(Project prj) {
@@ -175,6 +176,7 @@ public final class RunUtils {
      *
      * @param config
      * @return true if compile on save is allowed for running the application.
+     * @deprecated
      */
     @Deprecated 
     public static boolean hasApplicationCompileOnSaveEnabled(RunConfig config) {
@@ -189,6 +191,7 @@ public final class RunUtils {
      *
      * @param project
      * @return true if compile on save is allowed for running tests.
+     * @deprecated
      */
     @Deprecated
     public static boolean hasTestCompileOnSaveEnabled(Project prj) {
@@ -214,6 +217,7 @@ public final class RunUtils {
      *
      * @param config
      * @return true if compile on save is allowed for running tests.
+     * @deprecated
      */
     @Deprecated
     public static boolean hasTestCompileOnSaveEnabled(RunConfig config) {

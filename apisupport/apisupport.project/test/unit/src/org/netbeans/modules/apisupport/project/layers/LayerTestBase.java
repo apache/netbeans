@@ -33,6 +33,7 @@ import org.xml.sax.EntityResolver;
  * Does some setup, since TAX requires some special infrastructure.
  * @author Jesse Glick
  * @see "#62363"
+ * @deprecated
  */
 @Deprecated
 public abstract class LayerTestBase extends NbTestCase {

@@ -1099,7 +1099,9 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     /** Returns an item on offset <code>offset</code>
      * This method is largely a workaround for a bug in getTokenChain().
      * If offset falls right between two items, returns one which is just before
-     * offset. If <code>offset == 0</code>, retruns null. */
+     * offset. If <code>offset == 0</code>, retruns null.
+     * @deprecated
+     */
     @Deprecated()
     public TokenItem getItemAtOrBefore(int offset) throws BadLocationException {
         TokenItem backItem = null;

@@ -603,7 +603,7 @@ public final class CommonTasksSupport {
     /**
      * Queue a signal to a process (sigqueue).
      *
-     * Deprecated. Do not use int signo as it may denote different signals on
+     * @deprecated Do not use int signo as it may denote different signals on
      * different platforms.
      *
      * @param execEnv execution environment of the process

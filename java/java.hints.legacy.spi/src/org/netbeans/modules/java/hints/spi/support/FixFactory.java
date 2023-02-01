@@ -100,7 +100,7 @@ public final class FixFactory {
     }
 
     /**
-     * Do not use.
+     * @deprecated Do not use.
      */
     @Deprecated
     public static boolean isSuppressWarningsFix(Fix f) {

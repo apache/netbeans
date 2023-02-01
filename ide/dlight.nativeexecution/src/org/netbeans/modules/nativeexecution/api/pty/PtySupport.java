@@ -139,6 +139,7 @@ public final class PtySupport {
      *
      * There is an option in pty utility - --set-erase-key that could be used to
      * achieve needed effect.
+     * @deprecated
      */
     @Deprecated
     public static void setBackspaceAsEraseChar(ExecutionEnvironment exEnv, String tty) {

@@ -28,6 +28,7 @@ import org.openide.filesystems.FileUtil;
  * Hold a reference for an instance of JsfSupport for the project.
  *
  * @author marekfukala
+ * @deprecated
  */
 @Deprecated
 public class JsfSupportHandle {

@@ -211,6 +211,7 @@ public final class  UiUtils {
      * @param offset  offset with fileobject
      * @return true if and only if the declaration was correctly opened,
      *                false otherwise
+     * @deprecated
      */
     public @Deprecated static boolean open(final FileObject fo, final int offset) {
         return doOpen(fo, offset);

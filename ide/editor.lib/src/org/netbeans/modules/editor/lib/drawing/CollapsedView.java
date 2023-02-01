@@ -62,6 +62,7 @@ import org.openide.util.WeakListeners;
  * The collapsed area spans one or more lines and it is presented as three dots.
  *
  * @author Martin Roskanin
+ * @deprecated
  */
 /* package */ @Deprecated class CollapsedView extends View {
 

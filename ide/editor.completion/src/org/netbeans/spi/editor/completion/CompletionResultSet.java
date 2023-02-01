@@ -69,6 +69,7 @@ public final class CompletionResultSet {
      * for the given mime-type then only the first one
      * (according to the xml-layer registration order)
      * will be taken into account.
+     * @deprecated
      */
     @Deprecated
     public void setTitle(String title) {

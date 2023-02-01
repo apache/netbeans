@@ -23,6 +23,7 @@ package org.netbeans.modules.payara.tooling.utils;
  * <li>Ordinal value based comparison.</li>
  * </ul>
  * @author Tomas Kraus
+ * @deprecated
  */
 @Deprecated
 public final class EnumUtils {

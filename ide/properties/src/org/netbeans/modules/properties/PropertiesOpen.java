@@ -90,7 +90,9 @@ public class PropertiesOpen extends CloneableOpenSupport
                             implements OpenCookie, CloseCookie {
 
     private static final Logger LOG = Logger.getLogger(PropertiesOpen.class.getName());
-    /** Main properties dataobject */
+    /** Main properties dataobject
+     * @deprecated
+     */
     @Deprecated
     PropertiesDataObject propDataObject;
 
@@ -112,7 +114,9 @@ public class PropertiesOpen extends CloneableOpenSupport
     private transient Object UPDATE_LOCK = new Object();
     
 
-    /** Constructor */
+    /** Constructor
+     * @deprecated
+     */
     @Deprecated
     public PropertiesOpen(PropertiesDataObject propDataObject) {
         super(new Environment(propDataObject));
@@ -387,7 +391,9 @@ public class PropertiesOpen extends CloneableOpenSupport
         /** Generated Serialized Version UID */
         static final long serialVersionUID = -1934890789745432531L;
         
-        /** Object to serialize and be connected to. */
+        /** Object to serialize and be connected to.
+         * @deprecated
+         */
         @Deprecated
         private DataObject dataObject;
 
@@ -407,6 +413,7 @@ public class PropertiesOpen extends CloneableOpenSupport
          * the data object so, all property changes of the data object
          * are also rethrown to own listeners.
          * @param dataObject data object to be attached to
+         * @deprecated
          */
         @Deprecated
         public Environment(PropertiesDataObject dataObject) {
@@ -513,6 +520,7 @@ public class PropertiesOpen extends CloneableOpenSupport
          * @return the support or null if the environemnt is not in valid 
          * state and the CloneableOpenSupport cannot be found for associated
          * data object
+         * @deprecated
          */
         @Deprecated
         //TODO PENDING Called from super class need to preserve
@@ -535,6 +543,7 @@ public class PropertiesOpen extends CloneableOpenSupport
          * It could be invalid after deserialization when the object it
          * referenced to does not exist anymore.
          * @return true or false depending on its state
+         * @deprecated
          */
         @Deprecated
         @Override
@@ -574,6 +583,7 @@ public class PropertiesOpen extends CloneableOpenSupport
          * @exception IOException if the environment cannot be marked modified
          *   (for example when the file is readonly), when such exception
          *   is the support should discard all previous changes
+         * @deprecated
          */
         @Deprecated
         @Override
@@ -587,6 +597,7 @@ public class PropertiesOpen extends CloneableOpenSupport
         /** 
          * Implements {@code CloneableOpenSupport.Env} interface.
          * Reverse method that can be called to make the environment unmodified.
+         * @deprecated
          */
         @Deprecated
         @Override
@@ -846,7 +857,9 @@ public class PropertiesOpen extends CloneableOpenSupport
             }
         }
 
-        /** Adds save cookie to the dataobject. */
+        /** Adds save cookie to the dataobject.
+         * @deprecated
+         */
         @Deprecated
         private void addSaveCookie() {
             if(propDataObject.getCookie(SaveCookie.class) == null) {
@@ -860,7 +873,9 @@ public class PropertiesOpen extends CloneableOpenSupport
             }
         }
         
-        /** Removes save cookie from the dataobject. */
+        /** Removes save cookie from the dataobject.
+         * @deprecated
+         */
         @Deprecated
         private void removeSaveCookie() {
             if(propDataObject.getCookie(SaveCookie.class) == this) {
@@ -945,7 +960,9 @@ public class PropertiesOpen extends CloneableOpenSupport
     /** Cloneable top component which represents table view of resource bundles. */
     public static class PropertiesCloneableTopComponent extends CloneableTopComponent {
 
-        /** Reference to underlying {@code PropertiesDataObject}. */
+        /** Reference to underlying {@code PropertiesDataObject}.
+         * @deprecated
+         */
         @Deprecated
         private PropertiesDataObject propDataObject;
 
@@ -971,7 +988,9 @@ public class PropertiesOpen extends CloneableOpenSupport
         }
 
         /** Constructor.
-        * @param propDataObject data object we belong to */
+         * @param propDataObject data object we belong to
+         * @deprecated
+         */
         @Deprecated
         public PropertiesCloneableTopComponent (PropertiesDataObject propDataObject) {
             this.propDataObject  = propDataObject;
@@ -1431,7 +1450,9 @@ public class PropertiesOpen extends CloneableOpenSupport
         
         // Constructor
         
-        /** Collects all UndoRedo managers from all editor support of all entries. */
+        /** Collects all UndoRedo managers from all editor support of all entries.
+         * @deprecated
+         */
         @Deprecated
         public CompoundUndoRedoManager(PropertiesDataObject obj) {
             init(obj);
@@ -1440,7 +1461,9 @@ public class PropertiesOpen extends CloneableOpenSupport
             init(structure);
         }
 
-        /** Initialize set of managers. */
+        /** Initialize set of managers.
+         * @deprecated
+         */
         @Deprecated
         private void init(PropertiesDataObject obj) {
             BundleStructure structure = obj.getBundleStructure();
@@ -1462,7 +1485,9 @@ public class PropertiesOpen extends CloneableOpenSupport
             }
         }
 
-        /** Resets the managers. Used when data object has changed. */
+        /** Resets the managers. Used when data object has changed.
+         * @deprecated
+         */
         @Deprecated
         public synchronized void reset(PropertiesDataObject obj) {
             managers.clear();

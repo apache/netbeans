@@ -32,6 +32,7 @@ public interface HtmlParser {
      * Returns a name of the parser. 
      * 
      * @return An internal identifier of the parser. Doesn't need to be localized, not presented to user.
+     * @deprecated
      */
     @Deprecated
     public String getName();

@@ -175,6 +175,7 @@ public class DiffComponent extends org.openide.windows.TopComponent {
     
     /**
      * Transfer the focus to the diff panel.
+     * @deprecated
      */
     @Deprecated
     public void requestFocus() {
@@ -184,6 +185,7 @@ public class DiffComponent extends org.openide.windows.TopComponent {
     
     /**
      * Transfer the focus to the diff panel.
+     * @deprecated
      */
     @Deprecated
     public boolean requestFocusInWindow() {
@@ -218,6 +220,7 @@ public class DiffComponent extends org.openide.windows.TopComponent {
     /**
      * Override for clean up reasons.
      * Will be moved to the appropriate method when will be made.
+     * @deprecated
      */
     @Deprecated
     public boolean canClose(Workspace workspace, boolean last) {

@@ -29,6 +29,7 @@ import org.netbeans.modules.html.editor.lib.api.elements.ElementsIterator;
  * Plain HTML syntax analyzer
  *
  * @author mfukala@netbeans.org
+ * @deprecated
  */
 @Deprecated
 public final class SyntaxAnalyzer extends ElementsIterator {

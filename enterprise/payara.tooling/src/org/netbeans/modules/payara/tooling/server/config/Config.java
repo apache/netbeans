@@ -66,6 +66,7 @@ public class Config {
          * @param version Payara Server version.
          * @param configFile Libraries XML configuration file associated to
          * given version.
+         * @deprecated
          */
         @Deprecated
         public Next(PayaraVersion version, URL configFile) {
@@ -96,11 +97,15 @@ public class Config {
     final Map<Short, URL> libraryConfigFiles = new HashMap<>();
     
     
-    /** Configuration files. */
+    /** Configuration files.
+     * @deprecated
+     */
     @Deprecated
     final URL[] configFiles;
 
-    /** Version to configuration file mapping table. */
+    /** Version to configuration file mapping table.
+     * @deprecated
+     */
     @Deprecated
     final int[] index;
     
@@ -111,6 +116,7 @@ public class Config {
      * @param nextConfig    Next libraries configuration file(s) starting from
      *                      provided version. Versions must be passed
      *                      in ascending order.
+     * @deprecated
      */
     @Deprecated
     public Config(URL defaultConfig,

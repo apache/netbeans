@@ -139,7 +139,6 @@ public abstract class PhpFrameworkProvider {
     public abstract boolean isInPhpModule(PhpModule phpModule);
 
     /**
-     * Deprecated, use {@link #getConfigurationFiles2(PhpModule)} instead.
      * <p>
      * Returns the configuration files (no directories allowed!) belonging to this framework. The files
      * do not need to exist, however only existing files are taken into account.
@@ -150,6 +149,7 @@ public abstract class PhpFrameworkProvider {
      *
      * @param  phpModule the PHP module for which the configuration files are returned; never <code>null</code>.
      * @return an array containing the configuration files; can be empty but never <code>null</code>.
+     * @deprecated use {@link #getConfigurationFiles2(PhpModule)} instead.
      */
     @Deprecated
     public File[] getConfigurationFiles(PhpModule phpModule) {

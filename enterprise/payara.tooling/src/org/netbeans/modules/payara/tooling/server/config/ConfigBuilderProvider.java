@@ -78,6 +78,7 @@ public class ConfigBuilderProvider {
      * <p/>
      * @param version Payara server version.
      * @return Library builder configuration for given Payara server version.
+     * @deprecated
      */
     @Deprecated
     public static URL getBuilderConfig(final PayaraVersion version) {

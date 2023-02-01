@@ -153,6 +153,7 @@ public class AttrSupports {
     
     /**
      * Provides code completion for a class name context
+     * @deprecated
      */
     @Deprecated
     public static class ClassNameSupport extends AttributeValueSupport.Default {
@@ -195,6 +196,7 @@ public class AttrSupports {
     
     /**
      * Provides code completion for a comma-separated list of imports context
+     * @deprecated
      */
     @Deprecated
     public static class PackageListSupport extends ClassNameSupport {

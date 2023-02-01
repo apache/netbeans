@@ -62,9 +62,13 @@ public class WebServiceData implements WsdlData {
     private String wsName;
     private boolean jaxWsEnabled;
     private boolean jaxRpcEnabled;
-    /** Removing this field. Use {@link #wsdlState} */
+
+    /** Removing this field.
+     * @deprecated Use {@link #wsdlState}
+     */
     @Deprecated
     private boolean compiled;
+
     /** The current state of the web service data */
     private State wsdlState = State.WSDL_UNRETRIEVED;
     /** Flag indicating whether the WSDL has been retrieved and has not failed in being modeled */

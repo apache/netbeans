@@ -68,7 +68,9 @@ public class BundleEditPanel extends JPanel implements PropertyChangeListener {
     private Element.ItemElem lastSelectedBundleKey;
     private int lastSelectedColumn;
     
-    /** Creates new form BundleEditPanel */
+    /** Creates new form BundleEditPanel
+     * @deprecated
+     */
     @Deprecated
     public BundleEditPanel(final PropertiesDataObject obj, PropertiesTableModel propTableModel) {
 //        this.obj = obj;

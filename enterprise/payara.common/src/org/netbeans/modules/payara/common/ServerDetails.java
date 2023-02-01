@@ -37,6 +37,7 @@ import org.xml.sax.SAXException;
  *
  * @author vkraemer
  * @author Gaurav Gupta
+ * @deprecated
  */
 @Deprecated
 public enum ServerDetails implements PayaraPlatformVersionAPI {
@@ -282,6 +283,7 @@ public enum ServerDetails implements PayaraPlatformVersionAPI {
      * @param domainXml the file to analyze
      * @return -1 if domainXml is null, unreadable or not a directory
      * @throws IllegalStateException if domainXml cannot be parsed
+     * @deprecated
      */
     @Deprecated
     public static int getVersionFromDomainXml(File domainXml) throws IllegalStateException {

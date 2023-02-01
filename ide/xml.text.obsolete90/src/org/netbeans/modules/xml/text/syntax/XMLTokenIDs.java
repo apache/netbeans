@@ -27,6 +27,7 @@ import org.netbeans.editor.BaseTokenID;
  * @author  Petr Kuzel
  * @see XMLDefaultTokenContext
  * @see XMLTokenId
+ * @deprecated
  */
 @Deprecated
 public interface XMLTokenIDs {

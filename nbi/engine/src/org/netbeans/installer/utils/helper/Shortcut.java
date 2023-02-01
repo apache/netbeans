@@ -24,7 +24,7 @@ import org.netbeans.installer.utils.system.shortcut.FileShortcut;
 
 /**
  * Class is depricated since NetBeans M9.<br>
- * The new style is to use shortcut implementations in shortcut package : 
+ * @deprecated The new style is to use shortcut implementations in shortcut package :
  * <ul>
  *      <li><code>FileShortcut</code></li>  
  *      <li><code>InternetShortcut</code></li>

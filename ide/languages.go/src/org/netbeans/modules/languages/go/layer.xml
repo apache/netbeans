@@ -45,7 +45,7 @@
     <folder name="Loaders">
         <folder name="text">
             <folder name="x-go">
-                <attr name="iconBase" stringvalue="org/netbeans/modules/languages/go/resources/go-blue.png"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/languages/go/resources/go.png"/>
             </folder>
         </folder>
     </folder>

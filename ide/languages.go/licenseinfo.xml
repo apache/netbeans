@@ -21,7 +21,7 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/languages/go/resources/go-blue.png</file>
-        <license ref="CC-BY-4.0" />
+        <file>src/org/netbeans/modules/languages/go/resources/go.png</file>
+        <license ref="Apache-2.0-ASF" />
     </fileset>
 </licenseinfo>

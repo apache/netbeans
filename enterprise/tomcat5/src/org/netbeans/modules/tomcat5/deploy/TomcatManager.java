@@ -555,7 +555,6 @@ public class TomcatManager implements DeploymentManager {
         boolean fireListener = false;
         synchronized (this) {
             if (tomEEChecked) {
-                LOGGER.log(Level.INFO, "TomEE version {0}, type {1}", new Object[] {tomEEVersion, tomEEType});
                 return;
             }
             assert tomEEWarListener == null;

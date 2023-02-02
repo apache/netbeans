@@ -100,61 +100,61 @@ public class Utils {
         return ClassPathSupport.createClassPath(new URL[0]);
     }
 
-    private static ClassPath convertToClassPath(File[] roots) {
-        List<URL> l = new ArrayList<URL>();
-        for (int i = 0; i < roots.length; i++) {
-            URL url = Utils.fileToURL(roots[i]);
-            l.add(url);
-        }
-        URL[] urls = l.toArray(new URL[l.size()]);
-        return ClassPathSupport.createClassPath(urls);
-    }
+//    private static ClassPath convertToClassPath(File[] roots) {
+//        List<URL> l = new ArrayList<URL>();
+//        for (int i = 0; i < roots.length; i++) {
+//            URL url = Utils.fileToURL(roots[i]);
+//            l.add(url);
+//        }
+//        URL[] urls = l.toArray(new URL[l.size()]);
+//        return ClassPathSupport.createClassPath(urls);
+//    }
 
-    /**
-     * This method uses SourceForBinaryQuery to find sources for each
-     * path item and returns them as ClassPath instance. All path items for which
-     * the sources were not found are omitted.
-     *
-     */
-    private static ClassPath convertToSourcePath(File[] fs)  {
-        List<PathResourceImplementation> lst = new ArrayList<PathResourceImplementation>();
-        Set<URL> existingSrc = new HashSet<URL>();
-        for (int i = 0; i < fs.length; i++) {
-            URL url = Utils.fileToURL(fs[i]);
-            try {
-                FileObject[] srcfos = SourceForBinaryQuery.findSourceRoots(url).getRoots();
-                for (int j = 0; j < srcfos.length; j++) {
-                    if (FileUtil.isArchiveFile(srcfos[j])) {
-                        srcfos [j] = FileUtil.getArchiveRoot(srcfos [j]);
-                    }
-                    try {
-                        url = srcfos[j].getURL();
-                        if  (!url.toExternalForm().endsWith("/")) {
-                            url = new URL(url.toExternalForm() + "/");
-                        }
-                    } catch (FileStateInvalidException ex) {
-                        ErrorManager.getDefault().notify
-                                (ErrorManager.EXCEPTION, ex);
-                        continue;
-                    } catch (MalformedURLException ex) {
-                        ErrorManager.getDefault().notify
-                                (ErrorManager.EXCEPTION, ex);
-                        continue;
-                    }
-                    if (url == null)  {
-                        continue;
-                    }
-                    if (!existingSrc.contains(url)) {
-                        lst.add(ClassPathSupport.createResource(url));
-                        existingSrc.add(url);
-                    }
-                } // for
-            } catch (IllegalArgumentException ex) {
-                //TODO??
-            }
-        }
-        return ClassPathSupport.createClassPath(lst);
-    }
+//    /**
+//     * This method uses SourceForBinaryQuery to find sources for each
+//     * path item and returns them as ClassPath instance. All path items for which
+//     * the sources were not found are omitted.
+//     *
+//     */
+//    private static ClassPath convertToSourcePath(File[] fs)  {
+//        List<PathResourceImplementation> lst = new ArrayList<PathResourceImplementation>();
+//        Set<URL> existingSrc = new HashSet<URL>();
+//        for (int i = 0; i < fs.length; i++) {
+//            URL url = Utils.fileToURL(fs[i]);
+//            try {
+//                FileObject[] srcfos = SourceForBinaryQuery.findSourceRoots(url).getRoots();
+//                for (int j = 0; j < srcfos.length; j++) {
+//                    if (FileUtil.isArchiveFile(srcfos[j])) {
+//                        srcfos [j] = FileUtil.getArchiveRoot(srcfos [j]);
+//                    }
+//                    try {
+//                        url = srcfos[j].getURL();
+//                        if  (!url.toExternalForm().endsWith("/")) {
+//                            url = new URL(url.toExternalForm() + "/");
+//                        }
+//                    } catch (FileStateInvalidException ex) {
+//                        ErrorManager.getDefault().notify
+//                                (ErrorManager.EXCEPTION, ex);
+//                        continue;
+//                    } catch (MalformedURLException ex) {
+//                        ErrorManager.getDefault().notify
+//                                (ErrorManager.EXCEPTION, ex);
+//                        continue;
+//                    }
+//                    if (url == null)  {
+//                        continue;
+//                    }
+//                    if (!existingSrc.contains(url)) {
+//                        lst.add(ClassPathSupport.createResource(url));
+//                        existingSrc.add(url);
+//                    }
+//                } // for
+//            } catch (IllegalArgumentException ex) {
+//                //TODO??
+//            }
+//        }
+//        return ClassPathSupport.createClassPath(lst);
+//    }
 
 
 

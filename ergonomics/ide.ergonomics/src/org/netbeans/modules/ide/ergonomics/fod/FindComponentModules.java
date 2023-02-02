@@ -195,22 +195,22 @@ public final class FindComponentModules extends Task {
         return closure;
     }
     
-    private Collection<UpdateElement> readEnableLater () {
-        Set<UpdateElement> res = new HashSet<UpdateElement> ();
-        Preferences pref = FindComponentModules.getPreferences ();
-        String value = pref.get (ENABLE_LATER, null);
-        if (value != null && value.trim ().length () > 0) {
-            StringTokenizer st = new StringTokenizer(value, ","); // NOI18N
-            while (st.hasMoreElements()) {
-                String codeName = st.nextToken().trim();
-                UpdateElement el = findUpdateElement(codeName, true);
-                if (el != null) {
-                    res.add (el);
-                }
-            }
-        }
-        return res;
-    }
+//    private Collection<UpdateElement> readEnableLater () {
+//        Set<UpdateElement> res = new HashSet<UpdateElement> ();
+//        Preferences pref = FindComponentModules.getPreferences ();
+//        String value = pref.get (ENABLE_LATER, null);
+//        if (value != null && value.trim ().length () > 0) {
+//            StringTokenizer st = new StringTokenizer(value, ","); // NOI18N
+//            while (st.hasMoreElements()) {
+//                String codeName = st.nextToken().trim();
+//                UpdateElement el = findUpdateElement(codeName, true);
+//                if (el != null) {
+//                    res.add (el);
+//                }
+//            }
+//        }
+//        return res;
+//    }
     
     public Collection<UpdateElement> getVisibleUpdateElements (Collection<UpdateElement> elems) {
         String prefCNB = infos[0].getPreferredCodeNameBase();

@@ -489,41 +489,41 @@ public class ResourceTable
         }
     }
     
-    private void fireParentChangedChange(ResourceTable oldTable, ResourceTable newTable)
-    {
-        PropertyChangeEvent event = new PropertyChangeEvent(this, PARENT_RESOURCE_TABLE, oldTable, newTable);
-        fireEventAndCleanList(listeners, event);
-
-        // Since the parent table changed, the listeners property value may have also changed.
-        for(String key : propertyListeners.keySet())
-        {   
-            // If this table does not contain the key, then the parent specified
-            // the value.  Therefore notify that the reource changed.
-            if(properties.containsKey(key) == false)
-            {
-                Object oldResource = oldTable.getProperty(key);
-                Object newResource = getProperty(key);
-               
-                if(oldResource.equals(newResource) == false)
-                {
-                    firePropertyChange(key, oldResource, newResource);
-                }
-            }
-        }
-
-        for(int index = childrenTables.size() - 1; index >= 0; index--)
-        {
-            WeakReference < ResourceTable > childRef = childrenTables.get(index);
-            if(childRef.get() != null)
-            {
-                childRef.get().notifyPropertyChanged(PARENT_RESOURCE_TABLE, event);
-            }
-            else
-            {
-                childrenTables.remove(index);
-            }
-        }
-    }
+//    private void fireParentChangedChange(ResourceTable oldTable, ResourceTable newTable)
+//    {
+//        PropertyChangeEvent event = new PropertyChangeEvent(this, PARENT_RESOURCE_TABLE, oldTable, newTable);
+//        fireEventAndCleanList(listeners, event);
+//
+//        // Since the parent table changed, the listeners property value may have also changed.
+//        for(String key : propertyListeners.keySet())
+//        {
+//            // If this table does not contain the key, then the parent specified
+//            // the value.  Therefore notify that the reource changed.
+//            if(properties.containsKey(key) == false)
+//            {
+//                Object oldResource = oldTable.getProperty(key);
+//                Object newResource = getProperty(key);
+//
+//                if(oldResource.equals(newResource) == false)
+//                {
+//                    firePropertyChange(key, oldResource, newResource);
+//                }
+//            }
+//        }
+//
+//        for(int index = childrenTables.size() - 1; index >= 0; index--)
+//        {
+//            WeakReference < ResourceTable > childRef = childrenTables.get(index);
+//            if(childRef.get() != null)
+//            {
+//                childRef.get().notifyPropertyChanged(PARENT_RESOURCE_TABLE, event);
+//            }
+//            else
+//            {
+//                childrenTables.remove(index);
+//            }
+//        }
+//    }
     
     private void fireEventAndCleanList(ArrayList <WeakReference<PropertyChangeListener>> refListeners,
                                        PropertyChangeEvent event)

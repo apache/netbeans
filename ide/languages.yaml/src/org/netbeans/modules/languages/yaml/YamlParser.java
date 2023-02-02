@@ -148,18 +148,18 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
         }
     }
 
-    private static String replaceInlineRegexBrackets(String source) {
-        // XXX this is just a workaround for issue #246787
-        // it is caused by jvyamlb yaml parser
-        Pattern p = Pattern.compile("\\^/.*?\\[.*?\\].*?,");
-        Matcher m = p.matcher(source);
-        while (m.find()) {
-            String found = m.group();
-            String replaced = found.replace('[', '_').replace(']', '_');
-            source = source.replace(found, replaced);
-        }
-        return source;
-    }
+//    private static String replaceInlineRegexBrackets(String source) {
+//        // XXX this is just a workaround for issue #246787
+//        // it is caused by jvyamlb yaml parser
+//        Pattern p = Pattern.compile("\\^/.*?\\[.*?\\].*?,");
+//        Matcher m = p.matcher(source);
+//        while (m.find()) {
+//            String found = m.group();
+//            String replaced = found.replace('[', '_').replace(']', '_');
+//            source = source.replace(found, replaced);
+//        }
+//        return source;
+//    }
 
     // for test package private
     YamlParserResult parse(String src, Snapshot snapshot) {

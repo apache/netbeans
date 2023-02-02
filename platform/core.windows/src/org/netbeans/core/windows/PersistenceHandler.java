@@ -973,103 +973,103 @@ public final class PersistenceHandler implements PersistenceObserver {
         }
     }
 
-    /** Dump window manager configuration data to standard output. */
-    private static String dumpConfig (WindowManagerConfig wmc) {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("\n-- wmc: [" + Integer.toHexString(System.identityHashCode(wmc)) + "]");
-        buffer.append("\n-- JOINED --");
-        buffer.append("\n-- x: " + wmc.xJoined);
-        buffer.append("\n-- y: " + wmc.yJoined);
-        buffer.append("\n--  width: " + wmc.widthJoined);
-        buffer.append("\n-- height: " + wmc.heightJoined);
-        buffer.append("\n--  relativeX: " + wmc.relativeXJoined);
-        buffer.append("\n--  relativeY: " + wmc.relativeYJoined);
-        buffer.append("\n--  relativeWidth: " + wmc.relativeWidthJoined);
-        buffer.append("\n-- relativeHeight: " + wmc.relativeHeightJoined);
-        buffer.append("\n-- centeredHorizontally: " + wmc.centeredHorizontallyJoined);
-        buffer.append("\n--   centeredVertically: " + wmc.centeredVerticallyJoined);
-        buffer.append("\n--    maximizeIfWidthBelowJoined: " + wmc.maximizeIfWidthBelowJoined);
-        buffer.append("\n--   maximizeIfHeightBelowJoined: " + wmc.maximizeIfHeightBelowJoined);
-
-        buffer.append("\n-- SEPARATED --");
-        buffer.append("\n-- x: " + wmc.xSeparated);
-        buffer.append("\n-- y: " + wmc.ySeparated);
-        buffer.append("\n--  width: " + wmc.widthSeparated);
-        buffer.append("\n-- height: " + wmc.heightSeparated);
-        buffer.append("\n--  relativeX: " + wmc.relativeXSeparated);
-        buffer.append("\n--  relativeY: " + wmc.relativeYSeparated);
-        buffer.append("\n--  relativeWidth: " + wmc.relativeWidthSeparated);
-        buffer.append("\n-- relativeHeight: " + wmc.relativeHeightSeparated);
-        buffer.append("\n-- centeredHorizontally: " + wmc.centeredHorizontallySeparated);
-        buffer.append("\n--   centeredVertically: " + wmc.centeredVerticallySeparated);
-
-        buffer.append("\n-- editorAreaState: " + wmc.editorAreaState);
-        if(wmc.editorAreaConstraints != null) {
-            for (int i = 0; i < wmc.editorAreaConstraints.length; i++) {
-                buffer.append("\n-- co[" + i + "]: " + wmc.editorAreaConstraints[i]);
-            }
-        }
-        buffer.append("\n--         editorAreaBounds: " + wmc.editorAreaBounds);
-        buffer.append("\n-- editorAreaRelativeBounds: " + wmc.editorAreaRelativeBounds);
-
-        buffer.append("\n--     screenSize: " + wmc.screenSize);
-        buffer.append("\n--    activeModeName: " + wmc.activeModeName);
-        buffer.append("\n-- editorMaximizedModeName: " + wmc.editorMaximizedModeName);
-        buffer.append("\n-- viewMaximizedModeName: " + wmc.viewMaximizedModeName);
-        buffer.append("\n--     toolbarconfig: " + wmc.toolbarConfiguration);
-        buffer.append("\n-- modes: " + Arrays.toString(wmc.modes) + " size " + (wmc.modes == null ? -1 : wmc.modes.length));
-        for (int i = 0; i < wmc.modes.length; i++) {
-            ModeConfig mc = wmc.modes[i];
-            buffer.append("\n-- --");
-            buffer.append("\n-- -- mode[" + i + "]: " + mc.name);
-            buffer.append("\n-- -- state: " + mc.state + " "
-            + ((mc.state == Constants.MODE_STATE_JOINED) ? "joined" : "separated"));
-            if (mc.constraints != null) {
-                buffer.append("\n-- -- constraints.sz: " + mc.constraints.length);
-                for (int j = 0; j < mc.constraints.length; j++) {
-                    buffer.append("\n-- -- co[" + j + "]: " + mc.constraints[j]);
-                }
-            }
-            buffer.append("\n-- -- kind: " + mc.kind + " ");
-            if (mc.kind == Constants.MODE_KIND_EDITOR) {
-                buffer.append("editor");
-            } else if (mc.kind == Constants.MODE_KIND_VIEW) {
-                buffer.append("view");
-            } else if (mc.kind == Constants.MODE_KIND_SLIDING) {
-                buffer.append("sliding");
-            } else {
-                buffer.append("unknown");
-            }
-            buffer.append("\n-- --         bounds: " + mc.bounds);
-            buffer.append("\n-- -- relativeBounds: " + mc.relativeBounds);
-            buffer.append("\n-- --          state: " + mc.frameState);
-            buffer.append("\n-- -- active-tc: " + mc.selectedTopComponentID);
-            buffer.append("\n-- -- permanent: " + mc.permanent);
-            if (mc.tcRefConfigs != null) {
-                for (int k = 0; k < mc.tcRefConfigs.length; k++) {
-                    TCRefConfig tcRefCfg = mc.tcRefConfigs[k];
-                    buffer.append("\n++ ++ ++ tcRef[" + k + "]: " + tcRefCfg.tc_id);
-                    buffer.append("\n++ ++ ++   opened: " + tcRefCfg.opened);
-                }
-            }
-        }
-        buffer.append("\n-- groups: " + Arrays.toString(wmc.groups) + " size " + (wmc.groups == null ? -1 : wmc.groups.length));
-        for (int i = 0; i < wmc.groups.length; i++) {
-            GroupConfig sc = wmc.groups[i];
-            buffer.append("\n-- --");
-            buffer.append("\n-- -- group[" + i + "]: " + sc.name);
-            if (sc.tcGroupConfigs != null) {
-                for (int k = 0; k < sc.tcGroupConfigs.length; k++) {
-                    TCGroupConfig tcGroupCfg = sc.tcGroupConfigs[k];
-                    buffer.append("\n++ ++ ++ tcGroup[" + k + "]: " + tcGroupCfg.tc_id);
-                    buffer.append("\n++ ++ ++   open: " + tcGroupCfg.open);
-                    buffer.append("\n++ ++ ++  close: " + tcGroupCfg.close);
-                }
-            }
-        }
-
-        return buffer.toString();
-    }
+//    /** Dump window manager configuration data to standard output. */
+//    private static String dumpConfig (WindowManagerConfig wmc) {
+//        StringBuffer buffer = new StringBuffer();
+//        buffer.append("\n-- wmc: [" + Integer.toHexString(System.identityHashCode(wmc)) + "]");
+//        buffer.append("\n-- JOINED --");
+//        buffer.append("\n-- x: " + wmc.xJoined);
+//        buffer.append("\n-- y: " + wmc.yJoined);
+//        buffer.append("\n--  width: " + wmc.widthJoined);
+//        buffer.append("\n-- height: " + wmc.heightJoined);
+//        buffer.append("\n--  relativeX: " + wmc.relativeXJoined);
+//        buffer.append("\n--  relativeY: " + wmc.relativeYJoined);
+//        buffer.append("\n--  relativeWidth: " + wmc.relativeWidthJoined);
+//        buffer.append("\n-- relativeHeight: " + wmc.relativeHeightJoined);
+//        buffer.append("\n-- centeredHorizontally: " + wmc.centeredHorizontallyJoined);
+//        buffer.append("\n--   centeredVertically: " + wmc.centeredVerticallyJoined);
+//        buffer.append("\n--    maximizeIfWidthBelowJoined: " + wmc.maximizeIfWidthBelowJoined);
+//        buffer.append("\n--   maximizeIfHeightBelowJoined: " + wmc.maximizeIfHeightBelowJoined);
+//
+//        buffer.append("\n-- SEPARATED --");
+//        buffer.append("\n-- x: " + wmc.xSeparated);
+//        buffer.append("\n-- y: " + wmc.ySeparated);
+//        buffer.append("\n--  width: " + wmc.widthSeparated);
+//        buffer.append("\n-- height: " + wmc.heightSeparated);
+//        buffer.append("\n--  relativeX: " + wmc.relativeXSeparated);
+//        buffer.append("\n--  relativeY: " + wmc.relativeYSeparated);
+//        buffer.append("\n--  relativeWidth: " + wmc.relativeWidthSeparated);
+//        buffer.append("\n-- relativeHeight: " + wmc.relativeHeightSeparated);
+//        buffer.append("\n-- centeredHorizontally: " + wmc.centeredHorizontallySeparated);
+//        buffer.append("\n--   centeredVertically: " + wmc.centeredVerticallySeparated);
+//
+//        buffer.append("\n-- editorAreaState: " + wmc.editorAreaState);
+//        if(wmc.editorAreaConstraints != null) {
+//            for (int i = 0; i < wmc.editorAreaConstraints.length; i++) {
+//                buffer.append("\n-- co[" + i + "]: " + wmc.editorAreaConstraints[i]);
+//            }
+//        }
+//        buffer.append("\n--         editorAreaBounds: " + wmc.editorAreaBounds);
+//        buffer.append("\n-- editorAreaRelativeBounds: " + wmc.editorAreaRelativeBounds);
+//
+//        buffer.append("\n--     screenSize: " + wmc.screenSize);
+//        buffer.append("\n--    activeModeName: " + wmc.activeModeName);
+//        buffer.append("\n-- editorMaximizedModeName: " + wmc.editorMaximizedModeName);
+//        buffer.append("\n-- viewMaximizedModeName: " + wmc.viewMaximizedModeName);
+//        buffer.append("\n--     toolbarconfig: " + wmc.toolbarConfiguration);
+//        buffer.append("\n-- modes: " + Arrays.toString(wmc.modes) + " size " + (wmc.modes == null ? -1 : wmc.modes.length));
+//        for (int i = 0; i < wmc.modes.length; i++) {
+//            ModeConfig mc = wmc.modes[i];
+//            buffer.append("\n-- --");
+//            buffer.append("\n-- -- mode[" + i + "]: " + mc.name);
+//            buffer.append("\n-- -- state: " + mc.state + " "
+//            + ((mc.state == Constants.MODE_STATE_JOINED) ? "joined" : "separated"));
+//            if (mc.constraints != null) {
+//                buffer.append("\n-- -- constraints.sz: " + mc.constraints.length);
+//                for (int j = 0; j < mc.constraints.length; j++) {
+//                    buffer.append("\n-- -- co[" + j + "]: " + mc.constraints[j]);
+//                }
+//            }
+//            buffer.append("\n-- -- kind: " + mc.kind + " ");
+//            if (mc.kind == Constants.MODE_KIND_EDITOR) {
+//                buffer.append("editor");
+//            } else if (mc.kind == Constants.MODE_KIND_VIEW) {
+//                buffer.append("view");
+//            } else if (mc.kind == Constants.MODE_KIND_SLIDING) {
+//                buffer.append("sliding");
+//            } else {
+//                buffer.append("unknown");
+//            }
+//            buffer.append("\n-- --         bounds: " + mc.bounds);
+//            buffer.append("\n-- -- relativeBounds: " + mc.relativeBounds);
+//            buffer.append("\n-- --          state: " + mc.frameState);
+//            buffer.append("\n-- -- active-tc: " + mc.selectedTopComponentID);
+//            buffer.append("\n-- -- permanent: " + mc.permanent);
+//            if (mc.tcRefConfigs != null) {
+//                for (int k = 0; k < mc.tcRefConfigs.length; k++) {
+//                    TCRefConfig tcRefCfg = mc.tcRefConfigs[k];
+//                    buffer.append("\n++ ++ ++ tcRef[" + k + "]: " + tcRefCfg.tc_id);
+//                    buffer.append("\n++ ++ ++   opened: " + tcRefCfg.opened);
+//                }
+//            }
+//        }
+//        buffer.append("\n-- groups: " + Arrays.toString(wmc.groups) + " size " + (wmc.groups == null ? -1 : wmc.groups.length));
+//        for (int i = 0; i < wmc.groups.length; i++) {
+//            GroupConfig sc = wmc.groups[i];
+//            buffer.append("\n-- --");
+//            buffer.append("\n-- -- group[" + i + "]: " + sc.name);
+//            if (sc.tcGroupConfigs != null) {
+//                for (int k = 0; k < sc.tcGroupConfigs.length; k++) {
+//                    TCGroupConfig tcGroupCfg = sc.tcGroupConfigs[k];
+//                    buffer.append("\n++ ++ ++ tcGroup[" + k + "]: " + tcGroupCfg.tc_id);
+//                    buffer.append("\n++ ++ ++   open: " + tcGroupCfg.open);
+//                    buffer.append("\n++ ++ ++  close: " + tcGroupCfg.close);
+//                }
+//            }
+//        }
+//
+//        return buffer.toString();
+//    }
 
     private static void debugLog(String message) {
         Debug.log(PersistenceHandler.class, message);

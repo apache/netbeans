@@ -258,19 +258,19 @@ public class ModulesInstaller {
         return sb.toString();
     }
 
-    private void waitToModuleLoaded () {
-        assert ! SwingUtilities.isEventDispatchThread () : "Cannot be called in EQ.";
-        for (UpdateElement m : modules4install) {
-           while (!m.isEnabled()) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-           }
-        }
-        
-    }
+//    private void waitToModuleLoaded () {
+//        assert ! SwingUtilities.isEventDispatchThread () : "Cannot be called in EQ.";
+//        for (UpdateElement m : modules4install) {
+//           while (!m.isEnabled()) {
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException ex) {
+//                    Exceptions.printStackTrace(ex);
+//                }
+//           }
+//        }
+//
+//    }
     
     private static String getBundle (String key, Object... params) {
         return NbBundle.getMessage (ModulesInstaller.class, key, params);

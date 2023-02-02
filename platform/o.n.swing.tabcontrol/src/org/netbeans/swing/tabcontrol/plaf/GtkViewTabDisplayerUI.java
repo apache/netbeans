@@ -191,9 +191,9 @@ public final class GtkViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
         return;
     }
     
-    private static void paintTabBackgroundNative (Graphics g, int index, int state,
-    int x, int y, int w, int h) {
-    }
+//    private static void paintTabBackgroundNative (Graphics g, int index, int state,
+//    int x, int y, int w, int h) {
+//    }
 
     protected void paintTabBackground(Graphics g, int index, int x, int y,
                                       int width, int height) {

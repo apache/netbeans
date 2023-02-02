@@ -410,15 +410,15 @@ public class MiscUtils implements CommonConstants {
     }
     
     
-    private static boolean addToList(File file,List path) {
-        String pathName = getCanonicalPath(file);
-        
-        if (pathName != null && !path.contains(pathName)) {
-            path.add(pathName);
-            return true;
-        }
-        return false;
-    }
+//    private static boolean addToList(File file,List path) {
+//        String pathName = getCanonicalPath(file);
+//
+//        if (pathName != null && !path.contains(pathName)) {
+//            path.add(pathName);
+//            return true;
+//        }
+//        return false;
+//    }
     
     public static void setSilent(boolean silent) {
         printInfo = !silent;

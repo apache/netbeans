@@ -155,27 +155,27 @@ public class FindInFilesAction extends CallableSystemAction {
         return presenter;
     }
     
-    /**
-     * Checks whether the stored toolbar presenter exists but does not create
-     * one if it does not exist.
-     *
-     * @return  <code>true</code> if the reference to the toolbar presenter
-     *          is not <code>null</code> and has not been cleared yet;
-     *          <code>false</code> otherwise
-     * @see  #getStoredToolbarPresenter
-     */
-    private boolean checkToolbarPresenterExists() {
-        assert EventQueue.isDispatchThread();
-        if (shouldLog(LOG)) {
-            log("checkToolbarPresenterExists()");
-        }
-
-        Object refObj = getProperty(VAR_TOOLBAR_COMP_REF);
-        if (refObj == null) {
-            return false;
-        }
-        return ((Reference) refObj).get() != null;
-    }
+//    /**
+//     * Checks whether the stored toolbar presenter exists but does not create
+//     * one if it does not exist.
+//     *
+//     * @return  <code>true</code> if the reference to the toolbar presenter
+//     *          is not <code>null</code> and has not been cleared yet;
+//     *          <code>false</code> otherwise
+//     * @see  #getStoredToolbarPresenter
+//     */
+//    private boolean checkToolbarPresenterExists() {
+//        assert EventQueue.isDispatchThread();
+//        if (shouldLog(LOG)) {
+//            log("checkToolbarPresenterExists()");
+//        }
+//
+//        Object refObj = getProperty(VAR_TOOLBAR_COMP_REF);
+//        if (refObj == null) {
+//            return false;
+//        }
+//        return ((Reference) refObj).get() != null;
+//    }
 
     @Override
     protected String iconResource() {

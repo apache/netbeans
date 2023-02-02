@@ -287,17 +287,17 @@ public class RatReportTask extends Task {
             this.folder = moduleFolder;
         }
 
-        private File getFolder() {
-            return folder;
-        }
+//        private File getFolder() {
+//            return folder;
+//        }
 
         private void addApproved(String resources) {
             approved.add(resources);
         }
 
-        private void addInvalidExternal(String resources) {
-            external.add(resources);
-        }
+//        private void addInvalidExternal(String resources) {
+//            external.add(resources);
+//        }
 
         private void addUnapproved(String resources) {
             unapproved.add(resources);

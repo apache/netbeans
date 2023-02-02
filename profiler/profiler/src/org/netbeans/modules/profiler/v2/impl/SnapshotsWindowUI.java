@@ -466,13 +466,13 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
         
     }
     
-    private static boolean hasSnapshots(ProfilerSession session) {
-//        ResultsManager rm = ResultsManager.getDefault();
-//        Lookup.Provider project = session.getProject();
-//        return rm.hasSnapshotsFor(project);
-        
-        return true;
-    }
+//    private static boolean hasSnapshots(ProfilerSession session) {
+////        ResultsManager rm = ResultsManager.getDefault();
+////        Lookup.Provider project = session.getProject();
+////        return rm.hasSnapshotsFor(project);
+//
+//        return true;
+//    }
     
     private static boolean isOpen(Snapshot s) {
         File f = FileUtil.toFile(s.getFile());

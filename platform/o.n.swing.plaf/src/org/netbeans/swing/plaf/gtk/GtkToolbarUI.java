@@ -81,9 +81,9 @@ public class GtkToolbarUI extends BasicToolBarUI implements ContainerListener {
         return createRolloverBorder();
     }
     
-    private Border createNonRolloverToggleBorder() {
-        return createRolloverBorder();
-    }
+//    private Border createNonRolloverToggleBorder() {
+//        return createRolloverBorder();
+//    }
     
     protected void setBorderToRollover(Component c) {
         if (c instanceof AbstractButton) {

@@ -109,11 +109,11 @@ class InstallConfig {
         return moduleName.startsWith(ergonomicsPackName) && mi.isEnabled();
     }
 
-    private boolean isPackEnabled(String prefName) {
-        for( String name : enabledPackNames ) {
-            if( name.contains(prefName) )
-                return true;
-        }
-        return false;
-    }
+//    private boolean isPackEnabled(String prefName) {
+//        for( String name : enabledPackNames ) {
+//            if( name.contains(prefName) )
+//                return true;
+//        }
+//        return false;
+//    }
 }

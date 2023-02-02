@@ -131,11 +131,11 @@ public final class LanguageIds {
         }
     }
 
-    private static LanguageIds create(int id) {
-        LanguageIds[] ids = new LanguageIds[id + 1];
-        ids[id] = EMPTY; // Parent ids
-        return new LanguageIds(ids, id);
-    }
+//    private static LanguageIds create(int id) {
+//        LanguageIds[] ids = new LanguageIds[id + 1];
+//        ids[id] = EMPTY; // Parent ids
+//        return new LanguageIds(ids, id);
+//    }
     
     private static LanguageIds create(LanguageIds ids, int id) {
 //        assert (id > ids.ids.length) : "Attempt to add language with lower id=" + id; // NOI18N

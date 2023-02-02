@@ -491,8 +491,8 @@ implements FileChangeListener, LexicalHandler, LookupListener {
     public void fileDataCreated(FileEvent fe) {
     }
 
-    private void fileCreated(FileObject fo) {
-    }
+//    private void fileCreated(FileObject fo) {
+//    }
 
     public void fileChanged(FileEvent fe) {
         XMLDataObject realXML = getXml();

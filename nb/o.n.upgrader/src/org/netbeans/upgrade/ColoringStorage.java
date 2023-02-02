@@ -257,49 +257,49 @@ class ColoringStorage {
         XMLStorage.save (fo, new String (sb));
     }
     
-    /**
-     * Crates FileObject for given mimeTypes and profile.
-     */ 
-    private static String getFolderName (
-        String[] mimeTypes, 
-        String profile
-    ) {
-        StringBuffer sb = new StringBuffer ();
-        sb.append ("Editors");
-        int i, k = mimeTypes.length;
-        for (i = 0; i < k; i++)
-            sb.append ('/').append (mimeTypes [i]);
-        if (profile != null)
-            sb.append ('/').append (profile);
-        return sb.append ('/').toString ();
-    }    
+//    /**
+//     * Crates FileObject for given mimeTypes and profile.
+//     */
+//    private static String getFolderName (
+//        String[] mimeTypes,
+//        String profile
+//    ) {
+//        StringBuffer sb = new StringBuffer ();
+//        sb.append ("Editors");
+//        int i, k = mimeTypes.length;
+//        for (i = 0; i < k; i++)
+//            sb.append ('/').append (mimeTypes [i]);
+//        if (profile != null)
+//            sb.append ('/').append (profile);
+//        return sb.append ('/').toString ();
+//    }
     
-    /**
-     * Crates FileObject for given mimeTypes and profile.
-     */ 
-    private static FileObject createFileObject (
-        FileObject      root,
-        String[]        mimeTypes, 
-        String          profile,
-        String          fileName
-    ) {
-        try {
-            FileObject fo = getFO (FileUtil.getConfigRoot (), "Editors");
-            int i, k = mimeTypes.length;
-            for (i = 0; i < k; i++)
-                fo = getFO (fo, mimeTypes [i]);
-            if (profile != null)
-                fo = getFO (fo, profile);
-            if (fileName == null)
-                return fo;
-            FileObject fo1 = fo.getFileObject (fileName);
-            if (fo1 != null) return fo1;
-            return fo.createData (fileName);
-        } catch (IOException ex) {
-            ErrorManager.getDefault ().notify (ex);
-            return null;
-        }
-    }    
+//    /**
+//     * Crates FileObject for given mimeTypes and profile.
+//     */
+//    private static FileObject createFileObject (
+//        FileObject      root,
+//        String[]        mimeTypes,
+//        String          profile,
+//        String          fileName
+//    ) {
+//        try {
+//            FileObject fo = getFO (FileUtil.getConfigRoot (), "Editors");
+//            int i, k = mimeTypes.length;
+//            for (i = 0; i < k; i++)
+//                fo = getFO (fo, mimeTypes [i]);
+//            if (profile != null)
+//                fo = getFO (fo, profile);
+//            if (fileName == null)
+//                return fo;
+//            FileObject fo1 = fo.getFileObject (fileName);
+//            if (fo1 != null) return fo1;
+//            return fo.createData (fileName);
+//        } catch (IOException ex) {
+//            ErrorManager.getDefault ().notify (ex);
+//            return null;
+//        }
+//    }
        
     private static FileObject getFO (FileObject fo, String next) throws IOException {
         FileObject fo1 = fo.getFileObject (next);

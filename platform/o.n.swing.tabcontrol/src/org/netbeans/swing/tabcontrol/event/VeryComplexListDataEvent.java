@@ -83,13 +83,13 @@ public final class VeryComplexListDataEvent extends ComplexListDataEvent {
         return sb.toString();
     }
 
-    private static final void arr2str(Object[] o, StringBuffer sb) {
-        for (int i = 0; i < o.length; i++) {
-            sb.append(o[i]);
-            if (i != o.length - 1) {
-                sb.append(","); //NOI18N
-            }
-        }
-    }
+//    private static final void arr2str(Object[] o, StringBuffer sb) {
+//        for (int i = 0; i < o.length; i++) {
+//            sb.append(o[i]);
+//            if (i != o.length - 1) {
+//                sb.append(","); //NOI18N
+//            }
+//        }
+//    }
 
 }

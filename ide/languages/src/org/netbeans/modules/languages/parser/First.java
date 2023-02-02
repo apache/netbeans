@@ -442,20 +442,20 @@ class First {
         return sb.toString ();
     }
     
-    private int optimizeFollow () {
-        int count = 0;
-        for (int i = 0; i < follow.length;  i++) {
-            if (follow [i] == null) continue;
-            List<int[]> list = follow [i].fl;
-            Map<Integer,Set<Integer>> n = new HashMap<Integer,Set<Integer>> ();
-            Iterator<int[]> it = list.iterator ();
-            while (it.hasNext ())
-                addToFollow (it.next (), n, new HashSet<Integer> ());
-            follow [i].fl = convertFollow (n);
-            count += follow [i].fl.size ();
-        }
-        return count;
-    }
+//    private int optimizeFollow () {
+//        int count = 0;
+//        for (int i = 0; i < follow.length;  i++) {
+//            if (follow [i] == null) continue;
+//            List<int[]> list = follow [i].fl;
+//            Map<Integer,Set<Integer>> n = new HashMap<Integer,Set<Integer>> ();
+//            Iterator<int[]> it = list.iterator ();
+//            while (it.hasNext ())
+//                addToFollow (it.next (), n, new HashSet<Integer> ());
+//            follow [i].fl = convertFollow (n);
+//            count += follow [i].fl.size ();
+//        }
+//        return count;
+//    }
     
     private void addToFollow (int[] is, Map<Integer,Set<Integer>> n, Set<Integer> abs) {
         Rule rule = rules.get (is [0]);

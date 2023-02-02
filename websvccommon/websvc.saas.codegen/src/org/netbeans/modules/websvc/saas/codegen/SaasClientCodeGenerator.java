@@ -248,22 +248,22 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
         this.bean = bean;
     }
     
-    private String getParamList() {
-        List<ParameterInfo> inputParams = bean.filterParametersByAuth
-                (bean.filterParameters(new ParamFilter[]{ParamFilter.FIXED}));
-        String text = ""; //NOI18N
-        for (int i = 0; i < inputParams.size(); i++) {
-            ParameterInfo param = inputParams.get(i);
-
-            if (i == 0) {
-                text += getParameterName(param, true, true, true);
-            } else {
-                text += ", " + getParameterName(param, true, true, true); //NOI18N
-            }
-        }
-
-        return text;
-    }
+//    private String getParamList() {
+//        List<ParameterInfo> inputParams = bean.filterParametersByAuth
+//                (bean.filterParameters(new ParamFilter[]{ParamFilter.FIXED}));
+//        String text = ""; //NOI18N
+//        for (int i = 0; i < inputParams.size(); i++) {
+//            ParameterInfo param = inputParams.get(i);
+//
+//            if (i == 0) {
+//                text += getParameterName(param, true, true, true);
+//            } else {
+//                text += ", " + getParameterName(param, true, true, true); //NOI18N
+//            }
+//        }
+//
+//        return text;
+//    }
 
   
     protected void insert(String s, boolean reformat)

@@ -1695,20 +1695,20 @@ public final class EditorCaret implements Caret {
         }
     }
     
-    private void updateRectangularSelectionDotRect() { // Assumes update caret bounds of getLastCaretItem()
-        if (rectangularSelection) {
-            Rectangle caretBounds = getLastCaretItem().getCaretBounds();
-            if (caretBounds != null) {
-                if (rsDotRect != null) {
-                    rsDotRect.y = caretBounds.y;
-                    rsDotRect.height = caretBounds.height;
-                } else {
-                    rsDotRect = caretBounds;
-                }
-            }
-            updateRectangularSelectionPaintRect();
-        }
-    }
+//    private void updateRectangularSelectionDotRect() { // Assumes update caret bounds of getLastCaretItem()
+//        if (rectangularSelection) {
+//            Rectangle caretBounds = getLastCaretItem().getCaretBounds();
+//            if (caretBounds != null) {
+//                if (rsDotRect != null) {
+//                    rsDotRect.y = caretBounds.y;
+//                    rsDotRect.height = caretBounds.height;
+//                } else {
+//                    rsDotRect = caretBounds;
+//                }
+//            }
+//            updateRectangularSelectionPaintRect();
+//        }
+//    }
     
     private void fireEditorCaretChange(EditorCaretEvent evt) {
         for (EditorCaretListener listener : listenerList.getListeners()) {

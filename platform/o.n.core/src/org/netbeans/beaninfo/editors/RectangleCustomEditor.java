@@ -212,9 +212,9 @@ public class RectangleCustomEditor extends IntegerCustomEditor {
         }
     }
     
-    private JLabel findLabelFor(JTextField c) {
-        return getMap().get(c);
-    }
+//    private JLabel findLabelFor(JTextField c) {
+//        return getMap().get(c);
+//    }
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (PropertyEnv.PROP_STATE.equals(evt.getPropertyName()) && evt.getNewValue() == PropertyEnv.STATE_VALID) {

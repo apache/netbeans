@@ -238,31 +238,31 @@ public class JFXProjectConfigurations {
         return Collections.unmodifiableSet(RUN_CONFIGS.keySet());
     }
 
-    private Map<String,String/*|null*/> getConfigUnmodifyable(String config) {
-        assert !configNameWrong(config);
-        return Collections.unmodifiableMap(RUN_CONFIGS.get(config));
-    }
+//    private Map<String,String/*|null*/> getConfigUnmodifyable(String config) {
+//        assert !configNameWrong(config);
+//        return Collections.unmodifiableMap(RUN_CONFIGS.get(config));
+//    }
 
-    private Map<String,String/*|null*/> getDefaultConfigUnmodifyable() {
-        return getConfigUnmodifyable(null);
-    }
+//    private Map<String,String/*|null*/> getDefaultConfigUnmodifyable() {
+//        return getConfigUnmodifyable(null);
+//    }
 
-    private Map<String,String/*|null*/> getActiveConfigUnmodifyable() {
-        return getConfigUnmodifyable(getActive());
-    }
+//    private Map<String,String/*|null*/> getActiveConfigUnmodifyable() {
+//        return getConfigUnmodifyable(getActive());
+//    }
 
     private Map<String,String/*|null*/> getConfig(String config) {
         assert !configNameWrong(config);
         return RUN_CONFIGS.get(config);
     }
 
-    private Map<String,String/*|null*/> getDefaultConfig() {
-        return getConfig(null);
-    }
+//    private Map<String,String/*|null*/> getDefaultConfig() {
+//        return getConfig(null);
+//    }
 
-    private Map<String,String/*|null*/> getActiveConfig() {
-        return getConfig(getActive());
-    }
+//    private Map<String,String/*|null*/> getActiveConfig() {
+//        return getConfig(getActive());
+//    }
 
     private Map<String,String/*|null*/> getConfigNonNull(String config) {
         assert !configNameWrong(config);
@@ -274,13 +274,13 @@ public class JFXProjectConfigurations {
         return configMap;
     }
 
-    private Map<String,String/*|null*/> getDefaultConfigNonNull() {
-        return getConfigNonNull(null);
-    }
+//    private Map<String,String/*|null*/> getDefaultConfigNonNull() {
+//        return getConfigNonNull(null);
+//    }
 
-    private Map<String,String/*|null*/> getActiveConfigNonNull() {
-        return getConfigNonNull(getActive());
-    }
+//    private Map<String,String/*|null*/> getActiveConfigNonNull() {
+//        return getConfigNonNull(getActive());
+//    }
 
     //----------------------------------------------------------
 
@@ -1632,23 +1632,23 @@ public class JFXProjectConfigurations {
             return false;
         }
         
-        private boolean isEntryHidden(String config, @NonNull String name) {
-            Map<String, String> entry = getEntry(config, name);
-            if(entry != null) {
-                return isEntryHidden(entry);
-            }
-            return false;
-        }
+//        private boolean isEntryHidden(String config, @NonNull String name) {
+//            Map<String, String> entry = getEntry(config, name);
+//            if(entry != null) {
+//                return isEntryHidden(entry);
+//            }
+//            return false;
+//        }
         
         private void hideEntry(@NonNull Map<String,String> entry) {
             assert entry != null;
             entry.put(suffixes[2], APP_MULTIPROP_HIDDEN_TRUE); // NOI18N
         }
         
-        private void unhideEntry(@NonNull Map<String,String> entry) {
-            assert entry != null;
-            entry.remove(suffixes[2]);
-        }
+//        private void unhideEntry(@NonNull Map<String,String> entry) {
+//            assert entry != null;
+//            entry.remove(suffixes[2]);
+//        }
 
         private void hideEntry(String config, String name) {
             Map<String, String> map = getEntry(config, name);
@@ -1657,12 +1657,12 @@ public class JFXProjectConfigurations {
             }
         }
         
-        private void unhideEntry(String config, String name) {
-            Map<String, String> map = getEntry(config, name);
-            if(map != null) {
-                unhideEntry(map);
-            }
-        }
+//        private void unhideEntry(String config, String name) {
+//            Map<String, String> map = getEntry(config, name);
+//            if(map != null) {
+//                unhideEntry(map);
+//            }
+//        }
 
         /**
          * Removes those entries from list that are marked as hidden
@@ -1719,9 +1719,9 @@ public class JFXProjectConfigurations {
             return getEntry(config, name) != null;
         }
 
-        private boolean hasDefaultEntry(@NonNull String name) {
-            return hasEntry(null, name);
-        }
+//        private boolean hasDefaultEntry(@NonNull String name) {
+//            return hasEntry(null, name);
+//        }
 
         private boolean hasActiveEntry(@NonNull String name) {
             return hasEntry(getActive(), name);
@@ -1742,28 +1742,28 @@ public class JFXProjectConfigurations {
 
         //----------------------------------------------------------
 
-        /**
-         * Returns true if exactly the entry with name name and value value
-         * is present in configuration config
-         * 
-         * @param config
-         * @param name
-         * @param value
-         * @return 
-         */
-        private boolean hasEntry(String config, @NonNull String name, @NonNull String value) {
-            assert !configNameWrong(config);
-            String v = getEntryValue(config, name);
-            return JFXProjectProperties.isEqualText(v, value);
-        }
+//        /**
+//         * Returns true if exactly the entry with name name and value value
+//         * is present in configuration config
+//         *
+//         * @param config
+//         * @param name
+//         * @param value
+//         * @return
+//         */
+//        private boolean hasEntry(String config, @NonNull String name, @NonNull String value) {
+//            assert !configNameWrong(config);
+//            String v = getEntryValue(config, name);
+//            return JFXProjectProperties.isEqualText(v, value);
+//        }
 
-        private boolean hasDefaultEntry(@NonNull String name, @NonNull String value) {
-            return hasEntry(null, name, value);
-        }
+//        private boolean hasDefaultEntry(@NonNull String name, @NonNull String value) {
+//            return hasEntry(null, name, value);
+//        }
 
-        private boolean hasActiveEntry(@NonNull String name, @NonNull String value) {
-            return hasEntry(getActive(), name, value);
-        }
+//        private boolean hasActiveEntry(@NonNull String name, @NonNull String value) {
+//            return hasEntry(getActive(), name, value);
+//        }
 
         public boolean hasEntryTransparent(String config, @NonNull String name, @NonNull String value) {
             assert !configNameWrong(config);
@@ -1788,19 +1788,19 @@ public class JFXProjectConfigurations {
             return entry != null && entry.containsKey(suffixes[1]);
         }
         
-        private boolean hasEntryValue(String config, @NonNull String name) {
-            assert !configNameWrong(config);
-            Map<String, String> entry = getEntry(config, name);
-            return hasEntryValue(entry);
-        }
+//        private boolean hasEntryValue(String config, @NonNull String name) {
+//            assert !configNameWrong(config);
+//            Map<String, String> entry = getEntry(config, name);
+//            return hasEntryValue(entry);
+//        }
 
-        private boolean hasDefaultEntryValue(@NonNull String name) {
-            return hasEntryValue(null, name);
-        }
+//        private boolean hasDefaultEntryValue(@NonNull String name) {
+//            return hasEntryValue(null, name);
+//        }
 
-        private boolean hasActiveEntryValue(@NonNull String name) {
-            return hasEntryValue(getActive(), name);
-        }
+//        private boolean hasActiveEntryValue(@NonNull String name) {
+//            return hasEntryValue(getActive(), name);
+//        }
 
         public boolean hasEntryValueTransparent(String config, @NonNull String name) {
             assert !configNameWrong(config);
@@ -1833,13 +1833,13 @@ public class JFXProjectConfigurations {
             return getEntry(getEntries(config), name);
         }
 
-        private Map<String, String> getDefaultEntry(@NonNull String name) {
-            return getEntry((String)null, name);
-        }
+//        private Map<String, String> getDefaultEntry(@NonNull String name) {
+//            return getEntry((String)null, name);
+//        }
 
-        private Map<String, String> getActiveEntry(@NonNull String name) {
-            return getEntry(getActive(), name);
-        }
+//        private Map<String, String> getActiveEntry(@NonNull String name) {
+//            return getEntry(getActive(), name);
+//        }
 
         public Map<String, String> getEntryTransparent(String config, @NonNull String name) {
             assert !configNameWrong(config);
@@ -1860,47 +1860,47 @@ public class JFXProjectConfigurations {
 
         //----------------------------------------------------------
 
-        /**
-         * Note that returned null is ambiguous - may mean that there
-         * was no value defined or that it was defined and its value was null.
-         * To check this ask has*EntryValue*()
-         * 
-         * @param config
-         * @param name
-         * @return 
-         */
-        private String getEntryValue(String config, @NonNull String name) {
-            assert !configNameWrong(config);
-            Map<String,String/*|null*/> entry = getEntry(config, name);
-            if(entry != null) {
-                return getEntryValue(entry);
-            }
-            return null;
-        }
+//        /**
+//         * Note that returned null is ambiguous - may mean that there
+//         * was no value defined or that it was defined and its value was null.
+//         * To check this ask has*EntryValue*()
+//         *
+//         * @param config
+//         * @param name
+//         * @return
+//         */
+//        private String getEntryValue(String config, @NonNull String name) {
+//            assert !configNameWrong(config);
+//            Map<String,String/*|null*/> entry = getEntry(config, name);
+//            if(entry != null) {
+//                return getEntryValue(entry);
+//            }
+//            return null;
+//        }
 
-        /**
-         * Note that returned null is ambiguous - may mean that there
-         * was no value defined or that it was defined and its value was null.
-         * To check this ask has*EntryValue*()
-         * 
-         * @param name
-         * @return 
-         */
-        private String getDefaultEntryValue(@NonNull String name) {
-            return getEntryValue((String)null, name);
-        }
+//        /**
+//         * Note that returned null is ambiguous - may mean that there
+//         * was no value defined or that it was defined and its value was null.
+//         * To check this ask has*EntryValue*()
+//         *
+//         * @param name
+//         * @return
+//         */
+//        private String getDefaultEntryValue(@NonNull String name) {
+//            return getEntryValue((String)null, name);
+//        }
 
-        /**
-         * Note that returned null is ambiguous - may mean that there
-         * was no value defined or that it was defined and its value was null.
-         * To check this ask has*EntryValue*()
-         * 
-         * @param name
-         * @return 
-         */
-        private String getActiveEntryValue(@NonNull String name) {
-            return getEntryValue(getActive(), name);
-        }
+//        /**
+//         * Note that returned null is ambiguous - may mean that there
+//         * was no value defined or that it was defined and its value was null.
+//         * To check this ask has*EntryValue*()
+//         *
+//         * @param name
+//         * @return
+//         */
+//        private String getActiveEntryValue(@NonNull String name) {
+//            return getEntryValue(getActive(), name);
+//        }
 
         /**
          * Note that returned null is ambiguous - may mean that there
@@ -2157,16 +2157,16 @@ public class JFXProjectConfigurations {
             return prop;
         }
         
-        private Map<String, String> copyEntry(@NonNull Map<String, String> entry) {
-            Map<String, String> newEntry = new HashMap<String, String>();
-            for(String name : suffixes) {
-                String value = entry.get(name);
-                if(value != null && !value.isEmpty()) {
-                    newEntry.put(name, value);
-                }
-            }
-            return newEntry;
-        }
+//        private Map<String, String> copyEntry(@NonNull Map<String, String> entry) {
+//            Map<String, String> newEntry = new HashMap<String, String>();
+//            for(String name : suffixes) {
+//                String value = entry.get(name);
+//                if(value != null && !value.isEmpty()) {
+//                    newEntry.put(name, value);
+//                }
+//            }
+//            return newEntry;
+//        }
 
         //----------------------------------------------------------
 
@@ -2186,13 +2186,13 @@ public class JFXProjectConfigurations {
             props.add(entry);
         }
         
-        private void addDefaultEntry(@NonNull Map<String,String> entry) {
-            addEntry((String)null, entry);
-        }
+//        private void addDefaultEntry(@NonNull Map<String,String> entry) {
+//            addEntry((String)null, entry);
+//        }
         
-        private void addActiveEntry(@NonNull Map<String,String> entry) {
-            addEntry(getActive(), entry);
-        }
+//        private void addActiveEntry(@NonNull Map<String,String> entry) {
+//            addEntry(getActive(), entry);
+//        }
 
         //----------------------------------------------------------
 
@@ -2218,9 +2218,9 @@ public class JFXProjectConfigurations {
             return addEntry((String)null, name);
         }
 
-        private Map<String, String> addActiveEntry(@NonNull String name) {
-            return addEntry(getActive(), name);
-        }
+//        private Map<String, String> addActiveEntry(@NonNull String name) {
+//            return addEntry(getActive(), name);
+//        }
 
         public Map<String, String> addEntryTransparent(String config, @NonNull String name) {
             assert !configNameWrong(config);
@@ -2274,9 +2274,9 @@ public class JFXProjectConfigurations {
             return addEntry(null, name, value);
         }
 
-        private Map<String, String> addActiveEntry(@NonNull String name, String value) {
-            return addEntry(getActive(), name, value);
-        }
+//        private Map<String, String> addActiveEntry(@NonNull String name, String value) {
+//            return addEntry(getActive(), name, value);
+//        }
 
         public Map<String, String> addEntryTransparent(String config, @NonNull String name, String value) {
             assert !configNameWrong(config);
@@ -2398,9 +2398,9 @@ public class JFXProjectConfigurations {
             eraseEntry((String)null, name);
         }
 
-        private void eraseActiveEntry(@NonNull String name) {
-            eraseEntry(getActive(), name);
-        }
+//        private void eraseActiveEntry(@NonNull String name) {
+//            eraseEntry(getActive(), name);
+//        }
         
         private void eraseNonDefaultEntries(@NonNull String name, boolean hidden) {
             for(String c: getConfigNames()) {
@@ -2447,9 +2447,9 @@ public class JFXProjectConfigurations {
             eraseEntries(null);
         }
 
-        private void eraseActiveEntries() {
-            eraseEntries(getActive());
-        }
+//        private void eraseActiveEntries() {
+//            eraseEntries(getActive());
+//        }
 
         public void eraseEntriesTransparent(String config) {
             assert !configNameWrong(config);
@@ -2550,13 +2550,13 @@ public class JFXProjectConfigurations {
             return prop != null && prop.startsWith(prefix) && prop.endsWith(suffixes[0]);
         }
 
-        private boolean isEntryValueProperty(@NonNull String prop) {
-            return prop != null && prop.startsWith(prefix) && prop.endsWith(suffixes[1]);
-        }
+//        private boolean isEntryValueProperty(@NonNull String prop) {
+//            return prop != null && prop.startsWith(prefix) && prop.endsWith(suffixes[1]);
+//        }
 
-        private boolean isEntryHiddenProperty(@NonNull String prop) {
-            return prop != null && prop.startsWith(prefix) && prop.endsWith(suffixes[2]);
-        }
+//        private boolean isEntryHiddenProperty(@NonNull String prop) {
+//            return prop != null && prop.startsWith(prefix) && prop.endsWith(suffixes[2]);
+//        }
 
         private String getEntryValueProperty(String entryNameProperty) {
             if(entryNameProperty != null && isEntryNameProperty(entryNameProperty)) {
@@ -2822,9 +2822,9 @@ public class JFXProjectConfigurations {
             extractEntries(ep, null);
         }
 
-        private void extractActiveEntries(@NonNull EditableProperties ep) {
-            extractEntries(ep, getActive());
-        }
+//        private void extractActiveEntries(@NonNull EditableProperties ep) {
+//            extractEntries(ep, getActive());
+//        }
         
         /**
          * Returns dump of APP_MULTIPROPS. Useful for testing.

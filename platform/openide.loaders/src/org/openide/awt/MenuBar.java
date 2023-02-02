@@ -295,16 +295,16 @@ public class MenuBar extends JMenuBar implements Externalizable {
             recreate ();
         }
 
-        /** Removes the components added by this FolderInstance from the MenuBar.
-         * Called when menu is refreshed. */
-        private void cleanUp() {
-            synchronized (getTreeLock()) {
-                for (Iterator<Component> it = getManaged().iterator(); it.hasNext(); ) {
-                    MenuBar.this.remove(it.next());
-                }
-                getManaged().clear();
-            }
-        }
+//        /** Removes the components added by this FolderInstance from the MenuBar.
+//         * Called when menu is refreshed. */
+//        private void cleanUp() {
+//            synchronized (getTreeLock()) {
+//                for (Iterator<Component> it = getManaged().iterator(); it.hasNext(); ) {
+//                    MenuBar.this.remove(it.next());
+//                }
+//                getManaged().clear();
+//            }
+//        }
 
         /** Adds the component to the MenuBar after the last added one */
         private void addComponent (Component c) {

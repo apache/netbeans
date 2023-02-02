@@ -150,17 +150,17 @@ public final class MacroRecording {
         return (String) action.getValue(Action.NAME);
     }
 
-    private static String getFilteredActionCommand(String cmd) {
-        if (cmd == null || cmd.length() == 0) {
-            return "";
-        }
-        char ch = cmd.charAt(0);
-        if ((ch >= 0x20) && (ch != 0x7F)) {
-            return cmd;
-        } else {
-            return "";
-        }
-    }
+//    private static String getFilteredActionCommand(String cmd) {
+//        if (cmd == null || cmd.length() == 0) {
+//            return "";
+//        }
+//        char ch = cmd.charAt(0);
+//        if ((ch >= 0x20) && (ch != 0x7F)) {
+//            return cmd;
+//        } else {
+//            return "";
+//        }
+//    }
 
     private static void appendEncodedText(StringBuilder sb, StringBuilder text) {
         sb.append('"');

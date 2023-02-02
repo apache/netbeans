@@ -547,10 +547,10 @@ public class GroovyCompletionCollector implements CompletionCollector {
     private static boolean autoPopup = true;
     private static boolean inited;
 
-    private static boolean isCaseSensitive() {
-        lazyInit();
-        return caseSensitive;
-    }
+//    private static boolean isCaseSensitive() {
+//        lazyInit();
+//        return caseSensitive;
+//    }
 
     private static class SettingsListener implements PreferenceChangeListener {
 

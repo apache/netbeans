@@ -936,175 +936,175 @@ public class ProfilerInterface implements CommonConstants {
         return false;
     }
 
-    /** Called on CLASS_PREPARE JVMTI event */
-    private static void classLoadHook(Class clazz) {
-        ThreadInfo threadInfo = ThreadInfo.getThreadInfo();
-
-        threadInfo.inProfilingRuntimeMethod++;
-
-        try {
-            String className = clazz.getName();
-
-            if (instrumentMethodGroupCallThread == Thread.currentThread() || internalClassName(className)) { // See comment at inInstrumentMethodGroupCall
-                ClassLoaderManager.registerLoader(clazz); // Still register the loader, for reasons related with
-                                                          // management of jmethodIds
-
-                return;
-            }
-
-            Thread currentThread = Thread.currentThread();
-
-            if (PROFILER_SERVER_THREAD_NAME.equals(currentThread.getName())) {
-                System.err.println(ENGINE_WARNING + "class " + className + " loaded by " + PROFILER_SERVER_THREAD_NAME); // NOI18N
-
-                return;
-            }
-
-            if ((initInstrumentationThread != null) && (currentThread == initInstrumentationThread)) {
-                // Looks like on rare occasions we can get this problem - class load hook called when it shouldn't.
-                // If we are already here, we can't (easily at least) fix this problem, but at least we can warn the user.
-                System.err.println(ENGINE_WARNING + "class load hook invoked at inappropriate time for " // NOI18N
-                                   + className + ", loader = " + clazz.getClassLoader()); // NOI18N
-                System.err.println("*** This class will not be instrumented unless you re-run the instrumentation command"); // NOI18N
-                System.err.println(PLEASE_REPORT_PROBLEM);
-                System.err.println("=============================== Stack trace ====================="); // NOI18N
-                Thread.dumpStack();
-                System.err.println("=============================== End stack trace ================="); // NOI18N
-
-                return;
-            }
-
-            //System.out.println("+++ Class load hook invoked for " + className + ", loader = " + clazz.getClassLoader());
-            int classLoaderId = ClassLoaderManager.registerLoader(clazz);
-            boolean resumeTimer = false;
-
-            if (DEBUG) {
-                System.err.println("ProfilerInterface.classLoadHook.DEBUG: " + className + ", classLoaderId: " + classLoaderId); // NOI18N
-            }
-
-            serialClientOperationsLock.beginTrans(true);
-
-            try {
-                boolean rootInstrumented = false;
-                String excMessage = null;
-                int instrType = getCurrentInstrType();
-
-                if (instrType == INSTR_NONE) {
-                    return; // Instrumentation was turned off in the mean time
-                }
-
-                // bugfix for issue http://profiler.netbeans.org/issues/show_bug.cgi?id=65968
-                boolean resumeProfiling = false;
-
-                if (ThreadInfo.profilingSuspended()) {
-                    ThreadInfo.suspendProfiling();
-                    resumeProfiling = true;
-                }
-
-                try {
-                    if (rootClassLoaded) { // if yes, it means instrumentation has been started
-                                           // [ian] why the following if???
-
-                        if ((instrType != INSTR_RECURSIVE_FULL) && (instrType != INSTR_RECURSIVE_SAMPLED)
-                                && (instrType != INSTR_OBJECT_ALLOCATIONS) && (instrType != INSTR_OBJECT_LIVENESS)) {
-                            if (!((instrType == INSTR_CODE_REGION)
-                                    && className.equals(rootClassNames[ProfilingSessionStatus.CODE_REGION_CLASS_IDX]))) {
-                                return; // Nothing to do
-                            }
-                        }
-
-                        ThreadInfo ti = null;
-
-                        if ((instrType == INSTR_RECURSIVE_FULL) || (instrType == INSTR_RECURSIVE_SAMPLED)) {
-                            nClassLoads++;
-                            ti = ProfilerRuntimeCPU.suspendCurrentThreadTimer(); // start blackout period
-                            clientInstrStartTime = Timers.getCurrentTimeInCounts();
-                            // We'll be unable to call resumeCurrentThreadTimer() right here, since here we are holding serialClientOperationsLock.
-                            // The same lock is acquired when we dump the event buffer. So if here we call resumeTimer(), which calls writeEvent(),
-                            // we can get into a deadlock if some other thread at this time is dumping the event buffer and tries to acquire that lock.
-                            resumeTimer = true; // resume blackout period at the end
-                        }
-
-                        byte[] classFileBytes = getClassFileBytes(clazz, classLoaderId);
-                        // send request to tool to instrument the bytecode
-                        ClassLoadedCommand cmd = new ClassLoadedCommand(className,
-                                                                        ClassLoaderManager.getThisAndParentLoaderData(classLoaderId),
-                                                                        classFileBytes, (ti != null) ? ti.isInCallGraph() : false);
-                        profilerServer.sendComplexCmdToClient(cmd);
-
-                        // read response from tool that should contain the instrumented bytecode, and redefine the methods/classes
-                        if (!getAndInstrumentClasses(false)) {
-                            disableProfilerHooks();
-
-                            return;
-                        }
-                    } else {
-                        // in total inst scheme for CPU profiling we instrument everything
-                        boolean rootWasLoaded = ((instrType == INSTR_RECURSIVE_FULL) || (instrType == INSTR_RECURSIVE_SAMPLED))
-                                                && (status.instrScheme == INSTRSCHEME_TOTAL);
-
-                        // No root classes have been loaded - check if it's one of them
-                        if (!rootWasLoaded && !isRootClass(className)) {
-                            return;
-                        }
-
-                        // This is a root class - proceed with requesting client for instrumented code.
-                        nClassLoads++;
-                        clientInstrStartTime = Timers.getCurrentTimeInCounts();
-                        sendRootClassLoadedCommand(true);
-
-                        if (!getAndInstrumentClasses(true)) {
-                            disableProfilerHooks();
-
-                            return;
-                        }
-
-                        // Note: it is important to have 'rootClassLoaded = true' here, i.e. *after* (not before) the call to getAndInstrumentClasses().
-                        // It looks like some classes returned by getAllLoadedClasses() may be not completely initialized, and thus when we finally
-                        // load them properly in instrumentMethodGroup() before intrumenting, they get initialized and classLoadHook is called for each
-                        // of them. If rootClassLoaded is true, then for each such class a request is sent to the client, which wonders why it got a
-                        // second class load event for the same class. Having rootClassLoaded not set until all such classes are loaded eliminates this
-                        // issue. WARNING: may it happen that some really new class is loaded as a side effect of initializing of the classes described
-                        // above? If so, it will be effectively lost. Need to try to come up with a test to confirm or prove this worry wrong.
-                        rootInstrumented = true;
-                        rootClassLoaded = true;
-
-                        // This is done to avoid counting the time spent in instrumentation etc. upon root class load, but before our app (or actually
-                        // data recording) started. That's because we use this internal statistics to calculate/verify the gross run time of the app.
-                        ProfilerCalibrator.resetInternalStatsCollectors();
-                    }
-
-                    if (rootInstrumented || (excMessage != null)) {
-                        AsyncMessageCommand cmd = null;
-
-                        if (excMessage == null) {
-                            cmd = new AsyncMessageCommand(true, INSTRUMENTATION_SUCCESSFUL_MSG);
-                        } else {
-                            cmd = new AsyncMessageCommand(false, excMessage);
-                        }
-
-                        profilerServer.sendComplexCmdToClient(cmd);
-                    }
-                } finally {
-                    if (resumeProfiling) {
-                        ThreadInfo.resumeProfiling();
-                    }
-                }
-            } finally { // end of synchronized(serialClientOperationsLock)
-                serialClientOperationsLock.endTrans();
-            }
-
-            if (resumeTimer) {
-                int instrType = getCurrentInstrType();
-
-                if ((instrType == INSTR_RECURSIVE_FULL) || (instrType == INSTR_RECURSIVE_SAMPLED)) {
-                    ProfilerRuntimeCPU.resumeCurrentThreadTimer();
-                }
-            }
-        } finally {
-            threadInfo.inProfilingRuntimeMethod--;
-        }
-    }
+//    /** Called on CLASS_PREPARE JVMTI event */
+//    private static void classLoadHook(Class clazz) {
+//        ThreadInfo threadInfo = ThreadInfo.getThreadInfo();
+//
+//        threadInfo.inProfilingRuntimeMethod++;
+//
+//        try {
+//            String className = clazz.getName();
+//
+//            if (instrumentMethodGroupCallThread == Thread.currentThread() || internalClassName(className)) { // See comment at inInstrumentMethodGroupCall
+//                ClassLoaderManager.registerLoader(clazz); // Still register the loader, for reasons related with
+//                                                          // management of jmethodIds
+//
+//                return;
+//            }
+//
+//            Thread currentThread = Thread.currentThread();
+//
+//            if (PROFILER_SERVER_THREAD_NAME.equals(currentThread.getName())) {
+//                System.err.println(ENGINE_WARNING + "class " + className + " loaded by " + PROFILER_SERVER_THREAD_NAME); // NOI18N
+//
+//                return;
+//            }
+//
+//            if ((initInstrumentationThread != null) && (currentThread == initInstrumentationThread)) {
+//                // Looks like on rare occasions we can get this problem - class load hook called when it shouldn't.
+//                // If we are already here, we can't (easily at least) fix this problem, but at least we can warn the user.
+//                System.err.println(ENGINE_WARNING + "class load hook invoked at inappropriate time for " // NOI18N
+//                                   + className + ", loader = " + clazz.getClassLoader()); // NOI18N
+//                System.err.println("*** This class will not be instrumented unless you re-run the instrumentation command"); // NOI18N
+//                System.err.println(PLEASE_REPORT_PROBLEM);
+//                System.err.println("=============================== Stack trace ====================="); // NOI18N
+//                Thread.dumpStack();
+//                System.err.println("=============================== End stack trace ================="); // NOI18N
+//
+//                return;
+//            }
+//
+//            //System.out.println("+++ Class load hook invoked for " + className + ", loader = " + clazz.getClassLoader());
+//            int classLoaderId = ClassLoaderManager.registerLoader(clazz);
+//            boolean resumeTimer = false;
+//
+//            if (DEBUG) {
+//                System.err.println("ProfilerInterface.classLoadHook.DEBUG: " + className + ", classLoaderId: " + classLoaderId); // NOI18N
+//            }
+//
+//            serialClientOperationsLock.beginTrans(true);
+//
+//            try {
+//                boolean rootInstrumented = false;
+//                String excMessage = null;
+//                int instrType = getCurrentInstrType();
+//
+//                if (instrType == INSTR_NONE) {
+//                    return; // Instrumentation was turned off in the mean time
+//                }
+//
+//                // bugfix for issue http://profiler.netbeans.org/issues/show_bug.cgi?id=65968
+//                boolean resumeProfiling = false;
+//
+//                if (ThreadInfo.profilingSuspended()) {
+//                    ThreadInfo.suspendProfiling();
+//                    resumeProfiling = true;
+//                }
+//
+//                try {
+//                    if (rootClassLoaded) { // if yes, it means instrumentation has been started
+//                                           // [ian] why the following if???
+//
+//                        if ((instrType != INSTR_RECURSIVE_FULL) && (instrType != INSTR_RECURSIVE_SAMPLED)
+//                                && (instrType != INSTR_OBJECT_ALLOCATIONS) && (instrType != INSTR_OBJECT_LIVENESS)) {
+//                            if (!((instrType == INSTR_CODE_REGION)
+//                                    && className.equals(rootClassNames[ProfilingSessionStatus.CODE_REGION_CLASS_IDX]))) {
+//                                return; // Nothing to do
+//                            }
+//                        }
+//
+//                        ThreadInfo ti = null;
+//
+//                        if ((instrType == INSTR_RECURSIVE_FULL) || (instrType == INSTR_RECURSIVE_SAMPLED)) {
+//                            nClassLoads++;
+//                            ti = ProfilerRuntimeCPU.suspendCurrentThreadTimer(); // start blackout period
+//                            clientInstrStartTime = Timers.getCurrentTimeInCounts();
+//                            // We'll be unable to call resumeCurrentThreadTimer() right here, since here we are holding serialClientOperationsLock.
+//                            // The same lock is acquired when we dump the event buffer. So if here we call resumeTimer(), which calls writeEvent(),
+//                            // we can get into a deadlock if some other thread at this time is dumping the event buffer and tries to acquire that lock.
+//                            resumeTimer = true; // resume blackout period at the end
+//                        }
+//
+//                        byte[] classFileBytes = getClassFileBytes(clazz, classLoaderId);
+//                        // send request to tool to instrument the bytecode
+//                        ClassLoadedCommand cmd = new ClassLoadedCommand(className,
+//                                                                        ClassLoaderManager.getThisAndParentLoaderData(classLoaderId),
+//                                                                        classFileBytes, (ti != null) ? ti.isInCallGraph() : false);
+//                        profilerServer.sendComplexCmdToClient(cmd);
+//
+//                        // read response from tool that should contain the instrumented bytecode, and redefine the methods/classes
+//                        if (!getAndInstrumentClasses(false)) {
+//                            disableProfilerHooks();
+//
+//                            return;
+//                        }
+//                    } else {
+//                        // in total inst scheme for CPU profiling we instrument everything
+//                        boolean rootWasLoaded = ((instrType == INSTR_RECURSIVE_FULL) || (instrType == INSTR_RECURSIVE_SAMPLED))
+//                                                && (status.instrScheme == INSTRSCHEME_TOTAL);
+//
+//                        // No root classes have been loaded - check if it's one of them
+//                        if (!rootWasLoaded && !isRootClass(className)) {
+//                            return;
+//                        }
+//
+//                        // This is a root class - proceed with requesting client for instrumented code.
+//                        nClassLoads++;
+//                        clientInstrStartTime = Timers.getCurrentTimeInCounts();
+//                        sendRootClassLoadedCommand(true);
+//
+//                        if (!getAndInstrumentClasses(true)) {
+//                            disableProfilerHooks();
+//
+//                            return;
+//                        }
+//
+//                        // Note: it is important to have 'rootClassLoaded = true' here, i.e. *after* (not before) the call to getAndInstrumentClasses().
+//                        // It looks like some classes returned by getAllLoadedClasses() may be not completely initialized, and thus when we finally
+//                        // load them properly in instrumentMethodGroup() before intrumenting, they get initialized and classLoadHook is called for each
+//                        // of them. If rootClassLoaded is true, then for each such class a request is sent to the client, which wonders why it got a
+//                        // second class load event for the same class. Having rootClassLoaded not set until all such classes are loaded eliminates this
+//                        // issue. WARNING: may it happen that some really new class is loaded as a side effect of initializing of the classes described
+//                        // above? If so, it will be effectively lost. Need to try to come up with a test to confirm or prove this worry wrong.
+//                        rootInstrumented = true;
+//                        rootClassLoaded = true;
+//
+//                        // This is done to avoid counting the time spent in instrumentation etc. upon root class load, but before our app (or actually
+//                        // data recording) started. That's because we use this internal statistics to calculate/verify the gross run time of the app.
+//                        ProfilerCalibrator.resetInternalStatsCollectors();
+//                    }
+//
+//                    if (rootInstrumented || (excMessage != null)) {
+//                        AsyncMessageCommand cmd = null;
+//
+//                        if (excMessage == null) {
+//                            cmd = new AsyncMessageCommand(true, INSTRUMENTATION_SUCCESSFUL_MSG);
+//                        } else {
+//                            cmd = new AsyncMessageCommand(false, excMessage);
+//                        }
+//
+//                        profilerServer.sendComplexCmdToClient(cmd);
+//                    }
+//                } finally {
+//                    if (resumeProfiling) {
+//                        ThreadInfo.resumeProfiling();
+//                    }
+//                }
+//            } finally { // end of synchronized(serialClientOperationsLock)
+//                serialClientOperationsLock.endTrans();
+//            }
+//
+//            if (resumeTimer) {
+//                int instrType = getCurrentInstrType();
+//
+//                if ((instrType == INSTR_RECURSIVE_FULL) || (instrType == INSTR_RECURSIVE_SAMPLED)) {
+//                    ProfilerRuntimeCPU.resumeCurrentThreadTimer();
+//                }
+//            }
+//        } finally {
+//            threadInfo.inProfilingRuntimeMethod--;
+//        }
+//    }
 
     private static void firstTimeMethodInvokeHook(char methodId) {
         serialClientOperationsLock.beginTrans(true);

@@ -213,16 +213,16 @@ public class IDESettings  {
         return false;
     }
 
-    /** Used in layer xml to register FactoryEditor. */
-    private static org.netbeans.beaninfo.editors.HtmlBrowser.FactoryEditor createHtmlBrowserFactoryEditor()  {
-        return new org.netbeans.beaninfo.editors.HtmlBrowser.FactoryEditor(){
-            public void setValue(Object value) {
-                setWWWBrowser((HtmlBrowser.Factory)value);
-            }
-
-            public Object getValue() {
-                return getWWWBrowser();
-            }
-        };
-    }
+//    /** Used in layer xml to register FactoryEditor. */
+//    private static org.netbeans.beaninfo.editors.HtmlBrowser.FactoryEditor createHtmlBrowserFactoryEditor()  {
+//        return new org.netbeans.beaninfo.editors.HtmlBrowser.FactoryEditor(){
+//            public void setValue(Object value) {
+//                setWWWBrowser((HtmlBrowser.Factory)value);
+//            }
+//
+//            public Object getValue() {
+//                return getWWWBrowser();
+//            }
+//        };
+//    }
 }

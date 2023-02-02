@@ -960,14 +960,14 @@ public class MakeUpdateDesc extends MatchingTask {
         return sb.toString();
     }
 
-    private static byte[] hexDecode(String input) {
-        int length = input.length() / 2;
-        byte[] result = new byte[length];
-        for(int i = 0; i < length; i++) {
-            int b = Character.digit(input.charAt(i * 2), 16) << 4;
-            b |= Character.digit(input.charAt(i * 2 + 1), 16);
-            result[i] = (byte) (b & 0xFF);
-        }
-        return result;
-    }
+//    private static byte[] hexDecode(String input) {
+//        int length = input.length() / 2;
+//        byte[] result = new byte[length];
+//        for(int i = 0; i < length; i++) {
+//            int b = Character.digit(input.charAt(i * 2), 16) << 4;
+//            b |= Character.digit(input.charAt(i * 2 + 1), 16);
+//            result[i] = (byte) (b & 0xFF);
+//        }
+//        return result;
+//    }
 }

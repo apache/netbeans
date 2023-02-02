@@ -374,16 +374,16 @@ public abstract class ReverseMemCallGraphPanel extends ResultsPanel {
         }
     }
 
-    private void saveColumnsData() {
-        int index;
-        TableColumnModel colModel = treeTable.getColumnModel();
-
-        for (int i = 0; i < treeTableModel.getColumnCount(); i++) {
-            index = treeTableModel.getRealColumn(i);
-
-            if (index != 0) {
-                columnWidths[index - 1] = colModel.getColumn(i).getPreferredWidth();
-            }
-        }
-    }
+//    private void saveColumnsData() {
+//        int index;
+//        TableColumnModel colModel = treeTable.getColumnModel();
+//
+//        for (int i = 0; i < treeTableModel.getColumnCount(); i++) {
+//            index = treeTableModel.getRealColumn(i);
+//
+//            if (index != 0) {
+//                columnWidths[index - 1] = colModel.getColumn(i).getPreferredWidth();
+//            }
+//        }
+//    }
 }

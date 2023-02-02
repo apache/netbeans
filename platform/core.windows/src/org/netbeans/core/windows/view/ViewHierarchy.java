@@ -996,14 +996,14 @@ final class ViewHierarchy {
         return sb.toString();
     }
 
-    private String dumpAccessors() {
-        StringBuffer sb = new StringBuffer();
-        for(ElementAccessor accessor: accessor2view.keySet()) {
-            sb.append("accessor="+accessor + "\tview="+accessor2view.get(accessor) + "\n"); // NOI18N
-        }
-        
-        return sb.toString();
-    }
+//    private String dumpAccessors() {
+//        StringBuffer sb = new StringBuffer();
+//        for(ElementAccessor accessor: accessor2view.keySet()) {
+//            sb.append("accessor="+accessor + "\tview="+accessor2view.get(accessor) + "\n"); // NOI18N
+//        }
+//
+//        return sb.toString();
+//    }
 
     private void changeStateOfSeparateViews(boolean iconify) {
      // All the timestamping is a a workaround beause of buggy GNOME and of its kind who iconify the windows on leaving the desktop.
@@ -1082,9 +1082,9 @@ final class ViewHierarchy {
     } // End of main window listener.
     
     
-    private static void debugLog(String message) {
-        Debug.log(ViewHierarchy.class, message);
-    }
+//    private static void debugLog(String message) {
+//        Debug.log(ViewHierarchy.class, message);
+//    }
 
     private boolean shouldUseFakeSplitRoot() {
         return Constants.SWITCH_HIDE_EMPTY_DOCUMENT_AREA;

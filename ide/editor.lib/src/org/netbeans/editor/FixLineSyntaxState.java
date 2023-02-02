@@ -549,16 +549,16 @@ final class FixLineSyntaxState {
         return doc.getDefaultRootElement();
     }
 
-    private static void checkConsistency(Document doc) {
-        // Check whether all syntax state infos (except for the first line) are non-null
-        Element lineRoot = getLineRoot(doc);
-        int lineCount = lineRoot.getElementCount();
-        for (int i = 1; i < lineCount; i++) { // skip the very first line
-            LineElement elem = (LineElement)lineRoot.getElement(i);
-            assert ((Syntax.StateInfo) elem.legacyGetAttributesObject() != null) :
-                    "Syntax state null at line " + i + " of " + lineCount; // NOI18N
-        }
-    }
+//    private static void checkConsistency(Document doc) {
+//        // Check whether all syntax state infos (except for the first line) are non-null
+//        Element lineRoot = getLineRoot(doc);
+//        int lineCount = lineRoot.getElementCount();
+//        for (int i = 1; i < lineCount; i++) { // skip the very first line
+//            LineElement elem = (LineElement)lineRoot.getElement(i);
+//            assert ((Syntax.StateInfo) elem.legacyGetAttributesObject() != null) :
+//                    "Syntax state null at line " + i + " of " + lineCount; // NOI18N
+//        }
+//    }
     
     public static String lineInfosToString(Document doc) {
         StringBuffer sb = new StringBuffer();

@@ -351,9 +351,9 @@ public class DerbyOptions {
         }
     }
 
-    private static BeanNode createViewNode() throws java.beans.IntrospectionException {
-        return new BeanNode<DerbyOptions>(DerbyOptions.getDefault());
-    }
+//    private static BeanNode createViewNode() throws java.beans.IntrospectionException {
+//        return new BeanNode<DerbyOptions>(DerbyOptions.getDefault());
+//    }
 
     static class DerbyLibraryRegistrar implements FileSystem.AtomicAction {
 

@@ -203,16 +203,16 @@ public class PanelBodyContainer extends javax.swing.JPanel {
         }
     }
 
-    private void adjustProgressWidth() {
-        //Issue #155752
-        Dimension min = progress.getMinimumSize();
-        Dimension preferred = progress.getPreferredSize();
-        if (min != null && preferred != null && (min.width * 2) < preferred.width) {
-            int width = preferred.width / 2 ;
-            int height = min.height;
-            progress.setMinimumSize(new Dimension(150, height));
-        }        
-    }
+//    private void adjustProgressWidth() {
+//        //Issue #155752
+//        Dimension min = progress.getMinimumSize();
+//        Dimension preferred = progress.getPreferredSize();
+//        if (min != null && preferred != null && (min.width * 2) < preferred.width) {
+//            int width = preferred.width / 2 ;
+//            int height = min.height;
+//            progress.setMinimumSize(new Dimension(150, height));
+//        }
+//    }
 
     private void initBodyPanel () {
         pBodyPanel.removeAll ();

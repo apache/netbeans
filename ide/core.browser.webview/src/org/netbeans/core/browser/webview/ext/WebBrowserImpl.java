@@ -690,32 +690,32 @@ public class WebBrowserImpl extends WebBrowser implements BrowserCallback, Enhan
         return result;
     }
 
-    /**
-     * Initializes popup-menu of the web-browser component.
-     *
-     * @param browserComponent component whose popup-menu should be initialized.
-     */
-    private void initComponentPopupMenu(JComponent browserComponent) {
-        if (PageInspector.getDefault() != null) {
-            // Web-page inspection support is available in the IDE
-            // => add a menu item that triggers page inspection.
-            String inspectPage = NbBundle.getMessage(WebBrowserImpl.class, "WebBrowserImpl.inspectPage"); // NOI18N
-            JPopupMenu menu = new JPopupMenu();
-            menu.add(new AbstractAction(inspectPage) {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    PageInspector inspector = PageInspector.getDefault();
-                    if (inspector == null) {
-                        Logger logger = Logger.getLogger(WebBrowserImpl.class.getName());
-                        logger.log(Level.INFO, "No PageInspector found: ignoring the request for page inspection!"); // NOI18N
-                    } else {
-                        inspector.inspectPage(new ProxyLookup(getLookup(), projectContext));
-                    }
-                }
-            });
-            browserComponent.setComponentPopupMenu(menu);
-        }
-    }
+//    /**
+//     * Initializes popup-menu of the web-browser component.
+//     *
+//     * @param browserComponent component whose popup-menu should be initialized.
+//     */
+//    private void initComponentPopupMenu(JComponent browserComponent) {
+//        if (PageInspector.getDefault() != null) {
+//            // Web-page inspection support is available in the IDE
+//            // => add a menu item that triggers page inspection.
+//            String inspectPage = NbBundle.getMessage(WebBrowserImpl.class, "WebBrowserImpl.inspectPage"); // NOI18N
+//            JPopupMenu menu = new JPopupMenu();
+//            menu.add(new AbstractAction(inspectPage) {
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//                    PageInspector inspector = PageInspector.getDefault();
+//                    if (inspector == null) {
+//                        Logger logger = Logger.getLogger(WebBrowserImpl.class.getName());
+//                        logger.log(Level.INFO, "No PageInspector found: ignoring the request for page inspection!"); // NOI18N
+//                    } else {
+//                        inspector.inspectPage(new ProxyLookup(getLookup(), projectContext));
+//                    }
+//                }
+//            });
+//            browserComponent.setComponentPopupMenu(menu);
+//        }
+//    }
 
     private void showContextMenu( int screenX, int screenY, Element elementUnderCursor ) {
         if( null == browser )

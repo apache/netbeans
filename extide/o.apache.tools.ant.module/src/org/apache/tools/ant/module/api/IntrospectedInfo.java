@@ -784,9 +784,9 @@ public final class IntrospectedInfo {
                 // Exact equivalence is unlikely to happen; there may be unanalyzed Java classes, etc.
                 //assert equiv(info, load(node)) : info + " vs. " + load(node);
             }
-            private boolean equiv(IntrospectedInfo ii1, IntrospectedInfo ii2) {
-                return ii1.clazzes.equals(ii2.clazzes) && ii1.namedefs.equals(ii2.namedefs);
-            }
+//            private boolean equiv(IntrospectedInfo ii1, IntrospectedInfo ii2) {
+//                return ii1.clazzes.equals(ii2.clazzes) && ii1.namedefs.equals(ii2.namedefs);
+//            }
         };
     }
     

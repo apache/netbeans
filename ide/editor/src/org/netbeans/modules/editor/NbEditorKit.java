@@ -259,17 +259,17 @@ public class NbEditorKit extends ExtKit implements Callable {
             (String)contentTypeTable.get(this.getClass().getName()) : super.getContentType(); //NOI18N
     }
 
-    private static ResourceBundle getBundleFromName (String name) {
-        ResourceBundle bundle = null;
-        if (name != null) {
-            try {
-                bundle = NbBundle.getBundle (name);
-            } catch (MissingResourceException mre) {
-                //ErrorManager.getDefault ().notify (mre);
-            }
-        }
-        return bundle;
-    }
+//    private static ResourceBundle getBundleFromName (String name) {
+//        ResourceBundle bundle = null;
+//        if (name != null) {
+//            try {
+//                bundle = NbBundle.getBundle (name);
+//            } catch (MissingResourceException mre) {
+//                //ErrorManager.getDefault ().notify (mre);
+//            }
+//        }
+//        return bundle;
+//    }
 
     /**
      * @deprecated this action is no longer used. It is reimplemented in editor.actions module.

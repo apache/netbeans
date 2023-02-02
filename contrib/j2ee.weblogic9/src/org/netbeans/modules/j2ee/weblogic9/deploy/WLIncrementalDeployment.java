@@ -349,66 +349,66 @@ public class WLIncrementalDeployment extends IncrementalDeployment implements In
         return id.startsWith("/") ? id : "/" + id; // NOI18N
     }
     
-    private boolean deployFastSwap(TargetModuleID module) {
-        final String server = module.getTarget().getName();
-        final String application = module.getModuleID();
-
-        WLConnectionSupport support = dm.getConnectionSupport();
-        try {
-            Boolean ret = support.executeAction(new WLConnectionSupport.JMXAction<Boolean>() {
-
-                @Override
-                public Boolean call(MBeanServerConnection connection) throws Exception {
-                    ObjectName appRuntime = new ObjectName(
-                            "com.bea:ServerRuntime=" + server + ",Name=" + application + ",Type=ApplicationRuntime"); // NOI18N
-                    ObjectName redefinitionRuntime = (ObjectName) connection.getAttribute(
-                            appRuntime, "ClassRedefinitionRuntime"); // NOI18N
-
-                    if (redefinitionRuntime == null) {
-                        return false;
-                    }
-
-                    ObjectName redef = (ObjectName) connection.invoke(
-                            redefinitionRuntime, "redefineClasses", new Object[] {null, null}, // NOI18N
-                            new String[] {String.class.getName(), String[].class.getName()});
-                    
-                    long start = System.currentTimeMillis();
-                    String str = (String) connection.getAttribute(redef, "Status"); // NOI18N
-                    while ((System.currentTimeMillis() - start) < FAST_SWAP_TIMEOUT && isRunning(str)) {
-                        Thread.sleep(FAST_SWAP_POLLING);
-                        str = (String) connection.getAttribute(redef, "Status"); // NOI18N
-                    }
-
-                    Integer candidates = (Integer) connection.getAttribute(redef, "CandidateClassesCount"); // NOI18N
-                    if (LOGGER.isLoggable(Level.FINE)) {
-                        Integer processed = (Integer) connection.getAttribute(redef, "ProcessedClassesCount"); // NOI18N
-                        LOGGER.log(Level.FINE, "Processed {0} from {1} candidate classes", // NOI18N
-                                new Object[] {processed, candidates});
-                    }
-
-                    if (isRunning(str)) {
-                        connection.invoke(redef, "cancel", new Object[0], new String[0]); // NOI18N
-                        return false;
-                    }
-
-                    if (!("FINISHED".equals(str)) // NOI18N
-                            || (candidates != null && candidates.intValue() == 0)) {
-                        return false;
-                    }
-                    return true;
-                }
-
-                @Override
-                public String getPath() {
-                    return "/jndi/weblogic.management.mbeanservers.runtime"; // NOI18N
-                }
-            });
-            return ret.booleanValue();
-        }catch (Exception ex) {
-            LOGGER.log(Level.INFO, null, ex);
-            return false;
-        }
-    }
+//    private boolean deployFastSwap(TargetModuleID module) {
+//        final String server = module.getTarget().getName();
+//        final String application = module.getModuleID();
+//
+//        WLConnectionSupport support = dm.getConnectionSupport();
+//        try {
+//            Boolean ret = support.executeAction(new WLConnectionSupport.JMXAction<Boolean>() {
+//
+//                @Override
+//                public Boolean call(MBeanServerConnection connection) throws Exception {
+//                    ObjectName appRuntime = new ObjectName(
+//                            "com.bea:ServerRuntime=" + server + ",Name=" + application + ",Type=ApplicationRuntime"); // NOI18N
+//                    ObjectName redefinitionRuntime = (ObjectName) connection.getAttribute(
+//                            appRuntime, "ClassRedefinitionRuntime"); // NOI18N
+//
+//                    if (redefinitionRuntime == null) {
+//                        return false;
+//                    }
+//
+//                    ObjectName redef = (ObjectName) connection.invoke(
+//                            redefinitionRuntime, "redefineClasses", new Object[] {null, null}, // NOI18N
+//                            new String[] {String.class.getName(), String[].class.getName()});
+//
+//                    long start = System.currentTimeMillis();
+//                    String str = (String) connection.getAttribute(redef, "Status"); // NOI18N
+//                    while ((System.currentTimeMillis() - start) < FAST_SWAP_TIMEOUT && isRunning(str)) {
+//                        Thread.sleep(FAST_SWAP_POLLING);
+//                        str = (String) connection.getAttribute(redef, "Status"); // NOI18N
+//                    }
+//
+//                    Integer candidates = (Integer) connection.getAttribute(redef, "CandidateClassesCount"); // NOI18N
+//                    if (LOGGER.isLoggable(Level.FINE)) {
+//                        Integer processed = (Integer) connection.getAttribute(redef, "ProcessedClassesCount"); // NOI18N
+//                        LOGGER.log(Level.FINE, "Processed {0} from {1} candidate classes", // NOI18N
+//                                new Object[] {processed, candidates});
+//                    }
+//
+//                    if (isRunning(str)) {
+//                        connection.invoke(redef, "cancel", new Object[0], new String[0]); // NOI18N
+//                        return false;
+//                    }
+//
+//                    if (!("FINISHED".equals(str)) // NOI18N
+//                            || (candidates != null && candidates.intValue() == 0)) {
+//                        return false;
+//                    }
+//                    return true;
+//                }
+//
+//                @Override
+//                public String getPath() {
+//                    return "/jndi/weblogic.management.mbeanservers.runtime"; // NOI18N
+//                }
+//            });
+//            return ret.booleanValue();
+//        }catch (Exception ex) {
+//            LOGGER.log(Level.INFO, null, ex);
+//            return false;
+//        }
+//    }
     
     private static boolean isRunning(String status) {
         return "RUNNING".equals(status) || "SCHEDULED".equals(status); // NOI18N

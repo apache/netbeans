@@ -261,25 +261,25 @@ public abstract class FlatProfileContainer {
         totalMethods = nRows;
     }
 
-    private void calculatePercent(boolean usePrimaryTime) {
-        percent = new float[nRows];
+//    private void calculatePercent(boolean usePrimaryTime) {
+//        percent = new float[nRows];
+//
+//        double wholeNetTime = getWholeGraphNetTime0();
+//        long[] tpm = timeInMcs0;
+//
+//        if (collectingTwoTimeStamps && (!usePrimaryTime)) {
+//            wholeNetTime = getWholeGraphNetTime1();
+//            tpm = timeInMcs1;
+//        }
+//
+//        for (int i = 0; i < nRows; i++) {
+//            percent[i] = (float) ((wholeNetTime > 0) ? ((double) tpm[i] / wholeNetTime * 100) : 0);
+//        }
+//
+//        staticUsePrimaryTime = usePrimaryTime;
+//    }
 
-        double wholeNetTime = getWholeGraphNetTime0();
-        long[] tpm = timeInMcs0;
-
-        if (collectingTwoTimeStamps && (!usePrimaryTime)) {
-            wholeNetTime = getWholeGraphNetTime1();
-            tpm = timeInMcs1;
-        }
-
-        for (int i = 0; i < nRows; i++) {
-            percent[i] = (float) ((wholeNetTime > 0) ? ((double) tpm[i] / wholeNetTime * 100) : 0);
-        }
-
-        staticUsePrimaryTime = usePrimaryTime;
-    }
-
-    private boolean passedFilter(String value, String filter, int type) {
+//    private boolean passedFilter(String value, String filter, int type) {
 //        // Case sensitive comparison:
 //        /*switch (type) {
 //           case CommonConstants.FILTER_STARTS_WITH:
@@ -315,8 +315,8 @@ public abstract class FlatProfileContainer {
 //                }
 //        }
 
-        return false;
-    }
+//        return false;
+//    }
 
 //    private boolean passedFilters(String value, String[] filters, int type) {
 //        for (int i = 0; i < filters.length; i++) {

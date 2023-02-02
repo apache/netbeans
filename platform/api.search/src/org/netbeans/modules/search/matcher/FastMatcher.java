@@ -127,16 +127,16 @@ public class FastMatcher extends AbstractMatcher {
         }
     }
 
-    /**
-     * Lazy initialization of fallback default matcher (for files that are too
-     * big for file-mapped-memory).
-     */
-    private DefaultMatcher getDefaultMatcher() {
-        if (defaultMatcher == null) {
-            defaultMatcher = new DefaultMatcher(searchPattern);
-        }
-        return defaultMatcher;
-    }
+//    /**
+//     * Lazy initialization of fallback default matcher (for files that are too
+//     * big for file-mapped-memory).
+//     */
+//    private DefaultMatcher getDefaultMatcher() {
+//        if (defaultMatcher == null) {
+//            defaultMatcher = new DefaultMatcher(searchPattern);
+//        }
+//        return defaultMatcher;
+//    }
 
     /**
      * Perform pattern matching inside the whole file.
@@ -865,12 +865,12 @@ public class FastMatcher extends AbstractMatcher {
             return start + length;
         }
 
-        /**
-         * Test if the line is non-empty.
-         */
-        private boolean isNotEmpty() {
-            return length > 0;
-        }
+//        /**
+//         * Test if the line is non-empty.
+//         */
+//        private boolean isNotEmpty() {
+//            return length > 0;
+//        }
 
         /**
          * Get lenght of the line.

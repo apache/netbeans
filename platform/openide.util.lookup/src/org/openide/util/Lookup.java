@@ -201,21 +201,21 @@ public abstract class Lookup {
         }
     }
     
-    /** Called from MockServices to reset default lookup in case services change
-     */
-    private static synchronized void resetDefaultLookup() {
-        if (defaultLookup == null || defaultLookup instanceof DefLookup) {
-            DefLookup def = (DefLookup)defaultLookup;
-            ClassLoader l = Thread.currentThread().getContextClassLoader();
-            Lookup misl = Lookups.metaInfServices(l);
-            if (def == null) {
-                def = new DefLookup();
-                def.init(l, misl, false);
-                defaultLookup = def;
-            }
-            def.init(l, misl, true);
-        }
-    }
+//    /** Called from MockServices to reset default lookup in case services change
+//     */
+//    private static synchronized void resetDefaultLookup() {
+//        if (defaultLookup == null || defaultLookup instanceof DefLookup) {
+//            DefLookup def = (DefLookup)defaultLookup;
+//            ClassLoader l = Thread.currentThread().getContextClassLoader();
+//            Lookup misl = Lookups.metaInfServices(l);
+//            if (def == null) {
+//                def = new DefLookup();
+//                def.init(l, misl, false);
+//                defaultLookup = def;
+//            }
+//            def.init(l, misl, true);
+//        }
+//    }
 
     /** Look up an object matching a given interface.
      * This is the simplest method to use.

@@ -187,9 +187,9 @@ public final class NimbusViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
         return;
     }
     
-    private static void paintTabBackgroundNative (Graphics g, int index, int state,
-    int x, int y, int w, int h) {
-    }
+//    private static void paintTabBackgroundNative (Graphics g, int index, int state,
+//    int x, int y, int w, int h) {
+//    }
     /*
 key:TabbedPane:TabbedPaneTab[Disabled+Selected].backgroundPainter
 key:TabbedPane:TabbedPaneTab[Disabled].backgroundPainter

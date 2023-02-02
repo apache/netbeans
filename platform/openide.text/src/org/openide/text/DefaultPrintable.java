@@ -404,18 +404,18 @@ final class DefaultPrintable extends Object implements Printable {
         }
     }
      */
-    /**
-    * @param tl a TextLayout
-    * @param currentLine
-    * @return <tt>true</tt> iff <tt>tl</tt> is a TextLayout that does not represent wrapped line
-    */
-    private boolean isNewline(TextLayout tl, int currentLine) {
-        if (currentLine >= startLayouts.size()) {
-            return false; // wrapping appeared
-        } else {
-            return startLayouts.get(currentLine) == tl;
-        }
-    }
+//    /**
+//    * @param tl a TextLayout
+//    * @param currentLine
+//    * @return <tt>true</tt> iff <tt>tl</tt> is a TextLayout that does not represent wrapped line
+//    */
+//    private boolean isNewline(TextLayout tl, int currentLine) {
+//        if (currentLine >= startLayouts.size()) {
+//            return false; // wrapping appeared
+//        } else {
+//            return startLayouts.get(currentLine) == tl;
+//        }
+//    }
 
     /** Computes alignment for a TextLayout with given bounds on the page with given width
     * and for given alignment policy.
@@ -575,15 +575,15 @@ final class DefaultPrintable extends Object implements Printable {
         return PrintPreferences.getLineAscentCorrection();
     }
 
-    /** @return false */
-    private static boolean lineNumbers() {
-        return false;
-    }
+//    /** @return false */
+//    private static boolean lineNumbers() {
+//        return false;
+//    }
 
     // not used
-    private static Font lineNumbersFont() {
-        return new Font("Courier", java.awt.Font.PLAIN, 6); // NOI18N
-    }
+//    private static Font lineNumbersFont() {
+//        return new Font("Courier", java.awt.Font.PLAIN, 6); // NOI18N
+//    }
 
     // ----------------- options end --------------
 

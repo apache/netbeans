@@ -955,30 +955,30 @@ public class CreateRulePanel extends javax.swing.JPanel {
         }
     }
 
-    /**
-     * Saves the given document to its underlying {@link FileObject} if the
-     * document is not opened in the nb editor, more formally if
-     * EditorCookie.getOpenedPanes() == null.
-     *
-     * @param document
-     * @throws IOException
-     */
-    private static void saveDocumentIfNotOpened(Document document) throws IOException {
-
-        Object o = document.getProperty(Document.StreamDescriptionProperty);
-        if (!(o instanceof DataObject)) {
-            return;
-        }
-        DataObject dobj = (DataObject) o;
-        EditorCookie ec = dobj.getLookup().lookup(EditorCookie.class);
-        if (ec != null && ec.getOpenedPanes() == null) {
-            //file not open in any editor
-            SaveCookie save = dobj.getLookup().lookup(SaveCookie.class);
-            if (save != null) {
-                save.save();
-            }
-        }
-    }
+//    /**
+//     * Saves the given document to its underlying {@link FileObject} if the
+//     * document is not opened in the nb editor, more formally if
+//     * EditorCookie.getOpenedPanes() == null.
+//     *
+//     * @param document
+//     * @throws IOException
+//     */
+//    private static void saveDocumentIfNotOpened(Document document) throws IOException {
+//
+//        Object o = document.getProperty(Document.StreamDescriptionProperty);
+//        if (!(o instanceof DataObject)) {
+//            return;
+//        }
+//        DataObject dobj = (DataObject) o;
+//        EditorCookie ec = dobj.getLookup().lookup(EditorCookie.class);
+//        if (ec != null && ec.getOpenedPanes() == null) {
+//            //file not open in any editor
+//            SaveCookie save = dobj.getLookup().lookup(SaveCookie.class);
+//            if (save != null) {
+//                save.save();
+//            }
+//        }
+//    }
 
     /**
      * Gets a {@link Document} instance for the given {@link FileObject}.

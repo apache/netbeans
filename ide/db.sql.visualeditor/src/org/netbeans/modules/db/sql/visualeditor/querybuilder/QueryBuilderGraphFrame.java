@@ -1869,7 +1869,7 @@ public class QueryBuilderGraphFrame extends JPanel
     
     // Redraw an internal frame?
     
-    private void redrawFrame(QueryBuilderInternalFrame frame) {
+//    private void redrawFrame(QueryBuilderInternalFrame frame) {
 //         if (frame != null)
 //             // && frame.isShowing()
 //         {
@@ -1881,7 +1881,7 @@ public class QueryBuilderGraphFrame extends JPanel
 //             // Update the graph model with the new attributes, which include frame bounds(?)
 //             _graphModel.edit(map,null,null,null);
 //         }
-    }
+//    }
     
     
     // Manually refresh the graph display -- copied from ComponentListener below

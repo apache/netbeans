@@ -547,20 +547,20 @@ final class CaretTransaction {
         }
     }
 
-    private void resetIndexes() {
-        indexesLength = 0;
-    }
+//    private void resetIndexes() {
+//        indexesLength = 0;
+//    }
     
-    private void addToIndexes(int index) {
-        if (indexes == null) {
-            indexes = new int[8];
-        } else if (indexesLength == indexes.length) {
-            int[] orig = indexes;
-            indexes = new int[indexesLength << 1];
-            System.arraycopy(orig, 0, indexes, 0, indexesLength);
-        }
-        indexes[indexesLength++] = index;
-    }
+//    private void addToIndexes(int index) {
+//        if (indexes == null) {
+//            indexes = new int[8];
+//        } else if (indexesLength == indexes.length) {
+//            int[] orig = indexes;
+//            indexes = new int[indexesLength << 1];
+//            System.arraycopy(orig, 0, indexes, 0, indexesLength);
+//        }
+//        indexes[indexesLength++] = index;
+//    }
     
     
     private int findCaretItemIndex(GapList<CaretItem> caretItems, CaretItem caretItem) {

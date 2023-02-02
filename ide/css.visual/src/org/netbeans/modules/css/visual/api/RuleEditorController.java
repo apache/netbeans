@@ -104,9 +104,9 @@ public final class RuleEditorController {
     private RuleEditorController() {
     }
     
-    private RuleEditorController(RuleEditorPanel peer) {
-        this.peer = peer;
-    }
+//    private RuleEditorController(RuleEditorPanel peer) {
+//        this.peer = peer;
+//    }
     
     /**
      * Gets the rule editor UI component.

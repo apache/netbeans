@@ -91,9 +91,9 @@ class WebStorePanel extends javax.swing.JPanel {
         }
     }
     
-    private Dimension getDescriptionSize(){
-        return new Dimension(350, (int)getAdjustedHeight());
-    }
+//    private Dimension getDescriptionSize(){
+//        return new Dimension(350, (int)getAdjustedHeight());
+//    }
     
     private void init(){
         initComponents();
@@ -150,20 +150,20 @@ class WebStorePanel extends javax.swing.JPanel {
         return fakePane.getPreferredSize().getHeight();
     }
     
-    private int getRows() {
-        int count = 0;
-        try {
-            int offs=description.getCaretPosition();
-            while( offs>0) {
-                offs=Utilities.getRowStart(description, offs)-1;
-                count++;
-            }
-        } 
-        catch (BadLocationException e) {
-            assert false;
-        }
-        return count+1;
-    }
+//    private int getRows() {
+//        int count = 0;
+//        try {
+//            int offs=description.getCaretPosition();
+//            while( offs>0) {
+//                offs=Utilities.getRowStart(description, offs)-1;
+//                count++;
+//            }
+//        }
+//        catch (BadLocationException e) {
+//            assert false;
+//        }
+//        return count+1;
+//    }
     
     private void attachActions(final Runnable runnable){
         webStoreButton.addActionListener(new ActionListener() {

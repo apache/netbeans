@@ -391,10 +391,10 @@ public class LexerRandomTest extends DemoTokenUpdater {
         }
     }
     
-    private void dump() {
-        System.err.println("Dump of token iterator\n"
-            + allTokensToString());
-    }
+//    private void dump() {
+//        System.err.println("Dump of token iterator\n"
+//            + allTokensToString());
+//    }
     
     private static void checkTokensEqual(Token t1, Token t2) {
         if (t1.getId() != t2.getId()) {

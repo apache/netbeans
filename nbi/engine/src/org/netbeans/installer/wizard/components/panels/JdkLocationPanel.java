@@ -379,22 +379,22 @@ public class JdkLocationPanel extends ApplicationLocationPanel {
         return null;
     }
 
-    private File getJavaFromInstalledProductProperties() {
-        for (Product product : Registry.getInstance().queryProducts(new OrFilter(
-                new ProductFilter(Status.INSTALLED),
-                new ProductFilter(Status.TO_BE_INSTALLED)))) {
-            final String jdk = product.getProperty(JDK_LOCATION_PROPERTY);
-
-            if (jdk != null) {
-                final File jdkFile = new File(jdk);
-
-                if (jdkLocations.contains(jdkFile)) {
-                    return jdkFile;
-                }
-            }
-        }
-        return null;
-    }
+//    private File getJavaFromInstalledProductProperties() {
+//        for (Product product : Registry.getInstance().queryProducts(new OrFilter(
+//                new ProductFilter(Status.INSTALLED),
+//                new ProductFilter(Status.TO_BE_INSTALLED)))) {
+//            final String jdk = product.getProperty(JDK_LOCATION_PROPERTY);
+//
+//            if (jdk != null) {
+//                final File jdkFile = new File(jdk);
+//
+//                if (jdkLocations.contains(jdkFile)) {
+//                    return jdkFile;
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     private File getJavaPreferredVersionLocation() {
         if (preferredVersion == null) {

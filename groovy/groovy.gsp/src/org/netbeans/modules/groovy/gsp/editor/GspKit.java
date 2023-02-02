@@ -243,24 +243,24 @@ public class GspKit extends HtmlKit {
         return new GspKit();
     }
     
-    private static Token<?> getToken(BaseDocument doc, int offset, boolean checkEmbedded) {
-        TokenHierarchy<Document> th = TokenHierarchy.get((Document)doc);
-        TokenSequence<?> ts = th.tokenSequence();
-        ts.move(offset);
-        if (!ts.moveNext() && !ts.movePrevious()) {
-            return null;
-        }
-
-        if (checkEmbedded) {
-            TokenSequence<?> es = ts.embedded();
-            if (es != null) {
-                es.move(offset);
-                if (es.moveNext() || es.movePrevious()) {
-                    return es.token();
-                }
-            }
-        }
-        return ts.token();
-    }
+//    private static Token<?> getToken(BaseDocument doc, int offset, boolean checkEmbedded) {
+//        TokenHierarchy<Document> th = TokenHierarchy.get((Document)doc);
+//        TokenSequence<?> ts = th.tokenSequence();
+//        ts.move(offset);
+//        if (!ts.moveNext() && !ts.movePrevious()) {
+//            return null;
+//        }
+//
+//        if (checkEmbedded) {
+//            TokenSequence<?> es = ts.embedded();
+//            if (es != null) {
+//                es.move(offset);
+//                if (es.moveNext() || es.movePrevious()) {
+//                    return es.token();
+//                }
+//            }
+//        }
+//        return ts.token();
+//    }
 }
 

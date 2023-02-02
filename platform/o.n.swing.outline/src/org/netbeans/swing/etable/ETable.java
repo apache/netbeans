@@ -1212,92 +1212,92 @@ public class ETable extends JTable {
         }
     }
     
-    private void updateSelectedLines(int[] currentLineSelections,
-                                     int currentLeadRow, int currentAnchorRow,
-                                     int[] newLineSelections,
-                                     int newLeadRow, int newAnchorRow) {
-        //System.err.println("updateSelectedLines("+Arrays.toString(currentLineSelections)+" => "+
-        //                   Arrays.toString(newLineSelections));
-        boolean wasAutoScroll = getAutoscrolls();
-        setAutoscrolls(false);
-        DefaultListSelectionModel rsm = (DefaultListSelectionModel) getSelectionModel();
-        rsm.setValueIsAdjusting(true);
-        ListSelectionModel csm = getColumnModel().getSelectionModel();
-        csm.setValueIsAdjusting(true);
-
-        //System.err.println("Orig lead and anchor selection indexes: "+rsm.getLeadSelectionIndex()+", "+rsm.getAnchorSelectionIndex());
-
-        //int leadRow = convertRowIndexToView(selectedRows.leadInModel);
-        //int anchorRow = convertRowIndexToView(selectedRows.anchorInModel);
-        
-        int i = 0;
-        int j = 0;
-        while (i < currentLineSelections.length || j < newLineSelections.length) {
-            int selected = (i < currentLineSelections.length) ? currentLineSelections[i] : Integer.MAX_VALUE;
-            int toSelect = (j < newLineSelections.length) ? newLineSelections[j] : Integer.MAX_VALUE;
-            if (selected == toSelect) {
-                i++;
-                j++;
-                continue;
-            }
-            if (selected < toSelect) {
-                if (selected > -1) {
-                    int selected2 = selected;
-                    while ((i + 1) < currentLineSelections.length && currentLineSelections[i+1] == (selected2 + 1) && (selected2 + 1) < toSelect) {
-                        selected2++;
-                        i++;
-                    }
-                    rsm.removeSelectionInterval(selected, selected2);
-                    //System.err.println("  removing selection ("+selected+", "+selected2+")");
-                }
-                i++;
-            } else {
-                if (toSelect > -1) {
-                    int toSelect2 = toSelect;
-                    while ((j + 1) < newLineSelections.length && newLineSelections[j + 1] == (toSelect2 + 1) && (toSelect2 + 1) < selected) {
-                        toSelect2++;
-                        j++;
-                    }
-                    rsm.addSelectionInterval(toSelect, toSelect2);
-                    //System.err.println("  adding selection ("+toSelect+", "+toSelect2+")");
-                }
-                j++;
-            }
-        }
-        
-        if (newAnchorRow != currentAnchorRow) {
-            //System.err.println("  Setting anchor selection index: "+anchorRow);
-            rsm.setAnchorSelectionIndex(newAnchorRow);
-        }
-        if (newLeadRow != currentLeadRow) {
-            if (newLeadRow == -1) {
-                for (int k = 0; k < newLineSelections.length; k++) {
-                    if (newLineSelections[k] == -1) {
-                        while((k + 1) < newLineSelections.length && newLineSelections[k+1] == -1) {
-                            k++;
-                        }
-                        if ((k + 1) < newLineSelections.length) {
-                            newLeadRow = newLineSelections[k+1];
-                            break;
-                        }
-                        if (k > 0) {
-                            newLeadRow = newLineSelections[0];
-                            break;
-                        }
-                    }
-                }
-            }
-            //System.err.println("  Setting lead selection index: "+leadRow);
-            // DO NOT CALL setLeadSelectionIndex() as it screws up selection!
-            rsm.moveLeadSelectionIndex(newLeadRow);
-        }
-         
-        rsm.setValueIsAdjusting(false);
-        csm.setValueIsAdjusting(false);
-        if (wasAutoScroll) {
-            setAutoscrolls(true);
-        }
-    }
+//    private void updateSelectedLines(int[] currentLineSelections,
+//                                     int currentLeadRow, int currentAnchorRow,
+//                                     int[] newLineSelections,
+//                                     int newLeadRow, int newAnchorRow) {
+//        //System.err.println("updateSelectedLines("+Arrays.toString(currentLineSelections)+" => "+
+//        //                   Arrays.toString(newLineSelections));
+//        boolean wasAutoScroll = getAutoscrolls();
+//        setAutoscrolls(false);
+//        DefaultListSelectionModel rsm = (DefaultListSelectionModel) getSelectionModel();
+//        rsm.setValueIsAdjusting(true);
+//        ListSelectionModel csm = getColumnModel().getSelectionModel();
+//        csm.setValueIsAdjusting(true);
+//
+//        //System.err.println("Orig lead and anchor selection indexes: "+rsm.getLeadSelectionIndex()+", "+rsm.getAnchorSelectionIndex());
+//
+//        //int leadRow = convertRowIndexToView(selectedRows.leadInModel);
+//        //int anchorRow = convertRowIndexToView(selectedRows.anchorInModel);
+//
+//        int i = 0;
+//        int j = 0;
+//        while (i < currentLineSelections.length || j < newLineSelections.length) {
+//            int selected = (i < currentLineSelections.length) ? currentLineSelections[i] : Integer.MAX_VALUE;
+//            int toSelect = (j < newLineSelections.length) ? newLineSelections[j] : Integer.MAX_VALUE;
+//            if (selected == toSelect) {
+//                i++;
+//                j++;
+//                continue;
+//            }
+//            if (selected < toSelect) {
+//                if (selected > -1) {
+//                    int selected2 = selected;
+//                    while ((i + 1) < currentLineSelections.length && currentLineSelections[i+1] == (selected2 + 1) && (selected2 + 1) < toSelect) {
+//                        selected2++;
+//                        i++;
+//                    }
+//                    rsm.removeSelectionInterval(selected, selected2);
+//                    //System.err.println("  removing selection ("+selected+", "+selected2+")");
+//                }
+//                i++;
+//            } else {
+//                if (toSelect > -1) {
+//                    int toSelect2 = toSelect;
+//                    while ((j + 1) < newLineSelections.length && newLineSelections[j + 1] == (toSelect2 + 1) && (toSelect2 + 1) < selected) {
+//                        toSelect2++;
+//                        j++;
+//                    }
+//                    rsm.addSelectionInterval(toSelect, toSelect2);
+//                    //System.err.println("  adding selection ("+toSelect+", "+toSelect2+")");
+//                }
+//                j++;
+//            }
+//        }
+//
+//        if (newAnchorRow != currentAnchorRow) {
+//            //System.err.println("  Setting anchor selection index: "+anchorRow);
+//            rsm.setAnchorSelectionIndex(newAnchorRow);
+//        }
+//        if (newLeadRow != currentLeadRow) {
+//            if (newLeadRow == -1) {
+//                for (int k = 0; k < newLineSelections.length; k++) {
+//                    if (newLineSelections[k] == -1) {
+//                        while((k + 1) < newLineSelections.length && newLineSelections[k+1] == -1) {
+//                            k++;
+//                        }
+//                        if ((k + 1) < newLineSelections.length) {
+//                            newLeadRow = newLineSelections[k+1];
+//                            break;
+//                        }
+//                        if (k > 0) {
+//                            newLeadRow = newLineSelections[0];
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//            //System.err.println("  Setting lead selection index: "+leadRow);
+//            // DO NOT CALL setLeadSelectionIndex() as it screws up selection!
+//            rsm.moveLeadSelectionIndex(newLeadRow);
+//        }
+//
+//        rsm.setValueIsAdjusting(false);
+//        csm.setValueIsAdjusting(false);
+//        if (wasAutoScroll) {
+//            setAutoscrolls(true);
+//        }
+//    }
     
     /**
      * This method update mouse listener on the scrollPane if it is needed.

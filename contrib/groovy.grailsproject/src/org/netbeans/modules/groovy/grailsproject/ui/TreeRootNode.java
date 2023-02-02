@@ -73,23 +73,23 @@ public final class TreeRootNode extends FilterNode implements PropertyChangeList
         this(new FilterNode(folder.getNodeDelegate(), folder.createNodeChildren(new VisibilityQueryDataFilter(g))), g, project, type);
     }
 
-    private TreeRootNode(Node originalNode, SourceGroup group, GrailsProject project, Type type) {
-        super(originalNode, new PackageFilterChildren(originalNode),
-                new ProxyLookup(
-                originalNode.getLookup(),
-                Lookups.fixed(  new PathFinder(group),  // no need for explicit search info
-                                // Adding TemplatesImpl to Node's lookup to narrow-down
-                                // number of displayed templates with the NewFile action.
-                                // see # 122942
-                                new TemplatesImpl(project, group)
-                                )
-                ));
-        String pathName = group.getName();
-        setShortDescription(pathName.substring(project.getProjectDirectory().getPath().length() + 1));
-        this.group = group;
-        this.visualType = type;
-        group.addPropertyChangeListener(WeakListeners.propertyChange(this, group));
-    }
+//    private TreeRootNode(Node originalNode, SourceGroup group, GrailsProject project, Type type) {
+//        super(originalNode, new PackageFilterChildren(originalNode),
+//                new ProxyLookup(
+//                originalNode.getLookup(),
+//                Lookups.fixed(  new PathFinder(group),  // no need for explicit search info
+//                                // Adding TemplatesImpl to Node's lookup to narrow-down
+//                                // number of displayed templates with the NewFile action.
+//                                // see # 122942
+//                                new TemplatesImpl(project, group)
+//                                )
+//                ));
+//        String pathName = group.getName();
+//        setShortDescription(pathName.substring(project.getProjectDirectory().getPath().length() + 1));
+//        this.group = group;
+//        this.visualType = type;
+//        group.addPropertyChangeListener(WeakListeners.propertyChange(this, group));
+//    }
 
     @Override
     public PasteType getDropType(Transferable t, int action, int index) {

@@ -155,19 +155,19 @@ public final class PrintDetailsTask implements Runnable {
         displayer.displayNodes(buffer);
     }
 
-    /**
-     */
-    private Node[] concatNodeArrays(Node[] arrA, Node[] arrB) {
-        Node[] result = new Node[arrA.length + arrB.length];
-
-        System.arraycopy(arrA,   0,
-                         result, 0,
-                         arrA.length);
-        System.arraycopy(arrB,   0,
-                         result, arrA.length,
-                         arrB.length);
-        return result;
-    }
+//    /**
+//     */
+//    private Node[] concatNodeArrays(Node[] arrA, Node[] arrB) {
+//        Node[] result = new Node[arrA.length + arrB.length];
+//
+//        System.arraycopy(arrA,   0,
+//                         result, 0,
+//                         arrA.length);
+//        System.arraycopy(arrB,   0,
+//                         result, arrA.length,
+//                         arrB.length);
+//        return result;
+//    }
     
     /**
      */

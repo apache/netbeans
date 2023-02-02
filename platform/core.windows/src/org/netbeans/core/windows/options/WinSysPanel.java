@@ -220,19 +220,19 @@ private void isSnappingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         isSnapScreenEdges.setEnabled(isSnapping.isSelected());
     }
     
-    private void updateFloatingSection () {
-        boolean isAlpha = NativeWindowSystem.getDefault().isWindowAlphaSupported();
-
-        isAlphaFloating.setEnabled(isAlpha);
-
-        if (isAlpha) {
-            isAlphaFloating.setToolTipText(
-                    NbBundle.getMessage(WinSysPanel.class, "IsAlphaFloatingTooltip")); // NOI18N
-        } else {
-            isAlphaFloating.setToolTipText(
-                    NbBundle.getMessage(WinSysPanel.class, "NoAlphaSupport")); // NOI18N
-        }
-    }
+//    private void updateFloatingSection () {
+//        boolean isAlpha = NativeWindowSystem.getDefault().isWindowAlphaSupported();
+//
+//        isAlphaFloating.setEnabled(isAlpha);
+//
+//        if (isAlpha) {
+//            isAlphaFloating.setToolTipText(
+//                    NbBundle.getMessage(WinSysPanel.class, "IsAlphaFloatingTooltip")); // NOI18N
+//        } else {
+//            isAlphaFloating.setToolTipText(
+//                    NbBundle.getMessage(WinSysPanel.class, "NoAlphaSupport")); // NOI18N
+//        }
+//    }
     
     private static boolean isMacJDK7() {
         if( Utilities.isMac() ) {

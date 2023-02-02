@@ -196,12 +196,12 @@ public final class AquaLFCustoms extends LFCustoms {
         return result;
     }
     
-    private static final Image icon2Image(Icon icon) {
-        Image image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics g = image.getGraphics();
-        icon.paintIcon(new JLabel(), g, 0, 0);
-        g.dispose();
-        return image;
-    }
+//    private static final Image icon2Image(Icon icon) {
+//        Image image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+//        Graphics g = image.getGraphics();
+//        icon.paintIcon(new JLabel(), g, 0, 0);
+//        g.dispose();
+//        return image;
+//    }
     
 }

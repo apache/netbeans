@@ -307,12 +307,12 @@ final class UINode extends AbstractNode implements VisualData, Decorable {
         return s.substring(index + 1);
     }
 
-    private static <T> T getParam(LogRecord r, int index, Class<T> type) {
-        if (r == null || r.getParameters() == null || r.getParameters().length <= index) {
-            return null;
-        }
-        Object o = r.getParameters()[index];
-        return type.isInstance(o) ? type.cast(o) : null;
-    }
+//    private static <T> T getParam(LogRecord r, int index, Class<T> type) {
+//        if (r == null || r.getParameters() == null || r.getParameters().length <= index) {
+//            return null;
+//        }
+//        Object o = r.getParameters()[index];
+//        return type.isInstance(o) ? type.cast(o) : null;
+//    }
 
 }

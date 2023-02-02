@@ -157,13 +157,13 @@ final class ScaleFx implements SlidingFx, ActionListener {
         this.finishAlpha = finishAlpha;
     }
     
-    private void setSuggestedIterations(int count) {
-        if (count < 3) {
-            count = 3;
-        }
-        // make iterations odd number for easier path computing, see computePath
-        this.iterCount = count % 2 == 0 ? count + 1 : count;
-    }
+//    private void setSuggestedIterations(int count) {
+//        if (count < 3) {
+//            count = 3;
+//        }
+//        // make iterations odd number for easier path computing, see computePath
+//        this.iterCount = count % 2 == 0 ? count + 1 : count;
+//    }
     
     private Rectangle[] computePath(Rectangle start, Rectangle finish) {
         Rectangle[] path = new Rectangle[iterCount];

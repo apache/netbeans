@@ -306,26 +306,26 @@ public final class Manager {
         callOnWindowFromAWT(theMethod, null);
     }
     
-    /**
-     */
-    private void displayIssuesFromAWT(ReplaceTask task,
-                                      String title,
-                                      boolean att) {
-        Method theMethod;
-        try {
-            theMethod = ResultView.class.getDeclaredMethod(
-                                                "displayIssuesToUser",  //NOI18N
-                                                ReplaceTask.class,
-                                                String.class,
-                                                String[].class,
-                                                Boolean.TYPE);
-        } catch (NoSuchMethodException ex) {
-            throw new IllegalStateException(ex);
-        }
-        callOnWindowFromAWT(theMethod,
-                            new Object[] {task, title, task.getProblems(), att},
-                            false);
-    }
+//    /**
+//     */
+//    private void displayIssuesFromAWT(ReplaceTask task,
+//                                      String title,
+//                                      boolean att) {
+//        Method theMethod;
+//        try {
+//            theMethod = ResultView.class.getDeclaredMethod(
+//                                                "displayIssuesToUser",  //NOI18N
+//                                                ReplaceTask.class,
+//                                                String.class,
+//                                                String[].class,
+//                                                Boolean.TYPE);
+//        } catch (NoSuchMethodException ex) {
+//            throw new IllegalStateException(ex);
+//        }
+//        callOnWindowFromAWT(theMethod,
+//                            new Object[] {task, title, task.getProblems(), att},
+//                            false);
+//    }
     
     /**
      * Calls a given method on the Search Results window, from the AWT thread.

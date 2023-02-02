@@ -234,24 +234,24 @@ final class NonStretchingViewTabLayoutModel implements TabLayoutModel {
         }
     }
     
-    private static void makeShorterEqually( int[] coords, int widthToDistribute ) {
-        int delta = Math.max( widthToDistribute / coords.length, 1 );
-        int total = 0;
-        for( int i=coords.length-1; i>=0; i-- ) {
-            int tabWidth = coords[i] ;
-            if( i > 0 )
-                tabWidth -= coords[i-1];
-            if( tabWidth < 5 )
-                continue;
-            int currentDelta = Math.min( tabWidth-5, delta );
-            for( int j=i; j<coords.length; j++ ) {
-                coords[j] -= currentDelta;
-            }
-            total += currentDelta;
-            if( total >= widthToDistribute )
-                break;
-        }
-    }
+//    private static void makeShorterEqually( int[] coords, int widthToDistribute ) {
+//        int delta = Math.max( widthToDistribute / coords.length, 1 );
+//        int total = 0;
+//        for( int i=coords.length-1; i>=0; i-- ) {
+//            int tabWidth = coords[i] ;
+//            if( i > 0 )
+//                tabWidth -= coords[i-1];
+//            if( tabWidth < 5 )
+//                continue;
+//            int currentDelta = Math.min( tabWidth-5, delta );
+//            for( int j=i; j<coords.length; j++ ) {
+//                coords[j] -= currentDelta;
+//            }
+//            total += currentDelta;
+//            if( total >= widthToDistribute )
+//                break;
+//        }
+//    }
 
     private static int findSecondMaxWidth( int[] coords, int maxTabWidth ) {
         int res = 0;

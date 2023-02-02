@@ -371,22 +371,22 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             }
         }
 
-        private void reverseAllInputs(LayoutNode node) {
-            for (LayoutEdge e : node.preds) {
-                assert !reversedLinks.contains(e.link);
-                reversedLinks.add(e.link);
-                node.succs.add(e);
-                e.from.preds.add(e);
-                e.from.succs.remove(e);
-                int oldRelativeFrom = e.relativeFrom;
-                int oldRelativeTo = e.relativeTo;
-                e.to = e.from;
-                e.from = node;
-                e.relativeFrom = oldRelativeTo;
-                e.relativeTo = oldRelativeFrom;
-            }
-            node.preds.clear();
-        }
+//        private void reverseAllInputs(LayoutNode node) {
+//            for (LayoutEdge e : node.preds) {
+//                assert !reversedLinks.contains(e.link);
+//                reversedLinks.add(e.link);
+//                node.succs.add(e);
+//                e.from.preds.add(e);
+//                e.from.succs.remove(e);
+//                int oldRelativeFrom = e.relativeFrom;
+//                int oldRelativeTo = e.relativeTo;
+//                e.to = e.from;
+//                e.from = node;
+//                e.relativeFrom = oldRelativeTo;
+//                e.relativeTo = oldRelativeFrom;
+//            }
+//            node.preds.clear();
+//        }
 
         private void reverseEdge(LayoutEdge e) {
             assert !reversedLinks.contains(e.link);
@@ -755,10 +755,10 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             }
         }
 
-        private int evaluate() {
-            // TODO: Implement efficient evaluate / crossing min
-            return 0;
-        }
+//        private int evaluate() {
+//            // TODO: Implement efficient evaluate / crossing min
+//            return 0;
+//        }
 
         public void postCheck() {
 

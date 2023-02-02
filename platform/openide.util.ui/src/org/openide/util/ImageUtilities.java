@@ -802,25 +802,25 @@ public final class ImageUtilities {
         }
     }
 
-    // Note: No longer in use.
-    /** The method creates a BufferedImage which represents the same Image as the
-     * parameter but consumes less memory.
-     */
-    private static final Image toBufferedImage(Image img) {
-        // load the image
-        new javax.swing.ImageIcon(img, "");
-
-        if (img.getHeight(null)*img.getWidth(null) > 24*24) {
-            return img;
-        }
-        java.awt.image.BufferedImage rep = createBufferedImage(img.getWidth(null), img.getHeight(null));
-        java.awt.Graphics g = rep.createGraphics();
-        g.drawImage(img, 0, 0, null);
-        g.dispose();
-        img.flush();
-
-        return rep;
-    }
+//    // Note: No longer in use.
+//    /** The method creates a BufferedImage which represents the same Image as the
+//     * parameter but consumes less memory.
+//     */
+//    private static final Image toBufferedImage(Image img) {
+//        // load the image
+//        new javax.swing.ImageIcon(img, "");
+//
+//        if (img.getHeight(null)*img.getWidth(null) > 24*24) {
+//            return img;
+//        }
+//        java.awt.image.BufferedImage rep = createBufferedImage(img.getWidth(null), img.getHeight(null));
+//        java.awt.Graphics g = rep.createGraphics();
+//        g.drawImage(img, 0, 0, null);
+//        g.dispose();
+//        img.flush();
+//
+//        return rep;
+//    }
 
     private static void ensureLoaded(Image image) {
         if (

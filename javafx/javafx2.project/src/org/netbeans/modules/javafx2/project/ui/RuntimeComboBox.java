@@ -444,9 +444,9 @@ public class RuntimeComboBox extends javax.swing.JPanel {
             fireDataAdded(start + stop1, start + stop2);
         }
         
-        private int getUserListStartPos() {
-            return predefinedList.isEmpty() ? 0 : predefinedList.size();
-        }
+//        private int getUserListStartPos() {
+//            return predefinedList.isEmpty() ? 0 : predefinedList.size();
+//        }
         
         private int getActionPos() {
             return getSepPos() + 1;

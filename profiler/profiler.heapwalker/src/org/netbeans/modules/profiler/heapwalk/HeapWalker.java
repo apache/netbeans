@@ -153,15 +153,15 @@ public class HeapWalker {
             });
     }
     
-    private void computeRetainedSizes() {
-        List<JavaClass> classes = mainHeapWalker.getHeapFragment().getAllClasses();
-        if (classes.size() > 0) {
-            ProgressHandle pd = ProgressHandle.createHandle(Bundle.HeapFragmentWalker_ComputingRetainedMsg());
-            pd.start();
-            classes.get(0).getRetainedSizeByClass();
-            pd.finish();
-        }
-    }
+//    private void computeRetainedSizes() {
+//        List<JavaClass> classes = mainHeapWalker.getHeapFragment().getAllClasses();
+//        if (classes.size() > 0) {
+//            ProgressHandle pd = ProgressHandle.createHandle(Bundle.HeapFragmentWalker_ComputingRetainedMsg());
+//            pd.start();
+//            classes.get(0).getRetainedSizeByClass();
+//            pd.finish();
+//        }
+//    }
 
     // --- Private implementation ------------------------------------------------
     private static Lookup.Provider computeHeapDumpProject(File heapDumpFile) {

@@ -184,19 +184,19 @@ public class IndentFactory implements IndentTask.Factory {
             return indent;
         }
         
-        private static int getCurrentIndent (String line) {
-            int indent = 0;
-            int i = 0, k = line.length () - 1;
-            while (i < k && Character.isWhitespace (line.charAt (i))) {
-                if (line.charAt(i) == '\t') {
-                    indent += 8 - indent % 8;
-                } else {
-                    indent++;
-                }
-                i++;
-            }
-            return indent;
-        }
+//        private static int getCurrentIndent (String line) {
+//            int indent = 0;
+//            int i = 0, k = line.length () - 1;
+//            while (i < k && Character.isWhitespace (line.charAt (i))) {
+//                if (line.charAt(i) == '\t') {
+//                    indent += 8 - indent % 8;
+//                } else {
+//                    indent++;
+//                }
+//                i++;
+//            }
+//            return indent;
+//        }
 
         private static int computeIndent (
             int                     ln,

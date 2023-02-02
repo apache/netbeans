@@ -307,9 +307,9 @@ public final class LocFiles extends Task {
         }
         return f;
     }
-    private static String nameFrom(String base, String... paths) {
-        return nameFrom(base, paths, 0, paths.length, true);
-    }
+//    private static String nameFrom(String base, String... paths) {
+//        return nameFrom(base, paths, 0, paths.length, true);
+//    }
     private static String nameFrom(String base, String[] paths, int from, int upTo, boolean addIfPresent) {
         if (base == null) {
             return null;

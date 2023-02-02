@@ -132,13 +132,13 @@ public final class PluginsPanel extends JPanel {
         selectedPluginsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
-    private boolean isUpdateRunning() {
-        return !panelEnabled;
-    }
+//    private boolean isUpdateRunning() {
+//        return !panelEnabled;
+//    }
 
-    private void startUpdate() {
-        lockPanel();
-    }
+//    private void startUpdate() {
+//        lockPanel();
+//    }
 
     void finishUpdate() {
         unlockPanel();

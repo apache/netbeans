@@ -324,14 +324,14 @@ class UsagesASTEvaluator extends ASTEvaluator {
     
     private static AttributeSet unresolvedUssageAttributeSet;
     
-    private static AttributeSet getUnresolvedUssageAttributes () {
-        if (unresolvedUssageAttributeSet == null) {
-            SimpleAttributeSet sas = new SimpleAttributeSet ();
-            sas.addAttribute (EditorStyleConstants.WaveUnderlineColor, Color.red);
-            unresolvedUssageAttributeSet = sas;
-        }
-        return unresolvedUssageAttributeSet;
-    }
+//    private static AttributeSet getUnresolvedUssageAttributes () {
+//        if (unresolvedUssageAttributeSet == null) {
+//            SimpleAttributeSet sas = new SimpleAttributeSet ();
+//            sas.addAttribute (EditorStyleConstants.WaveUnderlineColor, Color.red);
+//            unresolvedUssageAttributeSet = sas;
+//        }
+//        return unresolvedUssageAttributeSet;
+//    }
     
     private static AttributeSet localVariableAttributeSet;
     

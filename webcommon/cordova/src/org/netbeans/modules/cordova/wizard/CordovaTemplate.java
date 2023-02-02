@@ -254,9 +254,9 @@ public class CordovaTemplate implements SiteTemplateImplementation {
             return true;
         }
 
-        private void setErrorMessage(String message) {
-            wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, message);
-        }
+//        private void setErrorMessage(String message) {
+//            wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, message);
+//        }
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {

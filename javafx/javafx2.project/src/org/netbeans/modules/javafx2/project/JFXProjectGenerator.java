@@ -736,15 +736,15 @@ public class JFXProjectGenerator {
     //------------ Used by unit tests -------------------
     private static SpecificationVersion defaultSourceLevel;
 
-    private static SpecificationVersion getDefaultSourceLevel() {
-        if (defaultSourceLevel != null) {
-            return defaultSourceLevel;
-        } else {
-            JavaPlatform defaultPlatform = JavaPlatformManager.getDefault().getDefaultPlatform();
-            SpecificationVersion v = defaultPlatform.getSpecification().getVersion();
-            return v;
-        }
-    }
+//    private static SpecificationVersion getDefaultSourceLevel() {
+//        if (defaultSourceLevel != null) {
+//            return defaultSourceLevel;
+//        } else {
+//            JavaPlatform defaultPlatform = JavaPlatformManager.getDefault().getDefaultPlatform();
+//            SpecificationVersion v = defaultPlatform.getSpecification().getVersion();
+//            return v;
+//        }
+//    }
     private static final Pattern INVALID_NAME = Pattern.compile("[$/\\\\\\p{Cntrl}]");  //NOI18N
 
     private static String validatePropertyValue(String value) {

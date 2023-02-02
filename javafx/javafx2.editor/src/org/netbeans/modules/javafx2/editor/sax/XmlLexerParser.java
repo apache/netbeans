@@ -246,19 +246,19 @@ public class XmlLexerParser implements ContentLocator {
     
     private XMLTokenId  forcedId;
     
-    private void handleErrorAs(XMLTokenId id) {
-        markError();
-        forcedId = id;
-    }
+//    private void handleErrorAs(XMLTokenId id) {
+//        markError();
+//        forcedId = id;
+//    }
     
-    private XMLTokenId getTokenId() {
-        if (forcedId != null) {
-            XMLTokenId id = this.forcedId;
-            forcedId = null;
-            return id;
-        }
-        return nextToken().id();
-    }
+//    private XMLTokenId getTokenId() {
+//        if (forcedId != null) {
+//            XMLTokenId id = this.forcedId;
+//            forcedId = null;
+//            return id;
+//        }
+//        return nextToken().id();
+//    }
     
     @SuppressWarnings("unchecked")
     public void parse() throws SAXException {

@@ -456,16 +456,16 @@ public class AddServerPropertiesVisualPanel extends JPanel {
         
     }      
     
-    private String browseDomainLocation(){
-        String insLocation = null;
-        JFileChooser chooser = getJFileChooser();
-        int returnValue = chooser.showDialog(this, NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_ChooseButton")); //NOI18N
-        
-        if(returnValue == JFileChooser.APPROVE_OPTION){
-            insLocation = chooser.getSelectedFile().getAbsolutePath();
-        }
-        return insLocation;
-    }
+//    private String browseDomainLocation(){
+//        String insLocation = null;
+//        JFileChooser chooser = getJFileChooser();
+//        int returnValue = chooser.showDialog(this, NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_ChooseButton")); //NOI18N
+//
+//        if(returnValue == JFileChooser.APPROVE_OPTION){
+//            insLocation = chooser.getSelectedFile().getAbsolutePath();
+//        }
+//        return insLocation;
+//    }
     
     private JFileChooser getJFileChooser(){
         JFileChooser chooser = new JFileChooser();

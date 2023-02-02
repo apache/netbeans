@@ -257,9 +257,9 @@ public class ObjLivenessMethodInstrumentor extends MemoryProfMethodInstrumentor 
         }
     }
     
-    private boolean trackAllAllocations() {
-        return instrFilter.getType() == InstrumentationFilter.TYPE_NONE && allUnprofiledClassStatusArray == null;
-    }
+//    private boolean trackAllAllocations() {
+//        return instrFilter.getType() == InstrumentationFilter.TYPE_NONE && allUnprofiledClassStatusArray == null;
+//    }
     
     static boolean isObjectConstructor(ClassInfo clazz, int methodIdx) {
         if (OBJECT_SLASHED_CLASS_NAME.equals(clazz.getName())

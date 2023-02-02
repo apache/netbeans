@@ -541,10 +541,10 @@ public abstract class LockContentionPanel extends DataView {
         return node.getTime() / countsInMicrosec;
     }
 
-    private String getTimeInMillis(LockCCTNode node) {
-        long microSec = getTimeInMicroSec(node);
-        return StringUtils.mcsTimeToString(microSec);
-    }
+//    private String getTimeInMillis(LockCCTNode node) {
+//        long microSec = getTimeInMicroSec(node);
+//        return StringUtils.mcsTimeToString(microSec);
+//    }
     
     private void initColumnsData() {
         columnCount = 3;

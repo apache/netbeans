@@ -247,13 +247,13 @@ public abstract class CaretBasedBlockHighlighting implements HighlightsContainer
         }
     }
     
-    private static String positionToString(Position p) {
-        return p == null ? "null" : p.toString(); //NOI18N
-    }
+//    private static String positionToString(Position p) {
+//        return p == null ? "null" : p.toString(); //NOI18N
+//    }
 
-    private static String s2s(Object o) {
-        return o == null ? "null" : o.getClass().getSimpleName() + "@" + Integer.toHexString(System.identityHashCode(o)); //NOI18N
-    }
+//    private static String s2s(Object o) {
+//        return o == null ? "null" : o.getClass().getSimpleName() + "@" + Integer.toHexString(System.identityHashCode(o)); //NOI18N
+//    }
     
     public static final class CaretRowHighlighting extends CaretBasedBlockHighlighting {
         

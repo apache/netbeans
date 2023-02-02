@@ -295,41 +295,41 @@ public class Utilities {
         return LineDocumentUtils.getLineEnd(doc, offset);
     }
     
-    private static int findBestSpan(JTextComponent c, int lineBegin, int lineEnd, int x)
-    throws BadLocationException{
-        if (lineBegin == lineEnd){
-            return lineEnd;
-        } 
-        int low = lineBegin;
-        int high = lineEnd;
-        while (low <= high) {
-            
-            if (high - low < 3){
-                int bestSpan = Integer.MAX_VALUE;
-                int bestPos = -1;
-                for (int i = low; i<=high; i++){
-                    Rectangle tempRect = c.modelToView(i);
-                    if (Math.abs(x-tempRect.x) < bestSpan){
-                        bestSpan = Math.abs(x-tempRect.x);
-                        bestPos = i;
-                    }
-                }
-                return bestPos;
-            }
-            
-            int mid = (low + high) / 2;
-            
-            Rectangle tempRect = c.modelToView(mid);
-            if (tempRect.x > x){
-                high = mid;
-            } else if (tempRect.x < x) {
-                low = mid;
-            } else {
-                return mid;
-            }
-        }
-        return lineBegin;
-    }
+//    private static int findBestSpan(JTextComponent c, int lineBegin, int lineEnd, int x)
+//    throws BadLocationException{
+//        if (lineBegin == lineEnd){
+//            return lineEnd;
+//        }
+//        int low = lineBegin;
+//        int high = lineEnd;
+//        while (low <= high) {
+//
+//            if (high - low < 3){
+//                int bestSpan = Integer.MAX_VALUE;
+//                int bestPos = -1;
+//                for (int i = low; i<=high; i++){
+//                    Rectangle tempRect = c.modelToView(i);
+//                    if (Math.abs(x-tempRect.x) < bestSpan){
+//                        bestSpan = Math.abs(x-tempRect.x);
+//                        bestPos = i;
+//                    }
+//                }
+//                return bestPos;
+//            }
+//
+//            int mid = (low + high) / 2;
+//
+//            Rectangle tempRect = c.modelToView(mid);
+//            if (tempRect.x > x){
+//                high = mid;
+//            } else if (tempRect.x < x) {
+//                low = mid;
+//            } else {
+//                return mid;
+//            }
+//        }
+//        return lineBegin;
+//    }
 
     /** Get the position that is one line above and visually at some
     * x-coordinate value.

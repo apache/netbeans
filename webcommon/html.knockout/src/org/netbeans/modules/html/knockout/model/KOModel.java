@@ -111,30 +111,30 @@ public class KOModel {
         return LexerUtils.equals(KOUtils.KO_PARAMS_ATTR_NAME, attribute.unqualifiedName(), true, true);
     }
     
-    private static boolean containsKODirective(Snapshot snapshot, Attribute attribute) {
-        TokenHierarchy<?> tokenHierarchy = snapshot.getTokenHierarchy();
-        TokenSequence<HTMLTokenId> tokenSequence = tokenHierarchy.tokenSequence(HTMLTokenId.language());
-        if(tokenSequence != null) {
-            tokenSequence.move(attribute.valueOffset() + (attribute.isValueQuoted() ? 1 : 0));
-            if(tokenSequence.moveNext()) {
-                TokenSequence<KODataBindTokenId> embedded = tokenSequence.embedded(KODataBindTokenId.language());
-                if(embedded != null) {
-                    embedded.moveStart();
-                    while(embedded.moveNext()) {
-                        switch(embedded.token().id()) {
-                            case KEY:
-                                String img = embedded.token().text().toString();
-                                if(Binding.getBinding(img) != null) {
-                                    return true;
-                                }
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
+//    private static boolean containsKODirective(Snapshot snapshot, Attribute attribute) {
+//        TokenHierarchy<?> tokenHierarchy = snapshot.getTokenHierarchy();
+//        TokenSequence<HTMLTokenId> tokenSequence = tokenHierarchy.tokenSequence(HTMLTokenId.language());
+//        if(tokenSequence != null) {
+//            tokenSequence.move(attribute.valueOffset() + (attribute.isValueQuoted() ? 1 : 0));
+//            if(tokenSequence.moveNext()) {
+//                TokenSequence<KODataBindTokenId> embedded = tokenSequence.embedded(KODataBindTokenId.language());
+//                if(embedded != null) {
+//                    embedded.moveStart();
+//                    while(embedded.moveNext()) {
+//                        switch(embedded.token().id()) {
+//                            case KEY:
+//                                String img = embedded.token().text().toString();
+//                                if(Binding.getBinding(img) != null) {
+//                                    return true;
+//                                }
+//                                break;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return false;
+//    }
     
     /**
      * Gets a list of all angular attributes in the page.

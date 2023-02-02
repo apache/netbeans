@@ -488,25 +488,25 @@ public final class ImportHelper {
         return packageOffset;
     }
 
-    /**
-     * Returns line index (line number - 1) of the last import statement or {@literal -1}
-     * if no import statement was found within this in {@link BaseDocument}.
-     *
-     * @param doc document
-     * @return line index (line number - 1) of the last import statement or {@literal -1}
-     *         if no import statement was found within this {@link BaseDocument}.
-     */
-    private static int getLastImportLineIndex(BaseDocument doc) {
-        try {
-            int lastImportOffset = getLastImportStatementOffset(doc);
-            if (lastImportOffset != -1) {
-                return Utilities.getLineOffset(doc, lastImportOffset);
-            }
-        } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return -1;
-    }
+//    /**
+//     * Returns line index (line number - 1) of the last import statement or {@literal -1}
+//     * if no import statement was found within this in {@link BaseDocument}.
+//     *
+//     * @param doc document
+//     * @return line index (line number - 1) of the last import statement or {@literal -1}
+//     *         if no import statement was found within this {@link BaseDocument}.
+//     */
+//    private static int getLastImportLineIndex(BaseDocument doc) {
+//        try {
+//            int lastImportOffset = getLastImportStatementOffset(doc);
+//            if (lastImportOffset != -1) {
+//                return Utilities.getLineOffset(doc, lastImportOffset);
+//            }
+//        } catch (BadLocationException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//        return -1;
+//    }
 
     /**
      * Returns offset of the last import statement or {@literal -1} if no import

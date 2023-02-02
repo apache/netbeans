@@ -106,14 +106,14 @@ public class ResourcePathCompleter implements Completer, Completer.Factory {
         }
     }
     
-    /**
-     * Completes using ClassIndex
-     */
-    private void completeMatchingFiles() {
-        // TBD - after I get access to the Jumpto index somehow.
-        //ClassIndex index = context.getCompilationInfo().getClasspathInfo();
-        
-    }
+//    /**
+//     * Completes using ClassIndex
+//     */
+//    private void completeMatchingFiles() {
+//        // TBD - after I get access to the Jumpto index somehow.
+//        //ClassIndex index = context.getCompilationInfo().getClasspathInfo();
+//
+//    }
     
     /**
      * Completes from the current folder

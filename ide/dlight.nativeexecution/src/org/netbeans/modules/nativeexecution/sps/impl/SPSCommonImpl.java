@@ -191,7 +191,7 @@ public abstract class SPSCommonImpl implements SolarisPrivilegesSupport {
         invalidateCache();
     }
 
-    private static String loc(String key, String... params) {
-        return NbBundle.getMessage(SPSCommonImpl.class, key, params);
-    }
+//    private static String loc(String key, String... params) {
+//        return NbBundle.getMessage(SPSCommonImpl.class, key, params);
+//    }
 }

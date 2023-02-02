@@ -152,9 +152,9 @@ public class FormatAction extends BaseAction {
         path.remove (path.size () - 1);
     }
     
-    private static String chars (int length) {
-        StringBuilder sb = new StringBuilder ();
-        for (int i = 0; i < length; i++) sb.append (' ');
-        return sb.toString ();
-    }
+//    private static String chars (int length) {
+//        StringBuilder sb = new StringBuilder ();
+//        for (int i = 0; i < length; i++) sb.append (' ');
+//        return sb.toString ();
+//    }
 }

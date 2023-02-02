@@ -313,28 +313,28 @@ class DominatorTree {
     }
 
     // debugging 
-    private void printObjs(List<Long> changedIds, List<Long> oldDomIds, List<Long> newDomIds, List<Boolean> addedByDirtySet, List<Long> changedIdx) {
-        if (changedIds.size()>20) return;
-        TreeMap<Integer,String> m = new TreeMap();
-        
-        for (int i=0; i<changedIds.size(); i++) {
-            Long iid = changedIds.get(i);
-            Long oldDom = oldDomIds.get(i);
-            Long newDom = newDomIds.get(i);
-            Long index = changedIdx.get(i);
-            Boolean addedByDirt = addedByDirtySet.get(i);
-            Instance ii = heap.getInstanceByID(iid.longValue());
-            int number = ii.getInstanceNumber();
-            String text = "Index: "+index+(addedByDirt?" New ":" Old ")+printInstance(iid);
-            
-            text+=" OldDom "+printInstance(oldDom);
-            text+=" NewDom: "+printInstance(newDom);
-            m.put(number,text);
-        }
-        for (Integer in : m.keySet()) {
-            Systems.debug(m.get(in));
-        }
-    }
+//    private void printObjs(List<Long> changedIds, List<Long> oldDomIds, List<Long> newDomIds, List<Boolean> addedByDirtySet, List<Long> changedIdx) {
+//        if (changedIds.size()>20) return;
+//        TreeMap<Integer,String> m = new TreeMap();
+//
+//        for (int i=0; i<changedIds.size(); i++) {
+//            Long iid = changedIds.get(i);
+//            Long oldDom = oldDomIds.get(i);
+//            Long newDom = newDomIds.get(i);
+//            Long index = changedIdx.get(i);
+//            Boolean addedByDirt = addedByDirtySet.get(i);
+//            Instance ii = heap.getInstanceByID(iid.longValue());
+//            int number = ii.getInstanceNumber();
+//            String text = "Index: "+index+(addedByDirt?" New ":" Old ")+printInstance(iid);
+//
+//            text+=" OldDom "+printInstance(oldDom);
+//            text+=" NewDom: "+printInstance(newDom);
+//            m.put(number,text);
+//        }
+//        for (Integer in : m.keySet()) {
+//            Systems.debug(m.get(in));
+//        }
+//    }
     
     // debugging
     String printInstance(Long instanceid) {

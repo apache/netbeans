@@ -149,9 +149,9 @@ public class InternalHandle {
         return userInitiated;
     }
     
-    private int getCurrentUnit() {
-        return currentUnit;
-    }
+//    private int getCurrentUnit() {
+//        return currentUnit;
+//    }
     
     public int getTotalUnits() {
         if (del != null) {

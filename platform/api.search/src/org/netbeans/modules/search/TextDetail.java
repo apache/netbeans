@@ -732,10 +732,10 @@ public final class TextDetail implements Selectable {
             txtDetail.showDetail(TextDetail.DH_GOTO);
         }
 
-        /** Show the text occurence. */
-        private void showDetail() {
-            txtDetail.showDetail(TextDetail.DH_SHOW);
-        }
+//        /** Show the text occurence. */
+//        private void showDetail() {
+//            txtDetail.showDetail(TextDetail.DH_SHOW);
+//        }
 
         /** {@inheritDoc } 
          * Implements <code>OutputListener</code> interface method.
@@ -797,34 +797,34 @@ public final class TextDetail implements Selectable {
             }
         }
 
-        /**
-         * Returns short description of a visual representation of
-         * a <code>TextDetail</code>. The description may be used e.g.
-         * for a tooltip text of a node.
-         *
-         * @param  det  detailed information about location of a matching string
-         * @return  short description of a visual representation
-         */
-        private static String getShortDesc(TextDetail det) {
-            int line = det.getLine();
-            int col = det.getColumn();
-            
-            if (col > 0) {
-                
-                /* line <line>, column <col> */
-                return NbBundle.getMessage(DetailNode.class,
-                                           "TEXT_DETAIL_FMT_SHORT1",   //NOI18N
-                                           new Object[] {Integer.toString(line),
-                                                         Integer.toString(col)
-                                                        });
-            } else {
-                
-                /* line <line> */
-                return NbBundle.getMessage(DetailNode.class,
-                                           "TEXT_DETAIL_FMT_SHORT2",   //NOI18N
-                                           Integer.toString(line));
-            }
-        }
+//        /**
+//         * Returns short description of a visual representation of
+//         * a <code>TextDetail</code>. The description may be used e.g.
+//         * for a tooltip text of a node.
+//         *
+//         * @param  det  detailed information about location of a matching string
+//         * @return  short description of a visual representation
+//         */
+//        private static String getShortDesc(TextDetail det) {
+//            int line = det.getLine();
+//            int col = det.getColumn();
+//
+//            if (col > 0) {
+//
+//                /* line <line>, column <col> */
+//                return NbBundle.getMessage(DetailNode.class,
+//                                           "TEXT_DETAIL_FMT_SHORT1",   //NOI18N
+//                                           new Object[] {Integer.toString(line),
+//                                                         Integer.toString(col)
+//                                                        });
+//            } else {
+//
+//                /* line <line> */
+//                return NbBundle.getMessage(DetailNode.class,
+//                                           "TEXT_DETAIL_FMT_SHORT2",   //NOI18N
+//                                           Integer.toString(line));
+//            }
+//        }
 
         /**
          * Returns full description of a visual representation of

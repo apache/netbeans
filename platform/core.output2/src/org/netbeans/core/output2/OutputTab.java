@@ -756,17 +756,17 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         return origPane != null ? filtOut.getWriter() : outWriter;
     }
 
-    private void disableHtmlName() {
-        Controller.getDefault().removeFromUpdater(this);
-        String escaped;
-        try {
-            escaped = XMLUtil.toAttributeValue(io.getName() + " ");
-        } catch (CharConversionException e) {
-            escaped = io.getName() + " ";
-        }
-        //#88204 apostophes are escaped in xm but not html
-        io.getIOContainer().setTitle(this, escaped.replace("&apos;", "'"));
-    }
+//    private void disableHtmlName() {
+//        Controller.getDefault().removeFromUpdater(this);
+//        String escaped;
+//        try {
+//            escaped = XMLUtil.toAttributeValue(io.getName() + " ");
+//        } catch (CharConversionException e) {
+//            escaped = io.getName() + " ";
+//        }
+//        //#88204 apostophes are escaped in xm but not html
+//        io.getIOContainer().setTitle(this, escaped.replace("&apos;", "'"));
+//    }
 
     private void initOptionsListener() {
         optionsListener = new PropertyChangeListener() {

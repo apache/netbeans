@@ -149,15 +149,15 @@ public class NamedParamsCompletion extends BaseCompletion {
         return false;
     }
 
-    private boolean isParameterPrefix(NamedArgumentListExpression namedArgsExpression, String name) {
-        List<MapEntryExpression> namedArgs = namedArgsExpression.getMapEntryExpressions();
-
-        for (MapEntryExpression namedEntry : namedArgs) {
-            String namedArgument = namedEntry.getKeyExpression().getText();
-            if (namedArgument != null && name.startsWith(namedArgument)) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    private boolean isParameterPrefix(NamedArgumentListExpression namedArgsExpression, String name) {
+//        List<MapEntryExpression> namedArgs = namedArgsExpression.getMapEntryExpressions();
+//
+//        for (MapEntryExpression namedEntry : namedArgs) {
+//            String namedArgument = namedEntry.getKeyExpression().getText();
+//            if (namedArgument != null && name.startsWith(namedArgument)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 }

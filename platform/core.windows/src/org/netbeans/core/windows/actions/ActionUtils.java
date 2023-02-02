@@ -521,16 +521,16 @@ public abstract class ActionUtils {
         tc.close();
     }
     
-    private static void saveDocument(TopComponent tc) {
-        SaveCookie sc = getSaveCookie(tc);
-        if(sc != null) {
-            try {
-                sc.save();
-            } catch(IOException ioe) {
-                Exceptions.printStackTrace(ioe);
-            }
-        }
-    }
+//    private static void saveDocument(TopComponent tc) {
+//        SaveCookie sc = getSaveCookie(tc);
+//        if(sc != null) {
+//            try {
+//                sc.save();
+//            } catch(IOException ioe) {
+//                Exceptions.printStackTrace(ioe);
+//            }
+//        }
+//    }
     
     private static SaveCookie getSaveCookie(TopComponent tc) {
         Lookup lookup = tc.getLookup();

@@ -145,26 +145,26 @@ public class OptionsPanelControllerProcessor extends LayerGeneratingProcessor {
         file.write();
     }
 
-    private String getBundleValue(String label, Annotation annotation, String annotationMethod) throws LayerGenerationException {
-        String javaIdentifier = "(?:\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)";
-        Matcher m = Pattern.compile("((?:" + javaIdentifier + "\\.)+[^\\s.#]+)?#(\\S*)").matcher(label);
-        if (m.matches()) {
-            String bundle = m.group(1);
-            String key = m.group(2);
-            if (bundle == null) {
-                Element referenceElement = originatingElement;
-                while (referenceElement != null && referenceElement.getKind() != ElementKind.PACKAGE) {
-                    referenceElement = referenceElement.getEnclosingElement();
-                }
-                if (referenceElement == null) {
-                    throw new LayerGenerationException("No reference element to determine package in '" + label + "'", originatingElement);
-                }
-                bundle = ((PackageElement) referenceElement).getQualifiedName() + ".Bundle";
-            }
-            return verifyBundleValue(bundle, key, m.group(1) == null, annotation, annotationMethod);
-        }
-        return label;
-    }
+//    private String getBundleValue(String label, Annotation annotation, String annotationMethod) throws LayerGenerationException {
+//        String javaIdentifier = "(?:\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)";
+//        Matcher m = Pattern.compile("((?:" + javaIdentifier + "\\.)+[^\\s.#]+)?#(\\S*)").matcher(label);
+//        if (m.matches()) {
+//            String bundle = m.group(1);
+//            String key = m.group(2);
+//            if (bundle == null) {
+//                Element referenceElement = originatingElement;
+//                while (referenceElement != null && referenceElement.getKind() != ElementKind.PACKAGE) {
+//                    referenceElement = referenceElement.getEnclosingElement();
+//                }
+//                if (referenceElement == null) {
+//                    throw new LayerGenerationException("No reference element to determine package in '" + label + "'", originatingElement);
+//                }
+//                bundle = ((PackageElement) referenceElement).getQualifiedName() + ".Bundle";
+//            }
+//            return verifyBundleValue(bundle, key, m.group(1) == null, annotation, annotationMethod);
+//        }
+//        return label;
+//    }
 
     private String verifyBundleValue(String bundle, String key, boolean samePackage, Annotation annotation, String annotationMethod) throws LayerGenerationException {
         if (processingEnv == null) {

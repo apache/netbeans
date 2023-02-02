@@ -374,19 +374,19 @@ public final class TestRunner {
                 .split(NEW_LINE_REGEX);
     }
 
-    private void testIgnore(String line) {
-        Matcher matcher = NAME_PATTERN.matcher(line);
-        if (matcher.find()) {
-            String name = matcher.group(1);
-            if (!StringUtils.hasText(name)) {
-                name = Bundle.TestRunner_noName();
-            }
-            addTestCase(name, Status.IGNORED);
-        } else {
-            LOGGER.log(Level.FINE, "Unexpected test IGNORE line: {0}", line);
-            assert false : line;
-        }
-    }
+//    private void testIgnore(String line) {
+//        Matcher matcher = NAME_PATTERN.matcher(line);
+//        if (matcher.find()) {
+//            String name = matcher.group(1);
+//            if (!StringUtils.hasText(name)) {
+//                name = Bundle.TestRunner_noName();
+//            }
+//            addTestCase(name, Status.IGNORED);
+//        } else {
+//            LOGGER.log(Level.FINE, "Unexpected test IGNORE line: {0}", line);
+//            assert false : line;
+//        }
+//    }
 
     private void addTestCase(String name, Status status) {
         addTestCase(name, status, 0L);

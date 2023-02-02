@@ -271,38 +271,38 @@ implements TokenHierarchyListener, ChangeListener {
         return sb.toString();
     }
 
-    private static String attributeSet(AttributeSet as) {
-        if (as == null) {
-            return "AttributeSet is null"; //NOI18N
-        }
-        
-        StringBuilder sb = new StringBuilder();
-        
-        for(Enumeration<? extends Object> keys = as.getAttributeNames(); keys.hasMoreElements(); ) {
-            Object key = keys.nextElement();
-            Object value = as.getAttribute(key);
-
-            if (key == null) {
-                sb.append("null"); //NOI18N
-            } else {
-                sb.append("'").append(key.toString()).append("'"); //NOI18N
-            }
-
-            sb.append(" = "); //NOI18N
-
-            if (value == null) {
-                sb.append("null"); //NOI18N
-            } else {
-                sb.append("'").append(value.toString()).append("'"); //NOI18N
-            }
-
-            if (keys.hasMoreElements()) {
-                sb.append(", "); //NOI18N
-            }
-        }
-        
-        return sb.toString();
-    }
+//    private static String attributeSet(AttributeSet as) {
+//        if (as == null) {
+//            return "AttributeSet is null"; //NOI18N
+//        }
+//
+//        StringBuilder sb = new StringBuilder();
+//
+//        for(Enumeration<? extends Object> keys = as.getAttributeNames(); keys.hasMoreElements(); ) {
+//            Object key = keys.nextElement();
+//            Object value = as.getAttribute(key);
+//
+//            if (key == null) {
+//                sb.append("null"); //NOI18N
+//            } else {
+//                sb.append("'").append(key.toString()).append("'"); //NOI18N
+//            }
+//
+//            sb.append(" = "); //NOI18N
+//
+//            if (value == null) {
+//                sb.append("null"); //NOI18N
+//            } else {
+//                sb.append("'").append(value.toString()).append("'"); //NOI18N
+//            }
+//
+//            if (keys.hasMoreElements()) {
+//                sb.append(", "); //NOI18N
+//            }
+//        }
+//
+//        return sb.toString();
+//    }
     
     /**
      * Checks if the token should be treated as a block. Returns true if the token

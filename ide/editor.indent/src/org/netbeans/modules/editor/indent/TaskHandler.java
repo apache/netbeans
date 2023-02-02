@@ -326,35 +326,35 @@ public final class TaskHandler {
         }
     }
     
-    /**
-     * Collect language paths used within the given token sequence
-     * 
-     * @param ts non-null token sequence (or subsequence). <code>ts.moveNext()</code>
-     * is called first on it.
-     * @return collection of language paths present in the given token sequence.
-     */
-    private Collection<LanguagePath> getActiveEmbeddedPaths(TokenSequence ts) {
-        Collection<LanguagePath> lps = new HashSet<LanguagePath>();
-        lps.add(ts.languagePath());
-        List<TokenSequence<?>> tsStack = null;
-        while (true) {
-            while (ts.moveNext()) {
-                TokenSequence<?> eTS = ts.embedded();
-                if (eTS != null) {
-                    tsStack.add(ts);
-                    ts = eTS;
-                    lps.add(ts.languagePath());
-                }
-            }
-            if (tsStack != null && tsStack.size() > 0) {
-                ts = tsStack.get(tsStack.size() - 1);
-                tsStack.remove(tsStack.size() - 1);
-            } else {
-                break;
-            }
-        }
-        return lps;
-    }
+//    /**
+//     * Collect language paths used within the given token sequence
+//     *
+//     * @param ts non-null token sequence (or subsequence). <code>ts.moveNext()</code>
+//     * is called first on it.
+//     * @return collection of language paths present in the given token sequence.
+//     */
+//    private Collection<LanguagePath> getActiveEmbeddedPaths(TokenSequence ts) {
+//        Collection<LanguagePath> lps = new HashSet<LanguagePath>();
+//        lps.add(ts.languagePath());
+//        List<TokenSequence<?>> tsStack = null;
+//        while (true) {
+//            while (ts.moveNext()) {
+//                TokenSequence<?> eTS = ts.embedded();
+//                if (eTS != null) {
+//                    tsStack.add(ts);
+//                    ts = eTS;
+//                    lps.add(ts.languagePath());
+//                }
+//            }
+//            if (tsStack != null && tsStack.size() > 0) {
+//                ts = tsStack.get(tsStack.size() - 1);
+//                tsStack.remove(tsStack.size() - 1);
+//            } else {
+//                break;
+//            }
+//        }
+//        return lps;
+//    }
 
     private String docMimeType() {
         return (String)document().getProperty("mimeType"); //NOI18N

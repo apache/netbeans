@@ -321,14 +321,14 @@ public final class BracesMatcherSupport {
         return false;
     }
     
-    // Used from the layer
-    private static BracesMatcherFactory defaultMatcherFactory() {
-        return new BracesMatcherFactory() {
-            public BracesMatcher createMatcher(MatcherContext context) {
-                return defaultMatcher(context, -1, -1);
-            }
-        };
-    }
+//    // Used from the layer
+//    private static BracesMatcherFactory defaultMatcherFactory() {
+//        return new BracesMatcherFactory() {
+//            public BracesMatcher createMatcher(MatcherContext context) {
+//                return defaultMatcher(context, -1, -1);
+//            }
+//        };
+//    }
 
     // Preventing instantiation
     private BracesMatcherSupport() {

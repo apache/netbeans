@@ -152,12 +152,12 @@ public class JDKPanel extends DestinationPanel {
             return null;
         }
         
-        private boolean isJDK8() {
-            if (getBundledJDK(panel) != null) {
-                return getBundledJDK(panel).getVersion().newerOrEquals(Version.getVersion("1.8.0")); // NOI18N
-            }
-            return false;
-        }
+//        private boolean isJDK8() {
+//            if (getBundledJDK(panel) != null) {
+//                return getBundledJDK(panel).getVersion().newerOrEquals(Version.getVersion("1.8.0")); // NOI18N
+//            }
+//            return false;
+//        }
 
     }
     

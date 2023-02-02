@@ -136,16 +136,16 @@ public final class TestCreatorPanelDisplayer {
         }
     }
 
-    private void saveAll(Node[] activatedNodes) {
-        for(Node node : activatedNodes) {
-            SaveCookie saveCookie = node.getLookup().lookup(SaveCookie.class);
-            if (saveCookie != null) {
-                try {
-                    saveCookie.save();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-        }
-    }
+//    private void saveAll(Node[] activatedNodes) {
+//        for(Node node : activatedNodes) {
+//            SaveCookie saveCookie = node.getLookup().lookup(SaveCookie.class);
+//            if (saveCookie != null) {
+//                try {
+//                    saveCookie.save();
+//                } catch (IOException ex) {
+//                    Exceptions.printStackTrace(ex);
+//                }
+//            }
+//        }
+//    }
 }

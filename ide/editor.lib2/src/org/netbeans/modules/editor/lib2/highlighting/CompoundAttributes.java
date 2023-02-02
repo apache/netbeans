@@ -36,13 +36,13 @@ import org.netbeans.spi.editor.highlighting.HighlightsSequence;
  */
 public final class CompoundAttributes implements AttributeSet {
     
-    private static void checkHighlightItemsNonNull(HighlightItem[] highlightItems) {
-        for (int i = 0; i < highlightItems.length; i++) {
-            if (highlightItems[i] == null) {
-                throw new IllegalStateException("highlightItems[" + i + "] == null"); // NOI18N
-            }
-        }
-    }
+//    private static void checkHighlightItemsNonNull(HighlightItem[] highlightItems) {
+//        for (int i = 0; i < highlightItems.length; i++) {
+//            if (highlightItems[i] == null) {
+//                throw new IllegalStateException("highlightItems[" + i + "] == null"); // NOI18N
+//            }
+//        }
+//    }
     
     /**
      * Since the view may move its absolute start offset the end offsets in highlight items

@@ -200,15 +200,15 @@ public final class CslEditorKit extends NbEditorKit {
         return MimePath.validate(mimeType) && mimeType.length() > 0 ? mimeType : null;
     }
 
-    private static Action findAction(Action [] actions, String name) {
-        for(Action a : actions) {
-            Object nameObj = a.getValue(Action.NAME);
-            if (nameObj instanceof String && name.equals(nameObj)) {
-                return a;
-            }
-        }
-        return null;
-    }
+//    private static Action findAction(Action [] actions, String name) {
+//        for(Action a : actions) {
+//            Object nameObj = a.getValue(Action.NAME);
+//            if (nameObj instanceof String && name.equals(nameObj)) {
+//                return a;
+//            }
+//        }
+//        return null;
+//    }
 
     /**
      * Returns true if bracket completion is enabled in options.

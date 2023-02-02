@@ -65,9 +65,9 @@ public class GroovyHintsProvider implements HintsProvider {
         }
     }
 
-    private void invokeHint(GroovyAstRule rule, HintsManager manager, RuleContext context, List<Hint> hints) {
-        rule.computeHints((GroovyRuleContext) context, hints);
-    }
+//    private void invokeHint(GroovyAstRule rule, HintsManager manager, RuleContext context, List<Hint> hints) {
+//        rule.computeHints((GroovyRuleContext) context, hints);
+//    }
 
     @Override
     public void computeSuggestions(HintsManager manager, RuleContext context, List<Hint> suggestions, int caretOffset) {

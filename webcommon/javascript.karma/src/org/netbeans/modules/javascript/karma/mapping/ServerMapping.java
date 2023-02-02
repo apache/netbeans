@@ -139,9 +139,9 @@ public final class ServerMapping {
         return directoriesProvider.getTestDirectory(false);
     }
 
-    private boolean isUnderneath(FileObject root, FileObject folder) {
-        return root.equals(folder)
-                || FileUtil.isParentOf(root, folder);
-    }
+//    private boolean isUnderneath(FileObject root, FileObject folder) {
+//        return root.equals(folder)
+//                || FileUtil.isParentOf(root, folder);
+//    }
 
 }

@@ -461,15 +461,15 @@ final class TimelineChart extends SynchronousXYChart {
         repaintDirty();
     }
 
-    private void repaintRows(final int startIndex) {
-        for (int i = startIndex; i < rows.size(); i++) {
-            ChartContext rowContext = rows.get(i).getContext();
-            invalidateImage(new Rectangle(0, Utils.checkedInt(rowContext.
-                           getViewportOffsetY()), getWidth(), rowContext.
-                           getViewportHeight()));
-        }
-        repaintDirty();
-    }
+//    private void repaintRows(final int startIndex) {
+//        for (int i = startIndex; i < rows.size(); i++) {
+//            ChartContext rowContext = rows.get(i).getContext();
+//            invalidateImage(new Rectangle(0, Utils.checkedInt(rowContext.
+//                           getViewportOffsetY()), getWidth(), rowContext.
+//                           getViewportHeight()));
+//        }
+//        repaintDirty();
+//    }
 
     private void updateRowBounds() {
         if (rows == null) return; // Happens when called from constructor

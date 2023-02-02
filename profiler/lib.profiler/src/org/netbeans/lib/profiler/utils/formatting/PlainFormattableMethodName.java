@@ -345,7 +345,7 @@ public class PlainFormattableMethodName implements Formattable {
         return getFullFormattedClassAndMethod();
     }
 
-    private boolean isAllWildCard(String methodName) {
-        return methodName.equals("<all>") || methodName.equals("*"); // NOI18N
-    }
+//    private boolean isAllWildCard(String methodName) {
+//        return methodName.equals("<all>") || methodName.equals("*"); // NOI18N
+//    }
 }

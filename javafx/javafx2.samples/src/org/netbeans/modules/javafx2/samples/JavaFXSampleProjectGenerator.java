@@ -175,18 +175,18 @@ public class JavaFXSampleProjectGenerator {
         }
     }
 
-    private static File createPrivateProperties(FileObject fo) throws IOException {
-        String[] nameElements = AntProjectHelper.PRIVATE_PROPERTIES_PATH.split("/"); // NOI18N
-        for (int i = 0; i < nameElements.length - 1; i++) {
-            FileObject tmp = fo.getFileObject(nameElements[i]);
-            if (tmp == null) {
-                tmp = fo.createFolder(nameElements[i]);
-            }
-            fo = tmp;
-        }
-        fo = fo.createData(nameElements[nameElements.length - 1]);
-        return FileUtil.toFile(fo);
-    }
+//    private static File createPrivateProperties(FileObject fo) throws IOException {
+//        String[] nameElements = AntProjectHelper.PRIVATE_PROPERTIES_PATH.split("/"); // NOI18N
+//        for (int i = 0; i < nameElements.length - 1; i++) {
+//            FileObject tmp = fo.getFileObject(nameElements[i]);
+//            if (tmp == null) {
+//                tmp = fo.createFolder(nameElements[i]);
+//            }
+//            fo = tmp;
+//        }
+//        fo = fo.createData(nameElements[nameElements.length - 1]);
+//        return FileUtil.toFile(fo);
+//    }
 
     /**
      * Extract nested text from an element.

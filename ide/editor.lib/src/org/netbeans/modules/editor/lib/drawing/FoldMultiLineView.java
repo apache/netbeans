@@ -55,9 +55,9 @@ import org.netbeans.lib.editor.view.GapMultiLineView;
             foldAndEndLineElemList.size() - 1));
     }
 
-    private JTextComponent getTextComponent() {
-        return (JTextComponent)getContainer();
-    }
+//    private JTextComponent getTextComponent() {
+//        return (JTextComponent)getContainer();
+//    }
     
     protected @Override boolean useCustomReloadChildren() {
         return true;

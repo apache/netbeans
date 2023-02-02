@@ -114,39 +114,39 @@ public class AngularJsIndexer extends EmbeddingIndexer{
 
     }
 
-    private static void removeControllers(@NonNull final URI uri) {
-        final Map<URI, Collection<AngularJsController>> map = controllers.get();
-        
-        if (map == null) {
-            throw new IllegalStateException("AngularJsIndexer.addControllers can be called only from scanner thread.");  //NOI18N
-        }
-        map.remove(uri);
-    }
+//    private static void removeControllers(@NonNull final URI uri) {
+//        final Map<URI, Collection<AngularJsController>> map = controllers.get();
+//
+//        if (map == null) {
+//            throw new IllegalStateException("AngularJsIndexer.addControllers can be called only from scanner thread.");  //NOI18N
+//        }
+//        map.remove(uri);
+//    }
     
-    private static void removeTemplateControllers(@NonNull final URI uri) {
-        final Map<URI, Map<String, AngularJsController.ModuleConfigRegistration>> map = templateControllers.get();
-        
-        if (map == null) {
-            throw new IllegalStateException("AngularJsIndexer.addControllers can be called only from scanner thread.");  //NOI18N
-        }
-        map.remove(uri);
-    }
+//    private static void removeTemplateControllers(@NonNull final URI uri) {
+//        final Map<URI, Map<String, AngularJsController.ModuleConfigRegistration>> map = templateControllers.get();
+//
+//        if (map == null) {
+//            throw new IllegalStateException("AngularJsIndexer.addControllers can be called only from scanner thread.");  //NOI18N
+//        }
+//        map.remove(uri);
+//    }
     
-    private static Collection<AngularJsController> getControllers(@NonNull final URI uri) {
-        final Map<URI, Collection<AngularJsController>> map = controllers.get();
-        if (map == null) {
-            throw new IllegalStateException("AngularJsIndexer.getControllers can be called only from scanner thread.");  //NOI18N
-        }
-        return map.get(uri);
-    }
+//    private static Collection<AngularJsController> getControllers(@NonNull final URI uri) {
+//        final Map<URI, Collection<AngularJsController>> map = controllers.get();
+//        if (map == null) {
+//            throw new IllegalStateException("AngularJsIndexer.getControllers can be called only from scanner thread.");  //NOI18N
+//        }
+//        return map.get(uri);
+//    }
     
-    private static Map<String, AngularJsController.ModuleConfigRegistration> getTemplateControllers(@NonNull final URI uri) {
-        final Map<URI, Map<String, AngularJsController.ModuleConfigRegistration>> map = templateControllers.get();
-        if (map == null) {
-            throw new IllegalStateException("AngularJsIndexer.getControllers can be called only from scanner thread.");  //NOI18N
-        }
-        return map.get(uri);
-    }
+//    private static Map<String, AngularJsController.ModuleConfigRegistration> getTemplateControllers(@NonNull final URI uri) {
+//        final Map<URI, Map<String, AngularJsController.ModuleConfigRegistration>> map = templateControllers.get();
+//        if (map == null) {
+//            throw new IllegalStateException("AngularJsIndexer.getControllers can be called only from scanner thread.");  //NOI18N
+//        }
+//        return map.get(uri);
+//    }
     
     public static boolean isScannerThread() {
         return controllers.get() != null;

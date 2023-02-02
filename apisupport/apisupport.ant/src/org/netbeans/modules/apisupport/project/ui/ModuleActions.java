@@ -727,33 +727,33 @@ public final class ModuleActions implements ActionProvider, ExecProject {
         }
     }
 
-    private boolean hasTestUnitDataDir() {
-        String dataDir = project.evaluator().getProperty("test.unit.data.dir");
-        return dataDir != null && project.getHelper().resolveFileObject(dataDir) != null;
-    }
+//    private boolean hasTestUnitDataDir() {
+//        String dataDir = project.evaluator().getProperty("test.unit.data.dir");
+//        return dataDir != null && project.getHelper().resolveFileObject(dataDir) != null;
+//    }
     
     private static final String SYSTEM_PROPERTY_PREFIX = "test-unit-sys-prop.";
     
-    private void prepareSystemProperties(Map<String, Object> properties) {
-        Map<String, String> evaluated = project.evaluator().getProperties();
-
-        if (evaluated == null) {
-            return ;
-        }
-        
-        for (Entry<String, String> e : evaluated.entrySet()) {
-            if (e.getKey().startsWith(SYSTEM_PROPERTY_PREFIX) && e.getValue() != null) {
-                @SuppressWarnings("unchecked")
-                Collection<String> systemProperties = (Collection<String>) properties.get(JavaRunner.PROP_RUN_JVMARGS);
-
-                if (systemProperties == null) {
-                    properties.put(JavaRunner.PROP_RUN_JVMARGS, systemProperties = new LinkedList<String>());
-                }
-
-                systemProperties.add("-D" + e.getKey().substring(SYSTEM_PROPERTY_PREFIX.length()) + "=" + e.getValue());
-            }
-        }
-    }
+//    private void prepareSystemProperties(Map<String, Object> properties) {
+//        Map<String, String> evaluated = project.evaluator().getProperties();
+//
+//        if (evaluated == null) {
+//            return ;
+//        }
+//
+//        for (Entry<String, String> e : evaluated.entrySet()) {
+//            if (e.getKey().startsWith(SYSTEM_PROPERTY_PREFIX) && e.getValue() != null) {
+//                @SuppressWarnings("unchecked")
+//                Collection<String> systemProperties = (Collection<String>) properties.get(JavaRunner.PROP_RUN_JVMARGS);
+//
+//                if (systemProperties == null) {
+//                    properties.put(JavaRunner.PROP_RUN_JVMARGS, systemProperties = new LinkedList<String>());
+//                }
+//
+//                systemProperties.add("-D" + e.getKey().substring(SYSTEM_PROPERTY_PREFIX.length()) + "=" + e.getValue());
+//            }
+//        }
+//    }
 
     private static boolean verifySufficientlyNewHarness(NbModuleProject project) {
         NbPlatform plaf = project.getPlatform(false);
@@ -813,41 +813,41 @@ public final class ModuleActions implements ActionProvider, ExecProject {
         return new String[] {"debug-test-single-nb"}; // NOI18N
     }
     
-    private boolean bypassAntBuildScript(String command, FileObject[] files, AtomicReference<ExecutorTask> task) throws IllegalArgumentException {
-        FileObject toRun = null;
-
-        if (COMMAND_RUN_SINGLE.equals(command) || 
-            COMMAND_DEBUG_SINGLE.equals(command) ||
-            COMMAND_PROFILE_SINGLE.equals(command)) {
-            toRun = files[0];
-        }
-        
-        if (toRun != null) {
-            String commandToExecute = COMMAND_RUN_SINGLE.equals(command) ? 
-                                        JavaRunner.QUICK_TEST : 
-                                        (COMMAND_DEBUG_SINGLE.equals(command) ? 
-                                            JavaRunner.QUICK_TEST_DEBUG :
-                                            JavaRunner.QUICK_TEST_PROFILE);
-            if (!JavaRunner.isSupported(commandToExecute, Collections.singletonMap(JavaRunner.PROP_EXECUTE_FILE, toRun))) {
-                return false;
-            }
-            try {
-                Map<String, Object> properties = new HashMap<String, Object>();
-
-                prepareSystemProperties(properties);
-
-                properties.put(JavaRunner.PROP_EXECUTE_FILE, toRun);
-
-                task.set(JavaRunner.execute(commandToExecute, properties));
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
+//    private boolean bypassAntBuildScript(String command, FileObject[] files, AtomicReference<ExecutorTask> task) throws IllegalArgumentException {
+//        FileObject toRun = null;
+//
+//        if (COMMAND_RUN_SINGLE.equals(command) ||
+//            COMMAND_DEBUG_SINGLE.equals(command) ||
+//            COMMAND_PROFILE_SINGLE.equals(command)) {
+//            toRun = files[0];
+//        }
+//
+//        if (toRun != null) {
+//            String commandToExecute = COMMAND_RUN_SINGLE.equals(command) ?
+//                                        JavaRunner.QUICK_TEST :
+//                                        (COMMAND_DEBUG_SINGLE.equals(command) ?
+//                                            JavaRunner.QUICK_TEST_DEBUG :
+//                                            JavaRunner.QUICK_TEST_PROFILE);
+//            if (!JavaRunner.isSupported(commandToExecute, Collections.singletonMap(JavaRunner.PROP_EXECUTE_FILE, toRun))) {
+//                return false;
+//            }
+//            try {
+//                Map<String, Object> properties = new HashMap<String, Object>();
+//
+//                prepareSystemProperties(properties);
+//
+//                properties.put(JavaRunner.PROP_EXECUTE_FILE, toRun);
+//
+//                task.set(JavaRunner.execute(commandToExecute, properties));
+//            } catch (IOException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     @ActionID(category="Project", id="org.netbeans.modules.apisupport.project.reload")
     @ActionRegistration(displayName="#ACTION_reload", lazy=false)

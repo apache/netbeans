@@ -592,26 +592,26 @@ public class SelectorsGroupEditor extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_classPrefixComboBoxActionPerformed
     
-    private String getRule(String ruleType){
-        String rule = null;
-        if(ruleType.equals(ELEMENT_TYPE)){
-            rule = (String) selectElementComboBox.getSelectedItem();
-            if(rule.equals(NONE)) rule = null;
-        }else if(ruleType.equals(CLASS_TYPE)){
-            if(!selectClassTextField.getText().trim().equals("")){
-                String rulePrefix = (String) classPrefixComboBox.getSelectedItem();
-                rule = "." + selectClassTextField.getText().trim();
-                if(!rulePrefix.equals(NONE)){
-                    rule = rulePrefix  + rule;
-                }
-            }
-        }else if(ruleType.equals(ELEMENT_ID_TYPE)){
-            if(!selectElementIdTextField.getText().trim().equals("")){
-                rule = "#" + selectElementIdTextField.getText().trim();
-            }
-        }
-        return rule;
-    }
+//    private String getRule(String ruleType){
+//        String rule = null;
+//        if(ruleType.equals(ELEMENT_TYPE)){
+//            rule = (String) selectElementComboBox.getSelectedItem();
+//            if(rule.equals(NONE)) rule = null;
+//        }else if(ruleType.equals(CLASS_TYPE)){
+//            if(!selectClassTextField.getText().trim().equals("")){
+//                String rulePrefix = (String) classPrefixComboBox.getSelectedItem();
+//                rule = "." + selectClassTextField.getText().trim();
+//                if(!rulePrefix.equals(NONE)){
+//                    rule = rulePrefix  + rule;
+//                }
+//            }
+//        }else if(ruleType.equals(ELEMENT_ID_TYPE)){
+//            if(!selectElementIdTextField.getText().trim().equals("")){
+//                rule = "#" + selectElementIdTextField.getText().trim();
+//            }
+//        }
+//        return rule;
+//    }
     
     private void resetRuleHierarchy(){
         StringBuffer ruleSetBuf = new StringBuffer();

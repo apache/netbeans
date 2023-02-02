@@ -315,13 +315,13 @@ public class CellTipManager implements MouseListener, MouseMotionListener, Mouse
         universalCellTipListener.unregisterForComponent(component);
     }
 
-    private static Frame frameForComponent(Component component) {
-        while (!(component instanceof Frame)) {
-            component = component.getParent();
-        }
-
-        return (Frame) component;
-    }
+//    private static Frame frameForComponent(Component component) {
+//        while (!(component instanceof Frame)) {
+//            component = component.getParent();
+//        }
+//
+//        return (Frame) component;
+//    }
 
     private int getHeightAdjust(Rectangle a, Rectangle b) {
         if ((b.y >= a.y) && ((b.y + b.height) <= (a.y + a.height))) {
@@ -331,51 +331,51 @@ public class CellTipManager implements MouseListener, MouseMotionListener, Mouse
         }
     }
 
-    private int getPopupFitHeight(Rectangle popupRectInScreen, Component invoker) {
-        if (invoker != null) {
-            Container parent;
+//    private int getPopupFitHeight(Rectangle popupRectInScreen, Component invoker) {
+//        if (invoker != null) {
+//            Container parent;
+//
+//            for (parent = invoker.getParent(); parent != null; parent = parent.getParent()) {
+//                if (parent instanceof JFrame || parent instanceof JDialog || parent instanceof JWindow) {
+//                    return getHeightAdjust(parent.getBounds(), popupRectInScreen);
+//                } else if (parent instanceof JApplet || parent instanceof JInternalFrame) {
+//                    if (popupFrameRect == null) {
+//                        popupFrameRect = new Rectangle();
+//                    }
+//
+//                    Point p = parent.getLocationOnScreen();
+//                    popupFrameRect.setBounds(p.x, p.y, parent.getBounds().width, parent.getBounds().height);
+//
+//                    return getHeightAdjust(popupFrameRect, popupRectInScreen);
+//                }
+//            }
+//        }
+//
+//        return 0;
+//    }
 
-            for (parent = invoker.getParent(); parent != null; parent = parent.getParent()) {
-                if (parent instanceof JFrame || parent instanceof JDialog || parent instanceof JWindow) {
-                    return getHeightAdjust(parent.getBounds(), popupRectInScreen);
-                } else if (parent instanceof JApplet || parent instanceof JInternalFrame) {
-                    if (popupFrameRect == null) {
-                        popupFrameRect = new Rectangle();
-                    }
-
-                    Point p = parent.getLocationOnScreen();
-                    popupFrameRect.setBounds(p.x, p.y, parent.getBounds().width, parent.getBounds().height);
-
-                    return getHeightAdjust(popupFrameRect, popupRectInScreen);
-                }
-            }
-        }
-
-        return 0;
-    }
-
-    private int getPopupFitWidth(Rectangle popupRectInScreen, Component invoker) {
-        if (invoker != null) {
-            Container parent;
-
-            for (parent = invoker.getParent(); parent != null; parent = parent.getParent()) {
-                if (parent instanceof JFrame || parent instanceof JDialog || parent instanceof JWindow) {
-                    return getWidthAdjust(parent.getBounds(), popupRectInScreen);
-                } else if (parent instanceof JApplet || parent instanceof JInternalFrame) {
-                    if (popupFrameRect == null) {
-                        popupFrameRect = new Rectangle();
-                    }
-
-                    Point p = parent.getLocationOnScreen();
-                    popupFrameRect.setBounds(p.x, p.y, parent.getBounds().width, parent.getBounds().height);
-
-                    return getWidthAdjust(popupFrameRect, popupRectInScreen);
-                }
-            }
-        }
-
-        return 0;
-    }
+//    private int getPopupFitWidth(Rectangle popupRectInScreen, Component invoker) {
+//        if (invoker != null) {
+//            Container parent;
+//
+//            for (parent = invoker.getParent(); parent != null; parent = parent.getParent()) {
+//                if (parent instanceof JFrame || parent instanceof JDialog || parent instanceof JWindow) {
+//                    return getWidthAdjust(parent.getBounds(), popupRectInScreen);
+//                } else if (parent instanceof JApplet || parent instanceof JInternalFrame) {
+//                    if (popupFrameRect == null) {
+//                        popupFrameRect = new Rectangle();
+//                    }
+//
+//                    Point p = parent.getLocationOnScreen();
+//                    popupFrameRect.setBounds(p.x, p.y, parent.getBounds().width, parent.getBounds().height);
+//
+//                    return getWidthAdjust(popupFrameRect, popupRectInScreen);
+//                }
+//            }
+//        }
+//
+//        return 0;
+//    }
 
     private int getWidthAdjust(Rectangle a, Rectangle b) {
         if ((b.x >= a.x) && ((b.x + b.width) <= (a.x + a.width))) {

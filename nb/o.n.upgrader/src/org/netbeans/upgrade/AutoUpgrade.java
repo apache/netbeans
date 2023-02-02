@@ -79,17 +79,17 @@ public final class AutoUpgrade {
         }
     }
 
-    //#75324 NBplatform settings are not imported
-    private static void upgradeBuildProperties(final File sourceFolder, final String[] version) throws IOException {
-        File userdir = new File(System.getProperty("netbeans.user", ""));//NOI18N
-        String[] regexForSelection = new String[]{
-            "^nbplatform[.](?!default[.]netbeans[.]dest[.]dir).+[.].+=.+$", //NOI18N
-            // #161616
-            "^var[.].*"  //NOI18N
-        };
-        Copy.appendSelectedLines(new File(sourceFolder, "build.properties"), //NOI18N
-                userdir, regexForSelection);
-    }
+//    //#75324 NBplatform settings are not imported
+//    private static void upgradeBuildProperties(final File sourceFolder, final String[] version) throws IOException {
+//        File userdir = new File(System.getProperty("netbeans.user", ""));//NOI18N
+//        String[] regexForSelection = new String[]{
+//            "^nbplatform[.](?!default[.]netbeans[.]dest[.]dir).+[.].+=.+$", //NOI18N
+//            // #161616
+//            "^var[.].*"  //NOI18N
+//        };
+//        Copy.appendSelectedLines(new File(sourceFolder, "build.properties"), //NOI18N
+//                userdir, regexForSelection);
+//    }
 
     // the order of VERSION_TO_CHECK here defines the precedence of imports
     // the first one will be choosen for import
@@ -242,35 +242,35 @@ public final class AutoUpgrade {
         
     }
     
-    /* copy-pasted method doUpgrade and slightly modified to copy files relative
-     * to userdir.
-     */
-    private static void doNonStandardUpgrade (File source,String oldVersion) 
-            throws IOException, PropertyVetoException {
-        File userdir = new File(System.getProperty("netbeans.user", "")); // NOI18N        
-        java.util.Set<?> includeExclude;
-        try {
-            InputStream is = AutoUpgrade.class.getResourceAsStream("nonstandard" + oldVersion); // NOI18N
-            if (is == null) {
-                return;
-            }
-            Reader r = new InputStreamReader(is, "utf-8"); // NOI18N
-            includeExclude = IncludeExclude.create(r);
-            r.close();
-        } catch (IOException ex) {
-            throw new IOException("Cannot import from version: " +  oldVersion + "nonstandard", ex);
-        }        
-        ErrorManager.getDefault ().log (ErrorManager.USER, "Import: Old version: " // NOI18N
-            + oldVersion + "nonstandard"  + ". Importing from " + source + " to " + userdir // NOI18N
-        );        
-        
-        LocalFileSystem  old = new LocalFileSystem();
-        old.setRootDirectory(source);
-        
-        LocalFileSystem nfs = new LocalFileSystem();
-        nfs.setRootDirectory(userdir);                
-        Copy.copyDeep(old.getRoot(), nfs.getRoot(), includeExclude, PathTransformation.getInstance(oldVersion));
-    }    
+//    /* copy-pasted method doUpgrade and slightly modified to copy files relative
+//     * to userdir.
+//     */
+//    private static void doNonStandardUpgrade (File source,String oldVersion)
+//            throws IOException, PropertyVetoException {
+//        File userdir = new File(System.getProperty("netbeans.user", "")); // NOI18N
+//        java.util.Set<?> includeExclude;
+//        try {
+//            InputStream is = AutoUpgrade.class.getResourceAsStream("nonstandard" + oldVersion); // NOI18N
+//            if (is == null) {
+//                return;
+//            }
+//            Reader r = new InputStreamReader(is, "utf-8"); // NOI18N
+//            includeExclude = IncludeExclude.create(r);
+//            r.close();
+//        } catch (IOException ex) {
+//            throw new IOException("Cannot import from version: " +  oldVersion + "nonstandard", ex);
+//        }
+//        ErrorManager.getDefault ().log (ErrorManager.USER, "Import: Old version: " // NOI18N
+//            + oldVersion + "nonstandard"  + ". Importing from " + source + " to " + userdir // NOI18N
+//        );
+//
+//        LocalFileSystem  old = new LocalFileSystem();
+//        old.setRootDirectory(source);
+//
+//        LocalFileSystem nfs = new LocalFileSystem();
+//        nfs.setRootDirectory(userdir);
+//        Copy.copyDeep(old.getRoot(), nfs.getRoot(), includeExclude, PathTransformation.getInstance(oldVersion));
+//    }
     
 
     static MultiFileSystem createLayeredSystem(final LocalFileSystem lfs, final XMLFileSystem xmlfs) {

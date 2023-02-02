@@ -173,13 +173,13 @@ public class WhereUsedPanelMethod extends WhereUsedPanel.WhereUsedInnerPanel {
         }
     }
 
-    private static EmptyImageIcon EMPTY_IMAGE_ICON;
-    private static Icon getEmptyIcon() {
-        if (EMPTY_IMAGE_ICON == null) {
-            EMPTY_IMAGE_ICON = new EmptyImageIcon();
-        }
-        return EMPTY_IMAGE_ICON;
-    }
+//    private static EmptyImageIcon EMPTY_IMAGE_ICON;
+//    private static Icon getEmptyIcon() {
+//        if (EMPTY_IMAGE_ICON == null) {
+//            EMPTY_IMAGE_ICON = new EmptyImageIcon();
+//        }
+//        return EMPTY_IMAGE_ICON;
+//    }
     private static class EmptyImageIcon implements Icon {
         private static final int WIDTH = 16;
         private static final int HEIGHT = 16;

@@ -475,10 +475,10 @@ public final class ExplorerActionsImpl {
         pasteActionPerformer.syncEnable();
     }
 
-    private boolean actionsUpdateScheduled() {
-        ActionStateUpdater asu = actionStateUpdater;
-        return asu != null ? asu.updateScheduled() : false;
-    }
+//    private boolean actionsUpdateScheduled() {
+//        ActionStateUpdater asu = actionStateUpdater;
+//        return asu != null ? asu.updateScheduled() : false;
+//    }
 
     /** Paste type used when in clipbopard is MultiTransferable */
     private static class MultiPasteType extends PasteType {

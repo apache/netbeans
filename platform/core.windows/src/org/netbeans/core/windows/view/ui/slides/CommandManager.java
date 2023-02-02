@@ -244,11 +244,11 @@ final class CommandManager implements ActionListener {
     
     /************************** non-public stuff **********************/
 
-    private Rectangle getScreenCompRect(Component comp) { 
-        Rectangle result = new Rectangle(comp.getLocationOnScreen(), comp.getSize());
-        
-        return result;
-    }
+//    private Rectangle getScreenCompRect(Component comp) {
+//        Rectangle result = new Rectangle(comp.getLocationOnScreen(), comp.getSize());
+//
+//        return result;
+//    }
     
      private static final boolean NO_POPUP_PLACEMENT_HACK = Boolean.getBoolean("netbeans.popup.no_hack"); // NOI18N
 // ##########################     

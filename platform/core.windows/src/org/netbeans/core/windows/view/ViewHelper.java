@@ -292,9 +292,9 @@ final class ViewHelper {
         return snapshot;
     }
 
-    private static void debugLog(String message) {
-        Debug.log(ViewHelper.class, message);
-    }
+//    private static void debugLog(String message) {
+//        Debug.log(ViewHelper.class, message);
+//    }
 
 }
 

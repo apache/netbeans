@@ -380,9 +380,9 @@ public final class ClassCompleter implements Completer, Completer.Factory {
         return items;
     }
     
-    private boolean isPrefixEmpty() {
-        return namePrefix.isEmpty() && packagePrefix == null;
-    }
+//    private boolean isPrefixEmpty() {
+//        return namePrefix.isEmpty() && packagePrefix == null;
+//    }
     
     @Override
     public List<CompletionItem> complete() {

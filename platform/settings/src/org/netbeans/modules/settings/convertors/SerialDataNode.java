@@ -130,12 +130,12 @@ public final class SerialDataNode extends DataNode {
         }
     }
     
-    /** Getter for instance data object.
-     * @return instance data object
-     */
-    private InstanceDataObject i () {
-        return (InstanceDataObject)getDataObject ();
-    }
+//    /** Getter for instance data object.
+//     * @return instance data object
+//     */
+//    private InstanceDataObject i () {
+//        return (InstanceDataObject)getDataObject ();
+//    }
     
     private InstanceCookie.Of ic () {
         return (InstanceCookie.Of) getDataObject().getCookie(InstanceCookie.Of.class);

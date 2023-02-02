@@ -397,346 +397,346 @@ implements ModuleConfiguration, DatasourceConfiguration, DeploymentPlanConfigura
 //        }
 //    }
     
-    /**
-     * Searches for the beans of the give type referring to the given data source. 
-     * It returns the names for the beans found.
-     *
-     * @param desc searched data source description tag value
-     * @param resRefName searched data source (res-ref-name tag value)
-     * @param root root bean to search from
-     * @param beanType type of bean to search for
-     *
-     * @return set of the names (ejb-name) of the beans refering to the resource-ref 
-     * with the same description and res-ref-name
-     */
-    private Set getRelevantBeansDataRef(String desc, String resRefName, DDBeanRoot root, BEAN_TYPE beanType) {
-        
-        Set beanNames = new HashSet();
-        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/" + beanType.getType()); // NOI18N
-        for (int i = 0; i < beans.length; i++) {
-            DDBean bean = beans[i];
-            DDBean[] resRefs = bean.getChildBean("resource-ref");
-            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
-                String[] descs = resRefs[j].getText("description"); // NOI18N
-                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
-                String[] types = resRefs[j].getText("res-type");     // NOI18N
-                if (descs.length > 0  && names.length > 0 && types.length > 0 &&
-                    descs[0].equals(desc) && names[0].equals(resRefName) && "javax.sql.DataSource".equals(types[0])) { // NOI18N
-                    //store bean's ejb-name tag value
-                    beanNames.add(bean.getChildBean("ejb-name")[0].getText()); // NOI18N
-                    break;
-                }
-            }
-        }
-        
-        return beanNames;
-    }
+//    /**
+//     * Searches for the beans of the give type referring to the given data source.
+//     * It returns the names for the beans found.
+//     *
+//     * @param desc searched data source description tag value
+//     * @param resRefName searched data source (res-ref-name tag value)
+//     * @param root root bean to search from
+//     * @param beanType type of bean to search for
+//     *
+//     * @return set of the names (ejb-name) of the beans refering to the resource-ref
+//     * with the same description and res-ref-name
+//     */
+//    private Set getRelevantBeansDataRef(String desc, String resRefName, DDBeanRoot root, BEAN_TYPE beanType) {
+//
+//        Set beanNames = new HashSet();
+//        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/" + beanType.getType()); // NOI18N
+//        for (int i = 0; i < beans.length; i++) {
+//            DDBean bean = beans[i];
+//            DDBean[] resRefs = bean.getChildBean("resource-ref");
+//            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
+//                String[] descs = resRefs[j].getText("description"); // NOI18N
+//                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
+//                String[] types = resRefs[j].getText("res-type");     // NOI18N
+//                if (descs.length > 0  && names.length > 0 && types.length > 0 &&
+//                    descs[0].equals(desc) && names[0].equals(resRefName) && "javax.sql.DataSource".equals(types[0])) { // NOI18N
+//                    //store bean's ejb-name tag value
+//                    beanNames.add(bean.getChildBean("ejb-name")[0].getText()); // NOI18N
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return beanNames;
+//    }
     
-    /**
-     * Searches for the message-driven beans referring to the given resource. 
-     * It returns the names and message destination links for the beans found.
-     *
-     * @param desc searched data source description tag value
-     * @param resRefName searched res-ref-name tag value
-     * @param root root bean to search from
-     *
-     * @return map where the keys are the bean names (ejb-name) and 
-     * the values are the message destinations (message-destination-link)
-     */
-    private Map getRelevantMsgDrvBeansDataRef(String desc, String resRefName, DDBeanRoot root) {
-        
-        HashMap/*<String, String>*/ beanMap = new HashMap(); // maps ejb-name to message-destination-link
-        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/message-driven"); // NOI18N
-        for (int i = 0; i < beans.length; i++) {
-            DDBean bean = beans[i];
-            DDBean[] resRefs = bean.getChildBean("resource-ref");
-            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
-                String[] descs = resRefs[j].getText("description"); // NOI18N
-                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
-                String[] types = resRefs[j].getText("res-type");     // NOI18N
-                if (descs.length > 0  && names.length > 0 && types.length > 0 &&
-                    descs[0].equals(desc) && names[0].equals(resRefName) && "javax.sql.DataSource".equals(types[0])) { // NOI18N
-                    //store bean's ejb-name and message-destination-link tag values
-                    String key = bean.getChildBean("ejb-name")[0].getText();
-                    String value = "";
-                    if (bean.getChildBean("message-destination-link").length > 0) // NOI18N
-                        value = bean.getChildBean("message-destination-link")[0].getText();
-                    beanMap.put(key, value); // NOI18N
-                    break;
-                }
-            }
-        }
-        
-        return beanMap;
-    }
+//    /**
+//     * Searches for the message-driven beans referring to the given resource.
+//     * It returns the names and message destination links for the beans found.
+//     *
+//     * @param desc searched data source description tag value
+//     * @param resRefName searched res-ref-name tag value
+//     * @param root root bean to search from
+//     *
+//     * @return map where the keys are the bean names (ejb-name) and
+//     * the values are the message destinations (message-destination-link)
+//     */
+//    private Map getRelevantMsgDrvBeansDataRef(String desc, String resRefName, DDBeanRoot root) {
+//
+//        HashMap/*<String, String>*/ beanMap = new HashMap(); // maps ejb-name to message-destination-link
+//        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/message-driven"); // NOI18N
+//        for (int i = 0; i < beans.length; i++) {
+//            DDBean bean = beans[i];
+//            DDBean[] resRefs = bean.getChildBean("resource-ref");
+//            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
+//                String[] descs = resRefs[j].getText("description"); // NOI18N
+//                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
+//                String[] types = resRefs[j].getText("res-type");     // NOI18N
+//                if (descs.length > 0  && names.length > 0 && types.length > 0 &&
+//                    descs[0].equals(desc) && names[0].equals(resRefName) && "javax.sql.DataSource".equals(types[0])) { // NOI18N
+//                    //store bean's ejb-name and message-destination-link tag values
+//                    String key = bean.getChildBean("ejb-name")[0].getText();
+//                    String value = "";
+//                    if (bean.getChildBean("message-destination-link").length > 0) // NOI18N
+//                        value = bean.getChildBean("message-destination-link")[0].getText();
+//                    beanMap.put(key, value); // NOI18N
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return beanMap;
+//    }
     
-    /**
-     * @param ejbRefName searched ejb-ref-name tag value
-     * @param root root bean to search from
-     * @param beanType type of bean to search for
-     *
-     * @return set of the names (ejb-name) of the beans refering to the ejb-ref 
-     * with the same ejb-ref-name
-     */
-    private Set getRelevantBeansEjbRef(String ejbRefName, DDBeanRoot root, BEAN_TYPE beanType) {
-        
-        Set beanNames = new HashSet();
-        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/" + beanType.getType()); // NOI18N
-        for (int i = 0; i < beans.length; i++) {
-            DDBean bean = beans[i];
-            DDBean[] ejbRefs = bean.getChildBean("ejb-ref");
-            for (int j = 0; ejbRefs != null && j < ejbRefs.length; j++) {
-                String[] names = ejbRefs[j].getText("ejb-ref-name"); // NOI18N
-                String[] types = ejbRefs[j].getText("ejb-ref-type"); // NOI18N
-                if (names.length > 0 && types.length > 0 && names[0].equals(ejbRefName) 
-                    && ("Session".equals(types[0]) || "Entity".equals(types[0]))) { // NOI18N
-                    //store bean's ejb-name tag value
-                    beanNames.add(bean.getChildBean("ejb-name")[0].getText()); // NOI18N
-                    break;
-                }
-            }
-        }
-        
-        return beanNames;
-    }
+//    /**
+//     * @param ejbRefName searched ejb-ref-name tag value
+//     * @param root root bean to search from
+//     * @param beanType type of bean to search for
+//     *
+//     * @return set of the names (ejb-name) of the beans refering to the ejb-ref
+//     * with the same ejb-ref-name
+//     */
+//    private Set getRelevantBeansEjbRef(String ejbRefName, DDBeanRoot root, BEAN_TYPE beanType) {
+//
+//        Set beanNames = new HashSet();
+//        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/" + beanType.getType()); // NOI18N
+//        for (int i = 0; i < beans.length; i++) {
+//            DDBean bean = beans[i];
+//            DDBean[] ejbRefs = bean.getChildBean("ejb-ref");
+//            for (int j = 0; ejbRefs != null && j < ejbRefs.length; j++) {
+//                String[] names = ejbRefs[j].getText("ejb-ref-name"); // NOI18N
+//                String[] types = ejbRefs[j].getText("ejb-ref-type"); // NOI18N
+//                if (names.length > 0 && types.length > 0 && names[0].equals(ejbRefName)
+//                    && ("Session".equals(types[0]) || "Entity".equals(types[0]))) { // NOI18N
+//                    //store bean's ejb-name tag value
+//                    beanNames.add(bean.getChildBean("ejb-name")[0].getText()); // NOI18N
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return beanNames;
+//    }
     
     interface JbossModifier {
         public void modify(Jboss modifiedJboss);
     }
     
-    /**
-     * Searches for the message-driven beans referring to the given ejb. 
-     * It returns the names and message destination links for the beans found.
-     *
-     * @param ejbRefName searched ejb-ref-name tag value
-     * @param root root bean to search from
-     *
-     * @return map where the keys are the bean names (ejb-name) and 
-     * the values are the message destinations (message-destination-link)
-     */
-    private Map getRelevantMsgDrvBeansEjbRef(String ejbRefName, DDBeanRoot root) {
-        
-        HashMap/*<String, String>*/ beanMap = new HashMap(); // maps ejb-name to message-destination-link
-        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/message-driven"); // NOI18N
-        for (int i = 0; i < beans.length; i++) {
-            DDBean bean = beans[i];
-            DDBean[] ejbRefs = bean.getChildBean("ejb-ref");
-            for (int j = 0; ejbRefs != null && j < ejbRefs.length; j++) {
-                String[] names = ejbRefs[j].getText("ejb-ref-name"); // NOI18N
-                String[] types = ejbRefs[j].getText("ejb-ref-type"); // NOI18N
-                if (names.length > 0 && types.length > 0 && names[0].equals(ejbRefName) 
-                    && ("Session".equals(types[0]) || "Entity".equals(types[0]))) { // NOI18N
-                    //store bean's ejb-name and message-destination-link tag values
-                    String key = bean.getChildBean("ejb-name")[0].getText();
-                    String value = "";
-                    if (bean.getChildBean("message-destination-link").length > 0) // NOI18N
-                        value = bean.getChildBean("message-destination-link")[0].getText();
-                    beanMap.put(key, value); // NOI18N
-                    break;
-                }
-            }
-        }
-        
-        return beanMap;
-    }
+//    /**
+//     * Searches for the message-driven beans referring to the given ejb.
+//     * It returns the names and message destination links for the beans found.
+//     *
+//     * @param ejbRefName searched ejb-ref-name tag value
+//     * @param root root bean to search from
+//     *
+//     * @return map where the keys are the bean names (ejb-name) and
+//     * the values are the message destinations (message-destination-link)
+//     */
+//    private Map getRelevantMsgDrvBeansEjbRef(String ejbRefName, DDBeanRoot root) {
+//
+//        HashMap/*<String, String>*/ beanMap = new HashMap(); // maps ejb-name to message-destination-link
+//        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/message-driven"); // NOI18N
+//        for (int i = 0; i < beans.length; i++) {
+//            DDBean bean = beans[i];
+//            DDBean[] ejbRefs = bean.getChildBean("ejb-ref");
+//            for (int j = 0; ejbRefs != null && j < ejbRefs.length; j++) {
+//                String[] names = ejbRefs[j].getText("ejb-ref-name"); // NOI18N
+//                String[] types = ejbRefs[j].getText("ejb-ref-type"); // NOI18N
+//                if (names.length > 0 && types.length > 0 && names[0].equals(ejbRefName)
+//                    && ("Session".equals(types[0]) || "Entity".equals(types[0]))) { // NOI18N
+//                    //store bean's ejb-name and message-destination-link tag values
+//                    String key = bean.getChildBean("ejb-name")[0].getText();
+//                    String value = "";
+//                    if (bean.getChildBean("message-destination-link").length > 0) // NOI18N
+//                        value = bean.getChildBean("message-destination-link")[0].getText();
+//                    beanMap.put(key, value); // NOI18N
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return beanMap;
+//    }
     
-    /**
-     * Searches for the beans of the give type referring to the given mail service. 
-     * It returns the names for the beans found.
-     *
-     * @param resRefName searched mail service (res-ref-name tag value)
-     * @param root root bean to search from
-     * @param beanType type of bean to search for
-     *
-     * @return set of the names (ejb-name) of the beans refering to the resource-ref 
-     * with the same description and res-ref-name
-     */
-    private Set getRelevantBeansMailRef(String resRefName, DDBeanRoot root, BEAN_TYPE beanType) {
-        
-        Set beanNames = new HashSet();
-        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/" + beanType.getType()); // NOI18N
-        for (int i = 0; i < beans.length; i++) {
-            DDBean bean = beans[i];
-            DDBean[] resRefs = bean.getChildBean("resource-ref");
-            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
-                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
-                String[] types = resRefs[j].getText("res-type");     // NOI18N
-                if (names.length > 0 && types.length > 0 &&
-                    names[0].equals(resRefName) && "javax.mail.Session".equals(types[0])) { // NOI18N
-                    //store bean's ejb-name tag value
-                    beanNames.add(bean.getChildBean("ejb-name")[0].getText()); // NOI18N
-                    break;
-                }
-            }
-        }
-        
-        return beanNames;
-    }
+//    /**
+//     * Searches for the beans of the give type referring to the given mail service.
+//     * It returns the names for the beans found.
+//     *
+//     * @param resRefName searched mail service (res-ref-name tag value)
+//     * @param root root bean to search from
+//     * @param beanType type of bean to search for
+//     *
+//     * @return set of the names (ejb-name) of the beans refering to the resource-ref
+//     * with the same description and res-ref-name
+//     */
+//    private Set getRelevantBeansMailRef(String resRefName, DDBeanRoot root, BEAN_TYPE beanType) {
+//
+//        Set beanNames = new HashSet();
+//        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/" + beanType.getType()); // NOI18N
+//        for (int i = 0; i < beans.length; i++) {
+//            DDBean bean = beans[i];
+//            DDBean[] resRefs = bean.getChildBean("resource-ref");
+//            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
+//                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
+//                String[] types = resRefs[j].getText("res-type");     // NOI18N
+//                if (names.length > 0 && types.length > 0 &&
+//                    names[0].equals(resRefName) && "javax.mail.Session".equals(types[0])) { // NOI18N
+//                    //store bean's ejb-name tag value
+//                    beanNames.add(bean.getChildBean("ejb-name")[0].getText()); // NOI18N
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return beanNames;
+//    }
     
-    /**
-     * Searches for the message-driven beans referring to the given mail service. 
-     * It returns the names and message destination links for the beans found.
-     *
-     * @param resRefName searched res-ref-name tag value
-     * @param root root bean to search from
-     *
-     * @return map where the keys are the bean names (ejb-name) and 
-     * the values are the message destinations (message-destination-link)
-     */
-    private Map getRelevantMsgDrvBeansMailRef(String resRefName, DDBeanRoot root) {
-        
-        HashMap/*<String, String>*/ beanMap = new HashMap(); // maps ejb-name to message-destination-link
-        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/message-driven"); // NOI18N
-        for (int i = 0; i < beans.length; i++) {
-            DDBean bean = beans[i];
-            DDBean[] resRefs = bean.getChildBean("resource-ref");
-            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
-                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
-                String[] types = resRefs[j].getText("res-type");     // NOI18N
-                if (names.length > 0 && types.length > 0 &&
-                    names[0].equals(resRefName) && "javax.mail.Session".equals(types[0])) { // NOI18N
-                    //store bean's ejb-name and message-destination-link tag values
-                    String key = bean.getChildBean("ejb-name")[0].getText();
-                    String value = "";
-                    if (bean.getChildBean("message-destination-link").length > 0) // NOI18N
-                        value = bean.getChildBean("message-destination-link")[0].getText();
-                    beanMap.put(key, value); // NOI18N
-                    break;
-                }
-            }
-        }
-        
-        return beanMap;
-    }
+//    /**
+//     * Searches for the message-driven beans referring to the given mail service.
+//     * It returns the names and message destination links for the beans found.
+//     *
+//     * @param resRefName searched res-ref-name tag value
+//     * @param root root bean to search from
+//     *
+//     * @return map where the keys are the bean names (ejb-name) and
+//     * the values are the message destinations (message-destination-link)
+//     */
+//    private Map getRelevantMsgDrvBeansMailRef(String resRefName, DDBeanRoot root) {
+//
+//        HashMap/*<String, String>*/ beanMap = new HashMap(); // maps ejb-name to message-destination-link
+//        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/message-driven"); // NOI18N
+//        for (int i = 0; i < beans.length; i++) {
+//            DDBean bean = beans[i];
+//            DDBean[] resRefs = bean.getChildBean("resource-ref");
+//            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
+//                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
+//                String[] types = resRefs[j].getText("res-type");     // NOI18N
+//                if (names.length > 0 && types.length > 0 &&
+//                    names[0].equals(resRefName) && "javax.mail.Session".equals(types[0])) { // NOI18N
+//                    //store bean's ejb-name and message-destination-link tag values
+//                    String key = bean.getChildBean("ejb-name")[0].getText();
+//                    String value = "";
+//                    if (bean.getChildBean("message-destination-link").length > 0) // NOI18N
+//                        value = bean.getChildBean("message-destination-link")[0].getText();
+//                    beanMap.put(key, value); // NOI18N
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return beanMap;
+//    }
     
-    /**
-     * Searches for the beans of the given type referring to the given connection factory. 
-     * It returns the names for the beans found.
-     *
-     * @param resRefName searched connection factory (res-ref-name tag value)
-     * @param root root bean to search from
-     * @param beanType type of bean to search for
-     *
-     * @return set of the names (ejb-name) of the beans refering to the resource-ref 
-     * with the same res-ref-name
-     */
-    private Set getRelevantBeansConnectionFactoryRef(String resRefName, DDBeanRoot root, BEAN_TYPE beanType) {
-        
-        Set beanNames = new HashSet();
-        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/" + beanType.getType()); // NOI18N
-        for (int i = 0; i < beans.length; i++) {
-            DDBean bean = beans[i];
-            DDBean[] resRefs = bean.getChildBean("resource-ref");
-            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
-                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
-                String[] types = resRefs[j].getText("res-type");     // NOI18N
-                if (names.length > 0 && types.length > 0 &&
-                    names[0].equals(resRefName) && "javax.jms.ConnectionFactory".equals(types[0])) { // NOI18N
-                    //store bean's ejb-name tag value
-                    beanNames.add(bean.getChildBean("ejb-name")[0].getText()); // NOI18N
-                    break;
-                }
-            }
-        }
-        
-        return beanNames;
-    }
+//    /**
+//     * Searches for the beans of the given type referring to the given connection factory.
+//     * It returns the names for the beans found.
+//     *
+//     * @param resRefName searched connection factory (res-ref-name tag value)
+//     * @param root root bean to search from
+//     * @param beanType type of bean to search for
+//     *
+//     * @return set of the names (ejb-name) of the beans refering to the resource-ref
+//     * with the same res-ref-name
+//     */
+//    private Set getRelevantBeansConnectionFactoryRef(String resRefName, DDBeanRoot root, BEAN_TYPE beanType) {
+//
+//        Set beanNames = new HashSet();
+//        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/" + beanType.getType()); // NOI18N
+//        for (int i = 0; i < beans.length; i++) {
+//            DDBean bean = beans[i];
+//            DDBean[] resRefs = bean.getChildBean("resource-ref");
+//            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
+//                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
+//                String[] types = resRefs[j].getText("res-type");     // NOI18N
+//                if (names.length > 0 && types.length > 0 &&
+//                    names[0].equals(resRefName) && "javax.jms.ConnectionFactory".equals(types[0])) { // NOI18N
+//                    //store bean's ejb-name tag value
+//                    beanNames.add(bean.getChildBean("ejb-name")[0].getText()); // NOI18N
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return beanNames;
+//    }
 
-    /**
-     * Searches for the message-driven beans referring to the given connection factory. 
-     * It returns the names and message destination links for the beans found.
-     *
-     * @param resRefName searched res-ref-name tag value
-     * @param root root bean to search from
-     *
-     * @return map where the keys are the bean names (ejb-name) and 
-     * the values are the message destinations (message-destination-link)
-     */
-    private Map getRelevantMsgDrvBeansConnectionFactoryRef(String resRefName, DDBeanRoot root) {
-        
-        HashMap/*<String, String>*/ beanMap = new HashMap(); // maps ejb-name to message-destination-link
-        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/message-driven"); // NOI18N
-        for (int i = 0; i < beans.length; i++) {
-            DDBean bean = beans[i];
-            DDBean[] resRefs = bean.getChildBean("resource-ref");
-            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
-                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
-                String[] types = resRefs[j].getText("res-type");     // NOI18N
-                if (names.length > 0 && types.length > 0 &&
-                    names[0].equals(resRefName) && "javax.jms.ConnectionFactory".equals(types[0])) { // NOI18N
-                    //store bean's ejb-name and message-destination-link tag values
-                    String key = bean.getChildBean("ejb-name")[0].getText();
-                    String value = "";
-                    if (bean.getChildBean("message-destination-link").length > 0) // NOI18N
-                        value = bean.getChildBean("message-destination-link")[0].getText();
-                    beanMap.put(key, value); // NOI18N
-                    break;
-                }
-            }
-        }
-        
-        return beanMap;
-    }
+//    /**
+//     * Searches for the message-driven beans referring to the given connection factory.
+//     * It returns the names and message destination links for the beans found.
+//     *
+//     * @param resRefName searched res-ref-name tag value
+//     * @param root root bean to search from
+//     *
+//     * @return map where the keys are the bean names (ejb-name) and
+//     * the values are the message destinations (message-destination-link)
+//     */
+//    private Map getRelevantMsgDrvBeansConnectionFactoryRef(String resRefName, DDBeanRoot root) {
+//
+//        HashMap/*<String, String>*/ beanMap = new HashMap(); // maps ejb-name to message-destination-link
+//        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/message-driven"); // NOI18N
+//        for (int i = 0; i < beans.length; i++) {
+//            DDBean bean = beans[i];
+//            DDBean[] resRefs = bean.getChildBean("resource-ref");
+//            for (int j = 0; resRefs != null && j < resRefs.length; j++) {
+//                String[] names = resRefs[j].getText("res-ref-name"); // NOI18N
+//                String[] types = resRefs[j].getText("res-type");     // NOI18N
+//                if (names.length > 0 && types.length > 0 &&
+//                    names[0].equals(resRefName) && "javax.jms.ConnectionFactory".equals(types[0])) { // NOI18N
+//                    //store bean's ejb-name and message-destination-link tag values
+//                    String key = bean.getChildBean("ejb-name")[0].getText();
+//                    String value = "";
+//                    if (bean.getChildBean("message-destination-link").length > 0) // NOI18N
+//                        value = bean.getChildBean("message-destination-link")[0].getText();
+//                    beanMap.put(key, value); // NOI18N
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return beanMap;
+//    }
     
-    /**
-     * @param msgDestRefName searched message-destination-ref tag value
-     * @param root root bean to search from
-     * @param beanType type of bean to search for
-     *
-     * @return set of the names (ejb-name) of the beans refering to the message-destination-ref 
-     * with the same message-destination-ref-name
-     */
-    private Set getRelevantBeansMsgDestRef(String msgDestRefName, DDBeanRoot root, BEAN_TYPE beanType) {
-        
-        Set beanNames = new HashSet();
-        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/" + beanType.getType()); // NOI18N
-        for (int i = 0; i < beans.length; i++) {
-            DDBean bean = beans[i];
-            DDBean[] msgDestRefs = bean.getChildBean("message-destination-ref"); // NOI18N
-            for (int j = 0; msgDestRefs != null && j < msgDestRefs.length; j++) {
-                String[] names = msgDestRefs[j].getText("message-destination-ref-name"); // NOI18N
-                if (names.length > 0 && names[0].equals(msgDestRefName)) {
-                    //store bean's ejb-name tag value
-                    beanNames.add(bean.getChildBean("ejb-name")[0].getText()); // NOI18N
-                    break;
-                }
-            }
-        }
-        
-        return beanNames;
-    }
+//    /**
+//     * @param msgDestRefName searched message-destination-ref tag value
+//     * @param root root bean to search from
+//     * @param beanType type of bean to search for
+//     *
+//     * @return set of the names (ejb-name) of the beans refering to the message-destination-ref
+//     * with the same message-destination-ref-name
+//     */
+//    private Set getRelevantBeansMsgDestRef(String msgDestRefName, DDBeanRoot root, BEAN_TYPE beanType) {
+//
+//        Set beanNames = new HashSet();
+//        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/" + beanType.getType()); // NOI18N
+//        for (int i = 0; i < beans.length; i++) {
+//            DDBean bean = beans[i];
+//            DDBean[] msgDestRefs = bean.getChildBean("message-destination-ref"); // NOI18N
+//            for (int j = 0; msgDestRefs != null && j < msgDestRefs.length; j++) {
+//                String[] names = msgDestRefs[j].getText("message-destination-ref-name"); // NOI18N
+//                if (names.length > 0 && names[0].equals(msgDestRefName)) {
+//                    //store bean's ejb-name tag value
+//                    beanNames.add(bean.getChildBean("ejb-name")[0].getText()); // NOI18N
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return beanNames;
+//    }
     
-    /**
-     * @param msgDestRefName searched message-destination-ref tag value
-     * @param root root bean to search from
-     * @param beanType type of bean to search for
-     *
-     * @return set of the names (ejb-name) of the beans refering to the message-destination-ref 
-     * with the same message-destination-ref-name
-     */
-    private Map getRelevantMsgDrvBeansMsgDestRef(String msgDestRefName, DDBeanRoot root) {
-        
-        HashMap/*<String, String>*/ beanMap = new HashMap(); // maps ejb-name to message-destination-link
-        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/message-driven"); // NOI18N
-        for (int i = 0; i < beans.length; i++) {
-            DDBean bean = beans[i];
-            DDBean[] msgDestRefs = bean.getChildBean("message-destination-ref"); // NOI18N
-            for (int j = 0; msgDestRefs != null && j < msgDestRefs.length; j++) {
-                String[] names = msgDestRefs[j].getText("message-destination-ref-name"); // NOI18N
-                if (names.length > 0 && names[0].equals(msgDestRefName)) {
-                    //store bean's ejb-name tag value
-                    String key = bean.getChildBean("ejb-name")[0].getText();
-                    String value = "";
-                    if (bean.getChildBean("message-destination-link").length > 0) // NOI18N
-                        value = bean.getChildBean("message-destination-link")[0].getText();
-                    beanMap.put(key, value); // NOI18N
-                    break;
-                }
-            }
-        }
-        
-        return beanMap;
-    }
+//    /**
+//     * @param msgDestRefName searched message-destination-ref tag value
+//     * @param root root bean to search from
+//     * @param beanType type of bean to search for
+//     *
+//     * @return set of the names (ejb-name) of the beans refering to the message-destination-ref
+//     * with the same message-destination-ref-name
+//     */
+//    private Map getRelevantMsgDrvBeansMsgDestRef(String msgDestRefName, DDBeanRoot root) {
+//
+//        HashMap/*<String, String>*/ beanMap = new HashMap(); // maps ejb-name to message-destination-link
+//        DDBean[] beans = root.getChildBean("/ejb-jar/enterprise-beans/message-driven"); // NOI18N
+//        for (int i = 0; i < beans.length; i++) {
+//            DDBean bean = beans[i];
+//            DDBean[] msgDestRefs = bean.getChildBean("message-destination-ref"); // NOI18N
+//            for (int j = 0; msgDestRefs != null && j < msgDestRefs.length; j++) {
+//                String[] names = msgDestRefs[j].getText("message-destination-ref-name"); // NOI18N
+//                if (names.length > 0 && names[0].equals(msgDestRefName)) {
+//                    //store bean's ejb-name tag value
+//                    String key = bean.getChildBean("ejb-name")[0].getText();
+//                    String value = "";
+//                    if (bean.getChildBean("message-destination-link").length > 0) // NOI18N
+//                        value = bean.getChildBean("message-destination-link")[0].getText();
+//                    beanMap.put(key, value); // NOI18N
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return beanMap;
+//    }
 
     public void bindDatasourceReferenceForEjb(String ejbName, String ejbType, 
             String referenceName, String jndiName) throws ConfigurationException {
@@ -908,41 +908,41 @@ implements ModuleConfiguration, DatasourceConfiguration, DeploymentPlanConfigura
         });
     }
 
-    /**
-     * Add a new mail service reference to the beans of the given type without it.
-     * 
-     * @param resRefName mail service reference name
-     * @param beanNames the beans (ejb-name value) which might need to add mail service reference specified by resRefName
-     * @param beanType type of bean to add mail service reference to
-     */
-    private void addMailReference(final String resRefName, final Set beanNames, final BEAN_TYPE beanType) 
-    throws ConfigurationException 
-    {
-        modifyJboss(new JbossModifier() {
-           public void modify(Jboss modifiedJboss) {
-               String jndiName = MAIL_SERVICE_JNDI_NAME_JB4;
-               JBossDataSourceRefModifier.modify(modifiedJboss, resRefName, beanNames, beanType, jndiName);
-           }
-        });
-    }
+//    /**
+//     * Add a new mail service reference to the beans of the given type without it.
+//     *
+//     * @param resRefName mail service reference name
+//     * @param beanNames the beans (ejb-name value) which might need to add mail service reference specified by resRefName
+//     * @param beanType type of bean to add mail service reference to
+//     */
+//    private void addMailReference(final String resRefName, final Set beanNames, final BEAN_TYPE beanType)
+//    throws ConfigurationException
+//    {
+//        modifyJboss(new JbossModifier() {
+//           public void modify(Jboss modifiedJboss) {
+//               String jndiName = MAIL_SERVICE_JNDI_NAME_JB4;
+//               JBossDataSourceRefModifier.modify(modifiedJboss, resRefName, beanNames, beanType, jndiName);
+//           }
+//        });
+//    }
 
-    /**
-     * Add a new mail service reference to the message-driven beans without it.
-     * 
-     * @param resRefName mail service reference name
-     * @param beans the bean names (ejb-name) mapped to the message destinations (message-destination-link)
-     * which might need to add mail service reference specified by resRefName
-     */
-    private void addMsgDrvMailReference(final String resRefName, final Map beans) 
-    throws ConfigurationException 
-    {
-        modifyJboss(new JbossModifier() {
-           public void modify(Jboss modifiedJboss) {
-               String jndiName = MAIL_SERVICE_JNDI_NAME_JB4;
-               JBossDataSourceRefModifier.modifyMsgDrv(modifiedJboss, resRefName, beans, jndiName);
-           }
-        });
-    }
+//    /**
+//     * Add a new mail service reference to the message-driven beans without it.
+//     *
+//     * @param resRefName mail service reference name
+//     * @param beans the bean names (ejb-name) mapped to the message destinations (message-destination-link)
+//     * which might need to add mail service reference specified by resRefName
+//     */
+//    private void addMsgDrvMailReference(final String resRefName, final Map beans)
+//    throws ConfigurationException
+//    {
+//        modifyJboss(new JbossModifier() {
+//           public void modify(Jboss modifiedJboss) {
+//               String jndiName = MAIL_SERVICE_JNDI_NAME_JB4;
+//               JBossDataSourceRefModifier.modifyMsgDrv(modifiedJboss, resRefName, beans, jndiName);
+//           }
+//        });
+//    }
 
     public void bindMdbToMessageDestination(String mdbName, String name, MessageDestination.Type type) throws ConfigurationException {
     

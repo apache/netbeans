@@ -263,16 +263,16 @@ public class ColorsManager {
         }
     }
     
-    private static List<AttributeSet> getColors(Language l, ResourceBundle bundle) {
-        List<Feature> list = l.getFeatureList ().getFeatures("COLORS");
-        List<AttributeSet> result = new ArrayList<AttributeSet> ();
-        Iterator<Feature> it = list.iterator();
-        while (it.hasNext()) {
-            Feature f = it.next();
-            result.add(createColoring(f, bundle));
-        }
-        return result;
-    }
+//    private static List<AttributeSet> getColors(Language l, ResourceBundle bundle) {
+//        List<Feature> list = l.getFeatureList ().getFeatures("COLORS");
+//        List<AttributeSet> result = new ArrayList<AttributeSet> ();
+//        Iterator<Feature> it = list.iterator();
+//        while (it.hasNext()) {
+//            Feature f = it.next();
+//            result.add(createColoring(f, bundle));
+//        }
+//        return result;
+//    }
     
     static SimpleAttributeSet createColoring(Feature f, ResourceBundle bundle) {
         String colorName = (String) f.getValue("color_name");
@@ -406,30 +406,30 @@ public class ColorsManager {
     //        return colorsMap;
     //    }
     
-    private static void addColor(
-            String tokenType,
-            SimpleAttributeSet sas,
-            Map<String,AttributeSet> colorsMap,
-            Map<String,AttributeSet> defaultsMap
-            ) {
-        if (sas == null)
-            sas = new SimpleAttributeSet();
-        else
-            sas = new SimpleAttributeSet(sas);
-        String colorName = (String) sas.getAttribute(StyleConstants.NameAttribute);
-        if (colorName == null)
-            colorName = tokenType;
-        sas.addAttribute(StyleConstants.NameAttribute, colorName);
-        sas.addAttribute(EditorStyleConstants.DisplayName, colorName);
-        if (!sas.isDefined(EditorStyleConstants.Default)) {
-            String def = colorName;
-            int i = def.lastIndexOf('_');
-            if (i > 0) def = def.substring(i + 1);
-            if (defaultsMap.containsKey(def))
-                sas.addAttribute(EditorStyleConstants.Default, def);
-        }
-        colorsMap.put(colorName, sas);
-    }
+//    private static void addColor(
+//            String tokenType,
+//            SimpleAttributeSet sas,
+//            Map<String,AttributeSet> colorsMap,
+//            Map<String,AttributeSet> defaultsMap
+//            ) {
+//        if (sas == null)
+//            sas = new SimpleAttributeSet();
+//        else
+//            sas = new SimpleAttributeSet(sas);
+//        String colorName = (String) sas.getAttribute(StyleConstants.NameAttribute);
+//        if (colorName == null)
+//            colorName = tokenType;
+//        sas.addAttribute(StyleConstants.NameAttribute, colorName);
+//        sas.addAttribute(EditorStyleConstants.DisplayName, colorName);
+//        if (!sas.isDefined(EditorStyleConstants.Default)) {
+//            String def = colorName;
+//            int i = def.lastIndexOf('_');
+//            if (i > 0) def = def.substring(i + 1);
+//            if (defaultsMap.containsKey(def))
+//                sas.addAttribute(EditorStyleConstants.Default, def);
+//        }
+//        colorsMap.put(colorName, sas);
+//    }
     
     private static Map<String,AttributeSet> getDefaultColors() {
         Collection<AttributeSet> defaults = EditorSettings.getDefault().
@@ -446,22 +446,22 @@ public class ColorsManager {
         return defaultsMap;
     }
     
-    private static Map getCurrentColors(Language l) {
-        // current colors
-        FontColorSettingsFactory fcsf = EditorSettings.getDefault().
-                getFontColorSettings(new String[] {l.getMimeType()});
-        Collection<AttributeSet> colors = fcsf.getAllFontColors("NetBeans");
-        Map<String,AttributeSet> colorsMap = new HashMap<String,AttributeSet> ();
-        Iterator<AttributeSet> it = colors.iterator();
-        while (it.hasNext()) {
-            AttributeSet as = it.next();
-            colorsMap.put(
-                    (String) as.getAttribute(StyleConstants.NameAttribute),
-                    as
-                    );
-        }
-        return colorsMap;
-    }
+//    private static Map getCurrentColors(Language l) {
+//        // current colors
+//        FontColorSettingsFactory fcsf = EditorSettings.getDefault().
+//                getFontColorSettings(new String[] {l.getMimeType()});
+//        Collection<AttributeSet> colors = fcsf.getAllFontColors("NetBeans");
+//        Map<String,AttributeSet> colorsMap = new HashMap<String,AttributeSet> ();
+//        Iterator<AttributeSet> it = colors.iterator();
+//        while (it.hasNext()) {
+//            AttributeSet as = it.next();
+//            colorsMap.put(
+//                    (String) as.getAttribute(StyleConstants.NameAttribute),
+//                    as
+//                    );
+//        }
+//        return colorsMap;
+//    }
     
     private static String getBundleName(Language l) {
         FileSystem fs = Repository.getDefault().getDefaultFileSystem();

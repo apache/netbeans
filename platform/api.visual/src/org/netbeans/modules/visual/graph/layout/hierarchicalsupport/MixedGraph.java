@@ -129,19 +129,19 @@ public class MixedGraph<N, E> {
         return vertex;
     }
 
-    /**
-     *
-     *
-     */
-    private void printGraph() {
-        for (Vertex<?> v : getVertices()) {
-            System.out.println("vertex = " + v);
-            Collection<Vertex<?>> vertices = v.getNeighbors() ;
-            for (Vertex<?> nv : vertices) {
-                System.out.println("\tneighbor = " + nv);
-            }
-        }
-    }
+//    /**
+//     *
+//     *
+//     */
+//    private void printGraph() {
+//        for (Vertex<?> v : getVertices()) {
+//            System.out.println("vertex = " + v);
+//            Collection<Vertex<?>> vertices = v.getNeighbors() ;
+//            for (Vertex<?> nv : vertices) {
+//                System.out.println("\tneighbor = " + nv);
+//            }
+//        }
+//    }
 
     /**
      *

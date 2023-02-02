@@ -514,14 +514,14 @@ public class WLInstantiatingIterator  implements WizardDescriptor.InstantiatingI
         listeners.add(listener);
     }
 
-    /**
-     * Notifies all the listeners of the supplied event
-     *
-     * @param event the event to be passed to the listeners
-     */
-    private void fireChangeEvent(ChangeEvent event) {
-        for (ChangeListener l : listeners) {
-            l.stateChanged(event);
-        }
-    }
+//    /**
+//     * Notifies all the listeners of the supplied event
+//     *
+//     * @param event the event to be passed to the listeners
+//     */
+//    private void fireChangeEvent(ChangeEvent event) {
+//        for (ChangeListener l : listeners) {
+//            l.stateChanged(event);
+//        }
+//    }
 }

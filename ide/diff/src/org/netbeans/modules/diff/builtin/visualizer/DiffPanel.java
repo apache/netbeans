@@ -286,14 +286,14 @@ public class DiffPanel extends javax.swing.JPanel implements javax.swing.event.C
   }
    */
   
-    private void jScrollBar1AdjustmentValueChanged (java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_jScrollBar1AdjustmentValueChanged
-        // Add your handling code here:
-    }//GEN-LAST:event_jScrollBar1AdjustmentValueChanged
+//    private void jScrollBar1AdjustmentValueChanged (java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_jScrollBar1AdjustmentValueChanged
+//        // Add your handling code here:
+//    }//GEN-LAST:event_jScrollBar1AdjustmentValueChanged
 
-    private void closeButtonActionPerformed (java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        // Add your handling code here:
-        exitForm(null);
-    }//GEN-LAST:event_closeButtonActionPerformed
+//    private void closeButtonActionPerformed (java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+//        // Add your handling code here:
+//        exitForm(null);
+//    }//GEN-LAST:event_closeButtonActionPerformed
 
     /** Exit the Application */
     private void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm

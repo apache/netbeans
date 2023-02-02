@@ -287,15 +287,15 @@ public final class HttpServerSettings {
         return new HelpCtx (HttpServerSettings.class);
     }
 
-    /** Returns string for localhost */
-    private String getLocalHost() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        }
-        catch (UnknownHostException e) {
-            return "localhost"; // NOI18N
-        }
-    }
+//    /** Returns string for localhost */
+//    private String getLocalHost() {
+//        try {
+//            return InetAddress.getLocalHost().getHostName();
+//        }
+//        catch (UnknownHostException e) {
+//            return "localhost"; // NOI18N
+//        }
+//    }
 
     public void addGrantAccessListener(GrantAccessListener l) {
         listenerList.add(GrantAccessListener.class, l);

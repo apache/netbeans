@@ -223,24 +223,24 @@ public final class ConnectionWidgetLayout implements Layout {
         childWidget.resolveBounds (new Point (linePoint.x - referencePoint.x, linePoint.y - referencePoint.y), preferredBounds);
     }
 
-    private ConnectionWidgetLayoutAlignment getAdjustedHorizontalAlignment (ConnectionWidgetLayoutAlignment adjustedAlignment) {
-        switch (adjustedAlignment) {
-            case TOP_LEFT:
-            case CENTER_LEFT:
-            case BOTTOM_LEFT:
-                return ConnectionWidgetLayoutAlignment.CENTER_LEFT;
-            case TOP_RIGHT:
-            case CENTER_RIGHT:
-            case BOTTOM_RIGHT:
-                return ConnectionWidgetLayoutAlignment.CENTER_RIGHT;
-            case TOP_CENTER:
-            case CENTER:
-            case BOTTOM_CENTER:
-                return ConnectionWidgetLayoutAlignment.CENTER;
-            default:
-                return ConnectionWidgetLayoutAlignment.NONE;
-        }
-    }
+//    private ConnectionWidgetLayoutAlignment getAdjustedHorizontalAlignment (ConnectionWidgetLayoutAlignment adjustedAlignment) {
+//        switch (adjustedAlignment) {
+//            case TOP_LEFT:
+//            case CENTER_LEFT:
+//            case BOTTOM_LEFT:
+//                return ConnectionWidgetLayoutAlignment.CENTER_LEFT;
+//            case TOP_RIGHT:
+//            case CENTER_RIGHT:
+//            case BOTTOM_RIGHT:
+//                return ConnectionWidgetLayoutAlignment.CENTER_RIGHT;
+//            case TOP_CENTER:
+//            case CENTER:
+//            case BOTTOM_CENTER:
+//                return ConnectionWidgetLayoutAlignment.CENTER;
+//            default:
+//                return ConnectionWidgetLayoutAlignment.NONE;
+//        }
+//    }
     
     private Point getReferencePointForAdjustedAlignment (ConnectionWidgetLayoutAlignment adjustedAlignment, Rectangle rectangle) {
         switch (adjustedAlignment) {

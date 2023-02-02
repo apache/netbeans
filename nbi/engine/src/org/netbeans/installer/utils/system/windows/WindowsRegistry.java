@@ -873,7 +873,7 @@ public class WindowsRegistry {
     }
     
     // native declarations //////////////////////////////////////////////////////
-    private native boolean keyExists0(int mode, int section, String key) throws NativeException;
+//    private native boolean keyExists0(int mode, int section, String key) throws NativeException;
     
     private native boolean valueExists0(int mode, int section, String key, String value) throws NativeException;
     

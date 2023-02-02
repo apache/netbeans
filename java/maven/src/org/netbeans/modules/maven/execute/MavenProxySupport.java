@@ -589,13 +589,13 @@ public class MavenProxySupport {
 
     @NbBundle.Messages({
         "TITLE_MavenProxyMismatch=Possible Network Proxy Issue",
-        "# {0} - gradle proxy",
-        "MSG_ProxyMisconfiguredDirect=Maven is configured for a proxy {0}, but the system does not require a proxy for network connections. Proxy settings should be removed from user gradle.properties.",
+        "# {0} - maven proxy",
+        "MSG_ProxyMisconfiguredDirect=Maven is configured for a proxy {0}, but the system does not require a proxy for network connections. Proxy settings should be removed from maven settings.xml.",
         "# {0} - system proxy",
-        "MSG_ProxyMisconfiguredMissing=Maven is not configured to use a network proxy, but the proxy {0} seems to be required for network communication. User gradle.properties should be updated to specify a proxy.",
+        "MSG_ProxyMisconfiguredMissing=Maven is not configured to use a network proxy, but the proxy {0} seems to be required for network communication. Maven settings.xml should be updated to specify a proxy.",
         "# {0} - system proxy",
-        "# {1} - gradle proxy",
-        "MSG_ProxyMisconfiguredOther=Maven is configured to use a network proxy {1}, but the proxy {0} seems to be required for network communication. Proxy settings should be updated in user gradle.properties.",
+        "# {1} - maven proxy",
+        "MSG_ProxyMisconfiguredOther=Maven is configured to use a network proxy {1}, but the proxy {0} seems to be required for network communication. Proxy settings should be updated in maven settings.xml.",
         "MSG_AppendAskUpdate=\nUpdate Maven configuration ? Choose \"Override\" to apply detected proxy only to IDE operations.",
         "MSG_AppendAskUpdate2=\nUpdate Maven configuration ?",
         "ACTION_Override=Override",

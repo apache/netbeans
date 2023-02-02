@@ -47,7 +47,7 @@ import org.openide.windows.TopComponent;
 @MIMEResolver.ExtensionRegistration(displayName = "#GoResolver",
     extension = "go",
     mimeType = GoLanguage.MIME_TYPE,
-    position = 286
+    position = 315
 )
 
 @ActionReferences({

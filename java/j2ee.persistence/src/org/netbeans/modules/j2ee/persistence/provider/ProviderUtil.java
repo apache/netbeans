@@ -96,7 +96,7 @@ public class ProviderUtil {
      * @param providerClass the FQN of the class that specifies the persistence provider.
      *
      * @return the provider that the given providerClass represents or null if it was
-     * an empty string and the project doesn't suppport a default (container managed)
+     * an empty string and the project doesn't support a default (container managed)
      * persistence provider.
      */
     public static Provider getProvider(String providerClass, Project project) {
@@ -131,7 +131,7 @@ public class ProviderUtil {
 
     }
 
-    /*
+    /**
      * Gets the default persistence provider of the target server
      * of the given <code>project</code>.
      *
@@ -161,8 +161,8 @@ public class ProviderUtil {
      * @param pu the persistence unit whose database connection is to 
      * be retrieved; must not be null.
      * 
-     * @return the connection specified in the given persistence unit or
-     * <code>null</code> if it didn't specify a connectioh.
+     * @rerturn the connection specified in the given persistence unit or
+     * <code>null</code> if it didn't specify a connection.
      * 
      */
     public static DatabaseConnection getConnection(PersistenceUnit pu) {
@@ -206,14 +206,14 @@ public class ProviderUtil {
         return null;
     }
     /**
-     * Gets the database connection properties (irl,name,password) specified in the given persistence
+     * Gets the database connection properties (url,name,password) specified in the given persistence
      * unit.
      * 
      * @param pu the persistence unit whose database connection is to 
      * be retrieved; must not be null.
      * 
-     * @return the connection properties specified in the given persistence unit or
-     * <code>null</code> if it didn't specify a connectioh.
+     * @rerturn the connection properties specified in the given persistence unit or
+     * <code>null</code> if it didn't specify a connection.
      * 
      */
     public static HashMap<String, String> getConnectionProperties(PersistenceUnit pu) {
@@ -415,8 +415,8 @@ public class ProviderUtil {
      * @param connection the database connections whose properties are to be set. Must
      * not be null.
      * @param provider it's persistence provider,  most database connection properties are 
-     * based on provider supported properties, if null profider is received from provider class from persistence unit.
-     * it's better to pass provider as differnt providers may have the same provider class.
+     * based on provider supported properties, if null provider is received from provider class from persistence unit.
+     * it's better to pass provider as different providers may have the same provider class.
      */
     public static void setDatabaseConnection(PersistenceUnit persistenceUnit, Provider provider, DatabaseConnection connection) {
 
@@ -660,7 +660,7 @@ public class ProviderUtil {
      * Gets the persistence units that are defined in the given <code>
      * puDataObject</code>.
      * 
-     * @param puDataObject the PUDataObject whose persistence units are to be retrived.
+     * @param puDataObject the PUDataObject whose persistence units are to be retrieved.
      * 
      * @return the persistence units specified in the given <code>puDataObject</code>
      * or an empty array if there were no persistence units defined in it.
@@ -715,7 +715,7 @@ public class ProviderUtil {
     }
 
     /**
-     * Adds the given <code>persistenceUnit</code> to the <code>PUDataObject<code>
+     * Adds the given <code>persistenceUnit</code> to the <code>PUDataObject</code>
      *  of the given <code>project</code> and saves it.
      * @param persistenceUnit the unit to be added
      * @param project the project to which the unit is to be added.
@@ -727,7 +727,7 @@ public class ProviderUtil {
     }
 
     /**
-     * Adds the given <code>persistenceUnit</code> to the <code>PUDataObject<code>
+     * Adds the given <code>persistenceUnit</code> to the <code>PUDataObject</code>
      *  of the given <code>project</code>'s <code>root</code> and saves it.
      * @param persistenceUnit the unit to be added
      * @param project the project to which the unit is to be added.
@@ -751,7 +751,7 @@ public class ProviderUtil {
     /**
      *Gets the <code>PUDataObject</code> associated with the given <code>fo</code>.
      * 
-     *@param fo the file object thas has an associated <code>PUDataObject</code>. Must
+     *@param fo the file object that has an associated <code>PUDataObject</code>. Must
      * not be null.
      * 
      *@return the <code>PUDataObject</code> associated with the given <code>fo</code>.

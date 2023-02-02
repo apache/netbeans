@@ -147,23 +147,24 @@ public class PersistenceUnitWizard implements WizardDescriptor.ProgressInstantia
         String modelGenLib = null;
         Provider selectedProvider = null;
         boolean libIsAdded = false;//used to check if lib was added to compile classpath
-        if (descriptor.isContainerManaged()) {
-            selectedProvider=descriptor.getSelectedProvider();
-            if (descriptor.isNonDefaultProviderEnabled()) {
+        if (descriptor.isContainerManaged()) {    
+            selectedProvider=descriptor.getSelectedProvider();            
+            if (descriptor.isNonDefaultProviderEnabled()) {          
+                // TODO: If server support selected provider do not search in lib
                 lib = PersistenceLibrarySupport.getLibrary(selectedProvider);
-                if (lib != null && !Util.isDefaultProvider(project, selectedProvider)) {
+                if (lib != null && !Util.isDefaultProvider(project, selectedProvider)) {      
                     handle.progress(NbBundle.getMessage(PersistenceUnitWizard.class, "MSG_LoadLibs"));
                     Util.addLibraryToProject(project, lib);
                     modelGenLib = lib.getName()+"modelgen";//NOI18N
                     selectedProvider = null;//to avoid one more library addition
-                    libIsAdded = true;
+                    libIsAdded = true; 
                 }
             }
             if(selectedProvider != null && selectedProvider.getAnnotationProcessor() != null){
                 if(lib == null)lib = PersistenceLibrarySupport.getLibrary(selectedProvider);
                 if (lib != null){
                     Util.addLibraryToProject(project, lib, JavaClassPathConstants.PROCESSOR_PATH);
-                    modelGenLib = lib.getName()+"modelgen";//NOI18N
+                    modelGenLib = lib.getName()+"modelgen";//NOI18N    
                 }
             }
         } else {
@@ -177,12 +178,15 @@ public class PersistenceUnitWizard implements WizardDescriptor.ProgressInstantia
             JDBCDriver[] driver = JDBCDriverManager.getDefault().getDrivers(descriptor.getPersistenceConnection().getDriverClass());
             PersistenceLibrarySupport.addDriver(project, driver[0]);
         }
+        
         handle.progress(NbBundle.getMessage(PersistenceUnitWizard.class, "MSG_CreatePU"));
-        String version = (lib!=null && libIsAdded) ? PersistenceUtils.getJPAVersion(lib) : PersistenceUtils.getJPAVersion(project);//use project provided api and avoid use of unsupported features this way
-        //
+        String version = (lib != null && libIsAdded) 
+                ? PersistenceUtils.getJPAVersion(lib) 
+                : PersistenceUtils.getJPAVersion(project); // use project provided api and avoid use of unsupported features this way
+        
         if (selectedProvider != null && version != null) {
             String provVersion = ProviderUtil.getVersion(selectedProvider);
-            if (provVersion != null) {
+            if (provVersion != null) {       
                 //even if project support jpa 2.x etc, but selected provider is reported as jpa1.0 use jpa1.0
                 if (Double.parseDouble(version) > Double.parseDouble(provVersion)) {
                     version = provVersion;

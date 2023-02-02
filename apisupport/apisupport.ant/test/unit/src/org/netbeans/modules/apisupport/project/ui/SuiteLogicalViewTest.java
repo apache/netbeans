@@ -138,12 +138,4 @@ public class SuiteLogicalViewTest extends TestBase {
         EventQueue.invokeAndWait(new Runnable() { public void run() {} });
     }
     
-    private void flushRequestProcessor() {
-        RequestProcessor.getDefault().post(new Runnable() {
-            public void run() {
-                // flush
-            }
-        }).waitFinished();
-    }
-    
 }

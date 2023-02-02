@@ -532,17 +532,6 @@ public class GenerateJNLPApplicationTest extends TestBase {
 //            fail("There should be at least one jnlp entry");
 //        }
 //    }
-    
-    private static String readFile(final FileObject fo) throws IOException, FileNotFoundException {
-        // write user modified version of the file
-        byte[] arr = new byte[(int)fo.getSize()];
-        InputStream is = fo.getInputStream();
-        int len = is.read(arr);
-        assertEquals("Read all", arr.length, len);
-        String s = new String(arr);
-        is.close();
-        return s;
-    }
 
     private void copyFiles(File from, File to) throws IOException {
         LOG.fine("Copy " + from + " to " + to);
@@ -566,23 +555,5 @@ public class GenerateJNLPApplicationTest extends TestBase {
             os.close();
         }
         
-    }
-    
-    private File createNewJarFile (String prefix) throws IOException {
-        if (prefix == null) {
-            prefix = "modules";
-        }
-        
-        File dir = new File(this.getWorkDir(), prefix);
-        dir.mkdirs();
-        
-        int i = 0;
-        for (;;) {
-            File f = new File (dir, i++ + ".jar");
-            if (!f.exists ()) {
-                f.createNewFile();
-                return f;
-            }
-        }
     }
 }

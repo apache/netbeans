@@ -626,24 +626,6 @@ public final class WLPluginProperties {
         return result;
     }
 
-    private static boolean hasRequiredChildren(File candidate, Collection requiredChildren) {
-        if (null == candidate)
-            return false;
-        String[] children = candidate.list();
-        if (null == children)
-            return false;
-        if (null == requiredChildren)
-            return true;
-        Iterator iter = requiredChildren.iterator();
-        while (iter.hasNext()){
-            String next = (String)iter.next();
-            File test = new File(candidate.getPath()+File.separator+next);
-            if (!test.exists())
-                return false;
-        }
-        return true;
-    }
-
     public static final class JvmVendor {
 
         public static final JvmVendor ORACLE = new JvmVendor("Oracle", // NOI18N

@@ -237,20 +237,6 @@ public class RenameTest extends NbTestCase {
 //            app=" [ error: code is in guarded block ]";
 //        }
 //        return elm.getDisplayText()+app;
-//     }   
+//     }
 
-    private File writeToWorkDir(File resF, String name) throws IOException {
-       byte buff[] =  new byte[(int)resF.length()]; 
-       FileInputStream fis = new FileInputStream(resF);
-       File retF = new File(getWorkDir(),name);
-       FileOutputStream fos = new FileOutputStream(retF);
-       try {
-           fis.read(buff);
-           fos.write(buff);
-       } finally {
-           fis.close();
-           fos.close();
-       }
-       return retF; 
-    }  
 }

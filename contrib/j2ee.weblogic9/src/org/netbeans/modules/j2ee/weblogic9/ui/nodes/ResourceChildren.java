@@ -58,10 +58,5 @@ class ResourceChildren extends WLNodeChildren<ResourceNode> {
         return new ResourceNode(new LibrariesChildrenFactory(lookup), ResourceNodeType.LIBRARY,
                 NbBundle.getMessage(ResourceChildren.class, "LBL_Libraries"));   // NOI18N
     }
-    
-    private ResourceNode createTuxedoResources( Lookup lookup ){
-        return new ResourceNode ( new TuxedoChildren( lookup ) , 
-                ResourceNodeType.TUXEDO, 
-                    NbBundle.getMessage(ResourceChildren.class, "LBL_Interoperability"));   // NOI18N
-    }
+
 }

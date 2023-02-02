@@ -207,25 +207,7 @@ public class BuildZipDistributionTest extends TestBase {
 //            fail("There should be a * in\n" + Arrays.asList(args));
 //        }
     }
-    
-    private File createNewJarFile (String prefix) throws IOException {
-        if (prefix == null) {
-            prefix = "modules";
-        }
-        
-        File dir = new File(this.getWorkDir(), prefix);
-        dir.mkdirs();
-        
-        int i = 0;
-        for (;;) {
-            File f = new File (dir, i++ + ".jar");
-            if (!f.exists ()) {
-                f.createNewFile();
-                return f;
-            }
-        }
-    }
-    
+
     private void run(File nbexec, String... args) throws Exception {
 
         URL tu = MainCallback.class.getProtectionDomain().getCodeSource().getLocation();

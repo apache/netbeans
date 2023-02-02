@@ -45,16 +45,6 @@ public final class ExecutionSupport {
         return instance;
     }
 
-    private static ExecutionSupport forRuntime(GrailsPlatform runtime) {
-        if (runtime == null) {
-            throw new NullPointerException("Runtime is null"); // NOI18N
-        }
-        if (!runtime.isConfigured()) {
-            return null;
-        }
-        return new ExecutionSupport(runtime);
-    }
-
     // only for wizard
     public Callable<Process> createCreateApp(final File directory) {
         return new Callable<Process>() {

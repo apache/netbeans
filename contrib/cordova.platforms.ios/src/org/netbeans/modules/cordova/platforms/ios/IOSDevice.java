@@ -123,10 +123,6 @@ public enum IOSDevice implements Device {
         }
     }
 
-    private String getIPhoneSimName() {
-        return getPlatform().getPrefferedTarget().getIdentifier().replace("p","P").replace("s", "S"); // NOI18N
-    }
-
     @Override
     public MobileDebugTransport getDebugTransport() {
         if (simulator) {

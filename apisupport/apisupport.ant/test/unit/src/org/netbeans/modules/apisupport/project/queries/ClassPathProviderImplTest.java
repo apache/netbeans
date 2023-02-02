@@ -101,10 +101,6 @@ public class ClassPathProviderImplTest extends TestBase {
         return FileUtil.urlForArchiveOrDir(fp).toExternalForm();
     }
     
-    private String urlForDir(String path) {
-        return FileUtil.urlForArchiveOrDir(file(path)).toExternalForm();
-    }
-    
     private Set<String> urlsOfCp(ClassPath cp) {
         Set<String> s = new TreeSet<String>();
         for (ClassPath.Entry entry : cp.entries()) {

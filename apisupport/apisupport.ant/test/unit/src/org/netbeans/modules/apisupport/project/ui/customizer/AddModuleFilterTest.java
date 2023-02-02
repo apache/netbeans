@@ -95,12 +95,4 @@ public class AddModuleFilterTest extends TestBase {
         ), matches);
     }
     
-    private void assertMatches(String text, String[] cnbs) {
-        Set<String> matchedCNBs = new HashSet<String>();
-        for (ModuleDependency dep : filter.getMatches(null, text, false)) {
-            matchedCNBs.add(dep.getModuleEntry().getCodeNameBase());
-        }
-        assertEquals("correct matches for '" + text + "'", new HashSet<String>(Arrays.asList(cnbs)), matchedCNBs);
-    }
-    
 }

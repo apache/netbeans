@@ -455,37 +455,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
         public void keyReleased(KeyEvent e){ somethingChanged();}
         
     }      
-    
-    private String browseDomainLocation(){
-        String insLocation = null;
-        JFileChooser chooser = getJFileChooser();
-        int returnValue = chooser.showDialog(this, NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_ChooseButton")); //NOI18N
-        
-        if(returnValue == JFileChooser.APPROVE_OPTION){
-            insLocation = chooser.getSelectedFile().getAbsolutePath();
-        }
-        return insLocation;
-    }
-    
-    private JFileChooser getJFileChooser(){
-        JFileChooser chooser = new JFileChooser();
-        
-        chooser.setDialogTitle("LBL_Chooser_Name"); //NOI18N
-        chooser.setDialogType(JFileChooser.CUSTOM_DIALOG);
-        
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        chooser.setApproveButtonMnemonic("Choose_Button_Mnemonic".charAt(0)); //NOI18N
-        chooser.setMultiSelectionEnabled(false);
-        chooser.addChoosableFileFilter(new dirFilter());
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setApproveButtonToolTipText("LBL_Chooser_Name"); //NOI18N
-        
-        chooser.getAccessibleContext().setAccessibleName("LBL_Chooser_Name"); //NOI18N
-        chooser.getAccessibleContext().setAccessibleDescription("LBL_Chooser_Name"); //NOI18N
-        
-        return chooser;
-    }
-    
+
     private static class dirFilter extends javax.swing.filechooser.FileFilter {
         
         public boolean accept(File f) {

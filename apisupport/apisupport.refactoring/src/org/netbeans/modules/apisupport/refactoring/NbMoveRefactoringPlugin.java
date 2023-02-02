@@ -335,17 +335,6 @@ public class NbMoveRefactoringPlugin extends AbstractRefactoringPlugin {
 //        return (JavaClass)res.getClassifiers().iterator().next();
 //    }
     
-    private static String findPackageName(Project project, FileObject fo) {
-        Sources srcs = ProjectUtils.getSources(project);
-        SourceGroup[] grps = srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        for (int i = 0; i < grps.length; i++) {
-            if (FileUtil.isParentOf(grps[i].getRootFolder(), fo) && grps[i].contains(fo)) {
-                return FileUtil.getRelativePath(grps[i].getRootFolder(), fo);
-            }
-        }
-        return null;
-    }
-    
     /*public final class ProjectPropertiesRefactoringElement extends AbstractRefactoringElement {
 
         private Project project;

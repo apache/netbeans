@@ -117,13 +117,4 @@ public class ModuleLogicalViewTest extends TestBase {
 //        assertEquals(Arrays.asList(new String[] {"${src.dir}", "javahelp", "important.files", "libraries"}), findKids(ch));
 //    }
     
-    private static List<String> findKids(Children ch) {
-        List<String> l = new ArrayList<String>();
-        Node[] kids = ch.getNodes(true);
-        for (int i = 0; i < kids.length; i++) {
-            l.add(kids[i].getName());
-        }
-        return l;
-    }
-    
 }

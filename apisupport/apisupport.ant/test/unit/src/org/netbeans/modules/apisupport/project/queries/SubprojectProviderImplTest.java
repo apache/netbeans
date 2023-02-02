@@ -150,13 +150,4 @@ public class SubprojectProviderImplTest extends TestBase {
         assertNotNull("have project in " + path, p);
         return p;
     }
-    
-    private void assertDepends(String parent, String child) throws Exception {
-        Project p1 = project(parent);
-        Project p2 = project(child);
-        SubprojectProvider spp = p1.getLookup().lookup(SubprojectProvider.class);
-        assertNotNull("have SPP in " + p1, spp);
-        assertTrue(parent + " includes " + child, spp.getSubprojects().contains(p2));
-    }
-    
 }

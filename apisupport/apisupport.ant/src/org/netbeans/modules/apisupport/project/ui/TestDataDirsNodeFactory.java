@@ -137,34 +137,6 @@ public class TestDataDirsNodeFactory implements NodeFactory {
             }
         }
 
-        private Node findPathPlain(FileObject fo, FileObject groupRoot, Node rootNode) {
-            FileObject folder = fo.isFolder() ? fo : fo.getParent();
-            String relPath = FileUtil.getRelativePath(groupRoot, folder);
-            List<String> path = new ArrayList<String>();
-            StringTokenizer strtok = new StringTokenizer(relPath, "/"); // NOI18N
-            while (strtok.hasMoreTokens()) {
-                String token = strtok.nextToken();
-               path.add(token);
-            }
-            try {
-                Node folderNode =  folder.equals(groupRoot) ? rootNode : NodeOp.findPath(rootNode, Collections.enumeration(path));
-                if (fo.isFolder()) {
-                    return folderNode;
-                } else {
-                    Node[] childs = folderNode.getChildren().getNodes(true);
-                    for (int i = 0; i < childs.length; i++) {
-                       DataObject dobj = childs[i].getLookup().lookup(DataObject.class);
-                       if (dobj != null && dobj.getPrimaryFile().getNameExt().equals(fo.getNameExt())) {
-                           return childs[i];
-                       }
-                    }
-                }
-            } catch (NodeNotFoundException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
         private Node findPathReduced(FileObject fo, Node n) {
             FileObject f = n.getLookup().lookup(FileObject.class);
             if (f == fo) {

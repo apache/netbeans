@@ -56,7 +56,8 @@
                     <code-name-base>org.netbeans.modules.java.lsp.server</code-name-base>
                     <build-prerequisite/>
                     <run-dependency>
-                        <specification-version>1.0</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.3</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

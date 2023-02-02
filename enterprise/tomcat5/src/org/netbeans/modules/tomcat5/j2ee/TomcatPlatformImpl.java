@@ -614,7 +614,7 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         Collections.addAll(content, tp.getCatalinaHome(),
                 new EjbSupportImpl(manager), wsStack);
         if (manager.isTomEE()) {
-            content.add(new JpaSupportImpl());
+            content.add(new JpaSupportImpl(manager));
             if (manager.isTomEEJaxRS()) {
                 content.add(new JaxRsStackSupportImpl(this));
             }

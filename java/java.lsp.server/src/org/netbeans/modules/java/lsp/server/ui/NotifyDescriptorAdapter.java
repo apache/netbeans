@@ -223,6 +223,12 @@ class NotifyDescriptorAdapter {
                     break;
             }
         }
+        Object[] add = descriptor.getAdditionalOptions();
+        if (add != null && add.length > 0) {
+            Object[] addOpts = Arrays.copyOf(add, add.length + options.length);
+            System.arraycopy(options, 0, addOpts, add.length, options.length);
+            options = addOpts;
+        }
         for (Object o : options) {
             String text;
             

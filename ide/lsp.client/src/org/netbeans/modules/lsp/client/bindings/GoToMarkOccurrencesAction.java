@@ -20,6 +20,7 @@
 package org.netbeans.modules.lsp.client.bindings;
 
 import java.awt.event.ActionEvent;
+import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorActionNames;
@@ -115,7 +116,11 @@ public class GoToMarkOccurrencesAction extends BaseAction {
     private static void navigateToOccurence(boolean next, JTextComponent txt) {
         if (txt != null && txt.getDocument() != null) {
             Document doc = txt.getDocument();
-            int position = txt.getCaretPosition();
+            Caret caret = txt.getCaret();
+            if(caret == null) {
+                return;
+            }
+            int position = caret.getDot();
             int goTo = findOccurrencePosition(next, doc, position);
             if (goTo > 0) {
                 txt.setCaretPosition(goTo);

@@ -109,14 +109,11 @@ public class Schema {
     private Set/*<String>*/ getTableNamesByType(String type) throws SQLException {
         Set/*<String>*/ result = new TreeSet();
 
-        ResultSet rs = provider.getMetaData().getTables(catalog.getName(), name, "%", new String[] { type }); // NOI18N
-        try {
+        try (ResultSet rs = provider.getMetaData().getTables(catalog.getName(), name, "%", new String[] { type })) { // NOI18N
             while (rs.next()) {
                 String tableName = rs.getString("TABLE_NAME"); // NOI18N
                 result.add(tableName);
             }
-        } finally {
-            rs.close();
         }
 
         return result;

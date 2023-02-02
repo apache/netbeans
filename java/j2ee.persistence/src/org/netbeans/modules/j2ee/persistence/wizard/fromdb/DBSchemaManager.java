@@ -338,16 +338,9 @@ public class DBSchemaManager {
      * <code>dbschemaFile</code>.
      */
     private static void writeSchemaElement(SchemaElement schemaElement, FileObject dbschemaFile) throws IOException {
-        FileLock lock = dbschemaFile.lock();
-        try {
-            OutputStream os = new BufferedOutputStream(dbschemaFile.getOutputStream(lock));
-            try {
-                schemaElement.save(os);
-            } finally {
-                os.close();
-            }
-        } finally {
-            lock.releaseLock();
+        try (FileLock lock = dbschemaFile.lock();
+                OutputStream os = new BufferedOutputStream(dbschemaFile.getOutputStream(lock))) {
+            schemaElement.save(os);
         }
     }
 }

@@ -124,11 +124,9 @@ public class PersistenceLibrarySupport {
     }
 
     private static void writeLibraryDefinition(final FileObject definitionFile, final LibraryImplementation library) throws IOException {
-        FileLock lock = null;
-        PrintWriter out = null;
-        try {
-            lock = definitionFile.lock();
-            out = new PrintWriter(new OutputStreamWriter(definitionFile.getOutputStream(lock), StandardCharsets.UTF_8));
+        try (FileLock lock = definitionFile.lock();
+                PrintWriter out = new PrintWriter(new OutputStreamWriter(definitionFile.getOutputStream(lock), StandardCharsets.UTF_8))) {
+            
             out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");      //NOI18N
             out.println("<!DOCTYPE library PUBLIC \"-//NetBeans//DTD Library Declaration 1.0//EN\" \"http://www.netbeans.org/dtds/library-declaration-1_0.dtd\">"); //NOI18N
             out.println("<library version=\"1.0\">");       			//NOI18N
@@ -157,13 +155,6 @@ public class PersistenceLibrarySupport {
                 out.println("\t</volume>");     //NOI18N
             }
             out.println("</library>");  //NOI18N
-        } finally {
-            if (out != null) {
-                out.close();
-            }
-            if (lock != null) {
-                lock.releaseLock();
-            }
         }
     }
 

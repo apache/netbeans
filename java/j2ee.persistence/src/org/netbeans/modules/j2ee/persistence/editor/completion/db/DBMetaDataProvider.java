@@ -92,9 +92,7 @@ public class DBMetaDataProvider {
         if (catalogs == null) {
             catalogs = new TreeMap(new CatalogComparator());
             
-            ResultSet rs = getMetaData().getCatalogs();
-            
-            try {
+            try (ResultSet rs = getMetaData().getCatalogs()) {
                 while (rs.next()) {
                     String catalogName = rs.getString("TABLE_CAT"); // NOI18N
                     Catalog catalog = new Catalog(this, catalogName);
@@ -104,8 +102,6 @@ public class DBMetaDataProvider {
                     //    result.add(catalogName);
                     //}
                 }
-            } finally {
-                rs.close();
             }
             
             if (catalogs.size() <= 0) {

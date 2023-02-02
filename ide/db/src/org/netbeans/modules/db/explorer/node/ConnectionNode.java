@@ -49,6 +49,7 @@ import org.netbeans.modules.db.metadata.model.api.MetadataModels;
 import org.netbeans.modules.db.util.PropertiesEditor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.Actions;
 import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
@@ -504,7 +505,7 @@ public class ConnectionNode extends BaseNode implements PropertyChangeListener, 
     public Action getPreferredAction() {
         boolean disconnected = ! connection.isVitalConnection();
         if (disconnected) {
-            return SystemAction.get(ConnectAction.class);
+            return Actions.forID("Database", "netbeans.db.explorer.action.Connect"); // NOI18N
         } else {
             return null;
         }

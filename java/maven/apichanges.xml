@@ -83,6 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="runutils-createconfig-action">
+            <api name="general"/>
+            <summary></summary>
+            <version major="2" minor="157"/>
+            <date day="23" month="1" year="2023"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                Added a <a href="@TOP@/org/netbeans/modules/maven/api/execute/RunUtils.html#createRunConfig-java.lang.String-org.netbeans.api.project.Project-org.netbeans.spi.project.ProjectConfiguration-org.openide.util.Lookup-">
+                RunUtils.createRunConfig()</a> variant that allows to create a <a href="@TOP@/org/netbeans/modules/maven/api/execute/RunConfig.html">RunConfig</a> for a project-defined action. 
+                Clients can use this function to use all user customizations that may have been configured for the project action before executing it using 
+                <a href="@TOP@/org/netbeans/modules/maven/api/execute/RunUtils.html#run-org.netbeans.modules.maven.api.execute.RunConfig-">RunUtils.run</a>.
+            </description>
+            <class package="org.netbeans.modules.maven.api.execute" name="RunUtils"/>
+        </change>
         <change id="lifecycle-white-list">
             <api name="general"/>
             <summary>LifecycleParticipants can be ignored</summary>

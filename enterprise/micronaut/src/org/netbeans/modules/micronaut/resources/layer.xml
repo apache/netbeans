@@ -80,6 +80,19 @@
                     </file>
                 </folder>
             </folder>
+            <folder name="org.springframework.boot:spring-boot-maven-plugin">
+                <folder name="Lookup">
+                    <file name="maven-project-actions.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
+                        <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/spring-actions-maven.xml"/>
+                    </file>
+                    <file name="native-image-artifacts.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.micronaut.maven.MicronautPackagingArtifactsImpl.projectLookup"/>
+                    </file>
+                </folder>
+            </folder>
             <folder name="LifecycleParticipants">
                 <folder name="org.graalvm.buildtools.maven.NativeExtension">
                     <attr name="ignoreOnModelLoad" boolvalue="true"/>

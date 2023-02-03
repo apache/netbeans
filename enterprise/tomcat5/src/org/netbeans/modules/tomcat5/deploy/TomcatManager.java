@@ -498,6 +498,38 @@ public class TomcatManager implements DeploymentManager {
                 return false;
         }
     }
+    
+    public boolean isTomEE9() {
+        return tomEEVersion == TomEEVersion.TOMEE_90;
+    }
+    
+    public boolean isTomEE8() {
+        return tomEEVersion == TomEEVersion.TOMEE_80;
+    }
+    
+    public boolean isTomEEplume() {
+        return tomEEType == TomEEType.TOMEE_PLUME;
+    }
+    
+    public boolean isJpa30() {
+        return isTomEE9();
+    }
+    
+    public boolean isJpa22() {
+        return isTomEE8();
+    }
+    
+    public boolean isJpa21() {
+        return tomEEVersion.isAtLeast(TomEEVersion.TOMEE_70) && !isTomEE9();
+    }
+    
+    public boolean isJpa20() {
+        return tomEEVersion.isAtLeast(TomEEVersion.TOMEE_15) && !isTomEE9();
+    }
+    
+    public boolean isJpa10() {
+        return isJpa20(); // All TomEE versions up to 8 support JPA 1.0
+    }
 
     /** Returns Tomcat lib folder: "lib" for  Tomcat 6.0 or greater and "common/lib" for Tomcat 5.x or less*/
     public String libFolder() {
@@ -523,7 +555,6 @@ public class TomcatManager implements DeploymentManager {
         boolean fireListener = false;
         synchronized (this) {
             if (tomEEChecked) {
-                LOGGER.log(Level.INFO, "TomEE version {0}, type {1}", new Object[] {tomEEVersion, tomEEType});
                 return;
             }
             assert tomEEWarListener == null;

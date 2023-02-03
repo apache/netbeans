@@ -963,25 +963,6 @@ public class ProfilerServer extends Thread implements CommonConstants {
         profilerInterfaceInitialized = true;
     }
 
-    private static void pressEnterToShutDown() {
-        // Make sure any excessive previous input doesn't cause us to shut down immediately
-        try {
-            while (System.in.available() > 0) {
-                System.in.read();
-            }
-        } catch (IOException ex) {
-            // ignore
-        }
-
-        System.out.println(ENTER_TO_SHUTDOWN_MSG);
-
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            // ignore
-        }
-    }
-
     private static void runTargetApp(String mainClassName, String[] mainArgs) {
         Class targetMainClass = null;
 

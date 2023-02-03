@@ -261,63 +261,6 @@ public abstract class FlatProfileContainer {
         totalMethods = nRows;
     }
 
-    private void calculatePercent(boolean usePrimaryTime) {
-        percent = new float[nRows];
-
-        double wholeNetTime = getWholeGraphNetTime0();
-        long[] tpm = timeInMcs0;
-
-        if (collectingTwoTimeStamps && (!usePrimaryTime)) {
-            wholeNetTime = getWholeGraphNetTime1();
-            tpm = timeInMcs1;
-        }
-
-        for (int i = 0; i < nRows; i++) {
-            percent[i] = (float) ((wholeNetTime > 0) ? ((double) tpm[i] / wholeNetTime * 100) : 0);
-        }
-
-        staticUsePrimaryTime = usePrimaryTime;
-    }
-
-    private boolean passedFilter(String value, String filter, int type) {
-//        // Case sensitive comparison:
-//        /*switch (type) {
-//           case CommonConstants.FILTER_STARTS_WITH:
-//             return value.startsWith(filter);
-//           case CommonConstants.FILTER_CONTAINS:
-//             return value.indexOf(filter) != -1;
-//           case CommonConstants.FILTER_ENDS_WITH:
-//             return value.endsWith(filter);
-//           case CommonConstants.FILTER_EQUALS:
-//             return value.equals(filter);
-//           case CommonConstants.FILTER_REGEXP:
-//             return value.matches(filter);
-//           }*/
-//
-//        // Case insensitive comparison (except regexp):
-//        switch (type) {
-////            case CommonConstants.FILTER_STARTS_WITH:
-////                return value.regionMatches(true, 0, filter, 0, filter.length()); // case insensitive startsWith, optimized
-//            case CommonConstants.FILTER_CONTAINS:
-//                return value.toLowerCase().contains(filter); // case insensitive indexOf, NOT OPTIMIZED
-//            case CommonConstants.FILTER_NOT_CONTAINS:
-//                return !value.toLowerCase().contains(filter);
-////            case CommonConstants.FILTER_ENDS_WITH:
-////                // case insensitive endsWith, optimized
-////                return value.regionMatches(true, value.length() - filter.length(), filter, 0, filter.length());
-////            case CommonConstants.FILTER_EQUALS:
-////                return value.equalsIgnoreCase(filter); // case insensitive equals
-//            case CommonConstants.FILTER_REGEXP:
-//                try {
-//                    return value.matches(filter); //  case sensitive!
-//                } catch (java.util.regex.PatternSyntaxException e) {
-//                    return false;
-//                }
-//        }
-
-        return false;
-    }
-
 //    private boolean passedFilters(String value, String[] filters, int type) {
 //        for (int i = 0; i < filters.length; i++) {
 //            if (passedFilter(value, filters[i], type)) {

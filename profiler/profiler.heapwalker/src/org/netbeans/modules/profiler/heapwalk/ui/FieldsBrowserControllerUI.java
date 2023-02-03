@@ -794,18 +794,6 @@ public class FieldsBrowserControllerUI extends JTitledPanel {
         }
     }
 
-    private void saveColumnsData() {
-        TableColumnModel colModel = fieldsListTable.getColumnModel();
-
-        for (int i = 0; i < fieldsListTableModel.getColumnCount(); i++) {
-            int index = fieldsListTableModel.getRealColumn(i);
-
-            if (index != 0) {
-                columnWidths[index - 1] = colModel.getColumn(i).getPreferredWidth();
-            }
-        }
-    }
-
     private void showColumnSelectionPopup(final JPopupMenu headerPopup, final JButton cornerButton) {
         initColumnSelectorItems();
         headerPopup.show(cornerButton, cornerButton.getWidth() - headerPopup.getPreferredSize().width, cornerButton.getHeight());

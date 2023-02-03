@@ -40,10 +40,7 @@ public class ClassInfoTest implements Serializable, Cloneable {
     public ClassInfoTest() {
         
     }
-    
-    private ClassInfoTest(int x) {
-        
-    }
+
     
     public static void staticMethod() {
         
@@ -52,10 +49,7 @@ public class ClassInfoTest implements Serializable, Cloneable {
     public int retMethod() {
         return 10;
     }
-    
-    private int calc(int x, int y) {
-        return x+y;
-    }
+
     
     public static class StaticInner extends ClassInfoTest {
         public void doit() {

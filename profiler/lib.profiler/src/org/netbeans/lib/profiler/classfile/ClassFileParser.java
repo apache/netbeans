@@ -103,10 +103,6 @@ public class ClassFileParser implements JavaClassConstants {
         return (char) (((classBuf[bufPos++] & 255) << 8) + (classBuf[bufPos++] & 255));
     }
 
-    private void badCPEntry(int entryNo) { // TODO CHECK: unused method
-        throw classFileReadException("Constant pool entry " + entryNo + " : invalid type"); // NOI18N
-    }
-
     private void badCPReference(int ofs, int i) {
         throw classFileReadException("Bad constant pool reference: " + ofs + " from entry " + i); // NOI18N
     }
@@ -157,11 +153,6 @@ public class ClassFileParser implements JavaClassConstants {
         }
 
         return (String) cpObjectCache[idx];
-    }
-
-    private ClassFileReadRuntimeException dataFormatError() { // TODO CHECK: unused method
-
-        return classFileReadException("Data format error"); // NOI18N
     }
 
     private char nextChar() {

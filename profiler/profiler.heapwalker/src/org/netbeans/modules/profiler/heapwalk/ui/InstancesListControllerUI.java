@@ -800,29 +800,6 @@ public class InstancesListControllerUI extends JTitledPanel {
         refreshView();
     }
 
-    private void restoreSelection() {
-        if (selectedRowContents != null) {
-            instancesListTable.selectRowByContents(selectedRowContents, 0, true);
-        }
-
-        selectionSaved = false;
-    }
-
-    private void saveSelection() {
-        if (selectionSaved) {
-            return;
-        }
-
-        selectedRow = (instancesListTable == null) ? (-1) : instancesListTable.getSelectedRow();
-        selectedRowContents = null;
-
-        if (selectedRow != -1) {
-            selectedRowContents = instancesListTable.getValueAt(selectedRow, 0).toString();
-        }
-
-        selectionSaved = true;
-    }
-
     // Selects instance displayed in container node
     private void selectCollapsedInstance(Instance instance) {
         HeapWalkerNode root = (HeapWalkerNode) instancesListTableModel.getRoot();

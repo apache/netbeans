@@ -837,7 +837,4 @@ public class InstancesListController extends AbstractController {
         return filteredInstances;
     }
 
-    private boolean matchesFilter(Instance instance, String filterValue) {
-        return true;
-    }
 }

@@ -403,38 +403,6 @@ class LongHashMap {
     }
 
     /**
-     * Removes the specified key-value mapping from the map if it is present.
-     *
-     * @param   key   possible key
-     * @param   value possible value
-     * @return  <code>true</code> if and only if the specified key-value
-     *          mapping was in the map
-     */
-    private boolean removeMapping(long key, long value) {
-        long k = key;
-        long[] tab = table;
-        int len = tab.length;
-        int i = hash(k, len);
-
-        while (true) {
-            long item = tab[i];
-            if (item == k) {
-                if (tab[i + 1] != value)
-                    return false;
-                modCount++;
-                size--;
-                tab[i] = 0;
-                tab[i + 1] = 0;
-                closeDeletion(i);
-                return true;
-            }
-            if (item == 0)
-                return false;
-            i = nextKeyIndex(i, len);
-        }
-    }
-
-    /**
      * Rehash all possibly-colliding entries following a
      * deletion. This preserves the linear-probe
      * collision properties required by get, put, etc.

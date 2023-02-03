@@ -199,10 +199,6 @@ final class SQLFeature extends ProfilerFeature.Basic {
         configurationChanged();
     }
     
-    private void selectionChanged() {
-        configurationChanged();
-    }
-    
     
     // --- Settings UI ---------------------------------------------------------
     

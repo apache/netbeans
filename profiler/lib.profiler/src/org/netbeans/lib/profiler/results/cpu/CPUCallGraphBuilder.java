@@ -965,13 +965,6 @@ public class CPUCallGraphBuilder extends BaseCallGraphBuilder implements CPUProf
         this.instrFilter = filter;
     }
 
-    private synchronized DebugInfoCollector getDebugCollector() {
-        if (debugCollector == null) {
-            debugCollector = new DebugInfoCollector();
-        }
-
-        return debugCollector;
-    }
 
     protected boolean isReady() {
         return (status != null) && (instrFilter != null);
@@ -989,10 +982,6 @@ public class CPUCallGraphBuilder extends BaseCallGraphBuilder implements CPUProf
         }
 
         return buffer.toString();
-    }
-
-    private String debugNode(RuntimeCPUCCTNode node) {
-        return getDebugCollector().getInfo(node);
     }
 
     private String dumpStack(ThreadInfo ti) {

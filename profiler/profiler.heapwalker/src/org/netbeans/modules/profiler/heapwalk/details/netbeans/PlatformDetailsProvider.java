@@ -380,9 +380,6 @@ public class PlatformDetailsProvider extends DetailsProvider.Basic {
                                                                       '_'
     };
 
-    private static boolean is6BitChar(int d) {
-        return d < 128 && encodeTable[d] >= 0;
-    }
 
     private static long encode6BitChar(int d) {
         return encodeTable[d];

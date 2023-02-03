@@ -406,11 +406,4 @@ public class TriggerCustomizer extends ValidityAwarePanel implements ActionListe
         add(fillerPanel, constraints);
     }
 
-    private void updateValidity() {
-        boolean isValid = true;
-
-        if (isValid != TriggerCustomizer.this.areSettingsValid()) {
-            fireValidityChanged(isValid);
-        }
-    }
 }

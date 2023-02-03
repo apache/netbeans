@@ -123,9 +123,4 @@ public class Classes {
     // ======================================== CVM specific code ===============================================
     private static native int doRedefineClasses(Class[] classes, byte[][] newClassFileBytes);
 
-    private static RedefineException newRedefineException(String msg, Throwable origCause) {
-        msg = "Class redefinition error: " + msg + "\nOriginal exception:\n" + origCause; // NOI18N
-
-        return new RedefineException(msg);
-    }
 }

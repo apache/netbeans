@@ -350,33 +350,6 @@ public final class TracerController  {
         }
     }
 
-    private void notifyRefreshRateChanged(Set<Map.Entry<TracerPackage, List<TracerProbe>>> items) {
-        Iterator<Map.Entry<TracerPackage, List<TracerProbe>>> itemsI = items.iterator();
-        while (itemsI.hasNext()) {
-            Map.Entry<TracerPackage, List<TracerProbe>> item = itemsI.next();
-            List<TracerProbe> probes = item.getValue();
-            TracerProbe[] probesArr = probes.toArray(new TracerProbe[0]);
-
-            PackageStateHandler ph = item.getKey().getStateHandler();
-            if (ph != null) try {
-                ph.refreshRateChanged(probesArr, null, -1);
-            } catch (Throwable t) {
-                LOGGER.log(Level.INFO, "Package exception in refreshRateChanged", t); // NOI18N
-            }
-
-            Iterator<TracerProbe> probesI = probes.iterator();
-            while (probesI.hasNext()) {
-                TracerProbe probe = probesI.next();
-                ProbeStateHandler rh = probe.getStateHandler();
-                if (rh != null) try {
-                    rh.refreshRateChanged(null, -1);
-                } catch (Throwable t) {
-                    LOGGER.log(Level.INFO, "Probe exception in refreshRateChanged", t); // NOI18N
-                }
-            }
-        }
-    }
-
 
     // --- Session runtime -----------------------------------------------------
 

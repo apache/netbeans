@@ -425,13 +425,6 @@ public class HeapFragmentWalkerUI extends JPanel {
         updatePresenters();
     }
 
-    private void unifyComponentsSize(Component c1, Component c2) {
-        Dimension preferredSize = new Dimension(Math.max(c1.getPreferredSize().width, c2.getPreferredSize().width),
-                                                Math.max(c1.getPreferredSize().height, c2.getPreferredSize().height));
-        c1.setPreferredSize(preferredSize);
-        c2.setPreferredSize(preferredSize);
-    }
-
     private void updateClientPresenters(AbstractButton[] clientPresenters) {
         while (toolBar.getComponentCount() > subControllersIndex) {
             toolBar.remove(subControllersIndex);

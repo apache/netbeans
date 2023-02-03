@@ -135,7 +135,4 @@ public class ClassRewriter {
         }
     }
 
-    private static void saveClassFileToDisk(DynamicClassInfo clazz, byte[] replacementClassFile) {
-        saveToDisk(clazz.getName(), replacementClassFile);
-    }
 }

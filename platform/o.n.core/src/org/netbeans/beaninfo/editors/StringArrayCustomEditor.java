@@ -102,7 +102,8 @@ public class StringArrayCustomEditor extends javax.swing.JPanel {
 
         updateButtons ();
         itemField.addKeyListener(new KeyAdapter() {
-           public void keyReleased(KeyEvent event) {
+            @Override
+            public void keyReleased(KeyEvent event) {
                 boolean containsCurrent = containsCurrent();
                 String txt = itemField.getText().trim();
                 boolean en = itemField.isEnabled() &&
@@ -365,6 +366,7 @@ public class StringArrayCustomEditor extends javax.swing.JPanel {
         updateValue ();
     }//GEN-LAST:event_addButtonActionPerformed
 
+    @Override
     public void setEnabled (boolean val) {
         Component[] c = getComponents();
         super.setEnabled(val);

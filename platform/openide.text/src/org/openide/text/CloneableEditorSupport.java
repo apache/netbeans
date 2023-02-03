@@ -660,6 +660,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
                 super(size);
             }
 
+            @Override
             public void writeTo(OutputStream os) throws IOException {
                 os.write(buf, 0, count);
             }

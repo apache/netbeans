@@ -319,11 +319,13 @@ public class TestUtilHid {
             this.forceFolder = true;
             return this;
         }
-        
+
+        @Override
         public boolean isLeaf() {
             return !forceFolder && super.isLeaf();
         }
-        
+
+        @Override
         public void serialize(String path, String tab, PrintWriter pw, File baseFolder) throws IOException {
             if (!getName().isEmpty()) {
                 String n = getName();

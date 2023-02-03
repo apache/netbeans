@@ -652,6 +652,7 @@ public final class UI {
                 }
                 myDialog.addComponentListener(
                     new ComponentAdapter() {
+                        @Override
                         public void componentResized(ComponentEvent event) {
                             resized();
                         }

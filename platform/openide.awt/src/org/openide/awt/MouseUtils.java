@@ -155,10 +155,12 @@ public class MouseUtils extends Object {
             super();
         }
 
+        @Override
         public void mousePressed(MouseEvent e) {
             maybePopup(e);
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             maybePopup(e);
         }

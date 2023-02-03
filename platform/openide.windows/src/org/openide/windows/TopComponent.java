@@ -939,6 +939,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
     * The default implementation just notifies the window manager.
     * @param name the new display name
     */
+    @Override
     public void setName(final String name) {
         String old = getName();
 
@@ -1032,6 +1033,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
 
     /** Sets toolTip for this <code>TopComponent</code>, adds notification
      * about the change to its <code>WindowManager.TopComponentManager</code>. */
+    @Override
     public void setToolTipText(String toolTip) {
         if ((toolTip != null) && toolTip.equals(getToolTipText())) {
             return;
@@ -1108,6 +1110,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
 
     /** Overrides superclass method, adds possible additional handling of global keystrokes
      * in case this <code>TopComoponent</code> is ancestor of focused component. */
+    @Override
     protected boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {
         boolean ret = super.processKeyBinding(ks, e, condition, pressed);
 
@@ -1248,13 +1251,16 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
     /* Read accessible context
      * @return - accessible context
      */
+    @Override
     public AccessibleContext getAccessibleContext() {
         if (accessibleContext == null) {
             accessibleContext = new JComponent.AccessibleJComponent() {
+                        @Override
                         public AccessibleRole getAccessibleRole() {
                             return AccessibleRole.PANEL;
                         }
 
+                        @Override
                         public String getAccessibleName() {
                             if (accessibleName != null) {
                                 return accessibleName;
@@ -1264,6 +1270,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
                         }
 
                         /* Fix for 19344: Null accessible decription of all TopComponents on JDK1.4 */
+                        @Override
                         public String getToolTipText() {
                             return TopComponent.this.getToolTipText();
                         }

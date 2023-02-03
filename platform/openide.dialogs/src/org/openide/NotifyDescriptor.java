@@ -1020,7 +1020,8 @@ public class NotifyDescriptor extends Object {
         public PasswordLine(String text, String title) {
             super(text, title);
         }
-        
+
+        @Override
         JTextField createTextField() {
             return new JPasswordField(25);
         }

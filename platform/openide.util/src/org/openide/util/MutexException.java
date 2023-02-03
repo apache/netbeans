@@ -48,6 +48,7 @@ public class MutexException extends Exception {
         return ex;
     }
 
+    @Override
     public Throwable getCause() {
         return ex;
     }

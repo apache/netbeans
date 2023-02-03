@@ -39,10 +39,12 @@ final class UtilitiesCompositeActionMap extends ActionMap {
         this.component = c;
     }
 
+    @Override
     public int size() {
         return keys().length;
     }
 
+    @Override
     public Action get(Object key) {
         Component c = component;
 
@@ -73,10 +75,12 @@ final class UtilitiesCompositeActionMap extends ActionMap {
         return null;
     }
 
+    @Override
     public Object[] allKeys() {
         return keys(true);
     }
 
+    @Override
     public Object[] keys() {
         return keys(false);
     }
@@ -123,18 +127,23 @@ final class UtilitiesCompositeActionMap extends ActionMap {
     // 
     // Not implemented
     //
+    @Override
     public void remove(Object key) {
     }
 
+    @Override
     public void setParent(ActionMap map) {
     }
 
+    @Override
     public void clear() {
     }
 
+    @Override
     public void put(Object key, Action action) {
     }
 
+    @Override
     public ActionMap getParent() {
         return null;
     }

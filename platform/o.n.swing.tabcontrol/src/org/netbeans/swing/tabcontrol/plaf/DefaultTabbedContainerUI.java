@@ -940,13 +940,15 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
     protected class ContainerComponentListener extends ComponentAdapter {
         public ContainerComponentListener() {
         }
-        
+
+        @Override
         public void componentMoved (ComponentEvent e) {
             if (container.getType() == TabbedContainer.TYPE_SLIDING) {
                 updateOrientation();
             }
         }
-        
+
+        @Override
         public void componentResized (ComponentEvent e) {
             if (container.getType() == TabbedContainer.TYPE_SLIDING) {
                 updateOrientation();
@@ -1542,7 +1544,8 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
                 changed = false;
                 return rect;
             }
-            
+
+            @Override
             public void paint(Graphics g) {
                 try {
                     if (USE_SWINGPAINTING) {
@@ -1679,7 +1682,8 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
                 }
                 doLayout();
             }
-            
+
+            @Override
             public void doLayout() {
                 Rectangle r = getImageBounds();
                 comp.setBounds (r.x, r.y, r.width, r.height);

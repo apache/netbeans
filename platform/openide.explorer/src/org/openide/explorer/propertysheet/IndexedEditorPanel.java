@@ -131,6 +131,7 @@ class IndexedEditorPanel extends javax.swing.JPanel implements ExplorerManager.P
         getAccessibleContext().setAccessibleDescription(bundle.getString("ACSD_IndexedEditorPanel"));
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         updateButtonState();

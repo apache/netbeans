@@ -98,6 +98,7 @@ final class TimedSoftReference<T> extends SoftReference<T> implements Runnable {
         }
     }
 
+    @Override
     public T get() {
         synchronized (m) {
             if (o == null) {

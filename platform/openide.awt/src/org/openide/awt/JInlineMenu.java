@@ -76,6 +76,7 @@ public class JInlineMenu extends JMenuItem implements DynamicMenuContent {
 
     /** Overriden to eliminate big gap at top of JInline popup painting.
      * @return cleared instets (0, 0, 0, 0) */
+    @Override
     public Insets getInsets() {
         return new Insets(0, 0, 0, 0);
     }

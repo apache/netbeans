@@ -85,6 +85,7 @@ public class ShutdownFromAWTTest extends NbTestCase {
             assertAWT();
             
             return new JDialog() {
+                @Override
                 public void setVisible(boolean v) {
                 }
             };

@@ -70,6 +70,7 @@ class IconPanel extends JComponent implements InplaceEditor {
         return inplaceEditor;
     }
 
+    @Override
     public void setEnabled(boolean val) {
         if (comp != null) {
             //Can be called from setUI in superclass constructor
@@ -79,6 +80,7 @@ class IconPanel extends JComponent implements InplaceEditor {
         super.setEnabled(val);
     }
 
+    @Override
     public void setBackground(Color c) {
         if (comp != null) {
             //Can be called from setUI in superclass constructor
@@ -88,6 +90,7 @@ class IconPanel extends JComponent implements InplaceEditor {
         super.setBackground(c);
     }
 
+    @Override
     public void setForeground(Color c) {
         if (comp != null) {
             //Can be called from setUI in superclass constructor
@@ -97,6 +100,7 @@ class IconPanel extends JComponent implements InplaceEditor {
         super.setForeground(c);
     }
 
+    @Override
     public void setFont(Font f) {
         if (comp != null) {
             comp.setFont(f);
@@ -126,6 +130,7 @@ class IconPanel extends JComponent implements InplaceEditor {
     }
 
     /** Overridden to paint the icon */
+    @Override
     public void paintComponent(Graphics g) {
         if (needLayout) {
             doLayout();
@@ -188,6 +193,7 @@ class IconPanel extends JComponent implements InplaceEditor {
         }
     }
 
+    @Override
     public void setOpaque(boolean val) {
         if (getInplaceEditor() != null) {
             getInplaceEditor().getComponent().setOpaque(true);
@@ -250,14 +256,17 @@ class IconPanel extends JComponent implements InplaceEditor {
         return inplaceEditor.supportsTextEntry();
     }
 
+    @Override
     public void requestFocus() {
         comp.requestFocus();
     }
 
+    @Override
     public boolean requestFocusInWindow() {
         return comp.requestFocusInWindow();
     }
 
+    @Override
     public void addFocusListener(FocusListener fl) {
         if (comp != null) {
             comp.addFocusListener(fl);
@@ -266,6 +275,7 @@ class IconPanel extends JComponent implements InplaceEditor {
         }
     }
 
+    @Override
     public void removeFocusListener(FocusListener fl) {
         if (comp != null) {
             comp.removeFocusListener(fl);
@@ -275,6 +285,7 @@ class IconPanel extends JComponent implements InplaceEditor {
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public void layout() {
         Insets ins = getInsets();
 
@@ -300,6 +311,7 @@ class IconPanel extends JComponent implements InplaceEditor {
         }
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Insets ins = getInsets();
         Component c = comp;
@@ -322,6 +334,7 @@ class IconPanel extends JComponent implements InplaceEditor {
         return result;
     }
 
+    @Override
     public Dimension getMinimumSize() {
         return getPreferredSize();
     }

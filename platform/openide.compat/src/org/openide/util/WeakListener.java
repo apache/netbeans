@@ -776,6 +776,7 @@ public abstract class WeakListener implements java.util.EventListener {
         * @return name of method of the source object that should be used
         *   to remove the listener from listening on source of events
         */
+        @Override
         protected String removeMethodName() {
             return "removeNodeListener"; // NOI18N
         }
@@ -901,6 +902,7 @@ public abstract class WeakListener implements java.util.EventListener {
 
         /** To string prints class.
         */
+        @Override
         public String toString() {
             return super.toString() + "[" + listenerClass + "]"; // NOI18N
         }
@@ -911,6 +913,7 @@ public abstract class WeakListener implements java.util.EventListener {
             return (proxy == obj) || (this == obj);
         }
 
+        @Override
         Object getImplementator() {
             return proxy;
         }

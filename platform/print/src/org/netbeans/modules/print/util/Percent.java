@@ -111,6 +111,7 @@ public final class Percent extends JComboBox implements ActionListener {
         return getEditor().getItem().toString();
     }
 
+    @Override
     public void actionPerformed(ActionEvent event) {
 //out();
         String value = getEditorItem();

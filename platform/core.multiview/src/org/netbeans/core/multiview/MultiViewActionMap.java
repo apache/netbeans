@@ -50,11 +50,13 @@ final class MultiViewActionMap extends ActionMap {
     public void setDelegateMap(ActionMap map) {
         delegate = map;
     }
-    
+
+    @Override
     public int size() {
         return keys ().length;
     }
 
+    @Override
     public Action get(Object key) {
         // the multiview's action map first.. for stuff like the closewindow and clonewindow from TopComponent.initActionMap
         javax.swing.ActionMap m = topComponentMap;
@@ -111,10 +113,12 @@ final class MultiViewActionMap extends ActionMap {
         return owner == component ? found : null;
     }
 
+    @Override
     public Object[] allKeys() {
         return keys (true);
     }
 
+    @Override
     public Object[] keys() {
         return keys (false);
     }
@@ -153,22 +157,27 @@ final class MultiViewActionMap extends ActionMap {
     // 
     // Not implemented
     //
+    @Override
     public void remove(Object key) {
         topComponentMap.remove(key);
-    }        
+    }
 
+    @Override
     public void setParent(ActionMap map) {
         topComponentMap.setParent(map);
     }
 
+    @Override
     public void clear() {
         topComponentMap.clear();
     }
 
+    @Override
     public void put(Object key, Action action) {
         topComponentMap.put (key, action);
     }
 
+    @Override
     public ActionMap getParent() {
         return topComponentMap.getParent();
     }

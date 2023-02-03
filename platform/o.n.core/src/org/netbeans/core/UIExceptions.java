@@ -72,6 +72,7 @@ public final class UIExceptions {
     private static final class AnnException extends Exception implements Callable<LogRecord[]> {
         private List<LogRecord> records;
 
+        @Override
         public String getMessage() {
             StringBuilder sb = new StringBuilder();
             String sep = "";
@@ -114,16 +115,19 @@ public final class UIExceptions {
             return r == null ? empty : r.toArray(empty);
         }
 
+        @Override
         public void printStackTrace(PrintStream s) {
             super.printStackTrace(s);
             logRecords(s);
         }
 
+        @Override
         public void printStackTrace(PrintWriter s) {
             super.printStackTrace(s);
             logRecords(s);
         }
 
+        @Override
         public void printStackTrace() {
             printStackTrace(System.err);
         }

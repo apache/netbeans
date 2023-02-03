@@ -33,6 +33,7 @@ public class DateEditor extends PropertyEditorSupport {
 
     private static DateFormat fmt = DateFormat.getDateTimeInstance();
 
+    @Override
     public String getAsText() {
         Date d = (Date)getValue();
         if (d != null) {
@@ -41,7 +42,8 @@ public class DateEditor extends PropertyEditorSupport {
             return ""; // NOI18N
         }
     }
-    
+
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
         if ("".equals(text)) { // NOI18N
             setValue(null);
@@ -55,6 +57,7 @@ public class DateEditor extends PropertyEditorSupport {
     }
     
     // #67524: Properties Editor doesn't support Date type. Replaces them with '???'
+    @Override
     public String getJavaInitializationString () {
         return "new java.util.Date(" + ((Date) getValue()).getTime() + "L)"; // NOI18N
     }

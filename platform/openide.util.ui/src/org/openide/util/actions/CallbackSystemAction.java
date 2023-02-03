@@ -482,6 +482,7 @@ public abstract class CallbackSystemAction extends CallableSystemAction implemen
             delegate.addPropertyChangeListener(this);
         }
 
+        @Override
         public void clear() {
             Action a;
 

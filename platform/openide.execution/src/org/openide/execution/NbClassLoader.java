@@ -127,6 +127,7 @@ public class NbClassLoader extends URLClassLoader {
     * @param name resource name
     * @return URL to that resource or <code>null</code>
     */
+    @Override
     public URL getResource (String name) {
         return super.getResource (name.startsWith ("/") ? name.substring (1) : name); // NOI18N
     }
@@ -137,6 +138,7 @@ public class NbClassLoader extends URLClassLoader {
        would simply define packages loaded from such a URL with no
        particular info. We want it to have specification version and
        all that good stuff. */
+    @Override
     protected Class findClass (final String name) throws ClassNotFoundException {
         if (!fast && name.indexOf ('.') != -1) {
             Logger.getLogger(NbClassLoader.class.getName()).log(Level.FINE, "NBFS used!");
@@ -201,6 +203,7 @@ public class NbClassLoader extends URLClassLoader {
     }
 
     /* @return a PermissionCollection for given CodeSource. */
+    @Override
     protected final synchronized PermissionCollection getPermissions(CodeSource cs) {
 
         if (permissionCollections != null) {

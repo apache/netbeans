@@ -314,7 +314,8 @@ public class UtilitiesTest extends NbTestCase {
         public CustomToolkitComponent( Toolkit t ) {
             this.customToolkit = t;
         }
-        
+
+        @Override
         public Toolkit getToolkit() {
             return customToolkit;
         }
@@ -486,6 +487,8 @@ public class UtilitiesTest extends NbTestCase {
         }
 
         boolean createCustomCursorCalled = false;
+
+        @Override
         public Cursor createCustomCursor(Image cursor, Point hotSpot, String name) throws IndexOutOfBoundsException, HeadlessException {
 
             createCustomCursorCalled = true;
@@ -493,6 +496,8 @@ public class UtilitiesTest extends NbTestCase {
         }
 
         boolean getBestCursorSizeCalled = false;
+
+        @Override
         public Dimension getBestCursorSize(int preferredWidth, int preferredHeight) throws HeadlessException {
             getBestCursorSizeCalled = true;
             return new Dimension(0,0);

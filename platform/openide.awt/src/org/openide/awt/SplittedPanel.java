@@ -234,6 +234,7 @@ public class SplittedPanel extends JComponent implements Accessible {
     }
 
     /** Updates splitting, too. */
+    @Override
     public void updateUI() {
         super.updateUI();
         updateSplitting();
@@ -880,13 +881,16 @@ public class SplittedPanel extends JComponent implements Accessible {
             getAccessibleContext().setAccessibleName(bundle.getString("ACSD_SplittedPanel_EmptySplitter"));
         }
 
+        @Override
         public Dimension getPreferredSize() {
             return new Dimension(width, width);
         }
 
+        @Override
         public AccessibleContext getAccessibleContext() {
             if (accessibleContext == null) {
                 accessibleContext = new AccessibleJComponent() {
+                            @Override
                             public AccessibleRole getAccessibleRole() {
                                 return AccessibleRole.SPLIT_PANE;
                             }
@@ -916,10 +920,12 @@ public class SplittedPanel extends JComponent implements Accessible {
             }
         }
 
+        @Override
         public Dimension getPreferredSize() {
             return new Dimension(splitterSize, splitterSize);
         }
 
+        @Override
         public void paint(Graphics g) {
             super.paint(g);
 
@@ -1030,6 +1036,7 @@ public class SplittedPanel extends JComponent implements Accessible {
             }
         }
 
+        @Override
         public AccessibleContext getAccessibleContext() {
             return SplittedPanel.this.getAccessibleContext();
         }

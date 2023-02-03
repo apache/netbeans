@@ -55,29 +55,7 @@ public final class JavaCompilerSetting {
     public void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
         propertyChangeSupport.removePropertyChangeListener(l);
     }
-    
-    private void readProperties(Properties p) {
-        this.classpath = p.getProperty(PROP_CLASS_PATH);
-        this.path = p.getProperty(PROP_EXEC_PATH);
-        String bool = p.getProperty(PROP_DEBUG);
-        if (bool != null)
-            this.debug = Boolean.valueOf(bool).booleanValue();
-        else
-            this.debug = false;
-                
-        bool = p.getProperty(PROP_DEPRECATION);
-        if (bool != null)
-            this.deprecation = Boolean.valueOf(bool).booleanValue();
-        else
-            this.deprecation = false;
-    }
-    
-    private void writeProperties(Properties p) {
-        p.setProperty(PROP_CLASS_PATH, getClasspath());
-        p.setProperty(PROP_EXEC_PATH, getPath());
-        p.setProperty(PROP_DEPRECATION, String.valueOf(isDeprecation()));
-        p.setProperty(PROP_DEBUG, String.valueOf(isDebug()));
-    }
+
     
     public boolean isDebug() {
         return this.debug;

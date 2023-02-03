@@ -272,27 +272,6 @@ final class VisualizerNode extends EventListenerList implements NodeListener, Tr
         return !isLeaf();
     }
 
-    private LogRecord assertAccess(int index) {
-        if (Children.MUTEX.isReadAccess()) {
-            return null;
-        }
-        if (Children.MUTEX.isWriteAccess()) {
-            return null;
-        }
-        if (!LOG.isLoggable(Level.FINE)) {
-            return null;
-        }
-        Level level = LOG.isLoggable(Level.FINEST) ? Level.FINEST : Level.FINE;
-        LogRecord rec = new LogRecord(level, "LOG_NO_READ_ACCESS"); // NOI18N
-        rec.setResourceBundle(NbBundle.getBundle(VisualizerNode.class));
-        rec.setParameters(new Object[] { this, index });
-        rec.setLoggerName(LOG.getName());
-        if (level == Level.FINEST) {
-            rec.setThrown(new AssertionError(rec.getMessage()));
-        }
-        return rec;
-    }
-
     public javax.swing.tree.TreeNode getChildAt(int p1) {
         return getChildren().getChildAt(p1);
     }

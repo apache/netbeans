@@ -300,15 +300,6 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
         }
         return Collections.unmodifiableMap (keymaps.get (profile));
     }
-        
-    private Map<ShortcutAction, Set<String>> getBaseKeyMap() {
-        if (baseKeyMap == null) {
-            DataFolder root = getRootFolder (SHORTCUTS_FOLDER, null);
-            Map<ShortcutAction, Set<String>> m = readKeymap (root);
-            baseKeyMap = m;
-        }
-        return baseKeyMap;
-    }
     
     /**
      * Overrides the base shortcut map with contents of the Keymap. If keymap specifies

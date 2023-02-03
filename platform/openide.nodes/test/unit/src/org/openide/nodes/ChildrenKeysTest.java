@@ -2341,11 +2341,6 @@ public class ChildrenKeysTest extends NbTestCase {
         root.setChildren(ch2);
     }
 
-    private static void assertNotGC(String msg, Reference ref) {
-        System.gc();
-        System.runFinalization();
-        assertNotNull(msg, ref);
-    }
     
     /** Sample keys.
     */

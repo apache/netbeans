@@ -125,35 +125,5 @@ public class IssuesTest extends NbTestCase {
         
     }
 
-    
-    private void checkLookupObject(final MimeLookup lookup, final Class clazz, final boolean shouldBePresent){
-        TestUtilities.waitMaxMilisForValue(WAIT_TIME, new TestUtilities.ValueResolver(){
-            public Object getValue(){
-                Object obj = lookup.lookup(clazz);
-                boolean bool = (shouldBePresent) ? obj != null : obj == null;
-                return Boolean.valueOf(bool);
-            }
-        }, Boolean.TRUE);
-        Object obj = lookup.lookup(clazz);
-        if (shouldBePresent){
-            assertTrue("Object should be present in the lookup",obj!=null);
-        } else {
-            assertTrue("Object should NOT be present in the lookup",obj==null);
-        }
-    }
-    
-    private void checkLookupTemplate(final MimeLookup lookup, final Class clazz, final int instCount){
-        TestUtilities.waitMaxMilisForValue(WAIT_TIME, new TestUtilities.ValueResolver(){
-            public Object getValue(){
-                Lookup.Result result = lookup.lookup(new Lookup.Template(clazz));
-                boolean bool = result.allInstances().size() == instCount;
-                return Boolean.valueOf(bool);
-            }
-        }, Boolean.TRUE);
-        Lookup.Result result = lookup.lookup(new Lookup.Template(clazz));
-        int size = result.allInstances().size();
-        boolean bool =  (size == instCount);
-        assertTrue("Number of instances doesn't match. Found:"+size+". Should be presented:"+instCount+".", bool);
-    }
 
 }

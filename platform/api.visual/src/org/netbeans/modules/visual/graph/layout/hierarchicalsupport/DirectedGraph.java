@@ -124,16 +124,6 @@ public class DirectedGraph<N, E> {
         return new Edge<>(source, target, edgeDE);
     }
 
-    private Edge<E> getEdge(Vertex<N> source, Vertex<N> target, E edgeDE) {
-        Edge<E> edge = edgeMap.get(edgeDE);
-
-        if (edge == null) {
-            edge = createEdge(source, target, edgeDE);
-            edgeMap.put(edgeDE, edge);
-        }
-
-        return edge;
-    }
 
     public Collection<Vertex<N>> getVertices() {
         return vertexMap.values();
@@ -207,85 +197,7 @@ public class DirectedGraph<N, E> {
         return new DummyEdge<>(source, target, originalEdge);
     }
 
-    private void printGraph() {
-        for (Vertex<?> rootVertex : getRootVertices()) {
-            System.out.println("root vertex = " + rootVertex);
-        }
 
-        for (Vertex<N> v : getVertices()) {
-            System.out.println("vertex = " + v);
-
-            Collection<Vertex<N>> neighbors = v.getUpperNeighbors();
-            for (Vertex<N> nv : neighbors) {
-                System.out.println("\tupper neighbor = " + nv);
-            }
-
-            neighbors = v.getLowerNeighbors();
-            for (Vertex<?> nv : neighbors) {
-                System.out.println("\tlower neighbor = " + nv);
-            }
-        }
-
-//    protected void createGraph(NodeDesignElement rootNode) {
-//        Vertex rootVertex = getVertex(rootNode);
-//        
-//        for (EdgeDesignElement edge : rootNode.getOutputEdges()) {
-//            NodeDesignElement destNode = edge.getTargetNode();
-//            
-//            if (vertexMap.get(destNode) != null)
-//                continue;
-//            
-//            //System.out.println("edge = " + edge);
-//            Vertex lowerVertex = getVertex(destNode);
-//            rootVertex.addLowerNeighbor(lowerVertex);
-//            lowerVertex.addUpperNeighbor(rootVertex);
-//            
-//            createGraph(destNode);
-//        }
-//        
-//        for (EdgeDesignElement edge : rootNode.getInputEdges()) {
-//            NodeDesignElement srcNode = edge.getSourceNode();
-//            
-//            if (vertexMap.get(srcNode) != null)
-//                continue;
-//            
-//            //System.out.println("edge = " + edge);
-//            Vertex lowerVertex = getVertex(srcNode);
-//            rootVertex.addLowerNeighbor(lowerVertex);
-//            lowerVertex.addUpperNeighbor(rootVertex);
-//            
-//            createGraph(srcNode);
-//        }
-//    }       
-//    protected DirectedGraph(Collection<NodeDesignElement> nodes) {
-//        this.nodes = nodes;
-//        vertexMap = new HashMap<NodeDesignElement, Vertex>();
-//        edgeMap = new HashMap<EdgeDesignElement, Edge>();
-//        rootVertices = new ArrayList<Vertex>();
-//        vertices = new ArrayList<Vertex>();
-//    }
-    /**
-     *
-     *
-     */
-//    public static DirectedGraph createGraph(Collection<NodeDesignElement> nodes) {
-//        DirectedGraph graph = new DirectedGraph(nodes);
-//        graph.createGraph();
-//        return graph;
-//    }
-//    
-//    /**
-//     *
-//     *
-//     */
-//    public static DirectedGraph createGraph(Collection<NodeDesignElement> nodes,
-//            NodeDesignElement rootNode) {
-//        DirectedGraph graph = new DirectedGraph(nodes);
-//        graph.createGraph(rootNode);
-//        graph.findRootVertices();
-//        return graph;
-//    }
-    }
 
     /**
      *

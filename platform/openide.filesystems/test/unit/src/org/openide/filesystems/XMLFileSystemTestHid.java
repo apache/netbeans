@@ -1274,49 +1274,11 @@ public class XMLFileSystemTestHid extends TestBaseHid {
         return testName;
     }
 
-    private static String getObjectViaMethodValue4 () {
-        return "";
-    }
 ///
     private static String getObjectViaMethodValue5 () {
         return "";
     }
 
-    private static Object getObjectViaMethodValue6 (Map attrs) {
-        try {
-            attrs.keySet().iterator().remove();
-            return "UnsupportedOperationException";
-        } catch (UnsupportedOperationException ex) {
-            // ok
-        }
-        try {
-            attrs.put("value1", "nothing");
-            return "UnsupportedOperationException";
-        } catch (UnsupportedOperationException ex) {
-            // ok
-        }
-        try {
-            attrs.remove("value1");
-            return "UnsupportedOperationException";
-        } catch (UnsupportedOperationException ex) {
-            // ok
-        }
-
-
-        return attrs.get("value1");
-    }
-    private static Object getObjectViaMethodValue7 (Map<String,Object> attrs, String attrName) {
-        assertEquals(9, attrs.keySet().size());
-        try {
-            attrs.entrySet().remove(null);
-            return "UnsupportedOperationException";
-        } catch (UnsupportedOperationException ex) {
-            // ok
-        }
-
-
-        return attrs.get("value1") + attrName;
-    }
     private static FileObject root;
     public static final class Data {
         Object peer;
@@ -1324,9 +1286,6 @@ public class XMLFileSystemTestHid extends TestBaseHid {
             FileObject fo = root.getFileObject("peer/snd");
             peer = fo.getAttribute("testPeer");
         }
-    }
-    private static Object getFO(FileObject fo) {
-        return fo;
     }
     
 }

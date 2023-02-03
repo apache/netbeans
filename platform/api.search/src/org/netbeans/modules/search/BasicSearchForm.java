@@ -556,27 +556,6 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
                                        : defaultTextColor);
         }
     }
-
-    private static boolean isBackrefSyntaxUsed(String text) {
-        final int len = text.length();
-        if (len < 2) {
-            return false;
-        }
-        String textToSearch = text.substring(0, len - 1);
-        int startIndex = 0;
-        int index;
-        while ((index = textToSearch.indexOf('\\', startIndex)) != -1) {
-            char c = text.charAt(index + 1);
-            if (c == '\\') {
-                startIndex = index + 1;
-            } else if ((c >= '0') && (c <= '9')) {
-                return true;
-            } else {
-                startIndex = index + 2;
-            }
-        }
-        return false;
-    }
     
     private Color getErrorTextColor() {
         if (errorTextColor == null) {

@@ -70,7 +70,6 @@ public class WeakListenerTest extends NbTestCase {
     private static class PropChBean {
         private Vector listeners = new Vector();
         private void addPCL(PropertyChangeListener l) { listeners.add(l); }
-        private void removePCL(PropertyChangeListener l) { listeners.remove(l); }
     } // End of PropChBean class
     
     private static class PrivatePropL extends WeakListener implements PropertyChangeListener {

@@ -1363,17 +1363,7 @@ final class DefaultModel implements Model {
         return ms;
     }
     ///////////////////////////////////////////////////
-    
-    /** Checks whether the mode isn't null.  */
-    private static boolean validateAddingMode(ModeImpl mode) {
-        if(mode == null) {
-            Logger.getLogger(DefaultModel.class.getName()).log(Level.WARNING, null,
-                              new java.lang.NullPointerException("Not allowed null mode")); // NOI18N
-            return false;
-        }
-        
-        return true;
-    }
+
     
     /** Keeps selected components of sliding modes in sync with given current
      * active mode. Sliding mode can have non-null selection (=slide) only if

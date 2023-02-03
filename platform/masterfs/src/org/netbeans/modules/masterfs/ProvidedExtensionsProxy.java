@@ -478,7 +478,7 @@ public class ProvidedExtensionsProxy extends ProvidedExtensions {
             reentrantCheck.set(null);
         }
     }
-    
+
     private class DelegatingDeleteHandler implements ProvidedExtensions.DeleteHandler {
         private ProvidedExtensions.DeleteHandler delegate;
         private DelegatingDeleteHandler(final ProvidedExtensions.DeleteHandler delegate) {

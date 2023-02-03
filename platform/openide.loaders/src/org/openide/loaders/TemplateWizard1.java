@@ -320,12 +320,6 @@ final class TemplateWizard1 extends javax.swing.JPanel implements DataFilter,
 
     }//GEN-END:initComponents
 
-
-    private void nameFocusGained (java.awt.event.FocusEvent evt) {//GEN-FIRST:event_nameFocusGained
-    }//GEN-LAST:event_nameFocusGained
-    private void templatesTreeValueChanged (javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_templatesTreeValueChanged
-    }//GEN-LAST:event_templatesTreeValueChanged
-
     /** Handles explorer manager property changes. */
     public void propertyChange(java.beans.PropertyChangeEvent evt) {
         if (evt.getPropertyName() == ExplorerManager.PROP_SELECTED_NODES && listener != null) {
@@ -334,11 +328,6 @@ final class TemplateWizard1 extends javax.swing.JPanel implements DataFilter,
             updateDescription (template);
         }
     }
-
-
-    private void packagesListValueChanged (javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_packagesListValueChanged
-    }//GEN-LAST:event_packagesListValueChanged
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel browserLabel;

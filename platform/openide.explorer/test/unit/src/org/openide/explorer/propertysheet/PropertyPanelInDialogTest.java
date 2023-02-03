@@ -485,11 +485,7 @@ public class PropertyPanelInDialogTest extends NbTestCase {
         
         
     }
-    
-    private void changeProperty(PropertyPanel ren, Node.Property newProp) {
-        ren.setProperty(newProp);
-    }
-    
+
     private void clickOn(final PropertyPanel ren, final int fromRight, final int fromTop) throws Exception {
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
@@ -542,18 +538,7 @@ public class PropertyPanelInDialogTest extends NbTestCase {
         });
         sleep();
     }
-    
-    private void shiftPressKey(final Component target, final int key) throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            public void run() {
-                KeyEvent ke = new KeyEvent(target, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), KeyEvent.SHIFT_MASK, key, (char) key);
-                target.dispatchEvent(ke);
-            }
-        });
-        sleep();
-    }
-    
-    
+
     private void typeKey(final Component target, final int key) throws Exception {
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {

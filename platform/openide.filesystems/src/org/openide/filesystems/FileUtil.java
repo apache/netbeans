@@ -2346,10 +2346,6 @@ public final class FileUtil extends Object {
             super(path);
         }
 
-        private NonCanonicalizingFile(URI uri) {
-            super(uri);
-        }
-
         @Override
         public File getCanonicalFile() throws IOException {
             return wrapFileNoCanonicalize(normalizeFile(super.getAbsoluteFile()));

@@ -237,9 +237,7 @@ class ModuleUpdate extends Object {
     }
     
     class ErrorCatcher implements org.xml.sax.ErrorHandler {
-        private void message (String level, org.xml.sax.SAXParseException e) {
-            pError = true;
-        }
+
 
         @Override
         public void error (org.xml.sax.SAXParseException e) {

@@ -391,10 +391,7 @@ abstract class SheetCell extends AbstractCellEditor implements TableModelListene
         
         return editor;
     }
-    
-    private PropertyPanel obtainPanel (Node node, Property prop) {
-        return getEditor(prop, node);
-    }
+
     
     private static class NullPanel extends JPanel {
         private WeakReference<Node> weakNode;

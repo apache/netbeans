@@ -166,10 +166,6 @@ class TableSheet extends JScrollPane {
         }
     }
 
-    private static String getString(String key) {
-        return NbBundle.getMessage(TableSheet.class, key);
-    }
-    
     @Override
     public void updateUI() {
         super.updateUI();

@@ -242,12 +242,6 @@ final class BrokenDataShadow extends MultiDataObject {
         }
     }
 
-    /** Constructs new broken data shadow for given primary file.
-    * @param fo the primary file
-    */
-    private BrokenDataShadow (FileObject fo) throws DataObjectExistsException {
-        this(fo, DataLoaderPool.getShadowLoader());
-    }
     
     /* Getter for delete action.
     * @return true if the object can be deleted

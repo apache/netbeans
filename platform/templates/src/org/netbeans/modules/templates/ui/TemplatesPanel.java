@@ -1528,18 +1528,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
             n.setDisplayName(displayName);
         }
     }
-    
-    private static Set<String> getOtherFileNames(FileObject fo) {
-        FileObject parent = fo.getParent();
-        FileObject[] children = parent.getChildren();
-        Set<String> siblings = new HashSet<>(children.length);
-        for (FileObject ch : children) {
-            if (ch != fo) {
-                siblings.add(ch.getNameExt());
-            }
-        }
-        return siblings;
-    }
+
 
     private static Set<String> getOtherFileNames(TemplateNode n) {
         Node parent = n.getParentNode();

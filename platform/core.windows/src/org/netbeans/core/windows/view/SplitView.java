@@ -218,8 +218,5 @@ public class SplitView extends ViewElement {
         splitPane.setChildren( orientation, arrViews, arrSplitWeights );
     }
 
-    private static void debugLog(String message) {
-        Debug.log(SplitView.class, message);
-    }
 }
 

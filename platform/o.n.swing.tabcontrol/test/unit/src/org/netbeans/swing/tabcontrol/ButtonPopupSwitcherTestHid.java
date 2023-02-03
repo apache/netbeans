@@ -146,11 +146,6 @@ public class ButtonPopupSwitcherTestHid extends TestCase {
         }
     }
 
-    
-    private void sleep() {
-        sleep(12000);
-    }
-    
     private void sleep(long millis) {
         try {
             Thread.sleep(millis);

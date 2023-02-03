@@ -214,9 +214,6 @@ public class CachingPreventsFileTouchesTest extends NbTestCase {
     @ServiceProvider(service = Handler.class)
     public static final class CaptureLog extends Handler {
         private static Logger watchOver = Logger.getLogger("org.netbeans.core.modules");
-        private static void assertCalled() {
-            assertEquals("OK", System.getProperty("CaptureLog"));
-        }
 
         public CaptureLog() {
             System.setProperty("CaptureLog", "OK");

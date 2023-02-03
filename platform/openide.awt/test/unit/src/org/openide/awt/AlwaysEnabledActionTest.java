@@ -453,37 +453,13 @@ public class AlwaysEnabledActionTest extends NbTestCase implements PropertyChang
 
     private static int myListenerCounter;
     private static int myListenerCalled;
-    private static ActionListener myListener() {
-        myListenerCounter++;
-        return new MyListener();
-    }
     private static ActionListener myAction() {
         myListenerCounter++;
         return new MyAction();
     }
-    private static Action myNamedAction() {
-        MyAction a = new MyAction();
-        a.putValue(Action.NAME, "MyNamedAction");
-        return a;
-    }
-    private static Action myIconAction() {
-        MyAction a = new MyAction();
-        final ImageIcon ii = new ImageIcon();
-        a.putValue(MyAction.SMALL_ICON, ii);
-        a.putValue("v", ii);
-        return a;
-    }
-    private static ActionListener myContextAction() {
-        myListenerCounter++;
-        return new MyContextAction();
-    }
     private static int myIconResourceCounter;
-    private static String myIconResource() {
-        myIconResourceCounter++;
-        return "org/openide/awt/TestIcon.png";
-    }
-    
-    
+
+
     private Action readAction(String fileName) throws Exception {
         FileObject fo = this.folder.getFileObject(fileName);
         assertNotNull("file " + fileName, fo);

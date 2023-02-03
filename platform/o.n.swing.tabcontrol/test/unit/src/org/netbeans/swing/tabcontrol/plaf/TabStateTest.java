@@ -217,31 +217,7 @@ public class TabStateTest extends TestCase {
             }
             assertAllTabsNotRepainted(msg);
         }
-        
-        private void assertTabRepainted (String msg, int tab) {
-            if (repaintedTabs == null) {
-                fail ("No tabs repainted - " + msg);
-            }
-            Set set = new HashSet (repaintedTabs);
-            repaintedTabs = null;
-            assertTrue ("Number of tabs repainted should be 1 but is " + set.size() + " - contents: " + set, set.size() == 1);
-            Integer in = (Integer) set.iterator().next();
-            assertTrue ("Wrong tab repainted - should be " + tab + " but is " + in + " - " + msg, in.intValue() == tab);
-        }
-        
-        private void assertTabsRepainted (String msg, int[] tabs) {
-            if (repaintedTabs == null) {
-                fail ("No tabs repainted - " + msg );
-            }
-            Set set = new HashSet (repaintedTabs);
-            repaintedTabs = null;
-            for (int i=0; i < tabs.length; i++) {
-                if (!set.contains(new Integer(tabs[i]))) {
-                    fail (msg + " Tab " + tabs[i] + " was not repainted - repainted tabs were " + set);
-                }
-            }
-        }
-        
+
         protected void repaintTab(int tab) {
             if (repaintedTabs == null) {
                 repaintedTabs = new HashSet();

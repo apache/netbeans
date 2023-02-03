@@ -144,24 +144,6 @@ public class JInlineMenu extends JMenuItem implements DynamicMenuContent {
         }
     }
 
-
-
-    /** Finds the index of a component in array of components.
-     * @return index or -1
-     */
-    private static int findIndex(Object of, Object[] arr) {
-        int menuLength = arr.length;
-
-        for (int i = 0; i < menuLength; i++) {
-            if (of == arr[i]) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-
     public JComponent[] synchMenuPresenters(JComponent[] items) {
         return this.items;
     }

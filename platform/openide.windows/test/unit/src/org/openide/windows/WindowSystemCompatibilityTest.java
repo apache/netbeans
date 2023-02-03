@@ -42,9 +42,6 @@ public final class WindowSystemCompatibilityTest extends Object {
         }
     }
     
-    private WindowSystemCompatibilityTest(String testName) {
-    }
-
     /** Checks the default implementation.
      */
     public static Test suite() {

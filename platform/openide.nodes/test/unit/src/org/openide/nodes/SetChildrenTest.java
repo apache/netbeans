@@ -426,49 +426,7 @@ public class SetChildrenTest extends NbTestCase {
                 }
             }
         }
-        
-        private static void printEvents( List events ) {
-        
-            for ( Iterator it = events.iterator(); it.hasNext(); ) {
-                Object e = it.next();
 
-                if ( e instanceof PropertyChangeEvent ) {
-                    System.out.println("PCHG : " + ((PropertyChangeEvent)e).getPropertyName() + " : " + ((PropertyChangeEvent)e).getSource() );
-                    System.out.println(" new : " + ((PropertyChangeEvent)e).getOldValue() );
-                    System.out.println(" old : " + ((PropertyChangeEvent)e).getNewValue() );
-                }
-
-                if ( e instanceof NodeMemberEvent ) {
-                    NodeMemberEvent ne = (NodeMemberEvent) e;
-                    System.out.println( ( ne.isAddEvent() ? "cADD : " : "cRMV : " ) + ne.getNode().getName() );
-
-                    Node[] delta = ne.getDelta();                
-                    if ( delta == null ) {
-                        System.out.println("d    : " + null );
-                    }
-                    else {
-                        System.out.println("d    : "  );
-                        for( int i = 0; i < delta.length; i++ ) {
-                            System.out.println("      " + delta[i].getName() );
-                        }
-                    }
-
-                    int[] deltaIdx = ne.getDeltaIndices();                
-                    if ( deltaIdx == null ) {
-                        System.out.println("di   : " + null );
-                    }
-                    else {
-                        System.out.println("di   : " );
-                        for( int i = 0; i < deltaIdx.length; i++ ) {
-                            System.out.println("      " + deltaIdx[i] );
-                        }
-                    }
-
-                }
-
-            }    
-        }
-        
     }
         
     

@@ -188,18 +188,7 @@ public class AutoSubmitTest extends NbTestCase {
             }
         } while (true);
     }
-    
-    private static boolean checkHandlers(String msg, Logger logger) {
-        Handler[] handlers = logger.getHandlers();
-        int n = 0;
-        for (Handler h : handlers) {
-            if (h instanceof UIHandler && !((UIHandler) h).isExceptionOnly()) {
-                n++;
-            }
-        }
-        System.err.println(msg+" Handlers with not exception only = "+n+", logger = "+logger);
-        return n == 1;
-    }
+
     
     private static void checkMessagesIn(File logs, int n) throws Exception {
         InputStream in = new FileInputStream(logs);

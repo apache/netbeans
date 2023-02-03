@@ -137,11 +137,7 @@ public class NbmAdvancedTestCase extends NbTestCase {
         }
         return provider;
     }
-    
-    private static String dot2dash (String codeName) {
-        return codeName.replace ('.', '-');
-    }
-    
+
     private static String deps2ModuleModuleDependencies (String... deps) {
         String res = "";
         for (String dep : Arrays.asList (deps)) {

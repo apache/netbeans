@@ -175,16 +175,7 @@ public class NbPresenterTest extends NbTestCase {
         presenter = new NbPresenter( descriptor, (Dialog)null, true );
         assertTrue( Boolean.FALSE.equals(presenter.getRootPane().getClientProperty( "nb.default.option.pane")) );
     }
-    
-    private void showButtonArray (Object [] array) {
-        JButton [] arr = (JButton []) array;
-        System.out.print("do: ");
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i].getText() + ", ");
-        }
-        System.out.println(".");
-    }
-    
+
 
     public void testNoDefaultClose() {
         DialogDescriptor dd = new DialogDescriptor("Test", "Test dialog");

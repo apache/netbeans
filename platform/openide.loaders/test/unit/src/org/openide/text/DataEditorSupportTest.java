@@ -574,9 +574,6 @@ public class DataEditorSupportTest extends NbTestCase {
             return new Replace ();
         }
 
-        private void setReadOnly(boolean readOnly) {
-            this.readOnly = readOnly;
-        }
     }
     
     private static final class Replace extends Object implements java.io.Serializable {
@@ -671,13 +668,6 @@ public class DataEditorSupportTest extends NbTestCase {
             return instance;
         }
 
-        private void assertFile(FileObject primaryFile) {
-            if (!primaryFile.equals(file)) {
-                AssertionFailedError afe = new AssertionFailedError("Files shall be the same:\nExpected:" + primaryFile + "\nReal    :" + file);
-                afe.initCause(who);
-                throw afe;
-            }
-        }
     }
     
     public static final class Pool extends org.openide.loaders.DataLoaderPool {

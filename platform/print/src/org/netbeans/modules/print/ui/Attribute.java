@@ -695,8 +695,6 @@ final class Attribute extends Dialog implements Macro.Listener, Percent.Listener
         };
     }
 
-    private void updateAttribute() {}
-
     private void updateText() {
         boolean enabled = !myAsEditor.isSelected();
 

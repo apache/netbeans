@@ -74,28 +74,7 @@ public class GeneralActionTest extends NbTestCase {
     }
     
     private static int myListenerCounter;
-    private static ActionListener myListener() {
-        myListenerCounter++;
-        return null;
-    }
+
     private static int myIconResourceCounter;
-    private static String myIconResource() {
-        myIconResourceCounter++;
-        return "/org/netbeans/modules/actions/support/TestIcon.png";
-    }
-    
-    
-    private Action readAction(String fileName) throws Exception {
-        FileObject fo = this.folder.getFileObject(fileName);
-        assertNotNull("file " + fileName, fo);
-        
-        Object obj = fo.getAttribute("instanceCreate");
-        assertNotNull("File object has not null instanceCreate attribute", obj);
-        
-        if (!(obj instanceof Action)) {
-            fail("Object needs to be action: " + obj);
-        }
-        
-        return (Action)obj;
-    }
+
 }

@@ -36,7 +36,7 @@ final class LazyNode extends FilterNode {
         super(an, new SwitchChildren(an));
         ((SwitchChildren)getChildren()).node = this;
         this.map = map;
-        
+
         an.setName((String) map.get("name")); // NOI18N
         an.setDisplayName((String) map.get("displayName")); // NOI18N
         an.setShortDescription((String) map.get("shortDescription")); // NOI18N

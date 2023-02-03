@@ -908,17 +908,7 @@ public class ExtTestCase extends NbTestCase {
             }
         }
     }
-    
-    private static void popEventQueue() throws Exception {
-        try {
-            Method m = EventQueue.class.getDeclaredMethod("pop", null);
-            m.setAccessible(true);
-            m.invoke(Toolkit.getDefaultToolkit().getSystemEventQueue(), null);
-        } catch (Exception e) {
-            
-        }
-    }
-    
+
     private static void dispatchEvent(EventQueue queue, AWTEvent evt) throws Exception {
         if (queue == null) {
             queue = Toolkit.getDefaultToolkit().getSystemEventQueue();

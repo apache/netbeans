@@ -740,37 +740,7 @@ public class NewPropertyPanelTest extends NbTestCase {
             }
         });
     }
-    
-    private void clickOn (final JComponent ren, final int fromRight, final int fromTop) throws Exception {
-        SwingUtilities.invokeAndWait (new Runnable() {
-            public void run() {
-                Point toClick = new Point(ren.getWidth() - fromRight, fromTop);
-                Component target=ren.getComponentAt(toClick);
-                toClick = SwingUtilities.convertPoint(ren, toClick, target);
-                System.err.println("Target component is " + target.getClass().getName() + " - " + target + " clicking at " + toClick);
-                
-                MouseEvent me = new MouseEvent (target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), MouseEvent.BUTTON1_MASK, toClick.x, toClick.y, 2, false);
-                target.dispatchEvent(me);
-                me = new MouseEvent (target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), MouseEvent.BUTTON1_MASK, toClick.x, toClick.y, 2, false);
-                target.dispatchEvent(me);
-                me = new MouseEvent (target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), MouseEvent.BUTTON1_MASK, toClick.x, toClick.y, 2, false);
-            }
-        });
-        sleep();
-    }
-    
-    private void clickOn (final JComponent ren) throws Exception {
-        SwingUtilities.invokeAndWait (new Runnable() {
-            public void run() {
-                Point toClick = new Point(5,5);
-                Component target=ren.getComponentAt(toClick);
-                MouseEvent me = new MouseEvent (target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), MouseEvent.BUTTON1_MASK, toClick.x, toClick.y, 2, false);
-                target.dispatchEvent(me);
-            }
-        });
-        sleep();
-    }
-    
+
     private void setEnabled(final PropertyPanel ren,final boolean val) throws Exception {
         SwingUtilities.invokeAndWait (new Runnable() {
             public void run() {
@@ -782,38 +752,7 @@ public class NewPropertyPanelTest extends NbTestCase {
     
     private Exception throwMe = null;
     private String flushResult = null;
-    private String flushValue(final PropertyPanel ren) throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            public void run() {
-                try {
-                    //flushResult = ren.flushValue();
-                } catch (Exception e) {
-                    throwMe = e;
-                    flushResult = null;
-                }
-            }
-        });
-        if (throwMe != null) {
-            try {
-                throw throwMe;
-            } finally {
-                throwMe = null;
-            }
-        }
-        return flushResult;
-    }
-    
 
-    private void releaseKey (final Component target, final int key) throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            public void run() {
-                KeyEvent ke = new KeyEvent (target, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, key, (char) key);
-                target.dispatchEvent(ke);
-            }
-        });
-        sleep();
-    }
-    
     private Exception throwMe2 = null;
     private void pressKey (final Component target, final int key) throws Exception {
         SwingUtilities.invokeAndWait(new Runnable() {
@@ -833,18 +772,7 @@ public class NewPropertyPanelTest extends NbTestCase {
             throw e1;
         }
     }
-    
-    private void shiftPressKey (final Component target, final int key) throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            public void run() {
-                KeyEvent ke = new KeyEvent (target, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), KeyEvent.SHIFT_MASK, key, (char) key);
-                target.dispatchEvent(ke);
-            }
-        });
-        sleep();
-    }
-    
-        
+
     private void typeKey (final Component target, final int key) throws Exception {
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {

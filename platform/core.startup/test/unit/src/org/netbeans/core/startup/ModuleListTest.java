@@ -176,52 +176,7 @@ public class ModuleListTest extends SetupHid {
         assertCache();
         */
     }
-    
-    private void assertCache() throws Exception {
-        Stamps.getModulesJARs().flush(0);
-        Stamps.getModulesJARs().shutdown();
-        
-        File f = Places.getCacheSubfile("all-modules.dat");
-        assertTrue("Cache exists", f.exists());
 
-        FileObject mf = fs.findResource(modulesfolder.getPath());
-        assertNotNull("config folder exits", mf);
-        
-        CountingSecurityManager.initialize(new File(fs.getRootDirectory(), "Modules").getPath());
-        
-        MockModuleInstaller installer = new MockModuleInstaller();
-        MockEvents ev = new MockEvents();
-        ModuleManager mgr2 = new ModuleManager(installer, ev);
-        assertNotNull(mf);
-        ModuleList list2 = new ModuleList(mgr2, mf, ev);
-        mgr2.mutexPrivileged().enterWriteAccess();
-        CharSequence log = Log.enable("org.netbeans.core.startup.ModuleList", Level.FINEST);
-        try {
-            list2.readInitial();
-        } finally {
-            mgr2.mutexPrivileged().exitWriteAccess();
-        }
-        if (log.toString().indexOf("no cache") >= 0) {
-            fail("Everything shall be read from cache:\n" + log);
-        }
-        if (log.toString().indexOf("Reading cache") < 0) {
-            fail("Cache shall be read:\n" + log);
-        }
-
-        Set<String> moduleNew = cnbs(mgr2.getModules());
-        Set<String> moduleOld = cnbs(mgr.getModules());
-        
-        assertEquals("Same set of modules:", moduleOld, moduleNew);
-        
-        CountingSecurityManager.assertCounts("Do not access the module config files", 0);
-    }
-    private static Set<String> cnbs(Set<Module> modules) {
-        TreeSet<String> set = new TreeSet<String>();
-        for (Module m : modules) {
-            set.add(m.getCodeNameBase());
-        }
-        return set;
-    }
     
     /** Check that adding a new module via XML, as Auto Update does, works.
      * Written to help test #27106.

@@ -52,11 +52,6 @@ public class FolderInstanceListenersWithCookieTest extends NbTestCase {
         return 20000;
     }
 
-    private static void setSystemProp(String key, String value) {
-        java.util.Properties prop = System.getProperties();
-        if (prop.get(key) != null) return;
-        prop.put(key, value);
-    }
 
     @Override
     protected void setUp () throws Exception {

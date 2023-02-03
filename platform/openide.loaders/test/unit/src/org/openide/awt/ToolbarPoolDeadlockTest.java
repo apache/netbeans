@@ -158,36 +158,7 @@ public class ToolbarPoolDeadlockTest extends NbTestCase {
         }
         assertEquals("And now the action is created", 1, MyAction.counter);
     }
-    
-    private static Object writeInstance (final FileObject folder, final String name, final Object inst) throws IOException {
-        class W implements FileSystem.AtomicAction {
-            public Object create;
-            
-            public void run () throws IOException {
-                FileObject fo = FileUtil.createData (folder, name);
-                FileLock lock = fo.lock ();
-                ObjectOutputStream oos = new ObjectOutputStream (fo.getOutputStream (lock));
-                oos.writeObject (inst);
-                oos.close ();
-                lock.releaseLock ();
-                
-                DataObject obj = DataObject.find (fo);
-                InstanceCookie ic = obj.getCookie(InstanceCookie.class);
-                
-                assertNotNull ("Cookie created", ic);
-                try {
-                    create = ic.instanceCreate ();
-                    assertEquals ("The same instance class", inst.getClass(), create.getClass ());
-                } catch (ClassNotFoundException ex) {
-                    fail (ex.getMessage ());
-                }
-            }
-        }
-        W w = new W ();
-        folder.getFileSystem ().runAtomicAction (w);
-        return w.create;
-    }
-    
+
     private static void assertLabels (String msg, int cnt, Component c) {
         int real = countLabels (c);
         assertEquals (msg, cnt, real);

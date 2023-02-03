@@ -121,18 +121,6 @@ public class Face {
         edgeMap.add(newEdge);
     }
 
-    /**
-     * 
-     * @param edgeToRemove
-     */
-    private void removeEdge(Edge<?> edgeToRemove) {
-        edges.remove(edgeToRemove);
-
-        // It's possible to have two entries of the same edge.
-        if (!edges.contains(edgeToRemove)) {
-            edgeMap.remove(edgeToRemove);
-        }
-    }
 
     /**
      * 
@@ -395,17 +383,6 @@ public class Face {
         updateDartIndices(index, null);
     }
 
-    /**
-     * 
-     * @param dartToRemove
-     */
-    private void removeDart(Dart dartToRemove) {
-        int index = getDartIndex(dartToRemove);
-        darts.remove(index);
-        dartMap.remove(dartToRemove);
-
-        updateDartIndices(index, dartToRemove);
-    }
 
     /**
      * 

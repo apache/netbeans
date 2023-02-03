@@ -180,15 +180,6 @@ public final class EqualPolygon extends Polygon {
         }
     }
 
-    private Point[] sortPoints(Point[] p) {
-        //Prune duplicates
-        HashSet<Point> set = new HashSet<Point>(Arrays.asList(p));
-        p = new Point[set.size()];
-        p = set.toArray(p);
-        //Then sort
-        Arrays.sort(p, comparator);
-        return p;
-    }
 
     private static final Comparator<Point> comparator = new PointsComparator();
 

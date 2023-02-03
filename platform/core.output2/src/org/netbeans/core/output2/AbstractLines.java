@@ -1205,13 +1205,6 @@ abstract class AbstractLines implements Lines, Runnable, ActionListener {
         }
     }
 
-    private int getTabLength(int i) {
-        if (i == 0) {
-            return tabLengthSums.get(0);
-        } else {
-            return tabLengthSums.get(i) - tabLengthSums.get(i-1) + 1;
-        }
-    }
 
     int checkLimits() {
         synchronized (readLock()) {

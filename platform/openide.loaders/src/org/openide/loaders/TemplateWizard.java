@@ -255,18 +255,7 @@ public class TemplateWizard extends WizardDescriptor {
         }
         return targetDataFolder;
     }
-    
-    // Note: called by reflection from projects/projectui/Hacks
-    private void reload (DataObject obj) {
-        Iterator it;
-        if (
-            obj == null ||
-            (it = getIterator (obj)) == null
-        ) {
-            it = defaultIterator ();
-        }
-        this.iterator.setIterator (it, true);
-    }
+
     
     /** Sets the target folder.
     *

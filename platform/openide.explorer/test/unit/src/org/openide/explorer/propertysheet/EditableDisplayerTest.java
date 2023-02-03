@@ -1001,16 +1001,6 @@ public class EditableDisplayerTest extends NbTestCase {
         assertEquals("Pixel test " + (count-1) + " " + msg + " - Color at " + x + "," + y + " does not match", toMatch, checkColor);
     }
     
-    
-    
-    private void changeProperty(final PropertyDisplayer_Mutable ren, final Node.Property newProp) throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            public void run() {
-                ren.setProperty(newProp);
-            }
-        });
-    }
-    
     private void clickOn(final EditablePropertyDisplayer ren, final int fromRight, final int fromTop) throws Exception {
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
@@ -1054,28 +1044,7 @@ public class EditableDisplayerTest extends NbTestCase {
     
     private Exception throwMe = null;
     private String flushResult = null;
-    private String flushValue(final EditablePropertyDisplayer ren) throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            public void run() {
-                try {
-                    //flushResult = ren.flushValue();
-                } catch (Exception e) {
-                    throwMe = e;
-                    flushResult = null;
-                }
-            }
-        });
-        if (throwMe != null) {
-            try {
-                throw throwMe;
-            } finally {
-                throwMe = null;
-            }
-        }
-        return flushResult;
-    }
-    
-    
+
     private void releaseKey(final Component target, final int key) throws Exception {
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
@@ -1096,17 +1065,7 @@ public class EditableDisplayerTest extends NbTestCase {
         });
         sleep();
     }
-    
-    private void shiftPressKey(final Component target, final int key) throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            public void run() {
-                KeyEvent ke = new KeyEvent(target, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), KeyEvent.SHIFT_MASK, key, (char) key);
-                target.dispatchEvent(ke);
-            }
-        });
-        sleep();
-    }
-    
+
     private void ctrlPressKey(final Component target, final int key) throws Exception {
         if (SwingUtilities.isEventDispatchThread()) {
             KeyEvent k = new KeyEvent(target, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), KeyEvent.CTRL_MASK, key, (char) key);

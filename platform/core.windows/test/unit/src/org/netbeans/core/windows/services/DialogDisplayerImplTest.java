@@ -355,10 +355,6 @@ public class DialogDisplayerImplTest extends NbTestCase {
 //            Thread.sleep (10);
         }
     }
-    
-    private void waitAWT() throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() { @Override public void run() { } });
-    }
 
     private void assertShowing(String msg, boolean showing, Component c) throws InterruptedException {
         for (int i = 0; i < 100; i++) {

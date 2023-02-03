@@ -1098,11 +1098,4 @@ public class GTPlanarizer<N, E> {
         this.maxIterations = iterations;
     }
 
-    /**
-     * 
-     * @return
-     */
-    private int getMaxIterations() {
-        return maxIterations;
-    }
 }

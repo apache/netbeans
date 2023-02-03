@@ -232,22 +232,7 @@ public class NbClipboardTest extends NbTestCase {
         
         assertEquals ("no new change", prev, listener.cnt);
     }
-    
-    
-    private static void waitEQ(final Window w) throws Exception {
-        class R implements Runnable {
-            boolean visible;
-            
-            public void run() {
-                visible = w.isShowing();
-            }
-        }
-        R r = new R();
-        while (!r.visible) {
-            SwingUtilities.invokeAndWait(r);
-        }
-    }
-    
+
     private static class BusyClipboard extends Clipboard {
 
         public BusyClipboard() {

@@ -486,17 +486,7 @@ public class SheetTableTest extends NbTestCase {
         });
         sleep();
     }
-    
-    private void releaseKey(final Component target, final int key) throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            public void run() {
-                KeyEvent ke = new KeyEvent(target, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, key, (char) key);
-                target.dispatchEvent(ke);
-            }
-        });
-        sleep();
-    }
-    
+
     private void pressKey(final Component target, final int key) throws Exception {
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {

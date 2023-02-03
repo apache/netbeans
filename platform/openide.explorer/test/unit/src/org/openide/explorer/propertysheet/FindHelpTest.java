@@ -104,14 +104,6 @@ public class FindHelpTest extends ExtTestCase {
         
     }
     
-    // XXX test use of ExPropertyEditor.PROPERTY_HELP_ID
-    
-    private static Collection findChildren(Component p, Class c) {
-        Collection x = new LinkedList();
-        findChildren(p, c, x);
-        return x;
-    }
-    
     private static void findChildren(Component p, Class c, Collection x) {
         if (c.isInstance(p)) {
             x.add(p);

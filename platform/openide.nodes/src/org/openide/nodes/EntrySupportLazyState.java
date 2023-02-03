@@ -94,14 +94,7 @@ final class EntrySupportLazyState {
     final Map<Entry, EntryInfo> getEntryToInfo() {
         return Collections.unmodifiableMap(entryToInfo);
     }
-    
-    private EntrySupportLazyState cloneState() {
-        try {
-            return (EntrySupportLazyState)clone();
-        } catch (CloneNotSupportedException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
+
 
     final EntrySupportLazyState changeInited(boolean newInited) {
         return new EntrySupportLazyState(

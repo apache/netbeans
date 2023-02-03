@@ -392,31 +392,6 @@ final class DefaultPrintable extends Object implements Printable {
         }
     }
 
-    /** Translates given page number to line number.
-    * @param pageNo
-    * @return number of first line on the page
-    * /
-    private int page2Line(int pageNo) {
-        if (pageNo == 0) {
-            return 0;
-        } else {
-            return (pageNo == pageIndicesSize ? Math.max(startLayouts.size() - 1, 0) : lineIndices[pageNo]);
-        }
-    }
-     */
-    /**
-    * @param tl a TextLayout
-    * @param currentLine
-    * @return <tt>true</tt> iff <tt>tl</tt> is a TextLayout that does not represent wrapped line
-    */
-    private boolean isNewline(TextLayout tl, int currentLine) {
-        if (currentLine >= startLayouts.size()) {
-            return false; // wrapping appeared
-        } else {
-            return startLayouts.get(currentLine) == tl;
-        }
-    }
-
     /** Computes alignment for a TextLayout with given bounds on the page with given width
     * and for given alignment policy.
     *
@@ -573,16 +548,6 @@ final class DefaultPrintable extends Object implements Printable {
     /** @return a line ascent correction */
     private static float getLineAscentCorrection() {
         return PrintPreferences.getLineAscentCorrection();
-    }
-
-    /** @return false */
-    private static boolean lineNumbers() {
-        return false;
-    }
-
-    // not used
-    private static Font lineNumbersFont() {
-        return new Font("Courier", java.awt.Font.PLAIN, 6); // NOI18N
     }
 
     // ----------------- options end --------------

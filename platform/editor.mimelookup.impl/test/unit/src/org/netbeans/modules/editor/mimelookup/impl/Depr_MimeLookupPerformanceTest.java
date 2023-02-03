@@ -65,23 +65,6 @@ public class Depr_MimeLookupPerformanceTest extends NbTestCase {
         
     }
 
-    private void gc(){
-        for (int i = 0; i<5; i++){
-            System.gc();
-        }
-    }
-
-    private static synchronized MemoryFilter getFilter(){
-        if (filter == null){
-            filter = new MemoryFilter(){
-                public boolean reject(Object obj){
-                    return false;
-                }
-            };
-        }
-        return filter;
-    }
-    
     public void testDummy() {
     }
     
@@ -169,48 +152,5 @@ public class Depr_MimeLookupPerformanceTest extends NbTestCase {
         assertSize("", size, lookup);
     }
     */
-    
-    
-    
-    private void checkPopupItemPresence(final MimeLookup lookup, final Class checkedClazz, final boolean shouldBePresent){
-        TestUtilities.waitMaxMilisForValue(WAIT_TIME, new TestUtilities.ValueResolver(){
-            public Object getValue(){
-                PopupActions pa = (PopupActions)lookup.lookup(PopupActions.class);
-                if (pa == null){
-                    return Boolean.FALSE;
-                }
-                boolean bool = false;
-                List items = pa.getPopupActions();
-                for (int i=0; i<items.size(); i++){
-                    Object obj = items.get(i);
-                    if (checkedClazz == obj.getClass()){
-                        bool = true;
-                        break;
-                    }
-                }
-                if (!shouldBePresent){
-                    bool = !bool;
-                }
-                return Boolean.valueOf(bool);
-            }
-        }, Boolean.TRUE);
-        PopupActions pa = (PopupActions)lookup.lookup(PopupActions.class);
-        assertTrue("PopupActions should be found", pa != null);        
-        boolean bool = false;
-        List items = pa.getPopupActions();
-        for (int i=0; i<items.size(); i++){
-            Object obj = items.get(i);
-            if (checkedClazz == obj.getClass()){
-                bool = true;
-                break;
-            }
-        }
-        if (shouldBePresent){
-            assertTrue("Class: "+checkedClazz+" should be present in lookup", bool);
-        }else{
-            assertTrue("Class: "+checkedClazz+" should not be present in lookup", !bool);
-        }
-    }
-    
-    
+
 }

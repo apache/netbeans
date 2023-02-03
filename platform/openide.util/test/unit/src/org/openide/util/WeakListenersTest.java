@@ -710,7 +710,6 @@ public class WeakListenersTest extends NbTestCase {
     private static class PropChBean {
         private java.beans.PropertyChangeSupport listeners = new java.beans.PropertyChangeSupport (this);
         private void addPCL(PCL l) { listeners.addPropertyChangeListener (l); }
-        private void removePCL(PCL l) { listeners.removePropertyChangeListener (l); }
     } // End of PropChBean class
 
     // just a marker, its name will be used to construct the name of add/remove methods, e.g. addPCL, removePCL

@@ -553,28 +553,6 @@ public class PropertyMarkingTest extends GraphicsTestCase {
     private static String initPropertyValue;
     private static String postChangePropertyValue;
     private static String postChangeEditorValue;
-    
-    //Shamelessly stolen from util.IconManager
-    private static final BufferedImage toBufferedImage(Image img) {
-        // load the image
-        new ImageIcon(img);
-        BufferedImage rep = createBufferedImage(img.getWidth(null), img.getHeight(null));
-        Graphics g = rep.createGraphics();
-        g.drawImage(img, 0, 0, null);
-        g.dispose();
-        img.flush();
-        return rep;
-    }
-    
-    /** Creates BufferedImage 16x16 and Transparency.BITMASK */
-    private static final BufferedImage createBufferedImage(int width, int height) {
-        ColorModel model = GraphicsEnvironment.getLocalGraphicsEnvironment().
-                getDefaultScreenDevice().getDefaultConfiguration().getColorModel(Transparency.BITMASK);
-        BufferedImage buffImage = new BufferedImage(model,
-                model.createCompatibleWritableRaster(width, height), model.isAlphaPremultiplied(), null);
-        return buffImage;
-    }
-    
-    
-    
+
+
 }

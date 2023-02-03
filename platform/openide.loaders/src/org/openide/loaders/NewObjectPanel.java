@@ -124,12 +124,6 @@ final class NewObjectPanel extends javax.swing.JPanel implements DocumentListene
         }
     }// </editor-fold>//GEN-END:initComponents
 
-    private void packageNameFocusGained (java.awt.event.FocusEvent evt) {//GEN-FIRST:event_packageNameFocusGained
-
-    }//GEN-LAST:event_packageNameFocusGained
-
-    private void packageModelChanged (javax.swing.event.ListDataEvent evt) {//GEN-FIRST:event_packageModelChanged
-    }//GEN-LAST:event_packageModelChanged
 
     private void newObjectNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newObjectNameFocusGained
         if (
@@ -142,10 +136,6 @@ final class NewObjectPanel extends javax.swing.JPanel implements DocumentListene
 
         newObjectName.selectAll ();
     }//GEN-LAST:event_newObjectNameFocusGained
-
-    private void templatesTreeValueChanged (javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_templatesTreeValueChanged
-    }//GEN-LAST:event_templatesTreeValueChanged
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

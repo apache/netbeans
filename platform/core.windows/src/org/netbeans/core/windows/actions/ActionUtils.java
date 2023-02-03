@@ -520,27 +520,6 @@ public abstract class ActionUtils {
     static void closeWindow(TopComponent tc) {
         tc.close();
     }
-    
-    private static void saveDocument(TopComponent tc) {
-        SaveCookie sc = getSaveCookie(tc);
-        if(sc != null) {
-            try {
-                sc.save();
-            } catch(IOException ioe) {
-                Exceptions.printStackTrace(ioe);
-            }
-        }
-    }
-    
-    private static SaveCookie getSaveCookie(TopComponent tc) {
-        Lookup lookup = tc.getLookup();
-        Object obj = lookup.lookup(SaveCookie.class);
-        if(obj instanceof SaveCookie) {
-            return (SaveCookie)obj;
-        }
-        
-        return null;
-    }
 
     static void cloneWindow(TopComponent tc) {
         if(tc instanceof TopComponent.Cloneable) {

@@ -197,44 +197,7 @@ public final class ContextView extends JPanel {
         }
         this.resultModel = resultModel;
     }
-    
-    /**
-     * Displays file(s) selected in the given tree.
-     * 
-     * @author  Marian Petras
-     */
-    private void displaySelectedFiles(final JTree tree) {
-        final TreePath[] selectedPaths = tree.getSelectionPaths();
-        if ((selectedPaths == null) || (selectedPaths.length == 0)) {
-            displayNoFileSelected();
-        } else if (selectedPaths.length > 1) {
-            displayMultipleItemsSelected();
-        } else {
-            assert selectedPaths.length == 1;
-            
-            final TreePath path = selectedPaths[0];
-            int pathCount = path.getPathCount();
-            if (pathCount == 1) {                   //root node selected
-                displayNoFileSelected();
-            } else {
-                assert pathCount == 2 || pathCount == 3;
-                MatchingObject matchingObj;
-                int matchIndex;
-                if (pathCount == 2) {               //file node selected
-                    matchingObj = (MatchingObject) path.getLastPathComponent();
-                    matchIndex = -1;
-                } else {                            //match node selected
-                    TreePath matchingObjPath = path.getParentPath();
-                    matchingObj = (MatchingObject)
-                                  matchingObjPath.getLastPathComponent();
-                    int matchingObjRow = tree.getRowForPath(matchingObjPath);
-                    int matchRow = tree.getRowForPath(path);
-                    matchIndex = matchRow - matchingObjRow - 1;
-                }
-                displayFile(matchingObj, matchIndex);
-            }
-        }
-    }
+
     
     /**
      */

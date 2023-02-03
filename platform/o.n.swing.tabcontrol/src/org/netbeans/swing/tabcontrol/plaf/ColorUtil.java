@@ -270,13 +270,6 @@ final class ColorUtil {
     }
 
     /**
-     * Rotates a float value around 0-1
-     */
-    private static float minMax(float f) {
-        return Math.max(0, Math.min(1, f));
-    }
-
-    /**
      * Draws drag texture of given dimensions. Texture is appropriate for Metal
      * like view tabs
      */

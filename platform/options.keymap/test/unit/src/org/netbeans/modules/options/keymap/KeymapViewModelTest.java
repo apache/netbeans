@@ -201,14 +201,7 @@ public class KeymapViewModelTest extends NbTestCase {
         });
         return result;
     }
-    
-    private static String getName (Object action) {
-        if (action instanceof TextAction)
-            return (String) ((TextAction) action).getValue (Action.SHORT_DESCRIPTION);
-        if (action instanceof Action)
-            return (String) ((Action) action).getValue (Action.NAME);
-        return action.toString ();
-    }
+
     
     private void checkShortcuts(final MutableShortcutsModel model, final Map<Set<String>,ShortcutAction> shortcuts, final boolean print) {
         System.out.println("check shortcuts");

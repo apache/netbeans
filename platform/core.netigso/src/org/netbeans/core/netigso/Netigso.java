@@ -523,22 +523,6 @@ implements Cloneable, Stamps.Updater {
         }
     }
 
-    private void setFrameworkStartLevel(BundleContext bc, int startLevel) {
-        ServiceReference sr = bc.getServiceReference("org.osgi.service.startlevel.StartLevel"); // NOI18N
-        StartLevel level = null;
-        if (sr != null) {
-            level = (StartLevel) bc.getService(sr);
-            if (level != null) {
-                level.setStartLevel(startLevel);
-                return;
-            }
-        }
-        LOG.log(
-            Level.WARNING, 
-            "Cannot set framewok startLevel to {1} reference: {2} level {3}", 
-            new Object[]{null, startLevel, sr, level}
-        );
-    }
     private void setBundleStartLevel(BundleContext bc, Bundle b, int startLevel) {
         ServiceReference sr = bc.getServiceReference("org.osgi.service.startlevel.StartLevel"); // NOI18N
         StartLevel level = null;

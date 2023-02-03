@@ -148,11 +148,7 @@ public class InternalHandle {
     public final boolean isUserInitialized() {
         return userInitiated;
     }
-    
-    private int getCurrentUnit() {
-        return currentUnit;
-    }
-    
+
     public int getTotalUnits() {
         if (del != null) {
             return del.getTotalUnits();

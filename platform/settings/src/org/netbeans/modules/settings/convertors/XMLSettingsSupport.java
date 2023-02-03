@@ -320,17 +320,7 @@ final class XMLSettingsSupport {
         
         return getSuperClasses(clazz.getSuperclass(), classes);
     }
-    
-    /** Class must be subclass of org.openide.ServiceType. */
-    private static Class getServiceTypeClass(Class type) {
-        if (!org.openide.ServiceType.class.isAssignableFrom(type))
-            throw new IllegalArgumentException();
-        // finds direct subclass of service type
-        while (type.getSuperclass () != org.openide.ServiceType.class) {
-            type = type.getSuperclass();
-        }
-        return type;
-    }
+
     
     /** Settings parser. */
     static final class SettingsRecognizer extends org.xml.sax.helpers.DefaultHandler {

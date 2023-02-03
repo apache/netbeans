@@ -190,23 +190,7 @@ class NbLikeEditorKit extends DefaultEditorKit implements Callable<Void> {
 //                }
 //            }
         }
-        
-        private void assertOffset (int offset) throws BadLocationException {
-            if (offset < 0) throw new BadLocationException ("", offset);
-        }
-        
-        private boolean notifyModified (Object o) {
-            boolean canBeModified = true;
-            if (o instanceof VetoableChangeListener) {
-                VetoableChangeListener l = (VetoableChangeListener)o;
-                try {
-                    l.vetoableChange (new java.beans.PropertyChangeEvent (this, "modified", null, Boolean.TRUE));
-                } catch (java.beans.PropertyVetoException ex) {
-                    canBeModified = false;
-                }
-            }
-            return canBeModified;
-        }
+
 
         protected void fireRemoveUpdate (javax.swing.event.DocumentEvent e) {
             super.fireRemoveUpdate(e);

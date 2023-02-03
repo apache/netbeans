@@ -223,13 +223,6 @@ public class DataEditorReadOnlyTest extends NbTestCase {
             return instance;
         }
 
-        private void assertFile(FileObject primaryFile) {
-            if (!primaryFile.equals(file)) {
-                AssertionFailedError afe = new AssertionFailedError("Files shall be the same:\nExpected:" + primaryFile + "\nReal    :" + file);
-                afe.initCause(who);
-                throw afe;
-            }
-        }
     }
     
     public static final class Pool extends org.openide.loaders.DataLoaderPool {

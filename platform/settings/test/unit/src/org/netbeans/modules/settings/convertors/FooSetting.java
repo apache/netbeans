@@ -98,22 +98,7 @@ public class FooSetting {
         this.name = name;
         propertyChangeSupport.firePropertyChange(PROP_NAME, oldName, name);
     }
-    
-    private void readProperties(Properties p) {
-        property1 = p.getProperty(PROP_PROPERTY1);
-        String _name = p.getProperty(PROP_NAME);
-        if (_name != null) name = _name;
-    }
-    
-    private void writeProperties(Properties p) {
-        if (property1 != null) {
-            p.setProperty(PROP_PROPERTY1, property1);
-        }
-        if (name != null) {
-            p.setProperty(PROP_NAME, name);
-        }
-    }
-    
+
     public String toString() {
         return this.getClass().getName() + '@' +
             Integer.toHexString(System.identityHashCode(this)) +

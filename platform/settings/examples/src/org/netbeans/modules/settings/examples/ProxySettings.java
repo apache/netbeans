@@ -87,18 +87,5 @@ public final class ProxySettings {
         this.proxyPort = proxyPort;
         propertyChangeSupport.firePropertyChange(PROP_PROXYPORT, new Integer(oldProxyPort), new Integer(proxyPort));
     }
-    
-    private void readProperties(Properties p) {
-        this.proxyHost = p.getProperty(PROP_PROXYHOST); //NOI18N
-        try {
-            this.proxyPort = Integer.parseInt(p.getProperty(PROP_PROXYPORT));
-        } catch (NumberFormatException ex) {
-            this.proxyPort = 0;
-        }
-    }
-    
-    private void writeProperties(Properties p) {
-        p.setProperty(PROP_PROXYHOST, proxyHost);
-        p.setProperty(PROP_PROXYPORT, String.valueOf(proxyPort));
-    }
+
 }

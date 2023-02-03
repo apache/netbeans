@@ -220,14 +220,7 @@ public class DataShadow extends MultiDataObject implements DataObject.Container 
         setOriginal (original);
         enqueueDataShadow(this);
     }
-    
-    /** Constructs new data shadow for given primary file and referenced original.
-    * @param fo the primary file
-    * @param original original data object
-    */
-    private DataShadow (FileObject fo, DataObject original) throws DataObjectExistsException {
-        this(fo, original, DataLoaderPool.getShadowLoader());
-    }
+
 
     /** Method that creates new data shadow in a folder. The name chosen is based
     * on the name of the original object.

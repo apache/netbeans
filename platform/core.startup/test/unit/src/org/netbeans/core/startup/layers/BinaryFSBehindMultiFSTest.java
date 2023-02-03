@@ -64,11 +64,6 @@ implements XMLFileSystemTestHid.Factory {
     protected void destroyFileSystem(String testName) throws IOException {
     }
 
-    private File getWorkDir() {
-        String workDirProperty = System.getProperty("workdir");//NOI18N
-        workDirProperty = (workDirProperty != null) ? workDirProperty : System.getProperty("java.io.tmpdir");//NOI18N                 
-        return new File(workDirProperty);
-    }
 
     public FileSystem createLayerSystem(String testName, URL[] layers) throws IOException {
         LayerCacheManager bm = LayerCacheManager.manager(true);

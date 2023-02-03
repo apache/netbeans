@@ -44,7 +44,6 @@ public class PatchByteCodeTest extends NbTestCase {
         private C(boolean doNotCare) {}
         @PatchedPublic
         private C(int doNotCare) {}
-        private void m1() {}
         @PatchedPublic
         private void m2() {}
     }

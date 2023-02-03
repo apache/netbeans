@@ -56,33 +56,29 @@ public class AddEntityPanel extends javax.swing.JPanel {
     private AddEntityPanel(EntityClassScope entityClassScope, final Set<String> ignoreClassNames) {
         initComponents();
         MetadataModel<EntityMappingsMetadata> model = entityClassScope.getEntityMappingsModel(true);
-        readHelper = MetadataModelReadHelper.create(model, new MetadataModelAction<EntityMappingsMetadata, List<String>>() {
-            public List<String> run(EntityMappingsMetadata metadata) {
-                List<String> result = new ArrayList<String>();
-                for (Entity entity : metadata.getRoot().getEntity()) {
-                    String className = entity.getClass2();
-                    if (!ignoreClassNames.contains(className)) {
-                        result.add(className);
-                    }
+        readHelper = MetadataModelReadHelper.create(model, (EntityMappingsMetadata metadata) -> {
+            List<String> result = new ArrayList<String>();
+            for (Entity entity : metadata.getRoot().getEntity()) {
+                String className = entity.getClass2();
+                if (!ignoreClassNames.contains(className)) {
+                    result.add(className);
                 }
-                Collections.sort(result);
-                return result;
             }
+            Collections.sort(result);
+            return result;
         });
     }
     
     private void initialize() {
-        readHelper.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                if (readHelper.getState() == State.FINISHED) {
-                    SwingUtilities.invokeLater( () -> {
-                        try {
-                            setEntityClassModel(readHelper.getResult());
-                        } catch (ExecutionException e1) {
-                            Exceptions.printStackTrace(e1);
-                        }
-                    });
-                }
+        readHelper.addChangeListener( (ChangeEvent e) -> {
+            if (readHelper.getState() == State.FINISHED) {
+                SwingUtilities.invokeLater( () -> {
+                    try {
+                        setEntityClassModel(readHelper.getResult());
+                    } catch (ExecutionException e1) {
+                        Exceptions.printStackTrace(e1);
+                    }
+                });
             }
         });
         readHelper.start();

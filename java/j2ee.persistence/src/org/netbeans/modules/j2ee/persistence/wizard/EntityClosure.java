@@ -100,29 +100,22 @@ public class EntityClosure {
     private EntityClosure(EntityClassScope entityClassScope, Project project) {
         this.model = entityClassScope.getEntityMappingsModel(true);
         this.project = project;
-        readHelper = MetadataModelReadHelper.create(model, new MetadataModelAction<EntityMappingsMetadata, List<Entity>>() {
-            @Override
-            public List<Entity> run(EntityMappingsMetadata metadata) {
-                return Arrays.<Entity>asList(metadata.getRoot().getEntity());
-            }
-        });
+        readHelper = MetadataModelReadHelper.create(model, (EntityMappingsMetadata metadata) -> 
+                Arrays.<Entity>asList(metadata.getRoot().getEntity()) );
     }
     
     private void initialize() {
-        readHelper.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if (readHelper.getState() == State.FINISHED) {
-                    SwingUtilities.invokeLater( () -> {
-                        try {
-                            addAvaliableEntities(new HashSet<Entity>(readHelper.getResult()));
-                            modelReady = true;
-                            changeSupport.fireChange();
-                        } catch (ExecutionException e1) {
-                            Exceptions.printStackTrace(e1);
-                        }
-                    });
-                }
+        readHelper.addChangeListener( (ChangeEvent e) -> {
+            if (readHelper.getState() == State.FINISHED) {
+                SwingUtilities.invokeLater( () -> {
+                    try {
+                        addAvaliableEntities(new HashSet<Entity>(readHelper.getResult()));
+                        modelReady = true;
+                        changeSupport.fireChange();
+                    } catch (ExecutionException e1) {
+                        Exceptions.printStackTrace(e1);
+                    }
+                });
             }
         });
         readHelper.start();
@@ -133,13 +126,7 @@ public class EntityClosure {
         
         JavaSource source = null;
         try {
-            source = model.runReadAction(new MetadataModelAction<EntityMappingsMetadata, JavaSource>() {
-
-                @Override
-                public JavaSource run(EntityMappingsMetadata metadata) throws Exception {
-                    return metadata.createJavaSource();
-                }
-            });
+            source = model.runReadAction( (EntityMappingsMetadata metadata) -> metadata.createJavaSource() );
         } catch (MetadataModelException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
@@ -150,24 +137,20 @@ public class EntityClosure {
             try {
                 ClassPath classPath = source.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
                 final Set<Project> ejbProjects = getEjbModulesOfClasspath(classPath);
-                source.runUserActionTask(new Task<CompilationController>() {
-
-                    @Override
-                    public void run(CompilationController parameter) throws Exception {
-                        for (Entity en : entities) {
-                            availableEntities.add(en.getClass2());
-                            fqnEntityMap.put(en.getClass2(), en);
-                            PersistentObject po = (PersistentObject) en;
-                            ElementHandle<TypeElement> teh = po.getTypeElementHandle();
-                            TypeElement te = teh.resolve(parameter);
-                            fqnIdExistMap.put(en.getClass2(), JpaControllerUtil.haveId(te));
-
-                            // issue #219565 - troubles of EJB's enities CP visibility
-                            FileObject file = SourceUtils.getFile(teh, parameter.getClasspathInfo());
-                            if (isEjbProjectEntity(ejbProjects, file)) {
-                                ejbModuleInvolved = true;
-                                LOG.log(Level.INFO, "Entity came from EJB module and mustn''t be visible on CP, entity={0}", en.getClass2());
-                            }
+                source.runUserActionTask( (CompilationController parameter) -> {
+                    for (Entity en : entities) {
+                        availableEntities.add(en.getClass2());
+                        fqnEntityMap.put(en.getClass2(), en);
+                        PersistentObject po = (PersistentObject) en;
+                        ElementHandle<TypeElement> teh = po.getTypeElementHandle();
+                        TypeElement te = teh.resolve(parameter);
+                        fqnIdExistMap.put(en.getClass2(), JpaControllerUtil.haveId(te));
+                        
+                        // issue #219565 - troubles of EJB's enities CP visibility
+                        FileObject file = SourceUtils.getFile(teh, parameter.getClasspathInfo());
+                        if (isEjbProjectEntity(ejbProjects, file)) {
+                            ejbModuleInvolved = true;
+                            LOG.log(Level.INFO, "Entity came from EJB module and mustn''t be visible on CP, entity={0}", en.getClass2());
                         }
                     }
                 }, true);
@@ -311,12 +294,7 @@ public class EntityClosure {
             return Collections.emptySet();
         }
 
-        JavaSource source = model.runReadAction(new MetadataModelAction<EntityMappingsMetadata, JavaSource>() {
-            @Override
-            public JavaSource run(EntityMappingsMetadata metadata) throws Exception {
-                return metadata.createJavaSource();
-            }
-        });
+        JavaSource source = model.runReadAction( (EntityMappingsMetadata metadata) -> metadata.createJavaSource() );
                 
         final Set<String> result = new HashSet<String>();
 
@@ -422,13 +400,7 @@ public class EntityClosure {
     
     void waitModelIsReady(){
         try {
-            Future result = model.runReadActionWhenReady(new MetadataModelAction<EntityMappingsMetadata, Boolean>() {
-
-                @Override
-                public Boolean run(EntityMappingsMetadata metadata) throws Exception {
-                    return true;
-                }
-            });
+            Future result = model.runReadActionWhenReady( (EntityMappingsMetadata metadata) -> true );
             result.get();
         } catch (InterruptedException ex) {
             Exceptions.printStackTrace(ex);
@@ -443,17 +415,13 @@ public class EntityClosure {
     }
     
     private boolean isFieldAccess(final String entity) throws MetadataModelException, IOException {
-        Boolean result = model.runReadAction(new MetadataModelAction<EntityMappingsMetadata, Boolean>() {
-            
-            @Override
-            public Boolean run(EntityMappingsMetadata metadata) throws Exception {
-                for (Entity e : metadata.getRoot().getEntity()){
-                    if (e.getClass2().equals(entity)){
-                        return e.getAccess().equals(Entity.FIELD_ACCESS);
-                    }
+        Boolean result = model.runReadAction( (EntityMappingsMetadata metadata) -> {
+            for (Entity e : metadata.getRoot().getEntity()){
+                if (e.getClass2().equals(entity)){
+                    return e.getAccess().equals(Entity.FIELD_ACCESS);
                 }
-                return false;
             }
+            return false;
         });
         
         return result;

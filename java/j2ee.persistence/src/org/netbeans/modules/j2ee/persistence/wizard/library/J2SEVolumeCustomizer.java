@@ -129,15 +129,14 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
             this.addButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(J2SEVolumeCustomizer.class,"AD_AddSources"));
             this.message.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(J2SEVolumeCustomizer.class,"AD_ContentSources"));
         }
-        this.content.addListSelectionListener(new ListSelectionListener () {
-            public void valueChanged(ListSelectionEvent e) {
-                if (e.getValueIsAdjusting())
-                    return;
-                int[] indices = content.getSelectedIndices();
-                removeButton.setEnabled(indices.length > 0);
-                downButton.setEnabled(indices.length > 0 && indices[indices.length-1]<model.getSize()-1);
-                upButton.setEnabled(indices.length>0 && indices[0]>0);
+        this.content.addListSelectionListener( (ListSelectionEvent e) -> {
+            if (e.getValueIsAdjusting()) {
+                return;
             }
+            int[] indices = content.getSelectedIndices();
+            removeButton.setEnabled(indices.length > 0);
+            downButton.setEnabled(indices.length > 0 && indices[indices.length-1]<model.getSize()-1);
+            upButton.setEnabled(indices.length>0 && indices[0]>0);
         });
     }
 

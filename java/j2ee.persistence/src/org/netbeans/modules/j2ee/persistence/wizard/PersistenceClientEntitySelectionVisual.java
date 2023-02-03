@@ -80,13 +80,7 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
     {
         setName(name);
         initComponents();
-        ListSelectionListener selectionListener = new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                updateButtons();
-            }
-        };
+        ListSelectionListener selectionListener = ( (ListSelectionEvent e) -> updateButtons() );
         listAvailable.getSelectionModel().addListSelectionListener(selectionListener);
         listSelected.getSelectionModel().addListSelectionListener(selectionListener);
         disableNoIdSelection = wizard.getProperty(PersistenceClientEntitySelection.DISABLENOIDSELECTION) == Boolean.TRUE;
@@ -457,12 +451,9 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
         EntityClassScope entityClassScope = EntityClassScope.getEntityClassScope(project.getProjectDirectory());
         
         entityClosure = EntityClosure.create(entityClassScope, project);
-        entityClosure.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                changeSupport.fireChange();
-                updateAddAllButton();
-            }
+        entityClosure.addChangeListener( (ChangeEvent e) -> {
+            changeSupport.fireChange();
+            updateAddAllButton();
         });
         entityClosure.setClosureEnabled(cbAddRelated.isSelected());
         listAvailable.setModel(new EntityListModel(entityClosure, true));

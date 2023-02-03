@@ -112,15 +112,10 @@ public class PersistenceLibrarySupport {
     }
 
     private void writeLibrary(final FileObject storage, final LibraryImplementation library) throws IOException {
-        storage.getFileSystem().runAtomicAction(
-                new FileSystem.AtomicAction() {
-
-            @Override
-                    public void run() throws IOException {
-                        FileObject fo = storage.createData(library.getName(), "xml");   //NOI18N
-                        writeLibraryDefinition(fo, library);
-                    }
-                });
+        storage.getFileSystem().runAtomicAction( () -> {
+            FileObject fo = storage.createData(library.getName(), "xml");   //NOI18N
+            writeLibraryDefinition(fo, library);
+        });
     }
 
     private static void writeLibraryDefinition(final FileObject definitionFile, final LibraryImplementation library) throws IOException {
@@ -337,14 +332,10 @@ public class PersistenceLibrarySupport {
                 providerLibs.add(new ProviderLibrary(each, cp, provider));
             }
         }
-        Collections.sort(providerLibs, new Comparator<ProviderLibrary>() {
-
-            @Override
-            public int compare(ProviderLibrary l1, ProviderLibrary l2) {
-                String name1 = l1.getLibrary().getDisplayName();
-                String name2 = l2.getLibrary().getDisplayName();
-                return name1.compareToIgnoreCase(name2);
-            }
+        Collections.sort(providerLibs, (ProviderLibrary l1, ProviderLibrary l2) -> {
+            String name1 = l1.getLibrary().getDisplayName();
+            String name2 = l2.getLibrary().getDisplayName();
+            return name1.compareToIgnoreCase(name2);
         });
         return providerLibs;
     }
@@ -360,14 +351,10 @@ public class PersistenceLibrarySupport {
         for (ProviderLibrary each : createLibraries()) {
             providerLibs.add(each.getProvider());
         }
-        Collections.sort(providerLibs, new Comparator<Provider>() {
-
-            @Override
-            public int compare(Provider p1, Provider p2) {
-                String name1 = p1.getDisplayName();
-                String name2 = p2.getDisplayName();
-                return name1.compareToIgnoreCase(name2);
-            }
+        Collections.sort(providerLibs, (Provider p1, Provider p2) -> {
+            String name1 = p1.getDisplayName();
+            String name2 = p2.getDisplayName();
+            return name1.compareToIgnoreCase(name2);
         });
         return providerLibs;
     }

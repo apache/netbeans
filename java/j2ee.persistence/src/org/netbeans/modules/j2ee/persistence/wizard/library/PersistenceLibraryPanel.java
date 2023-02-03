@@ -92,11 +92,7 @@ public class PersistenceLibraryPanel extends javax.swing.JPanel {
             }
         });
         // listen on library changes (added/removed content)
-        libImpl.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                checkValidity();
-            }
-        });
+        libImpl.addPropertyChangeListener( (PropertyChangeEvent evt) -> checkValidity() );
     }
     
     @Override

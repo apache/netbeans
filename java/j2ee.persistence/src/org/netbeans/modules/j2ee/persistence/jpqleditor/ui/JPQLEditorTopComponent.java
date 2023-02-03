@@ -146,12 +146,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
         }
         resultsTable.setRowHeight(Math.max(resultsTable.getRowHeight(), height));
         
-        puComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                puComboboxActionPerformed();
-            }
-        });
+        puComboBox.addActionListener( (ActionEvent e) -> puComboboxActionPerformed() );
 
         this.thisWindowCount = getNextWindowCount();
         setName(NbBundle.getMessage(JPQLEditorTopComponent.class, "CTL_JPQLEditorTopComponent") + thisWindowCount);
@@ -460,15 +455,12 @@ public final class JPQLEditorTopComponent extends TopComponent {
         puObject = null;
         if (dO instanceof PUDataObject) {
             puObject = (PUDataObject) dO;
-            dO.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (DataObject.PROP_VALID.equals(evt.getPropertyName()) && Boolean.FALSE.equals(evt.getNewValue())) {
-                        if (SwingUtilities.isEventDispatchThread()) {
-                            close();//need to close if corresponding dataobject was invalidated (deleted)
-                        } else {
-                            SwingUtilities.invokeLater( () -> close() );
-                        }
+            dO.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+                if (DataObject.PROP_VALID.equals(evt.getPropertyName()) && Boolean.FALSE.equals(evt.getNewValue())) {
+                    if (SwingUtilities.isEventDispatchThread()) {
+                        close();//need to close if corresponding dataobject was invalidated (deleted)
+                    } else {
+                        SwingUtilities.invokeLater( () -> close() );
                     }
                 }
             });
@@ -952,12 +944,9 @@ private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             dbconn = JPAEditorUtil.findDatabaseConnection(pu, pe.getProject());
             if (dbconn != null) {
                 if (dbconn.getJDBCConnection() == null) {
-                    Mutex.EVENT.readAccess(new Mutex.Action<DatabaseConnection>() {
-                        @Override
-                        public DatabaseConnection run() {
-                            ConnectionManager.getDefault().showConnectionDialog(dbconn);
-                            return dbconn;
-                        }
+                    Mutex.EVENT.readAccess( (Mutex.Action<DatabaseConnection>) () -> {
+                        ConnectionManager.getDefault().showConnectionDialog(dbconn);
+                        return dbconn;
                     });
                 }
             } else {

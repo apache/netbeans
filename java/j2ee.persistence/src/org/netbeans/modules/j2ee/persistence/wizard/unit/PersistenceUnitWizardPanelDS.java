@@ -136,12 +136,7 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
         JPADataSourcePopulator dsPopulator = project.getLookup().lookup(JPADataSourcePopulator.class);
         dsPopulator.connect(dsCombo);
         
-        dsCombo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                checkValidity();
-            }
-        });
+        dsCombo.addActionListener( (ActionEvent e) -> checkValidity() );
         
         ((JTextComponent)dsCombo.getEditor().getEditorComponent()).
                 getDocument().addDocumentListener(new DocumentListener() {

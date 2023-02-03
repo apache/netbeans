@@ -115,12 +115,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
     public DatabaseTablesPanel() {
         initComponents();
         initInitial();
-        ListSelectionListener selectionListener = new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                updateButtons();
-            }
-        };
+        ListSelectionListener selectionListener = ( (ListSelectionEvent e) -> updateButtons() );
         availableTablesList.getSelectionModel().addListSelectionListener(selectionListener);
         selectedTablesList.getSelectionModel().addListSelectionListener(selectionListener);
     }
@@ -140,31 +135,28 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
     
     private void initSubComponents(){
 
-        changeListener = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                    if (project != null && ProviderUtil.isValidServerInstanceOrNone(project)) {
-                        // stop listening once a server was set
-                        serverStatusProvider.removeChangeListener(changeListener);
-                        if (!Util.isContainerManaged(project)) {
-                            // if selected server does not support DataSource then
-                            // swap the combo to DB Connection selection
-                            datasourceComboBox.setModel(new DefaultComboBoxModel());
-                            initializeWithDbConnections();
-                            // notify user about result of server selection:
-                            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(DatabaseTablesPanel.class, "WRN_Server_Does_Not_Support_DS")));
-                        } else {
-                            // #190671 - because of hacks around server set in maven
-                            // listen and update data sources after server was set here again.
-                            // In theory this should not be necessary and
-                            // j2ee.common.DatasourceUIHelper.performServerSelection should have done
-                            // everything necessary but often at that time
-                            // PersistenceProviderSupplier.supportsDefaultProvider() is still false
-                            // (server change was not propagated there yet). In worst case combo model will be set twice:
-                            datasourceComboBox.setModel(new DefaultComboBoxModel());
-                            initializeWithDatasources();
-                        }
-                    }
+        changeListener = (ChangeEvent e) -> {
+            if (project != null && ProviderUtil.isValidServerInstanceOrNone(project)) {
+                // stop listening once a server was set
+                serverStatusProvider.removeChangeListener(changeListener);
+                if (!Util.isContainerManaged(project)) {
+                    // if selected server does not support DataSource then
+                    // swap the combo to DB Connection selection
+                    datasourceComboBox.setModel(new DefaultComboBoxModel());
+                    initializeWithDbConnections();
+                    // notify user about result of server selection:
+                    DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(DatabaseTablesPanel.class, "WRN_Server_Does_Not_Support_DS")));
+                } else {
+                    // #190671 - because of hacks around server set in maven
+                    // listen and update data sources after server was set here again.
+                    // In theory this should not be necessary and
+                    // j2ee.common.DatasourceUIHelper.performServerSelection should have done
+                    // everything necessary but often at that time
+                    // PersistenceProviderSupplier.supportsDefaultProvider() is still false
+                    // (server change was not propagated there yet). In worst case combo model will be set twice:
+                    datasourceComboBox.setModel(new DefaultComboBoxModel());
+                    initializeWithDatasources();
+                }
             }
         };
 

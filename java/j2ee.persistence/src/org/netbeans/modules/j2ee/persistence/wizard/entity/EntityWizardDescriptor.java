@@ -57,14 +57,11 @@ public class EntityWizardDescriptor implements WizardDescriptor.FinishablePanel,
     public java.awt.Component getComponent() {
         if (p == null) {
             p = new EntityWizardPanel(this);
-            p.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(EntityWizardPanel.IS_VALID)) {
-                        Object newvalue = evt.getNewValue();
-                        if (newvalue instanceof Boolean) {
-                            stateChanged(null);
-                        }
+            p.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+                if (evt.getPropertyName().equals(EntityWizardPanel.IS_VALID)) {
+                    Object newvalue = evt.getNewValue();
+                    if (newvalue instanceof Boolean) {
+                        stateChanged(null);
                     }
                 }
             });

@@ -125,20 +125,16 @@ public final class EntityManagerGenerator {
         Parameters.notNull("options", options); //NOI18N
         Parameters.notNull("strategyClass", strategyClass); //NOI18N
         
-        Task task = new Task<WorkingCopy>() {
+        Task task = (Task<WorkingCopy>) (WorkingCopy workingCopy) -> {
+            workingCopy.toPhase(Phase.RESOLVED);
+            CompilationUnitTree cut = workingCopy.getCompilationUnit();
+            TreeMaker make = workingCopy.getTreeMaker();
             
-            public void run(WorkingCopy workingCopy) throws Exception {
-                
-                workingCopy.toPhase(Phase.RESOLVED);
-                CompilationUnitTree cut = workingCopy.getCompilationUnit();
-                TreeMaker make = workingCopy.getTreeMaker();
-                
-                for (Tree typeDeclaration : cut.getTypeDecls()){
-                    if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDeclaration.getKind())){
-                        ClassTree clazz = (ClassTree) typeDeclaration;
-                        EntityManagerGenerationStrategy strategy = instantiateStrategy(strategyClass, workingCopy, make, clazz, options);
-                        workingCopy.rewrite(clazz, strategy.generate());
-                    }
+            for (Tree typeDeclaration : cut.getTypeDecls()){
+                if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDeclaration.getKind())){
+                    ClassTree clazz = (ClassTree) typeDeclaration;
+                    EntityManagerGenerationStrategy strategy = instantiateStrategy(strategyClass, workingCopy, make, clazz, options);
+                    workingCopy.rewrite(clazz, strategy.generate());
                 }
             }
         };

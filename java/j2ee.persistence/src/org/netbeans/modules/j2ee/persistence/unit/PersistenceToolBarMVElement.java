@@ -383,16 +383,13 @@ public class PersistenceToolBarMVElement extends ToolBarMultiViewElement impleme
                     NotifyDescriptor.PLAIN_MESSAGE,
                     null, null
                     );
-            panel.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
-                        Object newvalue = evt.getNewValue();
-                        if (newvalue instanceof Boolean) {
-                            validateUnitName(panel);
-                            nd.setValid((Boolean) newvalue);
-                            
-                        }
+            panel.addPropertyChangeListener( (PropertyChangeEvent evt1) -> {
+                if (evt1.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
+                    Object newvalue = evt1.getNewValue();
+                    if (newvalue instanceof Boolean) {
+                        validateUnitName(panel);
+                        nd.setValid((Boolean) newvalue);
+                        
                     }
                 }
             });

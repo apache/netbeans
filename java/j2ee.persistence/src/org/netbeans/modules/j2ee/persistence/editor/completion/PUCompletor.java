@@ -208,34 +208,24 @@ public abstract class PUCompletor {
 
         private void doJavaCompletion(final FileObject fo, final JavaSource js, final List<JPACompletionItem> results,
                 final String typedPrefix, final int substitutionOffset) throws IOException {
-            js.runUserActionTask(new Task<CompilationController>() {
-
-                @Override
-                public void run(CompilationController cc) throws Exception {
-                    cc.toPhase(Phase.ELEMENTS_RESOLVED);
-                    Project project = FileOwnerQuery.getOwner(fo);
-                    EntityClassScopeProvider provider = project.getLookup().lookup(EntityClassScopeProvider.class);
-                    EntityClassScope ecs = null;
-                    Entity[] entities = null;
-                    if (provider != null) {
-                        ecs = provider.findEntityClassScope(fo);
-                    }
-                    if (ecs != null) {
-                        entities = ecs.getEntityMappingsModel(false).runReadAction(new MetadataModelAction<EntityMappingsMetadata, Entity[]>() {
-
-                            @Override
-                            public Entity[] run(EntityMappingsMetadata metadata) throws Exception {
-                                return metadata.getRoot().getEntity();
-                            }
-                        });
-                    }
-                    // add classes 
-                    if(entities != null) {
-                        for (Entity entity : entities) {
-                            if (typedPrefix.length() == 0 || entity.getClass2().toLowerCase().startsWith(typedPrefix.toLowerCase()) || entity.getName().toLowerCase().startsWith(typedPrefix.toLowerCase())) {
-                                JPACompletionItem item = JPACompletionItem.createAttribValueItem(substitutionOffset, entity.getClass2());
-                                results.add(item);
-                            }
+            js.runUserActionTask( (CompilationController cc) -> {
+                cc.toPhase(Phase.ELEMENTS_RESOLVED);
+                Project project = FileOwnerQuery.getOwner(fo);
+                EntityClassScopeProvider provider = project.getLookup().lookup(EntityClassScopeProvider.class);
+                EntityClassScope ecs = null;
+                Entity[] entities = null;
+                if (provider != null) {
+                    ecs = provider.findEntityClassScope(fo);
+                }
+                if (ecs != null) {
+                    entities = ecs.getEntityMappingsModel(false).runReadAction( (EntityMappingsMetadata metadata) -> metadata.getRoot().getEntity() );
+                }
+                // add classes
+                if(entities != null) {
+                    for (Entity entity : entities) {
+                        if (typedPrefix.length() == 0 || entity.getClass2().toLowerCase().startsWith(typedPrefix.toLowerCase()) || entity.getName().toLowerCase().startsWith(typedPrefix.toLowerCase())) {
+                            JPACompletionItem item = JPACompletionItem.createAttribValueItem(substitutionOffset, entity.getClass2());
+                            results.add(item);
                         }
                     }
                 }
@@ -268,24 +258,20 @@ public abstract class PUCompletor {
             try {
                 // Compile the class and find the fiels
                 JavaSource classJavaSrc = JPAEditorUtil.getJavaSource(context.getDocument());
-                classJavaSrc.runUserActionTask(new Task<CompilationController>() {
-
-                    @Override
-                    public void run(CompilationController cc) throws Exception {
-                        cc.toPhase(Phase.ELEMENTS_RESOLVED);
-                        TypeElement typeElem = cc.getElements().getTypeElement(className);
-
-                        if (typeElem == null) {
-                            return;
-                        }
-
-                        List<? extends Element> clsChildren = typeElem.getEnclosedElements();
-                        for (Element clsChild : clsChildren) {
-                            if (clsChild.getKind() == ElementKind.FIELD) {
-                                VariableElement elem = (VariableElement) clsChild;
-                                JPACompletionItem item = JPACompletionItem.createClassPropertyItem(caretOffset - typedChars.length(), elem, ElementHandle.create(elem), cc.getElements().isDeprecated(clsChild));
-                                results.add(item);
-                            }
+                classJavaSrc.runUserActionTask( (CompilationController cc) -> {
+                    cc.toPhase(Phase.ELEMENTS_RESOLVED);
+                    TypeElement typeElem = cc.getElements().getTypeElement(className);
+                    
+                    if (typeElem == null) {
+                        return;
+                    }
+                    
+                    List<? extends Element> clsChildren = typeElem.getEnclosedElements();
+                    for (Element clsChild : clsChildren) {
+                        if (clsChild.getKind() == ElementKind.FIELD) {
+                            VariableElement elem = (VariableElement) clsChild;
+                            JPACompletionItem item = JPACompletionItem.createClassPropertyItem(caretOffset - typedChars.length(), elem, ElementHandle.create(elem), cc.getElements().isDeprecated(clsChild));
+                            results.add(item);
                         }
                     }
                 }, true);

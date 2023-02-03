@@ -82,11 +82,7 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         unitNameLabel.setVisible(editName);
         
         DatabaseExplorerUIs.connect(jdbcCombo, ConnectionManager.getDefault());
-        jdbcCombo.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                checkValidity();
-            }
-        });
+        jdbcCombo.addItemListener( (ItemEvent e) -> checkValidity() );
         
         unitNameTextField.getDocument().addDocumentListener(new ValidationListener());
         errorMessage.setForeground(Color.RED);

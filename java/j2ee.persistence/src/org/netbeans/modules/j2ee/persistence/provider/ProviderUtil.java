@@ -863,12 +863,9 @@ public class ProviderUtil {
         String ret = vers == null ? PersistenceUtils.getJPAVersion(project) : vers;
         final String version = ret != null ? ret : Persistence.VERSION_1_0;
         // must create the file using AtomicAction, see #72058
-        persistenceLocation.getFileSystem().runAtomicAction(new FileSystem.AtomicAction() {
-
-            public void run() throws IOException {
-                dd[0] = FileUtil.copyFile(FileUtil.getConfigFile(
-                        "org-netbeans-modules-j2ee-persistence/persistence-" + version + ".xml"), persistenceLocation, "persistence"); //NOI18N
-            }
+        persistenceLocation.getFileSystem().runAtomicAction( () -> {
+            dd[0] = FileUtil.copyFile(FileUtil.getConfigFile(
+                    "org-netbeans-modules-j2ee-persistence/persistence-" + version + ".xml"), persistenceLocation, "persistence"); //NOI18N
         });
         PersistenceUtils.logUsage(ProviderUtil.class, "USG_PERSISTENCE_XML_CREATED", new String[]{version});
         return dd[0];

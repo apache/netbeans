@@ -266,26 +266,18 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
         }
 
         MetadataModel<EntityMappingsMetadata> entityMappingsModel = entityClassScope.getEntityMappingsModel(true);
-        readHelper = MetadataModelReadHelper.create(entityMappingsModel, new MetadataModelAction<EntityMappingsMetadata, Set<Entity>>() {
-
-            @Override
-            public Set<Entity> run(EntityMappingsMetadata metadata) {
-                Set<Entity> result = new HashSet<Entity>();
-                result.addAll(Arrays.asList(metadata.getRoot().getEntity()));
-                return result;
-            }
+        readHelper = MetadataModelReadHelper.create(entityMappingsModel, (EntityMappingsMetadata metadata) -> {
+            Set<Entity> result1 = new HashSet<Entity>();
+            result1.addAll(Arrays.asList(metadata.getRoot().getEntity()));
+            return result1;
         });
 
-        readHelper.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if (readHelper.getState() == State.FINISHED) {
-                    try {
-                        processEntities(readHelper.getResult());
-                    } catch (ExecutionException ex) {
-                        Logger.getLogger(JavaPersistenceGenerator.class.getName()).log(Level.FINE, "Failed to get entity classes: ", ex); //NOI18N
-                    }
+        readHelper.addChangeListener( (ChangeEvent e) -> {
+            if (readHelper.getState() == State.FINISHED) {
+                try {
+                    processEntities(readHelper.getResult());
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(JavaPersistenceGenerator.class.getName()).log(Level.FINE, "Failed to get entity classes: ", ex); //NOI18N
                 }
             }
         });
@@ -525,11 +517,8 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     JavaSource javaSource = (pkClassFO != null && entityClass.getUpdateType() != UpdateType.UPDATE)
                             ? JavaSource.create(cpHelper.createClasspathInfo(), entityClassFO, pkClassFO)
                             : JavaSource.create(cpHelper.createClasspathInfo(), entityClassFO);
-                    javaSource.runModificationTask(new Task<WorkingCopy>() {
-                        @Override
-                        public void run(WorkingCopy copy) throws IOException {
-                            copy.toPhase(Phase.RESOLVED);
-                        }
+                    javaSource.runModificationTask((WorkingCopy copy) -> {
+                        copy.toPhase(Phase.RESOLVED);
                     }).commit();
                 } catch (IOException e) {
                     String message = e.getMessage();
@@ -568,19 +557,15 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     JavaSource javaSource = (pkClassFO != null && entityClass.getUpdateType() != UpdateType.UPDATE)
                             ? JavaSource.create(cpHelper.createClasspathInfo(), entityClassFO, pkClassFO)
                             : JavaSource.create(cpHelper.createClasspathInfo(), entityClassFO);
-                    javaSource.runModificationTask(new Task<WorkingCopy>() {
-
-                        @Override
-                        public void run(WorkingCopy copy) throws IOException {
-                            if (copy.getFileObject().equals(entityClassFO)) {
-                                EntityClassGenerator clsGen = new EntityClassGenerator(copy, entityClass);
-                                clsGen.run();
+                    javaSource.runModificationTask( (WorkingCopy copy) -> {
+                        if (copy.getFileObject().equals(entityClassFO)) {
+                            EntityClassGenerator clsGen = new EntityClassGenerator(copy, entityClass);
+                            clsGen.run();
+                        } else {
+                            if (entityClass.getUpdateType() != UpdateType.UPDATE) {
+                                new PKClassGenerator(copy, entityClass).run();
                             } else {
-                                if (entityClass.getUpdateType() != UpdateType.UPDATE) {
-                                    new PKClassGenerator(copy, entityClass).run();
-                                } else {
-                                    Logger.getLogger(JavaPersistenceGenerator.class.getName()).log(Level.INFO, "PK Class update isn't supported"); //NOI18N //TODO: implement update
-                                }
+                                Logger.getLogger(JavaPersistenceGenerator.class.getName()).log(Level.INFO, "PK Class update isn't supported"); //NOI18N //TODO: implement update
                             }
                         }
                     }).commit();

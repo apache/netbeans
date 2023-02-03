@@ -117,13 +117,10 @@ public final class EntityManagerGenerationStrategyResolverFactory {
                 return false;
             }
             try {
-                source.runModificationTask(new Task<WorkingCopy>() {
-                    @Override
-                    public void run(WorkingCopy parameter) throws Exception {
-                        parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        TypeElement typeElement = SourceUtils.getPublicTopLevelElement(parameter);
-                        result[0] = InjectionTargetQuery.isInjectionTarget(parameter, typeElement);
-                    }
+                source.runModificationTask( (WorkingCopy parameter) -> {
+                    parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                    TypeElement typeElement = SourceUtils.getPublicTopLevelElement(parameter);
+                    result[0] = InjectionTargetQuery.isInjectionTarget(parameter, typeElement);
                 });
             } catch (IOException ioe) {
                 Exceptions.printStackTrace(ioe);

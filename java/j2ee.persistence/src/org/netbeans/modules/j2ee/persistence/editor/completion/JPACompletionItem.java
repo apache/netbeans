@@ -1066,18 +1066,14 @@ public abstract class JPACompletionItem implements CompletionItem {
                             return;
                         }
 
-                        js.runUserActionTask(new Task<CompilationController>() {
-
-                            @Override
-                            public void run(CompilationController cc) throws Exception {
-                                cc.toPhase(JavaSource.Phase.RESOLVED);
-                                Element element = elemHandle.resolve(cc);
-                                if (element == null) {
-                                    return;
-                                }
-                                PersistenceCompletionDocumentation doc = PersistenceCompletionDocumentation.createJavaDoc(cc, element);
-                                resultSet.setDocumentation(doc);
+                        js.runUserActionTask( (CompilationController cc) -> {
+                            cc.toPhase(JavaSource.Phase.RESOLVED);
+                            Element element = elemHandle.resolve(cc);
+                            if (element == null) {
+                                return;
                             }
+                            PersistenceCompletionDocumentation doc1 = PersistenceCompletionDocumentation.createJavaDoc(cc, element);
+                            resultSet.setDocumentation(doc1);
                         }, false);
                         resultSet.finish();
                     } catch (IOException ex) {

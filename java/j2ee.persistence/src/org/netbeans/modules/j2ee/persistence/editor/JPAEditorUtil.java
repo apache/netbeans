@@ -203,20 +203,17 @@ public class JPAEditorUtil {
         final JavaSource js = getJavaSource(doc);
         if (js != null) {
             try {
-                js.runUserActionTask(new Task<CompilationController>() {
-
-                    public void run(CompilationController cc) throws Exception {
-                        boolean opened = false;
-                        TypeElement element = findClassElementByBinaryName(classBinaryName, cc);
-                        if (element != null) {
-                            opened = ElementOpen.open(js.getClasspathInfo(), element);
-                        }
-                        if (!opened) {
-                            String msg = NbBundle.getMessage(JPAEditorUtil.class, "LBL_SourceNotFound", classBinaryName);
-                            StatusDisplayer.getDefault().setStatusText(msg);
-                        }
+                js.runUserActionTask( (CompilationController cc) -> {
+                    boolean opened = false;
+                    TypeElement element = findClassElementByBinaryName(classBinaryName, cc);
+                    if (element != null) {
+                        opened = ElementOpen.open(js.getClasspathInfo(), element);
                     }
-                    }, false);
+                    if (!opened) {
+                        String msg = NbBundle.getMessage(JPAEditorUtil.class, "LBL_SourceNotFound", classBinaryName);
+                        StatusDisplayer.getDefault().setStatusText(msg);
+                    }
+                }, false);
             } catch (IOException ex) {
                 Logger.getLogger("global").log(Level.SEVERE, ex.getMessage(), ex);
             }

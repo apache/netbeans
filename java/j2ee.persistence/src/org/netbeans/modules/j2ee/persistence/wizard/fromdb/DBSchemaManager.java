@@ -151,31 +151,28 @@ public class DBSchemaManager {
                 }
                 schemaElement = new SchemaElement(schemaElementImpl);
                 
-                schemaElementImpl.addPropertyChangeListener(new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent event) {
-                        String propertyName = event.getPropertyName();
-                        String message = null;
-                        
-                        if ("totalCount".equals(propertyName)) { // NOI18N
-                            int workunits = ((Integer)event.getNewValue()).intValue();
-                            actionContext.switchToDeterminate(workunits);
-                        } else if ("progress".equals(propertyName)) { // NOI18N
-                            int workunit = ((Integer)event.getNewValue()).intValue();
-                            actionContext.progress(workunit);
-                        } else if ("tableName".equals(propertyName)) { // NOI18N
-                            message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingTable", event.getNewValue());
-                        } else if ("viewName".equals(propertyName)) { // NOI18N
-                            message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingView", event.getNewValue());
-                        } else if ("FKt".equals(propertyName)) { // NOI18N
-                            message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingTableKeys", event.getNewValue());
-                        } else if ("FKv".equals(propertyName)) { // NOI18N
-                            message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingViewKeys", event.getNewValue());
-                        }
-                        
-                        if (message != null) {
-                            actionContext.progress(message);
-                        }
+                schemaElementImpl.addPropertyChangeListener( (PropertyChangeEvent event) -> {
+                    String propertyName = event.getPropertyName();
+                    String message = null;
+                    
+                    if ("totalCount".equals(propertyName)) { // NOI18N
+                        int workunits = ((Integer)event.getNewValue()).intValue();
+                        actionContext.switchToDeterminate(workunits);
+                    } else if ("progress".equals(propertyName)) { // NOI18N
+                        int workunit = ((Integer)event.getNewValue()).intValue();
+                        actionContext.progress(workunit);
+                    } else if ("tableName".equals(propertyName)) { // NOI18N
+                        message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingTable", event.getNewValue());
+                    } else if ("viewName".equals(propertyName)) { // NOI18N
+                        message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingView", event.getNewValue());
+                    } else if ("FKt".equals(propertyName)) { // NOI18N
+                        message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingTableKeys", event.getNewValue());
+                    } else if ("FKv".equals(propertyName)) { // NOI18N
+                        message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingViewKeys", event.getNewValue());
+                    }
+                    
+                    if (message != null) {
+                        actionContext.progress(message);
                     }
                 });
                 

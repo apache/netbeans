@@ -68,12 +68,9 @@ public class JPQLEditorController {
         final DatabaseConnection dbconn = JPAEditorUtil.findDatabaseConnection(pu, pe.getProject());
         if (dbconn != null) {
             if (dbconn.getJDBCConnection() == null) {
-                Mutex.EVENT.readAccess(new Mutex.Action<DatabaseConnection>() {
-                    @Override
-                    public DatabaseConnection run() {
-                        ConnectionManager.getDefault().showConnectionDialog(dbconn);
-                        return dbconn;
-                    }
+                Mutex.EVENT.readAccess( (Mutex.Action<DatabaseConnection>) () -> {
+                    ConnectionManager.getDefault().showConnectionDialog(dbconn);
+                    return dbconn;
                 });
             }
         }

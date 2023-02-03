@@ -41,13 +41,11 @@ public class PersistenceLibraryCustomizer {
         LibraryImplementation libImpl = LibrariesSupport.createLibraryImplementation(PersistenceLibrarySupport.LIBRARY_TYPE, PersistenceLibrarySupport.VOLUME_TYPES);
         PersistenceLibraryPanel customizer = new PersistenceLibraryPanel(libImpl);
         final DialogDescriptor descriptor = new DialogDescriptor(customizer,NbBundle.getMessage(PersistenceLibraryCustomizer.class, "TXT_PersistenceLibrariesManager"));
-        customizer.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals(PersistenceLibraryPanel.IS_VALID)) {
-                    Object newvalue = evt.getNewValue();
-                    if (newvalue instanceof Boolean) {
-                        descriptor.setValid(((Boolean)newvalue).booleanValue());
-                    }
+        customizer.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName().equals(PersistenceLibraryPanel.IS_VALID)) {
+                Object newvalue = evt.getNewValue();
+                if (newvalue instanceof Boolean) {
+                    descriptor.setValid(((Boolean)newvalue).booleanValue());
                 }
             }
         });

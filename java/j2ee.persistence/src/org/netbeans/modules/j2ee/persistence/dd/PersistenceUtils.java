@@ -73,16 +73,7 @@ public class PersistenceUtils {
         MetadataModel<EntityMappingsMetadata> model = entityClassScope.getEntityMappingsModel(true);
         EntityMappings mappings = null;
         try {
-            mappings = model.runReadAction(
-                    new MetadataModelAction<EntityMappingsMetadata, EntityMappings>(){
-
-                        @Override
-                        public EntityMappings run(EntityMappingsMetadata metadata) throws Exception {
-                            return metadata.getRoot();
-                        }
-            
-                    }
-            );
+            mappings = model.runReadAction( (EntityMappingsMetadata metadata) -> metadata.getRoot() );
         } catch (MetadataModelException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {

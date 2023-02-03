@@ -109,14 +109,12 @@ public class JPQLExecutor {
 
             em = emf.createEntityManager();
 
-            Logger.getLogger("org.hibernate.hql.internal.ast.ErrorCounter").setFilter(new Filter() {//NOI18N
-                @Override
-                public boolean isLoggable(LogRecord record) {
-                    if (record.getLevel().intValue() > Level.INFO.intValue()) {//workaround to avoid exception dialog from nb for logged exception
-                        record.setLevel(Level.INFO);
-                    }
-                    return true;
+            Logger.getLogger("org.hibernate.hql.internal.ast.ErrorCounter").setFilter( (LogRecord record) -> { //NOI18N
+                //workaround to avoid exception dialog from nb for logged exception
+                if (record.getLevel().intValue() > Level.INFO.intValue()) {
+                    record.setLevel(Level.INFO);
                 }
+                return true;
             });
             Query query = em.createQuery(jpql);
             String queryStr = null;
@@ -184,39 +182,33 @@ public class JPQLExecutor {
             final List<JPQLQueryProblem> problems = new ArrayList<JPQLQueryProblem>();
             final String jpql0 = jpql;
             try {
-                js.runUserActionTask(new org.netbeans.api.java.source.Task<CompilationController>() {
-                    @Override
-                    public void run(CompilationController controller) throws Exception {
-                        controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        EntityClassScopeProvider provider = (EntityClassScopeProvider) project.getLookup().lookup(EntityClassScopeProvider.class);
-                        EntityClassScope ecs = null;
-                        if (provider != null) {
-                            ecs = provider.findEntityClassScope(pe.getLocation().getFileObject("persistence.xml"));
-                        }
-                        EntityClassScope scope = ecs;
-                        MetadataModel<EntityMappingsMetadata> entityMappingsModel = null;
-                        if (scope != null) {
-                            entityMappingsModel = scope.getEntityMappingsModel(false); // false since I guess you only want the entity classes defined in the project
-                        }
-                        if (entityMappingsModel != null) {
-                            final Elements elms = controller.getElements();
-                            entityMappingsModel.runReadAction(new MetadataModelAction<EntityMappingsMetadata, Boolean>() {
-                                @Override
-                                public Boolean run(EntityMappingsMetadata metadata) throws Exception {
-                                    ManagedTypeProvider mtp = new ManagedTypeProvider(project, metadata, elms);
-                                    //////////////////////
-                                    DefaultJPQLQueryHelper  helper = new DefaultJPQLQueryHelper (DefaultJPQLGrammar.instance());
-                                    helper.setQuery(new org.netbeans.modules.j2ee.persistence.spi.jpql.Query(null, jpql0, mtp));
-
-                                    try {
-                                        problems.addAll(helper.validate());
-                                    } catch (Exception ex) {
-                                    }
-                                    /////////////////////
-                                    return null;
-                                }
-                            });
-                        }
+                js.runUserActionTask( (CompilationController controller) -> {
+                    controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                    EntityClassScopeProvider provider1 = (EntityClassScopeProvider) project.getLookup().lookup(EntityClassScopeProvider.class);
+                    EntityClassScope ecs = null;
+                    if (provider1 != null) {
+                        ecs = provider1.findEntityClassScope(pe.getLocation().getFileObject("persistence.xml"));
+                    }
+                    EntityClassScope scope = ecs;
+                    MetadataModel<EntityMappingsMetadata> entityMappingsModel = null;
+                    if (scope != null) {
+                        entityMappingsModel = scope.getEntityMappingsModel(false); // false since I guess you only want the entity classes defined in the project
+                    }
+                    if (entityMappingsModel != null) {
+                        final Elements elms = controller.getElements();
+                        entityMappingsModel.runReadAction( (EntityMappingsMetadata metadata) -> {
+                            ManagedTypeProvider mtp = new ManagedTypeProvider(project, metadata, elms);
+                            //////////////////////
+                            DefaultJPQLQueryHelper  helper = new DefaultJPQLQueryHelper (DefaultJPQLGrammar.instance());
+                            helper.setQuery(new org.netbeans.modules.j2ee.persistence.spi.jpql.Query(null, jpql0, mtp));
+                            
+                            try {
+                                problems.addAll(helper.validate());
+                            } catch (Exception ex) {
+                            }
+                            /////////////////////
+                            return null;
+                        });
                     }
                 }, false);
             } catch (IOException ex) {

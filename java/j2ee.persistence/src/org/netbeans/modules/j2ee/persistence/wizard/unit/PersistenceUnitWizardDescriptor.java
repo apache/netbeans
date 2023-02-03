@@ -70,14 +70,11 @@ public class PersistenceUnitWizardDescriptor implements WizardDescriptor.Finisha
                 jdbcPanel= new PersistenceUnitWizardPanelJdbc(project, this, true);
                 panel = jdbcPanel;
             }
-            panel.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
-                        Object newvalue = evt.getNewValue();
-                        if (newvalue instanceof Boolean) {
-                            stateChanged(null);
-                        }
+            panel.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+                if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
+                    Object newvalue = evt.getNewValue();
+                    if (newvalue instanceof Boolean) {
+                        stateChanged(null);
                     }
                 }
             });

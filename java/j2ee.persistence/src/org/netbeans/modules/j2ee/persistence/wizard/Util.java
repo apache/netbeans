@@ -313,16 +313,12 @@ public class Util {
                 DialogDescriptor.DEFAULT_ALIGN,
                 null,
                 null);
-        panel.addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
-                    Object newvalue = evt.getNewValue();
-                    if (newvalue instanceof Boolean) {
-                        nd.setValid(((Boolean) newvalue).booleanValue());
-                        createPUButton.setEnabled(((Boolean) newvalue).booleanValue());
-                    }
+        panel.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
+                Object newvalue = evt.getNewValue();
+                if (newvalue instanceof Boolean) {
+                    nd.setValid(((Boolean) newvalue).booleanValue());
+                    createPUButton.setEnabled(((Boolean) newvalue).booleanValue());
                 }
             }
         });

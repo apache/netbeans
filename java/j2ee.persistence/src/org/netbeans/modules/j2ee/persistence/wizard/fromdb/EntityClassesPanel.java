@@ -107,15 +107,12 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         classNamesTable.getParent().setBackground(classNamesTable.getBackground());
         classNamesTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE); // NOI18N
         
-        mappedSuperclassCheckBox.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if (mappedSuperclassCheckBox.isSelected()) {
-                    generateFinderMethodsCheckBox.setEnabled(false);
-                    generateFinderMethodsCheckBox.setSelected(false);
-                } else {
-                    generateFinderMethodsCheckBox.setEnabled(true);
-                }
+        mappedSuperclassCheckBox.addChangeListener( (ChangeEvent e) -> {
+            if (mappedSuperclassCheckBox.isSelected()) {
+                generateFinderMethodsCheckBox.setEnabled(false);
+                generateFinderMethodsCheckBox.setSelected(false);
+            } else {
+                generateFinderMethodsCheckBox.setEnabled(true);
             }
         });
 
@@ -208,16 +205,12 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         ClasspathInfo classpathInfo = ClasspathInfo.create(fo);
         JavaSource javaSource = JavaSource.create(classpathInfo);
         try {
-            javaSource.runUserActionTask(new Task<CompilationController>() {
-
-                @Override
-                public void run(CompilationController controller) throws IOException {
-                    controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                    TypeElement jc = controller.getElements().getTypeElement("javax.xml.bind.annotation.XmlTransient"); //NOI18N
-                    if(jc == null){
-                        generateJAXBCheckBox.setSelected(false);
-                        generateJAXBCheckBox.setEnabled(false);
-                    }
+            javaSource.runUserActionTask( (CompilationController controller) -> {
+                controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                TypeElement jc = controller.getElements().getTypeElement("javax.xml.bind.annotation.XmlTransient"); //NOI18N
+                if(jc == null){
+                    generateJAXBCheckBox.setSelected(false);
+                    generateJAXBCheckBox.setEnabled(false);
                 }
             }, true);
         } catch (IOException ex) {
@@ -230,12 +223,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         try {
             if (selectedTables == null) {
                 selectedTables = new SelectedTables(persistenceGen, tableClosure, getLocationValue(), getPackageName());
-                selectedTables.addChangeListener(new ChangeListener() {
-                    @Override
-                    public void stateChanged(ChangeEvent event) {
-                        changeSupport.fireChange();
-                    }
-                });
+                selectedTables.addChangeListener( (ChangeEvent event) -> changeSupport.fireChange() );
             } else {
                 selectedTables.setTableClosureAndTargetFolder(tableClosure, getLocationValue(), getPackageName());
             }

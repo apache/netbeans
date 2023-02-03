@@ -98,9 +98,6 @@ public class JQueryUtils {
         return false;
     }
 
-    private static boolean isEndToken(JsTokenId token) {
-        return token == JsTokenId.EOL || token == JsTokenId.OPERATOR_SEMICOLON;
-    }
 //
 //    public String getPrefix(ParserResult info, int caretOffset) {
 //        BaseDocument doc = (BaseDocument) info.getSnapshot().getSource().getDocument(false);

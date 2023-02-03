@@ -66,16 +66,6 @@ public class ExtDocDocumentationProviderTest extends JsDocumentationTestBase {
         });
     }
 
-    private void checkReturnType(Source source, final int offset, final List<? extends Type> expected) throws Exception {
-        initializeDocumentationHolder(source);
-        if (expected == null) {
-            assertNull(documentationHolder.getReturnType(getNodeForOffset(parserResult, offset)));
-        } else {
-            for (int i = 0; i < expected.size(); i++) {
-                assertEquals(expected.get(i), documentationHolder.getReturnType(getNodeForOffset(parserResult, offset)).get(i));
-            }
-        }
-    }
 
     private void checkParameter(Source source, final int offset, final FakeDocParameter expectedParam) throws Exception {
         initializeDocumentationHolder(source);
@@ -93,40 +83,8 @@ public class ExtDocDocumentationProviderTest extends JsDocumentationTestBase {
         }
     }
 
-    private void checkExtend(Source source, final int offset, final List<? extends Type> expected) throws Exception {
-        initializeDocumentationHolder(source);
-        if (expected == null) {
-            assertTrue(documentationHolder.getExtends(getNodeForOffset(parserResult, offset)).isEmpty());
-        } else {
-            for (int i = 0; i < expected.size(); i++) {
-                assertEquals(expected.get(i), documentationHolder.getExtends(getNodeForOffset(parserResult, offset)).get(i));
-            }
-        }
-    }
 
-    private void checkDocumentation(Source source, final int offset, final String expected) throws Exception {
-        initializeDocumentationHolder(source);
-        assertEquals(expected, documentationHolder.getDocumentation(getNodeForOffset(parserResult, offset)));
-    }
 
-    private void checkModifiers(Source source, final int offset, final String expectedModifiers) throws Exception {
-        initializeDocumentationHolder(source);
-        Set<JsModifier> realModifiers = documentationHolder.getModifiers(getNodeForOffset(parserResult, offset));
-        if (expectedModifiers == null) {
-            assertEquals(0, realModifiers.size());
-        } else {
-            String[] expModifiers = expectedModifiers.split("[|]");
-            assertEquals(expModifiers.length, realModifiers.size());
-            for (int i = 0; i < expModifiers.length; i++) {
-                assertTrue(realModifiers.contains(JsModifier.fromString(expModifiers[i])));
-            }
-        }
-    }
-
-    private void checkFirstSummary(Source source, int offset, String summary) throws ParseException {
-        initializeDocumentationHolder(source);
-        assertEquals(summary, documentationHolder.getCommentForOffset(offset, documentationHolder.getCommentBlocks()).getSummary().get(0));
-    }
 
     public void testGetParametersForNameAndTypeParam() throws Exception {
         Source testSource = getTestSource(getTestFile(FILE_NAME_PARAMETERS));

@@ -108,61 +108,6 @@ public class JQueryCodeCompletion implements CompletionProvider {
         return result;
     }
 
-    private int findParamIndex(ParserResult parserResult, int offset) {
-        TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(parserResult.getSnapshot().getTokenHierarchy(), offset);
-        if (ts == null) {
-            return -1;
-        }
-        ts.move(offset);
-        if (!(ts.moveNext() && ts.movePrevious())) {
-            return -1;
-        }
-        Token<? extends JsTokenId> token = LexUtilities.findNext(ts, Arrays.asList(JsTokenId.WHITESPACE));
-        // count index of parameters
-        int paramIndex = 0;
-        while(token.id() != JsTokenId.EOL && token.id() != JsTokenId.BRACKET_LEFT_PAREN) {
-            if (token.id() == JsTokenId.OPERATOR_COMMA) {
-                paramIndex ++;
-            } else if (token.id() == JsTokenId.OPERATOR_DOT) {
-                // we are not inside ()
-                return -1;
-            }
-            token = LexUtilities.findNext(ts, Arrays.asList(JsTokenId.WHITESPACE));
-        }
-        if (token.id() == JsTokenId.BRACKET_LEFT_PAREN) {
-            return paramIndex;
-        }
-        return -1;
-    }
-    
-    private String findFunctionName(ParserResult parserResult, int offset) {
-        TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(parserResult.getSnapshot().getTokenHierarchy(), offset);
-        if (ts == null) {
-            return null;
-        }
-        ts.move(offset);
-        if (!(ts.moveNext() && ts.movePrevious())) {
-            return null;
-        }
-        Token<? extends JsTokenId> token = LexUtilities.findNext(ts, Arrays.asList(JsTokenId.WHITESPACE));
-        while(token.id() != JsTokenId.EOL && token.id() != JsTokenId.BRACKET_LEFT_PAREN) {
-            if (token.id() == JsTokenId.OPERATOR_DOT) {
-                // we are not inside ()
-                return null;
-            }
-            token = LexUtilities.findNext(ts, Arrays.asList(JsTokenId.WHITESPACE));
-        }
-        if (token.id() == JsTokenId.BRACKET_LEFT_PAREN && ts.movePrevious()) {
-            token = LexUtilities.findNext(ts, Arrays.asList(JsTokenId.WHITESPACE));
-            if (token.id() == JsTokenId.IDENTIFIER){
-                return token.text().toString();
-            }
-        }
-        return null;
-    }
-    
-    
-
     @Override
     public String getHelpDocumentation(ParserResult info, ElementHandle element) {
         if (element instanceof DocSimpleElement) {

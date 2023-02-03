@@ -104,11 +104,6 @@ public class SDocDocumentationProviderTest extends JsDocumentationTestBase {
         }
     }
 
-    private void checkDocumentation(Source source, final int offset, final String expected) throws Exception {
-        initializeDocumentationHolder(source);
-        assertEquals(expected, documentationHolder.getDocumentation(getNodeForOffset(parserResult, offset)));
-    }
-
     private void checkDeprecated(Source source, final int offset, final boolean expected) throws Exception {
         initializeDocumentationHolder(source);
         assertEquals(expected, documentationHolder.isDeprecated(getNodeForOffset(parserResult, offset)));

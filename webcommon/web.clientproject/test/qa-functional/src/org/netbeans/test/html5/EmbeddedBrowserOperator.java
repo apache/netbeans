@@ -125,12 +125,6 @@ public class EmbeddedBrowserOperator extends TopComponentOperator {
         return _tbFitToScreenResize;
     }
 
-    private JToggleButtonOperator tbOption() {
-        if (_tbOption == null) {
-            _tbOption = new JToggleButtonOperator(this, 6);
-        }
-        return _tbOption;
-    }
 
     private JComboBoxOperator cboZoom() {
         if (_cboZoom == null) {

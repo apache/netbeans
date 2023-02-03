@@ -37,10 +37,6 @@ public class JsConventionHintTest extends HintTestBase {
         super(testName);
     }
     
-    private Rule createRule() {
-        return new JsConventionRule();
-    }
-    
     private Rule createSemicolonHint() {
         return new MissingSemicolonHint();
     }

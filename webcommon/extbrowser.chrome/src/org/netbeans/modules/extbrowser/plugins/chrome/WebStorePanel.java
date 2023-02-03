@@ -91,10 +91,6 @@ class WebStorePanel extends javax.swing.JPanel {
         }
     }
     
-    private Dimension getDescriptionSize(){
-        return new Dimension(350, (int)getAdjustedHeight());
-    }
-    
     private void init(){
         initComponents();
         // ui tweaks
@@ -148,21 +144,6 @@ class WebStorePanel extends javax.swing.JPanel {
                 "font-size: " + font.getSize() + "pt; }";
         ((HTMLDocument)fakePane.getDocument()).getStyleSheet().addRule(bodyRule);
         return fakePane.getPreferredSize().getHeight();
-    }
-    
-    private int getRows() {
-        int count = 0;
-        try {
-            int offs=description.getCaretPosition();
-            while( offs>0) {
-                offs=Utilities.getRowStart(description, offs)-1;
-                count++;
-            }
-        } 
-        catch (BadLocationException e) {
-            assert false;
-        }
-        return count+1;
     }
     
     private void attachActions(final Runnable runnable){

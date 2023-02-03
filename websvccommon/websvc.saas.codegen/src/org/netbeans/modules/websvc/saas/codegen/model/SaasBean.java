@@ -730,10 +730,6 @@ public abstract class SaasBean extends GenericResourceBean {
                     this.prompt = prompt;
                 }
 
-                private Prompt createPrompt() {
-                    return new Prompt();
-                }
-
                 public class Prompt {
 
                     private String deskTopUrl;

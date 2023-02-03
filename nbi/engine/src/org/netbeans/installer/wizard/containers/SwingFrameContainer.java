@@ -64,7 +64,7 @@ import org.netbeans.installer.wizard.ui.WizardUi;
  * In this case the container is an {@link NbiFrame}.
  *
  * @author Kirill Sorokin
- * @sicne 1.0
+ * @since 1.0
  */
 public class SwingFrameContainer extends NbiFrame implements SwingContainer {
     /////////////////////////////////////////////////////////////////////////////////

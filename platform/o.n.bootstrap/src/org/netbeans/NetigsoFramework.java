@@ -82,7 +82,7 @@ public abstract class NetigsoFramework {
     protected abstract void shutdown();
 
     /** Initializes a classloader for given module.
-     * @parma m the module description
+     * @param m the module description
      * @param pcl proxy classloader that shall be configured
      * @param jar the module JAR file
      * @return set of covered packages
@@ -139,7 +139,7 @@ public abstract class NetigsoFramework {
      * method to store it for next time.
      *
      * @param name name of the resource inside the JAR
-     * @parma resources the provider of the real resources
+     * @param resources the provider of the real resources
      * @return either cached value or the one returned by resources (or null)
      * @throws IOException if something goes wrong
      * @since 2.29

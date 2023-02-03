@@ -47,7 +47,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Test java brackets completion - unlike the original test this one
  * emulates real typing and tests the resulting state of the document.
  *
- * @autor Miloslav Metelka
+ * @author Miloslav Metelka
  */
 public class TypingCompletionUnitTest extends NbTestCase {
 

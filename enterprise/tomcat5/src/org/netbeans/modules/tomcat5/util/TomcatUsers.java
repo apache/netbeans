@@ -117,7 +117,7 @@ public class TomcatUsers {
      * 
      * @param tomcatUsersFile tomcat-users.xml file.
      * 
-     * @retun true if the user exists and has the "manager" role, false otherwise.
+     * @return true if the user exists and has the "manager" role, false otherwise.
      * 
      * @throws IOException if the file does not exist or an error occurs during 
      *         parsing it.
@@ -156,7 +156,7 @@ public class TomcatUsers {
      * 
      * @param tomcatUsersFile tomcat-users.xml file.
      * 
-     * @retun true if the user exists, false otherwise.
+     * @return true if the user exists, false otherwise.
      * 
      * @throws IOException if the file does not exist or an error occurs during 
      *         parsing it.

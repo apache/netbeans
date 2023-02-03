@@ -184,7 +184,7 @@ public class NbMainSequence extends WizardSequence {
                                             progress.getDetail().substring(SIZE_MODULES_PATTERN.length()) :
                                             progress.getDetail().substring(SIZE_UPDATES_PATTERN.length());
                                     try {
-                                        sizeOfModules = Integer.valueOf(size);
+                                        sizeOfModules = Integer.parseInt(size);
                                         if (sizeOfModules > 0) {
                                             spendPercentage = spendPercentage + INSTALL_STEP;
                                         }

@@ -161,7 +161,9 @@ public class PersistenceUnitWizard implements WizardDescriptor.ProgressInstantia
                 }
             }
             if(selectedProvider != null && selectedProvider.getAnnotationProcessor() != null){
-                if(lib == null)lib = PersistenceLibrarySupport.getLibrary(selectedProvider);
+                if(lib == null) {
+                    lib = PersistenceLibrarySupport.getLibrary(selectedProvider);
+                }
                 if (lib != null){
                     Util.addLibraryToProject(project, lib, JavaClassPathConstants.PROCESSOR_PATH);
                     modelGenLib = lib.getName()+"modelgen";//NOI18N    
@@ -257,7 +259,9 @@ public class PersistenceUnitWizard implements WizardDescriptor.ProgressInstantia
         //modelgen
         if(useModelgen && modelGenLib!=null){
             Library mLib = LibraryManager.getDefault().getLibrary(modelGenLib);
-            if(mLib!=null) Util.addLibraryToProject(project, mLib, JavaClassPathConstants.PROCESSOR_PATH);//no real need to add modelgen to compile classpath
+            if(mLib!=null) {
+                Util.addLibraryToProject(project, mLib, JavaClassPathConstants.PROCESSOR_PATH);//no real need to add modelgen to compile classpath
+            }
         }
         return Collections.singleton(pud.getPrimaryFile());
     }

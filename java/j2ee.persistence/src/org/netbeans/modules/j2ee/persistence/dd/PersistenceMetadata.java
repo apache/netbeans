@@ -99,7 +99,9 @@ public final class PersistenceMetadata {
      */
     public void refresh(FileObject fo){
         synchronized (ddMap) {
-            if( fo!=null )ddMap.remove(fo);
+            if( fo!=null ) {
+                ddMap.remove(fo);
+            }
         }
     }
 

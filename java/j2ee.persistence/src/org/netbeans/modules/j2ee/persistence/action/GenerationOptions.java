@@ -88,7 +88,9 @@ public final class GenerationOptions {
             {
                 return body2_0;
             }
-            else return body;
+            else {
+                return body;
+            }
         }
     }
     

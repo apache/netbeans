@@ -361,9 +361,14 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         {
             for (Table table : selectedTables.getTables()) {
                 if(!selectedTables.getUpdateType(table).equals(UpdateType.NEW)){
-                    if(selectedTables.getUpdateType(table).equals(UpdateType.UPDATE))recreate=true;
-                    else update=true;
-                    if(update && recreate)break;
+                    if(selectedTables.getUpdateType(table).equals(UpdateType.UPDATE)) {
+                        recreate=true;
+                    } else {
+                        update=true;
+                    }
+                    if(update && recreate) {
+                        break;
+                    }
                 }
             }
         }

@@ -62,7 +62,9 @@ public class Catalog {
                     : provider.getMetaData().getTables(name, "%", "%", new String[] { "TABLE", "VIEW" })) {
                 while (rs.next()) {
                     String schemaName = rs.getString("TABLE_SCHEM"); // NOI18N
-                    if(schemaName == null) schemaName = "";//handle null as empty name
+                    if(schemaName == null) {
+                        schemaName = "";//handle null as empty name
+                    }
                     Schema schema = new Schema(provider, this, schemaName);
                     schemas.put(schemaName, schema);
                 }

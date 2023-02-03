@@ -77,8 +77,9 @@ public class CompletionContext {
     
     private void initContext() throws BadLocationException {
         Token<XMLTokenId> token = documentContext.getCurrentToken();
-        if(token == null)
+        if(token == null) {
             return;
+        }
         
         boolean tokenBoundary = (documentContext.getCurrentTokenOffset() == caretOffset) 
                 || ((documentContext.getCurrentTokenOffset() + token.length()) == caretOffset);

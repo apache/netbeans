@@ -261,7 +261,9 @@ public class PersistenceLibrarySupport {
      * method is DISABLED and do nothing for now
      */
     public static void addDriver(final Project project, final JDBCDriver driver) {
-        if(true)return;
+        if(true) {
+            return;
+        }
         RequestProcessor.getDefault().post( () -> {
             Sources sources = ProjectUtils.getSources(project);
             if (sources == null) {

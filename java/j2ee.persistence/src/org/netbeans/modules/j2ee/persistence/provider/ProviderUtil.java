@@ -123,7 +123,9 @@ public class ProviderUtil {
        for (Provider each : getAllProviders()) {
             if (each.getProviderClass().equals(providerClass.trim())) {
                 ret = each;
-                if(ver.equals(ProviderUtil.getVersion(each)))return each;
+                if(ver.equals(ProviderUtil.getVersion(each))) {
+                    return each;
+                }
             }
         }
         
@@ -595,22 +597,31 @@ public class ProviderUtil {
     private static Set<Provider> filterProvidersByProperties(Set<Provider> providers, Property[] properties){
         Set<Provider> ret = null;
         if(providers == null){}
-        else if(providers.size()<= 1 || properties==null || properties.length==0) ret = new HashSet(providers);
-        else {
+        else if(providers.size()<= 1 || properties==null || properties.length==0) {
+            ret = new HashSet(providers);
+        } else {
             ret = new HashSet(providers);
             HashMap <Integer, ArrayList<Provider>> rates = new HashMap<Integer, ArrayList<Provider>>();
             int lowrate = Integer.MAX_VALUE;
             for(Provider each : providers){
                 int rate = 0;
                 for(Property prop: properties){
-                    if(each.getPropertyNames().contains(prop.getName()))rate++;
+                    if(each.getPropertyNames().contains(prop.getName())) {
+                        rate++;
+                    }
                 }
-                if(rates.get(rate) == null)rates.put(rate, new ArrayList<Provider>());
+                if(rates.get(rate) == null) {
+                    rates.put(rate, new ArrayList<Provider>());
+                }
                 rates.get(rate).add(each);
-                if(rate<lowrate)lowrate=rate;
+                if(rate<lowrate) {
+                    lowrate=rate;
+                }
             }
             if(rates.size()>1){
-                for(Provider prov:rates.get(lowrate))ret.remove(prov);
+                for(Provider prov:rates.get(lowrate)) {
+                    ret.remove(prov);
+                }
             }
         }
         return ret;

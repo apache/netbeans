@@ -591,7 +591,9 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-            if(text.length() == 0)text = " ";
+            if(text.length() == 0) {
+                text = " ";
+            }
             label.setEnabled((entityClosure.getAvailableEntities().contains(value) || entityClosure.getWantedEntities().contains(value)) && !disable);
             //setFont(list.getFont());
             label.setText(text);

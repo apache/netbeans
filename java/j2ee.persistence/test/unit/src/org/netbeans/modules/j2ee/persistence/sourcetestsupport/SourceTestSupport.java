@@ -137,8 +137,11 @@ public abstract class SourceTestSupport extends NbTestCase {
 
         @Override
         public String findMIMEType(FileObject fo) {
-            if(JavaDataLoader.JAVA_EXTENSION.equals(fo.getExt()))return JavaDataLoader.JAVA_MIME_TYPE;
-            else return null;
+            if(JavaDataLoader.JAVA_EXTENSION.equals(fo.getExt())) {
+                return JavaDataLoader.JAVA_MIME_TYPE;
+            } else {
+                return null;
+            }
         }
 
     }

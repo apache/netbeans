@@ -58,7 +58,9 @@ public abstract class PersistenceEditorTestBase extends PUDataObjectTestBase {
     
     protected void tearDown() throws Exception {
         super.tearDown();
-        if(dataObject != null)dataObject.save();
+        if(dataObject != null) {
+            dataObject.save();
+        }
         ddFile.refresh();
         ddFile.delete();
     }

@@ -90,7 +90,9 @@ public class TableUISupport {
         for (int i = 0; i < selected.length; i++) {
             Table table = (Table)list.getModel().getElementAt(selected[i]);
             if(enabledOnly){
-                if(!list.getCellRenderer().getListCellRendererComponent(list, table, selected[i], false, false).isEnabled())continue;
+                if(!list.getCellRenderer().getListCellRendererComponent(list, table, selected[i], false, false).isEnabled()) {
+                    continue;
+                }
             }
             result.add(table);
         }
@@ -103,7 +105,9 @@ public class TableUISupport {
 
         for (int i = 0; i < list.getModel().getSize(); i++) {
             Table table = (Table)list.getModel().getElementAt(i);
-            if(!list.getCellRenderer().getListCellRendererComponent(list, table, i, false, false).isEnabled())continue;
+            if(!list.getCellRenderer().getListCellRendererComponent(list, table, i, false, false).isEnabled()) {
+                continue;
+            }
             result.add(table);
         }
 
@@ -214,10 +218,11 @@ public class TableUISupport {
                 if (disabledReason!= null) {
                     displayName = NbBundle.getMessage(TableUISupport.class, "LBL_TableNameWithDisabledReason", tableItem.getName(), disabledReason.getDisplayName());
                 } else {
-                    if(tableItem.isTable())
+                    if(tableItem.isTable()) {
                         displayName = tableItem.getName();
-                    else
+                    } else {
                         displayName = tableItem.getName() + NbBundle.getMessage(TableUISupport.class, "LBL_DB_VIEW");
+                    }
                 }
             }
 
@@ -253,10 +258,11 @@ public class TableUISupport {
                 if (disabledReason!= null) {
                     displayName = NbBundle.getMessage(TableUISupport.class, "LBL_TableNameWithDisabledReason", table.getName(), disabledReason.getDisplayName());
                 } else {
-                    if(((Table)value).isTable())
+                    if(((Table)value).isTable()) {
                         displayName = table.getName();
-                    else
+                    } else {
                         displayName = table.getName() + NbBundle.getMessage(TableUISupport.class, "LBL_DB_VIEW");
+                    }
                 }
 
 

@@ -627,7 +627,9 @@ public class DbSchemaEjbGenerator {
      * may be used for issue 177341 fix later
      */
     private ForeignKeyElement[] removeDuplicateFK(ForeignKeyElement[] fkeys) {
-        if(fkeys==null || fkeys.length==0) return fkeys;
+        if(fkeys==null || fkeys.length==0) {
+            return fkeys;
+        }
         HashMap<ComparableFK, ForeignKeyElement> ret = new HashMap<ComparableFK, ForeignKeyElement>();
         for(int i=0;i<fkeys.length;i++)
         {

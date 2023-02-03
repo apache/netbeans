@@ -118,7 +118,9 @@ public class DBMetaDataProvider {
             getCatalogs();
         }
         Catalog ret = (Catalog)catalogs.get(name);
-        if(ret == null && "".equals(name))ret = (Catalog)catalogs.get(null);
+        if(ret == null && "".equals(name)) {
+            ret = (Catalog)catalogs.get(null);
+        }
         return ret;
     }
     

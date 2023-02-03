@@ -431,12 +431,14 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
         }
         
         public boolean accept(File f) {
-            if (f.isDirectory())
+            if (f.isDirectory()) {
                 return true;
+            }
             String name = f.getName();
             int index = name.lastIndexOf('.');   //NOI18N
-            if (index <= 0 || index==name.length()-1)
+            if (index <= 0 || index==name.length()-1) {
                 return false;
+            }
             String extension = name.substring(index+1).toUpperCase();
             return this.extensions.contains(extension);
         }

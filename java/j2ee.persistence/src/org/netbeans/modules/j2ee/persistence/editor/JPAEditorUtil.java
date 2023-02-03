@@ -228,8 +228,9 @@ public class JPAEditorUtil {
         // no matching element found
         if (!it.hasNext()) {
             return null;
-        } else
+        } else {
             return (VariableElement)it.next();
+        }
         
     }
 

@@ -193,7 +193,9 @@ public final class EntityManagerGenerator {
                     PersistenceUnit forOne=null;
                     for(int i=0;i<pus.length && forOne==null;i++) {
                         PersistenceUnit tmp=pus[i];
-                        if(forAll ==null && !tmp.isExcludeUnlistedClasses()) forAll=tmp;//first match sutable for all entities in the project
+                        if(forAll ==null && !tmp.isExcludeUnlistedClasses()) {
+                            forAll=tmp;//first match sutable for all entities in the project
+                        }
                         if(tmp.isExcludeUnlistedClasses()) {
                             String []classes = tmp.getClass2();
                             for(String clas:classes){

@@ -51,7 +51,9 @@ class ToplinkProvider extends Provider{
         if(version!=null && !Persistence.VERSION_1_0.equals(version)){
             return new ToplinkProvider(ECLIPSELINK_PROVIDER_CLASS, version);
         }
-        else return new ToplinkProvider(PREFERRED_PROVIDER_CLASS, version);
+        else {
+            return new ToplinkProvider(PREFERRED_PROVIDER_CLASS, version);
+        }
     }
     
     /**

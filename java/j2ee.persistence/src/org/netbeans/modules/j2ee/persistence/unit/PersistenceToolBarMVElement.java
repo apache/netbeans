@@ -94,16 +94,8 @@ public class PersistenceToolBarMVElement extends ToolBarMultiViewElement impleme
         comp = new ToolBarDesignEditor();
         factory=new PersistenceUnitPanelFactory(comp,puDataObject);
         setVisualEditor(comp);
-        repaintingTask = RequestProcessor.getDefault().create(new Runnable() {
-            @Override
-            public void run() {
-                javax.swing.SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        repaintView();
-                    }
-                });
-            }
+        repaintingTask = RequestProcessor.getDefault().create( () -> {
+            javax.swing.SwingUtilities.invokeLater( () -> repaintView() );
         });
         
     }

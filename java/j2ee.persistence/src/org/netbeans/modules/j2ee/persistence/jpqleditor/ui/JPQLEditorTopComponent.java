@@ -160,11 +160,10 @@ public final class JPQLEditorTopComponent extends TopComponent {
 
         sqlToggleButton.setSelected(true);
         jpqlEditor.getDocument().addDocumentListener(new JPQLDocumentListener());
-        ((NbEditorDocument) jpqlEditor.getDocument()).runAtomic(new Runnable() {//hack to unlock editor (make modifieble)
-            @Override
-            public void run() {
-            }
-        });
+        
+        //hack to unlock editor (make modifieble)
+        ((NbEditorDocument) jpqlEditor.getDocument()).runAtomic( () -> {} );
+        
         jpqlEditor.addMouseListener(new JPQLEditorPopupMouseAdapter());
         showSQL(NbBundle.getMessage(JPQLEditorTopComponent.class, "BuildHint"));
         resultsTable.setDefaultRenderer(Object.class, new ResultTableCellRenderer());
@@ -468,12 +467,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
                         if (SwingUtilities.isEventDispatchThread()) {
                             close();//need to close if corresponding dataobject was invalidated (deleted)
                         } else {
-                            SwingUtilities.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    close();//need to close if corresponding dataobject was invalidated (deleted)
-                                }
-                            });
+                            SwingUtilities.invokeLater( () -> close() );
                         }
                     }
                 }

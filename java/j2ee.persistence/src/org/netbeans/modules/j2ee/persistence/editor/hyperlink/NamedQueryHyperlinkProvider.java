@@ -85,12 +85,11 @@ public class NamedQueryHyperlinkProvider implements HyperlinkProviderExt {
     @Override
     public void performClickAction(final Document doc, final int offset, HyperlinkType type) {
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
-            @Override
-            public void run() {
-                goToNQ(doc, offset);
-            }
-        }, NbBundle.getMessage(NamedQueryHyperlinkProvider.class, "LBL_GoToNamedQuery"), cancel, false);
+        ProgressUtils.runOffEventDispatchThread( 
+                () -> goToNQ(doc, offset), 
+                NbBundle.getMessage(NamedQueryHyperlinkProvider.class, "LBL_GoToNamedQuery"), 
+                cancel, 
+                false);
     }
 
     @Override
@@ -336,40 +335,37 @@ public class NamedQueryHyperlinkProvider implements HyperlinkProviderExt {
         }
 
         final int[] ret = new int[]{-1, -1};
-        doc.render(new Runnable() {
-            @Override
-            public void run() {
-                TokenHierarchy th = TokenHierarchy.get(doc);
-                TokenSequence<JavaTokenId> ts = SourceUtils.getJavaTokenSequence(th, offset);
-
-                if (ts == null) {
-                    return;
-                }
-
-                ts.move(offset);
-                if (!ts.moveNext()) {
-                    return;
-                }
-
-                Token<JavaTokenId> t = ts.token();
-                boolean hasMessage = false;
-                if (USABLE_TOKEN_IDS.contains(t.id())) {
-                    for (int i = 0; i < 5; i++) {
-                        if (!ts.movePrevious()) {
-                            break;
-                        }
-                        Token<JavaTokenId> tk = ts.token();
-                        if (TokenUtilities.equals(CCParser.CREATE_NAMEDQUERY, tk.text())) {//NOI18N
-                            hasMessage = true;
-                        }
+        doc.render( () -> {
+            TokenHierarchy th = TokenHierarchy.get(doc);
+            TokenSequence<JavaTokenId> ts = SourceUtils.getJavaTokenSequence(th, offset);
+            
+            if (ts == null) {
+                return;
+            }
+            
+            ts.move(offset);
+            if (!ts.moveNext()) {
+                return;
+            }
+            
+            Token<JavaTokenId> t = ts.token();
+            boolean hasMessage = false;
+            if (USABLE_TOKEN_IDS.contains(t.id())) {
+                for (int i = 0; i < 5; i++) {
+                    if (!ts.movePrevious()) {
+                        break;
                     }
-                    if (hasMessage) {
-                        ts.move(offset);
-                        ts.moveNext();
-                        ret[0] = ts.offset();
-                        ret[1] = ts.offset() + t.length();
-                        return;
+                    Token<JavaTokenId> tk = ts.token();
+                    if (TokenUtilities.equals(CCParser.CREATE_NAMEDQUERY, tk.text())) {//NOI18N
+                        hasMessage = true;
                     }
+                }
+                if (hasMessage) {
+                    ts.move(offset);
+                    ts.moveNext();
+                    ret[0] = ts.offset();
+                    ret[1] = ts.offset() + t.length();
+                    return;
                 }
             }
         });

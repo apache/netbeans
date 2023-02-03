@@ -75,13 +75,11 @@ public class AddEntityPanel extends javax.swing.JPanel {
         readHelper.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 if (readHelper.getState() == State.FINISHED) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            try {
-                                setEntityClassModel(readHelper.getResult());
-                            } catch (ExecutionException e) {
-                                Exceptions.printStackTrace(e);
-                            }
+                    SwingUtilities.invokeLater( () -> {
+                        try {
+                            setEntityClassModel(readHelper.getResult());
+                        } catch (ExecutionException e1) {
+                            Exceptions.printStackTrace(e1);
                         }
                     });
                 }

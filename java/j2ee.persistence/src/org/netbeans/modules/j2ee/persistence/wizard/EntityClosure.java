@@ -113,16 +113,13 @@ public class EntityClosure {
             @Override
             public void stateChanged(ChangeEvent e) {
                 if (readHelper.getState() == State.FINISHED) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                addAvaliableEntities(new HashSet<Entity>(readHelper.getResult()));
-                                modelReady = true;
-                                changeSupport.fireChange();
-                            } catch (ExecutionException e) {
-                                Exceptions.printStackTrace(e);
-                            }
+                    SwingUtilities.invokeLater( () -> {
+                        try {
+                            addAvaliableEntities(new HashSet<Entity>(readHelper.getResult()));
+                            modelReady = true;
+                            changeSupport.fireChange();
+                        } catch (ExecutionException e1) {
+                            Exceptions.printStackTrace(e1);
                         }
                     });
                 }

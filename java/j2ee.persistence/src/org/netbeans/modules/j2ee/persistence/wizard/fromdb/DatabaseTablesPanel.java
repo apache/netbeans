@@ -206,12 +206,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         // is called wizard dialog might be non-visible, so the progress dialog
         // would be displayed before the wizard dialog.
         sourceSchemaUpdateEnabled = true;
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                updateSourceSchema();
-            }
-        });        
+        SwingUtilities.invokeLater( () -> updateSourceSchema() );
     }
     
     private void initInitial(){
@@ -1120,20 +1115,16 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         @Override
         public boolean isValid() {
 
-
             // TODO: RETOUCHE
             //            if (JavaMetamodel.getManager().isScanInProgress()) {
             if (false){
                 if (!waitingForScan) {
                     waitingForScan = true;
-                    RequestProcessor.Task task = RequestProcessor.getDefault().create(new Runnable() {
-                        @Override
-                        public void run() {
-                            // TODO: RETOUCHE
-                            //                            JavaMetamodel.getManager().waitScanFinished();
-                            waitingForScan = false;
-                            changeSupport.fireChange();
-                        }
+                    RequestProcessor.Task task = RequestProcessor.getDefault().create( () -> {
+                        // TODO: RETOUCHE
+                        // JavaMetamodel.getManager().waitScanFinished();
+                        waitingForScan = false;
+                        changeSupport.fireChange();
                     });
                     setErrorMessage(NbBundle.getMessage(DatabaseTablesPanel.class, "scanning-in-progress"));
                     task.schedule(0);

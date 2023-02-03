@@ -202,12 +202,7 @@ public class MetadataModelReadHelper<T, R> {
         changeSupport.fireChange();
         // ensure the model is not accessed in the calling thread in case
         // the calling thread is the AWT thread
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                reader.run();
-            }
-        });
+        RP.post( () -> reader.run() );
     }
 
     /**

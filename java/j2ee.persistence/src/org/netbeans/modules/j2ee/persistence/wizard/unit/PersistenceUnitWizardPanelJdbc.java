@@ -68,16 +68,12 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         setTableGeneration(tg);
         libraryCombo.setEnabled(false);
         
-        RP.post(new Runnable() {
-           @Override
-           public void run() {
-                PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
-                comboHelper.connect(libraryCombo);
-                libraryCombo.setEnabled(true);
-                checkValidity();
-           } 
+        RP.post( () -> {
+            PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
+            comboHelper.connect(libraryCombo);
+            libraryCombo.setEnabled(true);
+            checkValidity(); 
         });
-
         
         unitNameTextField.setText(Util.getCandidateName(project));
         unitNameTextField.selectAll();
@@ -164,7 +160,7 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
     
     public boolean isValidPanel() {
         setErrorMessage("");
-       Sources sources=ProjectUtils.getSources(project);
+        Sources sources=ProjectUtils.getSources(project);
         SourceGroup groups[]=sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         if(groups == null || groups.length == 0) {
             setErrorMessage(NbBundle.getMessage(PersistenceUnitWizardDescriptor.class,"ERR_JavaSourceGroup")); //NOI18N

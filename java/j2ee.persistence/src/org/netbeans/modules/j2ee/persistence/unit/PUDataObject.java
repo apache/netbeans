@@ -264,12 +264,7 @@ public class PUDataObject extends XmlMultiViewDataObject {
             // postpone the "Switch to XML View" action to the end of event dispatching thread
             // this enables to finish the current action first (e.g. painting particular view)
             // see the issue 67580
-            SwingUtilities.invokeLater(new Runnable(){
-                @Override
-                public void run() {
-                    goToXmlView();
-                }
-            });
+            SwingUtilities.invokeLater( () -> goToXmlView() );
         }
         return !switchView;
 
@@ -368,12 +363,8 @@ public class PUDataObject extends XmlMultiViewDataObject {
         }
         if (target!=null) {
             final Object key=target;
-            org.netbeans.modules.xml.multiview.Utils.runInAwtDispatchThread(new Runnable() {
-                @Override
-                public void run() {
-                    getActiveMultiViewElement0().getSectionView().openPanel(key);
-                }
-            });
+            org.netbeans.modules.xml.multiview.Utils.runInAwtDispatchThread( () -> 
+                    getActiveMultiViewElement0().getSectionView().openPanel(key));
         }
     }
     

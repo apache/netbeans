@@ -73,14 +73,11 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
        
         providerCombo.setEnabled(false);
 
-        RP.post(new Runnable() {
-           @Override
-           public void run() {
-                PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
-                comboHelper.connect(providerCombo);
-                providerCombo.setEnabled(true);
-                checkValidity();
-           } 
+        RP.post( () -> {
+            PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
+            comboHelper.connect(providerCombo);
+            providerCombo.setEnabled(true);
+            checkValidity(); 
         });
         
         PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
@@ -103,12 +100,7 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
             if(SwingUtilities.isEventDispatchThread()){
                 connectDatasources();
             } else {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        connectDatasources();
-                    }
-                });
+                SwingUtilities.invokeLater( () -> connectDatasources() );
             }
         }        
     }

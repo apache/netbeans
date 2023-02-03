@@ -83,60 +83,54 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
         this.persistenceUnit=persistenceUnit;
         this.project = FileOwnerQuery.getOwner(this.dObj.getPrimaryFile());
         
+        
         assert project != null : "Could not resolve project for " + dObj.getPrimaryFile(); //NOI18N]
         
         initComponents();
         setVisiblePanel();
         nameTextField.setText(NbBundle.getMessage(PersistenceUnitPanel.class,"LBL_Wait"));
-        RP.post(new Runnable() {
-
-            @Override
-            public void run() {
-
-                if (ProviderUtil.getConnection(persistenceUnit) != null && PersistenceLibrarySupport.getLibrary(persistenceUnit) != null) {
-                    isContainerManaged = false;
-                } else if (persistenceUnit.getJtaDataSource() != null || persistenceUnit.getNonJtaDataSource() != null) {
-                    isContainerManaged = true;
-                } else {
-                    isContainerManaged = Util.isSupportedJavaEEVersion(project);
-                }
-
-
-                PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
-                if (isContainerManaged){
-                    comboHelper.connect(providerCombo);
-                    ArrayList<Provider> providers = new ArrayList<Provider>();
-                    for(int i=0; i<providerCombo.getItemCount(); i++){
-                        Object obj = providerCombo.getItemAt(i);
-                        if(obj instanceof Provider){
-                            providers.add((Provider) obj);
-                        }
-                    }
-                    Provider provider = ProviderUtil.getProvider(persistenceUnit, providers.toArray(new Provider[]{}));
-                    providerCombo.setSelectedItem(provider);
-                } else {
-                    comboHelper.connect(libraryComboBox);
-                    setSelectedLibrary();
-                }
-
-                setVisiblePanel();
-                initIncludeAllEntities();
-                initEntityList();
-
-                initDataSource();
-                if(jpa2x)
-                {
-                    initCache();
-                    initValidation();
-                }
-
-                nameTextField.setText(persistenceUnit.getName());
-                setTableGeneration();
-                handleCmAmSelection();
-
-                registerModifiers();
+        RP.post( () -> {
+            if (ProviderUtil.getConnection(persistenceUnit) != null && PersistenceLibrarySupport.getLibrary(persistenceUnit) != null) {
+                isContainerManaged = false;
+            } else if (persistenceUnit.getJtaDataSource() != null || persistenceUnit.getNonJtaDataSource() != null) {
+                isContainerManaged = true;
+            } else {
+                isContainerManaged = Util.isSupportedJavaEEVersion(project);
             }
-        });
+            
+            PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
+            if (isContainerManaged){
+                comboHelper.connect(providerCombo);
+                ArrayList<Provider> providers = new ArrayList<Provider>();
+                for(int i=0; i<providerCombo.getItemCount(); i++){
+                    Object obj = providerCombo.getItemAt(i);
+                    if(obj instanceof Provider){
+                        providers.add((Provider) obj);
+                    }
+                }
+                Provider provider = ProviderUtil.getProvider(persistenceUnit, providers.toArray(new Provider[]{}));
+                providerCombo.setSelectedItem(provider);
+            } else {
+                comboHelper.connect(libraryComboBox);
+                setSelectedLibrary();
+            }
+            
+            setVisiblePanel();
+            initIncludeAllEntities();
+            initEntityList();
+            
+            initDataSource();
+            if (jpa2x) {
+                initCache();
+                initValidation();
+            }
+            
+            nameTextField.setText(persistenceUnit.getName());
+            setTableGeneration();
+            handleCmAmSelection();
+            
+            registerModifiers();
+        });   
         
     }
     
@@ -286,12 +280,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
                     dsPopulator.connect(dsCombo); 
                 } else {
                     try {
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            @Override
-                            public void run() {
-                                dsPopulator.connect(dsCombo);
-                            }
-                        });
+                        SwingUtilities.invokeAndWait( () -> dsPopulator.connect(dsCombo) );
                     } catch (InterruptedException ex) {
                         Exceptions.printStackTrace(ex);
                     } catch (InvocationTargetException ex) {

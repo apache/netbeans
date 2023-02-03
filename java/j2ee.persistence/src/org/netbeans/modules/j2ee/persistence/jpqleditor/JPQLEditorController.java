@@ -124,12 +124,8 @@ public class JPQLEditorController {
                     }
                     final JPQLResult jpqlResult0 = jpqlResult;
                     final ClassLoader customClassLoader0 = customClassLoader;
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            editorTopComponent.setResult(jpqlResult0, customClassLoader0);
-                        }
-                    });
+                    SwingUtilities.invokeLater( () -> 
+                            editorTopComponent.setResult(jpqlResult0, customClassLoader0) );
 
                     Thread.currentThread().setContextClassLoader(defClassLoader);
                 }

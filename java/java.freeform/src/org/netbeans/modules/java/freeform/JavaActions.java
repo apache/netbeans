@@ -672,7 +672,7 @@ final class JavaActions implements ActionProvider {
      * Use with {@link #GENERAL_SCRIPT_PATH}.
      * Idempotent, takes effect only once.
      * @param antProject XML of an Ant project (document element)
-     * @oaram origScriptPath Ant name of original build script's path
+     * @param origScriptPath Ant name of original build script's path
      */
     void ensureImports(Element antProject, String origScriptPath) throws IOException, SAXException {
         if (antProject.getAttribute("basedir").length() > 0) {

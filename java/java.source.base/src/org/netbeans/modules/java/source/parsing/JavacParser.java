@@ -620,7 +620,7 @@ public class JavacParser extends Parser {
      * Moves the Javac into the required {@link JavaSource#Phase}
      * Not synchronized, has to be called under Parsing API lock.
      * @param the required {@link JavaSource#Phase}
-     * @parma currentInfo - the javac
+     * @param currentInfo - the javac
      * @param cancellable when true the method checks cancels
      * @return the reached phase
      * @throws IOException when the javac throws an exception

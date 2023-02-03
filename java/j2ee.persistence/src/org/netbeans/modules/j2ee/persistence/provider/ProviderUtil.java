@@ -161,7 +161,7 @@ public class ProviderUtil {
      * @param pu the persistence unit whose database connection is to 
      * be retrieved; must not be null.
      * 
-     * @rerturn the connection specified in the given persistence unit or
+     * @return the connection specified in the given persistence unit or
      * <code>null</code> if it didn't specify a connectioh.
      * 
      */
@@ -212,7 +212,7 @@ public class ProviderUtil {
      * @param pu the persistence unit whose database connection is to 
      * be retrieved; must not be null.
      * 
-     * @rerturn the connection properties specified in the given persistence unit or
+     * @return the connection properties specified in the given persistence unit or
      * <code>null</code> if it didn't specify a connectioh.
      * 
      */

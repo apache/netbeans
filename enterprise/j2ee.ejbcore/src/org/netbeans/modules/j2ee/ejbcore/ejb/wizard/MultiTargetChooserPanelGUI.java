@@ -52,7 +52,7 @@ import org.openide.util.RequestProcessor;
  * 
  * @author Petr Hrebejk
  * @author Jesse Glick
- * @authos Martin Adamek
+ * @author Martin Adamek
  */
 public class MultiTargetChooserPanelGUI extends javax.swing.JPanel implements ActionListener, DocumentListener {
   

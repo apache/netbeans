@@ -719,7 +719,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
      * 
      * @param coloringName The name of the coloring to find.
      * 
-     * @retrun The coloring or <code>null</code> if there is no coloring with the
+     * @return The coloring or <code>null</code> if there is no coloring with the
      *   requested name.
      * @deprecated Use Editor Settings API instead.
      */

@@ -116,10 +116,12 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
     
     
     
+    @Override
     public String getPersistenceUnitName() {
         return unitNameTextField.getText();
     }
     
+    @Override
     public Provider getSelectedProvider(){
         return (Provider) libraryCombo.getSelectedItem();
     }
@@ -128,6 +130,7 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         return (DatabaseConnection) jdbcCombo.getSelectedItem();
     }
     
+    @Override
     public void setPreselectedDB(String db) {
         boolean hasItem = false;
         for (int i = 0; i < jdbcCombo.getItemCount(); i++) {
@@ -143,6 +146,7 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         jdbcCombo.setEnabled(!hasItem);
     }
     
+    @Override
     public String getTableGeneration() {
         if (ddlCreate.isSelected()) {
             return Provider.TABLE_GENERATION_CREATE;
@@ -153,6 +157,7 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         }
     }
     
+    @Override
     public boolean isValidPanel() {
         setErrorMessage("");
         Sources sources=ProjectUtils.getSources(project);
@@ -190,6 +195,7 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         return Strings.isEmpty(getPersistenceUnitName()) ? false : isNameUnique();
     }
     
+    @Override
     public void setErrorMessage(String msg) {
         errorMessage.setText(msg);
         errorMessage.setVisible(msg!=null && msg.length()>0);
@@ -406,12 +412,15 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
      * changes are made.
      */
     private class ValidationListener implements DocumentListener {
+        @Override
         public void insertUpdate(DocumentEvent e) {
             checkValidity();
         }
+        @Override
         public void removeUpdate(DocumentEvent e) {
             checkValidity();
         }
+        @Override
         public void changedUpdate(DocumentEvent e) {
             checkValidity();
         }

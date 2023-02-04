@@ -37,6 +37,7 @@ import javax.lang.model.type.TypeKind;
 public final class ApplicationManagedResourceTransactionNonInjectableInWeb extends EntityManagerGenerationStrategySupport {
     
     
+    @Override
     public ClassTree generate(){
         
         ClassTree modifiedClazz = getClassTree();

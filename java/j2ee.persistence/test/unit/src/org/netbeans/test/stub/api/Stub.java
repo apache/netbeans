@@ -72,10 +72,12 @@ public final class Stub {
     
         private static final Map/*<Object,Delegate>*/ STUB_TO_DELEGATE = new WeakHashMap();
         
+        @Override
         public Object create(Class[] intfs) {
             return create(intfs, new DefaultInvocationHandler());
         }
 
+        @Override
         public Object create(Class[] intfs, StubDelegate delegate) {
             Object stub = create(intfs, new MethodDelegatingInvocationHandler(delegate));
             STUB_TO_DELEGATE.put(stub, delegate);
@@ -86,6 +88,7 @@ public final class Stub {
             return Proxy.newProxyInstance(Stub.class.getClassLoader(), intfs, handler);
         }
         
+        @Override
         public Object getDelegate(Object stub) {
             StubDelegate delegate = (StubDelegate)STUB_TO_DELEGATE.get(stub);
             if (delegate == null) {
@@ -94,6 +97,7 @@ public final class Stub {
             return delegate;
         }
 
+        @Override
         public void setProperty(Object stub, Object key, Object value) {
             ((StubDelegate)getDelegate(stub)).setProperty(key, value);
         }
@@ -110,6 +114,7 @@ public final class Stub {
             this.delegate = delegate;
         }
 
+        @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             try {
                 Method delegateMethod = delegate.getClass().getMethod(method.getName(), method.getParameterTypes());
@@ -129,6 +134,7 @@ public final class Stub {
      */
     private static final class DefaultInvocationHandler implements InvocationHandler {
         
+        @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             String methodName = method.getName();
             Class[] paramTypes = method.getParameterTypes();

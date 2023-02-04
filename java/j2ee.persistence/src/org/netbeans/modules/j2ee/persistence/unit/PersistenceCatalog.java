@@ -62,6 +62,7 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         schemas.add(new SchemaInfo("orm_2_1.xsd", RESOURCE_PATH, ORM_NS));
     }
     
+    @Override
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
         if (systemId == null){
             return null;
@@ -74,6 +75,7 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         return null;
     }
     
+    @Override
     public Iterator getPublicIDs() {
         List<String> result = new ArrayList<String>();
         for (SchemaInfo each : schemas){
@@ -82,9 +84,11 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         return result.iterator();
     }
     
+    @Override
     public void refresh() {
     }
     
+    @Override
     public String getSystemID(String publicId) {
         if (publicId == null){
             return null;
@@ -97,35 +101,44 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         return null;
     }
     
+    @Override
     public String resolveURI(String name) {
         return null;
     }
     
+    @Override
     public String resolvePublic(String publicId) {
         return null;
     }
     
+    @Override
     public void addCatalogListener(CatalogListener l) {
     }
     
+    @Override
     public void removeCatalogListener(CatalogListener l) {
     }
     
+    @Override
     public String getIconResource(int type) {
         return "org/netbeans/modules/j2ee/persistence/dd/resources/persistenceCatalog.gif"; // NOI18N
     }
     
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(PersistenceCatalog.class, "LBL_PersistenceCatalog");
     }
     
+    @Override
     public String getShortDescription() {
         return NbBundle.getMessage(PersistenceCatalog.class, "DESC_PersistenceCatalog");
     }
     
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener l) {
     }
     
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener l) {
     }
 

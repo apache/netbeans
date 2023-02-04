@@ -40,42 +40,52 @@ class DataNucleusProvider extends Provider{
         super("org.datanucleus.store.appengine.jpa.DatastorePersistenceProvider"); //NOI18N
     }
 
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(DataNucleusProvider.class, "LBL_DataNucleus"); //NOI18N
     }
 
+    @Override
     public String getJdbcUrl() {
         return "";
     }
 
+    @Override
     public String getJdbcDriver() {
         return "";
     }
 
+    @Override
     public String getJdbcUsername() {
         return "";
     }
 
+    @Override
     public String getJdbcPassword() {
         return "";
     }
 
+    @Override
     public String getTableGenerationPropertyName() {
         return "";
     }
 
+    @Override
     public String getTableGenerationDropCreateValue() {
         return "";
     }
 
+    @Override
     public String getTableGenerationCreateValue() {
         return "";
     }
 
+    @Override
     public Map getUnresolvedVendorSpecificProperties() {
         return Collections.emptyMap();
     }
 
+    @Override
     public Map getDefaultVendorSpecificProperties() {
         Hashtable<String,String> properties = new Hashtable();
         properties.put("datanucleus.NontransactionalRead", "true"); //NOI18N

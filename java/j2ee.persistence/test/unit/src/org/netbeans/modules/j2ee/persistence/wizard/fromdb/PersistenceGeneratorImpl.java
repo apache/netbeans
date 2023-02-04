@@ -32,16 +32,20 @@ import org.openide.filesystems.FileObject;
  */
 public class PersistenceGeneratorImpl implements PersistenceGenerator {
     
+    @Override
     public String generateEntityName(String className) {
         return className;
     }
 
+    @Override
     public void init(WizardDescriptor wiz) {
     }
 
+    @Override
     public void generateBeans(final ProgressPanel progressPanel, final RelatedCMPHelper helper, final FileObject dbschemaFile, final ProgressContributor handle) throws IOException {
     }
 
+    @Override
     public void uninit() {
     }
 
@@ -49,10 +53,12 @@ public class PersistenceGeneratorImpl implements PersistenceGenerator {
         return false;
     }
 
+    @Override
     public Set<FileObject> createdObjects() {
         return Collections.<FileObject>emptySet();
     }
 
+    @Override
     public String getFQClassName(String tableName) {
         return null;
     }

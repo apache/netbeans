@@ -78,12 +78,15 @@ public class PersistenceLibraryPanel extends javax.swing.JPanel {
         libraryNameTextField.setText(libraryName + index);
         // listen on libray name changes
         libraryNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
             public void changedUpdate(DocumentEvent e) {
                 checkValidity();
             }
+            @Override
             public void insertUpdate(DocumentEvent e) {
                 checkValidity();
             }
+            @Override
             public void removeUpdate(DocumentEvent e) {
                 checkValidity();
             }

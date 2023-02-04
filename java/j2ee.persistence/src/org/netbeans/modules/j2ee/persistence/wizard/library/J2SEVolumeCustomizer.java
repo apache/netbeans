@@ -64,11 +64,13 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
         this.setName (NbBundle.getMessage(J2SEVolumeCustomizer.class,"TXT_"+volumeType));
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         this.addButton.requestFocus();
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         this.addButton.setEnabled(enabled);
@@ -403,6 +405,7 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
         }
     }
     
+    @Override
     public void setObject(Object bean) {
         if (bean instanceof LibraryImplementation) {
             LibrariesSupport.createLibraryImplementation(PersistenceLibrarySupport.LIBRARY_TYPE, PersistenceLibrarySupport.VOLUME_TYPES);
@@ -430,6 +433,7 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
             this.extensions = Arrays.asList(extensions);
         }
         
+        @Override
         public boolean accept(File f) {
             if (f.isDirectory()) {
                 return true;
@@ -443,6 +447,7 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
             return this.extensions.contains(extension);
         }
         
+        @Override
         public String getDescription() {
             return this.description;
         }
@@ -465,6 +470,7 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
     
     private static class ContentRenderer extends DefaultListCellRenderer {
                 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             String displayName = null;
             Color color = null;

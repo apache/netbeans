@@ -86,6 +86,7 @@ public class JPAParseUtils {
             return resolver;
         }
 
+        @Override
         public InputSource resolveEntity(String publicId, String systemId) {
             // additional logging for #127276
             if (LOGGER.isLoggable(Level.FINE)) {

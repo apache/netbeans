@@ -390,6 +390,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return treeMaker;
     }
     
+    @Override
     public void setTreeMaker(TreeMaker treeMaker) {
         this.treeMaker = treeMaker;
     }
@@ -398,6 +399,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return classTree;
     }
     
+    @Override
     public void setClassTree(ClassTree classTree) {
         this.classTree = classTree;
     }
@@ -406,6 +408,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return workingCopy;
     }
     
+    @Override
     public void setWorkingCopy(WorkingCopy workingCopy) {
         this.workingCopy = workingCopy;
     }
@@ -417,6 +420,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return genUtils;
     }
     
+    @Override
     public void setGenUtils(GenerationUtils genUtils) {
         this.genUtils = genUtils;
     }
@@ -425,6 +429,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return persistenceUnit;
     }
     
+    @Override
     public void setPersistenceUnit(PersistenceUnit persistenceUnit) {
         this.persistenceUnit = persistenceUnit;
     }
@@ -433,6 +438,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return generationOptions;
     }
     
+    @Override
     public void setGenerationOptions(GenerationOptions generationOptions) {
         this.generationOptions = generationOptions;
     }

@@ -50,9 +50,11 @@ public abstract class EntityManagerGenerationTestSupport  extends SourceTestSupp
         
         CancellableTask task = new CancellableTask<WorkingCopy>() {
             
+            @Override
             public void cancel() {
             }
             
+            @Override
             public void run(WorkingCopy workingCopy) throws Exception {
                 
                 workingCopy.toPhase(Phase.RESOLVED);

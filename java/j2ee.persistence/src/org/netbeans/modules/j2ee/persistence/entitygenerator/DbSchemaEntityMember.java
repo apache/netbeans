@@ -80,18 +80,22 @@ class DbSchemaEntityMember extends EntityMember {
         }
     }
 
+    @Override
     public boolean isNullable() {
         return columnElement.isNullable();
     }
 
+    @Override
     public boolean isPrimaryKey() {
         return isPrimaryKey;
     }
     
+    @Override
     public boolean isAutoIncrement() {
         return isAutoIncrement;
     }
     
+    @Override
     public void setPrimaryKey(boolean isPk, boolean isPkField) {
         isPrimaryKey = isPk;
 
@@ -134,18 +138,22 @@ class DbSchemaEntityMember extends EntityMember {
         return columnElement;
     }
     
+    @Override
     public boolean supportsFinder() {
         return sqlType.supportsFinder();
     }
     
+    @Override
     public String getColumnName() {
         return getColumnElement().getName().getName();
     }
     
+    @Override
     public String getTableName() {
         return getColumnElement().getDeclaringTable().getName().getName();
     }
 
+    @Override
     public boolean isLobType() {
         return SQLTypeUtil.isLob(getColumnElement().getType());
     }
@@ -156,6 +164,7 @@ class DbSchemaEntityMember extends EntityMember {
      * @return the length, <code>null</code> if it is not a character type
      * field or there is no length.
      */
+    @Override
     public Integer getLength() {
         return length;
     }
@@ -166,6 +175,7 @@ class DbSchemaEntityMember extends EntityMember {
      * @return the precision, <code>null</code> if it is not a numeric type
      * field or there is no precision.
      */
+    @Override
     public Integer getPrecision() {
         return precision;
     }
@@ -176,6 +186,7 @@ class DbSchemaEntityMember extends EntityMember {
      * @return the scale, <code>null</code> if it is not a numeric type
      * field or there is no scale.
      */
+    @Override
     public Integer getScale() {
         return scale;
     }

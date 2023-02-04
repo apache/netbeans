@@ -37,6 +37,7 @@ import javax.lang.model.type.TypeKind;
  */
 public final class ApplicationManagedResourceTransactionInJ2SE extends EntityManagerGenerationStrategySupport{
     
+    @Override
     public ClassTree generate() {
         
         

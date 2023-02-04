@@ -41,6 +41,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         this.classPath = ClassPathSupport.createClassPath(sources);
     }
     
+    @Override
     public ClassPath findClassPath(FileObject file, String type) {
         if(ClassPath.SOURCE.equals(type)){
             return this.classPath;

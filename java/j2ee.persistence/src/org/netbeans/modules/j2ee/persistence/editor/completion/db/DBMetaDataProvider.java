@@ -136,16 +136,19 @@ public class DBMetaDataProvider {
         return getConnection().getMetaData();
     }
     
+    @Override
     public String toString() {
         return "DBMetadataProvider[conn=" + getConnection() + "]"; // NOI18N
     }
     
     private static final class CatalogComparator implements Comparator {
         
+        @Override
         public boolean equals(Object that) {
             return that instanceof CatalogComparator;
         }
         
+        @Override
         public int compare(Object o1, Object o2) {
             String name1 = (String)o1;
             String name2 = (String)o2;
@@ -163,6 +166,7 @@ public class DBMetaDataProvider {
         public MetaDataListenerImpl() {
         }
 
+        @Override
         public void tablesChanged(final DatabaseConnection dbconn) {
             try {
                 Schema schema = getSchema(dbconn);
@@ -174,6 +178,7 @@ public class DBMetaDataProvider {
             }
         }
 
+        @Override
         public void tableChanged(DatabaseConnection dbconn, String tableName) {
             tablesChanged(dbconn);
         }

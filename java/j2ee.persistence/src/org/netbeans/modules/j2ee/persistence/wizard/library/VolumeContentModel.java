@@ -49,10 +49,12 @@ class VolumeContentModel extends AbstractListModel/*<String>*/ {
         }
     }
 
+    @Override
     public int getSize() {
         return this.content.size();
     }
 
+    @Override
     public Object getElementAt(int index) {
         if (index < 0 || index >= this.content.size()) {
             throw new IllegalArgumentException();

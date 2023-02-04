@@ -119,6 +119,7 @@ public class Schema {
         return result;
     }
     
+    @Override
     public String toString() {
         return "Schema[catalog=" + catalog + ",name='" + name + "']"; // NOI18N
     }

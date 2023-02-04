@@ -88,6 +88,7 @@ public class TableProviderImpl implements TableProvider {
         tables = Collections.unmodifiableSet(tmpTables);
     }
 
+    @Override
     public Set<Table> getTables() {
         return tables;
     }
@@ -114,6 +115,7 @@ public class TableProviderImpl implements TableProvider {
             this.referencedTables = referencedTables;
         }
 
+        @Override
         public Set<Table> getReferencedTables() {
             return referencedTables;
         }
@@ -122,6 +124,7 @@ public class TableProviderImpl implements TableProvider {
             this.referencedByTables = referencedByTables;
         }
 
+        @Override
         public Set<Table> getReferencedByTables() {
             return referencedByTables;
         }
@@ -130,6 +133,7 @@ public class TableProviderImpl implements TableProvider {
             this.joinTables = joinTables;
         }
 
+        @Override
         public Set<Table> getJoinTables() {
             return joinTables;
         }

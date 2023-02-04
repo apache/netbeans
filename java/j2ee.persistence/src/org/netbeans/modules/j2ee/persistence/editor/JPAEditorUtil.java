@@ -241,6 +241,7 @@ public class JPAEditorUtil {
             this.fieldName = fieldName;
         }
 
+        @Override
         public boolean accept(Element e, TypeMirror type) {
             
             if (e.getKind() != ElementKind.FIELD) {

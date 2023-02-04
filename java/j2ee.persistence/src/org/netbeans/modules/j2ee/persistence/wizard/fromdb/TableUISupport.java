@@ -128,6 +128,7 @@ public class TableUISupport {
 
     private abstract static class TableModel extends AbstractListModel {
 
+        @Override
         public abstract Table getElementAt(int index);
     }
 
@@ -143,14 +144,17 @@ public class TableUISupport {
             refresh();
         }
 
+        @Override
         public Table getElementAt(int index) {
             return displayTables.get(index);
         }
 
+        @Override
         public int getSize() {
             return displayTables != null ? displayTables.size() : 0;
         }
 
+        @Override
         public void stateChanged(ChangeEvent event) {
             refresh();
         }
@@ -176,14 +180,17 @@ public class TableUISupport {
             refresh();
         }
 
+        @Override
         public Table getElementAt(int index) {
             return displayTables.get(index);
         }
 
+        @Override
         public int getSize() {
             return displayTables != null ? displayTables.size() : 0;
         }
 
+        @Override
         public void stateChanged(ChangeEvent event) {
             refresh();
         }
@@ -208,6 +215,7 @@ public class TableUISupport {
             this.filter = filter;
         }
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             DisabledReason disabledReason = null;
             Object displayName = null;
@@ -466,6 +474,7 @@ public class TableUISupport {
             nonErrorForeground = UIManager.getColor("Label.foreground"); // NOI18N
         }
 
+        @Override
         public Component getTableCellRendererComponent(JTable jTable, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             boolean joinTable = false;
             boolean validClass = true;

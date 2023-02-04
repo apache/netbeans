@@ -60,12 +60,14 @@ public class DBSchemaUISupport {
             this.dbschemaFileList = dbschemaFileList;
         }
 
+        @Override
         public void setSelectedItem(Object anItem) {
             if (dbschemaFileList.getFileList().size() > 0) {
                 selectedItem = anItem;
             }
         }
 
+        @Override
         public Object getElementAt(int index) {
             List<FileObject> dbschemaFiles = dbschemaFileList.getFileList();
             if (dbschemaFiles.size() > 0) {
@@ -75,11 +77,13 @@ public class DBSchemaUISupport {
             }
         }
 
+        @Override
         public int getSize() {
             int dbschemaCount = dbschemaFileList.getFileList().size();
             return dbschemaCount > 0 ? dbschemaCount : 1;
         }
 
+        @Override
         public Object getSelectedItem() {
             return dbschemaFileList.getFileList().size() > 0 ? selectedItem : NbBundle.getMessage(DBSchemaUISupport.class, "LBL_NoSchemas");
         }
@@ -93,6 +97,7 @@ public class DBSchemaUISupport {
             this.comboBox = comboBox;
         }
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Object displayName = null;
             ComboBoxModel model = comboBox.getModel();

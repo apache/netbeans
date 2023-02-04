@@ -48,6 +48,7 @@ import org.openide.filesystems.FileUtil;
 public final class ContainerManagedJTAInjectableInWeb extends EntityManagerGenerationStrategySupport {
     
     
+    @Override
     public ClassTree generate() {
         
         ClassTree modifiedClazz = getClassTree();

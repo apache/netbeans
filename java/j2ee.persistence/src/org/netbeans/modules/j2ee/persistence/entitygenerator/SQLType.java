@@ -50,6 +50,7 @@ class SQLType {
    /** 
     * Override Object.equals
     */
+    @Override
     public boolean equals(Object other) {
         if (other == null || !getClass().isInstance(other)){
 	    return false;
@@ -60,6 +61,7 @@ class SQLType {
     /**
      * Override Object.hashCode
      */
+    @Override
     public int hashCode() {
         return sqlType;
     }
@@ -68,6 +70,7 @@ class SQLType {
      * Provide string representation of sql type. For example, 
      * java.sql.Types.BIT returns BIT.
      */
+    @Override
     public String toString() {
         return stringValue;
     }

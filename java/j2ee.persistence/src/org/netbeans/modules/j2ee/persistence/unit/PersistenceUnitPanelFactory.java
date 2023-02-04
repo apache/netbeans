@@ -58,6 +58,7 @@ public class PersistenceUnitPanelFactory implements InnerPanelFactory, PropertyC
      * panel if the key had no associated panel yet.
      * @param key the persistence unit whose associated panel should be retrieved.
      */ 
+    @Override
     public SectionInnerPanel createInnerPanel(Object key) {
         SectionInnerPanel panel = null;
         if (key instanceof PersistenceUnit){
@@ -75,6 +76,7 @@ public class PersistenceUnitPanelFactory implements InnerPanelFactory, PropertyC
         return panel;
     }
     
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (!XmlMultiViewDataObject.PROPERTY_DATA_MODIFIED.equals(evt.getPropertyName())){
             cache.clear();

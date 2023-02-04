@@ -42,6 +42,7 @@ import org.openide.util.NbBundle;
  */
 public final class ContainerManagedJTANonInjectableInWeb extends EntityManagerGenerationStrategySupport {
 
+    @Override
     public ClassTree generate() {
 
         if(ElementKind.CLASS != getClassElement().getKind())

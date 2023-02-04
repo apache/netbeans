@@ -41,6 +41,7 @@ public class TableClosureDisabledTest extends TestCase {
         super(testName);
     }
 
+    @Override
     public void setUp() {
         String schema = "Test_Schema";
         String catalog = null;
@@ -64,6 +65,7 @@ public class TableClosureDisabledTest extends TestCase {
         closure = new TableClosure(provider);
     }
 
+    @Override
     public void tearDown() {
         closure = null;
     }

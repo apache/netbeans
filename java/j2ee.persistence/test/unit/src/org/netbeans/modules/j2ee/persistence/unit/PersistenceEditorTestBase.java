@@ -50,12 +50,14 @@ public abstract class PersistenceEditorTestBase extends PUDataObjectTestBase {
         super(name);
     }
     
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         initDataObject();
         
     }
     
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         if(dataObject != null) {

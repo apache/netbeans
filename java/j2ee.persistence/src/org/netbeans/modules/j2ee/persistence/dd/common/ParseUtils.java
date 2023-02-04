@@ -84,6 +84,7 @@ public class ParseUtils {
         private int errorType=-1;
         SAXParseException error;
         
+        @Override
         public void warning(org.xml.sax.SAXParseException sAXParseException) throws org.xml.sax.SAXException {
             if (errorType<0) {
                 errorType=0;
@@ -91,6 +92,7 @@ public class ParseUtils {
             }
             //throw sAXParseException;
         }
+        @Override
         public void error(org.xml.sax.SAXParseException sAXParseException) throws org.xml.sax.SAXException {
             if (errorType<1) {
                 errorType=1;
@@ -98,6 +100,7 @@ public class ParseUtils {
             }
             //throw sAXParseException;
         }
+        @Override
         public void fatalError(org.xml.sax.SAXParseException sAXParseException) throws org.xml.sax.SAXException {
             errorType=2;
             throw sAXParseException;

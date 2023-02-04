@@ -254,6 +254,7 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
         return (Provider) providerCombo.getSelectedItem();
     }
     
+    @Override
     public void setErrorMessage(String msg){
         errorMessage.setText(msg);
         errorMessage.setVisible(msg!=null && msg.length()>0);
@@ -478,12 +479,15 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
      * changes are made.
      */
     private class ValidationListener implements DocumentListener {
+        @Override
         public void insertUpdate(DocumentEvent e) {
             checkValidity();
         }
+        @Override
         public void removeUpdate(DocumentEvent e) {
             checkValidity();
         }
+        @Override
         public void changedUpdate(DocumentEvent e) {
             checkValidity();
         }

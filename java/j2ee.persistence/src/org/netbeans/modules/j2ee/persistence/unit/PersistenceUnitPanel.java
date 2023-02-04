@@ -688,9 +688,11 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
         dObj.setChangedFromUI(false);
     }
     
+    @Override
     public void linkButtonPressed(Object ddBean, String ddProperty) {
     }
     
+    @Override
     public javax.swing.JComponent getErrorComponent(String errorId) {
         if ("name".equals(errorId)) {//NOI18N
             return nameTextField;

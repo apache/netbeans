@@ -82,6 +82,7 @@ public class Catalog {
         return (Schema)schemas.get(name);
     }
     
+    @Override
     public String toString() {
         return "Catalog[name='" + name + "']"; // NOI18N
     }

@@ -151,13 +151,13 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
     {
         super.endDocument();
 
-        this.State = new Integer(this.XGD_END);
+        this.State = this.XGD_END;
     } /*Method-End*/
 
     public   void endElement(java.lang.String name) throws org.xml.sax.SAXException
     {
         // Debug information
-        int lInitialState = this.State.intValue();
+        int lInitialState = this.State;
 
         try {
             if ( name.equals("ARRAY") )
@@ -165,7 +165,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
 
             if (!name.equals("_.ALIAS"))
             {
-                switch ( this.State.intValue() )
+                switch (this.State)
                 {
                 case XGD_NEED_ATTRIBUTE:
                     this.validateTag(name, "OBJECT", true);
@@ -239,7 +239,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                         lValue = lSource;
                     }
 
-                    switch ( this.State.intValue() )
+                    switch (this.State)
                     {
                     case XGD_NEED_END_ROW:
                         this.validateTag(name, "ROW", true);
@@ -285,11 +285,11 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                 case XGD_NEED_END_ROW_ELEMENT:
 //                    System.out.println("In endElement and this.XGD_NEED_END_ROW_ELEMENT currently a no op ");
 
-                    this.State = new Integer(this.XGD_NEED_ROW_ELEMENT);
+                    this.State = this.XGD_NEED_ROW_ELEMENT;
                     break;
                 case XGD_NEED_ROW_ELEMENT:
 //                    System.out.println("In endElement and this.XGD_NEED_ROW_ELEMENT currently a no op ");
-                     this.State = new Integer(this.XGD_NEED_ROW_TAG);
+                     this.State = this.XGD_NEED_ROW_TAG;
                     break;
                 case XGD_NEED_ROW_TAG:
 //                    System.out.println("In endElement and this.XGD_NEED_ROW_TAG currently a no op ");
@@ -335,7 +335,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
     {
         super.startDocument();
 
-        State = new Integer(this.XGD_END);
+        State = this.XGD_END;
         this.pushState(this.XGD_NEED_OBJECT);
     } /*Method-End*/
 
@@ -343,7 +343,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
     {
 
         // Debug information
-        int lInitialState = this.State.intValue();
+        int lInitialState = this.State;
 
 /*        System.out.println("startElement : Current State is " + this.State);
         System.out.println("startElement : State stack is ");
@@ -364,14 +364,14 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
             }
             else
             {
-                switch ( this.State.intValue() )
+                switch (this.State)
                 {
                 case XGD_NEED_ATTRIBUTE:
                     this.readAttributeHeader(name, atts);
                     break;
                 case XGD_NEED_ROW_TAG:
 //                    System.out.println("In startElement and this.XGD_NEED_ROW_TAG currently a no op ");
-                    this.State = new Integer(this.XGD_NEED_ROW_ELEMENT);
+                    this.State = this.XGD_NEED_ROW_ELEMENT;
                     break;
                 //    row :  XMLRow = new;
                 //    row.Elements = new;
@@ -380,7 +380,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                 //    PushObject(row);
                 case XGD_NEED_ROW_ELEMENT:
 //                    System.out.println("In startElement and this.XGD_NEED_ROW_ELEMENT currently a no op ");
-                    this.State = new Integer(this.XGD_NEED_END_ROW_ELEMENT);
+                    this.State = this.XGD_NEED_END_ROW_ELEMENT;
                     break;
                 //    elm :  XMLRowElement = new;
                 //    elm.ElementNm = name;
@@ -553,7 +553,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
             if (lRefName != null)
             {
                 this.processObjectReference(lRefName);
-                State = new Integer(this.XGD_NEED_END_OBJECT);
+                State = this.XGD_NEED_END_OBJECT;
                 return;
             }// end if
         }// end if;
@@ -640,7 +640,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
 
         if (lObj == null)
         {
-               State = new Integer(this.XGD_NEED_END_OBJECT);
+               State = this.XGD_NEED_END_OBJECT;
         }
         //else if (lobj.IsA(Stringizeable) then
         //    State = XGD_NEED_STRING;
@@ -649,7 +649,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
         //    State = XGD_NEED_ROW_TAG;
         else
         {
-            State = new Integer(this.XGD_NEED_ATTRIBUTE);
+            State = this.XGD_NEED_ATTRIBUTE;
         }
     } /*Method-End*/
 
@@ -762,7 +762,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
 
             this.pushRowType(lRowClassType);
             this.pushObject(lArray);
-            this.State = new Integer(this.XGD_NEED_ROW);
+            this.State = this.XGD_NEED_ROW;
         }
         else if (name.equals("NULLVALUE"))
         {
@@ -824,7 +824,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                 else
                     this.pushObject(lField.getType().newInstance());
 
-                this.State = new Integer(this.XGD_NEED_END_NULLVALUE);
+                this.State = this.XGD_NEED_END_NULLVALUE;
             }
             catch (InstantiationException e1)
             {
@@ -1092,7 +1092,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
             else if ( lRowType.equals("java.lang.StringBuffer") )
                 this.pushObject(new StringBuffer(lRowValue));
             else if (lRowType.equals("int") || lRowType.equals("java.lang.Integer"))
-                this.pushObject(Integer.valueOf(lRowValue));
+                this.pushObject(Integer.parseInt(lRowValue));
             else if (lRowType.equals("short")  || lRowType.equals("java.lang.Short"))
                 this.pushObject(Short.valueOf(lRowValue));
             else if (lRowType.equals("long")  || lRowType.equals("java.lang.Long"))
@@ -1131,7 +1131,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
 
     private void pushRowCount()
     {
-        Integer lInt = new Integer(0);
+        Integer lInt = 0;
         this.RowCountStack.push(lInt);
     }
 
@@ -1142,16 +1142,14 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
 
     private int currentRowCount()
     {
-        Integer lInt = (Integer)(this.RowCountStack.peek());
-        return lInt.intValue();
+        return (Integer)(this.RowCountStack.peek());
     }
 
     private void incrementRowCount()
     {
-        Integer lInt = (Integer)(this.RowCountStack.pop());
-        int lRowCount = lInt.intValue();
+        int lRowCount = (Integer)(this.RowCountStack.pop());
         lRowCount++;
-        this.RowCountStack.push(new Integer(lRowCount));
+        this.RowCountStack.push(lRowCount);
     }
 
     // MBO: added new class WrapperClassHelper.
@@ -1192,7 +1190,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                                { return new Character(s.charAt(0)); } });
             converters.put(Integer.class,
                            new Converter() { public Object valueOf(String s) 
-                               { return Integer.valueOf(s); } });
+                               { return Integer.parseInt(s); } });
             converters.put(Long.class,
                            new Converter() { public Object valueOf(String s) 
                                { return Long.valueOf(s); } });

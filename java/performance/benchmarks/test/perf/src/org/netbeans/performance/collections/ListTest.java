@@ -31,7 +31,7 @@ public abstract class ListTest extends MultiInstanceIntArgBenchmark {
 
     protected int getMaxIterationCount() {
         /* 50MBs / size of a filled list */
-        int param = ((Integer)getArgument()).intValue();
+        int param = (Integer) getArgument();
         int itemSize = 20;
         int size = param*itemSize + 200;
         return 50000000/size;

@@ -428,7 +428,7 @@ public class FormModel
             LayoutConstraints c = constraints instanceof LayoutConstraints ?
                                   (LayoutConstraints) constraints : null;
             LayoutConstraints[] constrArray = new LayoutConstraints[] { c };
-            int index = constraints instanceof Integer ? ((Integer)constraints).intValue() : -1;
+            int index = constraints instanceof Integer ? (Integer) constraints : -1;
 
             // component needs to be "in model" (have code expression) before added to layout
             if (newlyAdded || !metacomp.isInModel()) {

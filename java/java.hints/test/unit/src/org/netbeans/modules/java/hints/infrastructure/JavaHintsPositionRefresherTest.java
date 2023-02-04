@@ -163,7 +163,7 @@ public class JavaHintsPositionRefresherTest extends NbTestCase {
         try {
             Constructor constructor = Context.class.getDeclaredConstructor(int.class, AtomicBoolean.class);
             constructor.setAccessible(true);
-            ctx = (Context) constructor.newInstance(new Integer(position), new AtomicBoolean());
+            ctx = (Context) constructor.newInstance(position, new AtomicBoolean());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

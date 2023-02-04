@@ -200,13 +200,13 @@ public final class TestSpecBuilder implements BDEParserVisitor {
             return n.jjtAccept(this, null); // Integer
         } else if (count >= 2) { // interval
             Node n = node.jjtGetChild(0);
-            int i = ((Integer) n.jjtAccept(this, null)).intValue();
+            int i = (Integer) n.jjtAccept(this, null);
             n = node.jjtGetChild(1);
-            int j = ((Integer) n.jjtAccept(this, null)).intValue();
+            int j = (Integer) n.jjtAccept(this, null);
             
             if (count == 3) {
                 n = node.jjtGetChild(2);
-                int k = ((Integer) n.jjtAccept(this, null)).intValue();
+                int k = (Integer) n.jjtAccept(this, null);
                 return new Interval(i, j, k);
             } else {
                 return new Interval(i, j);
@@ -217,6 +217,6 @@ public final class TestSpecBuilder implements BDEParserVisitor {
 
     /** @return an Integer related to this node */
     public Object visit(ASTInteger node, Object data) throws Exception { 
-        return Integer.valueOf(node.getFirstToken().image.toString());
+        return Integer.parseInt(node.getFirstToken().image.toString());
     }
 }

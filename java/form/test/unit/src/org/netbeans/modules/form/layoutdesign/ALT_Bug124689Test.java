@@ -51,22 +51,22 @@ public class ALT_Bug124689Test extends LayoutTestCase {
         contInterior.put("jPanel1", new Rectangle(20, 36, 178, 116));
         contInterior.put("Form", new Rectangle(0, 0, 407, 636));
         compBounds.put("jTabbedPane1", new Rectangle(18, 11, 183, 144));
-        baselinePosition.put("jTabbedPane1-183-144", new Integer(0));
+        baselinePosition.put("jTabbedPane1-183-144", 0);
         compPrefSize.put("jTabbedPane1", new Dimension(183, 144));
         compBounds.put("jDesktopPane1", new Rectangle(18, 215, 183, 208));
-        baselinePosition.put("jDesktopPane1-183-208", new Integer(-1));
+        baselinePosition.put("jDesktopPane1-183-208", -1);
         compPrefSize.put("jDesktopPane1", new Dimension(1, 1));
         compBounds.put("jToolBar1", new Rectangle(101, 179, 100, 25));
-        baselinePosition.put("jToolBar1-100-25", new Integer(-1));
+        baselinePosition.put("jToolBar1-100-25", -1);
         compPrefSize.put("jToolBar1", new Dimension(92, 23));
         compBounds.put("jSplitPane1", new Rectangle(101, 161, 100, 0));
-        baselinePosition.put("jSplitPane1-100-0", new Integer(-1));
+        baselinePosition.put("jSplitPane1-100-0", -1);
         compPrefSize.put("jSplitPane1", new Dimension(80, 25));
         compBounds.put("textArea1", new Rectangle(219, 298, 188, 136));
-        baselinePosition.put("textArea1-188-136", new Integer(0));
+        baselinePosition.put("textArea1-188-136", 0);
         compPrefSize.put("textArea1", new Dimension(100, 80));
         compBounds.put("jScrollPane1", new Rectangle(219, 20, 168, 135));
-        baselinePosition.put("jScrollPane1-168-135", new Integer(0));
+        baselinePosition.put("jScrollPane1-168-135", 0);
         compPrefSize.put("jScrollPane1", new Dimension(452, 439));
         contInterior.put("jInternalFrame2", new Rectangle(76, 299, 104, 93));
         contInterior.put("jPanel2", new Rectangle(20, 36, 178, 116));
@@ -75,23 +75,23 @@ public class ALT_Bug124689Test extends LayoutTestCase {
         contInterior.put("jPanel1", new Rectangle(20, 36, 178, 116));
         contInterior.put("Form", new Rectangle(0, 0, 407, 636));
         compBounds.put("jTabbedPane1", new Rectangle(18, 11, 183, 144));
-        baselinePosition.put("jTabbedPane1-183-144", new Integer(0));
+        baselinePosition.put("jTabbedPane1-183-144", 0);
         compBounds.put("jDesktopPane1", new Rectangle(18, 215, 183, 208));
-        baselinePosition.put("jDesktopPane1-183-208", new Integer(-1));
+        baselinePosition.put("jDesktopPane1-183-208", -1);
         compBounds.put("jToolBar1", new Rectangle(101, 179, 100, 25));
-        baselinePosition.put("jToolBar1-100-25", new Integer(-1));
+        baselinePosition.put("jToolBar1-100-25", -1);
         compBounds.put("jSplitPane1", new Rectangle(101, 161, 100, 0));
-        baselinePosition.put("jSplitPane1-100-0", new Integer(-1));
+        baselinePosition.put("jSplitPane1-100-0", -1);
         compBounds.put("textArea1", new Rectangle(219, 298, 188, 136));
-        baselinePosition.put("textArea1-188-136", new Integer(0));
+        baselinePosition.put("textArea1-188-136", 0);
         compBounds.put("jScrollPane1", new Rectangle(219, 20, 168, 135));
-        baselinePosition.put("jScrollPane1-168-135", new Integer(0));
+        baselinePosition.put("jScrollPane1-168-135", 0);
         contInterior.put("jInternalFrame2", new Rectangle(76, 299, 104, 93));
         contInterior.put("jPanel2", new Rectangle(20, 36, 178, 116));
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
 // > START RESIZING
-        baselinePosition.put("jDesktopPane1-183-208", new Integer(-1));
+        baselinePosition.put("jDesktopPane1-183-208", -1);
         compPrefSize.put("jDesktopPane1", new Dimension(1, 1));
         {
             String[] compIds = new String[]{"jDesktopPane1"};
@@ -102,7 +102,7 @@ public class ALT_Bug124689Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
 // < START RESIZING
-        prefPaddingInParent.put("Form-jDesktopPane1-1-1", new Integer(11));
+        prefPaddingInParent.put("Form-jDesktopPane1-1-1", 11);
         // parentId-compId-dimension-compAlignment
 // > MOVE
         {
@@ -114,7 +114,7 @@ public class ALT_Bug124689Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("Form-jDesktopPane1-1-1", new Integer(11));
+        prefPaddingInParent.put("Form-jDesktopPane1-1-1", 11);
         // parentId-compId-dimension-compAlignment
 // > MOVE
         {
@@ -127,7 +127,7 @@ public class ALT_Bug124689Test extends LayoutTestCase {
         }
 // < MOVE
 // > END MOVING
-        prefPaddingInParent.put("Form-jDesktopPane1-1-1", new Integer(11));
+        prefPaddingInParent.put("Form-jDesktopPane1-1-1", 11);
         // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
 // < END MOVING
@@ -138,22 +138,22 @@ public class ALT_Bug124689Test extends LayoutTestCase {
         contInterior.put("jPanel1", new Rectangle(20, 36, 178, 116));
         contInterior.put("Form", new Rectangle(0, 0, 407, 636));
         compBounds.put("jTabbedPane1", new Rectangle(18, 11, 183, 144));
-        baselinePosition.put("jTabbedPane1-183-144", new Integer(0));
+        baselinePosition.put("jTabbedPane1-183-144", 0);
         compPrefSize.put("jTabbedPane1", new Dimension(183, 144));
         compBounds.put("jDesktopPane1", new Rectangle(18, 215, 183, 310));
-        baselinePosition.put("jDesktopPane1-183-310", new Integer(-1));
+        baselinePosition.put("jDesktopPane1-183-310", -1);
         compPrefSize.put("jDesktopPane1", new Dimension(1, 1));
         compBounds.put("jToolBar1", new Rectangle(101, 179, 100, 25));
-        baselinePosition.put("jToolBar1-100-25", new Integer(-1));
+        baselinePosition.put("jToolBar1-100-25", -1);
         compPrefSize.put("jToolBar1", new Dimension(92, 23));
         compBounds.put("jSplitPane1", new Rectangle(101, 161, 100, 0));
-        baselinePosition.put("jSplitPane1-183-0", new Integer(-1));
+        baselinePosition.put("jSplitPane1-183-0", -1);
         compPrefSize.put("jSplitPane1", new Dimension(80, 25));
         compBounds.put("textArea1", new Rectangle(219, 298, 188, 136));
-        baselinePosition.put("textArea1-188-136", new Integer(0));
+        baselinePosition.put("textArea1-188-136", 0);
         compPrefSize.put("textArea1", new Dimension(100, 80));
         compBounds.put("jScrollPane1", new Rectangle(219, 20, 168, 135));
-        baselinePosition.put("jScrollPane1-168-135", new Integer(0));
+        baselinePosition.put("jScrollPane1-168-135", 0);
         compPrefSize.put("jScrollPane1", new Dimension(452, 439));
         contInterior.put("jInternalFrame2", new Rectangle(76, 299, 104, 93));
         contInterior.put("jPanel2", new Rectangle(20, 36, 178, 116));
@@ -162,17 +162,17 @@ public class ALT_Bug124689Test extends LayoutTestCase {
         contInterior.put("jPanel1", new Rectangle(20, 36, 178, 116));
         contInterior.put("Form", new Rectangle(0, 0, 407, 636));
         compBounds.put("jTabbedPane1", new Rectangle(18, 11, 183, 144));
-        baselinePosition.put("jTabbedPane1-183-144", new Integer(0));
+        baselinePosition.put("jTabbedPane1-183-144", 0);
         compBounds.put("jDesktopPane1", new Rectangle(18, 215, 183, 310));
-        baselinePosition.put("jDesktopPane1-183-310", new Integer(-1));
+        baselinePosition.put("jDesktopPane1-183-310", -1);
         compBounds.put("jToolBar1", new Rectangle(101, 179, 100, 25));
-        baselinePosition.put("jToolBar1-100-25", new Integer(-1));
+        baselinePosition.put("jToolBar1-100-25", -1);
         compBounds.put("jSplitPane1", new Rectangle(101, 161, 100, 0));
-        baselinePosition.put("jSplitPane1-183-0", new Integer(-1));
+        baselinePosition.put("jSplitPane1-183-0", -1);
         compBounds.put("textArea1", new Rectangle(219, 298, 188, 136));
-        baselinePosition.put("textArea1-188-136", new Integer(0));
+        baselinePosition.put("textArea1-188-136", 0);
         compBounds.put("jScrollPane1", new Rectangle(219, 20, 168, 135));
-        baselinePosition.put("jScrollPane1-168-135", new Integer(0));
+        baselinePosition.put("jScrollPane1-168-135", 0);
         contInterior.put("jInternalFrame2", new Rectangle(76, 299, 104, 93));
         contInterior.put("jPanel2", new Rectangle(20, 36, 178, 116));
         ld.updateCurrentState();

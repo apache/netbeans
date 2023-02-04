@@ -53,50 +53,50 @@ public class ALT_Indent02Test extends LayoutTestCase {
         compBounds.put("jPanel5", new Rectangle(0, 0, 400, 308));
         compPrefSize.put("jPanel5", new Dimension(400, 308));
         compBounds.put("jLabel20", new Rectangle(30, 35, 91, 14));
-        baselinePosition.put("jLabel20-91-14", new Integer(11));
+        baselinePosition.put("jLabel20-91-14", 11);
         compPrefSize.put("jLabel20", new Dimension(91, 14));
         compBounds.put("jLabel23", new Rectangle(30, 107, 84, 14));
-        baselinePosition.put("jLabel23-84-14", new Integer(11));
+        baselinePosition.put("jLabel23-84-14", 11);
         compPrefSize.put("jLabel23", new Dimension(84, 14));
         compBounds.put("jLabel27", new Rectangle(30, 135, 126, 14));
-        baselinePosition.put("jLabel27-126-14", new Integer(11));
+        baselinePosition.put("jLabel27-126-14", 11);
         compPrefSize.put("jLabel27", new Dimension(126, 14));
         compBounds.put("jComboBox9", new Rectangle(160, 31, 230, 22));
-        baselinePosition.put("jComboBox9-230-22", new Integer(15));
+        baselinePosition.put("jComboBox9-230-22", 15);
         compPrefSize.put("jComboBox9", new Dimension(57, 22));
         compBounds.put("jComboBox11", new Rectangle(160, 103, 230, 22));
-        baselinePosition.put("jComboBox11-230-22", new Integer(15));
+        baselinePosition.put("jComboBox11-230-22", 15);
         compPrefSize.put("jComboBox11", new Dimension(57, 22));
         compBounds.put("jComboBox13", new Rectangle(160, 131, 230, 22));
-        baselinePosition.put("jComboBox13-230-22", new Integer(15));
+        baselinePosition.put("jComboBox13-230-22", 15);
         compPrefSize.put("jComboBox13", new Dimension(57, 22));
         compBounds.put("jLabel22", new Rectangle(20, 83, 113, 14));
-        baselinePosition.put("jLabel22-113-14", new Integer(11));
+        baselinePosition.put("jLabel22-113-14", 11);
         compPrefSize.put("jLabel22", new Dimension(113, 14));
         compBounds.put("jLabel19", new Rectangle(20, 11, 46, 14));
-        baselinePosition.put("jLabel19-46-14", new Integer(11));
+        baselinePosition.put("jLabel19-46-14", 11);
         compPrefSize.put("jLabel19", new Dimension(46, 14));
         contInterior.put("jPanel5", new Rectangle(0, 0, 400, 308));
         compBounds.put("jLabel20", new Rectangle(30, 35, 91, 14));
-        baselinePosition.put("jLabel20-91-14", new Integer(11));
+        baselinePosition.put("jLabel20-91-14", 11);
         compBounds.put("jLabel23", new Rectangle(30, 107, 84, 14));
-        baselinePosition.put("jLabel23-84-14", new Integer(11));
+        baselinePosition.put("jLabel23-84-14", 11);
         compBounds.put("jLabel27", new Rectangle(30, 135, 126, 14));
-        baselinePosition.put("jLabel27-126-14", new Integer(11));
+        baselinePosition.put("jLabel27-126-14", 11);
         compBounds.put("jComboBox9", new Rectangle(160, 31, 230, 22));
-        baselinePosition.put("jComboBox9-230-22", new Integer(15));
+        baselinePosition.put("jComboBox9-230-22", 15);
         compBounds.put("jComboBox11", new Rectangle(160, 103, 230, 22));
-        baselinePosition.put("jComboBox11-230-22", new Integer(15));
+        baselinePosition.put("jComboBox11-230-22", 15);
         compBounds.put("jComboBox13", new Rectangle(160, 131, 230, 22));
-        baselinePosition.put("jComboBox13-230-22", new Integer(15));
+        baselinePosition.put("jComboBox13-230-22", 15);
         compBounds.put("jLabel22", new Rectangle(20, 83, 113, 14));
-        baselinePosition.put("jLabel22-113-14", new Integer(11));
+        baselinePosition.put("jLabel22-113-14", 11);
         compBounds.put("jLabel19", new Rectangle(20, 11, 46, 14));
-        baselinePosition.put("jLabel19-46-14", new Integer(11));
+        baselinePosition.put("jLabel19-46-14", 11);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         // > START MOVING
-        baselinePosition.put("jLabel20-91-14", new Integer(11));
+        baselinePosition.put("jLabel20-91-14", 11);
         {
             String[] compIds = new String[] {
                 "jLabel20"
@@ -108,24 +108,24 @@ public class ALT_Indent02Test extends LayoutTestCase {
             ld.startMoving(compIds, bounds, hotspot);
         }
         // < START MOVING
-        prefPaddingInParent.put("jPanel5-jLabel20-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("jPanel5-jLabel20-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jLabel19-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jLabel19-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel22-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jLabel22-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel23-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox11-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jLabel23-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jComboBox11-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel27-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox13-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jLabel27-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jComboBox13-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("jPanel5-jLabel20-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("jPanel5-jLabel20-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jLabel20-jComboBox9-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel19-jLabel20-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("jPanel5-jLabel20-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("jPanel5-jLabel20-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jLabel19-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jLabel19-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel22-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jLabel22-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel23-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox11-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jLabel23-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jComboBox11-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel27-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox13-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jLabel27-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jComboBox13-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("jPanel5-jLabel20-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("jPanel5-jLabel20-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jLabel20-jComboBox9-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel19-jLabel20-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // > MOVE
         {
             Point p = new Point(45,46);
@@ -138,24 +138,24 @@ public class ALT_Indent02Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("jPanel5-jLabel20-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("jPanel5-jLabel20-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jLabel19-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jLabel19-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel22-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jLabel22-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel23-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox11-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jLabel23-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jComboBox11-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel27-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox13-jLabel20-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jLabel27-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jComboBox13-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("jPanel5-jLabel20-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("jPanel5-jLabel20-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jLabel20-jComboBox9-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel19-jLabel20-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("jPanel5-jLabel20-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("jPanel5-jLabel20-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jLabel19-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jLabel19-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel22-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jLabel22-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel23-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox11-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jLabel23-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jComboBox11-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel27-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox13-jLabel20-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jLabel27-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jComboBox13-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("jPanel5-jLabel20-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("jPanel5-jLabel20-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jLabel20-jComboBox9-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel19-jLabel20-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // > MOVE
         {
             Point p = new Point(44,46);
@@ -169,61 +169,61 @@ public class ALT_Indent02Test extends LayoutTestCase {
         }
         // < MOVE
         // > END MOVING
-        prefPadding.put("jLabel23-jComboBox9-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel23-jComboBox11-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel23-jComboBox13-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel27-jComboBox9-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel27-jComboBox11-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel27-jComboBox13-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jComboBox9-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jComboBox11-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel20-jComboBox13-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel23-jComboBox9-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel23-jComboBox11-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel23-jComboBox13-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel27-jComboBox9-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel27-jComboBox11-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel27-jComboBox13-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jComboBox9-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jComboBox11-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel20-jComboBox13-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.endMoving(true);
         // < END MOVING
         ld.externalSizeChangeHappened();
         // > UPDATE CURRENT STATE
         contInterior.put("jPanel5", new Rectangle(0, 0, 400, 308));
         compBounds.put("jLabel23", new Rectangle(30, 107, 84, 14));
-        baselinePosition.put("jLabel23-84-14", new Integer(11));
+        baselinePosition.put("jLabel23-84-14", 11);
         compPrefSize.put("jLabel23", new Dimension(84, 14));
         compBounds.put("jLabel27", new Rectangle(30, 135, 126, 14));
-        baselinePosition.put("jLabel27-126-14", new Integer(11));
+        baselinePosition.put("jLabel27-126-14", 11);
         compPrefSize.put("jLabel27", new Dimension(126, 14));
         compBounds.put("jComboBox9", new Rectangle(160, 31, 230, 22));
-        baselinePosition.put("jComboBox9-230-22", new Integer(15));
+        baselinePosition.put("jComboBox9-230-22", 15);
         compPrefSize.put("jComboBox9", new Dimension(57, 22));
         compBounds.put("jComboBox11", new Rectangle(160, 103, 230, 22));
-        baselinePosition.put("jComboBox11-230-22", new Integer(15));
+        baselinePosition.put("jComboBox11-230-22", 15);
         compPrefSize.put("jComboBox11", new Dimension(57, 22));
         compBounds.put("jComboBox13", new Rectangle(160, 131, 230, 22));
-        baselinePosition.put("jComboBox13-230-22", new Integer(15));
+        baselinePosition.put("jComboBox13-230-22", 15);
         compPrefSize.put("jComboBox13", new Dimension(57, 22));
         compBounds.put("jLabel22", new Rectangle(20, 83, 113, 14));
-        baselinePosition.put("jLabel22-113-14", new Integer(11));
+        baselinePosition.put("jLabel22-113-14", 11);
         compPrefSize.put("jLabel22", new Dimension(113, 14));
         compBounds.put("jLabel19", new Rectangle(20, 11, 46, 14));
-        baselinePosition.put("jLabel19-46-14", new Integer(11));
+        baselinePosition.put("jLabel19-46-14", 11);
         compPrefSize.put("jLabel19", new Dimension(46, 14));
         compBounds.put("jLabel20", new Rectangle(30, 35, 91, 14));
-        baselinePosition.put("jLabel20-91-14", new Integer(11));
+        baselinePosition.put("jLabel20-91-14", 11);
         compPrefSize.put("jLabel20", new Dimension(91, 14));
         contInterior.put("jPanel5", new Rectangle(0, 0, 400, 308));
         compBounds.put("jLabel23", new Rectangle(30, 107, 84, 14));
-        baselinePosition.put("jLabel23-84-14", new Integer(11));
+        baselinePosition.put("jLabel23-84-14", 11);
         compBounds.put("jLabel27", new Rectangle(30, 135, 126, 14));
-        baselinePosition.put("jLabel27-126-14", new Integer(11));
+        baselinePosition.put("jLabel27-126-14", 11);
         compBounds.put("jComboBox9", new Rectangle(160, 31, 230, 22));
-        baselinePosition.put("jComboBox9-230-22", new Integer(15));
+        baselinePosition.put("jComboBox9-230-22", 15);
         compBounds.put("jComboBox11", new Rectangle(160, 103, 230, 22));
-        baselinePosition.put("jComboBox11-230-22", new Integer(15));
+        baselinePosition.put("jComboBox11-230-22", 15);
         compBounds.put("jComboBox13", new Rectangle(160, 131, 230, 22));
-        baselinePosition.put("jComboBox13-230-22", new Integer(15));
+        baselinePosition.put("jComboBox13-230-22", 15);
         compBounds.put("jLabel22", new Rectangle(20, 83, 113, 14));
-        baselinePosition.put("jLabel22-113-14", new Integer(11));
+        baselinePosition.put("jLabel22-113-14", 11);
         compBounds.put("jLabel19", new Rectangle(20, 11, 46, 14));
-        baselinePosition.put("jLabel19-46-14", new Integer(11));
+        baselinePosition.put("jLabel19-46-14", 11);
         compBounds.put("jLabel20", new Rectangle(30, 35, 91, 14));
-        baselinePosition.put("jLabel20-91-14", new Integer(11));
+        baselinePosition.put("jLabel20-91-14", 11);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }

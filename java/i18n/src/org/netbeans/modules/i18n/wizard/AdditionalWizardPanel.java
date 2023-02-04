@@ -232,7 +232,7 @@ final class AdditionalWizardPanel extends JPanel {
             //Accessibility
             panel.getAccessibleContext().setAccessibleDescription(NbBundle.getBundle(AdditionalWizardPanel.class).getString("ACS_AdditionalWizardPanel"));                    
             
-            panel.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(2));
+            panel.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 2);
             panel.setName(NbBundle.getBundle(getClass()).getString("TXT_ModifyAdditional"));
             panel.setPreferredSize(I18nWizardDescriptor.PREFERRED_DIMENSION);
 

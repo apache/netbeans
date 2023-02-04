@@ -140,12 +140,12 @@ public abstract class PerformanceTestCase extends PerformanceTestCase2 implement
     /**
      * Count of repeats
      */
-    protected static int repeat = Integer.getInteger("org.netbeans.performance.repeat", 4).intValue();
+    protected static int repeat = Integer.getInteger("org.netbeans.performance.repeat", 4);
 
     /**
      * Count of repeats for measure memory usage
      */
-    protected static int repeat_memory = Integer.getInteger("org.netbeans.performance.memory.repeat", -1).intValue();
+    protected static int repeat_memory = Integer.getInteger("org.netbeans.performance.memory.repeat", -1);
 
     /**
      * Performance data.

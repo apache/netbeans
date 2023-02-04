@@ -48,21 +48,21 @@ public class ALT_Duplicating_Bug145134Test extends LayoutTestCase {
 // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 386, 286));
         compBounds.put("jButton1", new Rectangle(10, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compPrefSize.put("jButton1", new Dimension(73, 23));
         compBounds.put("jLabel1", new Rectangle(87, 15, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compBounds.put("jButton2", new Rectangle(10, 45, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compPrefSize.put("jButton2", new Dimension(73, 23));
         contInterior.put("Form", new Rectangle(0, 0, 386, 286));
         compBounds.put("jButton1", new Rectangle(10, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jLabel1", new Rectangle(87, 15, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jButton2", new Rectangle(10, 45, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
 // > DUPLICATE
@@ -78,33 +78,33 @@ public class ALT_Duplicating_Bug145134Test extends LayoutTestCase {
 // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 386, 286));
         compBounds.put("jButton1", new Rectangle(10, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compPrefSize.put("jButton1", new Dimension(73, 23));
         compBounds.put("jLabel1", new Rectangle(87, 15, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compBounds.put("jButton2", new Rectangle(10, 45, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compPrefSize.put("jButton2", new Dimension(73, 23));
         compBounds.put("jButton3", new Rectangle(10, 74, 73, 23));
-        baselinePosition.put("jButton3-73-23", new Integer(15));
+        baselinePosition.put("jButton3-73-23", 15);
         compPrefSize.put("jButton3", new Dimension(73, 23));
         compBounds.put("jButton4", new Rectangle(10, 108, 73, 23));
-        baselinePosition.put("jButton4-73-23", new Integer(15));
+        baselinePosition.put("jButton4-73-23", 15);
         compPrefSize.put("jButton4", new Dimension(73, 23));
-        prefPaddingInParent.put("Form-jButton4-1-1", new Integer(11));
+        prefPaddingInParent.put("Form-jButton4-1-1", 11);
         // parentId-compId-dimension-compAlignment
         contInterior.put("Form", new Rectangle(0, 0, 386, 286));
         compBounds.put("jButton1", new Rectangle(10, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jLabel1", new Rectangle(87, 15, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jButton2", new Rectangle(10, 45, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compBounds.put("jButton3", new Rectangle(10, 74, 73, 23));
-        baselinePosition.put("jButton3-73-23", new Integer(15));
+        baselinePosition.put("jButton3-73-23", 15);
         compBounds.put("jButton4", new Rectangle(10, 108, 73, 23));
-        baselinePosition.put("jButton4-73-23", new Integer(15));
+        baselinePosition.put("jButton4-73-23", 15);
         ld.updateCurrentState();
     }
 

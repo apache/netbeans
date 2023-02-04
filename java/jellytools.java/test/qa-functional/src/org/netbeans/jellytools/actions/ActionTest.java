@@ -305,6 +305,6 @@ public class ActionTest extends JellyTestCase {
     }
 
     private void setDefaultMode(int mode) {
-        JemmyProperties.setCurrentProperty("Action.DefaultMode", new Integer(mode));  // NOI18N
+        JemmyProperties.setCurrentProperty("Action.DefaultMode", mode);  // NOI18N
     }
 }

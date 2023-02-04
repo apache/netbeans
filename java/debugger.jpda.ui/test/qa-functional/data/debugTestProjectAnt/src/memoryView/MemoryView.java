@@ -120,7 +120,7 @@ public class MemoryView extends javax.swing.JFrame {
         text.setText(msgMemory.format(new Object[]{
                     new Long(total),
                     new Long(free),
-                    new Integer(taken)
+                    taken
                 }));
         text.invalidate();
         validate();
@@ -211,7 +211,7 @@ public class MemoryView extends javax.swing.JFrame {
 
     private void setRefreshTime(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setRefreshTime
         try {
-            int rate = Integer.valueOf(time.getText()).intValue();
+            int rate = Integer.parseInt(time.getText());
             timer.setDelay(rate);
         } catch (NumberFormatException ex) {
             time.setText(String.valueOf(timer.getDelay()));

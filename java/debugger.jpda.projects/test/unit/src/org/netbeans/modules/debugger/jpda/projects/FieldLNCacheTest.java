@@ -41,7 +41,7 @@ public class FieldLNCacheTest extends NbTestCase {
         testFile.deleteOnExit();
         FileObject testFO = FileUtil.toFileObject(testFile);
         fc.putLine("testURL", "testClass", "testField", testFO, 42);
-        assertEquals(new Integer(42), fc.getLine("testURL", "testClass", "testField"));
+        assertEquals(42, fc.getLine("testURL", "testClass", "testField"));
         assertNull(fc.getLine("testURL", "testClass", "testField2"));
         
         WeakReference testFORef = new WeakReference(testFO);
@@ -52,14 +52,14 @@ public class FieldLNCacheTest extends NbTestCase {
         testFO = FileUtil.toFileObject(testFile);
         assertNull(fc.getLine("testURL", "testClass", "testField"));
         fc.putLine("testURL", "testClass", "testField", testFO, 42);
-        assertEquals(new Integer(42), fc.getLine("testURL", "testClass", "testField"));
+        assertEquals(42, fc.getLine("testURL", "testClass", "testField"));
         PrintStream printStream = new PrintStream(testFO.getOutputStream());
         printStream.print("Changed.");
         printStream.close();
         assertNull(fc.getLine("testURL", "testClass", "testField")); // is reset after change
         
         fc.putLine("testURL", "testClass", "testField", testFO, 43);
-        assertEquals(new Integer(43), fc.getLine("testURL", "testClass", "testField"));
+        assertEquals(43, fc.getLine("testURL", "testClass", "testField"));
         testFO.delete();
         assertNull(fc.getLine("testURL", "testClass", "testField"));
     }

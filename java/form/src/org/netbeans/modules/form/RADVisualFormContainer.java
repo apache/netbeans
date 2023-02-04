@@ -244,8 +244,7 @@ public class RADVisualFormContainer extends RADVisualContainer implements FormCo
             // designer size should be persistent
             setAuxValue(FormDesigner.PROP_DESIGNER_SIZE, getDesignerSize());
         }
-        getFormModel().fireSyntheticPropertyChanged(this, PROP_FORM_SIZE_POLICY,
-            Integer.valueOf(old), Integer.valueOf(value));
+        getFormModel().fireSyntheticPropertyChanged(this, PROP_FORM_SIZE_POLICY, old, value);
     }
 
     // ------------------------------------------------------------------------------
@@ -264,14 +263,14 @@ public class RADVisualFormContainer extends RADVisualContainer implements FormCo
             @Override
             public Object getValue() throws
                 IllegalAccessException, IllegalArgumentException, java.lang.reflect.InvocationTargetException {
-                return Integer.valueOf(getFormSizePolicy());
+                return getFormSizePolicy();
             }
 
             @Override
             public void setValue(Object val) throws IllegalAccessException,
                                                     IllegalArgumentException, java.lang.reflect.InvocationTargetException {
                 if (!(val instanceof Integer)) throw new IllegalArgumentException();
-                setFormSizePolicy(((Integer)val).intValue());
+                setFormSizePolicy((Integer) val);
                 if (getNodeReference() != null)
                     getNodeReference().fireComponentPropertySetsChange();
             }
@@ -556,7 +555,7 @@ public class RADVisualFormContainer extends RADVisualContainer implements FormCo
         /** @return text for the current value */
         @Override
         public String getAsText() {
-            int value =((Integer)getValue()).intValue();
+            int value = (Integer) getValue();
             return names[value];
         }
 
@@ -566,11 +565,11 @@ public class RADVisualFormContainer extends RADVisualContainer implements FormCo
         @Override
         public void setAsText(String str) {
             if (names[0].equals(str))
-                setValue(Integer.valueOf(0));
+                setValue(0);
             else if (names[1].equals(str))
-                setValue(Integer.valueOf(1));
+                setValue(1);
             else if (names[2].equals(str))
-                setValue(Integer.valueOf(2));
+                setValue(2);
         }
     }
 }

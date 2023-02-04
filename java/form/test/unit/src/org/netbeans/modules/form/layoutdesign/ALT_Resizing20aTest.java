@@ -62,27 +62,27 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("Form", new Rectangle(0, 0, 1338, 376));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("panel1-0-0", new Integer(0));
+        baselinePosition.put("panel1-0-0", 0);
         compBounds.put("canvas1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("canvas1-0-0", new Integer(0));
+        baselinePosition.put("canvas1-0-0", 0);
         compBounds.put("list1", new Rectangle(53, 26, 40, 200));
-        baselinePosition.put("list1-40-200", new Integer(0));
+        baselinePosition.put("list1-40-200", 0);
         compBounds.put("checkbox1", new Rectangle(10, 346, 109, 20));
-        baselinePosition.put("checkbox1-109-20", new Integer(0));
+        baselinePosition.put("checkbox1-109-20", 0);
         compBounds.put("button1", new Rectangle(129, 304, 98, 62));
-        baselinePosition.put("button1-98-62", new Integer(0));
+        baselinePosition.put("button1-98-62", 0);
         compBounds.put("label1", new Rectangle(169, 26, 38, 20));
-        baselinePosition.put("label1-38-20", new Integer(0));
+        baselinePosition.put("label1-38-20", 0);
         compBounds.put("scrollbar1", new Rectangle(191, 101, 16, 48));
-        baselinePosition.put("scrollbar1-16-48", new Integer(0));
+        baselinePosition.put("scrollbar1-16-48", 0);
         compBounds.put("scrollbar2", new Rectangle(279, 26, 48, 16));
-        baselinePosition.put("scrollbar2-48-16", new Integer(0));
+        baselinePosition.put("scrollbar2-48-16", 0);
         compBounds.put("scrollPane1", new Rectangle(382, 26, 100, 100));
-        baselinePosition.put("scrollPane1-100-100", new Integer(0));
+        baselinePosition.put("scrollPane1-100-100", 0);
         compBounds.put("choice1", new Rectangle(492, 80, 28, 200));
-        baselinePosition.put("choice1-28-200", new Integer(0));
+        baselinePosition.put("choice1-28-200", 0);
         compBounds.put("textArea1", new Rectangle(129, 200, 245, 80));
-        baselinePosition.put("textArea1-245-80", new Integer(0));
+        baselinePosition.put("textArea1-245-80", 0);
         compMinSize.put("Form", new Dimension(1231, 362));
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
@@ -93,37 +93,37 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compPrefSize.put("panel1", new Dimension(0, 0));
         hasExplicitPrefSize.put("panel1", new Boolean(false));
         hasExplicitPrefSize.put("panel1", new Boolean(false));
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-checkbox1-1-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-button1-1-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-checkbox1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-checkbox1-1-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-button1-1-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-checkbox1-0-0", 10); // parentId-compId-dimension-compAlignment
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
         compBounds.put("canvas1", new Rectangle(0, 0, 0, 0));
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > START RESIZING
-        baselinePosition.put("choice1-28-200", new Integer(0));
+        baselinePosition.put("choice1-28-200", 0);
         compPrefSize.put("choice1", new Dimension(28, 20));
         {
             String[] compIds = new String[]{
@@ -141,7 +141,7 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
 // < START RESIZING
-        prefPaddingInParent.put("Form-choice1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-choice1-0-1", 10); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(548, 179);
@@ -154,7 +154,7 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("Form-choice1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-choice1-0-1", 10); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(549, 179);
@@ -168,17 +168,17 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         }
 // < MOVE
 // > END MOVING
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-panel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-canvas1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-button1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-textArea1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-choice1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-panel1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-canvas1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-button1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-textArea1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-choice1-0-1", 10); // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
 // < END MOVING
         ld.externalSizeChangeHappened();
@@ -186,27 +186,27 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("Form", new Rectangle(0, 0, 1338, 376));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("panel1-0-0", new Integer(0));
+        baselinePosition.put("panel1-0-0", 0);
         compBounds.put("canvas1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("canvas1-0-0", new Integer(0));
+        baselinePosition.put("canvas1-0-0", 0);
         compBounds.put("list1", new Rectangle(53, 26, 40, 200));
-        baselinePosition.put("list1-40-200", new Integer(0));
+        baselinePosition.put("list1-40-200", 0);
         compBounds.put("checkbox1", new Rectangle(10, 346, 109, 20));
-        baselinePosition.put("checkbox1-109-20", new Integer(0));
+        baselinePosition.put("checkbox1-109-20", 0);
         compBounds.put("button1", new Rectangle(129, 304, 98, 62));
-        baselinePosition.put("button1-98-62", new Integer(0));
+        baselinePosition.put("button1-98-62", 0);
         compBounds.put("label1", new Rectangle(169, 26, 38, 20));
-        baselinePosition.put("label1-38-20", new Integer(0));
+        baselinePosition.put("label1-38-20", 0);
         compBounds.put("scrollbar1", new Rectangle(191, 101, 16, 48));
-        baselinePosition.put("scrollbar1-16-48", new Integer(0));
+        baselinePosition.put("scrollbar1-16-48", 0);
         compBounds.put("scrollbar2", new Rectangle(279, 26, 48, 16));
-        baselinePosition.put("scrollbar2-48-16", new Integer(0));
+        baselinePosition.put("scrollbar2-48-16", 0);
         compBounds.put("scrollPane1", new Rectangle(382, 26, 100, 100));
-        baselinePosition.put("scrollPane1-100-100", new Integer(0));
+        baselinePosition.put("scrollPane1-100-100", 0);
         compBounds.put("choice1", new Rectangle(492, 80, 52, 200));
-        baselinePosition.put("choice1-52-200", new Integer(0));
+        baselinePosition.put("choice1-52-200", 0);
         compBounds.put("textArea1", new Rectangle(129, 200, 245, 80));
-        baselinePosition.put("textArea1-245-80", new Integer(0));
+        baselinePosition.put("textArea1-245-80", 0);
         compMinSize.put("Form", new Dimension(1293, 362));
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("panel1", new Rectangle(0, 0, 0, 0));
@@ -215,23 +215,23 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compPrefSize.put("panel1", new Dimension(0, 0));
         hasExplicitPrefSize.put("panel1", new Boolean(false));
         hasExplicitPrefSize.put("panel1", new Boolean(false));
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
     }
 
     /**
@@ -246,51 +246,51 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("Form", new Rectangle(0, 0, 1338, 376));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("panel1-0-0", new Integer(0));
+        baselinePosition.put("panel1-0-0", 0);
         compBounds.put("canvas1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("canvas1-0-0", new Integer(0));
+        baselinePosition.put("canvas1-0-0", 0);
         compBounds.put("list1", new Rectangle(53, 26, 40, 200));
-        baselinePosition.put("list1-40-200", new Integer(0));
+        baselinePosition.put("list1-40-200", 0);
         compBounds.put("checkbox1", new Rectangle(10, 346, 109, 20));
-        baselinePosition.put("checkbox1-109-20", new Integer(0));
+        baselinePosition.put("checkbox1-109-20", 0);
         compBounds.put("button1", new Rectangle(129, 304, 98, 62));
-        baselinePosition.put("button1-98-62", new Integer(0));
+        baselinePosition.put("button1-98-62", 0);
         compBounds.put("label1", new Rectangle(169, 26, 38, 20));
-        baselinePosition.put("label1-38-20", new Integer(0));
+        baselinePosition.put("label1-38-20", 0);
         compBounds.put("scrollbar1", new Rectangle(191, 101, 16, 48));
-        baselinePosition.put("scrollbar1-16-48", new Integer(0));
+        baselinePosition.put("scrollbar1-16-48", 0);
         compBounds.put("scrollbar2", new Rectangle(279, 26, 48, 16));
-        baselinePosition.put("scrollbar2-48-16", new Integer(0));
+        baselinePosition.put("scrollbar2-48-16", 0);
         compBounds.put("scrollPane1", new Rectangle(382, 26, 100, 100));
-        baselinePosition.put("scrollPane1-100-100", new Integer(0));
+        baselinePosition.put("scrollPane1-100-100", 0);
         compBounds.put("choice1", new Rectangle(492, 80, 28, 200));
-        baselinePosition.put("choice1-28-200", new Integer(0));
+        baselinePosition.put("choice1-28-200", 0);
         compBounds.put("textArea1", new Rectangle(129, 200, 245, 80));
-        baselinePosition.put("textArea1-245-80", new Integer(0));
+        baselinePosition.put("textArea1-245-80", 0);
         compMinSize.put("Form", new Dimension(1231, 362));
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("panel1", new Rectangle(0, 0, 0, 0));
         compMinSize.put("panel1", new Dimension(0, 0));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > START RESIZING
-        baselinePosition.put("choice1-28-200", new Integer(0));
+        baselinePosition.put("choice1-28-200", 0);
         compPrefSize.put("choice1", new Dimension(28, 20));
         {
             String[] compIds = new String[]{
@@ -308,10 +308,10 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
 // < START RESIZING
-        prefPadding.put("scrollPane1-choice1-0-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollPane1-choice1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollPane1-choice1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollPane1-choice1-0-0-3", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollPane1-choice1-0-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollPane1-choice1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollPane1-choice1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollPane1-choice1-0-0-3", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > MOVE
         {
             Point p = new Point(467, 183);
@@ -324,10 +324,10 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPadding.put("scrollPane1-choice1-0-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollPane1-choice1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollPane1-choice1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollPane1-choice1-0-0-3", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollPane1-choice1-0-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollPane1-choice1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollPane1-choice1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollPane1-choice1-0-0-3", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > MOVE
         {
             Point p = new Point(466, 183);
@@ -341,17 +341,17 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         }
 // < MOVE
 // > END MOVING
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-choice1-0-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-panel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-canvas1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-button1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-choice1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-choice1-0-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-panel1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-canvas1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-button1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-choice1-0-1", 10); // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
 // < END MOVING
         ld.externalSizeChangeHappened();
@@ -359,27 +359,27 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("Form", new Rectangle(0, 0, 1338, 376));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("panel1-0-0", new Integer(0));
+        baselinePosition.put("panel1-0-0", 0);
         compBounds.put("canvas1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("canvas1-0-0", new Integer(0));
+        baselinePosition.put("canvas1-0-0", 0);
         compBounds.put("list1", new Rectangle(53, 26, 40, 200));
-        baselinePosition.put("list1-40-200", new Integer(0));
+        baselinePosition.put("list1-40-200", 0);
         compBounds.put("checkbox1", new Rectangle(10, 346, 109, 20));
-        baselinePosition.put("checkbox1-109-20", new Integer(0));
+        baselinePosition.put("checkbox1-109-20", 0);
         compBounds.put("button1", new Rectangle(129, 304, 98, 62));
-        baselinePosition.put("button1-98-62", new Integer(0));
+        baselinePosition.put("button1-98-62", 0);
         compBounds.put("label1", new Rectangle(169, 26, 38, 20));
-        baselinePosition.put("label1-38-20", new Integer(0));
+        baselinePosition.put("label1-38-20", 0);
         compBounds.put("scrollbar1", new Rectangle(191, 101, 16, 48));
-        baselinePosition.put("scrollbar1-16-48", new Integer(0));
+        baselinePosition.put("scrollbar1-16-48", 0);
         compBounds.put("scrollbar2", new Rectangle(279, 26, 48, 16));
-        baselinePosition.put("scrollbar2-48-16", new Integer(0));
+        baselinePosition.put("scrollbar2-48-16", 0);
         compBounds.put("scrollPane1", new Rectangle(382, 26, 100, 100));
-        baselinePosition.put("scrollPane1-100-100", new Integer(0));
+        baselinePosition.put("scrollPane1-100-100", 0);
         compBounds.put("choice1", new Rectangle(492, 80, 56, 200));
-        baselinePosition.put("choice1-56-200", new Integer(0));
+        baselinePosition.put("choice1-56-200", 0);
         compBounds.put("textArea1", new Rectangle(129, 200, 245, 80));
-        baselinePosition.put("textArea1-245-80", new Integer(0));
+        baselinePosition.put("textArea1-245-80", 0);
         compMinSize.put("Form", new Dimension(1297, 362));
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("panel1", new Rectangle(0, 0, 0, 0));
@@ -388,60 +388,60 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compPrefSize.put("panel1", new Dimension(0, 0));
         hasExplicitPrefSize.put("panel1", new Boolean(false));
         hasExplicitPrefSize.put("panel1", new Boolean(false));
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("Form", new Rectangle(0, 0, 1338, 376));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("panel1-0-0", new Integer(0));
+        baselinePosition.put("panel1-0-0", 0);
         compBounds.put("canvas1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("canvas1-0-0", new Integer(0));
+        baselinePosition.put("canvas1-0-0", 0);
         compBounds.put("list1", new Rectangle(53, 26, 40, 200));
-        baselinePosition.put("list1-40-200", new Integer(0));
+        baselinePosition.put("list1-40-200", 0);
         compBounds.put("checkbox1", new Rectangle(10, 346, 109, 20));
-        baselinePosition.put("checkbox1-109-20", new Integer(0));
+        baselinePosition.put("checkbox1-109-20", 0);
         compBounds.put("button1", new Rectangle(129, 304, 98, 62));
-        baselinePosition.put("button1-98-62", new Integer(0));
+        baselinePosition.put("button1-98-62", 0);
         compBounds.put("label1", new Rectangle(169, 26, 38, 20));
-        baselinePosition.put("label1-38-20", new Integer(0));
+        baselinePosition.put("label1-38-20", 0);
         compBounds.put("scrollbar1", new Rectangle(191, 101, 16, 48));
-        baselinePosition.put("scrollbar1-16-48", new Integer(0));
+        baselinePosition.put("scrollbar1-16-48", 0);
         compBounds.put("scrollbar2", new Rectangle(279, 26, 48, 16));
-        baselinePosition.put("scrollbar2-48-16", new Integer(0));
+        baselinePosition.put("scrollbar2-48-16", 0);
         compBounds.put("scrollPane1", new Rectangle(382, 26, 100, 100));
-        baselinePosition.put("scrollPane1-100-100", new Integer(0));
+        baselinePosition.put("scrollPane1-100-100", 0);
         compBounds.put("choice1", new Rectangle(492, 80, 56, 200));
-        baselinePosition.put("choice1-56-200", new Integer(0));
+        baselinePosition.put("choice1-56-200", 0);
         compBounds.put("textArea1", new Rectangle(129, 200, 245, 80));
-        baselinePosition.put("textArea1-245-80", new Integer(0));
+        baselinePosition.put("textArea1-245-80", 0);
         compMinSize.put("Form", new Dimension(1297, 362));
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("panel1", new Rectangle(0, 0, 0, 0));
         compMinSize.put("panel1", new Dimension(0, 0));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
     }
 
     /**
@@ -458,51 +458,51 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("Form", new Rectangle(0, 0, 1338, 376));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("panel1-0-0", new Integer(0));
+        baselinePosition.put("panel1-0-0", 0);
         compBounds.put("canvas1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("canvas1-0-0", new Integer(0));
+        baselinePosition.put("canvas1-0-0", 0);
         compBounds.put("list1", new Rectangle(53, 26, 40, 200));
-        baselinePosition.put("list1-40-200", new Integer(0));
+        baselinePosition.put("list1-40-200", 0);
         compBounds.put("checkbox1", new Rectangle(10, 346, 109, 20));
-        baselinePosition.put("checkbox1-109-20", new Integer(0));
+        baselinePosition.put("checkbox1-109-20", 0);
         compBounds.put("button1", new Rectangle(129, 304, 98, 62));
-        baselinePosition.put("button1-98-62", new Integer(0));
+        baselinePosition.put("button1-98-62", 0);
         compBounds.put("label1", new Rectangle(169, 26, 38, 20));
-        baselinePosition.put("label1-38-20", new Integer(0));
+        baselinePosition.put("label1-38-20", 0);
         compBounds.put("scrollbar1", new Rectangle(191, 101, 16, 48));
-        baselinePosition.put("scrollbar1-16-48", new Integer(0));
+        baselinePosition.put("scrollbar1-16-48", 0);
         compBounds.put("scrollbar2", new Rectangle(279, 26, 48, 16));
-        baselinePosition.put("scrollbar2-48-16", new Integer(0));
+        baselinePosition.put("scrollbar2-48-16", 0);
         compBounds.put("scrollPane1", new Rectangle(382, 26, 100, 100));
-        baselinePosition.put("scrollPane1-100-100", new Integer(0));
+        baselinePosition.put("scrollPane1-100-100", 0);
         compBounds.put("choice1", new Rectangle(492, 80, 28, 200));
-        baselinePosition.put("choice1-28-200", new Integer(0));
+        baselinePosition.put("choice1-28-200", 0);
         compBounds.put("textArea1", new Rectangle(129, 200, 245, 80));
-        baselinePosition.put("textArea1-245-80", new Integer(0));
+        baselinePosition.put("textArea1-245-80", 0);
         compMinSize.put("Form", new Dimension(1231, 362));
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("panel1", new Rectangle(0, 0, 0, 0));
         compMinSize.put("panel1", new Dimension(0, 0));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > START RESIZING
-        baselinePosition.put("choice1-28-200", new Integer(0));
+        baselinePosition.put("choice1-28-200", 0);
         compPrefSize.put("choice1", new Dimension(28, 20));
         {
             String[] compIds = new String[]{
@@ -520,7 +520,7 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
 // < START RESIZING
-        prefPaddingInParent.put("Form-choice1-1-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-choice1-1-1", 10); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(503, 296);
@@ -533,7 +533,7 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("Form-choice1-1-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-choice1-1-1", 10); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(503, 297);
@@ -547,13 +547,13 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         }
 // < MOVE
 // > END MOVING
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-choice1-1-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-choice1-1-0", 10); // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
 // < END MOVING
         ld.externalSizeChangeHappened();
@@ -561,27 +561,27 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 1338, 377));
         contInterior.put("Form", new Rectangle(0, 0, 1338, 377));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("panel1-0-0", new Integer(0));
+        baselinePosition.put("panel1-0-0", 0);
         compBounds.put("canvas1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("canvas1-0-0", new Integer(0));
+        baselinePosition.put("canvas1-0-0", 0);
         compBounds.put("list1", new Rectangle(53, 26, 40, 200));
-        baselinePosition.put("list1-40-200", new Integer(0));
+        baselinePosition.put("list1-40-200", 0);
         compBounds.put("checkbox1", new Rectangle(10, 347, 109, 20));
-        baselinePosition.put("checkbox1-109-20", new Integer(0));
+        baselinePosition.put("checkbox1-109-20", 0);
         compBounds.put("button1", new Rectangle(129, 305, 98, 62));
-        baselinePosition.put("button1-98-62", new Integer(0));
+        baselinePosition.put("button1-98-62", 0);
         compBounds.put("label1", new Rectangle(169, 26, 38, 20));
-        baselinePosition.put("label1-38-20", new Integer(0));
+        baselinePosition.put("label1-38-20", 0);
         compBounds.put("scrollbar1", new Rectangle(191, 101, 16, 48));
-        baselinePosition.put("scrollbar1-16-48", new Integer(0));
+        baselinePosition.put("scrollbar1-16-48", 0);
         compBounds.put("scrollbar2", new Rectangle(279, 26, 48, 16));
-        baselinePosition.put("scrollbar2-48-16", new Integer(0));
+        baselinePosition.put("scrollbar2-48-16", 0);
         compBounds.put("scrollPane1", new Rectangle(382, 26, 100, 100));
-        baselinePosition.put("scrollPane1-100-100", new Integer(0));
+        baselinePosition.put("scrollPane1-100-100", 0);
         compBounds.put("choice1", new Rectangle(492, 80, 28, 215));
-        baselinePosition.put("choice1-28-215", new Integer(0));
+        baselinePosition.put("choice1-28-215", 0);
         compBounds.put("textArea1", new Rectangle(129, 200, 245, 80));
-        baselinePosition.put("textArea1-245-80", new Integer(0));
+        baselinePosition.put("textArea1-245-80", 0);
         compMinSize.put("Form", new Dimension(1231, 377));
         compBounds.put("Form", new Rectangle(0, 0, 1338, 377));
         contInterior.put("panel1", new Rectangle(0, 0, 0, 0));
@@ -590,60 +590,60 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compPrefSize.put("panel1", new Dimension(0, 0));
         hasExplicitPrefSize.put("panel1", new Boolean(false));
         hasExplicitPrefSize.put("panel1", new Boolean(false));
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         compBounds.put("Form", new Rectangle(0, 0, 1338, 377));
         contInterior.put("Form", new Rectangle(0, 0, 1338, 377));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("panel1-0-0", new Integer(0));
+        baselinePosition.put("panel1-0-0", 0);
         compBounds.put("canvas1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("canvas1-0-0", new Integer(0));
+        baselinePosition.put("canvas1-0-0", 0);
         compBounds.put("list1", new Rectangle(53, 26, 40, 200));
-        baselinePosition.put("list1-40-200", new Integer(0));
+        baselinePosition.put("list1-40-200", 0);
         compBounds.put("checkbox1", new Rectangle(10, 347, 109, 20));
-        baselinePosition.put("checkbox1-109-20", new Integer(0));
+        baselinePosition.put("checkbox1-109-20", 0);
         compBounds.put("button1", new Rectangle(129, 305, 98, 62));
-        baselinePosition.put("button1-98-62", new Integer(0));
+        baselinePosition.put("button1-98-62", 0);
         compBounds.put("label1", new Rectangle(169, 26, 38, 20));
-        baselinePosition.put("label1-38-20", new Integer(0));
+        baselinePosition.put("label1-38-20", 0);
         compBounds.put("scrollbar1", new Rectangle(191, 101, 16, 48));
-        baselinePosition.put("scrollbar1-16-48", new Integer(0));
+        baselinePosition.put("scrollbar1-16-48", 0);
         compBounds.put("scrollbar2", new Rectangle(279, 26, 48, 16));
-        baselinePosition.put("scrollbar2-48-16", new Integer(0));
+        baselinePosition.put("scrollbar2-48-16", 0);
         compBounds.put("scrollPane1", new Rectangle(382, 26, 100, 100));
-        baselinePosition.put("scrollPane1-100-100", new Integer(0));
+        baselinePosition.put("scrollPane1-100-100", 0);
         compBounds.put("choice1", new Rectangle(492, 80, 28, 215));
-        baselinePosition.put("choice1-28-215", new Integer(0));
+        baselinePosition.put("choice1-28-215", 0);
         compBounds.put("textArea1", new Rectangle(129, 200, 245, 80));
-        baselinePosition.put("textArea1-245-80", new Integer(0));
+        baselinePosition.put("textArea1-245-80", 0);
         compMinSize.put("Form", new Dimension(1231, 377));
         compBounds.put("Form", new Rectangle(0, 0, 1338, 377));
         contInterior.put("panel1", new Rectangle(0, 0, 0, 0));
         compMinSize.put("panel1", new Dimension(0, 0));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 1338, 377));
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
     }
 
     /**
@@ -661,51 +661,51 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("Form", new Rectangle(0, 0, 1338, 376));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("panel1-0-0", new Integer(0));
+        baselinePosition.put("panel1-0-0", 0);
         compBounds.put("canvas1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("canvas1-0-0", new Integer(0));
+        baselinePosition.put("canvas1-0-0", 0);
         compBounds.put("list1", new Rectangle(53, 26, 40, 200));
-        baselinePosition.put("list1-40-200", new Integer(0));
+        baselinePosition.put("list1-40-200", 0);
         compBounds.put("checkbox1", new Rectangle(10, 346, 109, 20));
-        baselinePosition.put("checkbox1-109-20", new Integer(0));
+        baselinePosition.put("checkbox1-109-20", 0);
         compBounds.put("button1", new Rectangle(129, 304, 98, 62));
-        baselinePosition.put("button1-98-62", new Integer(0));
+        baselinePosition.put("button1-98-62", 0);
         compBounds.put("label1", new Rectangle(169, 26, 38, 20));
-        baselinePosition.put("label1-38-20", new Integer(0));
+        baselinePosition.put("label1-38-20", 0);
         compBounds.put("scrollbar1", new Rectangle(191, 101, 16, 48));
-        baselinePosition.put("scrollbar1-16-48", new Integer(0));
+        baselinePosition.put("scrollbar1-16-48", 0);
         compBounds.put("scrollbar2", new Rectangle(279, 26, 48, 16));
-        baselinePosition.put("scrollbar2-48-16", new Integer(0));
+        baselinePosition.put("scrollbar2-48-16", 0);
         compBounds.put("scrollPane1", new Rectangle(382, 26, 100, 100));
-        baselinePosition.put("scrollPane1-100-100", new Integer(0));
+        baselinePosition.put("scrollPane1-100-100", 0);
         compBounds.put("choice1", new Rectangle(492, 80, 28, 200));
-        baselinePosition.put("choice1-28-200", new Integer(0));
+        baselinePosition.put("choice1-28-200", 0);
         compBounds.put("textArea1", new Rectangle(129, 200, 245, 80));
-        baselinePosition.put("textArea1-245-80", new Integer(0));
+        baselinePosition.put("textArea1-245-80", 0);
         compMinSize.put("Form", new Dimension(1231, 362));
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("panel1", new Rectangle(0, 0, 0, 0));
         compMinSize.put("panel1", new Dimension(0, 0));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > START RESIZING
-        baselinePosition.put("choice1-28-200", new Integer(0));
+        baselinePosition.put("choice1-28-200", 0);
         compPrefSize.put("choice1", new Dimension(28, 20));
         {
             String[] compIds = new String[]{
@@ -723,7 +723,7 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
 // < START RESIZING
-        prefPaddingInParent.put("Form-choice1-1-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-choice1-1-0", 10); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(506, 55);
@@ -736,7 +736,7 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("Form-choice1-1-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-choice1-1-0", 10); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(506, 54);
@@ -750,12 +750,12 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         }
 // < MOVE
 // > END MOVING
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.endMoving(true);
 // < END MOVING
         ld.externalSizeChangeHappened();
@@ -763,27 +763,27 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("Form", new Rectangle(0, 0, 1338, 376));
         compBounds.put("panel1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("panel1-0-0", new Integer(0));
+        baselinePosition.put("panel1-0-0", 0);
         compBounds.put("canvas1", new Rectangle(0, 0, 0, 0));
-        baselinePosition.put("canvas1-0-0", new Integer(0));
+        baselinePosition.put("canvas1-0-0", 0);
         compBounds.put("list1", new Rectangle(53, 26, 40, 200));
-        baselinePosition.put("list1-40-200", new Integer(0));
+        baselinePosition.put("list1-40-200", 0);
         compBounds.put("checkbox1", new Rectangle(10, 346, 109, 20));
-        baselinePosition.put("checkbox1-109-20", new Integer(0));
+        baselinePosition.put("checkbox1-109-20", 0);
         compBounds.put("button1", new Rectangle(129, 304, 98, 62));
-        baselinePosition.put("button1-98-62", new Integer(0));
+        baselinePosition.put("button1-98-62", 0);
         compBounds.put("label1", new Rectangle(169, 26, 38, 20));
-        baselinePosition.put("label1-38-20", new Integer(0));
+        baselinePosition.put("label1-38-20", 0);
         compBounds.put("scrollbar1", new Rectangle(191, 101, 16, 48));
-        baselinePosition.put("scrollbar1-16-48", new Integer(0));
+        baselinePosition.put("scrollbar1-16-48", 0);
         compBounds.put("scrollbar2", new Rectangle(279, 26, 48, 16));
-        baselinePosition.put("scrollbar2-48-16", new Integer(0));
+        baselinePosition.put("scrollbar2-48-16", 0);
         compBounds.put("scrollPane1", new Rectangle(382, 26, 100, 100));
-        baselinePosition.put("scrollPane1-100-100", new Integer(0));
+        baselinePosition.put("scrollPane1-100-100", 0);
         compBounds.put("choice1", new Rectangle(492, 58, 28, 222));
-        baselinePosition.put("choice1-28-222", new Integer(0));
+        baselinePosition.put("choice1-28-222", 0);
         compBounds.put("textArea1", new Rectangle(129, 200, 245, 80));
-        baselinePosition.put("textArea1-245-80", new Integer(0));
+        baselinePosition.put("textArea1-245-80", 0);
         compMinSize.put("Form", new Dimension(1231, 362));
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
         contInterior.put("panel1", new Rectangle(0, 0, 0, 0));
@@ -792,22 +792,22 @@ public class ALT_Resizing20aTest extends LayoutTestCase {
         compPrefSize.put("panel1", new Dimension(0, 0));
         hasExplicitPrefSize.put("panel1", new Boolean(false));
         hasExplicitPrefSize.put("panel1", new Boolean(false));
-        prefPadding.put("scrollbar2-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("scrollbar1-textArea1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar2-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("scrollbar1-textArea1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 1338, 376));
-        prefPadding.put("choice1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("choice1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("list1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-checkbox1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("textArea1-button1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("choice1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("list1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-checkbox1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("textArea1-button1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
     }
 }

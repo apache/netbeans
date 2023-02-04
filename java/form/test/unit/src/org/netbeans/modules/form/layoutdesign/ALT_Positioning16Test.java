@@ -60,11 +60,11 @@ public class ALT_Positioning16Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 400, 484));
         contInterior.put("Form", new Rectangle(0, 0, 400, 484));
         compBounds.put("jScrollPane1", new Rectangle(10, 11, 144, 118));
-        baselinePosition.put("jScrollPane1-144-118", new Integer(0));
+        baselinePosition.put("jScrollPane1-144-118", 0);
         compBounds.put("jScrollPane2", new Rectangle(10, 243, 35, 107));
-        baselinePosition.put("jScrollPane2-35-107", new Integer(0));
+        baselinePosition.put("jScrollPane2-35-107", 0);
         compBounds.put("jPanel1", new Rectangle(10, 135, 102, 102));
-        baselinePosition.put("jPanel1-102-102", new Integer(0));
+        baselinePosition.put("jPanel1-102-102", 0);
         contInterior.put("jPanel1", new Rectangle(11, 136, 100, 100));
         compMinSize.put("jPanel1", new Dimension(2, 2));
         compBounds.put("jPanel1", new Rectangle(10, 135, 102, 102));
@@ -72,17 +72,17 @@ public class ALT_Positioning16Test extends LayoutTestCase {
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         compBounds.put("jScrollPane3", new Rectangle(160, 11, 166, 182));
-        baselinePosition.put("jScrollPane3-166-182", new Integer(0));
+        baselinePosition.put("jScrollPane3-166-182", 0);
         compMinSize.put("Form", new Dimension(336, 361));
         compBounds.put("Form", new Rectangle(0, 0, 400, 484));
-        prefPaddingInParent.put("Form-jScrollPane3-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane3-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane3-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane3-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane2-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         lc = new LayoutComponent("jProgressBar1", false);
 // > START ADDING
-        baselinePosition.put("jProgressBar1-146-14", new Integer(-1));
+        baselinePosition.put("jProgressBar1-146-14", -1);
         {
             LayoutComponent[] comps = new LayoutComponent[]{lc};
             Rectangle[] bounds = new Rectangle[]{
@@ -93,24 +93,24 @@ public class ALT_Positioning16Test extends LayoutTestCase {
             ld.startAdding(comps, bounds, hotspot, defaultContId);
         }
 // < START ADDING
-        prefPaddingInParent.put("Form-jProgressBar1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane1-jProgressBar1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jProgressBar1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jProgressBar1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane1-jProgressBar1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jProgressBar1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > MOVE
         {
             Point p = new Point(210, 349);
@@ -123,24 +123,24 @@ public class ALT_Positioning16Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("Form-jProgressBar1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane1-jProgressBar1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jProgressBar1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jProgressBar1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane1-jProgressBar1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jProgressBar1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > MOVE
         {
             Point p = new Point(209, 349);
@@ -155,25 +155,25 @@ public class ALT_Positioning16Test extends LayoutTestCase {
 // < MOVE
 // > END MOVING
         compPrefSize.put("jProgressBar1", new Dimension(146, 14));
-        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jProgressBar1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jScrollPane2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jScrollPane2-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jScrollPane2-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jScrollPane2-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel1-jScrollPane2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel1-jScrollPane2-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel1-jScrollPane2-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel1-jScrollPane2-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel1-jProgressBar1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel1-jProgressBar1-1-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel1-jProgressBar1-1-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel1-jProgressBar1-1-0-3", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jProgressBar1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jScrollPane2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jScrollPane2-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jScrollPane2-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jScrollPane2-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jPanel1-jScrollPane2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jPanel1-jScrollPane2-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jPanel1-jScrollPane2-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jPanel1-jScrollPane2-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jPanel1-jProgressBar1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jPanel1-jProgressBar1-1-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jPanel1-jProgressBar1-1-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jPanel1-jProgressBar1-1-0-3", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.endMoving(true);
 // < END MOVING
         ld.externalSizeChangeHappened();
@@ -181,11 +181,11 @@ public class ALT_Positioning16Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 400, 484));
         contInterior.put("Form", new Rectangle(0, 0, 400, 484));
         compBounds.put("jScrollPane1", new Rectangle(10, 11, 144, 118));
-        baselinePosition.put("jScrollPane1-144-118", new Integer(0));
+        baselinePosition.put("jScrollPane1-144-118", 0);
         compBounds.put("jScrollPane2", new Rectangle(10, 243, 35, 107));
-        baselinePosition.put("jScrollPane2-35-107", new Integer(0));
+        baselinePosition.put("jScrollPane2-35-107", 0);
         compBounds.put("jPanel1", new Rectangle(10, 135, 102, 102));
-        baselinePosition.put("jPanel1-102-102", new Integer(0));
+        baselinePosition.put("jPanel1-102-102", 0);
         contInterior.put("jPanel1", new Rectangle(11, 136, 100, 100));
         compMinSize.put("jPanel1", new Dimension(2, 2));
         compBounds.put("jPanel1", new Rectangle(10, 135, 102, 102));
@@ -193,15 +193,15 @@ public class ALT_Positioning16Test extends LayoutTestCase {
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         compBounds.put("jScrollPane3", new Rectangle(160, 11, 166, 182));
-        baselinePosition.put("jScrollPane3-166-182", new Integer(0));
+        baselinePosition.put("jScrollPane3-166-182", 0);
         compBounds.put("jProgressBar1", new Rectangle(140, 336, 146, 14));
-        baselinePosition.put("jProgressBar1-146-14", new Integer(-1));
+        baselinePosition.put("jProgressBar1-146-14", -1);
         compMinSize.put("Form", new Dimension(336, 361));
         compBounds.put("Form", new Rectangle(0, 0, 400, 484));
-        prefPaddingInParent.put("Form-jScrollPane3-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane3-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane2-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
     }
@@ -220,25 +220,25 @@ public class ALT_Positioning16Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 400, 484));
         contInterior.put("Form", new Rectangle(0, 0, 400, 484));
         compBounds.put("jScrollPane1", new Rectangle(10, 11, 144, 118));
-        baselinePosition.put("jScrollPane1-144-118", new Integer(0));
+        baselinePosition.put("jScrollPane1-144-118", 0);
         compBounds.put("jScrollPane2", new Rectangle(10, 243, 35, 107));
-        baselinePosition.put("jScrollPane2-35-107", new Integer(0));
+        baselinePosition.put("jScrollPane2-35-107", 0);
         compBounds.put("jPanel1", new Rectangle(10, 135, 102, 102));
-        baselinePosition.put("jPanel1-102-102", new Integer(0));
+        baselinePosition.put("jPanel1-102-102", 0);
         contInterior.put("jPanel1", new Rectangle(11, 136, 100, 100));
         compMinSize.put("jPanel1", new Dimension(2, 2));
         compBounds.put("jPanel1", new Rectangle(10, 135, 102, 102));
         compBounds.put("jScrollPane3", new Rectangle(160, 11, 166, 182));
-        baselinePosition.put("jScrollPane3-166-182", new Integer(0));
+        baselinePosition.put("jScrollPane3-166-182", 0);
         compMinSize.put("Form", new Dimension(336, 361));
         compBounds.put("Form", new Rectangle(0, 0, 400, 484));
-        prefPaddingInParent.put("Form-jScrollPane3-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane3-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane3-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane3-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane2-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
 // > START RESIZING
-        baselinePosition.put("jScrollPane3-166-182", new Integer(0));
+        baselinePosition.put("jScrollPane3-166-182", 0);
         compPrefSize.put("jScrollPane3", new Dimension(166, 96));
         {
             String[] compIds = new String[]{
@@ -256,7 +256,7 @@ public class ALT_Positioning16Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
 // < START RESIZING
-        prefPaddingInParent.put("Form-jScrollPane3-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane3-1-1", 11); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(257, 282);
@@ -269,7 +269,7 @@ public class ALT_Positioning16Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("Form-jScrollPane3-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane3-1-1", 11); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(258, 283);
@@ -283,11 +283,11 @@ public class ALT_Positioning16Test extends LayoutTestCase {
         }
 // < MOVE
 // > END MOVING
-        prefPaddingInParent.put("Form-jScrollPane1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane3-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane2-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane2-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane3-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
 // < END MOVING
         ld.externalSizeChangeHappened();
@@ -295,11 +295,11 @@ public class ALT_Positioning16Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 400, 484));
         contInterior.put("Form", new Rectangle(0, 0, 400, 484));
         compBounds.put("jScrollPane1", new Rectangle(10, 11, 144, 118));
-        baselinePosition.put("jScrollPane1-144-118", new Integer(0));
+        baselinePosition.put("jScrollPane1-144-118", 0);
         compBounds.put("jScrollPane2", new Rectangle(10, 243, 35, 107));
-        baselinePosition.put("jScrollPane2-35-107", new Integer(0));
+        baselinePosition.put("jScrollPane2-35-107", 0);
         compBounds.put("jPanel1", new Rectangle(10, 135, 102, 102));
-        baselinePosition.put("jPanel1-102-102", new Integer(0));
+        baselinePosition.put("jPanel1-102-102", 0);
         contInterior.put("jPanel1", new Rectangle(11, 136, 100, 100));
         compMinSize.put("jPanel1", new Dimension(2, 2));
         compBounds.put("jPanel1", new Rectangle(10, 135, 102, 102));
@@ -307,17 +307,17 @@ public class ALT_Positioning16Test extends LayoutTestCase {
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         compBounds.put("jScrollPane3", new Rectangle(160, 11, 166, 267));
-        baselinePosition.put("jScrollPane3-166-267", new Integer(0));
+        baselinePosition.put("jScrollPane3-166-267", 0);
         compMinSize.put("Form", new Dimension(336, 361));
         compBounds.put("Form", new Rectangle(0, 0, 400, 484));
-        prefPaddingInParent.put("Form-jScrollPane3-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane3-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane3-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane3-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane2-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         lc = new LayoutComponent("jProgressBar1", false);
 // > START ADDING
-        baselinePosition.put("jProgressBar1-146-14", new Integer(-1));
+        baselinePosition.put("jProgressBar1-146-14", -1);
         {
             LayoutComponent[] comps = new LayoutComponent[]{lc};
             Rectangle[] bounds = new Rectangle[]{
@@ -328,26 +328,26 @@ public class ALT_Positioning16Test extends LayoutTestCase {
             ld.startAdding(comps, bounds, hotspot, defaultContId);
         }
 // < START ADDING
-        prefPaddingInParent.put("Form-jProgressBar1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane1-jProgressBar1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel1-jProgressBar1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jPanel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jProgressBar1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jProgressBar1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane1-jProgressBar1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jPanel1-jProgressBar1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jPanel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jProgressBar1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > MOVE
         {
             Point p = new Point(156, 340);
@@ -360,26 +360,26 @@ public class ALT_Positioning16Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("Form-jProgressBar1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane1-jProgressBar1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel1-jProgressBar1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jPanel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jProgressBar1-jScrollPane3-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jProgressBar1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jProgressBar1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane1-jProgressBar1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jPanel1-jProgressBar1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jPanel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jProgressBar1-jScrollPane3-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jProgressBar1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > MOVE
         {
             Point p = new Point(155, 340);
@@ -394,9 +394,9 @@ public class ALT_Positioning16Test extends LayoutTestCase {
 // < MOVE
 // > END MOVING
         compPrefSize.put("jProgressBar1", new Dimension(146, 14));
-        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jProgressBar1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane2-jProgressBar1-0-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jProgressBar1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.endMoving(true);
 // < END MOVING
         ld.externalSizeChangeHappened();
@@ -404,11 +404,11 @@ public class ALT_Positioning16Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 400, 484));
         contInterior.put("Form", new Rectangle(0, 0, 400, 484));
         compBounds.put("jScrollPane1", new Rectangle(10, 11, 144, 118));
-        baselinePosition.put("jScrollPane1-144-118", new Integer(0));
+        baselinePosition.put("jScrollPane1-144-118", 0);
         compBounds.put("jScrollPane2", new Rectangle(10, 243, 35, 107));
-        baselinePosition.put("jScrollPane2-35-107", new Integer(0));
+        baselinePosition.put("jScrollPane2-35-107", 0);
         compBounds.put("jPanel1", new Rectangle(10, 135, 102, 102));
-        baselinePosition.put("jPanel1-102-102", new Integer(0));
+        baselinePosition.put("jPanel1-102-102", 0);
         contInterior.put("jPanel1", new Rectangle(11, 136, 100, 100));
         compMinSize.put("jPanel1", new Dimension(2, 2));
         compBounds.put("jPanel1", new Rectangle(10, 135, 102, 102));
@@ -416,19 +416,19 @@ public class ALT_Positioning16Test extends LayoutTestCase {
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         compBounds.put("jScrollPane3", new Rectangle(160, 11, 166, 267));
-        baselinePosition.put("jScrollPane3-166-267", new Integer(0));
+        baselinePosition.put("jScrollPane3-166-267", 0);
         compBounds.put("jProgressBar1", new Rectangle(86, 336, 146, 14));
-        baselinePosition.put("jProgressBar1-146-14", new Integer(-1));
+        baselinePosition.put("jProgressBar1-146-14", -1);
         compMinSize.put("Form", new Dimension(336, 361));
         compBounds.put("Form", new Rectangle(0, 0, 400, 484));
-        prefPaddingInParent.put("Form-jScrollPane3-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jScrollPane2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jProgressBar1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane3-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane3-jProgressBar1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jScrollPane2-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jProgressBar1-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
     }

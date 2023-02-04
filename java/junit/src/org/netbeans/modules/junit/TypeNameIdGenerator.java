@@ -297,14 +297,14 @@ final class TypeNameIdGenerator {
                 Integer oldValue = usageNumbers.get(briefTypeId);
                 int suffix = (oldValue == null)
                              ? 0
-                             : oldValue.intValue();
+                             : oldValue;
                 String fullTypeName = fullTypeNames.get(index);
                 String longestTypeId;
                 do {
                     suffix++;
                     longestTypeId = briefTypeId + suffix;
                 } while (reservedTypeIds.contains(longestTypeId));
-                usageNumbers.put(briefTypeId, Integer.valueOf(suffix));
+                usageNumbers.put(briefTypeId, suffix);
 
                 /* fixate immediately to ensure thare are really no conflicts */
                 reservedTypeIds.add(longestTypeId);             //fixate
@@ -362,7 +362,7 @@ final class TypeNameIdGenerator {
         Object oldValue = typeIdUsage.get(typeId);
         if ((oldValue != null) && (oldValue != TRUE)) {
             assert (oldValue.getClass() == Integer.class);
-            int conflictingTypeIndex = ((Integer) oldValue).intValue();
+            int conflictingTypeIndex = (Integer) oldValue;
             assert !conflictingTypesIndices.get(conflictingTypeIndex);
             conflictingTypesIndices.set(conflictingTypeIndex);
             typeIdUsage.put(typeId, TRUE);
@@ -389,7 +389,7 @@ final class TypeNameIdGenerator {
                                          Map<String, Object> typeIdUsage,
                                          BitSet conflictingTypesIndices,
                                          Collection<String> reservedTypeIds) {
-        Object oldValue = typeIdUsage.put(typeId, Integer.valueOf(index));
+        Object oldValue = typeIdUsage.put(typeId, index);
         boolean nameConflict = (oldValue != null)
                                || (reservedTypeIds != null)
                                   && (reservedTypeIds.contains(typeId));
@@ -408,7 +408,7 @@ final class TypeNameIdGenerator {
                  *                           in conflict with some other type
                  */
                 assert (oldValue.getClass() == Integer.class);
-                int conflictingTypeIndex = ((Integer) oldValue).intValue();
+                int conflictingTypeIndex = (Integer) oldValue;
                 assert !conflictingTypesIndices.get(conflictingTypeIndex);
                 conflictingTypesIndices.set(conflictingTypeIndex);
                 rv++;

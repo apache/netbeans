@@ -48,21 +48,21 @@ public class ALT_Bug207040Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 396, 326));
         contInterior.put("Form", new Rectangle(0, 0, 396, 326));
         compBounds.put("jTextField1", new Rectangle(10, 12, 297, 20));
-        baselinePosition.put("jTextField1-297-20", new Integer(14));
+        baselinePosition.put("jTextField1-297-20", 14);
         compBounds.put("jButton1", new Rectangle(313, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jScrollPane1", new Rectangle(11, 71, 375, 244));
-        baselinePosition.put("jScrollPane1-375-244", new Integer(0));
+        baselinePosition.put("jScrollPane1-375-244", 0);
         compBounds.put("jTextField2", new Rectangle(100, 40, 59, 20));
-        baselinePosition.put("jTextField2-59-20", new Integer(14));
+        baselinePosition.put("jTextField2-59-20", 14);
         compMinSize.put("Form", new Dimension(395, 326));
         compBounds.put("Form", new Rectangle(0, 0, 396, 326));
         compPrefSize.put("jTextField1", new Dimension(59, 20));
-        prefPaddingInParent.put("Form-jScrollPane1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane1-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
 // > START RESIZING
-        baselinePosition.put("jTextField1-297-20", new Integer(14));
+        baselinePosition.put("jTextField1-297-20", 14);
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         {
             String[] compIds = new String[]{
@@ -80,7 +80,7 @@ public class ALT_Bug207040Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
 // < START RESIZING
-        prefPaddingInParent.put("Form-jTextField1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jTextField1-0-0", 10); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(40, 28);
@@ -93,7 +93,7 @@ public class ALT_Bug207040Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("Form-jTextField1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jTextField1-0-0", 10); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(42, 28);
@@ -107,7 +107,7 @@ public class ALT_Bug207040Test extends LayoutTestCase {
         }
 // < MOVE
 // > END MOVING
-        prefPaddingInParent.put("Form-jScrollPane1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane1-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
 // < END MOVING
         ld.externalSizeChangeHappened();
@@ -115,29 +115,29 @@ public class ALT_Bug207040Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 396, 326));
         contInterior.put("Form", new Rectangle(0, 0, 396, 326));
         compBounds.put("jTextField1", new Rectangle(42, 12, 265, 20));
-        baselinePosition.put("jTextField1-265-20", new Integer(14));
+        baselinePosition.put("jTextField1-265-20", 14);
         compBounds.put("jButton1", new Rectangle(313, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jScrollPane1", new Rectangle(11, 71, 375, 244));
-        baselinePosition.put("jScrollPane1-375-244", new Integer(0));
+        baselinePosition.put("jScrollPane1-375-244", 0);
         compBounds.put("jTextField2", new Rectangle(90, 40, 59, 20));
-        baselinePosition.put("jTextField2-59-20", new Integer(14));
+        baselinePosition.put("jTextField2-59-20", 14);
         compMinSize.put("Form", new Dimension(385, 326));
         compBounds.put("Form", new Rectangle(0, 0, 396, 326));
-        prefPaddingInParent.put("Form-jScrollPane1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane1-1-1", 11); // parentId-compId-dimension-compAlignment
         compBounds.put("Form", new Rectangle(0, 0, 396, 326));
         contInterior.put("Form", new Rectangle(0, 0, 396, 326));
         compBounds.put("jTextField1", new Rectangle(42, 12, 265, 20));
-        baselinePosition.put("jTextField1-265-20", new Integer(14));
+        baselinePosition.put("jTextField1-265-20", 14);
         compBounds.put("jButton1", new Rectangle(313, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jScrollPane1", new Rectangle(11, 71, 375, 244));
-        baselinePosition.put("jScrollPane1-375-244", new Integer(0));
+        baselinePosition.put("jScrollPane1-375-244", 0);
         compBounds.put("jTextField2", new Rectangle(90, 40, 59, 20));
-        baselinePosition.put("jTextField2-59-20", new Integer(14));
+        baselinePosition.put("jTextField2-59-20", 14);
         compMinSize.put("Form", new Dimension(385, 326));
         compBounds.put("Form", new Rectangle(0, 0, 396, 326));
-        prefPaddingInParent.put("Form-jScrollPane1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane1-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
     }

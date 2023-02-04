@@ -203,7 +203,7 @@ public final class JDBCStubUtil {
     
     private static void addAllAsReferenceType(List list, int[] values) {
         for (int i = 0; i < values.length; i++) {
-            list.add(new Integer(values[i]));
+            list.add(values[i]);
         }
     }
     

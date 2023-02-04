@@ -288,11 +288,11 @@ public class RADProperty extends FormProperty {
                // default value (0) does not correspond to any of the
                // enumerated constants (NONE_OPTION is -1)
             enumerationValues = new Object[] {
-                "NONE_OPTION", Integer.valueOf(-1), "DebugGraphics.NONE_OPTION", // NOI18N
-                "NO_CHANGES", Integer.valueOf(0), "0", // NOI18N
-                "LOG_OPTION", Integer.valueOf(1), "DebugGraphics.LOG_OPTION", // NOI18N
-                "FLASH_OPTION", Integer.valueOf(2), "DebugGraphics.FLASH_OPTION", // NOI18N
-                "BUFFERED_OPTION", Integer.valueOf(4), "DebugGraphics.BUFFERED_OPTION" }; // NOI18N
+                "NONE_OPTION", -1, "DebugGraphics.NONE_OPTION", // NOI18N
+                "NO_CHANGES", 0, "0", // NOI18N
+                "LOG_OPTION", 1, "DebugGraphics.LOG_OPTION", // NOI18N
+                "FLASH_OPTION", 2, "DebugGraphics.FLASH_OPTION", // NOI18N
+                "BUFFERED_OPTION", 4, "DebugGraphics.BUFFERED_OPTION" }; // NOI18N
         }
 
         if (enumerationValues == null
@@ -304,11 +304,11 @@ public class RADProperty extends FormProperty {
         {   // hack: enumeration definition is missing in standard Swing
             // for JDialog and JInternalFrame defaultCloseOperation property
             enumerationValues = new Object[] {
-                "DISPOSE_ON_CLOSE", Integer.valueOf(2), // NOI18N
+                "DISPOSE_ON_CLOSE", 2, // NOI18N
                         "WindowConstants.DISPOSE_ON_CLOSE", // NOI18N
-                "DO_NOTHING_ON_CLOSE", Integer.valueOf(0), // NOI18N
+                "DO_NOTHING_ON_CLOSE", 0, // NOI18N
                         "WindowConstants.DO_NOTHING_ON_CLOSE", // NOI18N
-                "HIDE_ON_CLOSE", Integer.valueOf(1), // NOI18N
+                "HIDE_ON_CLOSE", 1, // NOI18N
                          "WindowConstants.HIDE_ON_CLOSE" }; // NOI18N
         }
 

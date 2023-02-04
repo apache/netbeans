@@ -50,24 +50,24 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel1", new Rectangle(115, 135, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton1", new Rectangle(115, 77, 152, 23));
-        baselinePosition.put("jToggleButton1-152-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-152-23", 15);
         compBounds.put("jButton1", new Rectangle(115, 106, 152, 23));
-        baselinePosition.put("jButton1-152-23", new Integer(15));
+        baselinePosition.put("jButton1-152-23", 15);
         compMinSize.put("Form", new Dimension(277, 160));
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         compPrefSize.put("jToggleButton1", new Dimension(105, 23));
         compPrefSize.put("jButton1", new Dimension(73, 23));
-        prefPaddingInParent.put("Form-jLabel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jToggleButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         lc = new LayoutComponent("jButton2", false);
         // > START ADDING
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         {
             LayoutComponent[] comps = new LayoutComponent[]{lc};
             Rectangle[] bounds = new Rectangle[]{new Rectangle(0, 0, 73, 23)};
@@ -76,31 +76,31 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
             ld.startAdding(comps, bounds, hotspot, defaultContId);
         }
         // < START ADDING
-        prefPaddingInParent.put("Form-jButton2-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jToggleButton1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jToggleButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jToggleButton1-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jToggleButton1-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jToggleButton1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jLabel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jButton2-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jLabel1-jButton2-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jLabel1-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jLabel1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jLabel1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jLabel1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton1-jButton2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jButton2-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jToggleButton1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jToggleButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jToggleButton1-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jToggleButton1-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jToggleButton1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jLabel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jButton2-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jLabel1-jButton2-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jLabel1-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jLabel1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jLabel1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jLabel1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton1-jButton2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // > MOVE
         // > MOVE
         {
@@ -112,31 +112,31 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jButton2-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jToggleButton1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jToggleButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jToggleButton1-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jToggleButton1-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jToggleButton1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jLabel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jButton2-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jLabel1-jButton2-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jButton2-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jLabel1-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jLabel1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jLabel1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jLabel1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton1-jButton2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jButton2-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jToggleButton1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jToggleButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jToggleButton1-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jToggleButton1-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jToggleButton1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jLabel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jButton2-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jLabel1-jButton2-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jButton2-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jLabel1-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jLabel1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jLabel1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jLabel1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton1-jButton2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // > MOVE
         // > MOVE
         {
@@ -157,45 +157,45 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel1", new Rectangle(115, 139, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton1", new Rectangle(115, 77, 152, 23));
-        baselinePosition.put("jToggleButton1-152-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-152-23", 15);
         compBounds.put("jButton1", new Rectangle(115, 106, 152, 23));
-        baselinePosition.put("jButton1-152-23", new Integer(15));
+        baselinePosition.put("jButton1-152-23", 15);
         compBounds.put("jButton2", new Rectangle(153, 135, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compMinSize.put("Form", new Dimension(277, 169));
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         compPrefSize.put("jToggleButton1", new Dimension(105, 23));
         compPrefSize.put("jButton1", new Dimension(73, 23));
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jToggleButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-1-1", 11); // parentId-compId-dimension-compAlignment
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel1", new Rectangle(115, 139, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton1", new Rectangle(115, 77, 152, 23));
-        baselinePosition.put("jToggleButton1-152-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-152-23", 15);
         compBounds.put("jButton1", new Rectangle(115, 106, 152, 23));
-        baselinePosition.put("jButton1-152-23", new Integer(15));
+        baselinePosition.put("jButton1-152-23", 15);
         compBounds.put("jButton2", new Rectangle(153, 135, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compMinSize.put("Form", new Dimension(277, 169));
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         compPrefSize.put("jToggleButton1", new Dimension(105, 23));
         compPrefSize.put("jButton1", new Dimension(73, 23));
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jToggleButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         // > START RESIZING
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compPrefSize.put("jButton2", new Dimension(73, 23));
         {
             String[] compIds = new String[]{"jButton2"};
@@ -206,7 +206,7 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         // > MOVE
         {
@@ -218,7 +218,7 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         // > MOVE
         {
@@ -233,10 +233,10 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
         // > END MOVING
         compPrefSize.put("jToggleButton1", new Dimension(105, 23));
         compPrefSize.put("jButton1", new Dimension(73, 23));
-        prefPaddingInParent.put("Form-jLabel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jToggleButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
         // < END MOVING
         ld.externalSizeChangeHappened();
@@ -244,43 +244,43 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel1", new Rectangle(115, 139, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton1", new Rectangle(115, 77, 152, 23));
-        baselinePosition.put("jToggleButton1-152-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-152-23", 15);
         compBounds.put("jButton1", new Rectangle(115, 106, 152, 23));
-        baselinePosition.put("jButton1-152-23", new Integer(15));
+        baselinePosition.put("jButton1-152-23", 15);
         compBounds.put("jButton2", new Rectangle(153, 135, 114, 23));
-        baselinePosition.put("jButton2-114-23", new Integer(15));
+        baselinePosition.put("jButton2-114-23", 15);
         compMinSize.put("Form", new Dimension(277, 169));
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         compPrefSize.put("jButton2", new Dimension(73, 23));
         compPrefSize.put("jToggleButton1", new Dimension(105, 23));
         compPrefSize.put("jButton1", new Dimension(73, 23));
-        prefPaddingInParent.put("Form-jToggleButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-1-1", 11); // parentId-compId-dimension-compAlignment
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel1", new Rectangle(115, 139, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton1", new Rectangle(115, 77, 152, 23));
-        baselinePosition.put("jToggleButton1-152-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-152-23", 15);
         compBounds.put("jButton1", new Rectangle(115, 106, 152, 23));
-        baselinePosition.put("jButton1-152-23", new Integer(15));
+        baselinePosition.put("jButton1-152-23", 15);
         compBounds.put("jButton2", new Rectangle(153, 135, 114, 23));
-        baselinePosition.put("jButton2-114-23", new Integer(15));
+        baselinePosition.put("jButton2-114-23", 15);
         compMinSize.put("Form", new Dimension(277, 169));
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         compPrefSize.put("jButton2", new Dimension(73, 23));
         compPrefSize.put("jToggleButton1", new Dimension(105, 23));
         compPrefSize.put("jButton1", new Dimension(73, 23));
-        prefPaddingInParent.put("Form-jToggleButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }
@@ -290,7 +290,7 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
      */
     public void doChanges1() {
         // > START RESIZING
-        baselinePosition.put("jButton2-114-23", new Integer(15));
+        baselinePosition.put("jButton2-114-23", 15);
         compPrefSize.put("jButton2", new Dimension(73, 23));
         {
             String[] compIds = new String[]{"jButton2"};
@@ -301,7 +301,7 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         // > MOVE
         {
@@ -313,7 +313,7 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         // > MOVE
         {
@@ -328,10 +328,10 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
         // > END MOVING
         compPrefSize.put("jToggleButton1", new Dimension(105, 23));
         compPrefSize.put("jButton1", new Dimension(73, 23));
-        prefPaddingInParent.put("Form-jLabel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jToggleButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
         // < END MOVING
         ld.externalSizeChangeHappened();
@@ -339,41 +339,41 @@ public class ALT_SuppressedResizing08Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel1", new Rectangle(115, 139, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton1", new Rectangle(115, 77, 152, 23));
-        baselinePosition.put("jToggleButton1-152-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-152-23", 15);
         compBounds.put("jButton1", new Rectangle(115, 106, 152, 23));
-        baselinePosition.put("jButton1-152-23", new Integer(15));
+        baselinePosition.put("jButton1-152-23", 15);
         compBounds.put("jButton2", new Rectangle(153, 135, 151, 23));
-        baselinePosition.put("jButton2-151-23", new Integer(15));
+        baselinePosition.put("jButton2-151-23", 15);
         compMinSize.put("Form", new Dimension(314, 169));
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         compPrefSize.put("jToggleButton1", new Dimension(105, 23));
         compPrefSize.put("jButton1", new Dimension(73, 23));
-        prefPaddingInParent.put("Form-jToggleButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-1-1", 11); // parentId-compId-dimension-compAlignment
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel1", new Rectangle(115, 139, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton1", new Rectangle(115, 77, 152, 23));
-        baselinePosition.put("jToggleButton1-152-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-152-23", 15);
         compBounds.put("jButton1", new Rectangle(115, 106, 152, 23));
-        baselinePosition.put("jButton1-152-23", new Integer(15));
+        baselinePosition.put("jButton1-152-23", 15);
         compBounds.put("jButton2", new Rectangle(153, 135, 151, 23));
-        baselinePosition.put("jButton2-151-23", new Integer(15));
+        baselinePosition.put("jButton2-151-23", 15);
         compMinSize.put("Form", new Dimension(314, 169));
         compBounds.put("Form", new Rectangle(0, 0, 400, 300));
         compPrefSize.put("jToggleButton1", new Dimension(105, 23));
         compPrefSize.put("jButton1", new Dimension(73, 23));
-        prefPaddingInParent.put("Form-jToggleButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }

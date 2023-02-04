@@ -58,21 +58,21 @@ public class ALT_MaintainSize02Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jButton1", new Rectangle(317, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jTextField1", new Rectangle(10, 40, 380, 20));
-        baselinePosition.put("jTextField1-380-20", new Integer(14));
+        baselinePosition.put("jTextField1-380-20", 14);
         compBounds.put("jButton2", new Rectangle(10, 66, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compPrefSize.put("jButton1", new Dimension(73, 23));
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         compPrefSize.put("jButton2", new Dimension(73, 23));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jButton1", new Rectangle(317, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jTextField1", new Rectangle(10, 40, 380, 20));
-        baselinePosition.put("jTextField1-380-20", new Integer(14));
+        baselinePosition.put("jTextField1-380-20", 14);
         compBounds.put("jButton2", new Rectangle(10, 66, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         lm.removeComponent("jTextField1", true);
@@ -80,16 +80,16 @@ public class ALT_MaintainSize02Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jButton1", new Rectangle(317, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jButton2", new Rectangle(10, 66, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compPrefSize.put("jButton1", new Dimension(73, 23));
         compPrefSize.put("jButton2", new Dimension(73, 23));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jButton1", new Rectangle(317, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jButton2", new Rectangle(10, 66, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }
@@ -102,11 +102,11 @@ public class ALT_MaintainSize02Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jButton1", new Rectangle(317, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jTextField1", new Rectangle(10, 40, 380, 20));
-        baselinePosition.put("jTextField1-380-20", new Integer(14));
+        baselinePosition.put("jTextField1-380-20", 14);
         compBounds.put("jButton2", new Rectangle(10, 66, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         lm.removeComponent("jButton2", true);
@@ -114,16 +114,16 @@ public class ALT_MaintainSize02Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jButton1", new Rectangle(317, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jTextField1", new Rectangle(10, 40, 380, 20));
-        baselinePosition.put("jTextField1-380-20", new Integer(14));
+        baselinePosition.put("jTextField1-380-20", 14);
         compPrefSize.put("jButton1", new Dimension(73, 23));
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jButton1", new Rectangle(317, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jTextField1", new Rectangle(10, 40, 380, 20));
-        baselinePosition.put("jTextField1-380-20", new Integer(14));
+        baselinePosition.put("jTextField1-380-20", 14);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }
@@ -136,11 +136,11 @@ public class ALT_MaintainSize02Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jButton1", new Rectangle(317, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compPrefSize.put("jButton1", new Dimension(73, 23));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jButton1", new Rectangle(317, 11, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         lm.removeComponent("jTextField1", true);

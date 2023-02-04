@@ -50,7 +50,7 @@ public class ModePropertyEditor extends PropertyEditorSupport {
 
     /** @return text for the current value */
     public String getAsText () {
-        int value = ((Integer)getValue()).intValue();
+        int value = (Integer) getValue();
 
         for (int i = 0; i < values.length ; i++)
             if (values[i] == value)

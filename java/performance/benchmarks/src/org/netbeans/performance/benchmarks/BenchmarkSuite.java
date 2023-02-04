@@ -332,12 +332,12 @@ public final class BenchmarkSuite implements Test {
                         int i = interval.getStart();
                         List localMapList2 = new ArrayList(11);
                         for (; i < interval.getEnd(); i += interval.getStep()) {
-                            createArgsAndPut(keys, level + 1, as, mab, localMapList2, key, new Integer(i));
+                            createArgsAndPut(keys, level + 1, as, mab, localMapList2, key, i);
                             localMapList.addAll(localMapList2);
                             localMapList2.clear();
                         }
                         if (i >= interval.getEnd()) {
-                            createArgsAndPut(keys, level + 1, as, mab, localMapList2, key, new Integer(interval.getEnd()));
+                            createArgsAndPut(keys, level + 1, as, mab, localMapList2, key, interval.getEnd());
                             localMapList.addAll(localMapList2);
                         }
                     } else {

@@ -279,7 +279,7 @@ public abstract class TreeRuleTestBase extends NbTestCase {
     public void testIssue108246() throws Exception {
 
         String before = "package test; class Test {" +
-            "  Integer ii = new Integer(0);" +
+            "  Integer ii = 0;" +
             "  String s = ii.toString();" +
             "\n}\n";
 

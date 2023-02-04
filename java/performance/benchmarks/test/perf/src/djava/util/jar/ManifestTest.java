@@ -50,12 +50,12 @@ public class ManifestTest extends Benchmark {
     }
     
     public ManifestTest(String name) {
-        super(name, new Integer[] {new Integer(5), new Integer(10), new Integer(25), new Integer(100), new Integer(-5), new Integer(-25), new Integer(-100)});
+        super(name, new Integer[] {5, 10, 25, 100, -5, -25, -100});
     }
     
     protected byte[] mani;
     protected void setUp() throws Exception {
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
         boolean doSects = (magnitude < 0);
         magnitude = Math.abs(magnitude);
         ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
@@ -86,7 +86,7 @@ public class ManifestTest extends Benchmark {
     
     public void testManifestParsing() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
         boolean doSects = (magnitude < 0);
         magnitude = Math.abs(magnitude);
         for (int i = 0; i < count; i++) {

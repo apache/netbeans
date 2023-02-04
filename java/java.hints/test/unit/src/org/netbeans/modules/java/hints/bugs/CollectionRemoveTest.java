@@ -72,7 +72,7 @@ public class CollectionRemoveTest extends NbTestCase {
                        "public class Test {" +
                        "    private void test () {" +
                        "        java.util.List<String> l = null;" +
-                       "        l.remove(Integer.valueOf(1));" +
+                       "        l.remove(1);" +
                        "    }" +
                        "}")
                 .run(CollectionRemove.class)
@@ -86,7 +86,7 @@ public class CollectionRemoveTest extends NbTestCase {
                        "public class Test {" +
                        "    private void test () {" +
                        "        java.util.List<String> l = null;" +
-                       "        l.contains(Integer.valueOf(1));" +
+                       "        l.contains(1);" +
                        "    }" +
                        "}")
                 .run(CollectionRemove.class)
@@ -100,7 +100,7 @@ public class CollectionRemoveTest extends NbTestCase {
                        "public class Test {" +
                        "    private void test () {" +
                        "        java.util.Map<String, Number> l = null;" +
-                       "        l.containsKey(Integer.valueOf(1));" +
+                       "        l.containsKey(1);" +
                        "    }" +
                        "}")
                 .run(CollectionRemove.class)

@@ -136,7 +136,7 @@ public class NetbeansBuildActionXpp3Reader {
         {
             try
             {
-                return Integer.valueOf( s ).intValue();
+                return Integer.parseInt(s);
             }
             catch ( NumberFormatException e )
             {

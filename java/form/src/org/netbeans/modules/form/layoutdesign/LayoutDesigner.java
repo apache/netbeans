@@ -1038,8 +1038,8 @@ public final class LayoutDesigner implements LayoutConstants {
                         // to copy them.
                         temp.add(subCopy);
                         temp.add(copy);
-                        temp.add(new Integer(subCopy.getRawAlignment()));
-                        temp.add(new Integer(copy.getSubIntervalCount() + compCount));
+                        temp.add(subCopy.getRawAlignment());
+                        temp.add(copy.getSubIntervalCount() + compCount);
                         compCount++;
                     } else {
                         layoutModel.addInterval(subCopy, copy, -1);
@@ -1062,8 +1062,8 @@ public final class LayoutDesigner implements LayoutConstants {
                     while (iter.hasNext()) {
                         LayoutInterval comp = (LayoutInterval)iter.next();
                         LayoutInterval parent = (LayoutInterval)iter.next();
-                        int alignment = ((Integer)iter.next()).intValue();
-                        int index = ((Integer)iter.next()).intValue();
+                        int alignment = (Integer) iter.next();
+                        int index = (Integer) iter.next();
                         if (comp.getParent() != null) { // component reused - not copied, just moved
                             removeComponentInterval(comp, dimension);
                         }
@@ -2754,7 +2754,7 @@ public final class LayoutDesigner implements LayoutConstants {
             LayoutComponent comp = interval.getComponent();
             dimension = (interval == comp.getLayoutInterval(HORIZONTAL)) ? HORIZONTAL : VERTICAL;
             if (comp.isLinkSized(dimension)) {
-                Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(new Integer(comp.getLinkSizeId(dimension)));
+                Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(comp.getLinkSizeId(dimension));
                 Iterator iter = linked.iterator();
                 int prefSize = 0;
                 while (iter.hasNext()) {
@@ -2821,7 +2821,7 @@ public final class LayoutDesigner implements LayoutConstants {
         
         // Unset the same-size if we are making the component resizable
         if (resizing && comp.isLinkSized(dimension)) {
-            Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(new Integer(comp.getLinkSizeId(dimension)));
+            Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(comp.getLinkSizeId(dimension));
             Collection toChange;
             if (linked.size() == 2) { // The second component will be unlinked, too.
                 toChange = linked;
@@ -3198,7 +3198,7 @@ public final class LayoutDesigner implements LayoutConstants {
         for (int i = list.size()-1; i>=0; i--) {
             List subList = (List)list.get(i);
             if (subList.size() == 2) { // there is just one interval
-                int alignment = ((Integer)subList.get(0)).intValue();
+                int alignment = (Integer) subList.get(0);
                 LayoutInterval li = (LayoutInterval) subList.get(1);
                 if (li.isEmptySpace()) {
                     if (gap == null || li.getMaximumSize() > gap.getMaximumSize()) {
@@ -3293,7 +3293,7 @@ public final class LayoutDesigner implements LayoutConstants {
 
             LayoutInterval interval;
             if (subList.size() == 2) { // there is just one interval - use it directly
-                int alignment = ((Integer)subList.get(0)).intValue();
+                int alignment = (Integer) subList.get(0);
                 interval = (LayoutInterval) subList.get(1);
                 if (alignment == LEADING || alignment == TRAILING) {
                     layoutModel.setIntervalAlignment(interval, alignment);
@@ -3302,7 +3302,7 @@ public final class LayoutDesigner implements LayoutConstants {
             else { // there are more intervals - group them in a sequence
                 interval = new LayoutInterval(SEQUENTIAL);
                 Iterator itr = subList.iterator();
-                int alignment = ((Integer)itr.next()).intValue();
+                int alignment = (Integer) itr.next();
                 if (alignment == LEADING || alignment == TRAILING) {
                     interval.setAlignment(alignment);
                 }

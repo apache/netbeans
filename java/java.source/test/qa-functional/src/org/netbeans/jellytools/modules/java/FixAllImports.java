@@ -83,11 +83,10 @@ public class FixAllImports extends JDialogOperator {
     private Map<Integer,JComboBoxOperator> operators = new HashMap<Integer, JComboBoxOperator>();
     
     public JComboBoxOperator cbo(int index) {
-        Integer i = new Integer(index);
-        JComboBoxOperator _cbo = operators.get(i);
+        JComboBoxOperator _cbo = operators.get(index);
         if (_cbo==null) {
             _cbo = new JComboBoxOperator(this,index);
-            operators.put(i, _cbo);
+            operators.put(index, _cbo);
         }
         return _cbo;
     }
@@ -99,7 +98,7 @@ public class FixAllImports extends JDialogOperator {
     private Map<Integer,JLabelOperator> labelOperators = new HashMap<Integer, JLabelOperator>();
     
     public JLabelOperator lo(int index) {
-        Integer i = new Integer(index);
+        Integer i = index;
         JLabelOperator _lo = labelOperators.get(i);
         if (_lo==null) {
             _lo = new JLabelOperator(this,index+2);

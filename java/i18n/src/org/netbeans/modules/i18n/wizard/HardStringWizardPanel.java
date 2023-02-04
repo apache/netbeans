@@ -693,7 +693,7 @@ final class HardStringWizardPanel extends JPanel implements ListSelectionListene
             
             panel.getAccessibleContext().setAccessibleDescription(NbBundle.getBundle(HardStringWizardPanel.class).getString("ACS_HardStringWizardPanel"));//NOI18N
             
-            panel.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(3));
+            panel.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 3);
             panel.setName(NbBundle.getBundle(HardStringWizardPanel.class).getString("TXT_ModifyStrings"));//NOI18N
             panel.setPreferredSize(I18nWizardDescriptor.PREFERRED_DIMENSION);        
 

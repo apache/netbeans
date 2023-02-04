@@ -33,7 +33,7 @@ import org.netbeans.modules.dbschema.*;
  */
 public class TableChildren extends Children.Keys {
     /** Converts property names to filter. */
-    protected static HashMap propToFilter;
+    protected static HashMap<String, Integer> propToFilter;
 
     /** The table element whose subelements are represented. */
     protected DBElement element;
@@ -68,12 +68,12 @@ public class TableChildren extends Children.Keys {
     };
 
     static {
-        propToFilter = new HashMap ();
-        propToFilter.put (DBElementProperties.PROP_TABLES, new Integer (TableElementFilter.TABLE | TableElementFilter.VIEW));
-        propToFilter.put (DBElementProperties.PROP_COLUMNS, new Integer (TableElementFilter.COLUMN));
-        propToFilter.put (DBElementProperties.PROP_COLUMN_PAIRS, new Integer (TableElementFilter.COLUMN_PAIR));
-        propToFilter.put (DBElementProperties.PROP_INDEXES, new Integer (TableElementFilter.INDEX));
-        propToFilter.put (DBElementProperties.PROP_KEYS, new Integer (TableElementFilter.FK));
+        propToFilter = new HashMap<>();
+        propToFilter.put(DBElementProperties.PROP_TABLES, TableElementFilter.TABLE | TableElementFilter.VIEW);
+        propToFilter.put(DBElementProperties.PROP_COLUMNS, TableElementFilter.COLUMN);
+        propToFilter.put(DBElementProperties.PROP_COLUMN_PAIRS, TableElementFilter.COLUMN_PAIR);
+        propToFilter.put(DBElementProperties.PROP_INDEXES, TableElementFilter.INDEX);
+        propToFilter.put(DBElementProperties.PROP_KEYS, TableElementFilter.FK);
     }
  
     /** Create class children with the default factory.
@@ -280,9 +280,10 @@ public class TableChildren extends Children.Keys {
         * -> YES MY LORD! ANOTHER WISH?
         */
         public void propertyChange (PropertyChangeEvent evt) {
-            Integer i = (Integer) propToFilter.get (evt.getPropertyName ());
-            if (i != null)
-                refreshKeys(i.intValue());
+            Integer i = propToFilter.get (evt.getPropertyName ());
+            if (i != null) {
+                refreshKeys(i);
+            }
         }
     } // end of ElementListener inner class*/
 }

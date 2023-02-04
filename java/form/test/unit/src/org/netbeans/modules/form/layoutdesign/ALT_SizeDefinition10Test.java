@@ -50,7 +50,7 @@ public class ALT_SizeDefinition10Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 451, 108));
         contInterior.put("Form", new Rectangle(0, 0, 451, 108));
         compBounds.put("tabbedPane", new Rectangle(10, 11, 431, 86));
-        baselinePosition.put("tabbedPane-431-86", new Integer(0));
+        baselinePosition.put("tabbedPane-431-86", 0);
         compMinSize.put("Form", new Dimension(63, 108));
         compBounds.put("Form", new Rectangle(0, 0, 451, 108));
         compBounds.put("tab2", new Rectangle(12, 36, 426, 58));
@@ -61,24 +61,24 @@ public class ALT_SizeDefinition10Test extends LayoutTestCase {
         compBounds.put("tab2", new Rectangle(12, 36, 426, 58));
         contInterior.put("tab2", new Rectangle(12, 36, 426, 58));
         compBounds.put("textField2", new Rectangle(22, 47, 406, 36));
-        baselinePosition.put("textField2-406-36", new Integer(22));
+        baselinePosition.put("textField2-406-36", 22);
         compMinSize.put("tab2", new Dimension(26, 42));
         compBounds.put("tab2", new Rectangle(12, 36, 426, 58));
         compPrefSize.put("textField2", new Dimension(162, 20));
         compBounds.put("tab1", new Rectangle(12, 36, 426, 58));
         contInterior.put("tab1", new Rectangle(12, 36, 426, 58));
         compBounds.put("textField1", new Rectangle(22, 47, 406, 36));
-        baselinePosition.put("textField1-406-36", new Integer(22));
+        baselinePosition.put("textField1-406-36", 22);
         compMinSize.put("tab1", new Dimension(26, 42));
         compBounds.put("tab1", new Rectangle(12, 36, 426, 58));
         compPrefSize.put("textField1", new Dimension(406, 20));
         compPrefSize.put("textField1", new Dimension(406, 20));
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
-        prefPaddingInParent.put("Form-tabbedPane-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-tabbedPane-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-tabbedPane-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-tabbedPane-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-tabbedPane-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-tabbedPane-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-tabbedPane-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-tabbedPane-0-1", 10); // parentId-compId-dimension-compAlignment
     }
 
 }

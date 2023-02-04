@@ -66,22 +66,22 @@ public class LabelBeanInfo extends ComponentBeanInfo.Support {
         public void setAsText(String s) {
             Integer i;
             getTags();
-            if (s.equals(tags[0])) i = new Integer(java.awt.Label.LEFT);
-            else if (s.equals(tags[1])) i = new Integer(java.awt.Label.CENTER);
-            else i = new Integer(java.awt.Label.RIGHT);
+            if (s.equals(tags[0])) i = java.awt.Label.LEFT;
+            else if (s.equals(tags[1])) i = java.awt.Label.CENTER;
+            else i = java.awt.Label.RIGHT;
             setValue(i);
         }
 
         @Override
         public String getAsText() {
-            int i = ((Integer) getValue()).intValue();
+            int i = (Integer) getValue();
             getTags();
             return tags[i == java.awt.Label.CENTER ? 1 : (i == java.awt.Label.LEFT ? 0 : 2)];
         }
 
         @Override
         public String getJavaInitializationString () {
-            int i = ((Integer) getValue()).intValue();
+            int i = (Integer) getValue();
             switch (i) {
             case java.awt.Label.RIGHT :  return "java.awt.Label.RIGHT"; // NOI18N
             case java.awt.Label.LEFT :   return "java.awt.Label.LEFT"; // NOI18N

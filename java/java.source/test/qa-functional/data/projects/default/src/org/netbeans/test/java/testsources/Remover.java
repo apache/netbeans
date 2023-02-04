@@ -56,7 +56,7 @@ public abstract class Remover extends Object {
     public static int method1(int parameter1) throws java.io.IOException {
         /*This is body of mehodmethod1*/
         for (int i=0;i<100;i++){
-            System.out.println(new Integer(i).toString());
+            System.out.println(i);
         }
         return 0;
     }
@@ -67,7 +67,7 @@ public abstract class Remover extends Object {
     public static int method1(int parameter1,int parameter2) throws java.io.IOException {
         /*This is body of mehodmethod1*/
         for (int i=0;i<100;i++){
-            System.out.println(new Integer(i).toString());
+            System.out.println(i);
         }
         return 0;
     }
@@ -78,7 +78,7 @@ public abstract class Remover extends Object {
     public static int method1(float parameter1,float parameter2,final int parameter3) throws java.io.IOException {
         /*This is body of mehodmethod1*/
         for (int i=0;i<100;i++){
-            System.out.println(new Integer(i).toString());
+            System.out.println(i);
         }
         return 0;
     }
@@ -88,7 +88,7 @@ public abstract class Remover extends Object {
     public static int method2(int parameter1) throws java.io.IOException {
         /*This is body of mehodmethod2*/
         for (int i=0;i<100;i++){
-            System.out.println(new Integer(i).toString());
+            System.out.println(i);
         }
         return 0;
     }
@@ -100,7 +100,7 @@ public abstract class Remover extends Object {
     public static short method2(int parameter1,int parameter2) throws java.io.IOException {
         /*This is body of mehodmethod2*/
         for (int i=0;i<100;i++){
-            System.out.println(new Integer(i).toString());
+            System.out.println(i);
         }
         return 0;
     }
@@ -110,7 +110,7 @@ public abstract class Remover extends Object {
     public static long method2(float parameter1,float parameter2,final int parameter3) throws java.io.IOException {
         /*This is body of mehodmethod2*/
         for (int i=0;i<100;i++){
-            System.out.println(new Integer(i).toString());
+            System.out.println(i);
         }
         return 0;
     }

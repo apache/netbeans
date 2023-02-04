@@ -182,16 +182,16 @@ public class MalformedFormatStringTest extends NbTestCase {
 "    final int v = 1;\n" +
 "    public final int recurse(int var) {\n" +
 "    System.err.println(String.format(\"%d,%d,%d,%d\", 10,(byte)10, (short)10, (long)10));\n" +
-"    System.err.println(String.format(\"%d,%d,%d,%d\", Integer.valueOf(10), Byte.valueOf((byte)10), Short.valueOf((short)10), Long.valueOf((long)10)));\n" +
+"    System.err.println(String.format(\"%d,%d,%d,%d\", 10, Byte.valueOf((byte)10), Short.valueOf((short)10), Long.valueOf((long)10)));\n" +
                 
 "    System.err.println(String.format(\"%o,%o,%o,%o\", 10,(byte)10, (short)10, (long)10));\n" +
-"    System.err.println(String.format(\"%o,%o,%o,%o\", Integer.valueOf(10), Byte.valueOf((byte)10), Short.valueOf((short)10), Long.valueOf((long)10)));\n" +
+"    System.err.println(String.format(\"%o,%o,%o,%o\", 10, Byte.valueOf((byte)10), Short.valueOf((short)10), Long.valueOf((long)10)));\n" +
                 
 "    System.err.println(String.format(\"%x,%x,%x,%x\", 10,(byte)10, (short)10, (long)10));\n" +
-"    System.err.println(String.format(\"%x,%x,%x,%x\", Integer.valueOf(10), Byte.valueOf((byte)10), Short.valueOf((short)10), Long.valueOf((long)10)));\n" +
+"    System.err.println(String.format(\"%x,%x,%x,%x\", 10, Byte.valueOf((byte)10), Short.valueOf((short)10), Long.valueOf((long)10)));\n" +
                 
 "    System.err.println(String.format(\"%X,%X,%X,%X\", 10,(byte)10, (short)10, (long)10));\n" +
-"    System.err.println(String.format(\"%X,%X,%X,%X\", Integer.valueOf(10), Byte.valueOf((byte)10), Short.valueOf((short)10), Long.valueOf((long)10)));\n" +
+"    System.err.println(String.format(\"%X,%X,%X,%X\", 10, Byte.valueOf((byte)10), Short.valueOf((short)10), Long.valueOf((long)10)));\n" +
 "        return 0;\n" +
 "    } \n" +
 "}"

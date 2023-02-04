@@ -177,7 +177,7 @@ public final class TestNGAntLogger extends AntLogger {
             if (logLevel != null) {
                 int lvl;
                 try {
-                    lvl = Integer.valueOf(event.evaluate(logLevel));
+                    lvl = Integer.parseInt(event.evaluate(logLevel));
                 } catch (NumberFormatException nfe) {
                     lvl = -1;
                 }

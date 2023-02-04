@@ -49,45 +49,45 @@ public class ALT_Bug134368_1Test extends LayoutTestCase {
 // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 398, 134));
         compBounds.put("messageLabel", new Rectangle(10, 11, 388, 0));
-        baselinePosition.put("messageLabel-388-0", new Integer(4));
+        baselinePosition.put("messageLabel-388-0", 4);
         compPrefSize.put("messageLabel", new Dimension(0, 0));
         compBounds.put("jLabel3", new Rectangle(19, 40, 41, 14));
-        baselinePosition.put("jLabel3-41-14", new Integer(11));
+        baselinePosition.put("jLabel3-41-14", 11);
         compPrefSize.put("jLabel3", new Dimension(41, 14));
         compBounds.put("jLabel2", new Rectangle(10, 17, 50, 14));
-        baselinePosition.put("jLabel2-50-14", new Integer(11));
+        baselinePosition.put("jLabel2-50-14", 11);
         compPrefSize.put("jLabel2", new Dimension(50, 14));
         compBounds.put("passwordField2", new Rectangle(64, 40, 334, 17));
-        baselinePosition.put("passwordField2-334-17", new Integer(11));
+        baselinePosition.put("passwordField2-334-17", 11);
         compPrefSize.put("passwordField2", new Dimension(11, 17));
         compBounds.put("passwordField1", new Rectangle(64, 17, 334, 17));
-        baselinePosition.put("passwordField1-334-17", new Integer(11));
+        baselinePosition.put("passwordField1-334-17", 11);
         compPrefSize.put("passwordField1", new Dimension(11, 17));
         compBounds.put("okButton", new Rectangle(256, 100, 47, 23));
-        baselinePosition.put("okButton-47-23", new Integer(15));
+        baselinePosition.put("okButton-47-23", 15);
         compPrefSize.put("okButton", new Dimension(47, 23));
         compBounds.put("cancelButton", new Rectangle(321, 100, 65, 23));
-        baselinePosition.put("cancelButton-65-23", new Integer(15));
+        baselinePosition.put("cancelButton-65-23", 15);
         compPrefSize.put("cancelButton", new Dimension(65, 23));
         contInterior.put("Form", new Rectangle(0, 0, 398, 134));
         compBounds.put("messageLabel", new Rectangle(10, 11, 388, 0));
-        baselinePosition.put("messageLabel-388-0", new Integer(4));
+        baselinePosition.put("messageLabel-388-0", 4);
         compBounds.put("jLabel3", new Rectangle(19, 40, 41, 14));
-        baselinePosition.put("jLabel3-41-14", new Integer(11));
+        baselinePosition.put("jLabel3-41-14", 11);
         compBounds.put("jLabel2", new Rectangle(10, 17, 50, 14));
-        baselinePosition.put("jLabel2-50-14", new Integer(11));
+        baselinePosition.put("jLabel2-50-14", 11);
         compBounds.put("passwordField2", new Rectangle(64, 40, 334, 17));
-        baselinePosition.put("passwordField2-334-17", new Integer(11));
+        baselinePosition.put("passwordField2-334-17", 11);
         compBounds.put("passwordField1", new Rectangle(64, 17, 334, 17));
-        baselinePosition.put("passwordField1-334-17", new Integer(11));
+        baselinePosition.put("passwordField1-334-17", 11);
         compBounds.put("okButton", new Rectangle(256, 100, 47, 23));
-        baselinePosition.put("okButton-47-23", new Integer(15));
+        baselinePosition.put("okButton-47-23", 15);
         compBounds.put("cancelButton", new Rectangle(321, 100, 65, 23));
-        baselinePosition.put("cancelButton-65-23", new Integer(15));
+        baselinePosition.put("cancelButton-65-23", 15);
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
 // > START RESIZING
-        baselinePosition.put("passwordField2-334-17", new Integer(11));
+        baselinePosition.put("passwordField2-334-17", 11);
         compPrefSize.put("passwordField2", new Dimension(11, 17));
         {
             String[] compIds = new String[]{"passwordField2"};
@@ -98,7 +98,7 @@ public class ALT_Bug134368_1Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
 // < START RESIZING
-        prefPaddingInParent.put("Form-passwordField2-0-1", new Integer(10));
+        prefPaddingInParent.put("Form-passwordField2-0-1", 10);
         // parentId-compId-dimension-compAlignment
 // > MOVE
         {
@@ -110,7 +110,7 @@ public class ALT_Bug134368_1Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("Form-passwordField2-0-1", new Integer(10));
+        prefPaddingInParent.put("Form-passwordField2-0-1", 10);
         // parentId-compId-dimension-compAlignment
 // > MOVE
         {
@@ -129,41 +129,41 @@ public class ALT_Bug134368_1Test extends LayoutTestCase {
 // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 398, 134));
         compBounds.put("messageLabel", new Rectangle(10, 11, 388, 0));
-        baselinePosition.put("messageLabel-388-0", new Integer(4));
+        baselinePosition.put("messageLabel-388-0", 4);
         compPrefSize.put("messageLabel", new Dimension(0, 0));
         compBounds.put("jLabel3", new Rectangle(19, 40, 41, 14));
-        baselinePosition.put("jLabel3-41-14", new Integer(11));
+        baselinePosition.put("jLabel3-41-14", 11);
         compPrefSize.put("jLabel3", new Dimension(41, 14));
         compBounds.put("jLabel2", new Rectangle(10, 17, 50, 14));
-        baselinePosition.put("jLabel2-50-14", new Integer(11));
+        baselinePosition.put("jLabel2-50-14", 11);
         compPrefSize.put("jLabel2", new Dimension(50, 14));
         compBounds.put("passwordField2", new Rectangle(64, 40, 223, 17));
-        baselinePosition.put("passwordField2-223-17", new Integer(11));
+        baselinePosition.put("passwordField2-223-17", 11);
         compPrefSize.put("passwordField2", new Dimension(11, 17));
         compBounds.put("passwordField1", new Rectangle(64, 17, 334, 17));
-        baselinePosition.put("passwordField1-334-17", new Integer(11));
+        baselinePosition.put("passwordField1-334-17", 11);
         compPrefSize.put("passwordField1", new Dimension(11, 17));
         compBounds.put("okButton", new Rectangle(256, 100, 47, 23));
-        baselinePosition.put("okButton-47-23", new Integer(15));
+        baselinePosition.put("okButton-47-23", 15);
         compPrefSize.put("okButton", new Dimension(47, 23));
         compBounds.put("cancelButton", new Rectangle(321, 100, 65, 23));
-        baselinePosition.put("cancelButton-65-23", new Integer(15));
+        baselinePosition.put("cancelButton-65-23", 15);
         compPrefSize.put("cancelButton", new Dimension(65, 23));
         contInterior.put("Form", new Rectangle(0, 0, 398, 134));
         compBounds.put("messageLabel", new Rectangle(10, 11, 388, 0));
-        baselinePosition.put("messageLabel-388-0", new Integer(4));
+        baselinePosition.put("messageLabel-388-0", 4);
         compBounds.put("jLabel3", new Rectangle(19, 40, 41, 14));
-        baselinePosition.put("jLabel3-41-14", new Integer(11));
+        baselinePosition.put("jLabel3-41-14", 11);
         compBounds.put("jLabel2", new Rectangle(10, 17, 50, 14));
-        baselinePosition.put("jLabel2-50-14", new Integer(11));
+        baselinePosition.put("jLabel2-50-14", 11);
         compBounds.put("passwordField2", new Rectangle(64, 40, 223, 17));
-        baselinePosition.put("passwordField2-223-17", new Integer(11));
+        baselinePosition.put("passwordField2-223-17", 11);
         compBounds.put("passwordField1", new Rectangle(64, 17, 334, 17));
-        baselinePosition.put("passwordField1-334-17", new Integer(11));
+        baselinePosition.put("passwordField1-334-17", 11);
         compBounds.put("okButton", new Rectangle(256, 100, 47, 23));
-        baselinePosition.put("okButton-47-23", new Integer(15));
+        baselinePosition.put("okButton-47-23", 15);
         compBounds.put("cancelButton", new Rectangle(321, 100, 65, 23));
-        baselinePosition.put("cancelButton-65-23", new Integer(15));
+        baselinePosition.put("cancelButton-65-23", 15);
         ld.updateCurrentState();
     }
 

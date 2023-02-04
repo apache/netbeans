@@ -104,7 +104,7 @@ public class MemoryView extends Helper {
         System.out.println((msgMemory.format (new Object[] {
                                             new Long (total),
                                             new Long (free),
-                                            new Integer (taken)
+                                            taken
                                         })));
         return taken;
     }

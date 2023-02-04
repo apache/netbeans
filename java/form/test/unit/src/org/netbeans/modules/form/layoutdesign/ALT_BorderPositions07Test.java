@@ -53,15 +53,15 @@ public class ALT_BorderPositions07Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
         contInterior.put("Form", new Rectangle(0, 0, 504, 395));
         compBounds.put("jScrollBar1", new Rectangle(0, 29, 17, 341));
-        baselinePosition.put("jScrollBar1-17-341", new Integer(0));
+        baselinePosition.put("jScrollBar1-17-341", 0);
         compBounds.put("jComboBox1", new Rectangle(145, 60, 185, 20));
-        baselinePosition.put("jComboBox1-185-20", new Integer(14));
+        baselinePosition.put("jComboBox1-185-20", 14);
         compBounds.put("jButton1", new Rectangle(162, 156, 126, 150));
-        baselinePosition.put("jButton1-126-150", new Integer(79));
+        baselinePosition.put("jButton1-126-150", 79);
         compBounds.put("jLabel1", new Rectangle(355, 149, 34, 122));
-        baselinePosition.put("jLabel1-34-122", new Integer(65));
+        baselinePosition.put("jLabel1-34-122", 65);
         compBounds.put("jCheckBox1", new Rectangle(326, 273, 178, 23));
-        baselinePosition.put("jCheckBox1-178-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-178-23", 15);
         compMinSize.put("Form", new Dimension(504, 395));
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
@@ -69,18 +69,18 @@ public class ALT_BorderPositions07Test extends LayoutTestCase {
         compPrefSize.put("jScrollBar1", new Dimension(17, 48));
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compPrefSize.put("jComboBox1", new Dimension(56, 20));
-        prefPadding.put("jComboBox1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jLabel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jCheckBox1-1-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jLabel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jCheckBox1-1-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         compPrefSize.put("jCheckBox1", new Dimension(81, 23));
-        prefPadding.put("jComboBox1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jLabel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jLabel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
-        prefPadding.put("jComboBox1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jLabel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jLabel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > START MOVING
-        baselinePosition.put("jScrollBar1-17-341", new Integer(0));
+        baselinePosition.put("jScrollBar1-17-341", 0);
         {
             String[] compIds = new String[]{
                 "jScrollBar1"
@@ -92,26 +92,26 @@ public class ALT_BorderPositions07Test extends LayoutTestCase {
             ld.startMoving(compIds, bounds, hotspot);
         }
 // < START MOVING
-        prefPaddingInParent.put("Form-jScrollBar1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollBar1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollBar1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollBar1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollBar1-jComboBox1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jComboBox1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jComboBox1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jComboBox1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jButton1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jButton1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jButton1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jButton1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jLabel1-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jLabel1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jLabel1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jLabel1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jCheckBox1-0-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jCheckBox1-0-0-1", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jCheckBox1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jCheckBox1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jScrollBar1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollBar1-jComboBox1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jComboBox1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jComboBox1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jComboBox1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jButton1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jButton1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jButton1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jButton1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jLabel1-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jLabel1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jLabel1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jLabel1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jCheckBox1-0-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jCheckBox1-0-0-1", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jCheckBox1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jCheckBox1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > MOVE
         {
             Point p = new Point(16, 116);
@@ -124,26 +124,26 @@ public class ALT_BorderPositions07Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("Form-jScrollBar1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollBar1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollBar1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollBar1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollBar1-jComboBox1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jComboBox1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jComboBox1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jComboBox1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jButton1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jButton1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jButton1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jButton1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jLabel1-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jLabel1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jLabel1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jLabel1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jCheckBox1-0-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jCheckBox1-0-0-1", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jCheckBox1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jCheckBox1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jScrollBar1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollBar1-jComboBox1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jComboBox1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jComboBox1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jComboBox1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jButton1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jButton1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jButton1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jButton1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jLabel1-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jLabel1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jLabel1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jLabel1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jCheckBox1-0-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jCheckBox1-0-0-1", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jCheckBox1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jCheckBox1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
 // > MOVE
         {
             Point p = new Point(16, 115);
@@ -157,8 +157,8 @@ public class ALT_BorderPositions07Test extends LayoutTestCase {
         }
 // < MOVE
 // > END MOVING
-        prefPadding.put("jScrollBar1-jComboBox1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jButton1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jComboBox1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jButton1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.endMoving(true);
 // < END MOVING
         ld.externalSizeChangeHappened();
@@ -166,29 +166,29 @@ public class ALT_BorderPositions07Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
         contInterior.put("Form", new Rectangle(0, 0, 504, 395));
         compBounds.put("jScrollBar1", new Rectangle(10, 11, 17, 341));
-        baselinePosition.put("jScrollBar1-17-341", new Integer(0));
+        baselinePosition.put("jScrollBar1-17-341", 0);
         compBounds.put("jComboBox1", new Rectangle(145, 60, 185, 20));
-        baselinePosition.put("jComboBox1-185-20", new Integer(14));
+        baselinePosition.put("jComboBox1-185-20", 14);
         compBounds.put("jButton1", new Rectangle(162, 156, 126, 150));
-        baselinePosition.put("jButton1-126-150", new Integer(79));
+        baselinePosition.put("jButton1-126-150", 79);
         compBounds.put("jLabel1", new Rectangle(355, 149, 34, 122));
-        baselinePosition.put("jLabel1-34-122", new Integer(65));
+        baselinePosition.put("jLabel1-34-122", 65);
         compBounds.put("jCheckBox1", new Rectangle(326, 273, 178, 23));
-        baselinePosition.put("jCheckBox1-178-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-178-23", 15);
         compMinSize.put("Form", new Dimension(504, 395));
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
-        prefPaddingInParent.put("Form-jScrollBar1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-0-0", 10); // parentId-compId-dimension-compAlignment
         compPrefSize.put("jScrollBar1", new Dimension(17, 48));
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compPrefSize.put("jComboBox1", new Dimension(56, 20));
-        prefPadding.put("jLabel1-jCheckBox1-1-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jCheckBox1-1-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         compPrefSize.put("jCheckBox1", new Dimension(81, 23));
-        prefPaddingInParent.put("Form-jScrollBar1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-1-0", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
-        prefPaddingInParent.put("Form-jScrollBar1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollBar1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-0-0", 10); // parentId-compId-dimension-compAlignment
     }
 
     /**
@@ -197,33 +197,33 @@ public class ALT_BorderPositions07Test extends LayoutTestCase {
     public void doChanges1() {
         lm.undo(changeMark, lm.getChangeMark());
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
-        prefPaddingInParent.put("Form-jScrollBar1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollBar1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollBar1-0-0", 10); // parentId-compId-dimension-compAlignment
 // > UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
         contInterior.put("Form", new Rectangle(0, 0, 504, 395));
         compBounds.put("jScrollBar1", new Rectangle(0, 29, 17, 341));
-        baselinePosition.put("jScrollBar1-17-341", new Integer(0));
+        baselinePosition.put("jScrollBar1-17-341", 0);
         compBounds.put("jComboBox1", new Rectangle(145, 60, 185, 20));
-        baselinePosition.put("jComboBox1-185-20", new Integer(14));
+        baselinePosition.put("jComboBox1-185-20", 14);
         compBounds.put("jButton1", new Rectangle(162, 156, 126, 150));
-        baselinePosition.put("jButton1-126-150", new Integer(79));
+        baselinePosition.put("jButton1-126-150", 79);
         compBounds.put("jLabel1", new Rectangle(355, 149, 34, 122));
-        baselinePosition.put("jLabel1-34-122", new Integer(65));
+        baselinePosition.put("jLabel1-34-122", 65);
         compBounds.put("jCheckBox1", new Rectangle(326, 273, 178, 23));
-        baselinePosition.put("jCheckBox1-178-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-178-23", 15);
         compMinSize.put("Form", new Dimension(504, 395));
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
-        prefPadding.put("jComboBox1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jLabel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jLabel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
-        prefPadding.put("jComboBox1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jLabel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jLabel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
 // > START RESIZING
-        baselinePosition.put("jScrollBar1-17-341", new Integer(0));
+        baselinePosition.put("jScrollBar1-17-341", 0);
         compPrefSize.put("jScrollBar1", new Dimension(17, 48));
         {
             String[] compIds = new String[]{
@@ -266,8 +266,8 @@ public class ALT_BorderPositions07Test extends LayoutTestCase {
         }
 // < MOVE
 // > END MOVING
-        prefPadding.put("jScrollBar1-jComboBox1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollBar1-jButton1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jComboBox1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollBar1-jButton1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.endMoving(true);
 // < END MOVING
         ld.externalSizeChangeHappened();
@@ -275,33 +275,33 @@ public class ALT_BorderPositions07Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
         contInterior.put("Form", new Rectangle(0, 0, 504, 395));
         compBounds.put("jScrollBar1", new Rectangle(0, 29, 50, 341));
-        baselinePosition.put("jScrollBar1-50-341", new Integer(0));
+        baselinePosition.put("jScrollBar1-50-341", 0);
         compBounds.put("jComboBox1", new Rectangle(145, 60, 185, 20));
-        baselinePosition.put("jComboBox1-185-20", new Integer(14));
+        baselinePosition.put("jComboBox1-185-20", 14);
         compBounds.put("jButton1", new Rectangle(162, 156, 126, 150));
-        baselinePosition.put("jButton1-126-150", new Integer(79));
+        baselinePosition.put("jButton1-126-150", 79);
         compBounds.put("jLabel1", new Rectangle(355, 149, 34, 122));
-        baselinePosition.put("jLabel1-34-122", new Integer(65));
+        baselinePosition.put("jLabel1-34-122", 65);
         compBounds.put("jCheckBox1", new Rectangle(326, 273, 178, 23));
-        baselinePosition.put("jCheckBox1-178-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-178-23", 15);
         compMinSize.put("Form", new Dimension(504, 395));
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compPrefSize.put("jComboBox1", new Dimension(56, 20));
-        prefPadding.put("jComboBox1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jLabel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jLabel1-jCheckBox1-1-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jLabel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jCheckBox1-1-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         compPrefSize.put("jCheckBox1", new Dimension(81, 23));
-        prefPadding.put("jComboBox1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jLabel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jLabel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
-        prefPadding.put("jComboBox1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jLabel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jLabel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         compBounds.put("Form", new Rectangle(0, 0, 504, 395));
-        prefPadding.put("jComboBox1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jLabel1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jLabel1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
     }
 }

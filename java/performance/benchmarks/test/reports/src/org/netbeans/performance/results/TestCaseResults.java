@@ -222,7 +222,7 @@ public class TestCaseResults implements Comparable {
     /** Adds new value to set of measured results. */
     public synchronized void addValue(int val) {
         upToDate = false;
-        values.add (new Integer (val));
+        values.add(val);
     }
     
     public double getAverage () {
@@ -267,7 +267,7 @@ public class TestCaseResults implements Comparable {
         n = values.size();
         avg = stddev = var = sumSquares = 0;
         while (it.hasNext()) {
-            int val = ((Integer)it.next()).intValue();
+            int val = (Integer) it.next();
             avg += val;
             sumSquares += val*val;
         }
@@ -290,7 +290,7 @@ public class TestCaseResults implements Comparable {
             it = values.iterator();
             double ep = 0d;
             while (it.hasNext()) {
-                int v = ((Integer)it.next()).intValue();
+                int v = (Integer) it.next();
                 ep += v - avg;
                 var += (v - avg)*(v - avg);
             }

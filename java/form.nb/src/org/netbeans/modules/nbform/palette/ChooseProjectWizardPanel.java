@@ -62,7 +62,7 @@ class ChooseProjectWizardPanel implements WizardDescriptor.Panel<AddToPaletteWiz
             // wizard API: set the caption and index of this panel
             projectChooser.setName(PaletteUtils.getBundleString("CTL_SelectProject_Caption")); // NOI18N
             projectChooser.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, // NOI18N
-                                             Integer.valueOf(0));
+                                             0);
 
             if (lastDirectoryUsed != null)
                 projectChooser.setCurrentDirectory(new File(lastDirectoryUsed));

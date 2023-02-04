@@ -100,7 +100,7 @@ public class IteratorTest extends TestCase {
     public static List<Integer> createSequentialList( int size ) {        
         List<Integer> result = new ArrayList<Integer>( size );                
         for( int i = 0; i < size; i++ ) {
-            result.add( new Integer(i) );
+            result.add( i );
         }
         return result;
     }

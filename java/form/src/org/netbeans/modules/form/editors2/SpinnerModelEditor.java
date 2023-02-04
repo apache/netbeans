@@ -113,7 +113,7 @@ public class SpinnerModelEditor extends PropertyEditorSupport
         initialDateSpinner.setValue(new Date());
         minimumDateSpinner.setModel(new SpinnerDateModel());
         maximumDateSpinner.setModel(new SpinnerDateModel());
-        stepSizeSpinner.setValue(Integer.valueOf(1));
+        stepSizeSpinner.setValue(1);
         initialListLabel.setVisible(false);
         initialListCombo.setVisible(false);
         fireChanges = true;
@@ -309,8 +309,8 @@ public class SpinnerModelEditor extends PropertyEditorSupport
             assert false;
         }
         numberTypeCombo.setSelectedIndex(typeIndex);
-        minimumNumberSpinner.setValue(Integer.valueOf(0));
-        maximumNumberSpinner.setValue(Integer.valueOf(0));
+        minimumNumberSpinner.setValue(0);
+        maximumNumberSpinner.setValue(0);
         updateNumberEditors();
         initialNumberSpinner.setValue(model.getInitialValue());
         Comparable minimum = numberModel.getMinimum();
@@ -518,7 +518,7 @@ public class SpinnerModelEditor extends PropertyEditorSupport
                 result[i] = null; 
             } else {
                 if (Integer.class == clazz) {
-                    result[i] = Integer.valueOf(n.intValue());
+                    result[i] = n.intValue();
                 } else if (Long.class == clazz) {
                     result[i] = Long.valueOf(n.longValue());
                 } else if (Float.class == clazz) {
@@ -1478,9 +1478,9 @@ public class SpinnerModelEditor extends PropertyEditorSupport
         Object stepSize = numberModel.getStepSize();
         Class<?> clazz = initial.getClass();
         if (clazz == Integer.class
-                && Integer.valueOf(0).equals(initial)
+                && initial.equals(0)
                 && (minimum == null) && (maximum == null)
-                && (Integer.valueOf(1).equals(stepSize))) {
+                && (stepSize.equals(1))) {
             // default constructor
             code.append(')');
         } else {

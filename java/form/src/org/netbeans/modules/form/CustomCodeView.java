@@ -658,8 +658,8 @@ class CustomCodeView extends javax.swing.JPanel {
 
             Integer lastLineCount = lastDocLineCounts.get(doc);
             int lineCount = getLineCount(doc);
-            if (lastLineCount == null || lastLineCount.intValue() != lineCount) {
-                lastDocLineCounts.put(doc, Integer.valueOf(lineCount));
+            if (lastLineCount == null || lastLineCount != lineCount) {
+                lastDocLineCounts.put(doc, lineCount);
                 updateLines(doc, blockBounds[0], blockBounds[1], lines,
                             codeData.getEditableBlock(category, eBlockIndex));
                 repaint = true;

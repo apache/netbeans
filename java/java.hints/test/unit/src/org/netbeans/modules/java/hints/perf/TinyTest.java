@@ -533,7 +533,7 @@ public class TinyTest extends NbTestCase {
                        "import java.util.ArrayList;\n" +
                        "public class Test {\n" +
                        "     private void test() {\n" +
-                       "         ArrayList arrayList = new ArrayList(Integer.valueOf(\"6\"));\n" +
+                       "         ArrayList arrayList = new ArrayList(6));\n" +
                        "         arrayList.get(Integer.parseInt(\"1\"));\n" +
                        "     }\n" +
                        "}\n")
@@ -546,7 +546,7 @@ public class TinyTest extends NbTestCase {
                        "import java.util.ArrayList;\n" +
                        "public class Test {\n" +
                        "     private void test() {\n" +
-                       "         ArrayList arrayList = new ArrayList(Integer.parseInt(\"6\"));\n" +
+                       "         ArrayList arrayList = new ArrayList(6));\n" +
                        "         arrayList.get(Integer.parseInt(\"1\"));\n" +
                        "     }\n" +
                        "}\n")
@@ -559,8 +559,8 @@ public class TinyTest extends NbTestCase {
                        "import java.util.ArrayList;\n" +
                        "public class Test {\n" +
                        "     private void test() {\n" +
-                       "         ArrayList arrayList = new ArrayList(Integer.parseInt(\"6\"));\n" +
-                       "         arrayList.get(Integer.valueOf(\"1\"));\n" +
+                       "         ArrayList arrayList = new ArrayList(6);\n" +
+                       "         arrayList.get(1);\n" +
                        "     }\n" +
                        "}\n")
                 .run(Tiny.class)
@@ -572,8 +572,8 @@ public class TinyTest extends NbTestCase {
                        "import java.util.ArrayList;\n" +
                        "public class Test {\n" +
                        "     private void test() {\n" +
-                       "         ArrayList arrayList = new ArrayList(Integer.parseInt(\"6\"));\n" +
-                       "         arrayList.get(Integer.parseInt(\"1\"));\n" +
+                       "         ArrayList arrayList = new ArrayList(6);\n" +
+                       "         arrayList.get(1);\n" +
                        "     }\n" +
                        "}\n");
     }
@@ -583,7 +583,7 @@ public class TinyTest extends NbTestCase {
                 .input("package test;\n" +
                        "public class Test {\n" +
                        "     private int test() {\n" +
-                       "         return Integer.valueOf(\"1\");\n" +
+                       "         return 1;\n" +
                        "     }\n" +
                        "}\n")
                 .run(Tiny.class)
@@ -623,7 +623,7 @@ public class TinyTest extends NbTestCase {
                        "public class Test {\n" +
                        "     private void test() {\n" +
                        "         Executors.newFixedThreadPool(1).submit(() -> {\n" +
-                       "             return Integer.valueOf(\"1\");\n" +
+                       "             return 1;\n" +
                        "         });" +
                        "     }\n" +
                        "}\n");

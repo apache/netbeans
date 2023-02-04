@@ -49,25 +49,25 @@ public class ALT_ParallelPosition10Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jToggleButton1", new Rectangle(10, 11, 179, 23));
-        baselinePosition.put("jToggleButton1-179-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-179-23", 15);
         compPrefSize.put("jToggleButton1", new Dimension(179, 23));
         compBounds.put("jLabel1", new Rectangle(10, 44, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compBounds.put("jButton1", new Rectangle(48, 40, 75, 23));
-        baselinePosition.put("jButton1-75-23", new Integer(15));
+        baselinePosition.put("jButton1-75-23", 15);
         compPrefSize.put("jButton1", new Dimension(75, 23));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jToggleButton1", new Rectangle(10, 11, 179, 23));
-        baselinePosition.put("jToggleButton1-179-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-179-23", 15);
         compBounds.put("jLabel1", new Rectangle(10, 44, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jButton1", new Rectangle(48, 40, 75, 23));
-        baselinePosition.put("jButton1-75-23", new Integer(15));
+        baselinePosition.put("jButton1-75-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         // > START RESIZING
-        baselinePosition.put("jButton1-75-23", new Integer(15));
+        baselinePosition.put("jButton1-75-23", 15);
         compPrefSize.put("jButton1", new Dimension(75, 23));
         {
             String[] compIds = new String[] {
@@ -85,7 +85,7 @@ public class ALT_ParallelPosition10Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(193,55);
@@ -98,7 +98,7 @@ public class ALT_ParallelPosition10Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(192,55);
@@ -119,21 +119,21 @@ public class ALT_ParallelPosition10Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jToggleButton1", new Rectangle(10, 11, 179, 23));
-        baselinePosition.put("jToggleButton1-179-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-179-23", 15);
         compPrefSize.put("jToggleButton1", new Dimension(179, 23));
         compBounds.put("jLabel1", new Rectangle(10, 44, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compBounds.put("jButton1", new Rectangle(48, 40, 141, 23));
-        baselinePosition.put("jButton1-141-23", new Integer(15));
+        baselinePosition.put("jButton1-141-23", 15);
         compPrefSize.put("jButton1", new Dimension(75, 23));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jToggleButton1", new Rectangle(10, 11, 179, 23));
-        baselinePosition.put("jToggleButton1-179-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-179-23", 15);
         compBounds.put("jLabel1", new Rectangle(10, 44, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jButton1", new Rectangle(48, 40, 141, 23));
-        baselinePosition.put("jButton1-141-23", new Integer(15));
+        baselinePosition.put("jButton1-141-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }

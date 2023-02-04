@@ -52,70 +52,70 @@ public class ALT_SizeDefinition03Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 219, 300));
         compBounds.put("jLabel1", new Rectangle(10, 14, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jTextField1", new Rectangle(48, 11, 161, 20));
-        baselinePosition.put("jTextField1-161-20", new Integer(14));
+        baselinePosition.put("jTextField1-161-20", 14);
         compBounds.put("jToggleButton1", new Rectangle(10, 42, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(121, 43, 88, 20));
-        baselinePosition.put("jTextField2-88-20", new Integer(14));
+        baselinePosition.put("jTextField2-88-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 71, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jButton1", new Rectangle(93, 71, 116, 23));
-        baselinePosition.put("jButton1-116-23", new Integer(15));
+        baselinePosition.put("jButton1-116-23", 15);
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         compPrefSize.put("jTextField2", new Dimension(59, 20));
         compPrefSize.put("jButton1", new Dimension(115, 23));
-        prefPaddingInParent.put("Form-jCheckBox1-1-1", new Integer(7)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jCheckBox1-1-1", 7); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-1-1", 11); // parentId-compId-dimension-compAlignment
         contInterior.put("Form", new Rectangle(0, 0, 219, 300));
         compBounds.put("jLabel1", new Rectangle(10, 14, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jTextField1", new Rectangle(48, 11, 161, 20));
-        baselinePosition.put("jTextField1-161-20", new Integer(14));
+        baselinePosition.put("jTextField1-161-20", 14);
         compBounds.put("jToggleButton1", new Rectangle(10, 42, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(121, 43, 88, 20));
-        baselinePosition.put("jTextField2-88-20", new Integer(14));
+        baselinePosition.put("jTextField2-88-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 71, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jButton1", new Rectangle(93, 71, 116, 23));
-        baselinePosition.put("jButton1-116-23", new Integer(15));
+        baselinePosition.put("jButton1-116-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         ld.externalSizeChangeHappened();
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 218, 300));
         compBounds.put("jLabel1", new Rectangle(10, 11, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jTextField1", new Rectangle(48, 11, 160, 20));
-        baselinePosition.put("jTextField1-160-20", new Integer(14));
+        baselinePosition.put("jTextField1-160-20", 14);
         compBounds.put("jToggleButton1", new Rectangle(10, 42, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(121, 43, 87, 20));
-        baselinePosition.put("jTextField2-87-20", new Integer(14));
+        baselinePosition.put("jTextField2-87-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 71, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jButton1", new Rectangle(93, 71, 115, 23));
-        baselinePosition.put("jButton1-115-23", new Integer(15));
+        baselinePosition.put("jButton1-115-23", 15);
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         compPrefSize.put("jTextField2", new Dimension(59, 20));
         compPrefSize.put("jButton1", new Dimension(115, 23));
-        prefPaddingInParent.put("Form-jCheckBox1-1-1", new Integer(7)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jCheckBox1-1-1", 7); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-1-1", 11); // parentId-compId-dimension-compAlignment
         contInterior.put("Form", new Rectangle(0, 0, 218, 300));
         compBounds.put("jLabel1", new Rectangle(10, 14, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jTextField1", new Rectangle(48, 11, 160, 20));
-        baselinePosition.put("jTextField1-160-20", new Integer(14));
+        baselinePosition.put("jTextField1-160-20", 14);
         compBounds.put("jToggleButton1", new Rectangle(10, 42, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(121, 43, 87, 20));
-        baselinePosition.put("jTextField2-87-20", new Integer(14));
+        baselinePosition.put("jTextField2-87-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 71, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jButton1", new Rectangle(93, 71, 115, 23));
-        baselinePosition.put("jButton1-115-23", new Integer(15));
+        baselinePosition.put("jButton1-115-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }
@@ -127,11 +127,11 @@ public class ALT_SizeDefinition03Test extends LayoutTestCase {
      */
     public void doChanges1() {
         // > START RESIZING
-        baselinePosition.put("Form-218-300", new Integer(-1));
+        baselinePosition.put("Form-218-300", -1);
         compMinSize.put("Form", new Dimension(218, 105));
-        prefPaddingInParent.put("Form-jTextField1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jTextField2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jTextField1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jTextField2-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
         // parentId-compId-dimension-compAlignment
         // parentId-compId-dimension-compAlignment
         {
@@ -170,22 +170,22 @@ public class ALT_SizeDefinition03Test extends LayoutTestCase {
         // > END MOVING
         contInterior.put("Form", new Rectangle(0, 0, 290, 300));
         compBounds.put("jLabel1", new Rectangle(10, 14, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jTextField1", new Rectangle(48, 11, 232, 20));
-        baselinePosition.put("jTextField1-232-20", new Integer(14));
+        baselinePosition.put("jTextField1-232-20", 14);
         compBounds.put("jToggleButton1", new Rectangle(10, 42, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(121, 43, 159, 20));
-        baselinePosition.put("jTextField2-159-20", new Integer(14));
+        baselinePosition.put("jTextField2-159-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 71, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jButton1", new Rectangle(93, 71, 187, 23));
-        baselinePosition.put("jButton1-187-23", new Integer(15));
+        baselinePosition.put("jButton1-187-23", 15);
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         compPrefSize.put("jTextField2", new Dimension(59, 20));
         compPrefSize.put("jButton1", new Dimension(115, 23));
-        prefPaddingInParent.put("Form-jCheckBox1-1-1", new Integer(7)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jCheckBox1-1-1", 7); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-1-1", 11); // parentId-compId-dimension-compAlignment
         // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
         // < END MOVING
@@ -193,35 +193,35 @@ public class ALT_SizeDefinition03Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 290, 300));
         compBounds.put("jLabel1", new Rectangle(10, 14, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jTextField1", new Rectangle(48, 11, 232, 20));
-        baselinePosition.put("jTextField1-232-20", new Integer(14));
+        baselinePosition.put("jTextField1-232-20", 14);
         compBounds.put("jToggleButton1", new Rectangle(10, 42, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(121, 43, 159, 20));
-        baselinePosition.put("jTextField2-159-20", new Integer(14));
+        baselinePosition.put("jTextField2-159-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 71, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jButton1", new Rectangle(93, 71, 187, 23));
-        baselinePosition.put("jButton1-187-23", new Integer(15));
+        baselinePosition.put("jButton1-187-23", 15);
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         compPrefSize.put("jTextField2", new Dimension(59, 20));
         compPrefSize.put("jButton1", new Dimension(115, 23));
-        prefPaddingInParent.put("Form-jCheckBox1-1-1", new Integer(7)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jCheckBox1-1-1", 7); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-1-1", 11); // parentId-compId-dimension-compAlignment
         contInterior.put("Form", new Rectangle(0, 0, 290, 300));
         compBounds.put("jLabel1", new Rectangle(10, 14, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jTextField1", new Rectangle(48, 11, 232, 20));
-        baselinePosition.put("jTextField1-232-20", new Integer(14));
+        baselinePosition.put("jTextField1-232-20", 14);
         compBounds.put("jToggleButton1", new Rectangle(10, 42, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(121, 43, 159, 20));
-        baselinePosition.put("jTextField2-159-20", new Integer(14));
+        baselinePosition.put("jTextField2-159-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 71, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jButton1", new Rectangle(93, 71, 187, 23));
-        baselinePosition.put("jButton1-187-23", new Integer(15));
+        baselinePosition.put("jButton1-187-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }

@@ -237,7 +237,7 @@ public class PanelProjectLocationVisual extends SettingsPanel implements Documen
     }
 
     private String validFreeProjectName(final File parentFolder, final String formater, final int index) {
-        String name = MessageFormat.format(formater, new Object[] {new Integer (index)});                
+        String name = MessageFormat.format(formater, new Object[] {index});
         File file = new File(parentFolder, name);
         return file.exists() ? null : name;
     }

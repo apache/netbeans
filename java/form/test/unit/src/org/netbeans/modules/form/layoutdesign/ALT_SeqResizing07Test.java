@@ -48,21 +48,21 @@ public class ALT_SeqResizing07Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jTextField1", new Rectangle(0, 0, 400, 20));
-        baselinePosition.put("jTextField1-400-20", new Integer(14));
+        baselinePosition.put("jTextField1-400-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 22, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jCheckBox2", new Rectangle(10, 45, 81, 23));
-        baselinePosition.put("jCheckBox2-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox2-81-23", 15);
         compBounds.put("jScrollPane1", new Rectangle(10, 80, 35, 86));
-        baselinePosition.put("jScrollPane1-35-86", new Integer(0));
+        baselinePosition.put("jScrollPane1-35-86", 0);
         compBounds.put("jButton1", new Rectangle(78, 114, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jToggleButton1", new Rectangle(78, 143, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(78, 83, 59, 20));
-        baselinePosition.put("jTextField2-59-20", new Integer(14));
+        baselinePosition.put("jTextField2-59-20", 14);
         compBounds.put("jScrollPane2", new Rectangle(355, 116, 35, 50));
-        baselinePosition.put("jScrollPane2-35-50", new Integer(0));
+        baselinePosition.put("jScrollPane2-35-50", 0);
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         compPrefSize.put("jCheckBox1", new Dimension(81, 23));
         compPrefSize.put("jCheckBox2", new Dimension(81, 23));
@@ -73,25 +73,25 @@ public class ALT_SeqResizing07Test extends LayoutTestCase {
         compPrefSize.put("jScrollPane2", new Dimension(35, 130));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jTextField1", new Rectangle(0, 0, 400, 20));
-        baselinePosition.put("jTextField1-400-20", new Integer(14));
+        baselinePosition.put("jTextField1-400-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 22, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jCheckBox2", new Rectangle(10, 45, 81, 23));
-        baselinePosition.put("jCheckBox2-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox2-81-23", 15);
         compBounds.put("jScrollPane1", new Rectangle(10, 80, 35, 86));
-        baselinePosition.put("jScrollPane1-35-86", new Integer(0));
+        baselinePosition.put("jScrollPane1-35-86", 0);
         compBounds.put("jButton1", new Rectangle(78, 114, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jToggleButton1", new Rectangle(78, 143, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(78, 83, 59, 20));
-        baselinePosition.put("jTextField2-59-20", new Integer(14));
+        baselinePosition.put("jTextField2-59-20", 14);
         compBounds.put("jScrollPane2", new Rectangle(355, 116, 35, 50));
-        baselinePosition.put("jScrollPane2-35-50", new Integer(0));
+        baselinePosition.put("jScrollPane2-35-50", 0);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         // > START RESIZING
-        baselinePosition.put("jTextField2-59-20", new Integer(14));
+        baselinePosition.put("jTextField2-59-20", 14);
         compPrefSize.put("jTextField2", new Dimension(59, 20));
         {
             String[] compIds = new String[]{"jTextField2"};
@@ -127,8 +127,8 @@ public class ALT_SeqResizing07Test extends LayoutTestCase {
         }
         // < MOVE
         // > END MOVING
-        prefPadding.put("jTextField2-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jTextField2-jScrollPane2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jTextField2-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jTextField2-jScrollPane2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.endMoving(true);
         // < END MOVING
@@ -136,21 +136,21 @@ public class ALT_SeqResizing07Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jTextField1", new Rectangle(0, 0, 400, 20));
-        baselinePosition.put("jTextField1-400-20", new Integer(14));
+        baselinePosition.put("jTextField1-400-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 22, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jCheckBox2", new Rectangle(10, 45, 81, 23));
-        baselinePosition.put("jCheckBox2-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox2-81-23", 15);
         compBounds.put("jScrollPane1", new Rectangle(10, 80, 35, 86));
-        baselinePosition.put("jScrollPane1-35-86", new Integer(0));
+        baselinePosition.put("jScrollPane1-35-86", 0);
         compBounds.put("jButton1", new Rectangle(78, 114, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jToggleButton1", new Rectangle(78, 143, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(78, 83, 322, 20));
-        baselinePosition.put("jTextField2-322-20", new Integer(14));
+        baselinePosition.put("jTextField2-322-20", 14);
         compBounds.put("jScrollPane2", new Rectangle(355, 116, 35, 50));
-        baselinePosition.put("jScrollPane2-35-50", new Integer(0));
+        baselinePosition.put("jScrollPane2-35-50", 0);
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         compPrefSize.put("jCheckBox1", new Dimension(81, 23));
         compPrefSize.put("jCheckBox2", new Dimension(81, 23));
@@ -161,21 +161,21 @@ public class ALT_SeqResizing07Test extends LayoutTestCase {
         compPrefSize.put("jScrollPane2", new Dimension(35, 130));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jTextField1", new Rectangle(0, 0, 400, 20));
-        baselinePosition.put("jTextField1-400-20", new Integer(14));
+        baselinePosition.put("jTextField1-400-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 22, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jCheckBox2", new Rectangle(10, 45, 81, 23));
-        baselinePosition.put("jCheckBox2-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox2-81-23", 15);
         compBounds.put("jScrollPane1", new Rectangle(10, 80, 35, 86));
-        baselinePosition.put("jScrollPane1-35-86", new Integer(0));
+        baselinePosition.put("jScrollPane1-35-86", 0);
         compBounds.put("jButton1", new Rectangle(78, 114, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jToggleButton1", new Rectangle(78, 143, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(78, 83, 322, 20));
-        baselinePosition.put("jTextField2-322-20", new Integer(14));
+        baselinePosition.put("jTextField2-322-20", 14);
         compBounds.put("jScrollPane2", new Rectangle(355, 116, 35, 50));
-        baselinePosition.put("jScrollPane2-35-50", new Integer(0));
+        baselinePosition.put("jScrollPane2-35-50", 0);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }

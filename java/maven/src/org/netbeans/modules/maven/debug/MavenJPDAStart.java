@@ -205,7 +205,7 @@ public final class MavenJPDAStart {
         @Override
         public void propertyChange(PropertyChangeEvent e) {
             if (JPDADebugger.PROP_STATE.equals(e.getPropertyName())) {
-                int state = ((Integer) e.getNewValue()).intValue();
+                int state = (Integer) e.getNewValue();
                 if ( (state == JPDADebugger.STATE_DISCONNECTED) ||
                         (state == JPDADebugger.STATE_STOPPED)
                         ) {

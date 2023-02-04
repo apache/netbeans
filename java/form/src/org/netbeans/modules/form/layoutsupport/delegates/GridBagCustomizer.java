@@ -196,7 +196,7 @@ public final class GridBagCustomizer extends JPanel implements Customizer
 
         //designLayeredPane.setLayout(new BorderLayout());
 
-        //designLayeredPane.setLayer(designPanel, JLayeredPane.DEFAULT_LAYER.intValue());
+        //designLayeredPane.setLayer(designPanel, JLayeredPane.DEFAULT_LAYER);
         designLayeredPane.add(designPanel, JLayeredPane.DEFAULT_LAYER);
         designPanel.setBounds(20, 20, designPanel.getPreferredSize().width, designPanel.getPreferredSize().height);
         designLayeredPane.setOpaque(true);
@@ -221,16 +221,16 @@ public final class GridBagCustomizer extends JPanel implements Customizer
         java.util.List<GBComponentProxy> selected = containerProxy.getSelectedProxies();
         Iterator<GBComponentProxy> it = selected.iterator();
         while (it.hasNext())
-//            setProperty((GBComponentProxy)it.next(), DesignGridBagLayout.PROP_ANCHOR, new Integer(anchor));
-            setProperty(it.next(), "anchor", new Integer(anchor)); // NOI18N
+//            setProperty((GBComponentProxy)it.next(), DesignGridBagLayout.PROP_ANCHOR, anchor);
+            setProperty(it.next(), "anchor", anchor); // NOI18N
     }
 
     void setFill(int fill) {
         java.util.List<GBComponentProxy> selected = containerProxy.getSelectedProxies();
         Iterator<GBComponentProxy> it = selected.iterator();
         while (it.hasNext())
-//            setProperty((GBComponentProxy)it.next(), DesignGridBagLayout.PROP_FILL, new Integer(fill));
-            setProperty(it.next(), "fill", new Integer(fill)); // NOI18N
+//            setProperty((GBComponentProxy)it.next(), DesignGridBagLayout.PROP_FILL, fill);
+            setProperty(it.next(), "fill", fill); // NOI18N
     };
 
 
@@ -247,7 +247,7 @@ public final class GridBagCustomizer extends JPanel implements Customizer
             setProperty(p,
 //                        what == HORIZONTAL ? DesignGridBagLayout.PROP_IPADX : DesignGridBagLayout.PROP_IPADY ,
                         what == HORIZONTAL ? "ipadx" : "ipady" , // NOI18N
-                        new Integer(value));
+                        value);
         }
     }
 
@@ -306,7 +306,7 @@ public final class GridBagCustomizer extends JPanel implements Customizer
             setProperty(p,
 //                        what == HORIZONTAL ? DesignGridBagLayout.PROP_GRIDWIDTH : DesignGridBagLayout.PROP_GRIDHEIGHT ,
                         what == HORIZONTAL ? "gridwidth" : "gridheight" , // NOI18N
-                        new Integer(value));
+                        value);
         }
     }
 
@@ -806,10 +806,10 @@ public final class GridBagCustomizer extends JPanel implements Customizer
             if (dragLabel != null) {
 
                 if (!dragLabel.getLastIndex().equals(dragLabel.getOriginalIndex())) {
-//                    setProperty(this, DesignGridBagLayout.PROP_GRIDX, new Integer(dragLabel.getLastIndex().x));
-//                    setProperty(this, DesignGridBagLayout.PROP_GRIDY, new Integer(dragLabel.getLastIndex().y));
-                    setProperty(this, "gridx", new Integer(dragLabel.getLastIndex().x)); // NOI18N
-                    setProperty(this, "gridy", new Integer(dragLabel.getLastIndex().y)); // NOI18N
+//                    setProperty(this, DesignGridBagLayout.PROP_GRIDX, dragLabel.getLastIndex().x);
+//                    setProperty(this, DesignGridBagLayout.PROP_GRIDY, dragLabel.getLastIndex().y);
+                    setProperty(this, "gridx", dragLabel.getLastIndex().x); // NOI18N
+                    setProperty(this, "gridy", dragLabel.getLastIndex().y); // NOI18N
                 }
 
                 designLayeredPane.remove(dragLabel);
@@ -836,7 +836,7 @@ public final class GridBagCustomizer extends JPanel implements Customizer
                     dragLabel.setLastIndex(dragLabel.getIndex(evt.getPoint()));
                     dragLabel.setOriginalIndex(dragLabel.getIndex(evt.getPoint()));
 
-                    designLayeredPane.setLayer(dragLabel, JLayeredPane.DRAG_LAYER.intValue());
+                    designLayeredPane.setLayer(dragLabel, JLayeredPane.DRAG_LAYER);
                     designLayeredPane.add(dragLabel, BorderLayout.CENTER);
                     dragLabel.setBounds(evt.getPoint().x, evt.getPoint().y);
                     componentLabel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));

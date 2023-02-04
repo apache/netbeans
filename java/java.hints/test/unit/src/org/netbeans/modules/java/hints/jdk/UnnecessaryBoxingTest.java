@@ -77,7 +77,7 @@ public class UnnecessaryBoxingTest extends NbTestCase {
                 .input("package test;\n"
                 + "final class Test  {\n"
                 + "    public void test() {\n"
-                + "        String s = \"\" + Integer.valueOf(1);\n"
+                + "        String s = \"\" + 1;\n"
                 + "    }\n"
                 + "}", false)
                 .sourceLevel("1.5")
@@ -106,7 +106,7 @@ public class UnnecessaryBoxingTest extends NbTestCase {
                 + "    }\n"
                         
                 + "    public void test(boolean t) {\n"
-                + "        Long a = t ? new Integer(1) : l();\n"
+                + "        Long a = t ? 1 : l();\n"
                 + "    }\n"
                 + "}", false)
                 .sourceLevel("1.5").preference(UnnecessaryBoxing.PREFER_CAST_TO_BOXING, true)
@@ -121,7 +121,7 @@ public class UnnecessaryBoxingTest extends NbTestCase {
                 .input("package test;\n"
                 + "final class Test  {\n"
                 + "    public void test(boolean t) {\n"
-                + "        Long a = t ? new Integer(1) : Long.valueOf(5);\n"
+                + "        Long a = t ? 1 : Long.valueOf(5);\n"
                 + "    }\n"
                 + "}", false)
                 .sourceLevel("1.5").preference(UnnecessaryBoxing.PREFER_CAST_TO_BOXING, true)
@@ -133,7 +133,7 @@ public class UnnecessaryBoxingTest extends NbTestCase {
                 .assertOutput("package test;\n"
                 + "final class Test  {\n"
                 + "    public void test(boolean t) {\n"
-                + "        Long a = t ? new Integer(1) : (long) 5;\n"
+                + "        Long a = t ? 1 : (long) 5;\n"
                 + "    }\n"
                 + "}");
     }
@@ -158,7 +158,7 @@ public class UnnecessaryBoxingTest extends NbTestCase {
                 .input("package test;\n"
                 + "final class Test  {\n"
                 + "    public void test(boolean t) {\n"
-                + "        m(Integer.valueOf(1));\n"
+                + "        m(1);\n"
                 + "    }\n"
                 + "    \n"
                 + "    public void m(int a) {}\n"
@@ -202,7 +202,7 @@ public class UnnecessaryBoxingTest extends NbTestCase {
                 + "    public void test(boolean t) {\n"
                 + "    public void test() {\n" +
                   "        AbstractAction aa = new BeepAction();\n" +
-                  "        aa.putValue(Action.MNEMONIC_KEY, Integer.valueOf(0));\n" +
+                  "        aa.putValue(Action.MNEMONIC_KEY, 0);\n" +
                   "    }\n"
                 + "    }\n"
                 + "}", false)

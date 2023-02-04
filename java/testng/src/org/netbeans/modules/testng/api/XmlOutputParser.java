@@ -136,7 +136,7 @@ public final class XmlOutputParser extends DefaultHandler {
                 break;
             case STATE_CLASS:
                 if ("test-method".equals(qName)) { //NOI18N
-                    int duration = Integer.valueOf(attributes.getValue("duration-ms")); //NOI18N
+                    int duration = Integer.parseInt(attributes.getValue("duration-ms")); //NOI18N
                     testcase = createTestcaseReport(tcClassName, attributes.getValue("name"), duration); //NOI18N
                     suiteTime += duration;
                     testcase.setConfigMethod(Boolean.valueOf(attributes.getValue("is-config"))); //NOI18N

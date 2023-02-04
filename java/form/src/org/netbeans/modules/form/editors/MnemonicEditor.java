@@ -73,7 +73,7 @@ public class MnemonicEditor extends PropertyEditorSupport implements NamedProper
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
         if (text.length() < 1) {
-            setValue(new Integer(0));
+            setValue(0);
             return;
         }
         
@@ -117,7 +117,7 @@ public class MnemonicEditor extends PropertyEditorSupport implements NamedProper
         }
         
         try {
-            setValue(new Integer(text));
+            setValue(Integer.parseInt(text));
             return;            
         } catch (NumberFormatException e) {
             setValue(text);
@@ -138,13 +138,13 @@ public class MnemonicEditor extends PropertyEditorSupport implements NamedProper
             return;
         }
         if  (newValue instanceof Character) {
-            super.setValue(new Integer((int)(((Character)newValue).charValue())));
+            super.setValue((int)((Character) newValue));
             return;
         }
         if (newValue instanceof String) {
             String text = (String ) newValue;
             if (text.length() >= 1) {
-                super.setValue(new Integer((int)text.charAt(0)));
+                super.setValue((int)text.charAt(0));
                 return;
             }
         }

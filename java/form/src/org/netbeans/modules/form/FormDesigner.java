@@ -196,8 +196,8 @@ public class FormDesigner {
             }
         };
         layeredPane.setLayout(new OverlayLayout(layeredPane));
-        layeredPane.add(designPanel, Integer.valueOf(1000));
-        layeredPane.add(handleLayer, Integer.valueOf(1001));
+        layeredPane.add(designPanel, 1000);
+        layeredPane.add(handleLayer, 1001);
         canvasRoot = layeredPane;
 
 //        updateAssistant();
@@ -668,7 +668,7 @@ public class FormDesigner {
                         JLayeredPane oldPane = rootPane.getLayeredPane();
                         Component[] comps = oldPane.getComponents();
                         for (int i=0; i<comps.length; i++) {
-                            newPane.add(comps[i], Integer.valueOf(oldPane.getLayer(comps[i])));
+                            newPane.add(comps[i], oldPane.getLayer(comps[i]));
                         }
                         // Use our layered pane that knows about LAF switching
                         rootPane.setLayeredPane(newPane);
@@ -1992,7 +1992,7 @@ public class FormDesigner {
             textEditLayer = new InPlaceEditLayer();
             textEditLayer.setVisible(false);
             textEditLayer.addFinishListener(getFinnishListener());
-            layeredPane.add(textEditLayer, Integer.valueOf(2001));
+            layeredPane.add(textEditLayer, 2001);
         }
         return textEditLayer;
     }
@@ -2001,7 +2001,7 @@ public class FormDesigner {
         if(menuEditLayer == null) {
             menuEditLayer = new MenuEditLayer(this);
             menuEditLayer.setVisible(false);
-            layeredPane.add(menuEditLayer, Integer.valueOf(2000));
+            layeredPane.add(menuEditLayer, 2000);
         }
         return menuEditLayer;
     }
@@ -2172,7 +2172,7 @@ public class FormDesigner {
             if (comp1 == null || comp2 == null) { // not JComponents...
                 if (getLayoutDesigner().logTestCode()) {
                     getLayoutDesigner().testCode.add("  prefPadding.put(\"" + id +                  //NOI18N
-                "\", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType");       //NOI18N
+                "\", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType");       //NOI18N
                 }
                 return 10; // default distance between components (for non-JComponents)
             }
@@ -2231,7 +2231,7 @@ public class FormDesigner {
             if (comp == null) {
                 if (getLayoutDesigner().logTestCode()) {
                     getLayoutDesigner().testCode.add("  prefPaddingInParent.put(\"" + id +      //NOI18N
-                "\", new Integer(10)); // parentId-compId-dimension-compAlignment");    //NOI18N
+                "\", 10); // parentId-compId-dimension-compAlignment");    //NOI18N
                 }
                 return 10; // default distance from parent border (for non-JComponents)
             }

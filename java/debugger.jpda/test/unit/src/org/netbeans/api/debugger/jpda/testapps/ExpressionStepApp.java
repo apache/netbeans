@@ -61,7 +61,7 @@ public class ExpressionStepApp {
 
     private Integer m3(int x, int y) {
         int im3 = 30;
-        return new Integer(im3 + x + y);
+        return im3 + x + y;
     }
 
     static long x = 20L;

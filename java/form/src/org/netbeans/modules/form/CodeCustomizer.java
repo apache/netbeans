@@ -227,7 +227,7 @@ public class CodeCustomizer implements CustomCodeView.Listener {
             varProp.setValue(decl.local);
             int modif = decl.modifiers;
             if (modif < 0)
-                modif = (((Integer)modifProp.getValue()).intValue() & ~Modifier.FINAL)
+                modif = ((Integer) modifProp.getValue() & ~Modifier.FINAL)
                         | (modif & Modifier.FINAL);
             modifProp.setValue(modif);
         }

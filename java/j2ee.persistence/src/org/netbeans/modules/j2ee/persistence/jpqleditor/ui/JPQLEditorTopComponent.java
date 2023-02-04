@@ -104,7 +104,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
     private PUDataObject puObject;
     private HashMap<String, PersistenceUnit> puConfigMap = new HashMap<String, PersistenceUnit>();
     private static List<Integer> windowCounts = new ArrayList<Integer>();
-    private Integer thisWindowCount = new Integer(0);
+    private Integer thisWindowCount = 0;
     private JPQLEditorController controller = null;
     private ProgressHandle ph = null;
     private ProgressHandle ph2 = null;

@@ -120,7 +120,7 @@ public class JTableSelectionModelEditor extends EnumEditor implements FormCodeAw
         Object[] values = getEnumerationValues();
         Object value;
         Node node = attributes.getNamedItem(ATTR_SELECTION_MODE);
-        int selectionMode = Integer.valueOf(node.getNodeValue()).intValue();
+        int selectionMode = Integer.parseInt(node.getNodeValue());
         switch (selectionMode) {
             case ListSelectionModel.SINGLE_SELECTION: value = values[4]; break;
             case ListSelectionModel.SINGLE_INTERVAL_SELECTION: value = values[7]; break;

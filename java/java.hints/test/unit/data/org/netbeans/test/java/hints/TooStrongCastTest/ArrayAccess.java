@@ -7,7 +7,7 @@ package org.netbeans.test.java.hints.TooStrongCastTest;
 
 public class ArrayAccess {
     public void castInArrayAccess() throws Exception {
-        Integer idx = Integer.valueOf(10);
+        Integer idx = 10;
         Object[] ar = new Object[100];
         long idx2 = 10;
         

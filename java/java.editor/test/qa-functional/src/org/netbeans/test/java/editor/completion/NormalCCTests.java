@@ -42,7 +42,7 @@ public class NormalCCTests  extends CompletionTestPerformer{
     }
     
     public void testtypecastunsorted() throws Exception {
-        new CompletionTestCase(this).test(outputWriter, logWriter, "Object a = new Integer(1);((Integer) a.getClass()).", false, getDataDir(), "cp-prj-1", "org/netbeans/test/editor/completion/TestFile.java", 20);        
+        new CompletionTestCase(this).test(outputWriter, logWriter, "Object a = 1;((Integer) a.getClass()).", false, getDataDir(), "cp-prj-1", "org/netbeans/test/editor/completion/TestFile.java", 20);        
     }
     
     public void testarrayIIunsorted() throws Exception {

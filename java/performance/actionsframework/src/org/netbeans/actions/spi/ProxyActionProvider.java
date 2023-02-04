@@ -150,7 +150,7 @@ public abstract class ProxyActionProvider extends ActionProvider {
 //*************** Caching implementation for reverse lookups ******************
     
     private Object munge (String containerCtx, String action) {
-        return new Integer (containerCtx.hashCode() ^ action.hashCode());
+        return containerCtx.hashCode() ^ action.hashCode();
     }
     
     private ActionProvider findInCache (String containerCtx, String action) {

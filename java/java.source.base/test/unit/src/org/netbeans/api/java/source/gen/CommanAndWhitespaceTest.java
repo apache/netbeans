@@ -59,7 +59,7 @@ public class CommanAndWhitespaceTest extends GeneratorTestMDRCompat {
             "package hierbas.del.litoral;\n\n" +
             "public class Test {\n" +
             "    public void taragui() {\n" +
-            "        tests(Integer.MAX_VALUE, new Integer(1));\n" +
+            "        tests(Integer.MAX_VALUE, 1);\n" +
             "    }" +
             "    private void test(Integer i1, Integer i2) {}\n" +
             "}\n"
@@ -68,7 +68,7 @@ public class CommanAndWhitespaceTest extends GeneratorTestMDRCompat {
             "package hierbas.del.litoral;\n\n" +
             "public class Test {\n" +
             "    public void taragui() {\n" +
-            "        tests(Integer.MAX_VALUE, Integer.valueOf(1));\n" +
+            "        tests(Integer.MAX_VALUE, 1);\n" +
             "    }" +
             "    private void test(Integer i1, Integer i2) {}\n" +
             "}\n";

@@ -29,7 +29,7 @@ public class ThrowException {
     
     public static void main(String args[]) {
         Vector vector = new Vector();
-        vector.add(new Integer(1));
+        vector.add(1);
         
         try {
             vector.get(1);

@@ -48,30 +48,30 @@ public class ALT_Resizing09Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel2", new Rectangle(10, 40, 68, 14));
-        baselinePosition.put("jLabel2-68-14", new Integer(11));
+        baselinePosition.put("jLabel2-68-14", 11);
         compPrefSize.put("jLabel2", new Dimension(68, 14));
         compBounds.put("jLabel1", new Rectangle(10, 14, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compBounds.put("jTextField2", new Rectangle(82, 11, 90, 20));
-        baselinePosition.put("jTextField2-90-20", new Integer(14));
+        baselinePosition.put("jTextField2-90-20", 14);
         compPrefSize.put("jTextField2", new Dimension(59, 20));
         compBounds.put("jTextField1", new Rectangle(82, 37, 90, 20));
-        baselinePosition.put("jTextField1-90-20", new Integer(14));
+        baselinePosition.put("jTextField1-90-20", 14);
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel2", new Rectangle(10, 40, 68, 14));
-        baselinePosition.put("jLabel2-68-14", new Integer(11));
+        baselinePosition.put("jLabel2-68-14", 11);
         compBounds.put("jLabel1", new Rectangle(10, 14, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jTextField2", new Rectangle(82, 11, 90, 20));
-        baselinePosition.put("jTextField2-90-20", new Integer(14));
+        baselinePosition.put("jTextField2-90-20", 14);
         compBounds.put("jTextField1", new Rectangle(82, 37, 90, 20));
-        baselinePosition.put("jTextField1-90-20", new Integer(14));
+        baselinePosition.put("jTextField1-90-20", 14);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         // > START RESIZING
-        baselinePosition.put("jTextField2-90-20", new Integer(14));
+        baselinePosition.put("jTextField2-90-20", 14);
         compPrefSize.put("jTextField2", new Dimension(59, 20));
         {
             String[] compIds = new String[] {
@@ -89,7 +89,7 @@ public class ALT_Resizing09Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPadding.put("jLabel1-jTextField2-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jTextField2-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // > MOVE
         {
             Point p = new Point(52,20);
@@ -102,7 +102,7 @@ public class ALT_Resizing09Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPadding.put("jLabel1-jTextField2-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jTextField2-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // > MOVE
         {
             Point p = new Point(49,20);
@@ -122,26 +122,26 @@ public class ALT_Resizing09Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel2", new Rectangle(10, 40, 68, 14));
-        baselinePosition.put("jLabel2-68-14", new Integer(11));
+        baselinePosition.put("jLabel2-68-14", 11);
         compPrefSize.put("jLabel2", new Dimension(68, 14));
         compBounds.put("jLabel1", new Rectangle(10, 14, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compBounds.put("jTextField1", new Rectangle(82, 37, 90, 20));
-        baselinePosition.put("jTextField1-90-20", new Integer(14));
+        baselinePosition.put("jTextField1-90-20", 14);
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         compBounds.put("jTextField2", new Rectangle(48, 11, 124, 20));
-        baselinePosition.put("jTextField2-124-20", new Integer(14));
+        baselinePosition.put("jTextField2-124-20", 14);
         compPrefSize.put("jTextField2", new Dimension(59, 20));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel2", new Rectangle(10, 40, 68, 14));
-        baselinePosition.put("jLabel2-68-14", new Integer(11));
+        baselinePosition.put("jLabel2-68-14", 11);
         compBounds.put("jLabel1", new Rectangle(10, 14, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jTextField1", new Rectangle(82, 37, 90, 20));
-        baselinePosition.put("jTextField1-90-20", new Integer(14));
+        baselinePosition.put("jTextField1-90-20", 14);
         compBounds.put("jTextField2", new Rectangle(48, 11, 124, 20));
-        baselinePosition.put("jTextField2-124-20", new Integer(14));
+        baselinePosition.put("jTextField2-124-20", 14);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }

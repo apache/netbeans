@@ -35,8 +35,8 @@ public class ExceptionConstruct extends Benchmark {
 
     public ExceptionConstruct(String name) {
         super( name, new Integer[] {
-            new Integer(1), new Integer(5), new Integer(10),
-            new Integer(100), new Integer(1000 )
+            1, 5, 10,
+            100, 1000
         });
     }
 
@@ -52,7 +52,7 @@ public class ExceptionConstruct extends Benchmark {
      */
     public void testCreateObjectDeepInStack() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
     
         while( count-- > 0 ) {
             createObj( magnitude );
@@ -70,7 +70,7 @@ public class ExceptionConstruct extends Benchmark {
      */
     public void testCreateExceptionDeepInStack() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
     
         while( count-- > 0 ) {
             createExc( magnitude );
@@ -89,7 +89,7 @@ public class ExceptionConstruct extends Benchmark {
      */
     public void testThrowExceptionDeepInStack() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
     
         while( count-- > 0 ) {
             try {

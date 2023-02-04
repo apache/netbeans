@@ -86,7 +86,7 @@ public class JavaLineswitch extends ValueLogElement implements Comparable, Value
             value = val;
             identifier = identifier.substring(1);
         } else {
-            value = new Integer(intValue);
+            value = intValue;
         }
         name=identifier;
     }

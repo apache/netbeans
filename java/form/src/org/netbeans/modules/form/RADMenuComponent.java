@@ -41,14 +41,14 @@ public class RADMenuComponent extends RADMenuItemComponent implements ComponentC
     /** Initialization of supportedMenus map. */
     static {
         supportedMenus = new HashMap<Integer,Class[]>();
-        supportedMenus.put(Integer.valueOf(T_MENUBAR),
+        supportedMenus.put(T_MENUBAR,
                            new Class[] { Menu.class });
-        supportedMenus.put(Integer.valueOf(T_MENU),
+        supportedMenus.put(T_MENU,
                            new Class[] { MenuItem.class,
                                          CheckboxMenuItem.class,
                                          Menu.class,
                                          Separator.class });
-        supportedMenus.put(Integer.valueOf(T_POPUPMENU),
+        supportedMenus.put(T_POPUPMENU,
                            new Class[] { MenuItem.class,
                                          CheckboxMenuItem.class,
                                          Menu.class,
@@ -85,7 +85,7 @@ public class RADMenuComponent extends RADMenuItemComponent implements ComponentC
         if (isReadOnly())
             return RADComponent.NO_NEW_TYPES;
 
-        Class[] classes = supportedMenus.get(Integer.valueOf(getMenuItemType()));
+        Class[] classes = supportedMenus.get(getMenuItemType());
 
         if (classes == null)
             return RADComponent.NO_NEW_TYPES;
@@ -98,7 +98,7 @@ public class RADMenuComponent extends RADMenuItemComponent implements ComponentC
     }
 
     public boolean canAddItem(Class itemType) {
-        Class[] classes = supportedMenus.get(Integer.valueOf(getMenuItemType()));
+        Class[] classes = supportedMenus.get(getMenuItemType());
 
         if (classes != null)
             for (int i=0; i < classes.length; i++)

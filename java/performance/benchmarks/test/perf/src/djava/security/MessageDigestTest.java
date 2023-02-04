@@ -41,13 +41,13 @@ public class MessageDigestTest extends Benchmark {
     }
 
     public MessageDigestTest(String name) {
-        super(name, new Integer[] {new Integer(100), new Integer(1000), new Integer(10000)});
+        super(name, new Integer[] {100, 1000, 10000});
     }
     
     private byte[] buf;
     private MessageDigest dig;
     protected void setUp() throws Exception {
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
         buf = new byte[magnitude];
         for (int i = 0; i < magnitude; i++) {
             buf[i] = (byte)i;

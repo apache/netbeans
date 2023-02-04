@@ -120,7 +120,7 @@ public class ActionsTest extends DebuggerTestCase {
         new EventTool().waitNoEvent(1000); //because of issue 70731
         //main menu file actions
         //check debug file action
-        String debugActionName = Bundle.getStringTrimmed("org.netbeans.modules.debugger.ui.actions.Bundle", "LBL_DebugSingleAction_Name", new Object[]{new Integer(1), "MemoryView.java"});
+        String debugActionName = Bundle.getStringTrimmed("org.netbeans.modules.debugger.ui.actions.Bundle", "LBL_DebugSingleAction_Name", new Object[]{1, "MemoryView.java"});
         assertTrue(Utilities.runMenu + "|" + Utilities.runFileMenu + "|" + debugActionName + " is not enabled", Utilities.verifyMainMenu(Utilities.runMenu + "|" + debugActionName, true));
 
         //run to cursor

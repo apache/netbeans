@@ -1819,7 +1819,7 @@ public class IntroduceLocalExtensionTest extends RefactoringTestBase {
                 r[0].setWrap(wrap);
                 r[0].setReplace(replace);
                 r[0].setEquality(equality);
-                r[0].getContext().add(new Integer(1));
+                r[0].getContext().add(1);
             }
         }, true);
 
@@ -1869,7 +1869,7 @@ public class IntroduceLocalExtensionTest extends RefactoringTestBase {
                 r[0].setWrap(wrap);
                 r[0].setReplace(replace);
                 r[0].setEquality(equality);
-                r[0].getContext().add(new Integer(1));
+                r[0].getContext().add(1);
             }
         }, true);
 

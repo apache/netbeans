@@ -190,7 +190,7 @@ final class EclipseWizardIterator implements
         for (WizardDescriptor.Panel p : l) {
             JComponent comp = (JComponent)p.getComponent();
             comp.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX,  // NOI18N
-                    new Integer(index));
+                    index);
             index++;
             comp.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, getWizardPanelName(l));
         }

@@ -479,8 +479,8 @@ public class GroovyFormatter implements Formatter {
                 if (lineBegin != -1 || indentEmptyLines) {
                     // Don't do a hanging indent if we're already indenting beyond the parent level?
 
-                    indents.add(Integer.valueOf(indent));
-                    offsets.add(Integer.valueOf(offset));
+                    indents.add(indent);
+                    offsets.add(offset);
                 }
 
 

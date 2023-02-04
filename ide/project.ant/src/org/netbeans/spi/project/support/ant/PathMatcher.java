@@ -90,6 +90,9 @@ public final class PathMatcher {
     private final File base;
     private final Set<String> knownIncludes;
 
+    private static Pattern PATTERN_INCLUDES_FILTER_1 = Pattern.compile("/\\*\\*$");
+    private static Pattern PATTERN_PATH_FILTER_1 = Pattern.compile("/\\*\\*/|/\\*\\*|\\*\\*/|/\\*$|\\*|/|[^*/]+");
+
     /**
      * Create a path matching object.
      * It is faster to create one matcher and call {@link #matches} multiple times
@@ -128,7 +131,7 @@ public final class PathMatcher {
                 rx.append(".*"); // NOI18N
                 break;
             }
-            Matcher m = Pattern.compile("/\\*\\*/|/\\*\\*|\\*\\*/|/\\*$|\\*|/|[^*/]+").matcher(pattern); // NOI18N
+            Matcher m = PATTERN_PATH_FILTER_1.matcher(pattern); // NOI18N
             while (m.find()) {
                 String t = m.group();
                 if (t.equals("/**")) {
@@ -216,7 +219,8 @@ public final class PathMatcher {
         StringTokenizer patternstok = new StringTokenizer(includes, ", "); // NOI18N
         boolean search = false;
         while (patternstok.hasMoreTokens()) {
-            String pattern = patternstok.nextToken().replace('\\', '/').replaceFirst("/\\*\\*$", "/"); // NOI18N
+            Matcher m = PATTERN_INCLUDES_FILTER_1.matcher(patternstok.nextToken().replace('\\', '/'));
+            String pattern = m.replaceFirst("/"); // NOI18N
             if (pattern.equals("**")) { // NOI18N
                 roots.add(""); // NOI18N
             } else if (pattern.indexOf('*') == -1 && pattern.endsWith("/")) { // NOI18N

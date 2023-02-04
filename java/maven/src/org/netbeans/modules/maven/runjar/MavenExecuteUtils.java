@@ -91,6 +91,8 @@ public final class MavenExecuteUtils {
      * ID of the 'profile' action.
      */
     public static final String PROFILE_CMD = "profile"; // NOI18N
+
+    private static final Pattern PATTERN_MVN_GOAL_FILTER_1 = Pattern.compile("org\\.codehaus\\.mojo\\:exec-maven-plugin\\:(.)+\\:exec");
     
     /**
      * A helper that can update action mappings based on changes
@@ -324,7 +326,7 @@ public final class MavenExecuteUtils {
             Iterator it = map.getGoals().iterator();
             while (it.hasNext()) {
                 String goal = (String) it.next();
-                if (goal.matches("org\\.codehaus\\.mojo\\:exec-maven-plugin\\:(.)+\\:exec") //NOI18N
+                if (PATTERN_MVN_GOAL_FILTER_1.matcher(goal).matches() //NOI18N
                         || goal.indexOf("exec:exec") > -1) { //NOI18N
                     if (map.getProperties() != null) {
                         if (map.getProperties().containsKey("exec.args")) {

@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -51,6 +53,8 @@ public final class ModelRunConfig extends BeanRunConfig {
     public static final String EXEC_MERGED = "exec.args.merged";
     private static final String CP_PLACEHOLDER = "___CP___";
     private static final String EXEC_ARGS = MavenExecuteUtils.RUN_PARAMS;
+
+    private static final Pattern PATTERN_GOAL_EXEC_MAVEN_PLUGIN = Pattern.compile("org\\.codehaus\\.mojo\\:exec-maven-plugin\\:(.)+\\:exec");
     
     public ModelRunConfig(Project proj, NetbeansActionMapping mod, String actionName, FileObject selectedFile, Lookup lookup, boolean fallback) {
         model = mod;
@@ -109,7 +113,7 @@ public final class ModelRunConfig extends BeanRunConfig {
         }
         List<String> goals = model.getGoals();
         for (String goal : goals) {
-            if ( goal.matches("org\\.codehaus\\.mojo\\:exec-maven-plugin\\:(.)+\\:exec")) // NOI18N
+            if (PATTERN_GOAL_EXEC_MAVEN_PLUGIN.matcher(goal).matches()) // NOI18N
             {
                 NbMavenProjectImpl projectImpl = proj instanceof NbMavenProjectImpl ? (NbMavenProjectImpl)proj : proj.getLookup().lookup(NbMavenProjectImpl.class);
                 assert projectImpl != null : "Requires a maven project instance"; // NOI18N

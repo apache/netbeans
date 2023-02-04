@@ -25,6 +25,7 @@ import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 
 /**
  * This class verifies the given jar file (first command-line argument) wrt its
@@ -42,6 +43,9 @@ import java.util.jar.JarFile;
  
  */
 public class VerifyFile {
+
+    private static final Pattern PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z0-9_]+\\.)+[a-zA-Z][a-zA-Z0-9_]+");
+
     /**
      * The main method.
      *
@@ -97,8 +101,7 @@ public class VerifyFile {
         if (name.endsWith(".class")) { // NOI18N
             final String className = 
                     name.substring(0, name.length() - 6).replace('/', '.'); // NOMAGI
-            if (className.matches(
-                    "([a-zA-Z][a-zA-Z0-9_]+\\.)+[a-zA-Z][a-zA-Z0-9_]+")) { // NOI18N
+            if (PATTERN.matcher(className).matches()) { // NOI18N
                 return className;
             } else {
                 return null;

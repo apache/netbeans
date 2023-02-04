@@ -36,6 +36,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 import org.netbeans.ModuleInstaller;
 import org.netbeans.Util;
 import org.openide.filesystems.FileObject;
@@ -65,6 +67,8 @@ import org.xml.sax.XMLReader;
 public final class AutomaticDependencies {
     private static final Logger LOG = Logger.getLogger(AutomaticDependencies.class.getName());
     private static AutomaticDependencies INSTANCE;
+
+    private static final Pattern PATTERN_DEPENDENCY_NAME_FILTER_1 = Pattern.compile("^module ");
 
     private AutomaticDependencies() {}
     
@@ -322,7 +326,7 @@ public final class AutomaticDependencies {
         if (r.isModified()) {
             dependencies.clear();
             for (Dependency d : deps) {
-                dependencies.add(d.toString().replaceFirst("^module ", ""));
+                dependencies.add(PATTERN_DEPENDENCY_NAME_FILTER_1.matcher(d.toString()).replaceFirst(""));
             }
             return r.toString();
         } else {

@@ -34,6 +34,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -65,6 +66,9 @@ import org.openide.util.Utilities;
 @ActionRegistration(displayName = "#CTL_BuildInstallers", /* XXX might work to be context action on List<Project> */ lazy=false)
 @ActionReference(position = 400, path = "Projects/org-netbeans-modules-apisupport-project-suite-package/Actions")
 public final class BuildInstallersAction extends AbstractAction implements ContextAwareAction {
+
+    private static final Pattern PATTERN_APP_NAME_FILTER_1 = Pattern.compile("[0-9]+");
+    private static final Pattern PATTERN_TGT_FILTER_1 = Pattern.compile("^os-");
 
     public BuildInstallersAction() {
         putValue(NAME, NbBundle.getMessage(BuildInstallersAction.class, "CTL_BuildInstallers"));
@@ -212,7 +216,7 @@ public final class BuildInstallersAction extends AbstractAction implements Conte
                         Properties props = new Properties();
                         props.put("suite.location", suiteLocation.getAbsolutePath().replace("\\", "/"));
                         props.put("suite.nbi.product.uid",
-                                appName.replaceAll("[0-9]+", "").replace("_", "-").toLowerCase(Locale.ENGLISH));
+                                PATTERN_APP_NAME_FILTER_1.matcher(appName).replaceAll("").replace("_", "-").toLowerCase(Locale.ENGLISH));
 
 
                         props.put("nbi.stub.location", InstalledFileLocator.getDefault().locate(
@@ -253,7 +257,7 @@ public final class BuildInstallersAction extends AbstractAction implements Conte
                         }) {
                             if (prefs.getBoolean(k, false)) {
                                 installerConfDefined = true;
-                                platforms.add(k.replaceFirst("^os-", ""));
+                                platforms.add(PATTERN_TGT_FILTER_1.matcher(k).replaceFirst(""));
                             }
                         }
                         if (!installerConfDefined) {

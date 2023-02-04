@@ -33,6 +33,7 @@ import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.Action;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.openide.util.NbBundle;
@@ -46,6 +47,8 @@ public final class InputOutputCache {
     private static final Map<InputOutput, CachedInputOutput> AVAILABLE = new WeakHashMap<>();
 
     private static final Set<String> ACTIVE_DISPLAY_NAMES = new HashSet<String>();
+
+    private static final Pattern PATTERN_NAME_FILTER_1 = Pattern.compile("^(\\ #[0-9]+)?$");
 
     private InputOutputCache() {
         super();
@@ -171,7 +174,7 @@ public final class InputOutputCache {
         if (!toMatch.startsWith(base)) {
             return false;
         }
-        return toMatch.substring(base.length()).matches("^(\\ #[0-9]+)?$"); // NOI18N
+        return PATTERN_NAME_FILTER_1.matcher(toMatch.substring(base.length())).matches(); // NOI18N
     }
 
     @NbBundle.Messages({

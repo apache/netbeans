@@ -36,6 +36,8 @@ import org.w3c.dom.NodeList;
  */
 public class DOMCompare {
 
+    private static final Pattern PATTERN_WHITESPECE = Pattern.compile("^[ \t\r\n]+$");
+
     private DOMCompare() {
     }
 
@@ -173,6 +175,6 @@ public class DOMCompare {
     }
     
     private static boolean isWhitespace(String s) {
-        return Pattern.matches("^[ \t\r\n]+$", s);
+        return PATTERN_WHITESPECE.matcher(s).matches();
     }
 }

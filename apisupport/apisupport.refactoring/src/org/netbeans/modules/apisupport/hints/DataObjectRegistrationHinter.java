@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.source.GeneratorUtilities;
@@ -65,6 +66,9 @@ public class DataObjectRegistrationHinter implements Hinter {
     public static final String METHOD_DOPOOL_FACTORY = "method:org.openide.loaders.DataLoaderPool.factory";
     private static final String LOADERS_FOLDER = "Loaders/";
     private static final String FACTORIES_FOLDER = "Factories";
+
+    private static final Pattern PATTERN_ATTRIBUTES = Pattern.compile(
+            "mimeType|position|displayName|iconBase|dataObjectClass|instanceCreate|SystemFileSystem.localizingBundle");
 
     @Override
     public void process(final Context ctx) throws Exception {
@@ -231,7 +235,7 @@ public class DataObjectRegistrationHinter implements Hinter {
     private boolean checkAttributes(FileObject file, Context ctx) {
         boolean attributesCompatible = true;
         for (String attr : NbCollections.iterable(file.getAttributes())) {
-            if (!attr.matches("mimeType|position|displayName|iconBase|dataObjectClass|instanceCreate|SystemFileSystem.localizingBundle")) {
+            if (!PATTERN_ATTRIBUTES.matcher(attr).matches()) {
                 ctx.addHint(Severity.WARNING, DataObjectHinter_unrecognized_attr(attr));
                 attributesCompatible = false;
             }
@@ -406,7 +410,7 @@ public class DataObjectRegistrationHinter implements Hinter {
                     for (int i = 0; i < existanns.size(); i++) {
                         AnnotationTree ann = existanns.get(i);
                         Tree annotationType = ann.getAnnotationType();
-                        if (annotationType.toString().matches("ActionReferences")) {
+                        if (annotationType.toString().equals("ActionReferences")) {
                             existingActionReference = true;
                             List<? extends ExpressionTree> args = ann.getArguments();
                             AssignmentTree assign = (AssignmentTree) args.get(0);

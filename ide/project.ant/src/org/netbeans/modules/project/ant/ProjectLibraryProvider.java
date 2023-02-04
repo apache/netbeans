@@ -124,6 +124,8 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
     
     private volatile boolean listening = true;
     private final Map<ProjectLibraryArea,Reference<LP>> providers = new HashMap<ProjectLibraryArea,Reference<LP>>();
+
+    private static final Pattern PATTERN_HTTP_PROTOCOL = Pattern.compile("https?");
     
     /**
      * Default constructor for lookup.
@@ -648,7 +650,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
         }
         final Collection<String> result = new ArrayList<String>();
         for (int i=0; i< entries.length; i++) {
-            if (i < entries.length - 1 && entries[i].matches("https?")) {
+            if (i < entries.length - 1 && PATTERN_HTTP_PROTOCOL.matcher(entries[i]).matches()) {
                 // #212877: Definitions.getProperties already converted to \, so have entries=["http", "\\server\path\"]
                 String schemeSpecificPart = entries[i + 1].replace('\\', '/');
                 if (schemeSpecificPart.startsWith("//")) {

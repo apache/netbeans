@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -86,6 +87,8 @@ public final class DefaultProjectOperationsImplementation {
     private static final double NOTIFY_WORK = 0.1;
     private static final double FIND_PROJECT_WORK = 0.1;
     static final int    MAX_WORK = 100;
+
+    private static final Pattern PATTERN = Pattern.compile("(^\\s.*)|(.*\\s$)");
     
     private DefaultProjectOperationsImplementation() {
     }
@@ -778,7 +781,7 @@ public final class DefaultProjectOperationsImplementation {
     }
 
     private static boolean hasTrailingWhiteSpace(String s) {
-        return s.matches("(^\\s.*)|(.*\\s$)");                          //NOI18N
+        return PATTERN.matcher(s).matches();                          //NOI18N
     }
 
     private static String checkFileOrFolderName(File f) {

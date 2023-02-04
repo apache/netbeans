@@ -195,6 +195,8 @@ public class WindowsNativeUtils extends NativeUtils {
     /////////////////////////////////////////////////////////////////////////////////
     // Instance
     private File defaultApplicationsLocation;
+
+    private static final Pattern PATTERN_PATH_PARTS_FILTER_1 = Pattern.compile("[\\/:*\\?\"<>|]");
     
     // constructor //////////////////////////////////////////////////////////////////
     WindowsNativeUtils() {
@@ -349,7 +351,7 @@ public class WindowsNativeUtils extends NativeUtils {
         String[] parts = path.split("\\\\");
         
         for (int i = 1; i < parts.length; i++) {
-            if (Pattern.compile("[\\/:*\\?\"<>|]").matcher(parts[i]).find()) {
+            if (PATTERN_PATH_PARTS_FILTER_1.matcher(parts[i]).find()) {
                 return false;
             }
             if (parts[i].startsWith(" ") ||

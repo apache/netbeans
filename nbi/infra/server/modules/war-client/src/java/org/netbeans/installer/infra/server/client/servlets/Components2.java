@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,6 +41,9 @@ import org.netbeans.installer.product.components.Product;
 import org.netbeans.installer.utils.helper.Platform;
 
 public class Components2 extends HttpServlet {
+
+    private static final Pattern PATTERN_VERSION_FILTER_1 = Pattern.compile("\r\n|\r|\n");
+
     @EJB
     private Manager manager;
     
@@ -161,13 +165,13 @@ public class Components2 extends HttpServlet {
                         ((double) product.getDownloadSize()) / 1024. );
                 productUids.add(product.getUid());
                 productVersions.add(product.getVersion().toString());
-                productDisplayNames.add(product.getDisplayName().replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
-                productDescriptions.add(product.getDescription().replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
+                productDisplayNames.add(PATTERN_VERSION_FILTER_1.matcher(product.getDisplayName().replace("\"", "\\\"")).replaceAll("\\\n"));
+                productDescriptions.add(PATTERN_VERSION_FILTER_1.matcher(product.getDescription().replace("\"", "\\\"")).replaceAll("\\\n"));
                 productDownloadSizes.add(Long.toString(size));
                 productPlatforms.add(product.getPlatforms());
                 
                 if (notes.get(product.getUid()) != null) {
-                    productNotes.add(notes.get(product.getUid()).replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
+                    productNotes.add(PATTERN_VERSION_FILTER_1.matcher(notes.get(product.getUid()).replace("\"", "\\\"")).replaceAll("\\\n"));
                 } else {
                     productNotes.add("");
                 }
@@ -270,8 +274,8 @@ public class Components2 extends HttpServlet {
                 }
                 
                 groupProducts.add(components);
-                groupDisplayNames.add(group.getDisplayName().replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
-                groupDescriptions.add(group.getDescription().replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
+                groupDisplayNames.add(PATTERN_VERSION_FILTER_1.matcher(group.getDisplayName().replace("\"", "\\\"")).replaceAll("\\\n"));
+                groupDescriptions.add(PATTERN_VERSION_FILTER_1.matcher(group.getDescription().replace("\"", "\\\"")).replaceAll("\\\n"));
             }
             
             if (defaultGroupProducts.size() > 0) {

@@ -29,6 +29,8 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.w3c.dom.Document;
@@ -41,6 +43,8 @@ import org.xml.sax.InputSource;
 public class ModuleTestDependencies extends Task {
 
     private File output;
+
+    private static final Pattern PATTERN_DEPENDENCIES_NAME_FILTER = Pattern.compile("^nb[.]cluster[.]");
 
     /**
      * Configures the output file.
@@ -90,7 +94,7 @@ public class ModuleTestDependencies extends Task {
                     allowed.add(myCluster);
                     allowed.add("harness");
                     for (String piece : clusterDeps.split(",")) {
-                        allowed.add(piece.replaceFirst("^nb[.]cluster[.]", ""));
+                        allowed.add(PATTERN_DEPENDENCIES_NAME_FILTER.matcher(piece).replaceFirst(""));
                     }
                     for (Element depGroup : XMLUtil.findSubElements(td)) {
                         String testType = ParseProjectXml.findTextOrNull(depGroup, "name");

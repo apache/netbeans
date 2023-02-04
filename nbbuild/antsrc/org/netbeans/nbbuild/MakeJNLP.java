@@ -31,8 +31,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
@@ -51,8 +49,6 @@ import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -89,6 +85,9 @@ public class MakeJNLP extends Task {
     private static final String ATTR_CODEBASE = "Codebase"; //NOI18N
     private static final String ATTR_PERMISSIONS = "Permissions";   //NOI18N
     private static final String ATTR_APPLICATION_NAME = "Application-Name"; //NOI18N
+
+    private static final Pattern PATTERN_JAR_NAME_FILTER_1 = Pattern.compile("^modules-");
+    private static final Pattern PATTERN_JAR_NAME_FILTER_2 = Pattern.compile("(\\.zip)?$");
 
     public FileSet createModules()
     throws BuildException {
@@ -823,8 +822,8 @@ public class MakeJNLP extends Task {
                 throw new BuildException("Cannot check signature on " + jar, x, getLocation());
             }
             // javaws will reject .zip files even with signatures.
-            String rel2 = rel.endsWith(".jar") ? rel : rel.replaceFirst("(\\.zip)?$", ".jar");
-            File ext = new File(new File(targetFile, dashcnb), rel2.replace('/', '-').replaceFirst("^modules-", ""));
+            String rel2 = rel.endsWith(".jar") ? rel : PATTERN_JAR_NAME_FILTER_2.matcher(rel).replaceFirst(".jar");
+            File ext = new File(new File(targetFile, dashcnb), PATTERN_JAR_NAME_FILTER_1.matcher(rel2.replace('/', '-')).replaceFirst(""));
             Zip jartask = (Zip) getProject().createTask("jar");
             jartask.setDestFile(ext);
             ZipFileSet zfs = new ZipFileSet();

@@ -81,6 +81,9 @@ final class BadgingSupport implements SynchronousStatus, FileChangeListener {
     static final RequestProcessor RP = new RequestProcessor(BadgingSupport.class.getName());
     private static final Logger LOG = Logger.getLogger(BadgingSupport.class.getName());
 
+    private static final Pattern PATTERN_JAR_FILTER_1 = Pattern.compile("(file:.+/)([^/]+)[.]jar");
+    private static final Pattern PATTERN_PATH_FILTER_1 = Pattern.compile("(Menu|Toolbars)/.+");
+
     /** for branding/localization like "_f4j_ce_ja"; never null, but may be "" */
     private String suffix = "";
     private final FileSystem fs;
@@ -189,7 +192,7 @@ final class BadgingSupport implements SynchronousStatus, FileChangeListener {
                         }
                         }
                         if (val != null) {
-                            if (fo.getPath().matches("(Menu|Toolbars)/.+")) { // NOI18N
+                            if (PATTERN_PATH_FILTER_1.matcher(fo.getPath()).matches()) { // NOI18N
                                 // Special-case these folders to trim the mnemonics, since they are ugly.
                                 return Actions.cutAmpersand(val);
                             } else {
@@ -438,7 +441,7 @@ final class BadgingSupport implements SynchronousStatus, FileChangeListener {
                 if (jar != null) {
                     List<URL> roots = new ArrayList<URL>();
                     roots.add(FileUtil.getArchiveRoot(jar));
-                    Matcher m = Pattern.compile("(file:.+/)([^/]+)[.]jar").matcher(jar.toString()); // NOI18N
+                    Matcher m = PATTERN_JAR_FILTER_1.matcher(jar.toString()); // NOI18N
                     if (m.matches()) {
                         try {
                             for (String suffix : NbCollections.iterable(NbBundle.getLocalizingSuffixes())) {

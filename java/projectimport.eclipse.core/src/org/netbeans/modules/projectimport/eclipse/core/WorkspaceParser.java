@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 import org.netbeans.modules.projectimport.eclipse.core.spi.LaunchConfiguration;
 import org.openide.util.Utilities;
 import org.openide.xml.XMLUtil;
@@ -67,6 +69,8 @@ final class WorkspaceParser {
     private static final String JSF_LIB_NS = "http://www.eclipse.org/webtools/jsf/schema/jsflibraryregistry.xsd"; // NOI18N
     
     private final Workspace workspace;
+
+    private static final Pattern PATTERN_LAUNCH_FILTER_1 = Pattern.compile("\\.launch$");
     
     /** Creates a new instance of WorkspaceParser */
     WorkspaceParser(Workspace workspace) {
@@ -317,7 +321,8 @@ final class WorkspaceParser {
                     Element stringAttribute = (Element) nl.item(i);
                     attrs.put(stringAttribute.getAttribute("key"), stringAttribute.getAttribute("value")); // NOI18N
                 }
-                configs.add(new LaunchConfiguration(launch.getName().replaceFirst("\\.launch$", ""), type, // NOI18N
+                configs.add(new LaunchConfiguration(
+                        PATTERN_LAUNCH_FILTER_1.matcher(launch.getName()).replaceFirst(""), type, // NOI18N
                         attrs.get("org.eclipse.jdt.launching.PROJECT_ATTR"), // NOI18N
                         attrs.get("org.eclipse.jdt.launching.MAIN_TYPE"), // NOI18N
                         attrs.get("org.eclipse.jdt.launching.PROGRAM_ARGUMENTS"), // NOI18N

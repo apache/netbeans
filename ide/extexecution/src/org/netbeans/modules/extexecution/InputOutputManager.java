@@ -29,6 +29,7 @@ import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.Action;
 import org.netbeans.spi.extexecution.open.OptionOpenHandler;
 import org.openide.util.Lookup;
@@ -39,6 +40,8 @@ import org.openide.windows.InputOutput;
 public final class InputOutputManager {
 
     private static final Logger LOGGER = Logger.getLogger(InputOutputManager.class.getName());
+
+    private static final Pattern PATTERN_NAME_FILTER_1 = Pattern.compile("^(\\ #[0-9]+)?$");
 
     /**
      * All tabs which were used for some process which has now ended.
@@ -197,7 +200,7 @@ public final class InputOutputManager {
         if (!toMatch.startsWith(base)) {
             return false;
         }
-        return toMatch.substring(base.length()).matches("^(\\ #[0-9]+)?$"); // NOI18N
+        return PATTERN_NAME_FILTER_1.matcher(toMatch.substring(base.length())).matches(); // NOI18N
     }
 
     private static String getNonActiveDisplayName(String displayNameBase) {

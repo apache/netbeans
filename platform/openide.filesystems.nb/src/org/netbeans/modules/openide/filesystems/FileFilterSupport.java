@@ -41,6 +41,8 @@ import org.openide.filesystems.FileUtil;
  */
 public final class FileFilterSupport {
 
+    private static final Pattern PATTERN_FILE_NAME_FILTER_1 = Pattern.compile("\\[([^,]+), (true|false), (true|false)\\](\\S*)");     //NOI18N
+
     /**
      * The logger.
      */
@@ -196,9 +198,7 @@ public final class FileFilterSupport {
     }
 
     private static void addNameToList(List<FilterElement> list, String name) {
-        Pattern p = Pattern.compile(
-                "\\[([^,]+), (true|false), (true|false)\\](\\S*)");     //NOI18N
-        Matcher m = p.matcher(name);
+        Matcher m = PATTERN_FILE_NAME_FILTER_1.matcher(name);
         if (m.find()) {
             String fileName = m.group(1);
             boolean substring = m.group(2).equals("true");              //NOI18N

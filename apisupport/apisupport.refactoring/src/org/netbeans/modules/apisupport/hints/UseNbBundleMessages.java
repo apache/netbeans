@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -76,6 +77,8 @@ import org.netbeans.spi.java.hints.TriggerTreeKind;
     "UseNbBundleMessages.description=Use @NbBundle.Messages in preference to Bundle.properties plus NbBundle.getMessage(...)."
 })
 public class UseNbBundleMessages {
+
+    private static final Pattern PATTERN_ANNOTATION_TYPE_FILTER_1 = Pattern.compile("((org[.]openide[.]util[.])?NbBundle[.])?Messages");
 
     // XXX rewrite METHOD_INVOCATION branch to use @TriggerPattern
     @TriggerTreeKind({Kind.METHOD_INVOCATION, Kind.ASSIGNMENT})
@@ -361,7 +364,7 @@ public class UseNbBundleMessages {
         if (modifiers != null) {
             for (AnnotationTree ann : modifiers.getAnnotations()) {
                 Tree annotationType = ann.getAnnotationType();
-                if (annotationType.toString().matches("((org[.]openide[.]util[.])?NbBundle[.])?Messages")) { // XXX see above
+                if (PATTERN_ANNOTATION_TYPE_FILTER_1.matcher(annotationType.toString()).matches()) { // XXX see above
                     List<? extends ExpressionTree> args = ann.getArguments();
                     if (args.size() != 1) {
                         continue; // ?

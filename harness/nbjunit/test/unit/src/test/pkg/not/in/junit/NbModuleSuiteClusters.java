@@ -20,9 +20,14 @@
 package test.pkg.not.in.junit;
 
 import java.io.File;
+import java.util.regex.Pattern;
+
 import junit.framework.TestCase;
 
 public class NbModuleSuiteClusters extends TestCase {
+
+    private static final Pattern PATTERN_DIR_NAME_FILTER_1 = Pattern.compile(".*/");
+    private static final Pattern PATTERN_DIR_NAME_FILTER_2 = Pattern.compile("platform|harness|extra");
 
     public NbModuleSuiteClusters(String t) {
         super(t);
@@ -35,8 +40,8 @@ public class NbModuleSuiteClusters extends TestCase {
         StringBuilder sb = new StringBuilder();
         String sep = "";
         for (String d : dirs.replace(File.separatorChar, '/').split(File.pathSeparator)) {
-            String sd = d.replaceFirst(".*/", "");
-            if (sd.matches("platform|harness|extra")) { // extra for libs.junit4
+            String sd = PATTERN_DIR_NAME_FILTER_1.matcher(d).replaceFirst("");
+            if (PATTERN_DIR_NAME_FILTER_2.matcher(sd).matches()) { // extra for libs.junit4
                 continue;
             }
             sb.append(sep).append(sd);

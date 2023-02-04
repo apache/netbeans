@@ -63,6 +63,8 @@ public class AndroidPlatform implements MobilePlatform {
     
     public static int DEFAULT_TIMEOUT = 30000;
 
+    private static final Pattern PATTERN_COLUMN_FILTER_1 = Pattern.compile("(\\S+)(\\s+)(\\S+)(\\s+)(.+)");
+
     private final transient java.beans.PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
     
     public AndroidPlatform() {
@@ -348,8 +350,7 @@ public class AndroidPlatform implements MobilePlatform {
             String line;
             while ((line = r.readLine()) != null) {
                 if (line.trim().endsWith(appName)) {
-                    Pattern column = Pattern.compile("(\\S+)(\\s+)(\\S+)(\\s+)(.+)");
-                    Matcher matcher = column.matcher(line);
+                    Matcher matcher = PATTERN_COLUMN_FILTER_1.matcher(line);
                     if (matcher.matches()) {
                         return matcher.group(3);
                     }

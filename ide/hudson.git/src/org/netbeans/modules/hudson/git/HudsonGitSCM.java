@@ -45,7 +45,6 @@ import static org.netbeans.modules.hudson.git.Bundle.*;
 import org.netbeans.modules.hudson.ui.api.HudsonSCMHelper;
 import org.netbeans.modules.hudson.spi.HudsonJobChangeItem;
 import org.netbeans.modules.hudson.spi.HudsonSCM;
-import org.netbeans.modules.hudson.spi.HudsonSCM.ConfigurationStatus;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.OutputListener;
@@ -58,6 +57,8 @@ import org.w3c.dom.NodeList;
 public class HudsonGitSCM implements HudsonSCM {
 
     private static final Logger LOG = Logger.getLogger(HudsonGitSCM.class.getName());
+
+    private static final Pattern PATTERN_XML_LOG_GIT_FILTER_1 = Pattern.compile("[0-9a-f]{40}");
 
     @Messages({
         "# {0} - original URL", "# {1} - replacement URL", "ro_replacement=Replacing {0} with {1} in Hudson configuration.",
@@ -165,7 +166,7 @@ public class HudsonGitSCM implements HudsonSCM {
     private boolean looksLikeGitChangeLog(Element itemXML) {
         Element idE = XMLUtil.findElement(itemXML, "id", null);         //NOI18N
         return idE != null
-                && XMLUtil.findText(idE).matches("[0-9a-f]{40}");       //NOI18N
+               && PATTERN_XML_LOG_GIT_FILTER_1.matcher(XMLUtil.findText(idE)).matches();       //NOI18N
     }
 
     static @CheckForNull URI getRemoteOrigin(URI repository, @NullAllowed HudsonJob job) {

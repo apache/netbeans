@@ -634,19 +634,13 @@ public class Patch extends Reader {
     }
     
     private static Difference[] parseNormalDiff(Reader in) throws IOException {
-        Pattern normRegexp;
-        try {
-            normRegexp = Pattern.compile(CmdlineDiffProvider.DIFF_REGEXP);
-        } catch (PatternSyntaxException rsex) {
-            normRegexp = null;
-        }
         StringBuffer firstText = new StringBuffer();
         StringBuffer secondText = new StringBuffer();
         BufferedReader br = new BufferedReader(in);
         List<Difference> diffs = new ArrayList<Difference>();
         String line;
         while ((line = br.readLine()) != null) {
-            CmdlineDiffProvider.outputLine(line, normRegexp, diffs, firstText, secondText);
+            CmdlineDiffProvider.outputLine(line, CmdlineDiffProvider.PATTERN_DIFF_FILTER_1, diffs, firstText, secondText);
         }
         CmdlineDiffProvider.setTextOnLastDifference(diffs, firstText, secondText);
         return diffs.toArray(new Difference[diffs.size()]);
@@ -664,7 +658,7 @@ public class Patch extends Reader {
         private int buffLength = 0;
         private int buffPos = 0;
         private boolean isAtEndOfPatch = false;
-        
+
         public SinglePatchReader(Reader in) {
             this.in = new PushbackReader(in, BUFF_SIZE);
         }
@@ -741,13 +735,8 @@ public class Patch extends Reader {
             PushbackReader patchSource = in;
             char[] buff = new char[DIFFERENCE_DELIMETER.length()];
             int length;
-            Pattern normRegexp;
             boolean contextBeginDetected = false;
-            try {
-                normRegexp = Pattern.compile(CmdlineDiffProvider.DIFF_REGEXP);
-            } catch (PatternSyntaxException rsex) {
-                normRegexp = null;
-            }
+
             while ((length = patchSource.read(buff)) > 0) {
                 String input = new String(buff, 0, length);
                 int nl;
@@ -817,7 +806,7 @@ public class Patch extends Reader {
                         }
                     }
                     fileName[0] = name.toString();
-                } else if (normRegexp != null && normRegexp.matcher(input).matches()) {
+                } else if (CmdlineDiffProvider.PATTERN_DIFF_FILTER_1.matcher(input).matches()) {
                     diffType[0] = NORMAL_DIFF;
                     patchSource.unread(buff, 0, length);
                     return true;

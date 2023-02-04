@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.SwingUtilities;
 import org.netbeans.modules.glassfish.tooling.GlassFishIdeException;
 import org.netbeans.modules.glassfish.tooling.GlassFishStatus;
@@ -84,6 +85,8 @@ public class StartTask extends BasicTask<TaskState> {
 
     private static RequestProcessor NODE_REFRESHER
             = new RequestProcessor("nodes to refresh");
+
+    private static Pattern PATTEN_MSG_FILTER_1 = Pattern.compile("[sg]et\\?.*\\=configs\\..*");
 
     ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
@@ -310,7 +313,7 @@ public class StartTask extends BasicTask<TaskState> {
                             //support.refresh();
                         } else if (args != null && newState == TaskState.COMPLETED) {
                             for (String message : args) {
-                                if (message.matches("[sg]et\\?.*\\=configs\\..*")) {
+                                if (PATTEN_MSG_FILTER_1.matcher(message).matches()) {
                                     return;
                                 }
                             }

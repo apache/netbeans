@@ -70,6 +70,13 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class LayerIndex extends Task {
 
+    private static final Pattern PATTERN_SHORT_PATH_FILTER_1 = Pattern.compile("(^|/)org-netbeans-");
+    private static final Pattern PATTERN_SHORT_PATH_FILTER_2 = Pattern.compile("(^|/)org-openide-");
+    private static final Pattern PATTERN_SHORT_PATH_FILTER_3 = Pattern.compile("-modules-");
+    private static final Pattern PATTERN_SHORT_PATH_FILTER_4 = Pattern.compile("(^|/)org\\.netbeans\\.");
+    private static final Pattern PATTERN_SHORT_PATH_FILTER_5 = Pattern.compile("(^|/)org\\.openide\\.");
+    private static final Pattern PATTERN_SHORT_PATH_FILTER_6 = Pattern.compile("\\.modules\\.");
+
     public LayerIndex() {}
 
     List<FileSet> filesets = new ArrayList<>();
@@ -185,8 +192,11 @@ public class LayerIndex extends Task {
     }
 
     private String shortenPath(String path) {
-        return path.replaceAll("(^|/)org-netbeans-", "$1o-n-").replaceAll("(^|/)org-openide-", "$1o-o-").replaceAll("-modules-", "-m-")
-                .replaceAll("(^|/)org\\.netbeans\\.", "$1o.n.").replaceAll("(^|/)org\\.openide\\.", "$1o.o.").replaceAll("\\.modules\\.", ".m.");
+        String s1 = PATTERN_SHORT_PATH_FILTER_1.matcher(path).replaceAll("$1o-o-");
+        String s2 = PATTERN_SHORT_PATH_FILTER_2.matcher(s1).replaceAll("-m-");
+        String s3 = PATTERN_SHORT_PATH_FILTER_3.matcher(s2).replaceAll("$1o.n.");
+        String s4 = PATTERN_SHORT_PATH_FILTER_4.matcher(s3).replaceAll("$1o.o.");
+        return PATTERN_SHORT_PATH_FILTER_5.matcher(s4).replaceAll(".m.");
     }
 
     private void parse(InputStream is, final Map<String,String> files, final SortedMap<String,SortedMap<String,String>> labels,

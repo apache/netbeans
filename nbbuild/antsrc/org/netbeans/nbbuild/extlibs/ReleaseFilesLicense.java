@@ -50,6 +50,10 @@ import org.apache.tools.ant.Task;
  */
 public class ReleaseFilesLicense extends Task {
 
+    private static final Pattern PATTERN_LICENSE_FILTER_1 = Pattern.compile("-license\\.txt$");
+    private static final Pattern PATTERN_LICENSE_FILTER_2 = Pattern.compile("Files: (.+)");
+    private static final Pattern PATTERN_LICENSE_FILTER_3 = Pattern.compile("[, ]+");
+
     private File license;
     public void setLicense(File license) {
         this.license = license;
@@ -105,17 +109,17 @@ public class ReleaseFilesLicense extends Task {
                             }
                             try (InputStream is = new FileInputStream(possibleLicense)) {
                                 BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                                String files = possibleLicense.getName().replaceFirst("-license\\.txt$", ".jar") +
-                                        " " + possibleLicense.getName().replaceFirst("-license\\.txt$", ".zip");
+                                String files = PATTERN_LICENSE_FILTER_1.matcher(possibleLicense.getName()).replaceFirst(".jar") +
+                                        " " + PATTERN_LICENSE_FILTER_1.matcher(possibleLicense.getName()).replaceFirst(".zip");
                                 String line;
                                 while ((line = r.readLine()) != null && line.length() > 0) {
-                                    Matcher m = Pattern.compile("Files: (.+)").matcher(line);
+                                    Matcher m = PATTERN_LICENSE_FILTER_2.matcher(line);
                                     if (m.matches()) {
                                         files = m.group(1);
                                         break;
                                     }
                                 }
-                                if (Arrays.asList(files.split("[, ]+")).contains(binary)) {
+                                if (Arrays.asList(PATTERN_LICENSE_FILTER_3.split(files)).contains(binary)) {
                                     Set<String> binaries = inferredLicenses.get(possibleLicense);
                                     if (binaries == null) {
                                         binaries = new TreeSet<>();

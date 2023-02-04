@@ -28,6 +28,8 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.ProjectManager;
@@ -57,6 +59,8 @@ public final class ModuleProjectClassPathExtender extends ProjectClassPathModifi
 
     private final NbModuleProject project;
 
+    private static final Pattern PATTERN_LIB_NAME_FILTER = Pattern.compile("junit(_4)?");
+
     public ModuleProjectClassPathExtender(NbModuleProject project) {
         this.project = project;
     }
@@ -80,7 +84,7 @@ public final class ModuleProjectClassPathExtender extends ProjectClassPathModifi
     protected boolean addLibraries(Library[] libraries, SourceGroup sourceGroup, String type) throws IOException, UnsupportedOperationException {
         boolean cpChanged = false;
         for (Library library : libraries) {
-            if (library.getName().matches("junit(_4)?")) {
+            if (PATTERN_LIB_NAME_FILTER.matcher(library.getName()).matches()) {
                 ModuleEntry entry = project.getModuleList().getEntry("org.netbeans.libs.junit4");
                 if (entry != null) {
                     ProjectXMLManager pxm = new ProjectXMLManager(project);

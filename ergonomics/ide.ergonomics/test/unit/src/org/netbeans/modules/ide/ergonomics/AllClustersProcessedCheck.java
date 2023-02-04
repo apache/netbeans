@@ -22,6 +22,8 @@ package org.netbeans.modules.ide.ergonomics;
 import java.io.File;
 import java.net.URL;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
+
 import org.netbeans.junit.Log;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.ide.ergonomics.fod.FeatureManager;
@@ -31,6 +33,9 @@ import org.netbeans.modules.ide.ergonomics.fod.FeatureManager;
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
 public class AllClustersProcessedCheck extends NbTestCase {
+
+    private static final Pattern PATTERN_FILE_NAME_FILTER_1 = Pattern.compile("[\\.0-9]+$");
+
     public AllClustersProcessedCheck(String n) {
         super(n);
     }
@@ -43,7 +48,7 @@ public class AllClustersProcessedCheck extends NbTestCase {
 
         StringBuilder sb = new StringBuilder();
         for (String c : clusters.split(File.pathSeparator)) {
-            String n = new File(c).getName().replaceFirst("[\\.0-9]+$", "");
+            String n = PATTERN_FILE_NAME_FILTER_1.matcher(new File(c).getName()).replaceFirst("");
             if (n.equals("platform")) {
                 continue;
             }

@@ -26,6 +26,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.regex.Pattern;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -34,6 +36,10 @@ import org.apache.tools.ant.Task;
  * Issue #141817: remove external.py registration.
  */
 public class DeregisterExternalHook extends Task {
+
+    private static final Pattern PATTERN_CONFIG_FILTER_1 = Pattern.compile("(?m)^external *=.+\r?\n");
+    private static final Pattern PATTERN_CONFIG_FILTER_2 = Pattern.compile("(?m)^\\*/external/\\*\\.\\{zip,jar,gz,bz2,gem,dll\\} = (up|down)load:.+\r?\n");
+    private static final Pattern PATTERN_CONFIG_FILTER_3 = Pattern.compile("(^|\r?\n)(\r?\n)*(\\[(extensions|encode|decode)\\](\r?\n)+)+(?=\\[|$)");
 
     private File root;
     /** Location of NB source root. */
@@ -67,11 +73,12 @@ public class DeregisterExternalHook extends Task {
                     }
                 }
                 String config = baos.toString();
-                String newConfig = config.
-                        replaceAll("(?m)^external *=.+\r?\n", "").
-                        replaceAll("(?m)^\\*/external/\\*\\.\\{zip,jar,gz,bz2,gem,dll\\} = (up|down)load:.+\r?\n", "").
-                        replace("# To preauthenticate, use: https://jhacker:secret@hg.netbeans.org/binaries/upload", "").
-                        replaceAll("(^|\r?\n)(\r?\n)*(\\[(extensions|encode|decode)\\](\r?\n)+)+(?=\\[|$)", "$1");
+
+                String s1 = PATTERN_CONFIG_FILTER_1.matcher(config).replaceAll("");
+                String s2 = PATTERN_CONFIG_FILTER_2.matcher(s1).replaceAll("");
+                String s3 = s2.replace("# To preauthenticate, use: https://jhacker:secret@hg.netbeans.org/binaries/upload", "");
+                String newConfig = PATTERN_CONFIG_FILTER_3.matcher(s3).replaceAll("$1");
+
                 if (!newConfig.equals(config)) {
                     log("Unregistering external hook from " + hgrc);
                     try (OutputStream os = new FileOutputStream(hgrc)) {

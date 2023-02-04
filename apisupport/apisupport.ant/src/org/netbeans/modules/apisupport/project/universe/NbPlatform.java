@@ -88,6 +88,9 @@ public final class NbPlatform implements SourceRootsProvider, JavadocRootsProvid
     private final JavadocRootsSupport jrs;
 
     private static volatile boolean inited;
+
+    private static final Pattern PATTERN_DIR_NAME_FILTER_1 = Pattern.compile("platform\\d*");
+
     private static Map<String,String> initBuildProperties() {
         if (inited) {
             return null;
@@ -791,7 +794,7 @@ public final class NbPlatform implements SourceRootsProvider, JavadocRootsProvid
                 if (!subdirs[i].isDirectory()) {
                     continue;
                 }
-                if (!subdirs[i].getName().matches("platform\\d*")) { // NOI18N
+                if (!PATTERN_DIR_NAME_FILTER_1.matcher(subdirs[i].getName()).matches()) { // NOI18N
                     continue;
                 }
                 File coreJar = new File(subdirs[i], "core" + File.separatorChar + "core.jar"); // NOI18N

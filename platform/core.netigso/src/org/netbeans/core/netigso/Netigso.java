@@ -44,6 +44,9 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.netbeans.ArchiveResources;
 import org.netbeans.Module;
 import org.netbeans.Module.PackageExport;
@@ -90,6 +93,8 @@ implements Cloneable, Stamps.Updater {
     private NetigsoActivator activator;
     private Integer defaultStartLevel;
     private String defaultCoveredPkgs;
+
+    private static final Pattern PATTERN_URL_FILTER_1 = Pattern.compile("/[^/]*$");
     
     @Override
     protected NetigsoFramework clone() {
@@ -286,7 +291,8 @@ implements Cloneable, Stamps.Updater {
                                     pkgs.add(url.getFile().substring(9));
                                     continue;
                                 }
-                                pkgs.add(url.getFile().substring(1).replaceFirst("/[^/]*$", "").replace('/', '.'));
+                                Matcher mt = PATTERN_URL_FILTER_1.matcher(url.getFile().substring(1));
+                                pkgs.add(mt.replaceFirst("").replace('/', '.'));
                             }
                         }
                     }

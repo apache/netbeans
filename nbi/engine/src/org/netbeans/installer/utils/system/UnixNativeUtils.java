@@ -136,6 +136,10 @@ public class UnixNativeUtils extends NativeUtils {
     public static final String DEFAULT_XDG_DATA_DIRS =
             "/usr/share"; // NOI18N
 
+    private static final Pattern PATTERN_FILE_LINE_FILTER_1 = Pattern.compile("enabled=(.*)");
+    private static final Pattern PATTERN_FILE_LINE_FILTER_2 = Pattern.compile("filename_encoding=(.*)");
+    private static final Pattern PATTERN_FILE_LINE_FILTER_3 = Pattern.compile("^" + XDG_DESKTOP_DIR_ENV_VARIABLE + "=\"(.*)\"");
+
     public UnixNativeUtils() {
         initializeForbiddenFiles();
     }
@@ -437,7 +441,7 @@ public class UnixNativeUtils extends NativeUtils {
                         continue;
                     }
                     for (String s : FileUtils.readStringList(configFile)) {
-                        final Matcher matcher = Pattern.compile("enabled=(.*)").matcher(s);
+                        final Matcher matcher = PATTERN_FILE_LINE_FILTER_1.matcher(s);
                         if (matcher.find()) {
                             if (!Boolean.parseBoolean(matcher.group(1).toLowerCase(Locale.ENGLISH))) {
                                 LogManager.log("... XDG dirs are disabled");
@@ -458,7 +462,7 @@ public class UnixNativeUtils extends NativeUtils {
                             continue;
                         }
                         for (String s : FileUtils.readStringList(configFile)) {
-                            final Matcher matcher = Pattern.compile("filename_encoding=(.*)").matcher(s);
+                            final Matcher matcher = PATTERN_FILE_LINE_FILTER_2.matcher(s);
                             if (matcher.find()) {
                                 encoding = matcher.group(1);
                                 if (encoding.equals("locale")) {
@@ -479,7 +483,7 @@ public class UnixNativeUtils extends NativeUtils {
 
                     for (String s : content) {
                         LogManager.log("...... evaluating string : " + s);
-                        Matcher matcher = Pattern.compile("^" + XDG_DESKTOP_DIR_ENV_VARIABLE + "=\"(.*)\"").matcher(s);
+                        Matcher matcher = PATTERN_FILE_LINE_FILTER_3.matcher(s);
                         if (matcher.find()) {
                             LogManager.log("...... matches expected pattern");
                             final String value = matcher.group(1).replace("$HOME", userHome.getAbsolutePath());

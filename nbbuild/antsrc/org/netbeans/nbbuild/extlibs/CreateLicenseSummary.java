@@ -80,6 +80,10 @@ public class CreateLicenseSummary extends Task {
      */
     private static final Set<String> ALV2_LICENSES = new HashSet<>(Arrays.asList("Apache-2.0", "Apache-2.0-ASF"));
 
+    private static final Pattern PATTERN_LICENSE_LINE_FILTER_1 = Pattern.compile("([a-zA-Z]+): (.+)");
+    private static final Pattern PATTERN_LICENSE_LINE_FILTER_2 = Pattern.compile("[, ]+");
+    private static final Pattern PATTERN_LICENSE_LINE_FILTER_3 = Pattern.compile("-license\\.txt$");
+
     private File nball;
 
     public void setNball(File nball) {
@@ -567,7 +571,7 @@ public class CreateLicenseSummary extends Task {
                 BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 String line;
                 while ((line = r.readLine()) != null && line.length() > 0) {
-                    Matcher m = Pattern.compile("([a-zA-Z]+): (.+)").matcher(line);
+                    Matcher m = PATTERN_LICENSE_LINE_FILTER_1.matcher(line);
                     if (m.matches()) {
                         headers.put(m.group(1), m.group(2));
                     }
@@ -576,15 +580,15 @@ public class CreateLicenseSummary extends Task {
             }
             String files = headers.remove("Files");
             if (files != null) {
-                for (String file : files.split("[, ]+")) {
+                for (String file : PATTERN_LICENSE_LINE_FILTER_2.split(files)) {
                     binary2LicenseHeaders.put(file, headers);
                 }
             } else {
-                binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".jar"), headers);
-                binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".zip"), headers);
-                binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".xml"), headers);
-                binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".js"), headers);
-                binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".dylib"), headers);
+                binary2LicenseHeaders.put(PATTERN_LICENSE_LINE_FILTER_3.matcher(n).replaceFirst(".jar"), headers);
+                binary2LicenseHeaders.put(PATTERN_LICENSE_LINE_FILTER_3.matcher(n).replaceFirst(".zip"), headers);
+                binary2LicenseHeaders.put(PATTERN_LICENSE_LINE_FILTER_3.matcher(n).replaceFirst(".xml"), headers);
+                binary2LicenseHeaders.put(PATTERN_LICENSE_LINE_FILTER_3.matcher(n).replaceFirst(".js"), headers);
+                binary2LicenseHeaders.put(PATTERN_LICENSE_LINE_FILTER_3.matcher(n).replaceFirst(".dylib"), headers);
             }
             File notice = new File(d, n.replace("-license.txt", "-notice.txt"));
             if (notice.canRead()) {

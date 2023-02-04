@@ -27,6 +27,7 @@ import com.sun.source.tree.ModifiersTree;
 import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
@@ -45,6 +46,11 @@ import static org.netbeans.modules.apisupport.hints.Bundle.*;
 
 @ServiceProvider(service=Hinter.class)
 public class TemplateHinter implements Hinter {
+
+    private static final Pattern PATTERN_ATTR_FILTER_1 = Pattern.compile(
+            "instantiatingIterator|templateWizardIterator|template|displayName|iconBase|position|" +
+            "instantiatingWizardURL|templateWizardURL|templateCategory|javax[.]script[.]ScriptEngine"
+    );
 
     @Messages({
         "TemplateHinter_content_file=Replace with @TemplateRegistration",
@@ -81,7 +87,7 @@ public class TemplateHinter implements Hinter {
             }
         }
         for (String attr : NbCollections.iterable(file.getAttributes())) {
-            if (!attr.matches("instantiatingIterator|templateWizardIterator|template|displayName|iconBase|position|instantiatingWizardURL|templateWizardURL|templateCategory|javax[.]script[.]ScriptEngine")) {
+            if (!PATTERN_ATTR_FILTER_1.matcher(attr).matches()) {
                 ctx.addHint(Severity.WARNING, TemplateHinter_unrecognized_attr(attr));
                 return;
             }

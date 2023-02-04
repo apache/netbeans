@@ -90,6 +90,10 @@ import org.xml.sax.InputSource;
  */
 public class MakeOSGi extends Task {
 
+    private static final Pattern PATTERN_MODULE_FORMAT_FILTER_1 = Pattern.compile("org.openide.modules.ModuleFormat\\d+");
+    private static final Pattern PATTERN_PACKAGE_NAME_FILTER_1 = Pattern.compile(";.+");
+    private static final Pattern PATTERN_PATH_FILTER_1 = Pattern.compile("config/(Modules|ModuleAutoDeps)/.+[.]xml|lib/nbexec.*");
+
     private File destdir;
     private List<ResourceCollection> modules = new ArrayList<>();
     
@@ -254,7 +258,7 @@ public class MakeOSGi extends Task {
             if (exportPackage != null) {
                 // http://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
                 for (String piece : exportPackage.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)")) {
-                    info.exportedPackages.add(piece.trim().replaceFirst(";.+", ""));
+                    info.exportedPackages.add(PATTERN_PACKAGE_NAME_FILTER_1.matcher(piece.trim()).replaceFirst(""));
                 }
             }
         }
@@ -263,8 +267,11 @@ public class MakeOSGi extends Task {
 
     private File findDestFile(String bundleName, String bundleVersion) throws IOException {
         File destFile = new File(destdir, bundleName + (bundleVersion != null ? "-" + bundleVersion : "") + ".jar");
+
+        Pattern p = Pattern.compile("\\Q" + bundleName + "\\E(-.+)?[.]jar");
+
         for (File stale : destdir.listFiles()) {
-            if (stale.getName().matches("\\Q" + bundleName + "\\E(-.+)?[.]jar") && !stale.equals(destFile)) {
+            if (p.matcher(stale.getName()).matches() && !stale.equals(destFile)) {
                 log("Deleting copy under old name: " + stale);
                 if (!stale.delete()) {
                     throw new IOException("Could not delete: " + stale);
@@ -498,7 +505,7 @@ public class MakeOSGi extends Task {
         if (v != null) {
             StringBuilder b = null;
             for (String tok : v.split("[, ]+")) {
-                if (!tok.matches("org.openide.modules.ModuleFormat\\d+")) {
+                if (!PATTERN_MODULE_FORMAT_FILTER_1.matcher(tok).matches()) {
                     if (b == null) {
                         b = new StringBuilder(tok);
                     } else {
@@ -630,7 +637,7 @@ public class MakeOSGi extends Task {
                 NodeList nl = doc.getElementsByTagName("file");
                 for (int i = 0; i < nl.getLength(); i++) {
                     String path = ((Element) nl.item(i)).getAttribute("name");
-                    if (path.matches("config/(Modules|ModuleAutoDeps)/.+[.]xml|lib/nbexec.*")) {
+                    if (PATTERN_PATH_FILTER_1.matcher(path).matches()) {
                         continue;
                     }
                     File f = new File(cluster, path);

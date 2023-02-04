@@ -662,8 +662,11 @@ public class NbModuleSuite {
         final Configuration config;
         private static int invocations;
         private static File lastUserDir;
-        private int testCount = 0; 
-        
+        private int testCount = 0;
+
+        private static final Pattern PATTERN_JAR_ENTRY_FILTER_1 = Pattern.compile("META-INF/.+[.]SF");
+        private static final Pattern PATTERN_PLATFORM_FILTER_1 = Pattern.compile("platform\\d*");
+
         public S(Configuration config) {
             this.config = config.getReady();
         }
@@ -968,7 +971,7 @@ public class NbModuleSuite {
             if (clusterPath != null) {
                 for (String piece : tokenizePath(clusterPath)) {
                     File d = new File(piece);
-                    if (d.getName().matches("platform\\d*")) {
+                    if (PATTERN_PLATFORM_FILTER_1.matcher(d.getName()).matches()) {
                         return d;
                     }
                 }
@@ -1151,7 +1154,7 @@ public class NbModuleSuite {
                     JarOutputStream jos = new JarOutputStream(os, mani);
                     JarEntry entry;
                     while ((entry = jis.getNextJarEntry()) != null) {
-                        if (entry.getName().matches("META-INF/.+[.]SF")) {
+                        if (PATTERN_JAR_ENTRY_FILTER_1.matcher(entry.getName()).matches()) {
                             throw new IOException("cannot handle signed JARs");
                         }
                         jos.putNextEntry(entry);
@@ -1464,8 +1467,10 @@ public class NbModuleSuite {
                 String clusterReg = it.next();
                 String moduleReg = it.next();
                 Pattern modPattern = Pattern.compile(moduleReg);
+                Pattern p = Pattern.compile(clusterReg);
+
                 for (File c : clusterDirs) {
-                    if (!c.getName().matches(clusterReg)) {
+                    if (!p.matcher(c.getName()).matches()) {
                         continue;
                     }
 

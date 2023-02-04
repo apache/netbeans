@@ -40,7 +40,6 @@ import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
@@ -83,6 +82,8 @@ public class JDKProject implements Project {
     private final PropertyEvaluator evaluator;
             final MapPropertyProvider properties;
             final ProviderImpl configurations;
+
+    private static final Pattern PATTERN_MODULE_INFO_FILTER_1 = Pattern.compile(Pattern.quote("module-info.java"));
 
     public JDKProject(FileObject projectDir, @NullAllowed ModuleRepository moduleRepository, @NullAllowed ModuleDescription currentModule) {
         try {
@@ -187,7 +188,7 @@ public class JDKProject implements Project {
                         continue;
                     }
 
-                    newRoots.add(new Root(r.relPath, r.displayName, RootKind.MAIN_SOURCES, evaluator, Pattern.compile("module-info.java"), null));
+                    newRoots.add(new Root(r.relPath, r.displayName, RootKind.MAIN_SOURCES, evaluator, PATTERN_MODULE_INFO_FILTER_1, null));
 
                     for (String submodule : submodules) {
                         newRoots.add(new Root(r.relPath + submodule + "/src/", r.displayName + submodule + "/src/", RootKind.MAIN_SOURCES, evaluator, null));

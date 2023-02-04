@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.PackageElement;
@@ -59,6 +60,9 @@ import org.xml.sax.SAXException;
 
 @ServiceProvider(service=Processor.class)
 public class HelpSetRegistrationProcessor extends LayerGeneratingProcessor {
+
+    private static final Pattern PATTERN_PKG_FILTER_1 = Pattern.compile("/[^/]+$");
+    private static final Pattern PATTERN_FILE_FILTER_1 = Pattern.compile(".+[.]html?$");
 
     public @Override Set<String> getSupportedAnnotationTypes() {
         return Collections.singleton(HelpSetRegistration.class.getCanonicalName());
@@ -120,7 +124,7 @@ public class HelpSetRegistrationProcessor extends LayerGeneratingProcessor {
             if (searchDir != null) {
                 if ("file".equals(loc.getScheme())) {
                     File d = Utilities.toFile(loc).getParentFile();
-                    String out = hs.replaceFirst("/[^/]+$", "/") + searchDir + "/";
+                    String out = PATTERN_PKG_FILTER_1.matcher(hs).replaceFirst("/") + searchDir + "/";
                     try {
                         File config = File.createTempFile("jhindexer-config", ".txt");
                         try {
@@ -263,7 +267,7 @@ public class HelpSetRegistrationProcessor extends LayerGeneratingProcessor {
             String name = f.getName();
             if (f.isDirectory()) {
                 scan(f, pw, cnt, excludes, path + name + '/');
-            } else if (!excludes.contains(path + name) && name.matches(".+[.]html?$")) {
+            } else if (!excludes.contains(path + name) && PATTERN_FILE_FILTER_1.matcher(name).matches()) {
                 pw.println("File " + f);
                 cnt.incrementAndGet();
             }

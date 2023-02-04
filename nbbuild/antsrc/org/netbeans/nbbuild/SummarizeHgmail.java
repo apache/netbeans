@@ -46,6 +46,9 @@ import org.apache.tools.ant.types.FileSet;
 public class SummarizeHgmail extends Task {
 
     private File output;
+
+    private static final Pattern PATTERN_LINE_FILTER_1 = Pattern.compile("^[\\[#].+|\\s*");
+
     /** Output file. */
     public void setOutput(File output) {
         this.output = output;
@@ -81,7 +84,7 @@ public class SummarizeHgmail extends Task {
                         BufferedReader br = new BufferedReader(r);
                         String line;
                         while ((line = br.readLine()) != null) {
-                            if (line.matches("^[\\[#].+|\\s*")) {
+                            if (PATTERN_LINE_FILTER_1.matcher(line).matches()) {
                                 continue;
                             }
                             String[] split = line.split("=", 2);

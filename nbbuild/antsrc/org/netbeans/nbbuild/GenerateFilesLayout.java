@@ -26,6 +26,8 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -43,6 +45,9 @@ import org.xml.sax.SAXException;
 public class GenerateFilesLayout extends Task {
     
     private FileSet fs;
+
+    private static final Pattern PATTERN_FILE_NAME_FILTER = Pattern.compile("[^/]+/update_tracking/[^/]+[.]xml");
+
     public void addConfiguredFiles(FileSet fs) {
         this.fs = fs;
     }
@@ -91,7 +96,7 @@ public class GenerateFilesLayout extends Task {
                         // Files at top level are ignored.
                         continue;
                     }
-                    if (inclSlash.matches("[^/]+/update_tracking/[^/]+[.]xml")) {
+                    if (PATTERN_FILE_NAME_FILTER.matcher(inclSlash).matches()) {
                         // Not considered an actual part of the cluster, but rather its metadata.
                         continue;
                     }

@@ -28,6 +28,8 @@ import java.util.Hashtable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.regex.Pattern;
+
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
@@ -38,6 +40,8 @@ import org.apache.tools.ant.types.FileSet;
  * @author Jesse Glick
  */
 public class ModuleListParserTest extends TestBase {
+
+    private static final Pattern PATTERN_FILE_NAME_FILTER_1 = Pattern.compile("nb-scan-cache-.+[.]ser");
     public ModuleListParserTest(String name) {
         super(name);
     }
@@ -54,7 +58,7 @@ public class ModuleListParserTest extends TestBase {
 
     static void deleteCaches() throws IOException {
         for (File cache : new File(System.getProperty("java.io.tmpdir")).listFiles()) {
-            if (cache.getName().matches("nb-scan-cache-.+[.]ser") && !cache.delete()) {
+            if (PATTERN_FILE_NAME_FILTER_1.matcher(cache.getName()).matches() && !cache.delete()) {
                 throw new IOException(cache.getName());
             }
         }

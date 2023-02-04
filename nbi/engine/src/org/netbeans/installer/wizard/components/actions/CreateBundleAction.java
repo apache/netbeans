@@ -33,6 +33,8 @@ import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
+import java.util.regex.Pattern;
+
 import org.netbeans.installer.Installer;
 import org.netbeans.installer.product.components.Group;
 import org.netbeans.installer.product.components.Product;
@@ -106,6 +108,8 @@ public class CreateBundleAction extends WizardAction {
     // Instance
     private Progress progress;
     private HashSet<String> jarEntries = new HashSet <String>();
+
+    private static final Pattern PATTERN = Pattern.compile(EngineResources.ENGINE_PROPERTIES_PATTERN);
     
     public CreateBundleAction() {
         setProperty(TITLE_PROPERTY, DEFAULT_TITLE);
@@ -215,7 +219,7 @@ public class CreateBundleAction extends WizardAction {
                     ResourceUtils.getResource(
                     EngineResources.ENGINE_CONTENTS_LIST)));
             for(String entry : contents) {
-                if(entry.matches(EngineResources.ENGINE_PROPERTIES_PATTERN)) {
+                if(PATTERN.matcher(entry).matches()) {
                     Properties engineProps = new Properties();
                     engineProps.load(ResourceUtils.getResource(entry));
                     

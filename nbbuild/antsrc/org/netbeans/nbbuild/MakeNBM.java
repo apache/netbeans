@@ -52,6 +52,7 @@ import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -83,6 +84,12 @@ import org.xml.sax.SAXException;
 public class MakeNBM extends Task {
     
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat ("yyyy/MM/dd");
+
+    private static final Pattern PATTERN_ATTR_NAME_FILTER_1 = Pattern.compile(
+            "OpenIDE-Module(|-(Name|(Specification|Implementation)-Version|(Module|Package|Java|IDE)-Dependencies|" +
+            "(Short|Long)-Description|Display-Category|Provides|Requires|Recommends|Needs|Fragment-Host))|AutoUpdate-" +
+            "(Show-In-Client|Essential-Module)"
+    );
     
     /** The same syntax may be used for either <samp>&lt;license&gt;</samp> or
      * <samp>&lt;description&gt;</samp> subelements.
@@ -1031,8 +1038,7 @@ public class MakeNBM extends Task {
         }
         Collections.sort(attrNames);
         for(String name: attrNames) {
-            if (name.matches("OpenIDE-Module(|-(Name|(Specification|Implementation)-Version|(Module|Package|Java|IDE)-Dependencies|" +
-                    "(Short|Long)-Description|Display-Category|Provides|Requires|Recommends|Needs|Fragment-Host))|AutoUpdate-(Show-In-Client|Essential-Module)")) {
+            if (PATTERN_ATTR_NAME_FILTER_1.matcher(name).matches()) {
                 el.setAttribute(name, attr.getValue(name));
             }
         }

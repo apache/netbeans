@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
+
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
 
 /**
@@ -34,6 +36,10 @@ public class RunnerHttpListWebServices extends RunnerHttp {
     ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
     ////////////////////////////////////////////////////////////////////////////
+
+    private static final Pattern PATTERN_FILTER_1 = Pattern.compile(".* address:/");
+    private static final Pattern PATTERN_FILTER_2 = Pattern.compile("\\. .*");
+
 
     /**
      * Payara administration command result containing server resources.
@@ -98,7 +104,10 @@ public class RunnerHttpListWebServices extends RunnerHttp {
                     continue;
                 if (k.contains("address:/__wstx-services")) // NOI18N
                     continue;
-                String a = k.replaceFirst(".* address:/", "").replaceFirst("\\. .*", ""); // NOI18N
+
+                String s = PATTERN_FILTER_1.matcher(k).replaceFirst("");
+                String a = PATTERN_FILTER_2.matcher(s).replaceFirst(""); // NOI18N
+
                 if (filter.containsKey(a))
                     continue;
                 filter.put(a,a);

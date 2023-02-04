@@ -104,6 +104,9 @@ public class DockerAction {
 
     private static final Pattern PORT_PATTERN = Pattern.compile("^(\\d+)/(tcp|udp)$");
 
+    private static final Pattern PATTERN_DOCKER_LINE_FILTER_1 = Pattern.compile("^(?i)arg(.*)$");
+    private static final Pattern PATTERN_DOCKER_LINE_FILTER_2 = Pattern.compile("^(?i)arg");
+
     private static final Set<Integer> START_STOP_CONTAINER_CODES = new HashSet<>();
 
     private static final Set<Integer> REMOVE_CONTAINER_CODES = new HashSet<>();
@@ -395,8 +398,8 @@ public class DockerAction {
 
         // Filter this lines and remove ARG from the beginning
         List<String> argLines = dockerfile.asLines().stream()
-                .filter((line) -> line.trim().matches("^(?i)arg(.*)$")) // NOI18N
-                .map((argLine) -> argLine.trim().replaceFirst("^(?i)arg", "").trim()) // NOI18N
+                .filter((line) -> PATTERN_DOCKER_LINE_FILTER_1.matcher(line.trim()).matches()) // NOI18N
+                .map((argLine) -> PATTERN_DOCKER_LINE_FILTER_2.matcher(argLine.trim()).replaceFirst("").trim()) // NOI18N
                 .collect(Collectors.toList());
 
         // Now each line looks like: "key=val"

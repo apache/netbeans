@@ -35,6 +35,8 @@ public class TextFilter extends GenericFilter {
     
     private String[] normalizedValues = NORMALIZED_NOT_READY;
     private transient Pattern[] regexpPatterns;
+
+    private static final Pattern PATTERN_STD_FILTER_1 = Pattern.compile(".*");
     
     
     public TextFilter() {
@@ -104,7 +106,7 @@ public class TextFilter extends GenericFilter {
                         regexpPatterns[i] = Pattern.compile(values[i]);
                     } catch (RuntimeException e) {
                         handleInvalidFilter(values[i], e);
-                        regexpPatterns[i] = Pattern.compile(".*"); // NOI18N
+                        regexpPatterns[i] = PATTERN_STD_FILTER_1; // NOI18N
                     }
                 if (regexpPatterns[i].matcher(string).matches()) return true;
             }

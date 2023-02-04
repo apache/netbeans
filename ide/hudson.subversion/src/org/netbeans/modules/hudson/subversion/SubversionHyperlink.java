@@ -31,6 +31,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 import org.netbeans.api.diff.StreamSource;
 import org.netbeans.modules.hudson.api.ConnectionBuilder;
 import org.netbeans.modules.hudson.api.HudsonJob;
@@ -56,6 +58,8 @@ class SubversionHyperlink implements OutputListener {
     private final int startRev;
     private final int endRev;
     private final HudsonJob job;
+
+    private static final Pattern PATTERN_MODULE_FILTER_1 = Pattern.compile("/[^/]+$");
 
     /**
      * Creates a new potential hyperlink
@@ -118,7 +122,7 @@ class SubversionHyperlink implements OutputListener {
                     String line;
                     while ((line = r.readLine()) != null) {
                         if (line.equals("  <li><a href=\"../\">..</a></li>")) { // NOI18N
-                            module = module.replaceFirst("/[^/]+$", ""); // NOI18N
+                            module = PATTERN_MODULE_FILTER_1.matcher(module).replaceFirst(""); // NOI18N
                             continue STRIP;
                         }
                     }

@@ -39,6 +39,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
+
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.apisupport.project.universe.ModuleEntry;
@@ -70,6 +72,8 @@ public class ProjectXMLManagerTest extends TestBase {
     private static final String ANT_PROJECT_SUPPORT = "org.netbeans.modules.project.ant";
     private static final String DIALOGS = "org.openide.dialogs";
     private static final Set<String> ASSUMED_CNBS;
+
+    private static final Pattern PATTERN_DEPENDENCIES_LINE_FILTER_1 = Pattern.compile("<code-name-base>.+</code-name-base>");
     
     static {
         Set<String> assumedCNBs = new HashSet<>(2, 1.0f);
@@ -760,7 +764,7 @@ public class ProjectXMLManagerTest extends TestBase {
             String line;
             while ((line = r.readLine()) != null) {
                 line = line.trim();
-                if (line.matches("<code-name-base>.+</code-name-base>")) {
+                if (PATTERN_DEPENDENCIES_LINE_FILTER_1.matcher(line).matches()) {
                     String currentCNB = line.substring(16, line.length() - 17);
                     assertTrue("dependencies order, previous = \"" + previousCNB + "\", current = \"" + currentCNB + "\"",
                             previousCNB == null || previousCNB.compareTo(currentCNB) < 0);

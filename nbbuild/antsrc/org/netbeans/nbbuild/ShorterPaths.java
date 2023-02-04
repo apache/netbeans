@@ -29,6 +29,8 @@ import java.util.StringTokenizer;
 import java.util.jar.Attributes.Name;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.regex.Pattern;
+
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.util.FileUtils;
@@ -38,6 +40,9 @@ import org.apache.tools.ant.util.FileUtils;
  * Designed for netbeans.dest dir and test.dist.dir variables 
  */
 public class ShorterPaths extends Task {
+
+    private static final Pattern PATTERN_NAME_FILTER_1 = Pattern.compile("test-(unit|qa-functional)-sys-prop\\..+");
+    private static final Pattern PATTERN_NAME_FILTER_2 = Pattern.compile("^test-(unit|qa-functional)-sys-prop\\.");
 
     /** dir is prefix and name is name of variable
      * <shorterpaths in="inputpropname" out="outpropNames">
@@ -159,7 +164,7 @@ public class ShorterPaths extends Task {
                     Map<String,Object> properties = getProject().getProperties();
                     StringBuffer outProp = new StringBuffer();
                     for (String name : properties.keySet()) {
-                        if (name.matches("test-(unit|qa-functional)-sys-prop\\..+")) {
+                        if (PATTERN_NAME_FILTER_1.matcher(name).matches()) {
                             if (name.equals("test-unit-sys-prop.xtest.data")) {
                                 // ignore overring xtest.data.dir, data.zip placed to standard location
                                 continue;
@@ -169,7 +174,7 @@ public class ShorterPaths extends Task {
                             for (String path : tokenizePath(properties.get(name).toString())) {
                                 replacePath(path, outProp);
                             }
-                            pw.println(name.replaceFirst("^test-(unit|qa-functional)-sys-prop\\.", "test-sys-prop.") + "=" + outProp);
+                            pw.println(PATTERN_NAME_FILTER_2.matcher(name).replaceFirst("test-sys-prop.") + "=" + outProp);
                         } else if (name.startsWith("test.config")) {
                             pw.println(name + "=" + properties.get(name));
                         } else if ("requires.nb.javac".equals(name)) {

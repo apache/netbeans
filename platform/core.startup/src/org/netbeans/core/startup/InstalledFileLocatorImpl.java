@@ -60,6 +60,9 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
     private static final Logger LOG = Logger.getLogger(InstalledFileLocatorImpl.class.getName());
     
     private final File[] dirs;
+
+    private static final Pattern PATTERN_FIND_CALLER = Pattern.compile(".*InstalledFileLocator.*|java[.].+");
+
     public InstalledFileLocatorImpl() {
         List<File> _dirs = computeDirs();
         dirs = _dirs.toArray(new File[_dirs.size()]);
@@ -480,7 +483,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
 
     private static String findCaller() {
         for (StackTraceElement line : Thread.currentThread().getStackTrace()) {
-            if (!line.getClassName().matches(".*InstalledFileLocator.*|java[.].+")) { // NOI18N
+            if (!PATTERN_FIND_CALLER.matcher(line.getClassName()).matches()) { // NOI18N
                 return line.toString();
             }
         }

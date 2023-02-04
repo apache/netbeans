@@ -33,6 +33,8 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.resources.FileResource;
@@ -61,6 +63,8 @@ class OSGiProcess {
     private final Set<String> modules = new HashSet<String>();
     private final List<NewModule> newModules = new ArrayList<NewModule>();
     private int newModuleCount = 0;
+
+    private static final Pattern PATTERN_DEPENDENCY_NAME_FILTER_1 = Pattern.compile("/\\d+$");
 
     OSGiProcess(File workDir) {
         this.workDir = workDir;
@@ -132,7 +136,7 @@ class OSGiProcess {
                 String deps = jar.getManifest().getMainAttributes().getValue("OpenIDE-Module-Module-Dependencies");
                 if (deps != null) {
                     for (Dependency dep : Dependency.create(Dependency.TYPE_MODULE, deps)) {
-                        String cnb2 = dep.getName().replaceFirst("/\\d+$", "");
+                        String cnb2 = PATTERN_DEPENDENCY_NAME_FILTER_1.matcher(dep.getName()).replaceFirst("");
                         if (new File(platformDir, "modules/" + cnb2.replace('.', '-') + ".jar").isFile()) {
                             module(cnb2);
                         }

@@ -44,6 +44,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -90,6 +91,8 @@ public final class ConnectionBuilder {
     private int timeout;
     private boolean auth = true;
     private boolean followRedirects = true;
+
+    private static final Pattern PATTERN_COOKIE_FILTER_1 = Pattern.compile(";.*");
 
     /**
      * Prepare a connection.
@@ -293,7 +296,7 @@ public final class ConnectionBuilder {
                 }
                 if (COOKIES.containsKey(home.toString())) {
                     for (String cookie : COOKIES.get(home.toString())) {
-                        String cookieBare = cookie.replaceFirst(";.*", ""); // NOI18N
+                        String cookieBare = PATTERN_COOKIE_FILTER_1.matcher(cookie).replaceFirst(""); // NOI18N
                         LOG.log(Level.FINER, "Setting cookie {0} for {1}", new Object[] {cookieBare, conn.getURL()});
                         conn.setRequestProperty("Cookie", cookieBare); // NOI18N
                     }

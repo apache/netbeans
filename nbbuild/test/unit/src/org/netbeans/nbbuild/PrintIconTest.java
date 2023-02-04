@@ -24,11 +24,14 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 /**
  * @author Jaroslav Tulach
  */
 public class PrintIconTest extends TestBase {
+
+    private static final Pattern PATTERN_FILE_PATH_FILTER_1 = Pattern.compile(".+/");
 
     public PrintIconTest(String testName) {
         super(testName);
@@ -38,7 +41,7 @@ public class PrintIconTest extends TestBase {
     private File extractCountedResource(String resource) throws Exception {
         File f;
         for (int i = 1; ; i++) {
-             f = new File(getWorkDir(), i + "_" + resource.replaceFirst(".+/", ""));
+             f = new File(getWorkDir(), i + "_" + PATTERN_FILE_PATH_FILTER_1.matcher(resource).replaceFirst(""));
              if (!f.isFile()) {
                  break;
              }

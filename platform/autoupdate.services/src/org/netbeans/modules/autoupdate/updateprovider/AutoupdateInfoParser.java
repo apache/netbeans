@@ -86,7 +86,15 @@ public class AutoupdateInfoParser extends DefaultHandler {
     private final EntityResolver entityResolver;
     private final File nbmFile;
     private UpdateLicenseImpl currentUpdateLicenseImpl;
-    
+
+    private static final Pattern PATTERN_PACKAGE_EOL_FILTER = Pattern.compile(";.*$");
+    private static final Pattern PATTERN_PACKAGE_CONTAINS_NO_QUOTE = Pattern.compile("\"[^\"]*\"");
+    private static final Pattern PATTERN_REQ_BUNDLE_DEP_FILTER_1 = Pattern.compile("([^;]+)(.*)");
+    private static final Pattern PATTERN_REQ_BUNDLE_DEP_FILTER_2 = Pattern.compile(";([^:=]+):?=\"?([^;\"]+)\"?");
+
+    private static final Pattern PATTERN_REQ_BUNDLE_VER_FILTER_1 = Pattern.compile("[0-9]+([.][0-9]+)*");
+    private static final Pattern PATTERN_REQ_BUNDLE_VER_FILTER_2 = Pattern.compile("\\[([0-9]+)((?:[.][0-9]+)*),([0-9.]+)\\)");
+
     private AutoupdateInfoParser (Map<String, UpdateItem> items, File nbmFile) {
         this.items = items;
         this.entityResolver = newEntityResolver();
@@ -511,7 +519,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
             boolean needsNetbinox = false;
             // http://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
             for (String dep : requireBundle.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)")) {
-                Matcher m = Pattern.compile("([^;]+)(.*)").matcher(dep);
+                Matcher m = PATTERN_REQ_BUNDLE_DEP_FILTER_1.matcher(dep);
                 if (!m.matches()) {
                     throw new RuntimeException("Could not parse dependency: " + dep + " in " + whereFrom);
                 }
@@ -520,7 +528,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
                     needsNetbinox = true;
                     continue;
                 }
-                Matcher m2 = Pattern.compile(";([^:=]+):?=\"?([^;\"]+)\"?").matcher(m.group(2));
+                Matcher m2 = PATTERN_REQ_BUNDLE_DEP_FILTER_2.matcher(m.group(2));
                 boolean isOptional = false;
                 while (m2.find()) {
                     if (m2.group(1).equals("resolution") && m2.group(2).equals("optional")) {
@@ -541,12 +549,12 @@ public class AutoupdateInfoParser extends DefaultHandler {
                         continue;
                     }
                     String val = m2.group(2);
-                    if (val.matches("[0-9]+([.][0-9]+)*")) {
+                    if (PATTERN_REQ_BUNDLE_VER_FILTER_1.matcher(val).matches()) {
                         // non-range dep occasionally used in OSGi; no exact equivalent in NB
                         b.append(" > ").append(val);
                         continue;
                     }
-                    Matcher m3 = Pattern.compile("\\[([0-9]+)((?:[.][0-9]+)*),([0-9.]+)\\)").matcher(val);
+                    Matcher m3 = PATTERN_REQ_BUNDLE_VER_FILTER_2.matcher(val);
                     if (!m3.matches()) {
                         throw new RuntimeException("Could not parse version range: " + val + " in " + whereFrom);
                     }
@@ -579,11 +587,13 @@ public class AutoupdateInfoParser extends DefaultHandler {
         String pp = attr.getValue(BUNDLE_EXPORT_PACKAGE);
         StringBuilder provides = new StringBuilder();
         if (pp != null) {
-            for (String p : pp.replaceAll("\"[^\"]*\"", "").split(",")) {
+            String[] split = PATTERN_PACKAGE_CONTAINS_NO_QUOTE.matcher(pp).replaceAll("").split(",");
+
+            for (String p : split) {
                 if (provides.length() > 0) {
                     provides.append(',');
                 }
-                provides.append(p.replaceAll(";.*$", "").trim());
+                provides.append(PATTERN_PACKAGE_EOL_FILTER.matcher(p).replaceAll("").trim());
             }
         }
         if (provides.length() > 0) {
@@ -593,15 +603,17 @@ public class AutoupdateInfoParser extends DefaultHandler {
         String ip = attr.getValue(BUNDLE_IMPORT_PACKAGE);
         StringBuilder recommends = new StringBuilder();
         if (ip != null) {
-            for (String p : ip.replaceAll("\"[^\"]*\"", "").split(",")) {
-                String pkg = p.replaceAll(";.*$", "").trim();
+            String[] split = PATTERN_PACKAGE_CONTAINS_NO_QUOTE.matcher(ip).replaceAll("").split(",");
+
+            for (String p : split) {
+                String pkg = PATTERN_PACKAGE_EOL_FILTER.matcher(p).replaceAll("").trim();
                 if (JAVA_PLATFORM_PACKAGES.contains(pkg)) {
                     continue;
                 }
                 if (recommends.length() > 0) {
                     recommends.append(',');
                 }
-                recommends.append(p.replaceAll(";.*$", "").trim());
+                recommends.append(PATTERN_PACKAGE_EOL_FILTER.matcher(p).replaceAll("").trim());
             }
         }
         if (recommends.length() > 0) {

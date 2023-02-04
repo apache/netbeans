@@ -66,6 +66,8 @@ public final class LayerBuilder {
     private final ProcessingEnvironment processingEnv;
     private final List<File> unwrittenFiles = new LinkedList<File>();
 
+    private static final Pattern PATTERN_PATH_FILTER = Pattern.compile("[^/]+(/[^/]+)*");
+
     LayerBuilder(Document document, Element/*or null*/ originatingElement, ProcessingEnvironment/* or null*/ processingEnv) {
         this.doc = document;
         this.originatingElement = originatingElement;
@@ -79,7 +81,7 @@ public final class LayerBuilder {
      * @return a file builder
      */
     public File file(String path) {
-        if (!path.matches("[^/]+(/[^/]+)*")) {
+        if (!PATTERN_PATH_FILTER.matcher(path).matches()) {
             throw new IllegalArgumentException(path);
         }
         File f = new File(path, false);

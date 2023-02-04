@@ -29,6 +29,8 @@ import org.openide.filesystems.*;
  */
 public class DataLoaderInLayerOnSFSTest extends DataLoaderInLayerTest {
 
+    private static final Pattern RESOURCE_PATTERN = Pattern.compile("/.*");
+
     public DataLoaderInLayerOnSFSTest(String name) {
         super(name);
     }
@@ -36,7 +38,7 @@ public class DataLoaderInLayerOnSFSTest extends DataLoaderInLayerTest {
     @Override
     protected FileSystem createFS(String... resources) throws IOException {
         for (String s : resources) {
-            FileObject fo = FileUtil.getConfigFile(s.replaceAll("/.*", ""));
+            FileObject fo = FileUtil.getConfigFile(RESOURCE_PATTERN.matcher(s).replaceAll(""));
             if (fo != null) {
                 fo.delete();
             }

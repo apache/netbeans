@@ -58,6 +58,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = Processor.class)
 public class NbBundleProcessor extends AbstractProcessor {
 
+    private static final Pattern PATTERN_COMMENT_FILTER_1 = Pattern.compile("# [{](\\d+)[}] - (.+)");
+    private static final Pattern PATTERN_COMMENT_FILTER_2 = Pattern.compile("[{](\\d+)[}]");
+    private static final Pattern PATTERN_COMMENT_FILTER_3 = Pattern.compile("    /[*][*]\r?\n(?:     [*].+\r?\n)+     [*] @see (?:[\\w-]+)\r?\n     [*]/\r?\n    static String (\\w+).+\r?\n        .+\r?\n    [}]\r?\n");
+    private static final Pattern PATTERN_ANNOTATION_FILTER_1 = Pattern.compile("# +(PART)?(NO)?I18N *");
+
     public @Override Set<String> getSupportedAnnotationTypes() {
         return Collections.singleton(NbBundle.Messages.class.getCanonicalName());
     }
@@ -112,7 +117,7 @@ public class NbBundleProcessor extends AbstractProcessor {
                 for (String keyValue : e.getAnnotation(NbBundle.Messages.class).value()) {
                     if (keyValue.startsWith("#")) {
                         runningComments.add(keyValue);
-                        if (keyValue.matches("# +(PART)?(NO)?I18N *")) {
+                        if (PATTERN_ANNOTATION_FILTER_1.matcher(keyValue).matches()) {
                             processingEnv.getMessager().printMessage(Kind.ERROR, "#NOI18N and related keywords must not include spaces", e);
                         }
                         continue;
@@ -202,7 +207,7 @@ public class NbBundleProcessor extends AbstractProcessor {
                     String[] commentLines = comments.get(key);
                     if (commentLines != null) {
                         for (String comment : commentLines) {
-                            Matcher m = Pattern.compile("# [{](\\d+)[}] - (.+)").matcher(comment);
+                            Matcher m = PATTERN_COMMENT_FILTER_1.matcher(comment);
                             if (m.matches()) {
                                 i = Integer.parseInt(m.group(1));
                                 while (i >= params.size()) {
@@ -215,7 +220,7 @@ public class NbBundleProcessor extends AbstractProcessor {
                         }
                     }
                     StringBuffer annotatedValue = new StringBuffer("<i>");
-                    Matcher m = Pattern.compile("[{](\\d+)[}]").matcher(toJavadoc(value));
+                    Matcher m = PATTERN_COMMENT_FILTER_2.matcher(toJavadoc(value));
                     while (m.find()) {
                         i = Integer.parseInt(m.group(1));
                         m.appendReplacement(annotatedValue, i < params.size() ? "</i>{@code " + params.get(i) + "}<i>" : m.group());
@@ -252,7 +257,7 @@ public class NbBundleProcessor extends AbstractProcessor {
                 }
                 try {
                     Set<String> restored = new TreeSet<String>();
-                    Matcher m = Pattern.compile("    /[*][*]\r?\n(?:     [*].+\r?\n)+     [*] @see (?:[\\w-]+)\r?\n     [*]/\r?\n    static String (\\w+).+\r?\n        .+\r?\n    [}]\r?\n").matcher(processingEnv.getFiler().getResource(StandardLocation.SOURCE_OUTPUT, pkg, "Bundle.java").getCharContent(false));
+                    Matcher m = PATTERN_COMMENT_FILTER_3.matcher(processingEnv.getFiler().getResource(StandardLocation.SOURCE_OUTPUT, pkg, "Bundle.java").getCharContent(false));
                     while (m.find()) {
                         String identifier = m.group(1);
                         if (!methods.containsKey(identifier)) {

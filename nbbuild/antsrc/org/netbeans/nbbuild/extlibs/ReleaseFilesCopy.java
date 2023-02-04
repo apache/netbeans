@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildException;
@@ -42,6 +43,8 @@ import org.apache.tools.ant.util.FileUtils;
 public class ReleaseFilesCopy extends Task {
 
     private File cluster;
+    private static final Pattern PATTERN_FILTER_1 = Pattern.compile("release\\.(files|files\\.extra|dir)");
+
     public void setCluster(File cluster) {
         this.cluster = cluster;
     }
@@ -49,7 +52,7 @@ public class ReleaseFilesCopy extends Task {
     public @Override void execute() throws BuildException {
         for (Map.Entry<String,Object> entry : ((Map<String,Object>) getProject().getProperties()).entrySet()) {
             String k = entry.getKey();
-            if (k.startsWith("release.") && !k.matches("release\\.(files|files\\.extra|dir)")) {
+            if (k.startsWith("release.") && !PATTERN_FILTER_1.matcher(k).matches()) {
                 File to = FileUtils.getFileUtils().resolveFile(cluster, (String) entry.getValue());
                 String fromString = k.substring(8);
                 int bangSlash = fromString.indexOf("!/");

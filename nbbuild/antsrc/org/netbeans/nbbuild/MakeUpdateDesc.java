@@ -83,6 +83,11 @@ public class MakeUpdateDesc extends MatchingTask {
 
     protected boolean usedMatchingTask = false;
 
+    private static final Pattern PATTERN_REQ_BUNDLE_DEP_FILTER_1 = Pattern.compile("([^;]+)(.*)");
+    private static final Pattern PATTERN_REQ_BUNDLE_DEP_FILTER_2 = Pattern.compile(";([^:=]+):?=\"?([^;\"]+)\"?");
+    private static final Pattern PATTERN_REQ_BUNDLE_DEP_FILTER_3 = Pattern.compile("[0-9]+([.][0-9]+)*");
+    private static final Pattern PATTERN_REQ_BUNDLE_DEP_FILTER_4 = Pattern.compile("\\[([0-9]+)((?:[.][0-9]+)*),([0-9.]+)\\)");
+
     /** Set of NBMs presented as a folder in the Update Center. */
     public /*static*/ class Group {
         public List<FileSet> filesets = new ArrayList<>();
@@ -750,7 +755,7 @@ public class MakeUpdateDesc extends MatchingTask {
             boolean needsNetbinox = false;
             // http://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
             for (String dep : requireBundle.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)")) {
-                Matcher m = Pattern.compile("([^;]+)(.*)").matcher(dep);
+                Matcher m = PATTERN_REQ_BUNDLE_DEP_FILTER_1.matcher(dep);
                 if (!m.matches()) {
                     throw new BuildException("Could not parse dependency: " + dep + " in " + whereFrom);
                 }
@@ -759,7 +764,7 @@ public class MakeUpdateDesc extends MatchingTask {
                     needsNetbinox = true;
                     continue;
                 }
-                Matcher m2 = Pattern.compile(";([^:=]+):?=\"?([^;\"]+)\"?").matcher(m.group(2));
+                Matcher m2 = PATTERN_REQ_BUNDLE_DEP_FILTER_2.matcher(m.group(2));
                 boolean isOptional = false;
                 while(m2.find()) {
                     if(m2.group(1).equals("resolution") && m2.group(2).equals("optional")) {
@@ -778,12 +783,12 @@ public class MakeUpdateDesc extends MatchingTask {
                         continue;
                     }
                     String val = m2.group(2);
-                    if (val.matches("[0-9]+([.][0-9]+)*")) {
+                    if (PATTERN_REQ_BUNDLE_DEP_FILTER_3.matcher(val).matches()) {
                         // non-range dep occasionally used in OSGi; no exact equivalent in NB
                         depSB.append(" > ").append(val);
                         continue;
                     }
-                    Matcher m3 = Pattern.compile("\\[([0-9]+)((?:[.][0-9]+)*),([0-9.]+)\\)").matcher(val);
+                    Matcher m3 = PATTERN_REQ_BUNDLE_DEP_FILTER_4.matcher(val);
                     if (!m3.matches()) {
                         throw new BuildException("Could not parse version range: " + val + " in " + whereFrom);
                     }

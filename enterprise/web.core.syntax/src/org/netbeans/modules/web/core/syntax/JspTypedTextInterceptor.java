@@ -19,6 +19,7 @@
 package org.netbeans.modules.web.core.syntax;
 
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Pattern;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
@@ -46,6 +47,8 @@ import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
 public class JspTypedTextInterceptor implements TypedTextInterceptor {
 
     private boolean showCompletion;
+
+    private static final Pattern PATTERN_DOC_TEXT_FILTER_1 = Pattern.compile("(\\$\\{|\\#\\{).*");
 
     @Override
     public boolean beforeInsert(Context context) throws BadLocationException {
@@ -89,7 +92,7 @@ public class JspTypedTextInterceptor implements TypedTextInterceptor {
                                 String elText = CharSequenceUtilities.toString(token.text());
                                 TokenHierarchy<Document> tokenHierarchy = TokenHierarchy.get((Document) doc);
                                 int offset = token.offset(tokenHierarchy) + token.length();
-                                if (elText.matches("(\\$\\{|\\#\\{).*") && offset > caretOffset) {  //NOI18N
+                                if (PATTERN_DOC_TEXT_FILTER_1.matcher(elText).matches() && offset > caretOffset) {  //NOI18N
                                     doc.remove(caretOffset, 1);
                                     caret.setDot(caretOffset + 1); // skip closing bracket
                                     return;

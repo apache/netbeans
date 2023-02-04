@@ -36,6 +36,8 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 import org.netbeans.api.annotations.common.NonNull;
 import org.openide.modules.Dependency;
 import org.openide.util.Utilities;
@@ -96,7 +98,11 @@ public final class ManifestManager {
     public static final PackageExport[] EMPTY_EXPORTED_PACKAGES = new PackageExport[0];
     
     public static final ManifestManager NULL_INSTANCE = new ManifestManager();
-    
+
+    private static final Pattern PATTERN_PACKAGE_EOL_FILTER = Pattern.compile(";.*$");
+    private static final Pattern PATTERN_PACKAGE_CONTAINS_NO_QUOTE = Pattern.compile("\"[^\"]*\"");
+    private static final Pattern PATTERN_PACKAGE_RESOLUTION_OPTIONAL = Pattern.compile(".*; *resolution *:= *optional.*");
+
     private ManifestManager() {
         this.provTokens = new String[0];
         this.requiredTokens = new String[0];
@@ -443,9 +449,11 @@ public final class ManifestManager {
             StringBuilder sb = new StringBuilder();
             sb.append(codenamebase);
             if (pp != null) {
-                List<PackageExport> arr = new ArrayList<PackageExport>();
-                for (String p : pp.replaceAll("\"[^\"]*\"", "").split(",")) {
-                    final PackageExport pe = new PackageExport(p.replaceAll(";.*$", "").trim(), false);
+                String[] split = PATTERN_PACKAGE_CONTAINS_NO_QUOTE.matcher(pp).replaceAll("").split(",");
+                List<PackageExport> arr = new ArrayList<>(split.length);
+
+                for (String p : split) {
+                    final PackageExport pe = new PackageExport(PATTERN_PACKAGE_EOL_FILTER.matcher(p).replaceAll("").trim(), false);
                     arr.add(pe);
                     sb.append(',').append(pe.getPackage());
                 }
@@ -458,12 +466,14 @@ public final class ManifestManager {
             String sep = "";
             String pp = attr.getValue(BUNDLE_IMPORT_PACKAGE);
             if (pp != null) {
-                for (String p : pp.replaceAll("\"[^\"]*\"", "").split(",")) {
-                    String pkg = p.replaceAll(";.*$", "").trim();
+                String[] split = PATTERN_PACKAGE_CONTAINS_NO_QUOTE.matcher(pp).replaceAll("").split(",");
+
+                for (String p : split) {
+                    String pkg = PATTERN_PACKAGE_EOL_FILTER.matcher(p).replaceAll("").trim();
                     if (JAVA_PLATFORM_PACKAGES.contains(pkg)) {
                         continue;
                     }
-                    if (p.matches(".*; *resolution *:= *optional.*")) {
+                    if (PATTERN_PACKAGE_RESOLUTION_OPTIONAL.matcher(p).matches()) {
                         continue;
                     }
                     sb.append(sep).append(pkg);
@@ -472,8 +482,10 @@ public final class ManifestManager {
             }
             pp = attr.getValue(BUNDLE_REQUIRE_BUNDLE);
             if (pp != null) {
-                for (String p : pp.replaceAll("\"[^\"]*\"", "").split(",")) {
-                    sb.append(sep).append(p.replaceAll(";.*$", "").trim());
+                String[] split = PATTERN_PACKAGE_CONTAINS_NO_QUOTE.matcher(pp).replaceAll("").split(",");
+
+                for (String p : split) {
+                    sb.append(sep).append(PATTERN_PACKAGE_EOL_FILTER.matcher(p).replaceAll("").trim());
                     sep = ",";
                 }
             }

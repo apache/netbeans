@@ -67,6 +67,9 @@ public class VerifyLibsAndLicenses extends Task {
 
     private static final Pattern URL_PATTERN = Pattern.compile("(https?://\\S*[^/\\s]+)\\s+(\\S+)$");
 
+    private static final Pattern PATTERN_LINE_FILTER_1 = Pattern.compile("/(?=( |$))");
+    private static final Pattern PATTERN_FILES_FILTER_1 = Pattern.compile(".*\\.(jar|zip)");
+
     private File nball;
     public void setNball(File nball) {
         this.nball = nball;
@@ -87,11 +90,26 @@ public class VerifyLibsAndLicenses extends Task {
     private Map<String,String> pseudoTests;
     private Set<String> modules;
 
+    private static final Pattern PATTERN_ACTUAL_FILTER_1 = Pattern.compile("([\\\\\\[\\].^$?*+{}()|])");
+    private static final Pattern PATTERN_ACTUAL_FILTER_2 = Pattern.compile(" *__[A-Z_]+__ *");
+
+    private static final Pattern PATTERN_MERCURIAL_LINE_FILTER_1 = Pattern.compile("#.*");
+    private static final Pattern PATTERN_LICENSE_LINE_FILTER_1 = Pattern.compile("([a-zA-Z]+): (.+)");
+    private static final Pattern PATTERN_LICENSE_FILE_NAME_FILTER_1 = Pattern.compile("-license\\.txt$");
+    private static final Pattern PATTERN_LICENSE_FILE_NAME_FILTER_2 = Pattern.compile(".+[0-9].+");
+
+    private static final Pattern PATTERN_BODY_FILTER_1 = Pattern.compile("[ \n\t]+");
+
+    private static final Pattern PATTERN_FILES_FILTER_2 = Pattern.compile("[, ]+");
+
+    private static final Pattern PATTERN_TEMPLATE_FILTER_1 = Pattern.compile("^(__[A-Z_]+__).");
+    private static final Pattern PATTERN_TEMPLATE_FILTER_2 = Pattern.compile(".(__[A-Z_]+__)$");
+
     public @Override void execute() throws BuildException {
         try { // XXX workaround for http://issues.apache.org/bugzilla/show_bug.cgi?id=43398
         pseudoTests = new LinkedHashMap<>();
         if(getProject().getProperty("allmodules") != null) {
-            modules = new TreeSet<>(Arrays.asList(getProject().getProperty("allmodules").split("[, ]+")));
+            modules = new TreeSet<>(Arrays.asList(PATTERN_FILES_FILTER_2.split(getProject().getProperty("allmodules"))));
             modules.add("nbbuild");
         } else {
             Path nbAllPath = nball.toPath();
@@ -279,7 +297,7 @@ public class VerifyLibsAndLicenses extends Task {
                     BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                     String line;
                     while ((line = r.readLine()) != null && line.length() > 0) {
-                        Matcher m = Pattern.compile("([a-zA-Z]+): (.+)").matcher(line);
+                        Matcher m = PATTERN_LICENSE_LINE_FILTER_1.matcher(line);
                         if (!m.matches()) {
                             msg.append("\n" + path + " has a non-header line in the header block: \"" + line + "\"");
                             headers = null;
@@ -349,8 +367,8 @@ public class VerifyLibsAndLicenses extends Task {
                         } finally {
                             is.close();
                         }
-                        String master = masterBody.toString().replaceAll("[ \n\t]+", " ").trim();
-                        String actual = body.toString().replaceAll("[ \n\t]+", " ").trim();
+                        String master = PATTERN_BODY_FILTER_1.matcher(masterBody.toString()).replaceAll(" ").trim();
+                        String actual = PATTERN_BODY_FILTER_1.matcher(body.toString()).replaceAll(" ").trim();
                         String problem = templateMatch(actual, master, false);
                         if (problem != null) {
                             msg.append("\n" + path + " contains a license body which does not match that in nbbuild/licenses/" + license + ": " + problem);
@@ -372,7 +390,7 @@ public class VerifyLibsAndLicenses extends Task {
 
                 String files = headers.get("Files");
                 if (files != null) {
-                    for (String file : files.split("[, ]+")) {
+                    for (String file : PATTERN_FILES_FILTER_2.split(files)) {
                         referencedBinaries.add(file);
                         String nested = null;
                         if (file.contains("!/")) {
@@ -396,8 +414,8 @@ public class VerifyLibsAndLicenses extends Task {
                         }
                     }
                 } else {
-                    String matchingJar = n.replaceFirst("-license\\.txt$", ".jar");
-                    String matchingZip = n.replaceFirst("-license\\.txt$", ".zip");
+                    String matchingJar = PATTERN_LICENSE_FILE_NAME_FILTER_1.matcher(n).replaceFirst(".jar");
+                    String matchingZip = PATTERN_LICENSE_FILE_NAME_FILTER_1.matcher(n).replaceFirst(".zip");
                     referencedBinaries.add(matchingJar);
                     referencedBinaries.add(matchingZip);
                     if (!headers.getOrDefault("Type", "").equals("generated")) {
@@ -415,7 +433,7 @@ public class VerifyLibsAndLicenses extends Task {
                     continue;
                 }
                 String path = module + "/external/" + n;
-                if (!n.matches(".+[0-9].+")) {
+                if (!PATTERN_LICENSE_FILE_NAME_FILTER_2.matcher(n).matches()) {
                     msg.append("\n" + path + " does not appear to include a version number");
                 }
                 if (!referencedBinaries.contains(n)) {
@@ -488,7 +506,10 @@ public class VerifyLibsAndLicenses extends Task {
         boolean expectReason = false;
         String mismatch = null;
         while (true) {
-            if (actual.matches(expected.replaceAll("([\\\\\\[\\].^$?*+{}()|])", "\\\\$1").replaceAll(" *__[A-Z_]+__ *", ".*"))) {
+            String s1 = PATTERN_ACTUAL_FILTER_1.matcher(expected).replaceAll("\\\\$1");
+            String s2 = PATTERN_ACTUAL_FILTER_2.matcher(s1).replaceAll(".*");
+
+            if (actual.matches(s2)) {
                 reason = null;
                 break;
             } else if (expected.length() == 0) {
@@ -520,7 +541,7 @@ public class VerifyLibsAndLicenses extends Task {
                     continue;
                 }
             } else {
-                String absorbed = expected.replaceFirst(left ? "^(__[A-Z_]+__)." : ".(__[A-Z_]+__)$", "$1");
+                String absorbed = (left ? PATTERN_TEMPLATE_FILTER_1 : PATTERN_TEMPLATE_FILTER_2).matcher(expected).replaceFirst("$1");
                 assert !expected.equals(absorbed) : expected;
                 mismatch = mismatch(actual, expected, left);
                 expected = absorbed;
@@ -551,7 +572,7 @@ public class VerifyLibsAndLicenses extends Task {
             while ((line = r.readLine()) != null) {
                 line = line.trim();
                 if (!line.startsWith("#") && line.length() > 0) {
-                    patterns.add(line.replaceAll("/(?=( |$))", "/**"));
+                    patterns.add(PATTERN_LINE_FILTER_1.matcher(line).replaceAll("/**"));
                 }
             }
         }
@@ -577,7 +598,7 @@ public class VerifyLibsAndLicenses extends Task {
             File f = new File(dir, n);
             if (f.isDirectory()) {
                 findStrayThirdPartyBinaries(f, prefix + n + "/", violations, ignoredPatterns);
-            } else if (n.matches(".*\\.(jar|zip)")) {
+            } else if (PATTERN_FILES_FILTER_1.matcher(n).matches()) {
                 String path = prefix + n;
                 boolean ignored = false;
                 for (String pattern : ignoredPatterns) {
@@ -634,7 +655,7 @@ public class VerifyLibsAndLicenses extends Task {
                     BufferedReader br = new BufferedReader(r);
                     String line;
                     while ((line = br.readLine()) != null) {
-                        line = line.replaceAll("#.*", "");
+                        line = PATTERN_MERCURIAL_LINE_FILTER_1.matcher(line).replaceAll("");
                         if (line.trim().isEmpty())
                             continue;
                         line = line.replace(".", "\\.");

@@ -48,6 +48,7 @@ import org.openide.filesystems.FileObject;
 public class AngularConfigInterceptor implements FunctionInterceptor {
 
     private static final Pattern PATTERN = Pattern.compile("(.)*\\.config");  //NOI18N
+    private static final Pattern PATTERN_COMPONEN_FILTER_1 = Pattern.compile("[A-Z]");  //NOI18N
     public static final String COMPONENT_PROP = "component"; //NOI18N
     public static final String COMPONENTS_PROP = "components"; //NOI18N
     public static final String CONTROLLER_SUFFIX = "Controller"; //NOI18N
@@ -82,7 +83,7 @@ public class AngularConfigInterceptor implements FunctionInterceptor {
             if (!component.isEmpty()) {
                 // replace the uppercase chars in the component names with dashes and lowercase char
                 // e.g. "myCompDemo" to "my-comp-demo"
-                Matcher m = Pattern.compile("[A-Z]").matcher(component); //NOI18N
+                Matcher m = PATTERN_COMPONEN_FILTER_1.matcher(component); //NOI18N
                 StringBuffer sb = new StringBuffer();
                 while (m.find()) {
                     m.appendReplacement(sb, '-' + m.group().toLowerCase());

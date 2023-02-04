@@ -45,7 +45,8 @@ public class JarWithModuleAttributes extends Jar {
 
     private static final Pattern COMMA_SPACE = Pattern.compile(", *");
     private static final Pattern IMPL_DEP = Pattern.compile(" *([a-zA-Z0-9_.]+)(/[0-9]+)? *= *(.+) *");
-    
+    private static final Pattern PATTERN_INT_FILTER = Pattern.compile("0|[1-9][0-9]*");
+
     private File stamp;
     /** Location of a stamp file to create and/or make newer than the JAR file.
      * 
@@ -356,7 +357,7 @@ public class JarWithModuleAttributes extends Jar {
         return arr;
     }
     private static int parseInt(String v) throws NumberFormatException {
-        if (!v.matches("0|[1-9][0-9]*")) { // 050123 is a date, -12 is illegal, etc.
+        if (!PATTERN_INT_FILTER.matcher(v).matches()) { // 050123 is a date, -12 is illegal, etc.
             throw new NumberFormatException(v);
         }
         return Integer.parseInt(v);

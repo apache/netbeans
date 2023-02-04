@@ -80,6 +80,12 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
 //        System.setProperty("org.openide.util.lookup.level", "FINE");
     }
 
+    private static final Pattern PATTERN_DIR_NAME_FILTER_1 = Pattern.compile("/.+$");
+    private static final Pattern PATTERN_ATTR_FILTER_1 = Pattern.compile("\\/*");
+    private static final Pattern PATTERN_FILE_OBJ_FILTER_1 = Pattern.compile("Services/.+[.]instance");
+    private static final Pattern PATTERN_FILE_OBJ_FILTER_2 = Pattern.compile("Services/.+[.]settings");
+    private static final Pattern PATTERN_ATTR_SPLIT_1 = Pattern.compile(", ?");
+
     private static final String SFS_LB = "SystemFileSystem.localizingBundle";
 
     private ClassLoader contextClassLoader;   
@@ -358,18 +364,18 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
                 InstanceCookie ic = obj.getLookup().lookup(InstanceCookie.class);
                 if (ic != null) {
                     Object o = ic.instanceCreate ();
-                    if (fo.getPath().matches("Services/.+[.]instance")) {
+                    if (PATTERN_FILE_OBJ_FILTER_1.matcher(fo.getPath()).matches()) {
                         String instanceOf = (String) fo.getAttribute("instanceOf");
                         if (instanceOf == null) {
                             errors.add("File " + fo.getPath() + " should declare instanceOf");
                         } else if (o != null) {
-                            for (String piece : instanceOf.split(", ?")) {
+                            for (String piece : PATTERN_ATTR_SPLIT_1.split(instanceOf)) {
                                 if (!Class.forName(piece, true, Lookup.getDefault().lookup(ClassLoader.class)).isInstance(o)) {
                                     errors.add("File " + fo.getPath() + " claims to be a " + piece + " but is not (instance of " + o.getClass() + ")");
                                 }
                             }
                         }
-                    } else if (fo.getPath().matches("Services/.+[.]settings")) {
+                    } else if (PATTERN_FILE_OBJ_FILTER_2.matcher(fo.getPath()).matches()) {
                         if (!fo.asText().contains("<instanceof")) {
                             errors.add("File " + fo.getPath() + " should declare <instanceof class=\"...\"/>");
                         }
@@ -462,7 +468,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
                 if (fo.hasExt("shadow")) {
                     o = fo.getAttribute("originalFile");
                     if (o instanceof String) {
-                        String origF = o.toString().replaceFirst("\\/*", "");
+                        String origF = PATTERN_ATTR_FILTER_1.matcher(o.toString()).replaceFirst("");
                         if (origF.startsWith("Actions/")) {
                             continue;
                         }
@@ -538,7 +544,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
             if (depsS != null) {
                 Set<String> deps = new HashSet<String>();
                 for (Dependency d : Dependency.create(Dependency.TYPE_MODULE, depsS)) {
-                    deps.add(d.getName().replaceFirst("/.+$", ""));
+                    deps.add(PATTERN_DIR_NAME_FILTER_1.matcher(d.getName()).replaceFirst(""));
                 }
                 directDeps.put(module, deps);
             }

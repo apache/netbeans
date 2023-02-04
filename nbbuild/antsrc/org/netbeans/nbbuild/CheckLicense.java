@@ -46,6 +46,8 @@ public class CheckLicense extends Task {
     private List<Convert> fragments;
     private FailType fail;
 
+    private static final Pattern PATTERN_WORK_FILTER_1 = Pattern.compile(" +$", Pattern.MULTILINE);
+
     /** Add a file set of source files to check.
      * @param fs set of files to check licenses of
      */
@@ -200,7 +202,7 @@ public class CheckLicense extends Task {
                     if (changed) {
                         log ("Rewriting " + file);
                         FileOutputStream os = new FileOutputStream(file);
-                        workingString = Pattern.compile(" +$", Pattern.MULTILINE).matcher(workingString+"X").replaceAll("");
+                        workingString = PATTERN_WORK_FILTER_1.matcher(workingString + "X").replaceAll("");
                         os.write(workingString.substring(0, workingString.length() - 1).getBytes());
                         if (rest != null) {
                             os.write(rest);

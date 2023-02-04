@@ -48,13 +48,13 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
     public static final String DIFF_REGEXP = "(^[0-9]+(,[0-9]+|)[d][0-9]+$)|"+
                                               "(^[0-9]+(,[0-9]+|)[c][0-9]+(,[0-9]+|)$)|"+
                                               "(^[0-9]+[a][0-9]+(,[0-9]+|)$)";
+
+    public static final Pattern PATTERN_DIFF_FILTER_1 = Pattern.compile(CmdlineDiffProvider.DIFF_REGEXP);
+
     private static final int BUFF_LENGTH = 1024;
 
     private String diffCmd;
-    private transient Pattern pattern;
-    //private transient StringBuffer firstText;
-    //private transient StringBuffer secondText;
-    
+
     static final long serialVersionUID =4101521743158176210L;
     /** Creates new CmdlineDiffProvider
      * @param diffCmd The diff command. Must contain "{0}" and "{1}", which
@@ -62,11 +62,6 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
      */
     public CmdlineDiffProvider(String diffCmd) {
         this.diffCmd = diffCmd;
-        try {
-            pattern = Pattern.compile(DIFF_REGEXP);
-        } catch (PatternSyntaxException resex) {}
-        //firstText = new StringBuffer();
-        //secondText = new StringBuffer();
     }
 
     public CmdlineDiffProvider() {
@@ -174,16 +169,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
     private Difference[] createDiff(File f1, File f2) throws IOException {
         final StringBuffer firstText = new StringBuffer();
         final StringBuffer secondText = new StringBuffer();
-        if (pattern == null) {
-            try {
-                pattern = Pattern.compile(DIFF_REGEXP);
-            } catch (PatternSyntaxException resex) {
-                throw (IOException) ErrorManager.getDefault().annotate(
-                    new IOException(), resex.getLocalizedMessage());
-            }
-            //firstText = new StringBuffer();
-            //secondText = new StringBuffer();
-        }
+
         diffCmd = diffCmd.replace("\"{0}\"", "{0}").replace("\"{1}\"", "{1}");  // compatibility // NOI18N
         String firstPath;
         String secondPath;
@@ -214,7 +200,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                         for (int i = 0; i < length; i++) {
                             if (buffer[i] == '\n') {
                                 //stdoutNextLine(outBuffer.toString(), differences);
-                                outputLine(outBuffer.toString(), pattern, differences,
+                                outputLine(outBuffer.toString(), PATTERN_DIFF_FILTER_1, differences,
                                            firstText, secondText);
                                 outBuffer.delete(0, outBuffer.length());
                             } else {
@@ -224,7 +210,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                             }
                         }
                     }
-                    if (outBuffer.length() > 0) outputLine(outBuffer.toString(), pattern, differences,
+                    if (outBuffer.length() > 0) outputLine(outBuffer.toString(), PATTERN_DIFF_FILTER_1, differences,
                                                            firstText, secondText);
                     setTextOnLastDifference(differences, firstText, secondText);
                     ret[0] =  differences.toArray(new Difference[differences.size()]);

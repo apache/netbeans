@@ -57,7 +57,11 @@ public final class RefreshDependencyVersions extends Task {
     
     private boolean dryRun = false;
     private final Set<Dep> injectDeps = new HashSet<>();
-    
+
+    private static final Pattern PATTERN_LINE_FILTER_1 = Pattern.compile("(spec\\.version\\.base=)(.+)");
+    private static final Pattern PATTERN_LINE_FILTER_2 = Pattern.compile("(OpenIDE-Module: )(.+)");
+    private static final Pattern PATTERN_LINE_FILTER_3 = Pattern.compile("(OpenIDE-Module-Specification-Version: )(.+)");
+
     public RefreshDependencyVersions() {}
     
     public void setNbroot(File f) {
@@ -484,7 +488,7 @@ public final class RefreshDependencyVersions extends Task {
             if (pp.isFile()) {
                 String[] lines = gulp(pp, "ISO-8859-1");
                 for (int i = 0; i < lines.length; i++) {
-                    Matcher m1 = Pattern.compile("(spec\\.version\\.base=)(.+)").matcher(lines[i]);
+                    Matcher m1 = PATTERN_LINE_FILTER_1.matcher(lines[i]);
                     if (m1.matches()) {
                         dep.setSpecification(m1.group(2));
                     }
@@ -499,7 +503,7 @@ public final class RefreshDependencyVersions extends Task {
             if (mf.isFile()) {
                 String[] lines = gulp(mf, "UTF-8");
                 for (int i = 0; i < lines.length; i++) {
-                    Matcher m1 = Pattern.compile("(OpenIDE-Module: )(.+)").matcher(lines[i]);
+                    Matcher m1 = PATTERN_LINE_FILTER_2.matcher(lines[i]);
                     if (m1.matches()) {
                         String fullName = m1.group(2);
                         int idx = fullName.lastIndexOf('/');
@@ -511,7 +515,7 @@ public final class RefreshDependencyVersions extends Task {
                             dep.setCodenameBase("0");
                         }
                     }
-                    m1 = Pattern.compile("(OpenIDE-Module-Specification-Version: )(.+)").matcher(lines[i]);
+                    m1 = PATTERN_LINE_FILTER_3.matcher(lines[i]);
                     if (m1.matches()) {
                         dep.setSpecification(m1.group(2));
                     }

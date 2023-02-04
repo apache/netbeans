@@ -63,7 +63,10 @@ public class ModuleDependencies extends Task {
     private List<Output> outputs = new ArrayList<>();
     private Set<ModuleInfo> modules;
     private Pattern regexp;
-    
+
+    private static final Pattern PATTERN_DEPENDENCIES_NAME_FILTER_1 = Pattern.compile("^nb[.]cluster[.]");
+    private static final Pattern PATTERN_CLUSTER_FILTER_1 = Pattern.compile("[0-9.]+$");
+
     public ModuleDependencies () {
     }
     
@@ -725,7 +728,7 @@ public class ModuleDependencies extends Task {
             for (String clusterProp : standardClustersS.split(",")) {
                 String dir = getProject().getProperty(clusterProp + ".dir");
                 if (dir != null) {
-                    standardClusters.add(dir.replaceFirst("[0-9.]+$", ""));
+                    standardClusters.add(PATTERN_CLUSTER_FILTER_1.matcher(dir).replaceFirst(""));
                 }
             }
         }
@@ -765,7 +768,7 @@ public class ModuleDependencies extends Task {
                 Set<String> allowed = new HashSet<>();
                 allowed.add(m.group);
                 for (String piece : clusterDeps.split(",")) {
-                    allowed.add(piece.replaceFirst("^nb[.]cluster[.]", ""));
+                    allowed.add(PATTERN_DEPENDENCIES_NAME_FILTER_1.matcher(piece).replaceFirst(""));
                 }
                 for (Dependency d : m.depends) {
                     if (d.type == Dependency.Type.RECOMMENDS) {
@@ -1049,7 +1052,7 @@ public class ModuleDependencies extends Task {
                     continue;
                 }
                 Input i = new Input();
-                i.name = cluster.getName().replaceFirst("[0-9.]+$", "");
+                i.name = PATTERN_CLUSTER_FILTER_1.matcher(cluster.getName()).replaceFirst("");
                 i.jars = new FileSet();
                 i.jars.setDir(cluster);
                 i.jars.createInclude().setName("modules/*.jar");

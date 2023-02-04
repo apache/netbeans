@@ -25,6 +25,8 @@ import org.netbeans.spi.java.classpath.support.PathResourceBase;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
 
 import java.net.URL;
+import java.util.regex.Pattern;
+
 import org.openide.util.BaseUtilities;
 
 
@@ -33,6 +35,8 @@ import org.openide.util.BaseUtilities;
  */
 
 public final class SimplePathResourceImplementation  extends PathResourceBase {
+
+    private static final Pattern PATTERN_URL_FILTER_1 = Pattern.compile("file:.+[.]jar/?");
 
     /**
      * Check URL for correct syntax for a classpath root.
@@ -64,7 +68,7 @@ public final class SimplePathResourceImplementation  extends PathResourceBase {
             throw iae;
         }
         final String rootS = root.toString();
-        if (rootS.matches("file:.+[.]jar/?")) {
+        if (PATTERN_URL_FILTER_1.matcher(rootS).matches()) {
             File f = null;
             boolean dir = false;
             try {

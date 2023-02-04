@@ -31,6 +31,8 @@ import java.util.Properties;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
+
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -68,6 +70,8 @@ public final class BuildImplTest extends NbTestCase {
     private File junitJar;
     private File testNGJar;
     private File jcommanderJar;
+
+    private static final Pattern PATTERN_LINE_FILTER_1 = Pattern.compile("^.+[.](?=.+:$)");
 
     @Override protected Level logLevel() {
         return Level.FINE;
@@ -797,7 +801,7 @@ public final class BuildImplTest extends NbTestCase {
         int cnt = 0;
         synchronized (output) {
             for (String line : output) {
-                if (line.replaceFirst("^.+[.](?=.+:$)", "").equals(expectedLine)) {
+                if (PATTERN_LINE_FILTER_1.matcher(line).replaceFirst("").equals(expectedLine)) {
                     cnt++;
                 }
             }

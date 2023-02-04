@@ -33,6 +33,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.netbeans.util.Util;
@@ -221,8 +222,11 @@ final class CopyFiles extends Object {
             if (currentProperties == null) {
                 currentProperties = getProperties(relativePath);
             }
+
+            Pattern p = Pattern.compile(keyPattern);
+
             for (String key : currentProperties.keySet()) {
-                if (key.matches(keyPattern)) {
+                if (p.matcher(key).matches()) {
                     matchingKeys.add(key);
                 }
             }

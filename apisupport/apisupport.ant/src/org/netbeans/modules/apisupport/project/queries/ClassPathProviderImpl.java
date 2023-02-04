@@ -98,6 +98,8 @@ public final class ClassPathProviderImpl implements ClassPathProvider {
     private volatile Map<FileObject,ClassPath> extraCompilationUnitsCompile = null;
     private volatile Map<FileObject,ClassPath> extraCompilationUnitsExecute = null;
 
+    private static final Pattern PATTERN_CLASSPATH_FILTER_1 = Pattern.compile("\\$\\{([^{}]+)\\}");
+
     private static final Logger LOG = Logger.getLogger(ClassPathProviderImpl.class.getName());
 
     @CheckForNull
@@ -496,7 +498,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider {
                     CPI() {
                         project.evaluator().addPropertyChangeListener(WeakListeners.propertyChange(this, project.evaluator()));
                         project.getHelper().addAntProjectListener(WeakListeners.create(AntProjectListener.class, this, project.getHelper()));
-                        Matcher m = Pattern.compile("\\$\\{([^{}]+)\\}").matcher(cpS);
+                        Matcher m = PATTERN_CLASSPATH_FILTER_1.matcher(cpS);
                         while (m.find()) {
                             relevantProperties.add(m.group(1));
                         }

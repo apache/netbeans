@@ -26,6 +26,8 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
+
 import org.apache.maven.index.ArtifactContext;
 import org.apache.maven.index.ArtifactScanningListener;
 import org.apache.maven.index.ScanningResult;
@@ -45,6 +47,8 @@ public class RepositoryIndexerListener implements ArtifactScanningListener, Canc
     private final RepositoryInfo ri;
     private final Set<File> expectedDirs = new HashSet<>();
     private final Set<File> encounteredDirs = new HashSet<>();
+
+    private static final Pattern PATTERN_FILE_NAME_FILTER_MAVEN_METADATA = Pattern.compile("maven-metadata.*[.]xml");
 
     @SuppressWarnings("LeakingThisInConstructor")
     public RepositoryIndexerListener(IndexingContext indexingContext) {
@@ -82,7 +86,7 @@ public class RepositoryIndexerListener implements ArtifactScanningListener, Canc
         boolean hasFiles = false;
         boolean hasDirs = false;
         for (File f : kids) {
-            if (f.isFile() && !f.getName().matches("maven-metadata.*[.]xml")) {
+            if (f.isFile() && !PATTERN_FILE_NAME_FILTER_MAVEN_METADATA.matcher(f.getName()).matches()) {
                 hasFiles = true;
             }
             if (f.isDirectory()) {

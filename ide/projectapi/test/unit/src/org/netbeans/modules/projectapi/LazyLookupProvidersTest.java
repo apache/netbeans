@@ -29,6 +29,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
+
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.project.LookupMerger;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -39,6 +41,8 @@ import org.openide.util.test.AnnotationProcessorTestUtils;
 import org.openide.util.test.MockLookup;
 
 public class LazyLookupProvidersTest extends NbTestCase {
+
+    private static final Pattern PATTERN_CLASS_NAME_FILTER_1 = Pattern.compile("^\\Q" + LazyLookupProvidersTest.class.getName() + "$\\E");
 
     public LazyLookupProvidersTest(String n) {
         super(n);
@@ -180,7 +184,7 @@ public class LazyLookupProvidersTest extends NbTestCase {
         void assertLoadedClasses(String... names) {
             SortedSet<String> actual = new TreeSet<String>();
             for (Class<?> clazz : loadedClasses) {
-                actual.add(clazz.getName().replaceFirst("^\\Q" + LazyLookupProvidersTest.class.getName() + "$\\E", ""));
+                actual.add(PATTERN_CLASS_NAME_FILTER_1.matcher(clazz.getName()).replaceFirst(""));
             }
             assertEquals(Arrays.toString(names), actual.toString());
         }

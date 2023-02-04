@@ -34,6 +34,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 import org.netbeans.core.startup.CoreBridge;
 import org.netbeans.core.startup.Main;
 import org.netbeans.core.startup.RunLevel;
@@ -64,6 +66,8 @@ import org.osgi.service.url.URLStreamHandlerService;
 public class Activator implements BundleActivator, SynchronousBundleListener {
 
     private static final Logger LOG = Logger.getLogger(Activator.class.getName());
+
+    private static final Pattern PATTERN_HEADER_FILTER_1 = Pattern.compile(";.+");
 
     public Activator() {}
 
@@ -161,7 +165,7 @@ public class Activator implements BundleActivator, SynchronousBundleListener {
             // PackageAdmin.getRequiredBundles is not suitable for this - it is backwards.
             // XXX try to follow the spec more closely; this will work at least for headers created by MakeOSGi:
             for (String item : v.split(", ")) {
-                deps.add("cnb." + item.replaceFirst(";.+", ""));
+                deps.add("cnb." + PATTERN_HEADER_FILTER_1.matcher(item).replaceFirst(""));
             }
         }
         // XXX also check for BUNDLE_SYMBOLICNAME_ATTRIBUTE in IMPORT_PACKAGE (though not currently used by MakeOSGi)

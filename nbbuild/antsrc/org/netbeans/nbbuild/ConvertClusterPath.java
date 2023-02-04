@@ -46,6 +46,8 @@ public class ConvertClusterPath extends Task {
     private String basedir;
     private String to;
 
+    private static final Pattern PATTERN_FILE_NAME_FILTER_1 = Pattern.compile("^\\$\\{nbplatform\\.(.*)\\.netbeans\\.dest\\.dir\\}$");
+
     /**
      * Name of property to which stores
      * @param to
@@ -115,7 +117,7 @@ public class ConvertClusterPath extends Task {
                             }
                         });
                         if (alternate == null) {
-                            Matcher matcher = Pattern.compile("^\\$\\{nbplatform\\.(.*)\\.netbeans\\.dest\\.dir\\}$").matcher(parent.getName());
+                            Matcher matcher = PATTERN_FILE_NAME_FILTER_1.matcher(parent.getName());
                             if (matcher.matches()) {
                                 throw new BuildException("Unknown platform name '" + matcher.group(1) + "'.", getLocation());
                             } else {

@@ -45,6 +45,7 @@ public class TagParser {
     );
 
     private static final Pattern TAG_PATTERN = Pattern.compile("@([a-zA-Z]+)(\\s+|/|$)");
+    private static final Pattern PATTERN_LINE = Pattern.compile("[*\\s]+");
 
     public static Result parseTags(CompilationInfo info) {
         return parseTags(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()));
@@ -75,7 +76,7 @@ public class TagParser {
                     int pos = ts.offset() + prefix;
 
                     for (String line : lines) {
-                        if (line.replaceAll("[*\\s]+", "").isEmpty()) {
+                        if (PATTERN_LINE.matcher(line).replaceAll("").isEmpty()) {
                             pos += line.length() + 1;
                             continue;
                         }

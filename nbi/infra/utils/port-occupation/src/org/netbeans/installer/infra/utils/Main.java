@@ -21,19 +21,24 @@ package org.netbeans.installer.infra.utils;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author Kirill Sorokin
  */
 public class Main {
+
+    private static final Pattern PATTERN_ARGS_FILTER_1 = Pattern.compile("[0-9]+");
+    private static final Pattern PATTERN_ARGS_FILTER_2 = Pattern.compile("[0-9]+-[0-9]+");
+
     public static void main(String[] args) {
         for (String arg: args) {
-            if (arg.matches("[0-9]+")) {
+            if (PATTERN_ARGS_FILTER_1.matcher(arg).matches()) {
                 occupy(Integer.parseInt(arg));
             }
             
-            if (arg.matches("[0-9]+-[0-9]+")) {
+            if (PATTERN_ARGS_FILTER_2.matcher(arg).matches()) {
                 int start = Integer.parseInt(arg.substring(0, arg.indexOf("-")));
                 int end = Integer.parseInt(arg.substring(arg.indexOf("-") + 1));
                 

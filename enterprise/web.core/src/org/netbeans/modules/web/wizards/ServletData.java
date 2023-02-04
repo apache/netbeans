@@ -49,6 +49,11 @@ class ServletData extends DeployData {
 
     private static final Logger LOG = Logger.getLogger(ServletData.class.getName());
     private static final Pattern VALID_URI_PATTERN = Pattern.compile("[-_.!~*'();/?:@&=+$,a-zA-Z0-9]+"); // NOI18N
+
+    private static final Pattern PATTERN_SERVLET_FILTER_1 = Pattern.compile("[\\*/].*"); // NOI18N
+    private static final Pattern PATTERN_SERVLET_FILTER_2 = Pattern.compile(".*\\*.*\\*.*"); // NOI18N
+    private static final Pattern PATTERN_SERVLET_FILTER_3 = Pattern.compile("..*\\*..*"); // NOI18N
+
     private String errorMessage = null;
     private String name = null;
     // These are URL mappings - they're used by both Servlets and Filters
@@ -599,13 +604,13 @@ class ServletData extends DeployData {
     }
 
     private String checkServletMappig(String uri) {
-        if (!uri.matches("[\\*/].*")) { //NOI18N
+        if (!PATTERN_SERVLET_FILTER_1.matcher(uri).matches()) { //NOI18N
             return NbBundle.getMessage(ServletData.class, "MSG_WrongUriStart");
         } else if (uri.length() > 1 && uri.endsWith("/")) {
             return NbBundle.getMessage(ServletData.class, "MSG_WrongUriEnd");
-        } else if (uri.matches(".*\\*.*\\*.*")) { //NOI18N
+        } else if (PATTERN_SERVLET_FILTER_2.matcher(uri).matches()) { //NOI18N
             return NbBundle.getMessage(ServletData.class, "MSG_TwoAsterisks");
-        } else if (uri.matches("..*\\*..*")) { //NOI18N
+        } else if (PATTERN_SERVLET_FILTER_3.matcher(uri).matches()) { //NOI18N
             return NbBundle.getMessage(ServletData.class, "MSG_AsteriskInTheMiddle");
         } else if (uri.length() > 1 && !isRFC2396URI(uri.substring(1))) {
             return NbBundle.getMessage(ServletData.class, "MSG_WrongUri");

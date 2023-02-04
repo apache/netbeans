@@ -32,6 +32,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import javax.xml.parsers.SAXParserFactory;
 import org.apache.tools.ant.BuildException;
@@ -50,6 +51,9 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Jesse Glick, Jiri Skrivanek
  */
 public class LayerOptionsImport extends Task {
+
+    private static final Pattern PATTERN_ATTR_NAME_FILTER_1 = Pattern.compile("(in|ex)clude");
+    private static final Pattern PATTERN_MODULE_NAME_FILTER_1 = Pattern.compile("/\\d+$");
 
     public LayerOptionsImport() {
     }
@@ -86,7 +90,7 @@ public class LayerOptionsImport extends Task {
                         if (modname == null) {
                             continue;
                         }
-                        String cnb = modname.replaceFirst("/\\d+$", "");
+                        String cnb = PATTERN_MODULE_NAME_FILTER_1.matcher(modname).replaceFirst("");
                         String layer = mf.getMainAttributes().getValue("OpenIDE-Module-Layer");
                         if (layer != null) {
                             parse(jf.getInputStream(jf.getEntry(layer)), files, cnb, attributesMap);
@@ -118,7 +122,7 @@ public class LayerOptionsImport extends Task {
                         log(origin);
                     }
                     for (String name : name2value.keySet()) {
-                        if (name.matches("(in|ex)clude") || name.equals("translate")) {
+                        if (PATTERN_ATTR_NAME_FILTER_1.matcher(name).matches() || name.equals("translate")) {
                             String value = name2value.get(name);
                             if (value != null && value.length() > 0) {
                                 String line = String.format("%s %s", name, value);

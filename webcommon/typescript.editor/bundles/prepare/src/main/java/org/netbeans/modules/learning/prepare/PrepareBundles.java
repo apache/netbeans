@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.jar.JarOutputStream;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -59,6 +60,8 @@ public class PrepareBundles {
         "LICENSE.md"
     };
     private static final String nl = "\n";
+
+    private static final Pattern PATTERN_LICENSE_FILTER_1 = Pattern.compile("[ \n\r\t]+");
 
     public static void main(String... args) throws IOException, InterruptedException, NoSuchAlgorithmException {
         if (args.length != 2) {
@@ -242,7 +245,7 @@ public class PrepareBundles {
     }
 
     private static List<String> licenseTextToTokens(String licenseText) {
-        return Arrays.asList(licenseText.replaceAll("[ \n\r\t]+", " ").split(" "));
+        return Arrays.asList(PATTERN_LICENSE_FILTER_1.matcher(licenseText).replaceAll( " ").split(" "));
     }
 
     private static class LicenseDescription {

@@ -43,6 +43,7 @@ import org.apache.tools.ant.Task;
 public final class CheckModuleConfigs extends Task {
     
     private File nbroot;
+    private static final Pattern PATTERN_LIST_FILTER_1 = Pattern.compile(".*\\s.*|^,.*|.*,$|.*,,.*");
     
     public CheckModuleConfigs() {}
     
@@ -111,7 +112,7 @@ public final class CheckModuleConfigs extends Task {
             return Collections.emptyList();
         }
         // !list.matches("[^\\s,]+(,[^\\s,]+)*") exhausts stack for long module lists
-        if (list.matches(".*\\s.*|^,.*|.*,$|.*,,.*")) {
+        if (PATTERN_LIST_FILTER_1.matcher(list).matches()) {
             throw new BuildException("remove whitespaces or fix leading/trailing commas in " + what + ": " + list);
         }
         List<String> r = new ArrayList<>(Arrays.asList(list.split(",")));

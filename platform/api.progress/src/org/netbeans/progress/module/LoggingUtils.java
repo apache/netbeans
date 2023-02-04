@@ -19,11 +19,15 @@
 
 package org.netbeans.progress.module;
 
+import java.util.regex.Pattern;
+
 public class LoggingUtils {
+
+    private static final Pattern PATTERN_PROGRESS_LOG_LINE = Pattern.compile("(java|org[.]netbeans[.](api[.]progress|modules[.]progress|progress[.]module))[.].+");
 
     public static String findCaller() {
         for (StackTraceElement line : Thread.currentThread().getStackTrace()) {
-            if (!line.getClassName().matches("(java|org[.]netbeans[.](api[.]progress|modules[.]progress|progress[.]module))[.].+")) { // NOI18N
+            if (!PATTERN_PROGRESS_LOG_LINE.matcher(line.getClassName()).matches()) { // NOI18N
                 return line.toString();
             }
         }

@@ -905,8 +905,11 @@ public final class OptionsExportModel {
             if (currentProperties == null) {
                 currentProperties = getProperties(relativePath);
             }
+
+            Pattern p = Pattern.compile(keyPattern);
+
             for (String key : currentProperties.keySet()) {
-                if (key.matches(keyPattern)) {
+                if (p.matcher(key).matches()) {
                     matchingKeys.add(key);
                 }
             }

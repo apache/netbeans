@@ -254,14 +254,14 @@ public class Components2 extends HttpServlet {
             out.println();
             
             for (int i = 0; i < productUids.size(); i++) {
-                defaultGroupProducts.add(Integer.valueOf(i));
+                defaultGroupProducts.add(i);
             }
             
             for (Group group: groups) {
                 List<Integer> components = new LinkedList<Integer>();
                 for (int i = 0; i < products.size(); i++) {
                     if (products.get(i).getParent().equals(group)) {
-                        Integer index = Integer.valueOf(productMapping.get(i));
+                        Integer index = productMapping.get(i);
                         if (!components.contains(index)) {
                             components.add(index);
                             defaultGroupProducts.remove(index);

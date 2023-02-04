@@ -41,12 +41,12 @@ public class UniqueVariableNameFinder {
 
     public void addPattern(String pattern, int count) {
         varDeclMap.remove(pattern);
-        varDeclMap.put(pattern, new Integer(count));
+        varDeclMap.put(pattern, count);
     }
 
     public int getPatternCount(String pattern) {
         Integer count = varDeclMap.get(pattern);
-        return count != null?count.intValue():0;
+        return count != null? count :0;
     }
 
     public String getVariableDecl(ParameterInfo p) {
@@ -96,7 +96,7 @@ public class UniqueVariableNameFinder {
         Integer pCount = varDeclMap.get(pattern);
   
         if (pCount != null) {
-            return oldName + pCount.intValue();
+            return oldName + pCount;
         }
         return oldName;
     }

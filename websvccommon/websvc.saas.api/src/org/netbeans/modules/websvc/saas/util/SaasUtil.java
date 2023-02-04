@@ -435,7 +435,7 @@ public class SaasUtil {
             return -1;
         }
         try {
-            return Integer.valueOf(path.substring(iOpen+1, iClose)) - 1; //xpath index is 1-based
+            return Integer.parseInt(path.substring(iOpen+1, iClose)) - 1; //xpath index is 1-based
         } catch (NumberFormatException e) {
             return -1;
         }

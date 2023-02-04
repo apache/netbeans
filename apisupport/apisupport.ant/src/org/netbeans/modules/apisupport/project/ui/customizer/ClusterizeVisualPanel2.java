@@ -37,7 +37,7 @@ implements ExplorerManager.Provider {
         view.addPropertyColumn("action", NbBundle.getMessage(ClusterizeInfo.class, "MSG_ClusterizeActivateAs")); // NOI18N
         view.setPopupAllowed(false);
         
-        putClientProperty("WizardPanel_contentSelectedIndex", Integer.valueOf(1));
+        putClientProperty("WizardPanel_contentSelectedIndex", 1);
         putClientProperty("WizardPanel_contentData", panel.settings.getStep(1));
         putClientProperty("WizardPanel_autoWizardStyle", Boolean.TRUE);
         putClientProperty("WizardPanel_contentDisplayed", Boolean.TRUE);

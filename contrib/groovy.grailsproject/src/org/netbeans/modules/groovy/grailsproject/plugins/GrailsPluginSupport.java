@@ -364,7 +364,7 @@ public class GrailsPluginSupport {
                 try {
                     try {
                         Integer retValue = future.get();
-                        if (retValue.intValue() != 0) {
+                        if (retValue != 0) {
                             broken = true;
                         }
                     } catch (InterruptedException ex) {

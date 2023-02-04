@@ -392,7 +392,7 @@ public class WLIncrementalDeployment extends IncrementalDeployment implements In
                     }
 
                     if (!("FINISHED".equals(str)) // NOI18N
-                            || (candidates != null && candidates.intValue() == 0)) {
+                            || (candidates != null && candidates == 0)) {
                         return false;
                     }
                     return true;

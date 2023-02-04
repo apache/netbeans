@@ -100,7 +100,7 @@ public class GrailsProjectWizardIterator implements WizardDescriptor.ProgressIns
             Future<Integer> future = service.run();
             try {
                 Integer ret = future.get();
-                if (ret.intValue() != 0) {
+                if (ret != 0) {
                     String msg = NbBundle.getMessage(GrailsProjectWizardIterator.class, "WIZARD_ERROR_MESSAGE_APPLICATION");
                     DialogDisplayer.getDefault().notify(
                             new NotifyDescriptor.Message(msg, NotifyDescriptor.WARNING_MESSAGE));
@@ -155,7 +155,7 @@ public class GrailsProjectWizardIterator implements WizardDescriptor.ProgressIns
 
         // get project counter from GrailsConfiguration
         baseCount = GrailsProjectSettings.getDefault().getNewProjectCount() + 1;
-        wizard.putProperty("WizardPanel_GrailsProjectCounter", Integer.valueOf(baseCount));
+        wizard.putProperty("WizardPanel_GrailsProjectCounter", baseCount);
 
         panels = createPanels();
         String[] steps = createSteps();
@@ -171,7 +171,7 @@ public class GrailsProjectWizardIterator implements WizardDescriptor.ProgressIns
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i)); // NOI18N
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
             }
@@ -189,7 +189,7 @@ public class GrailsProjectWizardIterator implements WizardDescriptor.ProgressIns
 
     @Override
     public String name() {
-        return NbBundle.getMessage(GrailsProjectWizardIterator.class, "LAB_IteratorName", Integer.valueOf(index + 1), Integer.valueOf(panels.length));
+        return NbBundle.getMessage(GrailsProjectWizardIterator.class, "LAB_IteratorName", index + 1, panels.length);
     }
 
     @Override

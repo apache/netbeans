@@ -530,7 +530,7 @@ public final class GrailsPlatform {
             // why we want to parse number 3times at maximum
             for (int i = 0; i < Math.min(numberParts.length, 3); i++) {
                 try {
-                    parsed[i] = Integer.valueOf(numberParts[i]);
+                    parsed[i] = Integer.parseInt(numberParts[i]);
                 } catch (NumberFormatException ex) {
                     throw new IllegalArgumentException(version, ex);
                 }
@@ -547,15 +547,15 @@ public final class GrailsPlatform {
         }
 
         public int getMinor() {
-            return minor == null ? 0 : minor.intValue();
+            return minor == null ? 0 : minor;
         }
 
         public int getMicro() {
-            return micro == null ? 0 : micro.intValue();
+            return micro == null ? 0 : micro;
         }
 
         public int getUpdate() {
-            return update == null ? 0 : update.intValue();
+            return update == null ? 0 : update;
         }
 
         public String getQualifier() {

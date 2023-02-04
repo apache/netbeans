@@ -76,7 +76,7 @@ public class PanelProjectLocationVisual extends SettingsPanel implements Documen
         Integer count = (Integer) d.getProperty("WizardPanel_GrailsProjectCounter");
         String formater = NbBundle.getMessage(PanelProjectLocationVisual.class, "TXT_GrailsApplication");
         
-        int baseCount = count.intValue();
+        int baseCount = count;
         
         String newPrjName = (String) d.getProperty ("name"); //NOI18N
         if (newPrjName == null) {        

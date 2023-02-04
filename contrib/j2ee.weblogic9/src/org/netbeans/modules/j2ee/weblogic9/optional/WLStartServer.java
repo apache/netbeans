@@ -72,9 +72,8 @@ public final class WLStartServer extends StartServer {
 
     @Override
     public ServerDebugInfo getDebugInfo(Target target) {
-        return new ServerDebugInfo(dm.getHost(), Integer.valueOf(
-                dm.getInstanceProperties().getProperty(
-                WLPluginProperties.DEBUGGER_PORT_ATTR)));
+        return new ServerDebugInfo(dm.getHost(), Integer.parseInt(
+                dm.getInstanceProperties().getProperty(WLPluginProperties.DEBUGGER_PORT_ATTR)));
     }
 
     @Override

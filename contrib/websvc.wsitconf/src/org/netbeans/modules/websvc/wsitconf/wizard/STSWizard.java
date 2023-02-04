@@ -357,7 +357,7 @@ public class STSWizard implements TemplateWizard.Iterator {
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i)); // NOI18N
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
             }
@@ -392,7 +392,7 @@ public class STSWizard implements TemplateWizard.Iterator {
 
     public String name() {
         return MessageFormat.format(NbBundle.getMessage(STSWizard.class, "LBL_WizardStepsCount"),
-                new String[]{(Integer.valueOf(index + 1)).toString(), Integer.valueOf(panels.length).toString()}); //NOI18N
+                new String[]{Integer.toString(index + 1), Integer.toString(panels.length)}); //NOI18N
     }
 
     public boolean hasNext() {

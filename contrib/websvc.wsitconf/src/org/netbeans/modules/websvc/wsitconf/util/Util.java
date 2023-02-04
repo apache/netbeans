@@ -212,9 +212,9 @@ public class Util {
             i = Integer.parseInt(s);
             if (i != null) {
                 if (zeroAllowed) {
-                    return i.intValue() >= 0;
+                    return i >= 0;
                 }
-                return i.intValue() > 0;
+                return i > 0;
             }
         } catch (NumberFormatException nfe) {
             logger.log(Level.FINE, null, nfe); // just ignore

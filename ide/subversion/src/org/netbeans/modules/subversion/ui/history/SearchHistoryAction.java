@@ -115,11 +115,6 @@ public class SearchHistoryAction extends ContextAction {
         tc.activateDiffView(true);
     }
 
-    private static Context getDefaultContext() {
-        Project [] projects = OpenProjects.getDefault().getOpenProjects();
-        return SvnUtils.getProjectsContext(projects);
-    }
-
     /**
      * Opens search panel in the context of the given repository URL.
      * 

@@ -970,24 +970,6 @@ public class CommonTestsCfgOfCreate extends SelfResizingPanel implements ChangeL
         }
         return bottomPanel;
     }
-        
-    /**
-     * Adds a border and a title around a given component.
-     * If the component already has some border, it is overridden (not kept).
-     *
-     * @param  component  component the border and title should be added to
-     * @param  insets  insets between the component and the titled border
-     * @param  title  text of the title
-     */
-    private static void addTitledBorder(JComponent component,
-                                        Insets insets,
-                                        String title) {
-        Border insideBorder = BorderFactory.createEmptyBorder(
-                insets.top, insets.left, insets.bottom, insets.right);
-        Border outsideBorder = new TitledBorder(
-                BorderFactory.createEtchedBorder(), title);
-        component.setBorder(new CompoundBorder(outsideBorder, insideBorder));
-    }
     
     /**
      */
@@ -1175,44 +1157,6 @@ public class CommonTestsCfgOfCreate extends SelfResizingPanel implements ChangeL
             ChangeEvent e = new ChangeEvent(this);
             for (Iterator<ChangeListener> i = changeListeners.iterator(); i.hasNext(); ) {
                 i.next().stateChanged(e);
-            }
-        }
-    }
-    
-    /**
-     * Disables all interactive visual components of this dialog
-     * except the OK, Cancel and Help buttons.
-     */
-    private void disableComponents() {
-        final Stack<Container> stack = new Stack<Container>();
-        stack.push(this);
-        
-        while (!stack.empty()) {
-            Container container = stack.pop();
-            Component comps[] = container.getComponents();
-            for (int i = 0; i < comps.length; i++) {
-                final java.awt.Component comp = comps[i];
-                
-                if (comp == txtAreaMessage) {
-                    continue;
-                }
-                if (comp instanceof JPanel) {
-                    JPanel panel = (JPanel) comp;
-                    stack.push(panel);
-
-                    final Border border = panel.getBorder();
-                    if (border != null) {
-                        disableBorderTitles(border);
-                    }
-                    continue;
-                }
-                comp.setEnabled(false);
-                if (comp instanceof java.awt.Container) {
-                    Container nestedCont = (Container) comp;
-                    if (nestedCont.getComponentCount() != 0) {
-                        stack.push(nestedCont);
-                    }
-                }
             }
         }
     }

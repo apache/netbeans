@@ -60,16 +60,6 @@ public class SyntaxHighlightingTest extends NbTestCase {
 //        includes.add("testRanges");
 //        filterTests(includes);
     }
-
-    private void filterTests(List<String> includeTestNames) {
-        List<Filter.IncludeExclude> includeTests = new ArrayList<Filter.IncludeExclude>();
-        for (String testName : includeTestNames) {
-            includeTests.add(new Filter.IncludeExclude(testName, ""));
-        }
-        Filter filter = new Filter();
-        filter.setIncludes(includeTests.toArray(new Filter.IncludeExclude[includeTests.size()]));
-        setFilter(filter);
-    }
     
     public static TestSuite suite() {
         TestSuite suite = new NbTestSuite();
@@ -422,13 +412,6 @@ public class SyntaxHighlightingTest extends NbTestCase {
         }
     }
 
-    private void dumpSequence(HighlightsSequence hs) {
-        System.out.println("Dumping sequence: " + hs + " {");
-        while(hs.moveNext()) {
-            System.out.println("<" + hs.getStartOffset() + ", " + hs.getEndOffset() + ">");
-        }
-        System.out.println("} End of sequence: " + hs + " dump ------------");
-    }
 
     private static final class L implements HighlightsChangeListener {
         public int eventsCnt = 0;

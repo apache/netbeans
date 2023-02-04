@@ -217,24 +217,6 @@ public class CssHintsProvider implements HintsProvider {
         }
     }
 
-    private static String getMessageKey(String errorKey, boolean enabled) {
-        String param = null;
-        String keyEnable = null;
-        String keyDisable = null;
-        if (CssAnalyser.isUnknownPropertyError(errorKey)) {
-            keyEnable = "MSG_Disable_Ignore_Property"; //NOI18N
-            keyDisable = "MSG_Enable_Ignore_Property"; //NOI18N
-            param = CssAnalyser.getUnknownPropertyName(errorKey);
-        } else {
-            keyEnable = "MSG_Disable_Check"; //NOI18N
-            keyDisable = "MSG_Enable_Check"; //NOI18N
-
-        }
-        return enabled
-                ? NbBundle.getMessage(CssHintsProvider.class, keyEnable, param)
-                : NbBundle.getMessage(CssHintsProvider.class, keyDisable, param);
-
-    }
 
     private static final class ErrorCheckFix implements HintFix {
 

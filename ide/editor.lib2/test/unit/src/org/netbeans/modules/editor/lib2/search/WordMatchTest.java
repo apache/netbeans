@@ -48,15 +48,6 @@ public class WordMatchTest extends NbTestCase {
 //        filterTests(includes);
     }
 
-    private void filterTests(List<String> includeTestNames) {
-        List<Filter.IncludeExclude> includeTests = new ArrayList<Filter.IncludeExclude>();
-        for (String testName : includeTestNames) {
-            includeTests.add(new Filter.IncludeExclude(testName, ""));
-        }
-        Filter filter = new Filter();
-        filter.setIncludes(includeTests.toArray(new Filter.IncludeExclude[includeTests.size()]));
-        setFilter(filter);
-    }
 
     public void testOffset0Forward() throws Exception {
         Document doc = new PlainDocument();

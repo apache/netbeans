@@ -172,18 +172,6 @@ public final class DataComboBoxSupport {
             return dataModel.getListModel();
         }
 
-        private int getItemIndex(Object item) {
-            if (item == null) {
-                return -1;
-            }
-            for (int i = 0; i < getSize(); i++ ) {
-                if (getElementAt(i).equals(item)) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
         @Override
         public void intervalRemoved(ListDataEvent e) {
             throw new UnsupportedOperationException("This is currently not supported.");

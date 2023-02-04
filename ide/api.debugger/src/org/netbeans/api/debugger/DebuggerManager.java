@@ -785,18 +785,6 @@ public final class DebuggerManager implements ContextProvider {
         listeners.removeElement (l);
     }
 
-    /**
-     * Removes debugger listener.
-     * Does the same as {@link #removeDebuggerListener(org.netbeans.api.debugger.DebuggerManagerListener)},
-     * but uses the standard naming pattern, so that it can be called by
-     * {@link org.openide.util.WeakListeners}.
-     *
-     * @param l listener object.
-     */
-    // DO NOT REMOVE, used by WeakListeners, by reflection!
-    private void removeDebuggerManagerListener (DebuggerManagerListener l) {
-        listeners.removeElement (l);
-    }
 
     /** 
      * Add a debuggerManager listener to changes of watches and breakpoints.

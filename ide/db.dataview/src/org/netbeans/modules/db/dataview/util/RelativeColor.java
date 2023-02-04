@@ -299,20 +299,6 @@ public class RelativeColor implements UIDefaults.LazyValue {
         return result;
     }
     
-    private static final void out (String nm, float[] f) {
-        //XXX for debugging - deleteme
-        StringBuffer sb = new StringBuffer(nm);
-        sb.append(": ");
-        for (int i=0; i < f.length; i++) {
-            sb.append (Math.round(f[i] * 100));
-            if (i != f.length-1) {
-                sb.append(',');
-                sb.append(' ');
-            }
-        }
-        System.err.println(sb.toString());
-    }
-    
     /** Saturate a float value, clamping values below 0 to 0 and above 1 to 1 */
     private static float saturate (float f) {
         return Math.max(0, Math.min(1, f));

@@ -306,28 +306,6 @@ public class BlameTestHidden extends AbstractCommandTestCase {
 //        blameNullAuthor(urlAnnotator);
 //    }
 
-    private void blameNullAuthor(Annotator annotator) throws Exception {                                
-        
-        File file = createFile("file");
-        add(file);
-        commit(file);
-        
-        // 1. line
-        write(file, "a\n");
-        anoncommit(file);
-        ISVNInfo info = getInfo(file);
-        Number rev1 = info.getRevision();
-
-        ISVNAnnotations a1 = annotator.annotate(getNbClient(), file, null, null);
-        
-        // test 
-        assertEquals(1, a1.numberOfLines());        
-        assertEquals("a", a1.getLine(0));        
-        assertNull(a1.getAuthor(0));
-        // assertNull(a.getChanged(0)); is null only for svnClientAdapter
-        assertEquals(rev1.getNumber(), a1.getRevision(0));
-    }
-
     private abstract class Annotator {
         protected abstract ISVNAnnotations annotate(ISVNClientAdapter c, File file, SVNRevision revStart, SVNRevision revEnd) throws Exception;
     }

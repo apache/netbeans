@@ -146,31 +146,6 @@ public class QTCTestHidden extends NbTestCase {
 //        assertFalse(repoPanel.isVisible());
 //    }
 
-    private QueryTopComponent getQueryTC(QueryTopComponent... ignore) {
-        QueryTopComponent qtc = null;
-        Set<TopComponent> tcs = TopComponent.getRegistry().getOpened();
-        for (TopComponent tc : tcs) {
-            if (tc instanceof QueryTopComponent) {
-                boolean found = false;
-                for (TopComponent i : ignore) {
-                    if(tc == i) {
-                        found = true;
-                        break;
-                    }
-                }
-                if(found) continue;
-                qtc = (QueryTopComponent) tc;
-                break;
-            }
-        }
-        assertNotNull(qtc);
-        return qtc;
-    }
-
-    private QueryProvider[] getSavedQueries(QueryTopComponent tc) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        return (QueryProvider[]) getField(tc, "savedQueries");
-    }
-
     private Object getField(Object o, String name) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Field f = o.getClass().getDeclaredField(name);
         f.setAccessible(true);

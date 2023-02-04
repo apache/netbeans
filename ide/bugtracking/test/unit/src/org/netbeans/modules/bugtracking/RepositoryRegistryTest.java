@@ -239,14 +239,5 @@ public class RepositoryRegistryTest extends NbTestCase {
     private static final String ID_CONNECTOR2 = "RepositoryRegistryTestConector2";
     @BugtrackingConnector.Registration (id=ID_CONNECTOR2,displayName=ID_CONNECTOR2,tooltip=ID_CONNECTOR2)    
     public static class MyConnector2 extends MyConnector1 {} 
-    
-    private DelegatingConnector findConnector(String id) {
-        DelegatingConnector[] conns = BugtrackingManager.getInstance().getConnectors();
-        for (DelegatingConnector dc : conns) {
-            if(id.equals(dc.getID())) {
-                return dc;
-            }
-        }
-        return null;
-    }
+
 }

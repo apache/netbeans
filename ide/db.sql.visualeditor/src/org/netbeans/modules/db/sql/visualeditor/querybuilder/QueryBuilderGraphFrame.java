@@ -1865,25 +1865,9 @@ public class QueryBuilderGraphFrame extends JPanel
 //         resizeDesktop();
 //         _queryBuilder.getQueryBuilderPane().getQueryBuilderSqlTextArea().requestFocus(true);
     }
-    
-    
+
     // Redraw an internal frame?
-    
-    private void redrawFrame(QueryBuilderInternalFrame frame) {
-//         if (frame != null)
-//             // && frame.isShowing()
-//         {
-//             HashMap map = new HashMap();
-//             Map atts = GraphConstants.createMap();
-            
-//             GraphConstants.setBounds(atts,frame.getBounds());
-//             map.put(frame.getGraphCell(),atts);
-//             // Update the graph model with the new attributes, which include frame bounds(?)
-//             _graphModel.edit(map,null,null,null);
-//         }
-    }
-    
-    
+
     // Manually refresh the graph display -- copied from ComponentListener below
     // The forum suggested something like graphDidChange(); revalidate(); but not tried
     // ToDo: Decide whether we need something like this with GraphLib

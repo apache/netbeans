@@ -157,18 +157,7 @@ public class RegisterDerby implements DatabaseRuntime {
             Util.getDerbyFile("lib/derbytools.jar").getAbsolutePath() + File.pathSeparator +
             Util.getDerbyFile("lib/derbynet.jar").getAbsolutePath(); // NOI18N
     }
-    
-    /**
-     * Returns the registered Derby driver.
-     */
-    private JDBCDriver getRegisteredDerbyDriver() {
-        JDBCDriver[] drvs = JDBCDriverManager.getDefault().getDrivers(DerbyOptions.DRIVER_CLASS_NET);
-        if (drvs.length > 0) {
-            return drvs[0];
-        }
-        return null;
-    }
-    
+
     public int getPort() {
         return 1527;
     }

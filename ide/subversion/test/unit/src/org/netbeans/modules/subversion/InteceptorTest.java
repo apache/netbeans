@@ -4248,16 +4248,6 @@ public class InteceptorTest extends NbTestCase {
     protected void add(File file) throws SVNClientException {
         TestKit.add(file);
     }
-    
-    private void cleanUpRepo() throws SVNClientException {
-        ISVNClientAdapter client = getClient();
-        ISVNDirEntry[] entries = client.getList(repoUrl, SVNRevision.HEAD, false);
-        SVNUrl[] urls = new SVNUrl[entries.length];
-        for (int i = 0; i < entries.length; i++) {
-            urls[i] = repoUrl.appendPath(entries[i].getPath());            
-        }        
-        client.remove(urls, "cleanup");
-    }
 
     private void cleanUpWC(File wc) throws IOException {
         if(wc.exists()) {
@@ -4272,13 +4262,6 @@ public class InteceptorTest extends NbTestCase {
                     }
                 }
             }
-        }
-    }
-
-    private void assertStatus(SVNStatusKind status, File wc) throws SVNClientException {
-        ISVNStatus[] values = getClient().getStatus(new File[]{wc});
-        for (ISVNStatus iSVNStatus : values) {
-            assertEquals(status, iSVNStatus.getTextStatus());
         }
     }
  

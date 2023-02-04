@@ -45,10 +45,6 @@ import org.xml.sax.XMLReader;
  * @author Libor Kotouc
  */
 public class PaletteEnvironmentProvider implements Environment.Provider {
-    
-    private static PaletteEnvironmentProvider createProvider() {
-        return new PaletteEnvironmentProvider();
-    }
 
     private PaletteEnvironmentProvider() {
     }

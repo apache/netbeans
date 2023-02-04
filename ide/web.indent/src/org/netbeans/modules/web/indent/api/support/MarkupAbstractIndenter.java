@@ -338,19 +338,6 @@ public abstract class MarkupAbstractIndenter<T1 extends TokenId> extends Abstrac
         }
     }
 
-    private String dumpMoreDiagnosticToResolveIssue162700(Stack<MarkupItem> fileStack) {
-        int index = fileStack.size() - 6;
-        if (index < 0) {
-            index = 0;
-        }
-        StringBuilder sb = new StringBuilder("diagnostic dump: ");
-        ListIterator<MarkupItem> it = fileStack.listIterator(index);
-        while (it.hasNext()) {
-            MarkupItem im = it.next();
-            sb.append(im.toString()).append(" ");
-        }
-        return sb.toString();
-    }
 
     private boolean addIndentationCommand(List<IndentCommand> iis, IndentCommand ic, MarkupItem item, List<MarkupItem> prevItems) {
         MarkupItem prevItem = prevItems.size() > 0 ? prevItems.get(prevItems.size()-1) : null;
@@ -652,23 +639,6 @@ public abstract class MarkupAbstractIndenter<T1 extends TokenId> extends Abstrac
                 getStack().push(newItem);
             }
         }
-    }
-
-    private List<MarkupItem> eliminateTagsOpenedAndClosedOnOneLine(List<MarkupItem> lineItems) {
-        List<MarkupItem> newItems = new ArrayList<MarkupItem>();
-        for (int i=lineItems.size()-1; i>=0; i--) {
-            MarkupItem item = lineItems.get(i);
-            // found a closing tag -> jump before corresponding open tag if there is one:
-            if (!item.openingTag) {
-                int index = indexOfOpenTag(lineItems, item, i);
-                if (index != -1) {
-                    i = index;
-                    continue;
-                }
-            }
-            newItems.add(0, item);
-        }
-        return newItems;
     }
 
     private List<MarkupItem> calculateAllVirtualCloseTagsForOpenTag(MarkupItem newItem) {

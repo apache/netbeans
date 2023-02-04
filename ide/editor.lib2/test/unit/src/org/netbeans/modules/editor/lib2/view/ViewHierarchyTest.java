@@ -61,15 +61,6 @@ public class ViewHierarchyTest extends NbTestCase {
 //        filterTests(includes);
     }
 
-    private void filterTests(List<String> includeTestNames) {
-        List<Filter.IncludeExclude> includeTests = new ArrayList<Filter.IncludeExclude>();
-        for (String testName : includeTestNames) {
-            includeTests.add(new Filter.IncludeExclude(testName, ""));
-        }
-        Filter filter = new Filter();
-        filter.setIncludes(includeTests.toArray(new Filter.IncludeExclude[includeTests.size()]));
-        setFilter(filter);
-    }
 
     @Override
     protected void setUp() throws Exception {

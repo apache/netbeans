@@ -277,28 +277,6 @@ public final class HtmlEditorSupport extends DataEditorSupport implements OpenCo
         return text;
     }
 
-    private boolean canDecodeFile(FileObject fo, String encoding) {
-        CharsetDecoder decoder = Charset.forName(encoding).newDecoder().onUnmappableCharacter(CodingErrorAction.REPORT).onMalformedInput(CodingErrorAction.REPORT);
-        try {
-            BufferedInputStream bis = new BufferedInputStream(fo.getInputStream());
-            //I probably have to create such big buffer since I am not sure
-            //how to cut the file to smaller byte arrays so it cannot happen
-            //that an encoded character is divided by the arrays border.
-            //In such case it might happen that the method woult return
-            //incorrect value.
-            byte[] buffer = new byte[(int) fo.getSize()];
-            bis.read(buffer);
-            bis.close();
-            decoder.decode(ByteBuffer.wrap(buffer));
-            return true;
-        } catch (CharacterCodingException ex) {
-            //return false
-        } catch (IOException ioe) {
-            Logger.getLogger("global").log(Level.WARNING, "Error during charset verification", ioe);
-        }
-        return false;
-    }
-
     private boolean canEncode(String docText, String encoding) {
         CharsetEncoder encoder = Charset.forName(encoding).newEncoder();
         return encoder.canEncode(docText);

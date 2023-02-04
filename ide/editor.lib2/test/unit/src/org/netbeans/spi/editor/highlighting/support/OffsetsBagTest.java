@@ -982,14 +982,6 @@ public class OffsetsBagTest extends NbTestCase {
         assertMarks("Wrong highlights", createOffsetsBag(10, 35, attribsB), bag);
     }
 
-    private void dumpHighlights(HighlightsSequence seq) {
-        System.out.println("Dumping highlights from: " + seq + "{");
-        while(seq.moveNext()) {
-            System.out.println("<" + seq.getStartOffset() + ", " + seq.getEndOffset() + ", " + seq.getAttributes() + ">");
-        }
-        System.out.println("} --- End of Dumping highlights from: " + seq + " ---------------------");
-    }
-
     private OffsetsBag createOffsetsBag(Object... triples) {
         assert triples != null;
         assert triples.length % 3 == 0;

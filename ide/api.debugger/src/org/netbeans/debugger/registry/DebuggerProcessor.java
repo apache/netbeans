@@ -347,10 +347,6 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
         }
     }
 
-    private boolean implementsInterfaces(Element e, String classNames) {
-        Set<String> interfaces = new HashSet<>(Arrays.asList(classNames.split("[, ]+")));
-        return implementsInterfaces(e, interfaces);
-    }
 
     private boolean implementsInterfaces(Element e, Set<String> interfaces) {
         switch (e.getKind()) {
@@ -536,26 +532,6 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
         }
     }
 
-    /**
-     * Translates "org.MyClass1.class, org.MyClass2.class, ... " to
-     * "org.MyClass1, org.MyClass2, ..."
-     * @param classNames
-     * @return comma-separated class names
-     */
-    private String translateClassNames(String classNames) {
-        StringBuilder builder = new StringBuilder();
-        int i1 = 0;
-        int i2;
-        while ((i2 = classNames.indexOf(',', i1)) > 0) {
-            if (i1 > 0) builder.append(',');
-            builder.append(translateClass(classNames.substring(i1, i2).trim()));
-            i1 = i2 + 1;
-        }
-        if (i1 > 0) builder.append(',');
-        builder.append(translateClass(classNames.substring(i1).trim()));
-
-        return builder.toString();
-    }
 
     private String translateClass(String className) {
         if (className.endsWith(".class")) {

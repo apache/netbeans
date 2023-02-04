@@ -463,19 +463,6 @@ public class MergingOffsetsBagTest extends NbTestCase {
         }
     }
 
-    private String dumpHighlight(Position start, Position end, AttributeSet attribs) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("<");
-        sb.append(start == null ? " " : start.getOffset());
-        sb.append(",");
-        sb.append(end == null ? " " : end.getOffset());
-        sb.append(",");
-        dumpAttributes(sb, attribs);
-        sb.append(">");
-
-        return sb.toString();
-    }
 
     private String dumpAttributes(StringBuilder sb, AttributeSet attribs) {
         if (sb == null) {

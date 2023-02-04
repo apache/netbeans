@@ -117,20 +117,6 @@ public abstract class ParserManager {
      */
     public abstract boolean hasSyntaxErrors();
 
-
-    private static void printManagers () {
-        System.out.println("\nParserManagers:");
-        Iterator<Document> it = managers.keySet ().iterator ();
-        while (it.hasNext ()) {
-            Document document =  it.next ();
-            String title = (String) document.getProperty("title");
-            if (title == null)
-                title = document.toString();
-            WeakReference wr = managers.get (document);
-            if (wr.get () != null)
-                System.out.println("  " + title);
-        }
-    }
 }
 
 

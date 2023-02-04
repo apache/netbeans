@@ -118,14 +118,6 @@ public class MylynUtils {
         );
     }
 
-    private static boolean isNonProxyHost (String nonProxyHosts, String host) {
-        if(nonProxyHosts.equals("")) {  // NOI18N
-            return false;
-        }
-        // try host name first - might be faster
-        return dontUseHostName (nonProxyHosts, host) || dontUseIp (nonProxyHosts, host);
-    }
-
     private static boolean dontUseHostName (String nonProxyHosts, String host) {
         if (host == null) return false;
 

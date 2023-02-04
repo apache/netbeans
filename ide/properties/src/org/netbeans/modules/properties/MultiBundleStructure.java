@@ -272,18 +272,6 @@ class MultiBundleStructure extends BundleStructure implements Serializable {
         return files.length;
     }
 
-    /**
-     * Throws a runtime exception with a message that the entries
-     * have not been initialized yet.
-     *
-     * @exception  java.lang.IllegalStateException  thrown always
-     * @see  #updateEntries
-     */
-    private void notifyEntriesNotInitialized() {
-        throw new IllegalStateException(
-                "Resource Bundles: Entries not initialized");           //NOI18N
-    }
-
     private static boolean isValidLocaleSuffix(String s) {
         // first char is _
         int n = s.length();

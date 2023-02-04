@@ -717,34 +717,4 @@ public class EditorSettingsImpl extends EditorSettings {
         }
     }
 
-    private MimePath filter(MimePath mimePath) {
-        if (mimePath.size() > 0) {
-            MimePath filtered = mimePath;
-            String first = mimePath.getMimeType(0);
-            
-            if (first.contains(TEXT_BASE_MIME_TYPE)) {
-                if (mimePath.size() == 1) {
-                    filtered = MimePath.EMPTY;
-                } else {
-                    String path = mimePath.getPath().substring(first.length() + 1);
-                    filtered = MimePath.parse(path);
-                }
-                
-                if (LOG.isLoggable(Level.INFO)) {
-                    LOG.log(Level.INFO, TEXT_BASE_MIME_TYPE + " has been deprecated, use MimePath.EMPTY instead."); //, new Throwable("Stacktrace") //NOI18N
-                }
-                
-            } else if (first.startsWith("test")) {
-                String filteredFirst = first.substring(first.indexOf('_') + 1); //NOI18N
-                String path = filteredFirst + mimePath.getPath().substring(first.length() + 1);
-                filtered = MimePath.parse(path);
-
-                LOG.log(Level.INFO, "Don't use 'test' mime type to access settings through the editor/settings/storage API!", new Throwable("Stacktrace"));
-            }
-            
-            return filtered;
-        } else {
-            return mimePath;
-        }
-    }
 }

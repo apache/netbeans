@@ -608,38 +608,6 @@ public class TaskProcessor {
         return parser.getResult(task);
 
     }
-    
-    /**
-     * Checks if the current thread holds a document write lock on some of given files
-     * Slow should be used only in assertions
-     * @param files to be checked
-     * @return true when the current thread holds a edeitor write lock on some of given files
-     */
-    private static boolean holdsDocumentWriteLock (final Iterable<Source> sources) {
-        assert sources != null;
-        final Class<AbstractDocument> docClass = AbstractDocument.class;
-        try {
-            final Method method = docClass.getDeclaredMethod("getCurrentWriter"); //NOI18N
-            method.setAccessible(true);
-            final Thread currentThread = Thread.currentThread();
-            for (Source source : sources) {
-                try {
-                    Document doc = source.getDocument (true);
-                    if (doc instanceof AbstractDocument) {
-                        Object result = method.invoke(doc);
-                        if (result == currentThread) {
-                            return true;
-                        }
-                    }
-                } catch (Exception e) {
-                    Exceptions.printStackTrace(e);
-                }            
-            }
-        } catch (NoSuchMethodException e) {
-            Exceptions.printStackTrace(e);
-        }
-        return false;
-    }
 
     //Private classes
     /**

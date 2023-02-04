@@ -328,14 +328,5 @@ public class SourceMap {
         }
         return -i1 - 1;
     }
-    
-    private static boolean sortedAdd(Mapping m, List<Mapping> mappings, Comparator<Mapping> cmp) {
-        int pos = binarySearch(mappings, m.getColumn());
-        if (pos >= 0) {
-            return false;
-        }
-        mappings.add(-pos, m);
-        return true;
-    }
-    
+
 }

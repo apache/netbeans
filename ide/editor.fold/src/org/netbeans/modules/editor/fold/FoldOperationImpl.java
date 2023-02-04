@@ -526,22 +526,6 @@ public final class FoldOperationImpl {
         return r.currentFolds;
     }
     
-    private void checkLocked() {
-        Document d = getDocument();
-            if (d != null) {
-                // diagnostics, not throwing exceptions since it could disturb
-                // editing
-                if (!DocumentUtilities.isReadLocked(d)) {
-                    LOG.log(Level.WARNING, "Underlying document not read/write locked", 
-                            Exceptions.attachSeverity(new Throwable(), Level.FINE));
-                }
-                if (!execution.isLockedByCaller()) {
-                    LOG.log(Level.WARNING, "Fold hierarchy is not locked on transaction open", 
-                            Exceptions.attachSeverity(new Throwable(), Level.FINE));
-                }
-            }
-    }
-    
     public boolean getInitialState(FoldType ft) {
         return execution.getInitialFoldState(ft);
     }

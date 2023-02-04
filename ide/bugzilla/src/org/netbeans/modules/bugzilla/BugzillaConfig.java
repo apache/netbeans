@@ -208,19 +208,4 @@ public class BugzillaConfig {
         return PREF_TASK + repositoryId + "." + taskId + ".";
     }
 
-    /**
-     * Returns the path for the Bugzilla configuration directory.
-     *
-     * @return the path
-     *
-     */
-    private static String getNBConfigPath() {
-        //T9Y - nb bugzilla confing should be changable
-        String t9yNbConfigPath = System.getProperty("netbeans.t9y.bugzilla.nb.config.path"); //NOI18N
-        if (t9yNbConfigPath != null && t9yNbConfigPath.length() > 0) {
-            return t9yNbConfigPath;
-        }
-        String nbHome = Places.getUserDirectory().getAbsolutePath();            //NOI18N
-        return nbHome + "/config/issue-tracking/org-netbeans-modules-bugzilla"; //NOI18N
-    }
 }

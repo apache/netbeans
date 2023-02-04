@@ -257,47 +257,8 @@ class GapLineViewChildren extends GapBoxViewChildren {
         return 0f;
     }
     
-    private int getRowCount() {
-        return (rowList != null) ? rowList.size() : 0;
-    }
-    
     private Row getRow(int rowIndex) {
         return (Row)rowList.get(rowIndex);
-    }
-
-    /**
-     * Return row index that corresponds to the child index.
-     * <br>
-     * Search in valid rows only.
-     * @return &gt;=0 and &lt;<code>lastValidRowIndex</code>
-     *  or <code>lastValidRowIndex + 1</code> in case the searched
-     *  child is above the valid area.
-     */
-    private int getRowIndex(int childIndex) {
-        // binary search
-        int low = 0;
-        /* can only search up to last valid row index
-         * because the indexes of invalid lines have unpredictable values
-         * which could confuse the binary search
-         * and in worst case make infinite loop.
-         */
-        int high = rowList.lastValidRowIndex;
-        
-        while (low <= high) {
-            int mid = (low + high) / 2;
-            Row midRow = getRow(mid);
-            
-            if (midRow.endChildIndex <= childIndex) { // above the mid row
-                low = mid + 1;
-            } else if (midRow.startChildIndex > childIndex) { // below the mid row
-                high = mid - 1;
-            } else {
-                // child index inside the row
-                return mid;
-            }
-        }
-        
-        return low; // will be lastValidRowIndex
     }
 
     /**

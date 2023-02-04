@@ -66,16 +66,6 @@ public class WhitespaceHighlightingTest extends NbTestCase {
         wh = new WhitespaceHighlighting(pane);
         wh.testInitEnv(INDENT_ATTRS, TRAILING_ATTRS);
     }
-
-    private void filterTests(List<String> includeTestNames) {
-        List<Filter.IncludeExclude> includeTests = new ArrayList<Filter.IncludeExclude>();
-        for (String testName : includeTestNames) {
-            includeTests.add(new Filter.IncludeExclude(testName, ""));
-        }
-        Filter filter = new Filter();
-        filter.setIncludes(includeTests.toArray(new Filter.IncludeExclude[includeTests.size()]));
-        setFilter(filter);
-    }
     
     public void testInsertsRemovals() throws Exception {
         doc.insertString(0, "  ", null);

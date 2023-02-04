@@ -278,32 +278,6 @@ public class SvnConfigFilesTest extends NbTestCase {
         }
         return ini.get("global");
     }
-
-    private String getContent(String fileName) {
-        StringBuffer content = new StringBuffer("");
-        BufferedReader br = null;
-        
-        try {
-            br = new BufferedReader(new FileReader(fileName));
-            String line;
-            while ((line = br.readLine()) != null) {
-                content.append(line);
-                content.append("\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }    
-            }
-        }
-        
-        return content.toString();
-    }
     
     public void printArray(String[] array) {
         System.out.println("=== " + array.length + " ===");

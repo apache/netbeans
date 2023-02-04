@@ -741,19 +741,7 @@ public class HighlightingManagerTest extends NbTestCase {
             }
         }
     }
-    
-    private void dumpLookupContents(String mimePath) {
-        Lookup lookup = MimeLookup.getLookup(MimePath.parse(mimePath));
-        Lookup.Result<Object> result = lookup.lookupResult(Object.class);
-        Collection<? extends Lookup.Item<Object>> items = result.allItems();
-        
-        System.out.println("Lookup for " + mimePath + " : {");
-        for(Lookup.Item<Object> item : items) {
-            System.out.println("    " + item.getDisplayName());
-        }
-        System.out.println("} end of Lookup for " + mimePath + " ----");
-    }
-    
+
     static boolean moveNextSkipNullAttrs(HighlightsSequence hs) {
         while (hs.moveNext()) {
             if (hs.getAttributes() != null) {

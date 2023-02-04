@@ -151,9 +151,5 @@ public class CssPreferences {
     private static String encodeKey(String key) {
         return DELIMITER_PATTERN.matcher(key).replaceAll(ENCODED_DELIMITER);
     }
-    
-    private static String decodeKey(String key) {
-        return ENCODED_DELIMITER_PATTEN.matcher(key).replaceAll(DELIMITER);
-    }
 
 }

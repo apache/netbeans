@@ -325,12 +325,6 @@ public class InternalVSEMetaDataImpl implements VisualSQLEditorMetaData {
         refreshCacheTables();
     }
 
-    private void refresh() {
-        Log.getLogger().entering("InternalVSEMetaDataImpl", "refresh");
-        databaseMetaData = null;
-        refreshCacheTables();
-    }
-
     /**
      * clears the cache held in this instance.
      */

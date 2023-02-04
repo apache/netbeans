@@ -204,10 +204,6 @@ public class HtmlStructureScanner implements StructureScanner {
         return new OffsetRange(so, eo);
     }
 
-    private static int documentPosition(int astOffset, Snapshot snapshot) {
-        return snapshot.getOriginalOffset(astOffset);
-    }
-
     @Override
     public Configuration getConfiguration() {
         return new Configuration(false, false, 0);

@@ -555,19 +555,6 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         result.setSize(preferredSize);
     }
 
-    /** Computes width of string up to maxCharCount, with font of given JComponent
-     * and with maximum percentage of owning Window that can be taken */
-    private static int computeWidth (JComponent comp, int maxCharCount, int percent) {
-        FontMetrics fm = comp.getFontMetrics(comp.getFont());
-        int charW = fm.charWidth('X');
-        int result = charW * maxCharCount;
-        // limit width to 50% of containing window
-        Window w = SwingUtilities.windowForComponent(comp);
-        if (w != null) {
-            result = Math.min(result, w.getWidth() * percent / 100);
-        }
-        return result;
-    }
 
     /** Updates visibility and content of status labels.
      *

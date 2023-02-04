@@ -67,46 +67,6 @@ public class VisualMarkVector<M extends VisualMark> {
         return (rawY < yGapStart) ? rawY : (rawY - yGapLength);
     }
 
-    private void moveVisualGap(int index) {
-        if (LOG.isLoggable(Level.FINE)) {
-            checkGapConsistency();
-        }
-        if (index < yGapIndex) {
-            double lastY = 0d;
-            for (int i = yGapIndex - 1; i >= index; i--) {
-                M mark = getMark(i);
-                lastY = mark.rawY();
-                mark.setRawY(lastY + yGapLength);
-            }
-            yGapStart = lastY;
-
-        } else { // index > yGapIndex
-            for (int i = yGapIndex; i < index; i++) {
-                M mark = getMark(i);
-                mark.setRawY(mark.rawY() - yGapLength);
-            }
-            if (index < markCount()) { // Gap moved to existing view - the view is right above gap => subtract gap-lengths
-                M mark = getMark(index);
-                yGapStart = mark.rawY() - yGapLength;
-            } else {
-                // Gap above at end of all existing Ys => make gap starts high enough
-                // so that no offset/visual-offset is >= offsetGapStart/visualGapStart (no y translation occurs)
-                yGapStart = INITIAL_Y_GAP_LENGTH;
-            }
-        }
-        yGapIndex = index;
-        if (LOG.isLoggable(Level.FINE)) {
-            checkGapConsistency();
-        }
-    }
-    
-    private void checkGapConsistency() {
-        String error = gapConsistency();
-        if (error != null) {
-            throw new IllegalStateException("");
-        }
-    }
-
     private String gapConsistency() {
         String error = null;
         for (int i = 0; i < markCount(); i++) {

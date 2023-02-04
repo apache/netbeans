@@ -221,40 +221,6 @@ class RevisionSetupsSupport {
         }
     }
 
-    private List<Setup> addPropertySetups (SvnClient client, SVNUrl leftFileUrl, SVNRevision leftRevision,
-            SVNUrl rightFileUrl, SVNRevision rightRevision) throws SVNClientException {
-        List<Setup> propSetups = new ArrayList<>();
-        DiffProvider diffAlgorithm = (DiffProvider) Lookup.getDefault().lookup(DiffProvider.class);
-        try {
-            Map<String, byte[]> leftProps = leftFileUrl == null
-                    ? Collections.<String, byte[]>emptyMap()
-                    : toMap(client.getProperties(leftFileUrl, leftRevision, leftRevision));
-            Map<String, byte[]> rightProps = rightFileUrl == null
-                    ? Collections.<String, byte[]>emptyMap()
-                    : toMap(client.getProperties(rightFileUrl, rightRevision, rightRevision));
-
-            Set<String> allProps = new TreeSet<>(leftProps.keySet());
-            allProps.addAll(rightProps.keySet());
-            for (String key : allProps) {
-                boolean isLeft = leftProps.containsKey(key);
-                boolean isRight = rightProps.containsKey(key);
-                boolean propertiesDiffer = true;
-                if (isLeft && isRight) {
-                    MultiDiffPanel.Property p1 = new MultiDiffPanel.Property(leftProps.get(key));
-                    MultiDiffPanel.Property p2 = new MultiDiffPanel.Property(rightProps.get(key));
-                    Difference[] diffs = diffAlgorithm.computeDiff(p1.toReader(), p2.toReader());
-                    propertiesDiffer = (diffs.length != 0);
-                }
-                if (propertiesDiffer) {
-                    // TODO finish property setups init
-                }
-            }
-        } catch (IOException e) {
-            Subversion.LOG.log(Level.INFO, null, e);
-        }
-        return propSetups;
-    }
-
     private Map<String, byte[]> toMap (ISVNProperty[] properties) {
         Map<String, byte[]> map = new LinkedHashMap<>(properties.length);
         for (ISVNProperty prop : properties) {

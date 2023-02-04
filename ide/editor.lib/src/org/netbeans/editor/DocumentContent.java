@@ -324,23 +324,6 @@ final class DocumentContent implements AbstractDocument.Content, CharSeq, GapSta
         gapLength = newGapEnd - gapStart;
     }
 
-    private char[] copyChars(int offset, int length) {
-        char[] ret;
-        if ((offset + length) <= gapStart) { // completely below gap
-            ret = new char[length];
-            System.arraycopy(charArray, offset, ret, 0, length);
-            
-        } else if (offset >= gapStart) { // completely above gap
-            ret = new char[length];
-            System.arraycopy(charArray, offset + gapLength, ret, 0, length);
-            
-        } else { // spans the gap, must copy
-            ret = copySpanChars(offset, length);
-        }
-        
-        return ret;
-    }
-
     private char[] copySpanChars(int offset, int length) {
         char[] ret = new char[length];
         int belowGap = gapStart - offset;

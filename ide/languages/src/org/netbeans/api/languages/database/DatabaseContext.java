@@ -115,16 +115,6 @@ public class DatabaseContext extends DatabaseItem {
         contexts.add(context);
         contextsSorted = false;
     }
-    
-    private void addItem (DatabaseItem databaseItem) {
-        if (databaseItem instanceof DatabaseUsage) {
-            addUsage((DatabaseUsage)databaseItem);
-        } else if (databaseItem instanceof DatabaseDefinition) {
-            addDefinition((DatabaseDefinition)databaseItem);
-        } else if (databaseItem instanceof DatabaseContext) {
-            addContext(null, (DatabaseContext)databaseItem);
-        }
-    }
 
     private List<DatabaseDefinition> definitionsCache;
     

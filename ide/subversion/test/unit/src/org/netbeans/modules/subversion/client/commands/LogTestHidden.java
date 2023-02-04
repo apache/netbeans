@@ -425,23 +425,7 @@ public class LogTestHidden extends AbstractCommandTestCase {
         assertEquals(info.getRevision(), logsNb.getRevision());
         assertChangePaths(changePaths, logsNb.getChangedPaths());
     }
-    
-    private void assertLogs(ISVNLogMessage[] logsRef, ISVNLogMessage[] logsNb) {
-        assertEquals(logsRef.length, logsNb.length);
-        for (int i = 0; i < logsNb.length; i++) {
-            ISVNLogMessage lognb = logsNb[i];
-            ISVNLogMessage logref = logsRef[i];            
-            
-            assertEquals(logref.getAuthor(), lognb.getAuthor());
-            assertEquals(logref.getDate().toString(), lognb.getDate().toString());
-            assertEquals(logref.getMessage(), lognb.getMessage());
-            assertEquals(logref.getRevision(), lognb.getRevision());
-            
-            ISVNLogMessageChangePath[] pathsnb = lognb.getChangedPaths();
-            ISVNLogMessageChangePath[] pathsref = lognb.getChangedPaths();
-            assertChangePaths(pathsref, pathsnb);
-        }
-    }
+
 
     private void assertChangePaths(ISVNLogMessageChangePath[] pathsref, ISVNLogMessageChangePath[] pathsnb) {
 

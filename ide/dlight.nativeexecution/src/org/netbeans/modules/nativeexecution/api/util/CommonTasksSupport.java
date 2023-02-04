@@ -47,15 +47,6 @@ public final class CommonTasksSupport {
     private CommonTasksSupport() {
     }
 
-    /** TODO: move it to some common place within nativeexecution */
-    private static boolean getBoolean(String name, boolean result) {
-        String text = System.getProperty(name);
-        if (text != null) {
-            result = Boolean.parseBoolean(text);
-        }
-        return result;
-    }
-
     /**
      * Starts <tt>srcFileName</tt> file download from the host,
      * specified by the <tt>srcExecEnv</tt> saving it in the

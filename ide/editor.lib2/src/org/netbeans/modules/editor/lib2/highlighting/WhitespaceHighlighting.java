@@ -134,16 +134,6 @@ implements ReleasableHighlightsContainer, DocumentListener, LookupListener
         }
     }
     
-    private int lineStartOffset(int offset) {
-        while (offset > 0) {
-            char ch = docText.charAt(--offset);
-            if (ch == '\n') {
-                return offset + 1;
-            }
-        }
-        return 0;
-    }
-    
     private int beforeOffsetState(int offset) {
         int i;
         for (i = offset - 1; i >= 0; i--) {
@@ -156,19 +146,6 @@ implements ReleasableHighlightsContainer, DocumentListener, LookupListener
             }
         }
         return (i == offset - 1) ? FIRST_CHAR : WS_BEFORE;
-    }
-    
-    private boolean isWSTillFirstNL(CharSequence text) {
-        for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
-            if (ch == '\n') {
-                break;
-            }
-            if (!Character.isWhitespace(ch)) {
-                return false;
-            }
-        }
-        return true;
     }
     
     @Override

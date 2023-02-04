@@ -107,7 +107,7 @@ public final class RuleEditorController {
     private RuleEditorController(RuleEditorPanel peer) {
         this.peer = peer;
     }
-    
+
     /**
      * Gets the rule editor UI component.
      * Must be called in EDT.

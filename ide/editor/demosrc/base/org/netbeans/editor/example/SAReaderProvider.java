@@ -174,26 +174,11 @@ public class SAReaderProvider implements ReaderProvider {
 
     static Map folder2provider = new HashMap();
 
-    
-    private static void removeSubfolders() {
-        Iterator it = folder2provider.entrySet().iterator();
-        folder2provider = new HashMap();
-        while( it.hasNext() ) {
-            Map.Entry entry = (Map.Entry)it.next();
-            ReaderProvider prov = (ReaderProvider)entry.getValue();
-            Registry.unregisterReaderProvider( prov );
-        }
-    }
 
     private static void addFolder( File folder ) {
         SAReaderProvider prov = new SAReaderProvider( folder );
         folder2provider.put( folder.getName(), prov );
         Registry.registerReaderProvider( prov );
-    }
-
-    private static void removeFolder( File folder ) {
-        SAReaderProvider prov = (SAReaderProvider)folder2provider.remove( folder.getName() );
-        if( prov != null ) Registry.unregisterReaderProvider( prov );
     }
 
 }

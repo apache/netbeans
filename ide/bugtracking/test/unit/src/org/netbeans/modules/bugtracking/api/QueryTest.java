@@ -118,15 +118,4 @@ public class QueryTest extends NbTestCase {
         return getRepo().getQueries().iterator().next();
     }
 
-    private void assertOpened(APITestQuery apiQuery) throws InterruptedException {
-        long t = System.currentTimeMillis();
-        while(!apiQuery.wasOpened) {
-            Thread.currentThread().sleep(200);
-            if(System.currentTimeMillis() - t > 5000) {
-                // timeout
-                fail("issue wasn't opened");
-            }
-        }
-    }
-
 }

@@ -295,15 +295,6 @@ public class HyperlinkListener implements MouseMotionListener, MouseListener,
     }
     
     private static AttributeSet hyperlinkPressedAS = null;
-    
-    private static AttributeSet getHyperlinkPressedAS () {
-        if (hyperlinkPressedAS == null) {
-            SimpleAttributeSet as = new SimpleAttributeSet ();
-            as.addAttribute (StyleConstants.Foreground, Color.red);
-            as.addAttribute (StyleConstants.Underline, Color.red);
-            hyperlinkPressedAS = as;
-        }
-        return hyperlinkPressedAS;
-    }
+
 }
 

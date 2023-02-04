@@ -635,10 +635,6 @@ public class JdbcUrl extends HashMap<String, String> {
             this.url = url;
             this.length = url.length();
         }
-        
-        private String getFullUrl() {
-            return url;
-        }
 
         private String urlSubString() {
             if (index < length) {

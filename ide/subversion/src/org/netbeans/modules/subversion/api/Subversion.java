@@ -601,10 +601,6 @@ public class Subversion {
         return path;
     }
 
-    private static boolean isRootRelativePath(String relativePath) {
-        return relativePath.equals(RELATIVE_PATH_ROOT);
-    }
-
     private static String removeDuplicateSlashes(String str) {
         int len = str.length();
 

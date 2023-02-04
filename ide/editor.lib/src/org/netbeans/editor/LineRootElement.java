@@ -264,20 +264,6 @@ final class LineRootElement extends GapBranchElement {
 
         return super.getElementIndex(offset);
     }
-
-    private void checkConsistency() {
-        int lineCount = getElementCount();
-        assert (lineCount > 0); // Should be 1 or greater
-        int prevLineEndOffset = 0;
-        for (int i = 0; i < lineCount; i++) {
-            LineElement elem = (LineElement)getElement(i);
-            assert (prevLineEndOffset == elem.getStartOffset());
-            assert (prevLineEndOffset < elem.getEndOffset())
-                : "Line " + i + " of " + lineCount + ": " + lineToString(elem); // NOI18N
-            prevLineEndOffset = elem.getEndOffset();
-        }
-        assert (prevLineEndOffset == (doc.getLength() + 1));
-    }
     
     private String lineToString(Element line) {
         return "<" + line.getStartOffset() + ", " // NOI18N

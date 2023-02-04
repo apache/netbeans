@@ -75,15 +75,7 @@ public class UtilConvert {
 //        }
 //        return result.toString();
     }
-    
-    /** Checks whether the string contains only spaces */
-    private static boolean onlySpaces(String s){
-        for (int i = 0; i<s.length(); i++){
-            if (s.charAt(i) != ' ') return false;
-        }
-        return true;
-    }
-    
+
     /** Escapes spaces in outer part of string. */
     public static String escapeOutsideSpaces(String source){
         return source; // prj40 trunk compatability

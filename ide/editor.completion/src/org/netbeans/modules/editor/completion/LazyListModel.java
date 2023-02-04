@@ -407,19 +407,6 @@ implements ListModel, Runnable, javax.swing.event.ListDataListener {
         }
         return res;
     }
-    /** Removes specified amount of bits from the set.
-     */
-    private static BitSet removeAt (BitSet b, int at, int len, int newSize) {
-        BitSet clone = (BitSet)b.clone ();
-        
-        int max = b.length ();
-        while (at < max) {
-            clone.set (at, b.get (at + len));
-            at++;
-        }
-        clone.set (newSize, b.size (), false);
-        return clone;
-    }
 
     public void contentsChanged (ListDataEvent listDataEvent) {
         throw new java.lang.UnsupportedOperationException ("Not yet implemented");

@@ -991,14 +991,6 @@ public class PositionsBagTest extends NbTestCase {
         assertMarks("Wrong highlights", createPositionsBag(10, 35, attribsB), bag);
     }
 
-    private void dumpHighlights(HighlightsSequence seq) {
-        System.out.println("Dumping highlights from: " + seq + "{");
-        while(seq.moveNext()) {
-            System.out.println("<" + seq.getStartOffset() + ", " + seq.getEndOffset() + ", " + seq.getAttributes() + ">");
-        }
-        System.out.println("} --- End of Dumping highlights from: " + seq + " ---------------------");
-    }
-    
     private Position pos(int offset) {
         return new SimplePosition(offset);
     }

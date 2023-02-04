@@ -215,40 +215,6 @@ public final class CompositeFCS extends FontColorSettings {
         return name;
     }
 
-    private void dumpAttribs(AttributeSet attribs, String name, boolean tokenColoring) {
-//        if (!allFcsi[0].getMimePath().getPath().equals("text/x-java")) { //NOI18N
-//            return;
-//        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("Attribs for base mime path '"); //NOI18N
-        sb.append(allFcsi[0].getMimePath().getPath());
-        sb.append("' and "); //NOI18N
-        if (tokenColoring) {
-            sb.append("token '"); //NOI18N
-        } else {
-            sb.append("highlight '"); //NOI18N
-        }
-        sb.append(name);
-        sb.append("' = {"); //NOI18N
-
-        Enumeration<?> keys = attribs.getAttributeNames();
-        while (keys.hasMoreElements()) {
-            Object key = keys.nextElement();
-            Object value = attribs.getAttribute(key);
-
-            sb.append("'").append(key).append("' = '").append(value).append("'"); //NOI18N
-            if (keys.hasMoreElements()) {
-                sb.append(", "); //NOI18N
-            }
-        }
-
-        sb.append("} CompoundFCS.this = "); //NOI18N
-        sb.append(this.toString());
-
-        System.out.println(sb.toString());
-    }
-
     private Map<?, ?> getRenderingHints() {
         // This property was introduced in JDK1.6, see http://java.sun.com/javase/6/docs/api/java/awt/doc-files/DesktopProperties.html
         // We should probably also listen on the default toolkit for changes in this

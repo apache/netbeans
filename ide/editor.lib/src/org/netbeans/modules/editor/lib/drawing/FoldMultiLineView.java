@@ -54,10 +54,6 @@ import org.netbeans.lib.editor.view.GapMultiLineView;
         setLastLineElement((Element)foldAndEndLineElemList.get(
             foldAndEndLineElemList.size() - 1));
     }
-
-    private JTextComponent getTextComponent() {
-        return (JTextComponent)getContainer();
-    }
     
     protected @Override boolean useCustomReloadChildren() {
         return true;

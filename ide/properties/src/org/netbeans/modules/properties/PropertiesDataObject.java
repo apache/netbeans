@@ -270,42 +270,6 @@ public final class PropertiesDataObject extends MultiDataObject implements Cooki
         removeSecondaryEntry (fe);
     }
 
-    /** Creates new name for this instance when moving/copying to new folder destination. 
-     * @param folder new folder destination. */
-    private String createPasteSuffix(DataFolder folder) {
-        String basicName = getPrimaryFile().getName();
-
-        DataObject[] children = folder.getChildren();
-
-
-        // Repeat until there is not such file name.
-        for(int i = 0; ; i++) {
-            String newName;
-
-            if (i == 0) {
-                newName = basicName;
-            } else {
-                newName = basicName + i;
-            }
-            boolean exist = false;
-
-            for(int j = 0; j < children.length; j++) {
-                if(children[j] instanceof PropertiesDataObject && newName.equals(children[j].getName())) {
-                    exist = true;
-                    break;
-                }
-            }
-
-            if(!exist) {
-                if (i == 0) {
-                    return ""; // NOI18N
-                } else {
-                    return "" + i; // NOI18N
-                }
-            }
-        }
-    }
-
     /** Returns open support. It's used by all subentries as open support too. */
     public PropertiesOpen getOpenSupport() {
         if (openSupport == null) {

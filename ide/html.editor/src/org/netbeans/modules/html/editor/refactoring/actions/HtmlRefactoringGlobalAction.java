@@ -67,11 +67,6 @@ public abstract class HtmlRefactoringGlobalAction extends NodeAction {
         putValue(Action.MNEMONIC_KEY, Integer.valueOf(m));
     }
     
-    private static String trim(String arg) {
-        arg = arg.replace("&", ""); // NOI18N
-        return arg.replace("...", ""); // NOI18N
-    }
-    
     public org.openide.util.HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }

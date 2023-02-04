@@ -446,43 +446,6 @@ public class PropertiesOpen extends CloneableOpenSupport
             dataObj.addVetoableChangeListener(v);
         }
 
-        private  void addListeners() {
-            BundleStructure structure = bundleStructure;
-            PropertiesDataObject dataObj;
-            weakEnvPropListeners = new HashMap<PropertiesDataObject, PropertyChangeListener>();
-            weakEnvVetoListeners = new HashMap<PropertiesDataObject, VetoableChangeListener>();
-            PropertyChangeListener l;
-            VetoableChangeListener v;
-            for(int i=0;i<structure.getEntryCount();i++) {
-                dataObj = (PropertiesDataObject) structure.getNthEntry(i).getDataObject();
-                l = WeakListeners.propertyChange(this, dataObj);
-                weakEnvPropListeners.put(dataObj, l);
-                dataObj.addPropertyChangeListener(l);
-                v = WeakListeners.vetoableChange(this, dataObj);
-                weakEnvVetoListeners.put(dataObj, v);
-                dataObj.addVetoableChangeListener(v);
-            }
-
-        }
-
-        private void removeListeners() {
-            BundleStructure structure = bundleStructure;
-            PropertiesDataObject dataObj;
-            PropertyChangeListener l;
-            VetoableChangeListener v;
-            for(int i=0;i<structure.getEntryCount();i++) {
-                dataObj = (PropertiesDataObject) structure.getNthEntry(i).getDataObject();
-                l = weakEnvPropListeners.remove(dataObj);
-                v = weakEnvVetoListeners.remove(dataObj);
-                if (l!=null) {
-                    dataObj.removePropertyChangeListener(l);
-                }
-                if (v!=null) {
-                    dataObj.removeVetoableChangeListener(v);
-                }
-            }
-        }
-
         /** Implements {@code CloneableOpenSupport.Env} interface. Adds property listener. */
         @Override
         public void addPropertyChangeListener(PropertyChangeListener l) {

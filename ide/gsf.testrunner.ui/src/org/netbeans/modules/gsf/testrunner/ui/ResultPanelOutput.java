@@ -343,18 +343,6 @@ final class ResultPanelOutput extends JScrollPane
     */
     //</editor-fold>
     
-    /**
-     */
-    private void clear() {
-        assert EventQueue.isDispatchThread();
-        
-        try {
-            doc.remove(0, doc.getLength());
-        } catch (BadLocationException ex) {
-            ErrorManager.getDefault().notify(ErrorManager.ERROR, ex);
-        }
-    }
-    
     //<editor-fold defaultstate="collapsed" desc="displayText(String[])">
     /* *
      * /

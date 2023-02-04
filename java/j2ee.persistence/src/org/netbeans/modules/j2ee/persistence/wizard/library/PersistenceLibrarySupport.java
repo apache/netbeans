@@ -105,9 +105,6 @@ public class PersistenceLibrarySupport {
     private synchronized void initStorage() {
         if (this.storage == null) {
             this.storage = createStorage();
-            if (storage == null) {
-                return;
-            }
         }
     }
 

@@ -215,9 +215,7 @@ public final class EntitiesFromDBGenerator {
             helper.buildBeans();
             
         } catch (DBException ex){
-            IOException wrapper = new IOException(ex.getMessage());
-            wrapper.initCause(ex);
-            throw wrapper;
+            throw new IOException(ex);
         }
         
         

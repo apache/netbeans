@@ -104,10 +104,7 @@ public abstract class PersistenceEditorTestBase extends PUDataObjectTestBase {
         assertNotNull("Could not get updateTask", updateTask); //NOI18N
         
         updateTask.waitFinished(20000);
-        if (dataObject.getDataCache().getStringData().indexOf(str) > -1){
-            return true;
-        }
-        return false;
+        return dataObject.getDataCache().getStringData().contains(str);
     }
     
     /**

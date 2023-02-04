@@ -1122,9 +1122,6 @@ public class ProviderUtil {
         ClassPath classPath = ClassPath.getClassPath(sourceRoot, ClassPath.COMPILE);
         //this package name will change when open source, should just rely on subclass to use file names
         FileObject utxClass = classPath.findResource("org/springframework/transaction/annotation/Transactional.class"); // NOI18N
-        if (utxClass != null) {
-            return true;
-        }
-        return false;
+        return utxClass != null;
     }
 }

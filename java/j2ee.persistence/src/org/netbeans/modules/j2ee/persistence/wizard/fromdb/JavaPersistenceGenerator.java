@@ -811,21 +811,15 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
             }
 
             private boolean isCharacterType(String type) {
-                if ("java.lang.String".equals(type)) { // NOI18N
-                    // XXX also need to check for char[] and Character[]
-                    // (better to use TypeMirror)
-                    return true;
-                }
-                return false;
+                // XXX also need to check for char[] and Character[]
+                // (better to use TypeMirror)
+                return "java.lang.String".equals(type); // NOI18N
             }
 
             private boolean isDecimalType(String type) {
-                if ("java.lang.Double".equals(type) || // NOI18N
+                return "java.lang.Double".equals(type) || // NOI18N
                         "java.lang.Float".equals(type) || // NOI18N
-                        "java.math.BigDecimal".equals(type)) { // NOI18N
-                    return true;
-                }
-                return false;
+                        "java.math.BigDecimal".equals(type); // NOI18N
             }
 
             private String getMemberTemporalType(EntityMember m) {
@@ -1283,9 +1277,6 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                                             }
                                         }
                                     }
-                                    continue;
-                                } else {//NOI18N
-                                    continue;
                                 }
                             }
                         }

@@ -149,12 +149,7 @@ public class UseEntityManagerCodeGenerator implements CodeGenerator {
         }
 
         FileObject entityMgrRes = cp.findResource("javax/persistence/EntityManager.class"); // NOI18N
-
-        if (entityMgrRes != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return entityMgrRes != null;
     }
     
     public static TreePath getPathElementOfKind(Tree.Kind kind, TreePath path) {

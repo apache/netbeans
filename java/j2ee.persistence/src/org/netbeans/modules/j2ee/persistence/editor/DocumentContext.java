@@ -214,10 +214,7 @@ public class DocumentContext {
             return false;
         }
         final DocumentContext other = (DocumentContext) obj;
-        if (this.document != other.document && (this.document == null || !this.document.equals(other.document))) {
-            return false;
-        }
-        return true;
+        return !(this.document != other.document && (this.document == null || !this.document.equals(other.document)));
     }
 
     @Override

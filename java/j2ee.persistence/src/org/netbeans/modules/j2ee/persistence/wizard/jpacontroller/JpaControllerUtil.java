@@ -277,10 +277,7 @@ public class JpaControllerUtil {
     }
     
     public static boolean isEmbeddableClass(TypeElement typeElement) {
-        if (JpaControllerUtil.isAnnotatedWith(typeElement, "javax.persistence.Embeddable")) {
-            return true;
-        }
-        return false;
+        return JpaControllerUtil.isAnnotatedWith(typeElement, "javax.persistence.Embeddable");
     }
     
     public static int isRelationship(ExecutableElement method, boolean isFieldAccess) {
@@ -451,11 +448,7 @@ public class JpaControllerUtil {
             }
             typeElement = getSuperclassTypeElement(typeElement);
         }
-        if (!idDetected) {
-            return false;//
-        } else {
-            return true;
-        }
+        return idDetected;
     }
 
     public static ExecutableElement getIdGetter(final boolean isFieldAccess, final TypeElement typeElement) {

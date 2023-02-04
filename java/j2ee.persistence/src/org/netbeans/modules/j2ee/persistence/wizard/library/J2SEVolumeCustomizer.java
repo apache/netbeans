@@ -44,6 +44,7 @@ import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle;
 import org.netbeans.spi.project.libraries.LibraryImplementation;
 import org.openide.util.Exceptions;
+import org.openide.util.Utilities;
 
 /**
  * This class is copy from j2seplatform
@@ -374,7 +375,7 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
                     f = parent;
                 }
             }
-            URL url = f.toURI().toURL();
+            URL url = Utilities.toURI(f).toURL();
             if (FileUtil.isArchiveFile(url)) {
                 url = FileUtil.getArchiveRoot(url);
             } else if (!url.toExternalForm().endsWith("/")){

@@ -129,7 +129,6 @@ public class DbSchemaEjbGenerator {
                     if(pk != null && 1 == pk0.getColumns().length && fk.getLocalColumns().length == 1 && pk.getColumns().length==1){
                         if(fk.getLocalColumns()[0].equals(pk0.getColumns()[0])){
                             tableNames.add(table0.getName().getName());
-                            continue;
                         }
                     }
                 }
@@ -637,7 +636,6 @@ public class DbSchemaEjbGenerator {
             ComparableFK fkc=new ComparableFK(key);
             if(ret.get(fkc)!=null){//we already have the same key
                 LOGGER.log(Level.INFO,key.getName().getFullName()+" key in "+key.getDeclaringTable().getName().getFullName() + " is considered as a duplicate, you may need to verify your schema or database structure.");//NOI18N
-                continue;
             } else {
                 ret.put(fkc, key);
             }

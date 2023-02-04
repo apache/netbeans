@@ -77,14 +77,14 @@ public class XMLStorage {
         colorToName.put (Color.yellow, "yellow");
         nameToColor.put ("yellow", Color.yellow);
         
-        nameToFontStyle.put ("plain", Integer.valueOf (Font.PLAIN));
-        fontStyleToName.put (Integer.valueOf (Font.PLAIN), "plain");
-        nameToFontStyle.put ("bold", Integer.valueOf (Font.BOLD));
-        fontStyleToName.put (Integer.valueOf (Font.BOLD), "bold");
-        nameToFontStyle.put ("italic", Integer.valueOf (Font.ITALIC));
-        fontStyleToName.put (Integer.valueOf (Font.ITALIC), "italic");
-        nameToFontStyle.put ("bold+italic", Integer.valueOf (Font.BOLD + Font.ITALIC));
-        fontStyleToName.put (Integer.valueOf (Font.BOLD + Font.ITALIC), "bold+italic");
+        nameToFontStyle.put ("plain", Font.PLAIN);
+        fontStyleToName.put (Font.PLAIN, "plain");
+        nameToFontStyle.put ("bold", Font.BOLD);
+        fontStyleToName.put (Font.BOLD, "bold");
+        nameToFontStyle.put ("italic", Font.ITALIC);
+        fontStyleToName.put (Font.ITALIC, "italic");
+        nameToFontStyle.put ("bold+italic", Font.BOLD + Font.ITALIC);
+        fontStyleToName.put (Font.BOLD + Font.ITALIC, "bold+italic");
     }
     
     static String colorToString (Color color) {

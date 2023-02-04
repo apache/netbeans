@@ -59,7 +59,7 @@ public class Utils {
     static int getDefaultFontSize() {
         Integer customFontSize = (Integer)UIManager.get("customFontSize"); // NOI18N
         if (customFontSize != null) {
-            return customFontSize.intValue();
+            return customFontSize;
         } else {
             Font systemDefaultFont = UIManager.getFont("TextField.font"); // NOI18N
             return (systemDefaultFont != null)
@@ -95,7 +95,7 @@ public class Utils {
         ResourceBundle bundle = NbBundle.getBundle("org.netbeans.modules.welcome.resources.Bundle"); // NOI18N
         try {
             Integer rgb = Integer.decode(bundle.getString(resId));
-            return new Color(rgb.intValue());
+            return new Color(rgb);
         } catch( NumberFormatException nfE ) {
             ErrorManager.getDefault().notify( ErrorManager.INFORMATIONAL, nfE );
             return Color.BLACK;

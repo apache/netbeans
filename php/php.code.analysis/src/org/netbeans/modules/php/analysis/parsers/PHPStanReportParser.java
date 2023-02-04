@@ -180,7 +180,7 @@ public class PHPStanReportParser extends DefaultHandler {
     private int getInt(Attributes attributes, String name) {
         int i = -1;
         try {
-            i = Integer.valueOf(attributes.getValue(name));
+            i = Integer.parseInt(attributes.getValue(name));
         } catch (NumberFormatException exc) {
             // ignored
         }

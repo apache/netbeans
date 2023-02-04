@@ -247,7 +247,7 @@ public class PHPNewLineIndenterQATest extends PHPTestBase {
             String option = entry.getKey();
             Object value = entry.getValue();
             if (value instanceof Integer) {
-                prefs.putInt(option, ((Integer) value).intValue());
+                prefs.putInt(option, (Integer) value);
             } else if (value instanceof String) {
                 prefs.put(option, (String) value);
             } else if (value instanceof Boolean) {

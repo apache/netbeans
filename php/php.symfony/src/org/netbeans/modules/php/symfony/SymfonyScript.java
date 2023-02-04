@@ -336,7 +336,7 @@ public class SymfonyScript {
                 .additionalParameters(Collections.singletonList(LIST_COMMAND))
                 .run(getSilentDescriptor(), getOutProcessorFactory(lineProcessor));
         try {
-            if (task != null && task.get().intValue() == 0) {
+            if (task != null && task.get() == 0) {
                 freshCommands = lineProcessor.getCommands();
                 if (!freshCommands.isEmpty()) {
                     return freshCommands;

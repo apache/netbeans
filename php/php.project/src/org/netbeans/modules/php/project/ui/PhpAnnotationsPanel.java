@@ -231,7 +231,7 @@ public class PhpAnnotationsPanel extends JPanel {
                     "@sample(${param1}, ${param2} = ${value1})", // NOI18N
                     NbBundle.getMessage(PhpAnnotationsPanel.class, "SampleTag.documentation"));
         }
-        return annotations.get(index.intValue());
+        return annotations.get(index);
     }
 
     void fireChange() {

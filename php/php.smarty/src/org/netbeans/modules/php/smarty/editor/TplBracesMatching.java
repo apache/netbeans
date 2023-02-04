@@ -263,7 +263,7 @@ public class TplBracesMatching implements BracesMatcher, BracesMatcherFactory {
         int[] integers = new int[list.size()];
         Iterator<Integer> iterator = list.iterator();
         for (int i = 0; i < integers.length; i++) {
-            integers[i] = iterator.next().intValue();
+            integers[i] = iterator.next();
         }
         return integers;
     }

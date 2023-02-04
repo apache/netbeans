@@ -242,7 +242,7 @@ public final class ZendScript {
                 .additionalParameters(SHOW_COMMANDS_COMMAND)
                 .run(getSilentDescriptor(), getOutProcessorFactory(lineProcessor));
         try {
-            if (task != null && task.get().intValue() == 0) {
+            if (task != null && task.get() == 0) {
                 freshCommands = lineProcessor.getCommands();
                 if (!freshCommands.isEmpty()) {
                     return freshCommands;

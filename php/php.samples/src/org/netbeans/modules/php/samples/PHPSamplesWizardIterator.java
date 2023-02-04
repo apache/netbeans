@@ -146,7 +146,7 @@ public class PHPSamplesWizardIterator implements WizardDescriptor./*Progress*/In
 
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardProperties.SELECTED_INDEX, Integer.valueOf(i));
+                jc.putClientProperty(WizardProperties.SELECTED_INDEX, i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardProperties.CONTENT_DATA, steps);
             }
@@ -165,8 +165,7 @@ public class PHPSamplesWizardIterator implements WizardDescriptor./*Progress*/In
     }
 
     public String name() {
-        return MessageFormat.format("{0} of {1}",
-                new Object[]{Integer.valueOf(index + 1), Integer.valueOf(panels.length)});
+        return MessageFormat.format("{0} of {1}", new Object[]{index + 1, panels.length});
     }
 
     public boolean hasNext() {

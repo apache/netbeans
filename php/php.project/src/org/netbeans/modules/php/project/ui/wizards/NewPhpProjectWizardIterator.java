@@ -564,7 +564,7 @@ public class NewPhpProjectWizardIterator implements WizardDescriptor.ProgressIns
         if (port == null) {
             return null;
         }
-        return Integer.valueOf(port);
+        return Integer.parseInt(port);
     }
 
     private void extendPhpModule(PhpModule phpModule, Map<PhpFrameworkProvider, PhpModuleExtender> frameworkExtenders,

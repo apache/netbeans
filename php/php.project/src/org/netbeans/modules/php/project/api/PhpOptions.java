@@ -61,7 +61,7 @@ public final class PhpOptions {
                 if (PHP_INTERPRETER.equals(key)) {
                     propertyChangeSupport.firePropertyChange(PROP_PHP_INTERPRETER, null, newValue);
                 } else if (PHP_DEBUGGER_PORT.equals(key)) {
-                    propertyChangeSupport.firePropertyChange(PROP_PHP_DEBUGGER_PORT, null, Integer.valueOf(newValue));
+                    propertyChangeSupport.firePropertyChange(PROP_PHP_DEBUGGER_PORT, null, Integer.parseInt(newValue));
                 } else if (PHP_DEBUGGER_SESSION_ID.equals(key)) {
                     propertyChangeSupport.firePropertyChange(PROP_PHP_DEBUGGER_SESSION_ID, null, newValue);
                 } else if (PHP_DEBUGGER_STOP_AT_FIRST_LINE.equals(key)) {

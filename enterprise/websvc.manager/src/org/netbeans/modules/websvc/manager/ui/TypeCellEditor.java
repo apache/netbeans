@@ -184,7 +184,7 @@ public class TypeCellEditor extends DefaultCellEditor implements TableCellEditor
         if(currentType.equalsIgnoreCase("int") ||
         currentType.equalsIgnoreCase("java.lang.Integer")) {
             try {
-                returnValue = Integer.valueOf(inValue);
+                returnValue = Integer.parseInt(inValue);
             } catch(NumberFormatException nfe) {
                 returnValue = 0;
             }

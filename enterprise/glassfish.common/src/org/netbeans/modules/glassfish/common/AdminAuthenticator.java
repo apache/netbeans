@@ -88,7 +88,7 @@ public class AdminAuthenticator extends java.net.Authenticator {
                         dialogTitle = bundle.getString("CTL_PasswordProtected");
                         passwordPanel.setPrompt(NbBundle.getMessage(AdminAuthenticator.class,
                                 "PROMPT_GLASSFISH_AUTH", getRequestingHost(),
-                                Integer.valueOf(getRequestingPort()).toString()));
+                                Integer.toString(getRequestingPort())));
                     }
                     DialogDescriptor dd = new DialogDescriptor(passwordPanel, dialogTitle);
                     java.awt.Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);

@@ -75,7 +75,7 @@ public class UtilsTest extends TestCase{
         assertTrue(null == utils.getElement(null, null));               //NOI18N
         
         Integer integer = (Integer) utils.getElement("integer", object);//NOI18N
-        assertTrue(5 == integer.intValue());
+        assertTrue(5 == integer);
         String[] colours = 
             (String[]) utils.getElements("primaryColours",  object);    //NOI18N
         assertTrue("green".equals(colours[1]));                         //NOI18N
@@ -95,13 +95,13 @@ public class UtilsTest extends TestCase{
                 null, "size"));                                         //NOI18N
         integer = (Integer) utils.getElement(
                 "primaryColours", object, "");                          //NOI18N
-        assertTrue(3 == integer.intValue());
+        assertTrue(3 == integer);
         integer = (Integer) utils.getElement(
                 "primaryColours", object, null);                        //NOI18N
-        assertTrue(3 == integer.intValue());
+        assertTrue(3 == integer);
         integer = (Integer) utils.getElement(
                 "primaryColours", object, "size");                      //NOI18N
-        assertTrue(4 == integer.intValue());
+        assertTrue(4 == integer);
     }
 
 
@@ -162,11 +162,11 @@ public class UtilsTest extends TestCase{
     public void testGetMethod_One(){
         String str = "hello";                                           //NOI18N
         Method method = utils.getMethod("java.lang.String", "length");  //NOI18N
-        int length = ((Integer)utils.invoke(str, method)).intValue();
+        int length = (Integer)utils.invoke(str, method);
         assertTrue(5 == length);
         
         method = utils.getMethod(String.class, "length");               //NOI18N
-        length = ((Integer)utils.invoke(str, method)).intValue();
+        length = (Integer)utils.invoke(str, method);
         assertTrue(5 == length);
     }
 
@@ -202,7 +202,7 @@ public class UtilsTest extends TestCase{
     //      public static Class getClass(Object object)
     public void testGetClass(){
         assertTrue(String.class == utils.getClass("java.lang.String")); //NOI18N
-        Integer integer = new Integer(1234);
+        Integer integer = 1234;
         assertTrue(Integer.class == utils.getClass(integer));
     }
 
@@ -228,7 +228,7 @@ public class UtilsTest extends TestCase{
         
         Class[] argTypes = new Class[] {int.class};
         Constructor cons = utils.getConstructor(object.getClass(), argTypes);
-        Integer parameter = new Integer(4567);
+        Integer parameter = 4567;
         Object[] arguments = new Object[] {parameter};
         Object obj = utils.createObject(cons, arguments);
         assertTrue("java.lang.Integer".equals(objectName));             //NOI18N
@@ -315,7 +315,7 @@ public class UtilsTest extends TestCase{
     class CustomObject extends Object
     {
         String name = "foo";                                            //NOI18N
-        Integer integer = new Integer(5);
+        Integer integer = 5;
         String[] primaryColours = 
                 new String[] {"red", "green", "blue", "yellow"};        //NOI18N
 
@@ -324,7 +324,7 @@ public class UtilsTest extends TestCase{
         }
         
         public int getInteger(){
-            return integer.intValue();
+            return integer;
         }
         
         public String[] getPrimaryColours(){
@@ -336,11 +336,11 @@ public class UtilsTest extends TestCase{
         }
         
         public Integer sizePrimaryColours(){
-            return new Integer(4);
+            return 4;
         }
         
         public Integer primaryColours(){
-            return new Integer(3);
+            return 3;
         }
     }
 }

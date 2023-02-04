@@ -52,21 +52,21 @@ public class CharsetDisplayPreferenceEditorTest extends TestCase {
             new CharsetDisplayPreferenceEditor();
 
         Integer ret = null;
-        foo.setValue(Integer.valueOf("0"));
+        foo.setValue(0);
         ret = (Integer) foo.getValue();
-        assertEquals(Integer.valueOf("0"), ret);
-        foo.setValue(Integer.valueOf("1"));
+        assertEquals(0, ret);
+        foo.setValue(1);
         ret = (Integer) foo.getValue();
-        assertEquals(Integer.valueOf("1"),ret);
-        foo.setValue(Integer.valueOf("2"));
+        assertEquals(1,ret);
+        foo.setValue(2);
         ret = (Integer) foo.getValue();
-        assertEquals(Integer.valueOf("2"), ret);
-        foo.setValue(Integer.valueOf("3"));
+        assertEquals(2, ret);
+        foo.setValue(3);
         ret = (Integer) foo.getValue();
-        assertEquals(Integer.valueOf("1"),ret);
-        foo.setValue(Integer.valueOf("-1"));
+        assertEquals(1,ret);
+        foo.setValue(-1);
         ret = (Integer) foo.getValue();
-        assertEquals(Integer.valueOf("1"), ret );
+        assertEquals(1, ret );
         
     }
         

@@ -344,7 +344,7 @@ public class AddFormPropertyPanel extends javax.swing.JPanel implements Validati
     public String getArraySize() {
         String text = jTextFieldSize.getText().trim();
         try {
-            Integer size = new Integer(text);
+            Integer size = Integer.parseInt(text);
             return text;
         } catch (NumberFormatException ex) {
             return null;

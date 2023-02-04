@@ -78,7 +78,7 @@ class SQLParser {
         if (m.find()) {
             for (int i=0; i < commands.length; i+=2) {
                 if (m.start(i/2+1) != -1) {
-                    return ((Integer)commands[i+1]).intValue();
+                    return (Integer) commands[i + 1];
                 }
             }
             throw new IllegalArgumentException(m.toString());

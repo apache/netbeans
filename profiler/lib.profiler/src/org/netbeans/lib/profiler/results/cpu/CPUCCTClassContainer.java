@@ -176,7 +176,7 @@ public class CPUCCTClassContainer extends CPUCCTContainer {
         for (int i = 0; e.hasMoreElements(); i++) {
             sameTypeChildren.clear();
 
-            int sourceChildClassOrPackageId = ((Integer) e.nextElement()).intValue();
+            int sourceChildClassOrPackageId = (Integer) e.nextElement();
 
             for (int j = 0; j < nAllChildren; j++) {
                 if (sourceChildrenClassIds[j] == sourceChildClassOrPackageId) {
@@ -245,7 +245,7 @@ public class CPUCCTClassContainer extends CPUCCTContainer {
                 }
             } else { // A child node belongs to a different class
 
-                Integer key = Integer.valueOf(sourceChildClassOrPackageId);
+                Integer key = sourceChildClassOrPackageId;
 
                 if (!uniqChildCache.containsKey(key)) {
                     uniqChildCache.put(key, key);

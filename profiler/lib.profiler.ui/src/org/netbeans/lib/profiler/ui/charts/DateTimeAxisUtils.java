@@ -91,7 +91,7 @@ public class DateTimeAxisUtils {
 
     static {
         for (int i = 0; i < timeUnitsGrid.length; i++) {
-            timeUnitsToIndex.put(new Long(timeUnitsGrid[i]), Integer.valueOf(i));
+            timeUnitsToIndex.put(new Long(timeUnitsGrid[i]), i);
         }
     }
 
@@ -207,6 +207,6 @@ public class DateTimeAxisUtils {
             return -1;
         }
 
-        return ((Integer) oTimeUnitsFormatIndex).intValue();
+        return (Integer) oTimeUnitsFormatIndex;
     }
 }

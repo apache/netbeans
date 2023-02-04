@@ -113,13 +113,13 @@ public class CPUDataFrameProcessor extends AbstractLockDataFrameProcessor {
 
                     switch (eventType) {
                         case CommonConstants.MARKER_ENTRY_UNSTAMPED: {
-                            List parameters = (List) methodParameters.get(Integer.valueOf(currentThreadId));
+                            List parameters = (List) methodParameters.get(currentThreadId);
                             if (LOGGER.isLoggable(Level.FINEST)) {
                                 LOGGER.log(Level.FINEST, "Marker entry unstamped, tId={0}, mId={1}, pars={2}", new Object[]{currentThreadId, methodId, parameters.toString()}); // NOI18N
                             }
 
                             fireMethodEntryUnstamped(methodId, currentThreadId, CPUProfilingResultListener.METHODTYPE_MARKER, parameters, null);
-                            methodParameters.remove(Integer.valueOf(currentThreadId));
+                            methodParameters.remove(currentThreadId);
                             break;
                         }
                         case CommonConstants.METHOD_ENTRY_UNSTAMPED: {
@@ -150,7 +150,7 @@ public class CPUDataFrameProcessor extends AbstractLockDataFrameProcessor {
                             break;
                         }
                         case CommonConstants.MARKER_ENTRY: {
-                            List parameters = (List) methodParameters.get(Integer.valueOf(currentThreadId));
+                            List parameters = (List) methodParameters.get(currentThreadId);
                             int depth = getDepth(buffer);
                             int[] methodIds = new int[depth];
 
@@ -164,7 +164,7 @@ public class CPUDataFrameProcessor extends AbstractLockDataFrameProcessor {
 
                             fireMethodEntry(methodId, currentThreadId, CPUProfilingResultListener.METHODTYPE_MARKER, timeStamp0,
                                             timeStamp1, parameters, methodIds);
-                            methodParameters.remove(Integer.valueOf(currentThreadId));                            
+                            methodParameters.remove(currentThreadId);
                             break;
                         }
                         case CommonConstants.ROOT_ENTRY: {
@@ -188,7 +188,7 @@ public class CPUDataFrameProcessor extends AbstractLockDataFrameProcessor {
                             break;
                         }
                         case CommonConstants.MARKER_EXIT: {
-                            List parameters = (List) methodParameters.get(Integer.valueOf(currentThreadId));
+                            List parameters = (List) methodParameters.get(currentThreadId);
                             Object retVal = parameters == null ? null : parameters.get(0);
                             
                             if (LOGGER.isLoggable(Level.FINEST)) {
@@ -201,7 +201,7 @@ public class CPUDataFrameProcessor extends AbstractLockDataFrameProcessor {
 
                             fireMethodExit(methodId, currentThreadId, CPUProfilingResultListener.METHODTYPE_MARKER, timeStamp0,
                                            timeStamp1, retVal);
-                            methodParameters.remove(Integer.valueOf(currentThreadId));
+                            methodParameters.remove(currentThreadId);
                             break;
                         }
                         case CommonConstants.ROOT_EXIT: {
@@ -407,7 +407,7 @@ public class CPUDataFrameProcessor extends AbstractLockDataFrameProcessor {
                             for (int i = 0; i < pars; i++) {
                                 parameters.add(readParameter(buffer));
                             }
-                            methodParameters.put(Integer.valueOf(currentThreadId), parameters);
+                            methodParameters.put(currentThreadId, parameters);
                             break;
                         }
                         case CommonConstants.RESET_COLLECTORS: {
@@ -469,7 +469,7 @@ public class CPUDataFrameProcessor extends AbstractLockDataFrameProcessor {
             case SHORT:
                 return Short.valueOf(buffer.getShort());
             case INT:
-                return Integer.valueOf(buffer.getInt());
+                return buffer.getInt();
             case LONG:
                 return Long.valueOf(buffer.getLong());
             case FLOAT:

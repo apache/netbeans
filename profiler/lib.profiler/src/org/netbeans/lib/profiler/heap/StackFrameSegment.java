@@ -119,7 +119,7 @@ class StackFrameSegment extends TagBounds {
     }
     
     String getClassNameBySerialNumber(int classSerialNumber) {
-        Integer classSerialNumberObj = Integer.valueOf(classSerialNumber);
+        Integer classSerialNumberObj = classSerialNumber;
         String className = (String) classCache.get(classSerialNumberObj);
         
         if (className == null) {

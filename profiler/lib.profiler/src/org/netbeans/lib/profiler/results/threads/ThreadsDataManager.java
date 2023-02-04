@@ -134,7 +134,7 @@ public class ThreadsDataManager extends DataManager {
             int[] newIds = monitoredData.getNewThreadIds();
 
             for (int i = 0; i < newThreadsNum; i++) {
-                idToIndex.put(Integer.valueOf(newIds[i]), Integer.valueOf(i + max)); // add new threads to the end of the array
+                idToIndex.put(newIds[i], i + max); // add new threads to the end of the array
             }
         }
 
@@ -153,8 +153,8 @@ public class ThreadsDataManager extends DataManager {
                 }
                 // precise states timers
                 for (int i = 0; i < exThreadIds.length; i++) {
-                    Integer intIndex = (Integer) idToIndex.get(Integer.valueOf(exThreadIds[i]));
-                    int index = intIndex.intValue();
+                    Integer intIndex = (Integer) idToIndex.get(exThreadIds[i]);
+                    int index = intIndex;
                     ThreadData tData = threadData[index];
                     tData.add(exTimestamps[i], exStates[i]);
                 }
@@ -176,8 +176,8 @@ public class ThreadsDataManager extends DataManager {
                     startTime = monitoredData.getStateTimestamps()[0];
                 }
                 for (int threadIdx = 0; threadIdx < nThreads; threadIdx++) {
-                    Integer intIndex = (Integer) idToIndex.get(Integer.valueOf(threadIds[threadIdx]));
-                    int index = intIndex.intValue();
+                    Integer intIndex = (Integer) idToIndex.get(threadIds[threadIdx]);
+                    int index = intIndex;
                     byte[] threadStates = states[threadIdx];
                     ThreadData tData = threadData[index];
                     

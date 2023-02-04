@@ -30,26 +30,26 @@ import java.util.Map;
 class HprofGCRoot extends HprofObject implements GCRoot {
     //~ Static fields/initializers -----------------------------------------------------------------------------------------------
 
-    static Map kindMap;
+    private static final Map<Integer, String> KIND_MAP;
 
     static {
-        kindMap = new HashMap();
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_UNKNOWN), GCRoot.UNKNOWN);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_JNI_GLOBAL), GCRoot.JNI_GLOBAL);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_JNI_LOCAL), GCRoot.JNI_LOCAL);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_JAVA_FRAME), GCRoot.JAVA_FRAME);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_NATIVE_STACK), GCRoot.NATIVE_STACK);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_STICKY_CLASS), GCRoot.STICKY_CLASS);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_THREAD_BLOCK), GCRoot.THREAD_BLOCK);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_MONITOR_USED), GCRoot.MONITOR_USED);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_THREAD_OBJECT), GCRoot.THREAD_OBJECT);
+        KIND_MAP = new HashMap<>();
+        KIND_MAP.put(HprofHeap.ROOT_UNKNOWN, GCRoot.UNKNOWN);
+        KIND_MAP.put(HprofHeap.ROOT_JNI_GLOBAL, GCRoot.JNI_GLOBAL);
+        KIND_MAP.put(HprofHeap.ROOT_JNI_LOCAL, GCRoot.JNI_LOCAL);
+        KIND_MAP.put(HprofHeap.ROOT_JAVA_FRAME, GCRoot.JAVA_FRAME);
+        KIND_MAP.put(HprofHeap.ROOT_NATIVE_STACK, GCRoot.NATIVE_STACK);
+        KIND_MAP.put(HprofHeap.ROOT_STICKY_CLASS, GCRoot.STICKY_CLASS);
+        KIND_MAP.put(HprofHeap.ROOT_THREAD_BLOCK, GCRoot.THREAD_BLOCK);
+        KIND_MAP.put(HprofHeap.ROOT_MONITOR_USED, GCRoot.MONITOR_USED);
+        KIND_MAP.put(HprofHeap.ROOT_THREAD_OBJECT, GCRoot.THREAD_OBJECT);
         // HPROF HEAP 1.0.3
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_INTERNED_STRING), GCRoot.INTERNED_STRING);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_FINALIZING), GCRoot.FINALIZING);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_DEBUGGER), GCRoot.DEBUGGER);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_REFERENCE_CLEANUP), GCRoot.REFERENCE_CLEANUP);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_VM_INTERNAL), GCRoot.VM_INTERNAL);
-        kindMap.put(Integer.valueOf(HprofHeap.ROOT_JNI_MONITOR), GCRoot.JNI_MONITOR);
+        KIND_MAP.put(HprofHeap.ROOT_INTERNED_STRING, GCRoot.INTERNED_STRING);
+        KIND_MAP.put(HprofHeap.ROOT_FINALIZING, GCRoot.FINALIZING);
+        KIND_MAP.put(HprofHeap.ROOT_DEBUGGER, GCRoot.DEBUGGER);
+        KIND_MAP.put(HprofHeap.ROOT_REFERENCE_CLEANUP, GCRoot.REFERENCE_CLEANUP);
+        KIND_MAP.put(HprofHeap.ROOT_VM_INTERNAL, GCRoot.VM_INTERNAL);
+        KIND_MAP.put(HprofHeap.ROOT_JNI_MONITOR, GCRoot.JNI_MONITOR);
     }
 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ class HprofGCRoot extends HprofObject implements GCRoot {
     public String getKind() {
         int k = getHprofBuffer().get(fileOffset);
 
-        return (String) kindMap.get(Integer.valueOf(k & 0xff));
+        return KIND_MAP.get(k & 0xff);
     }
 
     long getInstanceId() {

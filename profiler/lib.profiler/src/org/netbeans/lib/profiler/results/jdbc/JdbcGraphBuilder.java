@@ -442,14 +442,14 @@ public class JdbcGraphBuilder extends BaseCallGraphBuilder implements CPUProfili
         
         Integer selectId = selectsToId.get(sel);
         if (selectId == null) {
-            selectId = Integer.valueOf(++lastSelectId);
+            selectId = ++lastSelectId;
             sel.setCommandType(extractSQLCommandType(select));
             sel.setTables(extractTables(select));
             selectsToId.put(sel, selectId);
             idsToSelect.put(selectId, sel);
             updateNumberOfSelects();
         }
-        return selectId.intValue();
+        return selectId;
     }
 
     private boolean isCollectingTwoTimeStamps() {
@@ -712,7 +712,7 @@ public class JdbcGraphBuilder extends BaseCallGraphBuilder implements CPUProfili
         if (selectId == -1) {
             return "-1";
         }
-        Select sel = idsToSelect.get(Integer.valueOf(selectId));
+        Select sel = idsToSelect.get(selectId);
         if (sel == null) {
             return "Null select for SelectId " + selectId;
         }
@@ -774,7 +774,7 @@ public class JdbcGraphBuilder extends BaseCallGraphBuilder implements CPUProfili
 
     @Override
     public int getCommandType(int selectId) {
-        Select sel = idsToSelect.get(Integer.valueOf(selectId));
+        Select sel = idsToSelect.get(selectId);
         if (sel != null) {
             return sel.getType();
         }
@@ -783,7 +783,7 @@ public class JdbcGraphBuilder extends BaseCallGraphBuilder implements CPUProfili
 
     @Override
     public int getSQLCommand(int selectId) {
-        Select sel = idsToSelect.get(Integer.valueOf(selectId));
+        Select sel = idsToSelect.get(selectId);
         if (sel != null) {
             return sel.getCommandType();
         }
@@ -792,7 +792,7 @@ public class JdbcGraphBuilder extends BaseCallGraphBuilder implements CPUProfili
 
     @Override
     public String[] getTables(int selectId) {
-        Select sel = idsToSelect.get(Integer.valueOf(selectId));
+        Select sel = idsToSelect.get(selectId);
         if (sel != null) {
             return sel.getTables();
         }
@@ -802,21 +802,21 @@ public class JdbcGraphBuilder extends BaseCallGraphBuilder implements CPUProfili
     private int incrementSqlLevel(ThreadInfo ti) {
         Integer sqlLevel = currentSqlLevel.get(ti);
         if (sqlLevel == null) {
-            sqlLevel = Integer.valueOf(1);
+            sqlLevel = 1;
         } else {
-            sqlLevel = Integer.valueOf(sqlLevel.intValue()+1);
+            sqlLevel = sqlLevel + 1;
         }
         currentSqlLevel.put(ti, sqlLevel);
-        return sqlLevel.intValue();
+        return sqlLevel;
     }
 
     private int decrementSqlLevel(ThreadInfo ti) {
         Integer sqlLevel = currentSqlLevel.get(ti);
 
         assert sqlLevel != null;
-        sqlLevel = Integer.valueOf(sqlLevel.intValue()-1);
+        sqlLevel = sqlLevel - 1;
         currentSqlLevel.put(ti, sqlLevel);
-        return sqlLevel.intValue();
+        return sqlLevel;
     }
 
 
@@ -833,7 +833,7 @@ public class JdbcGraphBuilder extends BaseCallGraphBuilder implements CPUProfili
 
         @Override
         protected String getInstrMethodClass(int selectId) {
-            Select sel = idsToSelect.get(Integer.valueOf(selectId));
+            Select sel = idsToSelect.get(selectId);
             if (sel == null) {
                 return "Unknown select for selectId " + selectId;
             }
@@ -860,7 +860,7 @@ public class JdbcGraphBuilder extends BaseCallGraphBuilder implements CPUProfili
         @Override
         public String getMethodNameAtRow(int row) {
             int selectId = getMethodIdAtRow(row);
-            return idsToSelect.get(Integer.valueOf(selectId)).getSelect();
+            return idsToSelect.get(selectId).getSelect();
         }
         
     }

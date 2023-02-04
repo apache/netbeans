@@ -91,12 +91,12 @@ class HprofProxy {
                 Integer offset = (Integer) stringInstance.getValueOfField("offset"); // NOI18N
                 Integer len = (Integer) stringInstance.getValueOfField("count"); // NOI18N
                 if (offset == null) {
-                    offset = Integer.valueOf(0);
+                    offset = 0;
                 }
                 if (len == null) {
                     len = chars.getLength();
                 }
-                char[] charArr = getChars(chars, coder, offset.intValue(), len.intValue());
+                char[] charArr = getChars(chars, coder, offset, len);
 
                 return new String(charArr).intern();
             }
@@ -145,6 +145,6 @@ class HprofProxy {
         Integer HI_BYTE_SHIFT = (Integer) utf16Class.getValueOfStaticField("HI_BYTE_SHIFT");      // NOI18N
         Integer LO_BYTE_SHIFT = (Integer) utf16Class.getValueOfStaticField("LO_BYTE_SHIFT");      // NOI18N
         
-        return new int[] {HI_BYTE_SHIFT.intValue(),LO_BYTE_SHIFT.intValue()};
+        return new int[] {HI_BYTE_SHIFT, LO_BYTE_SHIFT};
     }
 }

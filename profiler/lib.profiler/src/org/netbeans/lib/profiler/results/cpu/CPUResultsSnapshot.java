@@ -175,7 +175,7 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
         threadIdMap = new HashMap(methodLevelCCTs.length);
 
         for (int i = 0; i < methodLevelCCTs.length; i++) {
-            threadIdMap.put(Integer.valueOf(methodLevelCCTs[i].threadId), Integer.valueOf(i));
+            threadIdMap.put(methodLevelCCTs[i].threadId, i);
         }
 
         threadCCTContainers = new CPUCCTContainer[3][];
@@ -608,7 +608,7 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
         for (int i = 0; i < nThreads; i++) {
             containers[i] = new CPUCCTContainer(this);
             containers[i].readFromStream(in);
-            threadIdMap.put(Integer.valueOf(containers[i].threadId), Integer.valueOf(i));
+            threadIdMap.put(containers[i].threadId, i);
         }
 
         allThreadsMergedCCTContainers = new CPUCCTContainer[3];
@@ -655,14 +655,13 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
     }
 
     private int getContainerIdForThreadId(int threadId) {
-        Integer tid = Integer.valueOf(threadId);
         Integer cId = null;
 
-        if (threadIdMap.containsKey(tid)) {
-            cId = (Integer) threadIdMap.get(tid);
+        if (threadIdMap.containsKey(threadId)) {
+            cId = (Integer) threadIdMap.get(threadId);
         }
 
-        return (cId != null) ? cId.intValue() : 0;
+        return (cId != null) ? cId : 0;
     }
 
     protected PrestimeCPUCCTNode createRootNodeForAllThreads(int view) {

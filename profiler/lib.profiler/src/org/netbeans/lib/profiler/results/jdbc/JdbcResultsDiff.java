@@ -111,7 +111,7 @@ public class JdbcResultsDiff extends JdbcResultsSnapshot {
     private int selectId1(int selectId) {
         Integer id = (Integer) selectIdToSnapshot1.get(selectId);
         if (id != null) {
-            return id.intValue();
+            return id;
         }
         return -1;
     }
@@ -119,7 +119,7 @@ public class JdbcResultsDiff extends JdbcResultsSnapshot {
     private int selectId2(int selectId) {
         Integer id = (Integer) selectIdToSnapshot2.get(selectId);
         if (id != null) {
-            return id.intValue();
+            return id;
         }
         return -1;
     }

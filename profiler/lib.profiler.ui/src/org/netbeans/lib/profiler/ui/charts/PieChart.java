@@ -166,7 +166,7 @@ public class PieChart extends JComponent implements ComponentListener, ChartMode
         int[] items = new int[selectedItems.size()];
 
         for (int i = 0; i < selectedItems.size(); i++) {
-            items[i] = ((Integer) selectedItems.get(i)).intValue();
+            items[i] = selectedItems.get(i);
         }
 
         return items;

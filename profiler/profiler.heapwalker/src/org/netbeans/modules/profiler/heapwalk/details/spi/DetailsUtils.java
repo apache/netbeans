@@ -109,7 +109,7 @@ public final class DetailsUtils {
     
     public static int getIntFieldValue(Instance instance, String field, int def) {
         Object value = instance.getValueOfField(field);
-        return value instanceof Integer ? ((Integer)value).intValue() : def;
+        return value instanceof Integer ? (Integer) value : def;
     }
     
     public static long getLongFieldValue(Instance instance, String field, long def) {

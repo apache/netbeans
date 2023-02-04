@@ -153,7 +153,7 @@ class ClassDumpSegment extends TagBounds {
     }
 
     ClassDump getPrimitiveArrayClass(byte type) {
-        ClassDump primitiveArray = (ClassDump) primitiveArrayMap.get(Integer.valueOf(type));
+        ClassDump primitiveArray = (ClassDump) primitiveArrayMap.get((int) type);
 
         if (primitiveArray == null) {
             throw new IllegalArgumentException("Invalid type " + type); // NOI18N

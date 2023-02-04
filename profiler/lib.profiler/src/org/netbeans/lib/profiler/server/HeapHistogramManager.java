@@ -204,7 +204,7 @@ class HeapHistogramManager {
                 classesIdMap.put(name, cindex);
                 newClassNames.put(name, cindex);
             }
-            ids[outIndex] = cindex.intValue();
+            ids[outIndex] = cindex;
             instances[outIndex] = ci.instances;
             bytes[outIndex] = ci.bytes;
             outIndex++;
@@ -215,7 +215,7 @@ class HeapHistogramManager {
         it = newClassNames.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry newClassEntry = (Map.Entry) it.next();
-            newids[outIndex] = ((Integer) newClassEntry.getValue()).intValue();
+            newids[outIndex] = (Integer) newClassEntry.getValue();
             newNames[outIndex] = (String) newClassEntry.getKey();
             outIndex++;
         }

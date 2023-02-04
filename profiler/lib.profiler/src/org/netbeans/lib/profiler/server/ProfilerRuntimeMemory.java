@@ -186,7 +186,7 @@ public class ProfilerRuntimeMemory extends ProfilerRuntime {
 //                if (classNameId.startsWith("[")) Thread.dumpStack();
             }
         }
-        return classIdInt.intValue();
+        return classIdInt;
     }
     
     static boolean isInternalClass(Class clazz) {

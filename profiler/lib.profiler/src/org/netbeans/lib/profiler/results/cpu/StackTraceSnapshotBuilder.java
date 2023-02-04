@@ -529,16 +529,16 @@ public class StackTraceSnapshotBuilder {
             
             if (asRoot && !inRoot) {
                 inRoot = true;
-                ccgb.methodEntry(mId.intValue(), threadId, CPUCallGraphBuilder.METHODTYPE_ROOT, timestamp, threadtimestamp, null, null);
+                ccgb.methodEntry(mId, threadId, CPUCallGraphBuilder.METHODTYPE_ROOT, timestamp, threadtimestamp, null, null);
             } else {
-                ccgb.methodEntry(mId.intValue(), threadId, CPUCallGraphBuilder.METHODTYPE_NORMAL, timestamp, threadtimestamp, null, null);
+                ccgb.methodEntry(mId, threadId, CPUCallGraphBuilder.METHODTYPE_NORMAL, timestamp, threadtimestamp, null, null);
             }
             
         }
     }
 
     private Integer registerNewMethodInfo(final MethodInfo mi) {
-        Integer index = Integer.valueOf(methodInfos.size());
+        Integer index = methodInfos.size();
         
         methodInfos.add(mi);
         methodInfoMap.put(mi,index);
@@ -556,9 +556,9 @@ public class StackTraceSnapshotBuilder {
             }
             
             if (asRoot && --rootIndex == 0) {
-                ccgb.methodExit(index.intValue(), threadId, CPUCallGraphBuilder.METHODTYPE_ROOT, timestamp, threadtimestamp, null);
+                ccgb.methodExit(index, threadId, CPUCallGraphBuilder.METHODTYPE_ROOT, timestamp, threadtimestamp, null);
             } else {
-                ccgb.methodExit(index.intValue(), threadId, CPUCallGraphBuilder.METHODTYPE_NORMAL, timestamp, threadtimestamp, null);
+                ccgb.methodExit(index, threadId, CPUCallGraphBuilder.METHODTYPE_NORMAL, timestamp, threadtimestamp, null);
             }
         }
     }

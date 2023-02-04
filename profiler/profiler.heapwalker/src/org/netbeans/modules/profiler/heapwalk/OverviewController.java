@@ -469,7 +469,7 @@ public class OverviewController extends AbstractController {
                             sb.append(" tid=").append(threadId);    // NOI18N
                         }
                         if (threadStatus != null) {
-                            State tState = toThreadState(threadStatus.intValue());
+                            State tState = toThreadState(threadStatus);
                             sb.append(" ").append(tState);          // NOI18N
                         }
                         // --- Use this to enable VisualVM color scheme for threads dumps: ---
@@ -497,7 +497,7 @@ public class OverviewController extends AbstractController {
                                 }
                                 sb.append("    at ").append(stackElHref).append("<br>");  // NOI18N
                                 if (localsMap != null) {
-                                    List<JavaFrameGCRoot> locals = localsMap.get(Integer.valueOf(i));
+                                    List<JavaFrameGCRoot> locals = localsMap.get(i);
                                     
                                     if (locals != null) {
                                         for (JavaFrameGCRoot localVar : locals) {
@@ -542,7 +542,7 @@ public class OverviewController extends AbstractController {
             if (GCRoot.JAVA_FRAME.equals(root.getKind())) {
                 JavaFrameGCRoot frameGCroot = (JavaFrameGCRoot) root;
                 ThreadObjectGCRoot threadObj = frameGCroot.getThreadGCRoot();
-                Integer frameNo = Integer.valueOf(frameGCroot.getFrameNumber());
+                Integer frameNo = frameGCroot.getFrameNumber();
                 Map<Integer,List<JavaFrameGCRoot>> stackMap = javaFrameMap.get(threadObj);
                 List<JavaFrameGCRoot> locals;
                 

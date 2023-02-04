@@ -252,11 +252,11 @@ public class ThreadsPanel extends DataView {
             public Object getUserValueForRow(int row) {
                 if (row == -1) return null;
                 if (row >= getModel().getRowCount()) return null; // #239936
-                return Integer.valueOf(convertRowIndexToModel(row));
+                return convertRowIndexToModel(row);
             }
             protected void populatePopup(JPopupMenu popup, Object value, Object userValue) {
                 if (userValue != null) {
-                    final int row = ((Integer)userValue).intValue();
+                    final int row = (Integer) userValue;
                     final boolean sel = selected.contains(row);
                     popup.add(new JMenuItem(sel ? BUNDLE().getString("ACT_UnselectThread") :
                                                   BUNDLE().getString("ACT_SelectThread")) { // NOI18N
@@ -362,7 +362,7 @@ public class ThreadsPanel extends DataView {
                 super.fireActionPerformed(e);
                 Object newOffset = zoomIn.getValue(ViewManager.PROP_NEW_OFFSET);
                 if (newOffset != null) {
-                    int _newOffset = ((Integer)newOffset).intValue();
+                    int _newOffset = (Integer) newOffset;
                     threadsTable.setColumnOffset(2, _newOffset);
                 }
                 threadsTableModel.fireTableDataChanged();
@@ -378,7 +378,7 @@ public class ThreadsPanel extends DataView {
                 super.fireActionPerformed(e);
                 Object newOffset = zoomOut.getValue(ViewManager.PROP_NEW_OFFSET);
                 if (newOffset != null) {
-                    int _newOffset = ((Integer)newOffset).intValue();
+                    int _newOffset = (Integer) newOffset;
                     threadsTable.setColumnOffset(2, _newOffset);
                 }
                 threadsTableModel.fireTableDataChanged();

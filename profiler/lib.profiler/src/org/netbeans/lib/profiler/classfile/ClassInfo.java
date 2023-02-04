@@ -604,9 +604,9 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
                 for (int i = 0; i<uninitializedList.size();i++) {
                     Integer off = uninitializedList.get(i);
                     if (off != null) {
-                        int uninitializedOffset = off.intValue();
+                        int uninitializedOffset = off;
                         if (adjustOffset(uninitializedOffset, injectionPos, changeTypeIsInjectNewInstr, injectionBindsToFollowingInstruction)) {
-                            uninitializedList.set(i,Integer.valueOf(uninitializedOffset+injectedBytesCount));
+                            uninitializedList.set(i, uninitializedOffset + injectedBytesCount);
                             uninitializedListModified = true;
                         }
                     }
@@ -623,7 +623,7 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
                 while (uninitializedList.size() < listIndex+1) {
                     uninitializedList.add(null);
                 }
-                uninitializedList.set(listIndex,Integer.valueOf(getU2(buffer,offset)));
+                uninitializedList.set(listIndex, getU2(buffer, offset));
 //                LOG.finer("ITEM_Unitialized "+Integer.valueOf(getU2(buffer,offset)));
             }
         }
@@ -660,10 +660,10 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
             if (uninitializedListModified) {
                 switch (frameType) {
                     case SAME_LOCALS_1_STACK_ITEM:
-                        putU2(ret,newFrameOffset+2,uninitializedList.get(0).intValue());
+                        putU2(ret,newFrameOffset+2, uninitializedList.get(0));
                         break;
                     case SAME_LOCALS_1_STACK_ITEM_EXTENDED:
-                        putU2(ret,newFrameOffset+3,uninitializedList.get(0).intValue());
+                        putU2(ret,newFrameOffset+3, uninitializedList.get(0));
                         break;
                     case APPEND: {
                         int offset = newFrameOffset+3;
@@ -672,7 +672,7 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
                             int typeInfoSize = getVerificationTypeInfoSize(type);
 
                             if (type == 8) { // ITEM_Unitialized
-                                putU2(ret,offset+1,off.intValue());
+                                putU2(ret,offset+1, off);
                             }
                             offset += typeInfoSize;
                         }
@@ -689,7 +689,7 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
                             int typeInfoSize = getVerificationTypeInfoSize(type);
                             
                             if (type == 8) { // ITEM_Unitialized
-                                putU2(ret,offset+1,uninitializedList.get(i).intValue());
+                                putU2(ret,offset+1, uninitializedList.get(i));
                             }
                             offset += typeInfoSize;
                         }
@@ -701,7 +701,7 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
                             int typeInfoSize = getVerificationTypeInfoSize(type);
                             
                             if (type == 8) { // ITEM_Unitialized
-                                putU2(ret,offset+1,uninitializedList.get(locals+i).intValue());
+                                putU2(ret,offset+1, uninitializedList.get(locals + i));
                             }
                             offset += typeInfoSize;
                         }

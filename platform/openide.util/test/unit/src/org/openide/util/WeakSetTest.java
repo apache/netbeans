@@ -66,7 +66,7 @@ public class WeakSetTest extends NbTestCase {
                 int cnt = 10;
                 arr = new Object[cnt];
                 for (int i = 0; i < cnt; i++) {
-                    arr[i] = new Integer(i); // autoboxing makes test fail!
+                    arr[i] = i; // autoboxing makes test fail!
                 }
             }
             
@@ -231,9 +231,9 @@ public class WeakSetTest extends NbTestCase {
     
     public void testAddRemove() {
         Set<Object> set = new WeakSet<Object>();
-        Object obj = new Integer(1);
+        Object obj = 1;
         assertTrue("have to be new object", set.add(obj));
-        Object obj2 = new Integer(1);
+        Object obj2 = 1;
         assertFalse("object have to be already in set", set.add(obj2));
         assertTrue("object have to be removed correctly", set.remove(obj2));
         assertFalse("set have to be empty", set.remove(obj));
@@ -242,7 +242,7 @@ public class WeakSetTest extends NbTestCase {
     }
 
     public void testConcurrentExceptions() {
-        Object[] arr = new Object[]{new Integer(1), new Long(2), new Double(3)};
+        Object[] arr = new Object[]{1, new Long(2), new Double(3)};
         Set<Object> set = new WeakSet<Object>();
         set.addAll(Arrays.asList(arr));
 
@@ -264,7 +264,7 @@ public class WeakSetTest extends NbTestCase {
 
     @RandomlyFails // NB-Core-Build #8344: after assertGC: expected:<[2, 3.0]> but was:<[2, 3.0]>
     public void testClone() {
-        Object[] arr = new Object[]{new Integer(1), new Long(2), new Double(3)};
+        Object[] arr = new Object[]{1, new Long(2), new Double(3)};
         WeakSet<Object> set = new WeakSet<Object>();
         set.addAll(Arrays.asList(arr));
         Set<Object> second = (Set<Object>) set.clone();

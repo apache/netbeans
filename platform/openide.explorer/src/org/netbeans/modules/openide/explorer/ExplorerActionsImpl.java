@@ -736,9 +736,7 @@ public final class ExplorerActionsImpl {
                     );
                 title = MSG_ConfirmDeleteObjectTitle();
             } else {
-                message = MSG_ConfirmDeleteObjects(
-                        Integer.valueOf(sel.length)
-                    );
+                message = MSG_ConfirmDeleteObjects(sel.length);
                 title = MSG_ConfirmDeleteObjectsTitle();
             }
 

@@ -72,7 +72,7 @@ public class ChildrenArrayNodeAtShouldNotBeSlowTest extends NbTestCase {
         try {
             java.util.regex.Matcher m = java.util.regex.Pattern.compile ("test[a-zA-Z]*([0-9]+)").matcher (getName ());
             assertTrue ("Name does not contain numbers: " + getName (), m.find ());
-            return Integer.valueOf (m.group (1));
+            return Integer.parseInt(m.group (1));
         } catch (Exception ex) {
             ex.printStackTrace();
             fail ("Name: " + getName () + " does not represent number");

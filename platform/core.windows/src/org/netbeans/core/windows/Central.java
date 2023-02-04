@@ -166,7 +166,7 @@ final class Central implements ControllerHandler {
         
         if(isVisible()) {
             viewRequestor.scheduleRequest(new ViewRequest(null, View.CHANGE_MAIN_WINDOW_FRAME_STATE_JOINED_CHANGED,
-                Integer.valueOf(old), Integer.valueOf(frameState)));
+                    old, frameState));
         }
     }
     
@@ -180,7 +180,7 @@ final class Central implements ControllerHandler {
         
         if(isVisible()) {
             viewRequestor.scheduleRequest(new ViewRequest(null, View.CHANGE_MAIN_WINDOW_FRAME_STATE_SEPARATED_CHANGED,
-                Integer.valueOf(old), Integer.valueOf(frameState)));
+                    old, frameState));
         }
     }
     
@@ -338,11 +338,11 @@ final class Central implements ControllerHandler {
         if(isVisible()) {
             viewRequestor.scheduleRequest(
                 new ViewRequest(null, View.CHANGE_EDITOR_AREA_STATE_CHANGED,
-                        Integer.valueOf(old), Integer.valueOf(editorAreaState)));
+                        old, editorAreaState));
         }
         
         WindowManagerImpl.getInstance().doFirePropertyChange(
-            WindowManagerImpl.PROP_EDITOR_AREA_STATE, Integer.valueOf(old), Integer.valueOf(editorAreaState));
+            WindowManagerImpl.PROP_EDITOR_AREA_STATE, old, editorAreaState);
     }
 
     public void setEditorAreaFrameState(int frameState) {
@@ -354,7 +354,7 @@ final class Central implements ControllerHandler {
         
         if(isVisible()) {
             viewRequestor.scheduleRequest(new ViewRequest(null, View.CHANGE_EDITOR_AREA_FRAME_STATE_CHANGED,
-                Integer.valueOf(old), Integer.valueOf(frameState)));
+                    old, frameState));
         }
     }
     
@@ -707,8 +707,7 @@ final class Central implements ControllerHandler {
         
         if(isVisible()) {
             viewRequestor.scheduleRequest(new ViewRequest(
-                mode, View.CHANGE_MODE_FRAME_STATE_CHANGED,
-                Integer.valueOf(old), Integer.valueOf(frameState)));
+                mode, View.CHANGE_MODE_FRAME_STATE_CHANGED, old, frameState));
         }
     }
     

@@ -137,7 +137,7 @@ public class MultiXMLFSTest extends FSTest implements DataManager {
         
         for (int i = map.length; i < newMap.length; i++) {
             newMap[i] = cloneMap(map[i - map.length]);
-            newMap[i].put(XMLFS_NO_KEY, new Integer(50));
+            newMap[i].put(XMLFS_NO_KEY, 50);
         }
         
         return newMap;
@@ -146,7 +146,7 @@ public class MultiXMLFSTest extends FSTest implements DataManager {
     /** Creates a Map with default arguments values */
     protected Map createDefaultMap() {
         Map map = super.createDefaultMap();
-        map.put(XMLFS_NO_KEY, new Integer(10));
+        map.put(XMLFS_NO_KEY, 10);
         return map;
     }    
     

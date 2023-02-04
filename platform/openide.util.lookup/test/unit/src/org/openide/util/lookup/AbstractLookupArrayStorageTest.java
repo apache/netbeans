@@ -89,7 +89,7 @@ public class AbstractLookupArrayStorageTest extends AbstractLookupBaseHid {
             if (trash == -1) {
                 return new AbstractLookup (ic, new ArrayStorage ());
             } else {
-                return new AbstractLookup (ic, new ArrayStorage (new Integer (trash)));
+                return new AbstractLookup (ic, new ArrayStorage (trash));
             }
         }
         

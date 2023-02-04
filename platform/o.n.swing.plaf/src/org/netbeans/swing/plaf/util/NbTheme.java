@@ -290,7 +290,7 @@ public class NbTheme extends DefaultMetalTheme implements org.xml.sax.DocumentHa
 
     private final void handleMetric (org.xml.sax.AttributeList atts) throws SAXException  {
         String key = atts.getValue(KEY_ATTR);
-        Integer resource = Integer.valueOf (atts.getValue(VALUE_ATTR));
+        Integer resource = Integer.parseInt(atts.getValue(VALUE_ATTR));
         defaults.put (key, resource);
     }
     
@@ -371,7 +371,7 @@ public class NbTheme extends DefaultMetalTheme implements org.xml.sax.DocumentHa
     
     private final int intFromAttr (final org.xml.sax.AttributeList atts, final String key) throws SAXException {
         try {
-            return Integer.valueOf (atts.getValue (key)).intValue();
+            return Integer.parseInt(atts.getValue(key));
         } catch (NumberFormatException nfe) {
             throw new SAXException (atts.getValue(key) + " is not an integer");
         }

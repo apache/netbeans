@@ -30,7 +30,7 @@ public abstract class Util {
     private Util() {}
 
     private static Image mergeIcons(FileObject fo) throws IOException {
-        int count = ((Integer)fo.getAttribute("iconCount")).intValue();
+        int count = (Integer) fo.getAttribute("iconCount");
         if (count < 2) throw new IOException();
         URL icon1 = (URL)fo.getAttribute("icon1");
         System.out.println("Loading " + icon1 + " just to be sure...");
@@ -42,8 +42,8 @@ public abstract class Util {
             System.out.println("Loading " + iconn + " just to be sure...");
             iconn.openConnection().getInputStream().close();
             Image added = Toolkit.getDefaultToolkit().getImage(iconn);
-            int x = ((Integer)fo.getAttribute("iconx" + count)).intValue();
-            int y = ((Integer)fo.getAttribute("icony" + count)).intValue();
+            int x = (Integer) fo.getAttribute("iconx" + count);
+            int y = (Integer) fo.getAttribute("icony" + count);
             img = Utilities.mergeImages(img, added, x, y);
         }
         return img;

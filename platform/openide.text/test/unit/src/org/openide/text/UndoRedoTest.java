@@ -85,7 +85,7 @@ public class UndoRedoTest extends NbTestCase implements CloneableEditorSupport.E
                 args = new Object[] { new FakeEdit () };
             }
             if (method.getParameterTypes ()[0] == Integer.TYPE) {
-                args = new Object[] { new Integer (30) };
+                args = new Object[] { 30 };
             }
         }
         

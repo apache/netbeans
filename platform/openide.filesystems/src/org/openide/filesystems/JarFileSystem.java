@@ -73,8 +73,7 @@ public class JarFileSystem extends AbstractFileSystem {
     /** Controlls the LocalFileSystem's automatic refresh.
     * If the refresh time interval is set from the System.property, than this value is used.
     * Otherwise, the refresh time interval is set to 0, which means the refresh is disabled. */
-    private static final int REFRESH_TIME = Integer.getInteger("org.openide.filesystems.JarFileSystem.REFRESH_TIME", 0)
-                                                   .intValue(); // NOI18N
+    private static final int REFRESH_TIME = Integer.getInteger("org.openide.filesystems.JarFileSystem.REFRESH_TIME", 0); // NOI18N
 
     /** maxsize for passing ByteArrayInputStream*/
     private static final long MEM_STREAM_SIZE = 100000;

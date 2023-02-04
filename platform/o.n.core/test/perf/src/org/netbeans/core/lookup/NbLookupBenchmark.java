@@ -35,7 +35,7 @@ import org.openide.util.lookup.InstanceContent;
 public class NbLookupBenchmark extends Benchmark {
     /** how many times objects in INSTANCES should be added in */
     private static Object[] ARGS = {
-        new Integer (1)
+        1
     };
 
 
@@ -52,7 +52,7 @@ public class NbLookupBenchmark extends Benchmark {
 
     /** instances that we register */
     private static Object[] INSTANCES = new Object[] {
-        new Integer (10), 
+        10,
         new Object (),
         "Ahoj",
         new C4 (), new C3 (), new C2 (), new C1 ()

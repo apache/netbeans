@@ -62,7 +62,7 @@ implements AbstractLookupBaseHid.Impl {
         res.addLookupListener (ll);
         assertEquals ("Nothing is there", 0, res.allItems ().size ());
         
-        Object inst = new Integer (3);
+        Object inst = 3;
         ic.add (inst);
         
         assertEquals ("Not Filtered out", inst, lookup.lookup (Object.class));
@@ -94,7 +94,7 @@ implements AbstractLookupBaseHid.Impl {
         res.addLookupListener (ll);
         assertEquals ("Nothing is there", 0, res.allItems ().size ());
         
-        Object inst = new Integer (3);
+        Object inst = 3;
         ic.add (inst);
         
         assertEquals ("Filtered out", null, lookup.lookup (theQuery));
@@ -148,7 +148,7 @@ implements AbstractLookupBaseHid.Impl {
         res.addLookupListener (ll);
         assertEquals ("Nothing is there", 0, res.allItems ().size ());
         
-        Object inst = new Integer (3);
+        Object inst = 3;
         ic.add (inst);
         
         assertEquals ("Accepted", inst, lookup.lookup (theQuery));

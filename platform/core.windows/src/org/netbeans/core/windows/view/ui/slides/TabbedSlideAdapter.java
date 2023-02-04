@@ -291,8 +291,7 @@ public final class TabbedSlideAdapter extends Tabbed {
     
     @Override
     public Object getConstraintForLocation(Point location, boolean attachingPossible) {
-        int tab = slideBar.nextTabForCoordinate(location.x, location.y);
-        return Integer.valueOf(tab);
+        return slideBar.nextTabForCoordinate(location.x, location.y);
     }
     
     @Override

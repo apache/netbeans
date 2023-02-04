@@ -120,7 +120,7 @@ public class FileName implements FileNaming {
     }
 
     public final @Override int hashCode() {
-        return id.intValue();
+        return id;
     }
 
     public @Override boolean isFile() {

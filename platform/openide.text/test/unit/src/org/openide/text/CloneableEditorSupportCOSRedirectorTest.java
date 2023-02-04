@@ -126,7 +126,7 @@ implements CloneableEditorSupport.Env {
         content.append("Line1\nLine2\n");
         red.master.open();
         red.slave.open();
-        Integer template = new Integer (1);
+        Integer template = 1;
         ic.add (template); // put anything into the lookup
         
         // in order to set.getLines() work correctly, the document has to be loaded

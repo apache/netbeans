@@ -163,9 +163,9 @@ public class NodeTableModel extends AbstractTableModel {
                     Object o = props[i].getValue(ATTR_ORDER_NUMBER);
 
                     if (o instanceof Integer) {
-                        sort.put(new Double(((Integer) o).doubleValue()), Integer.valueOf(ia));
+                        sort.put(new Double(((Integer) o).doubleValue()), ia);
                     } else {
-                        sort.put(new Double(ia + 0.1), new Integer(ia));
+                        sort.put(new Double(ia + 0.1), ia);
                     }
                 } else {
                     allPropertyColumns[ia].setVisibleIndex(-1);
@@ -198,7 +198,7 @@ public class NodeTableModel extends AbstractTableModel {
         Iterator it = sort.values().iterator();
 
         while (it.hasNext()) {
-            i = ((Integer) it.next()).intValue();
+            i = (Integer) it.next();
             allPropertyColumns[i].setVisibleIndex(j);
             propertyColumns[j] = i;
             j++;
@@ -218,9 +218,9 @@ public class NodeTableModel extends AbstractTableModel {
             int vi = allPropertyColumns[i].getVisibleIndex();
 
             if (vi == -1) {
-                sort.put(new Double(i - 0.1), Integer.valueOf(i));
+                sort.put(new Double(i - 0.1), i);
             } else {
-                sort.put(new Double(vi), Integer.valueOf(i));
+                sort.put(new Double(vi), i);
             }
         }
 
@@ -228,7 +228,7 @@ public class NodeTableModel extends AbstractTableModel {
         Iterator<Integer> it = sort.values().iterator();
 
         while (it.hasNext()) {
-            int i = it.next().intValue();
+            int i = it.next();
             Property p = allPropertyColumns[i].getProperty();
 
             if (isVisible(p)) {
@@ -675,7 +675,7 @@ public class NodeTableModel extends AbstractTableModel {
             boxtext = getDisplayNameWithMnemonic( allPropertyColumns[i].getProperty() ) 
                     + ": " 
                     + allPropertyColumns[i].getProperty().getShortDescription(); // NOI18N
-            sort.put(boxtext, Integer.valueOf(i));
+            sort.put(boxtext, i);
         }
 
         Iterator<String> it = sort.keySet().iterator();
@@ -684,7 +684,7 @@ public class NodeTableModel extends AbstractTableModel {
         while (it.hasNext()) {
             boxtext = it.next();
 
-            int i = sort.get(boxtext).intValue();
+            int i = sort.get(boxtext);
             JCheckBox b = new JCheckBox(boxtext, oldvalues[i]);
             Mnemonics.setLocalizedText(b, boxtext);
             makeAccessibleCheckBox(b, allPropertyColumns[i].getProperty());
@@ -824,14 +824,14 @@ public class NodeTableModel extends AbstractTableModel {
         public int getVisibleIndex() {
             Integer order = (Integer) property.getValue(ATTR_ORDER_NUMBER);
             if (order == null) return -1;
-            else return order.intValue();
+            else return order;
         }
 
         /** Setter for property visibleIndex.
          * @param visibleIndex New value of property visibleIndex.
          */
         public void setVisibleIndex(int visibleIndex) {
-            property.setValue(ATTR_ORDER_NUMBER, new Integer(visibleIndex));
+            property.setValue(ATTR_ORDER_NUMBER, visibleIndex);
         }
     }
 }

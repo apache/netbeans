@@ -86,12 +86,12 @@ public class MultiViewEditorElementTest extends NbTestCase {
         MultiViewEditorElement mvee = new MultiViewEditorElement(context);
         
         assertEquals("ces", ces, mvee.getLookup().lookup(CloneableEditorSupport.class));
-        assertEquals("ten", Integer.valueOf(10), mvee.getLookup().lookup(Integer.class));
+        assertEquals("ten", 10, mvee.getLookup().lookup(Integer.class));
         
         NbMarshalledObject mar = new NbMarshalledObject(mvee);
         MultiViewEditorElement deser = (MultiViewEditorElement)mar.get();
         
-        assertEquals("ten", Integer.valueOf(10), deser.getLookup().lookup(Integer.class));
+        assertEquals("ten", 10, deser.getLookup().lookup(Integer.class));
         assertEquals("ces", ces, deser.getLookup().lookup(CloneableEditorSupport.class));
     }
     

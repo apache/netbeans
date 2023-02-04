@@ -1546,7 +1546,7 @@ class TreeTable extends JTable implements Runnable {
 
                         for (int i = min; i <= max; i++) {
                             if (listSelectionModel.isSelectedIndex(i)) {
-                                list.add(Integer.valueOf(i));
+                                list.add(i);
                             }
                         }
 

@@ -640,7 +640,7 @@ final class BinaryFS extends FileSystem implements DataInput {
                     case 1: // shortvalue
                         return Short.valueOf(value);
                     case 2: // intvalue
-                        return Integer.valueOf(value);
+                        return Integer.parseInt(value);
                     case 3: // longvalue
                         return Long.valueOf(value);
                     case 4: // floatvalue

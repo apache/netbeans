@@ -119,7 +119,7 @@ public class FolderInstanceListenersWithCookieTest extends NbTestCase {
             
             if (cookie) {
                 err.info("Adding cookie");
-                obj.cookieSet().add (new InstanceSupport.Instance (new Integer (100)));
+                obj.cookieSet().add (new InstanceSupport.Instance (100));
                 err.info("Cookie added");
             }
             

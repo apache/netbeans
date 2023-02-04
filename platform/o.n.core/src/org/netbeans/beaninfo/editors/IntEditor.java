@@ -126,7 +126,7 @@ public class IntEditor extends ExPropertyEditorSupport {
         String result;
         if (i != null) {
             if (keys != null) {
-                int intVal = i.intValue();
+                int intVal = i;
                 int idx = -1;
                 for (int j=0; j < values.length; j++) {
                     if (values[j] == intVal) {
@@ -156,7 +156,7 @@ public class IntEditor extends ExPropertyEditorSupport {
         //IllegalArgumentException is a more correct exception to throw
         //anyway
         try {
-            setValue(Integer.valueOf(s));
+            setValue(Integer.parseInt(s));
         } catch (NumberFormatException nfe) {
             String msg = NbBundle.getMessage(
                 IntEditor.class, "EXC_ILLEGAL_VALUE_TEXT") + s; //NOI18N
@@ -187,7 +187,7 @@ public class IntEditor extends ExPropertyEditorSupport {
                                          new java.util.Date());
                 throw iae;
             } else {
-                setValue(Integer.valueOf(values[idx]));
+                setValue(values[idx]);
             }
         }
     }
@@ -213,7 +213,7 @@ public class IntEditor extends ExPropertyEditorSupport {
         if (code == null) {
             result = getValue().toString();
         } else {
-            result = code[((Integer) getValue()).intValue()];
+            result = code[(Integer) getValue()];
         }
         return result;
     }

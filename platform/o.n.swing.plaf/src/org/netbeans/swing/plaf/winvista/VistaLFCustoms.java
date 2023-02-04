@@ -62,7 +62,7 @@ public final class VistaLFCustoms extends LFCustoms {
         int fontsize = 11;
         Integer in = (Integer) UIManager.get(CUSTOM_FONT_SIZE); //NOI18N
         if (in != null) {
-            fontsize = in.intValue();
+            fontsize = in;
         }
         
         Object[] result = new Object[] {

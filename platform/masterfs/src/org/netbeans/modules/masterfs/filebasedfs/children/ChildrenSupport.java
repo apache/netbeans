@@ -346,7 +346,7 @@ public class ChildrenSupport {
 
             @Override
             public int hashCode() {
-                return id.intValue();
+                return id;
             }
 
             public boolean isFile() {

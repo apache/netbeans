@@ -421,7 +421,7 @@ public abstract class TabState {
     }
     
     private boolean isAlarmTab (int tab) {
-        return attentionToggle && alarmTabs.contains(new Integer(tab));
+        return attentionToggle && alarmTabs.contains(tab);
     }
     
     private final HashSet<Integer> alarmTabs = new HashSet<Integer>(6);
@@ -429,11 +429,10 @@ public abstract class TabState {
     /** Add a tab to the list of those which should "flash" or otherwise give
      * some notification to the user to get their attention */
     public final void addAlarmTab (int alarmTab) {
-        Integer in = new Integer(alarmTab);
-        boolean added = alarmTabs.contains(in);
+        boolean added = alarmTabs.contains(alarmTab);
         boolean wasEmpty = alarmTabs.isEmpty();
         if (!added) {
-            alarmTabs.add (new Integer(alarmTab));
+            alarmTabs.add (alarmTab);
             repaintTab (alarmTab);
         }
         if (wasEmpty) {
@@ -464,10 +463,9 @@ public abstract class TabState {
     /** Remove a tab to the list of those which should "flash" or otherwise give
      * some notification to the user to get their attention */
     public final void removeAlarmTab (int alarmTab) {
-        Integer in = new Integer(alarmTab);
-        boolean contained = alarmTabs.contains(in);
+        boolean contained = alarmTabs.contains(alarmTab);
         if (contained) {
-            alarmTabs.remove(in);
+            alarmTabs.remove(alarmTab);
             boolean empty = alarmTabs.isEmpty();
             boolean wasAttentionToggled = attentionToggle;
             if (alarmTabs.isEmpty()) {
@@ -505,7 +503,7 @@ public abstract class TabState {
                     }
                     attentionToggle = !attentionToggle;
                     for (Iterator i=alarmTabs.iterator(); i.hasNext();) {
-                        repaintTab (((Integer) i.next()).intValue());
+                        repaintTab ((Integer) i.next());
                     }
                 }
             };
@@ -547,12 +545,12 @@ public abstract class TabState {
             return;
         }
         for (Iterator i=alarmTabs.iterator(); i.hasNext();) {
-            if (((Integer) i.next()).intValue() >= max) {
+            if ((Integer) i.next() >= max) {
                 i.remove();
             }
         }
         for (Iterator i=highlightTabs.iterator(); i.hasNext();) {
-            if (((Integer) i.next()).intValue() >= max) {
+            if ((Integer) i.next() >= max) {
                 i.remove();
             }
         }

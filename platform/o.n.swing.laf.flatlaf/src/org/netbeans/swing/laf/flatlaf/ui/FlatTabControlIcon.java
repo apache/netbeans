@@ -141,7 +141,7 @@ public final class FlatTabControlIcon extends VectorIcon {
         {
             int buttonState;
             if (this.buttonState != null) {
-                buttonState = this.buttonState.intValue();
+                buttonState = this.buttonState;
             } else {
                 // get button state from component
                 buttonState = TabControlButton.STATE_DEFAULT;

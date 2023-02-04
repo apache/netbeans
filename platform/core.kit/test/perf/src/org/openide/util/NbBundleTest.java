@@ -27,7 +27,7 @@ public class NbBundleTest extends Benchmark {
 
     public NbBundleTest(String name) {
         super( name, new Integer[] {
-            new Integer(1), new Integer(10), new Integer(100), new Integer(1000)
+            1, 10, 100, 1000
         });
     }
 
@@ -35,7 +35,7 @@ public class NbBundleTest extends Benchmark {
 
     protected void setUp() {
         int count = getIterationCount();
-        int param = ((Integer)getArgument()).intValue();
+        int param = (Integer) getArgument();
         keys = new String[param];
         for( int i=0; i<param; i++ ) {
             keys[i] = "MSG_BundleTest_" + i;
@@ -48,7 +48,7 @@ public class NbBundleTest extends Benchmark {
         
     public void testGetMessageUsingClass() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
 
         while( count-- > 0 ) {
             // do the stuff here, 
@@ -60,7 +60,7 @@ public class NbBundleTest extends Benchmark {
 
     public void testGetMessageUsingClassFullBrand() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
 	NbBundle.setBranding("brand1");
 
         while( count-- > 0 ) {
@@ -74,7 +74,7 @@ public class NbBundleTest extends Benchmark {
 
     public void testGetMessageUsingEmptyBrand() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
 	NbBundle.setBranding("brand2");
 
         while( count-- > 0 ) {
@@ -101,7 +101,7 @@ public class NbBundleTest extends Benchmark {
     
     public void testGetMessageUsingLazyCache() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
 
         while( count-- > 0 ) {
             // do the stuff here, 
@@ -114,7 +114,7 @@ public class NbBundleTest extends Benchmark {
 
     public void testGetMessageUsingCachedBundle() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
 
         while( count-- > 0 ) {
             ResourceBundle bundle = NbBundle.getBundle( UtilClass.class );
@@ -127,7 +127,7 @@ public class NbBundleTest extends Benchmark {
 
     public void testGetMessageUsingCachedBundleFullBrand() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
 	NbBundle.setBranding("brand1");
 
         while( count-- > 0 ) {
@@ -143,7 +143,7 @@ public class NbBundleTest extends Benchmark {
 
     public void testGetMessageUsingCachedBundleEmptyBrand() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
 	NbBundle.setBranding("brand2");
 
         while( count-- > 0 ) {

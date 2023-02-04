@@ -44,7 +44,7 @@ public final class WindowsLFCustoms extends LFCustoms {
         int fontsize = 11;
         Integer in = (Integer) UIManager.get(CUSTOM_FONT_SIZE); //NOI18N
         if (in != null) {
-            fontsize = in.intValue();
+            fontsize = in;
         }
         
         return new Object[] {
@@ -166,16 +166,16 @@ public final class WindowsLFCustoms extends LFCustoms {
                 new GuaranteedValue("TabbedPane.highlight", Color.WHITE) ,
              
             "Button.dashedRectGapX",
-               new GuaranteedValue("Button.dashedRectGapX", Integer.valueOf(5)),
+               new GuaranteedValue("Button.dashedRectGapX", 5),
                
             "Button.dashedRectGapY",
-               new GuaranteedValue("Button.dashedRectGapY", Integer.valueOf(4)),
+               new GuaranteedValue("Button.dashedRectGapY", 4),
                
             "Button.dashedRectGapWidth",
-               new GuaranteedValue("Button.dashedRectGapWidth", Integer.valueOf(10)),
+               new GuaranteedValue("Button.dashedRectGapWidth", 10),
                
             "Button.dashedRectGapHeight",
-               new GuaranteedValue("Button.dashedRectGapHeight", Integer.valueOf(8)),
+               new GuaranteedValue("Button.dashedRectGapHeight", 8),
                      
             "Tree.expandedIcon", new TreeIcon(false),
             "Tree.collapsedIcon", new TreeIcon(true)

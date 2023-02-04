@@ -233,7 +233,7 @@ public class ListView extends JScrollPane implements Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeObject(popupAllowed ? Boolean.TRUE : Boolean.FALSE);
         out.writeObject(traversalAllowed ? Boolean.TRUE : Boolean.FALSE);
-        out.writeObject(new Integer(getSelectionMode()));
+        out.writeObject(getSelectionMode());
     }
 
     /*
@@ -242,7 +242,7 @@ public class ListView extends JScrollPane implements Externalizable {
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         popupAllowed = ((Boolean) in.readObject()).booleanValue();
         traversalAllowed = ((Boolean) in.readObject()).booleanValue();
-        setSelectionMode(((Integer) in.readObject()).intValue());
+        setSelectionMode((Integer) in.readObject());
     }
 
     // properties ...........................................................................
@@ -1072,8 +1072,8 @@ public class ListView extends JScrollPane implements Externalizable {
                 startIndex = startIndex % size;
                 startIndex = getNextMatch(prefix, startIndex, Position.Bias.Forward);
 
-                if ((startIndex != -1) && !results.contains(new Integer(startIndex))) {
-                    results.add(Integer.valueOf(startIndex));
+                if ((startIndex != -1) && !results.contains(startIndex)) {
+                    results.add(startIndex);
 
                     String elementName = getModel().getElementAt(startIndex).toString();
 
@@ -1273,8 +1273,8 @@ public class ListView extends JScrollPane implements Externalizable {
                     }
 
                     Integer index = (Integer) results.get(currentSelectionIndex);
-                    list.setSelectedIndex(index.intValue());
-                    list.ensureIndexIsVisible(index.intValue());
+                    list.setSelectedIndex(index);
+                    list.ensureIndexIsVisible(index);
                 } else {
                     list.clearSelection();
                 }

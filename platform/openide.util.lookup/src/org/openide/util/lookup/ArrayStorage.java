@@ -385,7 +385,7 @@ implements AbstractLookup.Storage<ArrayStorage.Transaction> {
                 }
             }
 
-            int maxSize = (trashold == null) ? _arr.length : trashold.intValue();
+            int maxSize = (trashold == null) ? _arr.length : trashold;
 
             if (ensure > maxSize) {
                 throw new UnsupportedOperationException();

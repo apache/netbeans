@@ -139,7 +139,7 @@ public class AdaptiveMatteBorder implements Border {
             JComponent jc = (JComponent) c.getParent();
             Object o = jc.getClientProperty("viewType");
             if (o instanceof Integer) {
-                return ((Integer) o).intValue() == 0;
+                return (Integer) o == 0;
             }
         }
         return false;

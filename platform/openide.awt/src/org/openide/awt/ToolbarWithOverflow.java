@@ -427,7 +427,7 @@ public class ToolbarWithOverflow extends JToolBar {
             if (smallToolbarIcons) {
                 ((JComponent) comp).putClientProperty(PROP_PREF_ICON_SIZE, null);
             } else {
-                ((JComponent) comp).putClientProperty(PROP_PREF_ICON_SIZE, Integer.valueOf(24));
+                ((JComponent) comp).putClientProperty(PROP_PREF_ICON_SIZE, 24);
             }
         }
     }

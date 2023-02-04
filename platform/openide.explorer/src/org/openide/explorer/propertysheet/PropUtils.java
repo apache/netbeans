@@ -1112,7 +1112,7 @@ final class PropUtils {
         Integer i = (Integer) UIManager.get(KEY_ICONMARGIN); //NOI18N
 
         if (i != null) {
-            iconMargin = i.intValue();
+            iconMargin = i;
         } else {
             if (
                 "com.sun.java.swing.plaf.windows.WindowsLookAndFeel".equals(
@@ -1128,7 +1128,7 @@ final class PropUtils {
         i = (Integer) UIManager.get(KEY_ROWHEIGHT); //NOI18N
 
         if (i != null) {
-            spinnerHeight = i.intValue();
+            spinnerHeight = i;
         } else {
             spinnerHeight = iconSize;
         }
@@ -1342,7 +1342,7 @@ final class PropUtils {
             Object o = UIManager.get("netbeans.ps.textMargin"); //NOI18N
 
             if (o instanceof Integer) {
-                textMargin = ((Integer) o).intValue();
+                textMargin = (Integer) o;
             } else {
                 textMargin = 2;
             }

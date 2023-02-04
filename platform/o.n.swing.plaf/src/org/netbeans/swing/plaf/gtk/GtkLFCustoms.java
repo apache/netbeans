@@ -64,7 +64,7 @@ public class GtkLFCustoms extends LFCustoms {
             Integer i = (Integer) UIManager.get("customFontSize"); //NOI18N
             int sz = 11;
             if (i != null) {
-                sz = i.intValue();
+                sz = i;
             }
             controlFont = new Font ("Dialog", Font.PLAIN, sz); //NOI18N
         }

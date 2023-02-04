@@ -717,7 +717,7 @@ public class RendererDisplayerTest extends NbTestCase {
     }
     
     public class NumProperty extends PropertySupport {
-        private Integer myValue = new Integer(4);
+        private Integer myValue = 4;
         // Create new Property
         public NumProperty(String name, boolean isWriteable) {
             super(name, Integer.class, name, "", true, isWriteable);
@@ -769,13 +769,13 @@ public class RendererDisplayerTest extends NbTestCase {
         // Set the Property value threw the Editor
         @Override
         public void setValue(Object newValue) {
-            val = ((Integer) newValue).intValue();
+            val = (Integer) newValue;
             firePropertyChange();
         }
 
         @Override
         public String getAsText() {
-            return getTags()[((Integer) getValue()).intValue()];
+            return getTags()[(Integer) getValue()];
         }
 
         @Override
@@ -783,7 +783,7 @@ public class RendererDisplayerTest extends NbTestCase {
             String[] t = getTags();
             for (int i=0; i < t.length; i++) {
                 if (txt.trim().equals(t[i])) {
-                    setValue(new Integer(i));
+                    setValue(i);
                     return;
                 }
             }
@@ -793,7 +793,7 @@ public class RendererDisplayerTest extends NbTestCase {
 
         @Override
         public Object getValue() {
-            return new Integer(val);
+            return val;
         }
 
         @Override

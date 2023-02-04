@@ -104,8 +104,8 @@ public final class EditorProvider extends ComponentProvider {
         }
         List<Object> source = new ArrayList<Object>();
         source.add(document);
-        source.add(Integer.valueOf(start));
-        source.add(Integer.valueOf(end));
+        source.add(start);
+        source.add(end);
         ActionEvent event = new ActionEvent(source, 0, null);
         action.actionPerformed(event);
         Object object = event.getSource();

@@ -47,12 +47,12 @@ public class DefaultPropertyModelTest extends NbTestCase {
         DefaultPropertyModel model = new DefaultPropertyModel(obj, "soTimeout");
         
         
-        assertEquals("Calls the get method", model.getValue(), new Integer(obj.getSoTimeout()));
+        assertEquals("Calls the get method", model.getValue(), obj.getSoTimeout());
         
-        model.setValue(new Integer(100));
+        model.setValue(100);
         
         assertEquals("Value change", 100, obj.getSoTimeout());
-        assertEquals("Model updated", model.getValue(), new Integer(obj.getSoTimeout()));
+        assertEquals("Model updated", model.getValue(), obj.getSoTimeout());
     }
     
     //

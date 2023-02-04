@@ -108,7 +108,7 @@ public class ModuleInitTest extends Benchmark {
                 String k = kv.substring(0, x);
                 String v = kv.substring(x + 1);
                 try {
-                    m[i].put(k, new Integer(v));
+                    m[i].put(k, Integer.parseInt(v));
                 } catch (NumberFormatException nfe) {
                     m[i].put(k, v);
                 }
@@ -251,9 +251,9 @@ public class ModuleInitTest extends Benchmark {
     }
     
     private void createModules(Map params, File mods, File amods, File emods) throws IOException {
-        int size = ((Integer)params.get("modules")).intValue();
-        int jarSize = ((Integer)params.get("jarSize")).intValue();
-        int layerSize = ((Integer)params.get("layerSize")).intValue();
+        int size = (Integer) params.get("modules");
+        int jarSize = (Integer) params.get("jarSize");
+        int layerSize = (Integer) params.get("layerSize");
         File[] moddirs = {mods, amods, emods}; // indexed by types[n]
         for (int i = 0; i < size; i++) {
             int which = i % cyclesize;

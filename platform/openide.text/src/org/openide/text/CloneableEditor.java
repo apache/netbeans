@@ -541,7 +541,7 @@ public class CloneableEditor extends CloneableTopComponent implements CloneableE
             }
         }
 
-        out.writeObject(new Integer(pos));
+        out.writeObject(pos);
         out.writeBoolean(getLookup() == support.getLookup());
     }
 
@@ -562,7 +562,7 @@ public class CloneableEditor extends CloneableTopComponent implements CloneableE
         }
 
         // load cursor position
-        offset = ((Integer) in.readObject()).intValue();
+        offset = (Integer) in.readObject();
 
         if (!discard()) {
             cursorPosition = offset;

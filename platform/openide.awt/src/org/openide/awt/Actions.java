@@ -1037,7 +1037,7 @@ public class Actions {
             Object prop = button.getClientProperty("PreferredIconSize"); //NOI18N
 
             if (prop instanceof Integer) {
-                if (((Integer) prop).intValue() == 24) {
+                if ((Integer) prop == 24) {
                     useSmallIcon = false;
                 }
             }

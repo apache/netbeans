@@ -142,7 +142,7 @@ public class UtilitiesTopologicalSortTest extends NbTestCase {
         m.put ("e", Collections.singletonList ("f"));
         m.put ("f", Collections.singletonList ("d"));
         
-        Collection sizes = new ArrayList ();
+        Collection<Integer> sizes = new ArrayList<>();
         
         try {
             BaseUtilities.topologicalSort (c, m); 
@@ -150,13 +150,13 @@ public class UtilitiesTopologicalSortTest extends NbTestCase {
         } catch (TopologicalSortException ex) {
             Set[] sets = ex.topologicalSets();
             for (int i = 0; i < sets.length; i++) {
-                sizes.add (new Integer (sets[i].size ()));
+                sizes.add(sets[i].size());
             }
             
-            assertEquals ("There were three cycles plus first+last", 5, sizes.size ());
-            assertTrue ("One of size 1", sizes.contains (new Integer (1)));
-            assertTrue ("One of size 2", sizes.contains (new Integer (2)));
-            assertTrue ("One of size 3", sizes.contains (new Integer (3)));
+            assertEquals ("There were three cycles plus first+last", 5, sizes.size());
+            assertTrue ("One of size 1", sizes.contains(1));
+            assertTrue ("One of size 2", sizes.contains(2));
+            assertTrue ("One of size 3", sizes.contains(3));
             
             sets = ex.unsortableSets();
             assertEquals ("Three cycles", 3, sets.length);

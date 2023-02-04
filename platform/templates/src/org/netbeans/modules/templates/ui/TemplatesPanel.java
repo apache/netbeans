@@ -752,7 +752,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
             message = NbBundle.getMessage(TemplatesPanel.class, "MSG_ConfirmRevertFile", nodes[0].getDisplayName());
             title = NbBundle.getMessage(TemplatesPanel.class, "MSG_ConfirmRevertFileTitle");
         } else {
-            message = NbBundle.getMessage(TemplatesPanel.class, "MSG_ConfirmRevertFiles", Integer.valueOf(nodes.length));
+            message = NbBundle.getMessage(TemplatesPanel.class, "MSG_ConfirmRevertFiles", nodes.length);
             title = NbBundle.getMessage(TemplatesPanel.class, "MSG_ConfirmRevertFilesTitle");
         }
 

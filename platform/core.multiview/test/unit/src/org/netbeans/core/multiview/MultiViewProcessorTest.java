@@ -220,14 +220,14 @@ public class MultiViewProcessorTest extends NbTestCase {
         handler.requestActive(arr[0]);
         assertNull("No integer now", mvc.getLookup().lookup(Integer.class));
         ic.add(1);
-        assertEquals("1 now", Integer.valueOf(1), mvc.getLookup().lookup(Integer.class));
+        assertEquals("1 now", 1, mvc.getLookup().lookup(Integer.class));
 
 	((MultiViewCloneableTopComponent)mvc).splitComponent(JSplitPane.HORIZONTAL_SPLIT, -1);
 	handler.requestActive(arr[0]);
 	ic.remove(1);
         assertNull("No integer now", mvc.getLookup().lookup(Integer.class));
         ic.add(2);
-        assertEquals("2 now", Integer.valueOf(2), mvc.getLookup().lookup(Integer.class));
+        assertEquals("2 now", 2, mvc.getLookup().lookup(Integer.class));
     }
     
     
@@ -237,7 +237,7 @@ public class MultiViewProcessorTest extends NbTestCase {
         ic.add(10);
 
         CloneableTopComponent cmv = MultiViews.createCloneableMultiView("text/context", new LP(lookup));
-        assertEquals("10 now", Integer.valueOf(10), cmv.getLookup().lookup(Integer.class));
+        assertEquals("10 now", 10, cmv.getLookup().lookup(Integer.class));
         
         assertNotNull("MultiViewComponent created", cmv);
         TopComponent mvc = cmv.cloneTopComponent();
@@ -246,10 +246,10 @@ public class MultiViewProcessorTest extends NbTestCase {
         MultiViewHandler handler = MultiViews.findMultiViewHandler(mvc);
         assertNotNull("Handler found", handler);
         
-        assertEquals("10 now", Integer.valueOf(10), mvc.getLookup().lookup(Integer.class));
+        assertEquals("10 now", 10, mvc.getLookup().lookup(Integer.class));
         ic.remove(10);
         ic.add(1);
-        assertEquals("1 now", Integer.valueOf(1), mvc.getLookup().lookup(Integer.class));
+        assertEquals("1 now", 1, mvc.getLookup().lookup(Integer.class));
     }
     
     public void testLookupInitialized() {
@@ -258,10 +258,10 @@ public class MultiViewProcessorTest extends NbTestCase {
         ic.add(10);
 
         TopComponent mvc = MultiViews.createMultiView("text/context", new LP(lookup));
-        assertEquals("10 now", Integer.valueOf(10), mvc.getLookup().lookup(Integer.class));
+        assertEquals("10 now", 10, mvc.getLookup().lookup(Integer.class));
         ic.remove(10);
         ic.add(1);
-        assertEquals("1 now", Integer.valueOf(1), mvc.getLookup().lookup(Integer.class));
+        assertEquals("1 now", 1, mvc.getLookup().lookup(Integer.class));
     }
     
     
@@ -451,14 +451,14 @@ public class MultiViewProcessorTest extends NbTestCase {
         handler.requestActive(arr[0]);
         assertNull("No integer now", mvc.getLookup().lookup(Integer.class));
         ic.add(1);
-        assertEquals("1 now", Integer.valueOf(1), mvc.getLookup().lookup(Integer.class));
+        assertEquals("1 now", 1, mvc.getLookup().lookup(Integer.class));
 	
 	((MultiViewTopComponent)mvc).splitComponent(JSplitPane.HORIZONTAL_SPLIT, -1);
 	ic.remove(1);
 	handler.requestActive(arr[1]);
         assertNull("No integer now", mvc.getLookup().lookup(Integer.class));
         ic.add(2);
-        assertEquals("2 now", Integer.valueOf(2), mvc.getLookup().lookup(Integer.class));
+        assertEquals("2 now", 2, mvc.getLookup().lookup(Integer.class));
     }
 
     @MimeRegistration(mimeType="text/figaro", service=CloseOperationHandler.class)

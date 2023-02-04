@@ -27,7 +27,7 @@ public class ArrayEnumTest extends EnumBenchmark {
     Object[] array;
 
     protected void preSetUp() {
-	int arg = ((Integer)getArgument()).intValue();
+	int arg = (Integer) getArgument();
 	array = new Object[arg];
     }
 

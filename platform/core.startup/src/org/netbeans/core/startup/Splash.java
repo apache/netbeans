@@ -360,7 +360,7 @@ public final class Splash implements Stamps.Updater {
             Color color = Color.BLACK;
             try {
                 Integer rgb = Integer.decode(bundle.getString(prefix + "Color")); // NOI18N
-                color = new Color(rgb.intValue());
+                color = new Color(rgb);
             } catch (NumberFormatException nfe) {
                 //IZ 37515 - NbBundle.DEBUG causes startup to fail; use default value
                 Util.err.warning("Number format exception " + //NOI18N
@@ -458,11 +458,11 @@ public final class Splash implements Stamps.Updater {
                         Integer.parseInt(st.nextToken()),
                         Integer.parseInt(st.nextToken()));
                 Integer rgb = Integer.decode(bundle.getString("SplashProgressBarColor")); // NOI18N
-                color_bar = new Color(rgb.intValue());
+                color_bar = new Color(rgb);
                 rgb = Integer.decode(bundle.getString("SplashProgressBarEdgeColor")); // NOI18N
-                color_edge = new Color(rgb.intValue());
+                color_edge = new Color(rgb);
                 rgb = Integer.decode(bundle.getString("SplashProgressBarCornerColor")); // NOI18N
-                color_corner = new Color(rgb.intValue());
+                color_corner = new Color(rgb);
             } catch (NumberFormatException nfe) {
                 //IZ 37515 - NbBundle.DEBUG causes startup to fail - provide some useless values
                 Util.err.warning("Number format exception " + //NOI18N

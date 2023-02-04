@@ -111,7 +111,7 @@ public class FolderInstanceTest extends NbTestCase {
             
             if (cookie) {
                 err.info("Adding cookie");
-                obj.cookieSet().add (new InstanceSupport.Instance (new Integer (100)));
+                obj.cookieSet().add (new InstanceSupport.Instance (100));
                 err.info("Cookie added");
             }
             
@@ -199,7 +199,7 @@ public class FolderInstanceTest extends NbTestCase {
             }
             
             err.info("changing instance in cookie set");
-            InstanceSupport.Instance is = new InstanceSupport.Instance (new Integer (100));
+            InstanceSupport.Instance is = new InstanceSupport.Instance (100);
             set.add (is);
             err.info("changing instance in cookie set, done");
             
@@ -269,27 +269,27 @@ public class FolderInstanceTest extends NbTestCase {
 
             {
                 org.openide.nodes.CookieSet set = ((DataLoaderOrigTest.SimpleDataObject)objA).cookieSet ();
-                InstanceSupport.Instance is = new InstanceSupport.Instance (new Integer (1));
+                InstanceSupport.Instance is = new InstanceSupport.Instance (1);
                 set.add (is);
             }
             {
                 org.openide.nodes.CookieSet set = ((DataLoaderOrigTest.SimpleDataObject)objB).cookieSet ();
-                InstanceSupport.Instance is = new InstanceSupport.Instance (new Integer (2));
+                InstanceSupport.Instance is = new InstanceSupport.Instance (2);
                 set.add (is);
             }
             
             List list;
             list = (List)instance.instanceCreate ();
             assertEquals ("Two integer", 2, list.size ());
-            assertEquals ("1 is first", new Integer (1), list.get (0));
-            assertEquals ("2 is next", new Integer (2), list.get (1));
+            assertEquals ("1 is first", 1, list.get (0));
+            assertEquals ("2 is next", 2, list.get (1));
             
             folder.setOrder (new DataObject[] { objB, objA });
             
             list = (List)instance.instanceCreate ();
             assertEquals ("Two integer", 2, list.size ());
-            assertEquals ("2 is first", new Integer (2), list.get (0));
-            assertEquals ("1 is next", new Integer (1), list.get (1));
+            assertEquals ("2 is first", 2, list.get (0));
+            assertEquals ("1 is next", 1, list.get (1));
             
         } finally {
             Pool.setExtra(null);
@@ -523,7 +523,7 @@ public class FolderInstanceTest extends NbTestCase {
             DataFolder f = DataFolder.findFolder(folder);
             InvCheckFolderInstance icfi = new InvCheckFolderInstance(f, false);
             assertTrue(icfi.ok);
-            assertEquals(new Integer(0), icfi.instanceCreate());
+            assertEquals(0, icfi.instanceCreate());
             err.info("sample1: " + DataObject.find(lfs.findResource(names[0])));
             Pool.setExtra(l);
             try {
@@ -540,7 +540,7 @@ public class FolderInstanceTest extends NbTestCase {
                 System.err.println("sample: " + DataObject.find(lfs.findResource(names[0])));
                  */
                 Thread.sleep(sleep);
-                assertEquals(new Integer(cnt), icfi.instanceCreate());
+                assertEquals(cnt, icfi.instanceCreate());
                 //Thread.sleep(sleep);
                 assertTrue(icfi.ok);
                 //Thread.sleep(sleep);
@@ -560,11 +560,11 @@ public class FolderInstanceTest extends NbTestCase {
                 instance = icfi.instanceCreate();
                 err.info("instance is here (" + i + "): " + instance);
                 
-                if (new Integer (0).equals (instance)) {
+                if (instance.equals(0)) {
                     break;
                 }
             }
-            assertEquals(new Integer(0), instance);
+            assertEquals(0, instance);
             err.info("passed the usual failing point");
             //Thread.sleep(sleep);
             assertTrue(icfi.ok);
@@ -653,7 +653,7 @@ public class FolderInstanceTest extends NbTestCase {
                 return list;
             }
             
-            return new Integer(cookies.length);
+            return cookies.length;
         }
         
         protected InstanceCookie acceptDataObject(DataObject o) {

@@ -290,7 +290,7 @@ class ModeParser {
             for (Iterator it = tcRefOrder.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry en = (Map.Entry) it.next();
                 String tcRefName = (String) en.getKey();
-                int index = ((Integer) en.getValue()).intValue();
+                int index = (Integer) en.getValue();
                 TCRefParser tcRefParser = (TCRefParser) localMap.remove(tcRefName);
                 //Put instances to array according to defined order
                 //Order should be defined from 0 to N-1
@@ -333,7 +333,7 @@ class ModeParser {
             tcRefOrder.clear();
             for (int i = 0; i < localList.size(); i++) {
                 TCRefParser tcRefParser = localList.get(i);
-                tcRefOrder.put(tcRefParser.getName(), Integer.valueOf(i));
+                tcRefOrder.put(tcRefParser.getName(), i);
             }
             writeOrder();
         }
@@ -386,7 +386,7 @@ class ModeParser {
             tcRefOrder.clear();
             for (int i = 0; i < localList.size(); i++) {
                 TCRefParser tcRefParser = (TCRefParser) localList.get(i);
-                tcRefOrder.put(tcRefParser.getName(), Integer.valueOf(i));
+                tcRefOrder.put(tcRefParser.getName(), i);
             }
             writeOrder();
         }
@@ -442,7 +442,7 @@ class ModeParser {
             }
             tcRefOrder.clear();
             for (int i = 0; i < mc.tcRefConfigs.length; i++) {
-                tcRefOrder.put(mc.tcRefConfigs[i].tc_id, Integer.valueOf(i));
+                tcRefOrder.put(mc.tcRefConfigs[i].tc_id, i);
             }
         } else {
             tcRefOrder = null;
@@ -551,7 +551,7 @@ class ModeParser {
             int i = 0;
             while (tok.hasMoreTokens()) {
                 String tcRefName = tok.nextToken();
-                map.put(tcRefName, Integer.valueOf(i));
+                map.put(tcRefName, i);
                 i++;
             }
             tcRefOrder = map;
@@ -584,7 +584,7 @@ class ModeParser {
             String[] tcRefNames = new String[tcRefOrder.size()];
             for (Map.Entry<String, Integer> en: tcRefOrder.entrySet()) {
                 String tcRefName = en.getKey();
-                int index = en.getValue().intValue();
+                int index = en.getValue();
                 tcRefNames[index] = tcRefName;
             }
             StringBuilder buf = new StringBuilder(255);
@@ -653,7 +653,7 @@ class ModeParser {
         for (Iterator it = tcRefOrder.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry en = (Map.Entry) it.next();
             String name = (String) en.getKey();
-            int index = ((Integer) en.getValue()).intValue();
+            int index = (Integer) en.getValue();
             TCRefParser tcRefParser = (TCRefParser) localMap.remove(name);
             //Put instances to array according to defined order
             //Order should be defined from 0 to N-1
@@ -684,7 +684,7 @@ class ModeParser {
         tcRefOrder.clear();
         for (int i = 0; i < localList.size(); i++) {
             TCRefParser tcRefParser = localList.get(i);
-            tcRefOrder.put(tcRefParser.getName(), Integer.valueOf(i));
+            tcRefOrder.put(tcRefParser.getName(), i);
         }
         try {
             writeOrder();
@@ -745,7 +745,7 @@ class ModeParser {
             for (Iterator it = tcRefOrder.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry en = (Map.Entry) it.next();
                 String name = (String) en.getKey();
-                int index = ((Integer) en.getValue()).intValue();
+                int index = (Integer) en.getValue();
                 tcRefParser = (TCRefParser) localMap.remove(name);
                 //Put instances to array according to defined order
                 //Order should be defined from 0 to N-1
@@ -789,7 +789,7 @@ class ModeParser {
             tcRefOrder.clear();
             for (int i = 0; i < localList.size(); i++) {
                 tcRefParser = (TCRefParser) localList.get(i);
-                tcRefOrder.put(tcRefParser.getName(), Integer.valueOf(i));
+                tcRefOrder.put(tcRefParser.getName(), i);
             }
             try {
                 writeOrder();
@@ -1223,7 +1223,7 @@ class ModeParser {
             String size = attrs.getValue("size");
             if (tcId != null && size != null) {
                 try {
-                    Integer intSize = Integer.valueOf( size );
+                    Integer intSize = Integer.parseInt(size);
                     if( null == modeConfig.slideInSizes )
                         modeConfig.slideInSizes = new HashMap<String, Integer>(5);
                     modeConfig.slideInSizes.put( tcId, intSize );
@@ -1623,7 +1623,7 @@ class ModeParser {
                     buff.append("  <slide-in-size tc-id=\"");
                     buff.append(tcId);
                     buff.append("\" size=\"");
-                    buff.append(size.intValue());
+                    buff.append(size);
                     buff.append("\" />\n"); // NOI18N
                 }
             }

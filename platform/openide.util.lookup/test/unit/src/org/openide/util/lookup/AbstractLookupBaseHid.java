@@ -129,7 +129,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
     
     /** instances that we register */
     private static Object[] INSTANCES = new Object[] {
-        new Integer (10), 
+        10,
         new Object ()
     };
     
@@ -138,14 +138,14 @@ public class AbstractLookupBaseHid extends NbTestCase {
         Listener listener = new Listener();
         res.addLookupListener(listener);
         
-        final Integer i1 = Integer.valueOf(432432);
+        final Integer i1 = 432432;
         ic.add(i1);
         
         assertSame("i1 is returned", i1, lookup.lookup(Integer.class));
         assertTrue("One change", listener.listenerCalled);
         listener.listenerCalled = false;
         
-        Integer i2 = new Integer(i1);
+        Integer i2 = i1;
         assertNotSame(i2, i1);
         
         ic.add(i2);
@@ -172,16 +172,16 @@ public class AbstractLookupBaseHid extends NbTestCase {
         
         final Collection<? extends Integer> fourCol = res.allInstances();
         Iterator<? extends Integer> four = fourCol.iterator();
-        assertEquals("Four1", Integer.valueOf(1), four.next());
-        assertEquals("Four2", Integer.valueOf(2), four.next());
+        assertEquals("Four1", 1, four.next());
+        assertEquals("Four2", 2, four.next());
         
         ic1.remove(1);
 
         final Collection<? extends Integer> threeCol = res.allInstances();
         Iterator<? extends Integer> three = threeCol.iterator();
-        assertEquals("Three2", Integer.valueOf(2), three.next());
-        assertEquals("Three3", Integer.valueOf(3), three.next());
-        assertEquals("Three4", Integer.valueOf(4), three.next());
+        assertEquals("Three2", 2, three.next());
+        assertEquals("Three3", 3, three.next());
+        assertEquals("Three4", 4, three.next());
         assertFalse("Three ales", three.hasNext());
 
         assertEquals("This call computes the whole collection"
@@ -190,8 +190,8 @@ public class AbstractLookupBaseHid extends NbTestCase {
             + "modified", 
             "[1, 2, 3, 4]", new ArrayList<Integer>(fourCol).toString());
         
-        assertEquals("Four3",  Integer.valueOf(3), four.next());
-        assertEquals("Four4",  Integer.valueOf(4), four.next());
+        assertEquals("Four3",  3, four.next());
+        assertEquals("Four4",  4, four.next());
         assertFalse("Ales four", four.hasNext());
         
         Collection<? extends Integer> atTheEnd = res.allInstances();
@@ -205,8 +205,8 @@ public class AbstractLookupBaseHid extends NbTestCase {
     }
     
     public void testCompareUsingEquals() {
-        Integer i1 = new Integer(10);
-        Integer i2 = new Integer(10);
+        Integer i1 = 10;
+        Integer i2 = 10;
         assertEquals(i1, i2);
         assertNotSame(i1, i2);
         
@@ -271,7 +271,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         
         Lookup query = createLookup(before);
         
-        before.toAdd = Integer.valueOf(10);
+        before.toAdd = 10;
         
         Lookup.Result<Long> res = query.lookupResult(Long.class);
         assertTrue("empty", res.allItems().isEmpty());
@@ -641,7 +641,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
     
     /** Test if it is possible to remove a registered object. */
     public void testRemoveRegisteredObject() {
-        Integer inst = new Integer(10);
+        Integer inst = 10;
         
         ic.add(inst);
         if (lookup.lookup(inst.getClass()) == null) {
@@ -1420,11 +1420,11 @@ public class AbstractLookupBaseHid extends NbTestCase {
             }
             
             public Object getInstance () {
-                return new Integer (10);
+                return 10;
             }
             
             protected boolean creatorOf (Object obj) {
-                return new Integer (10).equals (obj);
+                return obj.equals(10);
             }
         }
         
@@ -1435,7 +1435,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
             class BlockInInstanceOf implements Runnable {
                 public void run () {
                     Integer i = my.lookup(Integer.class);
-                    assertEquals (new Integer (10), i);
+                    assertEquals (10, i);
                 }
             }
             BlockInInstanceOf blk = new BlockInInstanceOf ();
@@ -1449,10 +1449,10 @@ public class AbstractLookupBaseHid extends NbTestCase {
     }
 
     public void testAWayToGenerateProblem13779 () {
-        ic.add (new Integer (1));
-        ic.add (new Integer (2));
-        ic.add (new Integer (1));
-        ic.add (new Integer (2));
+        ic.add (1);
+        ic.add (2);
+        ic.add (1);
+        ic.add (2);
         
         Collection c = lookup.lookup (new Lookup.Template (Integer.class)).allInstances ();
         assertEquals ("There are two objects", 2, c.size ());
@@ -1631,7 +1631,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         listener.resultChanged(null);
         
         for(int i = 0; i < 100; i++) {
-            ic.add(new Integer(i));
+            ic.add(i);
         }
         
         assertEquals("3x100+1 checks", 301, listener.round);
@@ -1867,7 +1867,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         
         
         Liar l = new Liar();
-        l.obj = new Integer(5);
+        l.obj = 5;
         
         this.ic.addPair(l);
         

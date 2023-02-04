@@ -123,7 +123,7 @@ public class ModuleListStartLevelTest extends SetupHid {
         Map<String, Object> module = cache.get("com.jcraft.jsch");
         assertNotNull("Module info found", module);
         Object level = module.get("startlevel");
-        assertEquals("Start level is remembered", Integer.valueOf(4), level);
+        assertEquals("Start level is remembered", 4, level);
     }
     
 

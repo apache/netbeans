@@ -902,8 +902,8 @@ class SplitSubModel {
             for(Iterator it = index2child.keySet().iterator(); it.hasNext(); ) {
                 Integer index = (Integer)it.next();
                 Node child = (Node)index2child.get(index);
-                sb.append("child[" + index.intValue() +"]=" + child.getClass()
-                    + "@" + Integer.toHexString(child.hashCode())); // NOI18N
+                sb.append("child[" + index + "]=" + child.getClass()
+                          + "@" + Integer.toHexString(child.hashCode())); // NOI18N
             }
             
             return sb.toString();
@@ -920,20 +920,18 @@ class SplitSubModel {
                 if(index2child.isEmpty()) {
                     index = 0;
                 } else {
-                    index = ((Integer)index2child.lastKey()).intValue() + 1;
+                    index = index2child.lastKey() + 1;
                 }
             }
             
-            Integer ind = Integer.valueOf(index);
-            
-            Node oldChild = (Node)index2child.get(ind);
+            Node oldChild = (Node)index2child.get(index);
             // There are some other nodes at the index, shift them first.
-            for(int i = ind.intValue() + 1; oldChild != null; i++) {
-                oldChild = (Node)index2child.put(Integer.valueOf(i), oldChild);
+            for(int i = index + 1; oldChild != null; i++) {
+                oldChild = (Node)index2child.put(i, oldChild);
             }
 
             // Finally add the new node.
-            index2child.put(ind, child);
+            index2child.put(index, child);
             // Also add it to child2splitWeight map
             setChildSplitWeightImpl(child, splitWeight);
             child.setParent(this);
@@ -942,7 +940,7 @@ class SplitSubModel {
         }
         
         public Node getChildAt(int index) {
-            return (Node)index2child.get(Integer.valueOf(index));
+            return (Node)index2child.get(index);
         }
         
         private void verifyChildren() {
@@ -997,7 +995,7 @@ class SplitSubModel {
             for(Iterator it = index2child.keySet().iterator(); it.hasNext(); ) {
                 Object key = it.next();
                 if(child == index2child.get(key)) {
-                    return ((Integer)key).intValue();
+                    return (Integer) key;
                 }
             }
             

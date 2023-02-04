@@ -242,7 +242,7 @@ public class LocalFSTest extends FSTest implements DataManager {
         }
         
         void append(String s) {
-            positions.add(new Integer(buffer.length()));
+            positions.add(buffer.length());
             buffer.append(s);
         }
         
@@ -263,7 +263,7 @@ public class LocalFSTest extends FSTest implements DataManager {
         
         private void newPadding(String str) {
             for (int i = 0; i < positions.size(); i++) {
-                int idx = ((Integer) positions.get(i)).intValue();
+                int idx = (Integer) positions.get(i);
                 buffer.replace(idx, idx + str.length(), str);
             }
         }

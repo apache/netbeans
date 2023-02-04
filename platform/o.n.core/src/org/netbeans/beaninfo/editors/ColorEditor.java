@@ -948,7 +948,7 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
     public static final boolean gtkShouldAntialias() {
         if (gtkAA == null) {
             Object o = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/Antialias"); //NOI18N
-            gtkAA = Boolean.valueOf(Integer.valueOf(1).equals(o));
+            gtkAA = Boolean.valueOf(o.equals(1));
         }
 
         return gtkAA.booleanValue();

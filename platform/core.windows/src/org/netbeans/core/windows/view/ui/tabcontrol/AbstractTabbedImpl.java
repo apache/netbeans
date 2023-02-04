@@ -238,7 +238,7 @@ public abstract class AbstractTabbedImpl extends Tabbed {
         int tab = tabForCoordinate( location );
         if( tab != -1 ) {
             int index = dropIndexOfPoint( location );
-            return index < 0 ? null : Integer.valueOf( index );
+            return index < 0 ? null : index;
         }
         // ----
         if( attachingPossible ) {
@@ -248,7 +248,7 @@ public abstract class AbstractTabbedImpl extends Tabbed {
             }
         }
         int index = dropIndexOfPoint( location );
-        return index < 0 ? null : Integer.valueOf( index );
+        return index < 0 ? null : index;
     }
 
     protected abstract int dropIndexOfPoint( Point location );

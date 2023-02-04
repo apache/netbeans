@@ -281,8 +281,8 @@ public class ModeParserTest extends NbTestCase {
         Map<String,Integer> slideInSizes = modeCfg.slideInSizes;
         assertNotNull( slideInSizes );
         assertEquals( 2, slideInSizes.size() );
-        assertEquals( Integer.valueOf(123), slideInSizes.get( "output" ) );
-        assertEquals( Integer.valueOf(321), slideInSizes.get( "someOtherTopComponentId" ) );
+        assertEquals(123, slideInSizes.get( "output" ) );
+        assertEquals(321, slideInSizes.get( "someOtherTopComponentId" ) );
         
         System.out.println("ModeParserTest.testLoadMode06 FINISH");
     }

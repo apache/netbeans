@@ -65,8 +65,8 @@ final class AllLFCustoms extends LFCustoms {
                         
             EDITOR_ERRORSTRIPE_SCROLLBAR_INSETS, new Insets(0, 0, 0, 0),
 
-            SPLIT_PANE_DIVIDER_SIZE_VERTICAL, new Integer(4),
-            SPLIT_PANE_DIVIDER_SIZE_HORIZONTAL, new Integer(4)
+            SPLIT_PANE_DIVIDER_SIZE_VERTICAL, 4,
+            SPLIT_PANE_DIVIDER_SIZE_HORIZONTAL, 4
         }; //NOI18N
         return uiDefaults;
     }
@@ -82,7 +82,7 @@ final class AllLFCustoms extends LFCustoms {
         Integer in = (Integer) UIManager.get(CUSTOM_FONT_SIZE); //NOI18N
         boolean hasCustomFontSize = in != null;
         if (hasCustomFontSize) {
-            fontsize = in.intValue();
+            fontsize = in;
         }
         Object[] uiDefaults = {
             //XXX once jdk 1.5 b2 is out, these can be deleted
@@ -94,7 +94,7 @@ final class AllLFCustoms extends LFCustoms {
             "controlFont", new GuaranteedValue ("controlFont",
                 new Font ("Dialog", Font.PLAIN, fontsize)),
             
-            DEFAULT_FONT_SIZE, new Integer(11),
+            DEFAULT_FONT_SIZE, 11,
             ERROR_FOREGROUND, new GuaranteedValue(ERROR_FOREGROUND, errorColor),
 
             WARNING_FOREGROUND, new GuaranteedValue(WARNING_FOREGROUND, warningColor ),

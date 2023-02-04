@@ -290,7 +290,7 @@ class DefaultView implements View, Controller, WindowDnDManager.ViewAccessor {
 
                 ModeView modeView = hierarchy.getModeViewForAccessor(wsa.findModeAccessor((String)viewEvent.getSource())); // XXX
                 if(modeView != null) {
-                    modeView.setFrameState(((Integer)viewEvent.getNewValue()).intValue());
+                    modeView.setFrameState((Integer) viewEvent.getNewValue());
                     modeView.updateFrameState();
                 }
             } else if(changeType == CHANGE_MODE_SELECTED_TOPCOMPONENT_CHANGED) {

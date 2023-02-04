@@ -321,7 +321,7 @@ public final class HtmlRenderer {
                 Object cfs = UIManager.get("customFontSize"); //NOI18N
 
                 if (cfs instanceof Integer) {
-                    fs = ((Integer) cfs).intValue();
+                    fs = (Integer) cfs;
                 }
 
                 f = new Font("Dialog", Font.PLAIN, fs); //NOI18N
@@ -530,7 +530,7 @@ public final class HtmlRenderer {
                 Object cfs = UIManager.get("customFontSize"); //NOI18N
 
                 if (cfs instanceof Integer) {
-                    fs = ((Integer) cfs).intValue();
+                    fs = (Integer) cfs;
                 }
 
                 f = new Font("Dialog", Font.PLAIN, fs); //NOI18N

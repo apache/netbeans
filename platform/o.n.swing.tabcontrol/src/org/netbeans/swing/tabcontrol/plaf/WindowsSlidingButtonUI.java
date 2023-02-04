@@ -75,13 +75,13 @@ public class WindowsSlidingButtonUI extends SlidingButtonUI {
             try {
                 //Null checks so this can be tested on other platforms
                 Integer in = ((Integer)UIManager.get("Button.dashedRectGapX"));
-                dashedRectGapX = in == null ? 3 : in.intValue();
+                dashedRectGapX = in == null ? 3 : in;
                 in = ((Integer)UIManager.get("Button.dashedRectGapY"));
-                dashedRectGapY = in == null ? 3 : in.intValue();
+                dashedRectGapY = in == null ? 3 : in;
                 in = ((Integer)UIManager.get("Button.dashedRectGapWidth"));
-                dashedRectGapWidth = in == null ? 3 : in.intValue();
+                dashedRectGapWidth = in == null ? 3 : in;
                 in = ((Integer)UIManager.get("Button.dashedRectGapHeight"));
-                dashedRectGapHeight = in == null ? 3 : in.intValue();
+                dashedRectGapHeight = in == null ? 3 : in;
                 focusColor = UIManager.getColor(getPropertyPrefix() + "focus");
                 defaults_initialized = true;
             } catch (NullPointerException npe) {

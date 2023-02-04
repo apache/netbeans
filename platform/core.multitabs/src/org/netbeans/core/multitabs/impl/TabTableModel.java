@@ -188,7 +188,7 @@ public abstract class TabTableModel extends AbstractTableModel {
         protected int toTabIndex( int rowIndex, int colIndex ) {
             int res = -1;
             if( colIndex >= 0 && colIndex < tabIndexes.size() )
-                res = tabIndexes.get( colIndex ).intValue();
+                res = tabIndexes.get(colIndex);
             return res;
         }
 
@@ -196,7 +196,7 @@ public abstract class TabTableModel extends AbstractTableModel {
         protected int toColumnIndex( int tabIndex ) {
             int index = 0;
             for( Integer i : tabIndexes ) {
-                if( i.intValue() == tabIndex ) {
+                if(i == tabIndex ) {
                     return index;
                 }
                 index++;

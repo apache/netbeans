@@ -2109,8 +2109,8 @@ public final class ModuleManager extends Modules {
                         // Look for the corresponding module.
                         Object[] depParse = Util.parseCodeName(dep.getName());
                         String codeNameBase = (String)depParse[0];
-                        int relVersionMin = (depParse[1] != null) ? ((Integer)depParse[1]).intValue() : -1;
-                        int relVersionMax = (depParse[2] != null) ? ((Integer)depParse[2]).intValue() : relVersionMin;
+                        int relVersionMin = (depParse[1] != null) ? (Integer) depParse[1] : -1;
+                        int relVersionMax = (depParse[2] != null) ? (Integer) depParse[2] : relVersionMin;
                         Module other = get(codeNameBase);
                         if (other == null) {
                             // No such module, bad.

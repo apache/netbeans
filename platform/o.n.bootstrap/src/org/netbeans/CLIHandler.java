@@ -159,7 +159,7 @@ public abstract class CLIHandler extends Object {
 
         
         synchronized (block) {
-            if (state == block.intValue()) {
+            if (state == block) {
                 if (OUTPUT.isLoggable(Level.FINEST)) {
                     OUTPUT.finest(state + " blocked"); // NOI18N
                 }
@@ -636,7 +636,7 @@ public abstract class CLIHandler extends Object {
                                 // the address in the stream if the server is listening
                                 byte[] host;
                                 try {
-                                    if (block != null && block.intValue() == 667) {
+                                    if (block != null && block == 667) {
                                         // this is here to emulate #64004
                                         throw new UnknownHostException("dhcppc0"); // NOI18N
                                     }

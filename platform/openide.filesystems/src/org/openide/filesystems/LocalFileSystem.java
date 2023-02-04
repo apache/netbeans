@@ -55,7 +55,7 @@ public class LocalFileSystem extends AbstractFileSystem {
     * is disabled. */
     private static final int REFRESH_TIME = Integer.getInteger(
             "org.openide.filesystems.LocalFileSystem.REFRESH_TIME", 0
-        ).intValue(); // NOI18N
+    ); // NOI18N
     private static final int SUCCESS = 0;
     private static final int FAILURE = 1;
     private static final int NOT_EXISTS = 3;

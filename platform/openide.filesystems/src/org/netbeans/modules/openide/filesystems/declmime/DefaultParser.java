@@ -106,7 +106,7 @@ abstract class DefaultParser  extends DefaultHandler {
                         true);  //NOI18N
                 parser.setProperty(
                         "http://apache.org/xml/properties/input-buffer-size", //NOI18N
-                        new Integer(2048)); // #230305
+                        2048); // #230305
             } catch (SAXException ignore) {
                 // parsing may be slower :-(
             }

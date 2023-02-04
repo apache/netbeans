@@ -52,7 +52,7 @@ public final class GraphicsUtils {
     private static final boolean gtkShouldAntialias() {
         if (gtkAA == null) {
             Object o = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/Antialias"); //NOI18N
-            gtkAA = Integer.valueOf(1).equals(o);
+            gtkAA = o.equals(1);
         }
 
         return gtkAA.booleanValue();

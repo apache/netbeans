@@ -1040,7 +1040,7 @@ public class ChildrenKeysTest extends NbTestCase {
         
         
         K k = new K ();
-        Object[] keys = { "Ahoj", new Integer (3), "Kuk", new Integer (2) };
+        Object[] keys = { "Ahoj", 3, "Kuk", 2 };
         k.setKeys (keys);
         Node[] arr = k.getNodes (true);
         assertEquals ("Just two", 2, arr.length);
@@ -1415,7 +1415,7 @@ public class ChildrenKeysTest extends NbTestCase {
     }
     
     public void testChildrensAreNotCreatedOnNodeRemoval() {
-        final Integer cnt = new Integer(0);
+        final Integer cnt = 0;
         class K extends Keys {
 
             K() {

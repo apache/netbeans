@@ -77,7 +77,7 @@ public class AbstractLookupMemoryTest extends NbTestCase {
             ActiveQueue.queue(),
             listener,
             listener2,
-            new Integer (11) // trashhold is shared
+            11 // trashhold is shared
         };
 
         AbstractLookup.Content c = new AbstractLookup.Content ();

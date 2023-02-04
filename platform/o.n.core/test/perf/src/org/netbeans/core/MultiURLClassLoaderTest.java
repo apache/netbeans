@@ -63,7 +63,7 @@ public class MultiURLClassLoaderTest extends MapArgBenchmark implements DataMana
     /** Creates an argument array */
     private Map[] createArguments() {
         Map[] ret = new Map[] { createDefaultMap(), createDefaultMap() };
-        ret[1].put(CLASS_NO_KEY, new Integer(1000));
+        ret[1].put(CLASS_NO_KEY, 1000);
         return ret;
     }
 
@@ -139,8 +139,8 @@ public class MultiURLClassLoaderTest extends MapArgBenchmark implements DataMana
     /** Creates a Map with default arguments values */
     protected Map createDefaultMap() {
         Map map = super.createDefaultMap();
-        map.put(CLASS_NO_KEY, new Integer(500));
-        map.put(MultiXMLFSTest.XMLFS_NO_KEY, new Integer(30));
+        map.put(CLASS_NO_KEY, 500);
+        map.put(MultiXMLFSTest.XMLFS_NO_KEY, 30);
         return map;
     }
     
@@ -161,7 +161,7 @@ public class MultiURLClassLoaderTest extends MapArgBenchmark implements DataMana
         
         int fileNo = getIntValue(CLASS_NO_KEY);
         Map map = (Map) getArgument();
-        map.put(ReadOnlyFSTest.FILE_NO_KEY, new Integer(fileNo));
+        map.put(ReadOnlyFSTest.FILE_NO_KEY, fileNo);
         
         mfstest.setParent(this);
         

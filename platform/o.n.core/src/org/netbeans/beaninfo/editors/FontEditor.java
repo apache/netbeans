@@ -46,18 +46,18 @@ public class FontEditor implements PropertyEditor, XMLPropertyEditor {
 
     // static .....................................................................................
 
-    static final Integer[] sizes = new Integer [] {
-                                       Integer.valueOf (3),
-                                       Integer.valueOf (5),
-                                       Integer.valueOf (8),
-                                       Integer.valueOf (10),
-                                       Integer.valueOf (12),
-                                       Integer.valueOf (14),
-                                       Integer.valueOf (18),
-                                       Integer.valueOf (24),
-                                       Integer.valueOf (36),
-                                       Integer.valueOf (48)
-                                   };
+    static final Integer[] sizes = {
+            3,
+            5,
+            8,
+            10,
+            12,
+            14,
+            18,
+            24,
+            36,
+            48
+    };
 
     static final String[] styles = new String [] {
                                        NbBundle.getMessage(FontEditor.class, "CTL_Plain"),
@@ -426,8 +426,8 @@ public class FontEditor implements PropertyEditor, XMLPropertyEditor {
         }
 
         private void updateSizeList(int size) {
-            if (java.util.Arrays.asList(sizes).contains(Integer.valueOf(size)))
-                lSize.setSelectedValue(Integer.valueOf(size), true);
+            if (java.util.Arrays.asList(sizes).contains(size))
+                lSize.setSelectedValue(size, true);
             else
                 lSize.clearSelection();
         }

@@ -83,9 +83,9 @@ public class SlidingView extends ModeView {
                     if( null == res )
                         res = tc.getBounds();
                     if( Constants.BOTTOM.equals( side ) || Constants.TOP.equals( side ) ) {
-                        res.height = prevSlideSize.intValue();
+                        res.height = prevSlideSize;
                     } else {
-                        res.width = prevSlideSize.intValue();
+                        res.width = prevSlideSize;
                     }
                 }
             }

@@ -509,7 +509,7 @@ final class TemplateWizard1 extends javax.swing.JPanel implements DataFilter,
                 Component c = wizard.targetChooser().getComponent();
                 if (c instanceof JComponent) {
                     ((JComponent)c).putClientProperty(PROP_CONTENT_DATA, new String[] { c.getName() });
-                    ((JComponent)c).putClientProperty(PROP_CONTENT_SELECTED_INDEX, new Integer(0));
+                    ((JComponent)c).putClientProperty(PROP_CONTENT_SELECTED_INDEX, 0);
                 }
             } else {
                 // bugfix #27939, if template isn't changed and PROP_CONTENT_DATA no set => set it
@@ -517,7 +517,7 @@ final class TemplateWizard1 extends javax.swing.JPanel implements DataFilter,
                 if (c instanceof JComponent) {
                     if (((JComponent)c).getClientProperty (PROP_CONTENT_DATA) == null) {
                         ((JComponent)c).putClientProperty(PROP_CONTENT_DATA, new String[] { c.getName() });
-                        ((JComponent)c).putClientProperty(PROP_CONTENT_SELECTED_INDEX, new Integer(0));
+                        ((JComponent)c).putClientProperty(PROP_CONTENT_SELECTED_INDEX, 0);
                     }
                 }
             }

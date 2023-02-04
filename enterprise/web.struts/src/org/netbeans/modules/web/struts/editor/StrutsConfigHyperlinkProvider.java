@@ -266,7 +266,7 @@ public class StrutsConfigHyperlinkProvider implements HyperlinkProvider {
                         servletMapping = servletMapping.trim();
                         String prefix = servletMapping.substring(0, servletMapping.length()-2);
                         if (path.startsWith(prefix))
-                            actionPath = path.substring(prefix.length(), path.length());
+                            actionPath = path.substring(prefix.length());
                         else
                             actionPath = path;
                     }

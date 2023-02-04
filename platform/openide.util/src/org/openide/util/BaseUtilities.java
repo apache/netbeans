@@ -461,7 +461,7 @@ widthcheck:  {
         final int index = fullName.indexOf('$');
 
         if ((index >= 0) && (index < fullName.length())) {
-            return fullName.substring(index + 1, fullName.length());
+            return fullName.substring(index + 1);
         }
 
         return fullName;

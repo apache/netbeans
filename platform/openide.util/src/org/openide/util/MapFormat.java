@@ -291,7 +291,7 @@ public class MapFormat extends Format {
             result.append(obj);
         }
 
-        result.append(pattern.substring(lastOffset, pattern.length()));
+        result.append(pattern.substring(lastOffset));
 
         return result;
     }

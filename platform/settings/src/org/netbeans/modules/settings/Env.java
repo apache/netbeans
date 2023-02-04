@@ -166,7 +166,7 @@ public final class Env implements Environment.Provider {
             filename = filename.substring(0, i);
         }
         String resource = xmlEntitiesPrefix +
-            filename.substring(xmlLookupsPrefix.length(), filename.length());
+            filename.substring(xmlLookupsPrefix.length());
         
         return FileUtil.getConfigFile(resource);
     }

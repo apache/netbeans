@@ -56,7 +56,7 @@ public final class GroovyUtils {
             if (last > first) {
                 return stripPackage(fqn.substring(0, first)) + "<" +
                         stripPackageFromTypeParams(fqn.substring(first + 1, last)) + ">" +
-                        fqn.substring(last + 1, fqn.length());
+                        fqn.substring(last + 1);
             }
         }
         if (fqn.contains(".")) {

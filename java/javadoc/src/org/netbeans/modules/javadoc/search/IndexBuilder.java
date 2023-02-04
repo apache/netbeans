@@ -215,7 +215,7 @@ public class IndexBuilder implements Runnable, ChangeListener {
                     if (filename.length() > 54) {
                         // trim to display 54 chars
                         filename = filename.substring(0, 10) + "[...]" // NOI18N
-                                + filename.substring(filename.length() - 40, filename.length());
+                                + filename.substring(filename.length() - 40);
                     }
                     title = NbBundle.getMessage(IndexBuilder.class,
                             "FMT_NoOverviewTitle", new Object[] { filename }); // NOI18N

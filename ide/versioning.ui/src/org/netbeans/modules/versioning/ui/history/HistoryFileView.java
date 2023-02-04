@@ -1033,7 +1033,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
                 sb.append(s.substring(start, end));
                 if(i == spans.length) {
                     sb.append("</u></font>"); // NOI18N
-                    sb.append(s.substring(end, s.length()));
+                    sb.append(s.substring(end));
                 }
             }
             return sb.toString();

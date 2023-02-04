@@ -572,7 +572,7 @@ public class JavadocCompletionTask<T> extends UserTask {
     private void completeTypeVarName(Element forElement, String prefix, int substitutionOffset) {
         if (prefix.length() > 0) {
             if (prefix.charAt(0) == '<') {
-                prefix = prefix.substring(1, prefix.length());
+                prefix = prefix.substring(1);
             } else {
                 // not type param
                 return;

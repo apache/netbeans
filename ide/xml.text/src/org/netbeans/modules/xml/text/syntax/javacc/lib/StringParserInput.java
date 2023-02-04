@@ -169,7 +169,7 @@ public class StringParserInput extends SimpleCharStream implements CharStream {
      *
      *   {
      *      String t = GetImage();
-     *      return t.substring(t.length() - len, t.length()).toCharArray();
+     *      return t.substring(t.length() - len).toCharArray();
      *   }
      */
     public char[] GetSuffix(int l) {

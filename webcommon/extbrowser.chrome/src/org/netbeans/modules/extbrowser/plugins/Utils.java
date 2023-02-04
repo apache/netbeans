@@ -332,8 +332,7 @@ public final class Utils {
                     int index = nextToken.indexOf("a");
 
                     String first = nextToken.substring(0, index);
-                    String second = nextToken.substring(index + 1, 
-                            nextToken.length());
+                    String second = nextToken.substring(index + 1);
 
                     // version xxbyy is greater than any version xx-1 without a beta
                     // but less than version xx without a beta
@@ -344,8 +343,7 @@ public final class Utils {
                     int index = nextToken.indexOf("b");
 
                     String first = nextToken.substring(0, index);
-                    String second = nextToken.substring(index + 1, 
-                            nextToken.length());
+                    String second = nextToken.substring(index + 1);
 
                     // version xxbyy is greater than any version xx-1 without a beta
                     // but less than version xx without a beta

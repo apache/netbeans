@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.j2ee.persistence.sourcetestsupport;
 
-import java.io.Serializable;
 import java.net.URL;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatformManager;

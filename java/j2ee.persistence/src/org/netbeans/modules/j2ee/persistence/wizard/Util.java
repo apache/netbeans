@@ -20,7 +20,6 @@ package org.netbeans.modules.j2ee.persistence.wizard;
 
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Container;

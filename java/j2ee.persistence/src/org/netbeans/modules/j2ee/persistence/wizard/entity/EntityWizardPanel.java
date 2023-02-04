@@ -35,8 +35,6 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ui.TypeElementFinder;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.persistence.provider.InvalidPersistenceXmlException;
-import org.netbeans.modules.schema2beans.Schema2BeansException;
-import org.netbeans.modules.schema2beans.Schema2BeansException;
 import org.netbeans.modules.j2ee.persistence.provider.ProviderUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ImageUtilities;

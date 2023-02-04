@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.j2ee.persistence.jpqleditor;
 
-import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;

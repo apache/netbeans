@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator;
 
-import org.netbeans.modules.j2ee.persistence.action.*;
 import org.openide.filesystems.FileObject;
 
 /**

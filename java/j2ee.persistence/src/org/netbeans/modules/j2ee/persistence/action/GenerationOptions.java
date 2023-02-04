@@ -20,7 +20,6 @@
 package org.netbeans.modules.j2ee.persistence.action;
 
 import java.text.MessageFormat;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;

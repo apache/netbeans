@@ -27,7 +27,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.TypeParameterTree;
 import java.util.Collections;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 
 /**

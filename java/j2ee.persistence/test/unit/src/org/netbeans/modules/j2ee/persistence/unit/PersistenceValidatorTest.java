@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.j2ee.persistence.unit;
 
-import junit.framework.*;
 import java.util.List;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;

@@ -33,7 +33,6 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.spi.project.libraries.support.LibrariesSupport;
 import org.openide.DialogDisplayer;

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.j2ee.persistence.unit;
 
-import java.awt.CardLayout;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;

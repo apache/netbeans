@@ -20,7 +20,6 @@
 
 package org.netbeans.modules.j2ee.persistence.unit;
 
-import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,11 +28,9 @@ import java.util.List;
 import org.netbeans.modules.xml.catalog.spi.CatalogDescriptor2;
 import org.netbeans.modules.xml.catalog.spi.CatalogListener;
 import org.netbeans.modules.xml.catalog.spi.CatalogReader;
-import org.openide.util.ImageUtilities;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 
 /**
  * Catalog for persistence related schemas.

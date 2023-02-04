@@ -20,7 +20,6 @@
 package org.netbeans.modules.j2ee.persistence.wizard.fromdb;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;

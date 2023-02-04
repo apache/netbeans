@@ -22,7 +22,6 @@ package org.netbeans.modules.j2ee.persistence.wizard.unit;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.ChangeListener;

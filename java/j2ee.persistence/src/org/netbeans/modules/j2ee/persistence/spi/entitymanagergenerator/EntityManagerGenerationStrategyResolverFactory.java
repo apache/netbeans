@@ -22,7 +22,6 @@ package org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator;
 import java.io.IOException;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.javaee.injection.api.InjectionTargetQuery;

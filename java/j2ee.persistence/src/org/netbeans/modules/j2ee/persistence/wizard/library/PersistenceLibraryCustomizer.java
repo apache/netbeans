@@ -21,7 +21,6 @@ package org.netbeans.modules.j2ee.persistence.wizard.library;
 
 import java.awt.Dialog;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import org.netbeans.spi.project.libraries.LibraryImplementation;
 import org.netbeans.spi.project.libraries.support.LibrariesSupport;
 import org.openide.DialogDescriptor;

@@ -27,7 +27,6 @@ import org.netbeans.api.xml.lexer.XMLTokenId;
 import static org.netbeans.api.xml.lexer.XMLTokenId.*;
 import org.netbeans.modules.xml.text.api.dom.SyntaxElement;
 import org.netbeans.modules.xml.text.api.dom.TagElement;
-import org.netbeans.modules.xml.text.api.dom.XMLSyntaxSupport;
 import org.w3c.dom.Node;
 
 /**

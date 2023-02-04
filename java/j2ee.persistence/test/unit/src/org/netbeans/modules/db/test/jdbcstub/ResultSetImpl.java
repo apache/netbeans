@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.netbeans.modules.j2ee.persistence.editor.completion.*;
 import org.netbeans.test.stub.api.StubDelegate;
 
 /**

@@ -244,7 +244,7 @@ public final class ClientSideProjectWizardIterator implements WizardDescriptor.P
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps.toArray());
                 // name
@@ -260,7 +260,7 @@ public final class ClientSideProjectWizardIterator implements WizardDescriptor.P
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps.toArray(new String[0]));
                 // name
@@ -276,7 +276,7 @@ public final class ClientSideProjectWizardIterator implements WizardDescriptor.P
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps.toArray());
                 // name
@@ -304,7 +304,7 @@ public final class ClientSideProjectWizardIterator implements WizardDescriptor.P
     })
     @Override
     public String name() {
-        return Bundle.ClientSideProjectWizardIterator_name(Integer.valueOf(index + 1), Integer.valueOf(panels.length));
+        return Bundle.ClientSideProjectWizardIterator_name(index + 1, panels.length);
     }
 
     @Override

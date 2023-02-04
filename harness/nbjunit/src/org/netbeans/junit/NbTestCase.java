@@ -598,7 +598,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
         try {
             Matcher m = Pattern.compile("test[a-zA-Z]*([0-9]+)").matcher(getName());
             assertTrue("Name does not contain numbers: " + getName(), m.find());
-            return Integer.valueOf(m.group(1)).intValue();
+            return Integer.parseInt(m.group(1));
         } catch (Exception ex) {
             ex.printStackTrace();
             fail("Name: " + getName() + " does not represent number");

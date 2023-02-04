@@ -129,7 +129,7 @@ public class PropertySheetOperator extends TopComponentOperator {
      */
     public PropertySheetOperator(int mode, String objectName) {
         this(Bundle.getString("org.netbeans.core.windows.view.ui.Bundle", "CTL_FMT_GlobalProperties",
-                              new Object[]{Integer.valueOf(mode), objectName}));
+                              new Object[]{mode, objectName}));
     }
     
     /** Waits for property sheet with given name. Typically sheet

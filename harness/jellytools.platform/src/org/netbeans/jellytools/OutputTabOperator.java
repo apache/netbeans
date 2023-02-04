@@ -230,7 +230,7 @@ public class OutputTabOperator extends JComponentOperator {
                     if (getOutputDocumentClass().isInstance(document)) {
                         Method getLengthMethod = getOutputDocumentClass().getDeclaredMethod("getLength", (Class[]) null);
                         getLengthMethod.setAccessible(true);
-                        return ((Integer) getLengthMethod.invoke(document, (Object[]) null)).intValue();
+                        return (Integer) getLengthMethod.invoke(document, (Object[]) null);
                     }
                 } catch (Exception e) {
                     throw new JemmyException("getLength() by reflection failed.", e);
@@ -272,7 +272,7 @@ public class OutputTabOperator extends JComponentOperator {
                     if (getOutputDocumentClass().isInstance(document)) {
                         Method getTextMethod = getOutputDocumentClass().getDeclaredMethod("getText", new Class[]{int.class, int.class});
                         getTextMethod.setAccessible(true);
-                        return getTextMethod.invoke(document, new Object[]{Integer.valueOf(0), Integer.valueOf(length)}).toString();
+                        return getTextMethod.invoke(document, new Object[]{0, length}).toString();
                     }
                 } catch (Exception e) {
                     throw new JemmyException("Getting text by reflection failed.", e);
@@ -321,7 +321,7 @@ public class OutputTabOperator extends JComponentOperator {
      * @return count of filled lines of this output tab.
      */
     public int getLineCount() {
-        return ((Integer) runMapping(new MapAction("getLineCount") {
+        return (Integer) runMapping(new MapAction("getLineCount") {
 
             @Override
             public Object map() {
@@ -337,7 +337,7 @@ public class OutputTabOperator extends JComponentOperator {
                 }
                 return 0;
             }
-        })).intValue();
+        });
     }
 
     private Class getOutputDocumentClass() throws ClassNotFoundException {
@@ -392,17 +392,17 @@ public class OutputTabOperator extends JComponentOperator {
                         Class<?> clazz = getOutputDocumentClass();
                         Method getLineStartMethod = clazz.getDeclaredMethod("getLineStart", new Class[]{int.class});
                         getLineStartMethod.setAccessible(true);
-                        Integer lineStart = (Integer) getLineStartMethod.invoke(document, new Object[]{Integer.valueOf(line)});
+                        Integer lineStart = (Integer) getLineStartMethod.invoke(document, new Object[]{line});
                         Method getLineEndMethod = clazz.getDeclaredMethod("getLineEnd", new Class[]{int.class});
                         getLineEndMethod.setAccessible(true);
-                        Integer lineEnd = (Integer) getLineEndMethod.invoke(document, new Object[]{Integer.valueOf(line)});
+                        Integer lineEnd = (Integer) getLineEndMethod.invoke(document, new Object[]{line});
                         if (lineStart.intValue() == lineEnd.intValue()) {
                             // line is empty
                             return "";
                         }
                         Method getTextMethod = clazz.getDeclaredMethod("getText", new Class[]{int.class, int.class});
                         getTextMethod.setAccessible(true);
-                        return getTextMethod.invoke(document, new Object[]{lineStart, Integer.valueOf(lineEnd.intValue() - lineStart.intValue())}).toString();
+                        return getTextMethod.invoke(document, new Object[]{lineStart, lineEnd - lineStart}).toString();
                     }
                 } catch (Exception e) {
                     throw new JemmyException("Getting text by reflection failed.", e);

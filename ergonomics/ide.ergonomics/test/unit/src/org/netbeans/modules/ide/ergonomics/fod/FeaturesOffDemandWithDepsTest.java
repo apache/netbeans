@@ -170,7 +170,7 @@ public class FeaturesOffDemandWithDepsTest extends NbTestCase implements Propert
         assertNotNull("Not enabled manually", cnt);
         assertNotNull("Not enabled manually", when);
         assertEquals("Integer", Integer.class, cnt.getClass());
-        assertEquals("Set to zero", Integer.valueOf(0), cnt);
+        assertEquals("Set to zero", 0, cnt);
 
         Long modified = findLastModified(sub);
         assertEquals("enabled attribute is same as modification day", when, modified);

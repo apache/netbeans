@@ -76,7 +76,7 @@ public class StandardLoggerTest extends NbTestCase {
             new Message("ant -f " + MockAntSession.MOCK_SCRIPT_DIR_S + " " + MockAntSession.MOCK_TARGET, false, null),
             new Message(NbBundle.getMessage(StandardLogger.class, "MSG_target_started_printed", "some-target"), false, null),
             new Message("some message", true, null),
-            new Message(NbBundle.getMessage(StandardLogger.class, "FMT_finished_target_printed", new Integer(0), new Integer(15)), false, null),
+            new Message(NbBundle.getMessage(StandardLogger.class, "FMT_finished_target_printed", 0, 15), false, null),
         });
         assertEquals("correct text printed", expectedMessages, session.messages);
     }
@@ -106,7 +106,7 @@ public class StandardLoggerTest extends NbTestCase {
             new Message("\tat Quux.java:11", true, new MockHyperlink("file:/src/Quux.java", "stack trace", 11, -1, -1, -1)),
             new Message("\tat Baz.java:6", true, new MockHyperlink("file:/src/Baz.java", "stack trace", 6, -1, -1, -1)),
             new Message("...and an unrelated message", true, null),
-            new Message(NbBundle.getMessage(StandardLogger.class, "FMT_finished_target_printed", new Integer(0), new Integer(1)), false, null)
+            new Message(NbBundle.getMessage(StandardLogger.class, "FMT_finished_target_printed", 0, 1), false, null)
         );
         assertEquals("correct text printed", expectedMessages, session.messages);
     }

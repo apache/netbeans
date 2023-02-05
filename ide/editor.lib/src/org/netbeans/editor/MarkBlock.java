@@ -552,6 +552,7 @@ public class MarkBlock {
     }
 
     /** Destroy the marks if necessary */
+    @Deprecated(since="9", forRemoval=true)
     protected void finalize() throws Throwable {
         destroyMarks();
         super.finalize();

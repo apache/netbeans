@@ -642,6 +642,7 @@ public final class ModuleManager extends Modules {
             size = modules.size();
         }
 
+        @Deprecated(since="9", forRemoval=true)
         protected @Override void finalize() throws Throwable {
             super.finalize();
             Util.err.fine("Collected system class loader");

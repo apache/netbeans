@@ -78,6 +78,7 @@ abstract class AbstractLongMap {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Deprecated(since="9", forRemoval=true)
     protected void finalize() throws Throwable {
         if (cacheDirectory.isTemporary()) {
             tempFile.delete();

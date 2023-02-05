@@ -20,22 +20,5 @@
 
 -->
 <project name="platform/o.n.bootstrap" default="build" basedir=".">
-
     <import file="../../nbbuild/templates/projectized.xml"/>
-
-    <target name="compile" depends="check-main-status,projectized-common.compile,rebuild-main"/>
-
-    <target name="check-main-status">
-        <uptodate property="main.up.to.date" srcfile="${src.dir}/org/netbeans/Main.java" targetfile="${build.classes.dir}/org/netbeans/Main.class"/>
-    </target>
-
-    <target name="rebuild-main" unless="main.up.to.date">
-        <mkdir dir="${build.classes.dir}"/>
-        <delete file="${build.classes.dir}/org/netbeans/Main.class"/>
-        <javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}" deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="1.8" target="1.8" includeantruntime="false">
-            <classpath refid="cp"/>
-            <include name="org/netbeans/Main.java"/>
-            <compilerarg line="${javac.compilerargs}"/>
-        </javac>
-    </target>
 </project>

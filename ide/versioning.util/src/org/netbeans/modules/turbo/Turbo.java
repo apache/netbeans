@@ -133,6 +133,7 @@ public final class Turbo {
     }
 
     /** Logs cache statistics data. */
+    @Deprecated(since="9", forRemoval=true)
     protected void finalize() throws Throwable {
         super.finalize();
         statistics.shutdown();

@@ -860,9 +860,11 @@ public class JarClassLoader extends ProxyClassLoader {
             if (jar != null) jar.close();
         }
 
-        /** Delete any temporary JARs we were holding on to.
+        /**
+         * Delete any temporary JARs we were holding on to.
          * Also close any other JARs in our list.
          */
+	@Deprecated(since="9", forRemoval=true)
         @Override
         protected void finalize() throws Throwable {
             super.finalize();

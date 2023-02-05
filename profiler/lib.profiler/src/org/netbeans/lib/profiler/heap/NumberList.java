@@ -89,7 +89,8 @@ class NumberList {
         }
         return 8;
     }
-    
+
+    @Deprecated(since="9", forRemoval=true) 
     protected void finalize() throws Throwable {
         if (cacheDirectory.isTemporary()) {
             dataFile.delete();

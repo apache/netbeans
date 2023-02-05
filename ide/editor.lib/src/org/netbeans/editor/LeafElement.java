@@ -63,6 +63,7 @@ public class LeafElement extends BaseElement {
         }
     }
 
+    @Deprecated(since="9", forRemoval=true)
     protected void finalize() throws Throwable {
         try {
             startMark.remove();

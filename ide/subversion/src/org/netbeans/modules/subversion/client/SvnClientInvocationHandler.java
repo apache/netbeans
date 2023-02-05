@@ -474,6 +474,7 @@ public class SvnClientInvocationHandler implements InvocationHandler {
         return eh.handleException();        
     }
 
+    @Deprecated(since="9", forRemoval=true)
     @Override
     protected void finalize () throws Throwable {
         if (!disposed) {

@@ -1140,18 +1140,6 @@ public class AbstractObjectVariable extends AbstractVariable implements ObjectVa
         return "ObjectVariable ";
     }
 
-    /*@Override
-    protected void finalize() throws Throwable {
-        Value v = getInnerValue();
-        if (v instanceof ObjectReference) {
-            try {
-                System.err.println("ENABLING collection for "+v);
-                ObjectReferenceWrapper.enableCollection((ObjectReference) v);
-            } catch (Exception ex) {}
-        }
-        super.finalize();
-    }*/
-
     /* Uncomment when needed. Was used to create "readable" String and Char values.
     private static String convertToStringInitializer (String s) {
         StringBuffer sb = new StringBuffer ();

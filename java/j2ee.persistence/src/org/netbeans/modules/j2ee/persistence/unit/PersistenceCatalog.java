@@ -45,7 +45,7 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
     private static final String ORM_NS = PERSISTENCE_NS +  "/orm"; // NOI18N
     private static final String RESOURCE_PATH = "nbres:/org/netbeans/modules/j2ee/persistence/dd/resources/"; //NOI18N 
     
-    private List<SchemaInfo> schemas = new ArrayList<SchemaInfo>();
+    private List<SchemaInfo> schemas = new ArrayList<>();
 
     public PersistenceCatalog() {
         initialize();
@@ -77,7 +77,7 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
     
     @Override
     public Iterator getPublicIDs() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (SchemaInfo each : schemas){
             result.add(each.getPublicId());
         }

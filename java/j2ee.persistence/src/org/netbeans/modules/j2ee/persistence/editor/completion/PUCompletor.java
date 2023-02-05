@@ -63,7 +63,7 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
             Project project = FileOwnerQuery.getOwner(
@@ -87,10 +87,10 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
-            HashSet<String> providers = new HashSet<String>();
+            HashSet<String> providers = new HashSet<>();
             Project project = FileOwnerQuery.getOwner(
                     NbEditorUtilities.getFileObject(context.getDocument()));
             for(Provider provider: Util.getProviders(project)){
@@ -116,7 +116,7 @@ public abstract class PUCompletor {
         
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
             for (String val : new String[]{"true", "false"}) {//NOI18N
@@ -162,7 +162,7 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
 
@@ -186,7 +186,7 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(final CompletionContext context) {
-            final List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            final List<JPACompletionItem> results = new ArrayList<>();
             try {
                 Document doc = context.getDocument();
                 final String typedChars = context.getTypedPrefix();
@@ -244,7 +244,7 @@ public abstract class PUCompletor {
         @Override
         public List<JPACompletionItem> doCompletion(final CompletionContext context) {
 
-            final List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            final List<JPACompletionItem> results = new ArrayList<>();
             final int caretOffset = context.getCaretOffset();
             final String typedChars = context.getTypedPrefix();
 
@@ -300,14 +300,14 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
             String providerClass = getProviderClass(context.getTag());
             Project enclosingProject = FileOwnerQuery.getOwner(
                     NbEditorUtilities.getFileObject(context.getDocument()));
             Provider provider = ProviderUtil.getProvider(providerClass, enclosingProject);
-            ArrayList<String> keys = new ArrayList<String>();
+            ArrayList<String> keys = new ArrayList<>();
             String ver = provider == null ? context.getDocumentContext().getVersion() : ProviderUtil.getVersion(provider);
             if (provider == null || (ver!=null && !Persistence.VERSION_1_0.equals(ver))) {
                 keys.addAll(allKeyAndValues.get(null).keySet());
@@ -345,7 +345,7 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
             String propertyName = getPropertyName(context.getTag());
@@ -401,7 +401,7 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
 

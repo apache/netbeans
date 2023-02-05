@@ -86,7 +86,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
     // XXX comments are lost in method body passed as string - issue 89873
     // XXX return 0, 1 in generated equals() - issue 90183
     // XXX empty line in generated equals() - issue 90186
-    private final Map<String, String> entityName2TableName = new HashMap<String, String>();
+    private final Map<String, String> entityName2TableName = new HashMap<>();
     private Project initProject;
     // options (not currently exposed in UI)
     // field vs. property access
@@ -265,7 +265,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
         MetadataModel<EntityMappingsMetadata> entityMappingsModel = entityClassScope.getEntityMappingsModel(true);
         readHelper = MetadataModelReadHelper.create(entityMappingsModel, (EntityMappingsMetadata metadata) -> {
-            Set<Entity> result1 = new HashSet<Entity>();
+            Set<Entity> result1 = new HashSet<>();
             result1.addAll(Arrays.asList(metadata.getRoot().getEntity()));
             return result1;
         });
@@ -320,7 +320,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
         private final ProgressPanel progressPanel;
         private final ProgressContributor progressContributor;
-        private final Map<String, EntityClass> beanMap = new HashMap<String, EntityClass>();
+        private final Map<String, EntityClass> beanMap = new HashMap<>();
         private final EntityClass[] entityClasses;
         private final boolean generateNamedQueries;
         private final boolean generateJAXBAnnotations;
@@ -386,8 +386,8 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
             // while generating entity A we must be able to resolve type B).
 
             beanMap.clear();
-            Set<FileObject> generationPackageFOs = new HashSet<FileObject>();
-            Set<String> generatedEntityClasses = new HashSet<String>();
+            Set<FileObject> generationPackageFOs = new HashSet<>();
+            Set<String> generatedEntityClasses = new HashSet<>();
 
             for (int i = 0; i < entityClasses.length; i++) {
                 final EntityClass entityClass = entityClasses[i];
@@ -583,7 +583,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
         }
 
         private static Set<ClassPath> getAllClassPaths(Set<FileObject> fileObjects, String id) {
-            Set<ClassPath> classPaths = new HashSet<ClassPath>();
+            Set<ClassPath> classPaths = new HashSet<>();
             for (FileObject fileObject : fileObjects) {
                 ClassPath cp = ClassPath.getClassPath(fileObject, id);
                 if (cp != null) {
@@ -616,13 +616,13 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
             // the fully-qualified name of the primary key class
             protected final String pkFQClassName;
             // generated properties
-            protected final List<Property> properties = new ArrayList<Property>();
+            protected final List<Property> properties = new ArrayList<>();
             // generated methods
-            protected final List<MethodTree> methods = new ArrayList<MethodTree>();
+            protected final List<MethodTree> methods = new ArrayList<>();
             // generated constructors
-            protected final List<MethodTree> constructors = new ArrayList<MethodTree>();
+            protected final List<MethodTree> constructors = new ArrayList<>();
             // generated fields. does not include fields of properties, just plain fields 
-            protected final List<VariableTree> fields = new ArrayList<VariableTree>();
+            protected final List<VariableTree> fields = new ArrayList<>();
             // the original class tree of the class we are generating
             protected ClassTree originalClassTree;
             // the modified class tree of the class we are generating
@@ -682,7 +682,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
              */
             protected Property createProperty(EntityMember m) throws IOException {
                 boolean isPKMember = m.isPrimaryKey();
-                List<AnnotationTree> annotations = new ArrayList<AnnotationTree>();
+                List<AnnotationTree> annotations = new ArrayList<>();
 
                 //add @Id() only if not in an embeddable PK class
                 if (isPKMember && !needsPKClass) {
@@ -690,7 +690,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     if (m.isAutoIncrement()) {
                         // Can only support strategy=GenerationType.IDENTITY.
                         // See issue 76357 - desc 17
-                        List<ExpressionTree> annArguments = new ArrayList<ExpressionTree>();
+                        List<ExpressionTree> annArguments = new ArrayList<>();
                         annArguments.add(genUtils.createAnnotationArgument("strategy", "javax.persistence.GenerationType", "IDENTITY")); // NOI18N
                         annotations.add(genUtils.createAnnotation("javax.persistence.GeneratedValue", annArguments)); //NOI18N
                     }
@@ -747,7 +747,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                                                                         "message=\""+ NbBundle.getMessage(JavaPersistenceGenerator.class, "ERR_INVALID_PHONE")+"\")" +
                                                                         commentString);
                         }
-                        List <ExpressionTree> sizeAnnArguments = new ArrayList<ExpressionTree>();
+                        List <ExpressionTree> sizeAnnArguments = new ArrayList<>();
                         if (!m.isNullable()) {
                             sizeAnnArguments.add(genUtils.createAnnotationArgument("min", 1));  //NOI18N
                         }
@@ -1022,23 +1022,23 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
             // the fully-qualified name of the entity class
             private final String entityFQClassName;
             // the non-nullable properties (not including the primary key ones)
-            private final List<Property> nonNullableProps = new ArrayList<Property>();
+            private final List<Property> nonNullableProps = new ArrayList<>();
             // the names of the primary key columns
-            private final List<String> pkColumnNames = new ArrayList<String>();
+            private final List<String> pkColumnNames = new ArrayList<>();
             // variables correspoding to the fields in the primary key classs (or empty if no primary key class)
-            private final List<VariableTree> pkClassVariables = new ArrayList<VariableTree>();
+            private final List<VariableTree> pkClassVariables = new ArrayList<>();
             // the list of @NamedQuery annotations which will be added to the entity class
-            private final List<ExpressionTree> namedQueryAnnotations = new ArrayList<ExpressionTree>();
+            private final List<ExpressionTree> namedQueryAnnotations = new ArrayList<>();
             // the property for the primary key (or the primary key class)
             private Property pkProperty;
             // the prefix or all named queries ("select ... ")
             private String namedQueryPrefix;
-            private HashMap<String, Tree> existingColumns = new HashMap<String, Tree>();
+            private HashMap<String, Tree> existingColumns = new HashMap<>();
             private String existingEmbeddedId = null;
-            private HashMap<String, Tree> existingJoinColumns = new HashMap<String, Tree>();
-            private HashMap<TypeMirror, ArrayList<String>> existingJoinColumnss = new HashMap<TypeMirror, ArrayList<String>>();
-            private HashMap<String, ArrayList<String>> existingJoinTables = new HashMap<String, ArrayList<String>>();
-            private HashMap<String, Tree> existingMappings = new HashMap<String, Tree>();
+            private HashMap<String, Tree> existingJoinColumns = new HashMap<>();
+            private HashMap<TypeMirror, ArrayList<String>> existingJoinColumnss = new HashMap<>();
+            private HashMap<String, ArrayList<String>> existingJoinTables = new HashMap<>();
+            private HashMap<String, Tree> existingMappings = new HashMap<>();
             private final boolean useDefaults;
             private final boolean jaxbOrder = false;//need to be enum, like "alphavetical, as in code, as in table, undefined".
             
@@ -1071,7 +1071,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     collectExistingColumns();
                 } else {
                     newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation(generateMappedSC ? "javax.persistence.MappedSuperclass" : "javax.persistence.Entity")); // NOI18N
-                    List<ExpressionTree> tableAnnArgs = new ArrayList<ExpressionTree>();
+                    List<ExpressionTree> tableAnnArgs = new ArrayList<>();
                     if(useDefaults && entityClassName.equalsIgnoreCase(dbMappings.getTableName())){
                         //skip
                     } else if(dbMappings.getTableName() != null) {
@@ -1091,10 +1091,10 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     // UniqueConstraint annotations for the table
                     if (regenTablesAttrs && entityClass.getUniqueConstraints() != null
                             && !entityClass.getUniqueConstraints().isEmpty()) {
-                        List<ExpressionTree> uniqueConstraintAnnotations = new ArrayList<ExpressionTree>();
+                        List<ExpressionTree> uniqueConstraintAnnotations = new ArrayList<>();
                         for (List<String> constraintCols : entityClass.getUniqueConstraints()) {
 
-                            List<ExpressionTree> colArgs = new ArrayList<ExpressionTree>();
+                            List<ExpressionTree> colArgs = new ArrayList<>();
                             for (String colName : constraintCols) {
                                 colArgs.add(genUtils.createAnnotationArgument(null, colName));
                             }
@@ -1186,7 +1186,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                                         properties.remove(pkProperty);
                                     }
                                 } else if (nm.contentEquals("JoinTable")) {//NOI18N
-                                    ArrayList<String> columns = new ArrayList<String>();
+                                    ArrayList<String> columns = new ArrayList<>();
                                     String tableName = null;
                                     for (ExpressionTree exTree : annTree.getArguments()) {
                                         AssignmentTree aTree = (AssignmentTree) exTree;
@@ -1199,7 +1199,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                                                 //---TODO: this code is duplicated in this class.
                                                 inis = columnsArrayTree.getInitializers();
                                             }  else {
-                                                ArrayList<ExpressionTree> one = new ArrayList<ExpressionTree>();
+                                                ArrayList<ExpressionTree> one = new ArrayList<>();
                                                 one.add(value);
                                                 inis = one;
                                             }
@@ -1227,7 +1227,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                                     existingJoinTables.put(tableName, columns);
                                 } else if (nm.contentEquals("JoinColumns")) {//NOI18N
                                     TypeMirror tm = this.copy.getTrees().getTypeMirror(TreePath.getPath(copy.getCompilationUnit(), memberType));
-                                    ArrayList<String> columns = new ArrayList<String>();
+                                    ArrayList<String> columns = new ArrayList<>();
                                     for (ExpressionTree exTree : annTree.getArguments()) {
                                         AssignmentTree aTree = (AssignmentTree) exTree;
                                         ExpressionTree value = aTree.getExpression();
@@ -1355,7 +1355,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
                 // generate equivalent of finder methods - named query annotations
                 if (generateNamedQueries && !m.isLobType()) {
-                    List<ExpressionTree> namedQueryAnnArguments = new ArrayList<ExpressionTree>();
+                    List<ExpressionTree> namedQueryAnnArguments = new ArrayList<>();
                     namedQueryAnnArguments.add(genUtils.createAnnotationArgument("name", entityClassName + ".findBy" + createCapitalizedFieldName(memberName))); //NOI18N
 
                     if (namedQueryPrefix == null) {
@@ -1373,7 +1373,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
             protected void addFindAllNamedQueryAnnotation() {
                 // Add NamedQuery findAll here
-                List<ExpressionTree> namedQueryAnnArguments = new ArrayList<ExpressionTree>();
+                List<ExpressionTree> namedQueryAnnArguments = new ArrayList<>();
                 namedQueryAnnArguments.add(genUtils.createAnnotationArgument("name", entityClassName + ".findAll")); // NOI18N
 
                 char firstLetter = entityClassName.toLowerCase().charAt(0);
@@ -1434,8 +1434,8 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     fieldType = copy.getTypes().getDeclaredType(collectionTypeElem, fieldType);
                 }
 
-                List<AnnotationTree> annotations = new ArrayList<AnnotationTree>();
-                List<ExpressionTree> annArguments = new ArrayList<ExpressionTree>();
+                List<AnnotationTree> annotations = new ArrayList<>();
+                List<ExpressionTree> annArguments = new ArrayList<>();
                 if (role.isCascade()) {
                     annArguments.add(genUtils.createAnnotationArgument("cascade", "javax.persistence.CascadeType", "ALL")); // NOI18N
                 }
@@ -1465,7 +1465,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     annArguments.add(genUtils.createAnnotationArgument("mappedBy", fName)); // NOI18N
                 } else {  // Role A
                     if (role.isMany() && role.isToMany()) { // ManyToMany
-                        List<ExpressionTree> joinTableAnnArguments = new ArrayList<ExpressionTree>();
+                        List<ExpressionTree> joinTableAnnArguments = new ArrayList<>();
                         String jTN =  dbMappings.getJoinTableMapping().get(role.getFieldName());
 
                         if(existingJoinTables.get(jTN) != null){
@@ -1477,11 +1477,11 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
                         CMPMappingModel.JoinTableColumnMapping joinColumnMap = dbMappings.getJoinTableColumnMppings().get(role.getFieldName());
 
-                        List<AnnotationTree> joinCols = new ArrayList<AnnotationTree>();
+                        List<AnnotationTree> joinCols = new ArrayList<>();
                         ColumnData[] columns = joinColumnMap.getColumns();
                         ColumnData[] refColumns = joinColumnMap.getReferencedColumns();
                         for (int colIndex = 0; colIndex < columns.length; colIndex++) {
-                            List<ExpressionTree> attrs = new ArrayList<ExpressionTree>();
+                            List<ExpressionTree> attrs = new ArrayList<>();
                             attrs.add(genUtils.createAnnotationArgument("name", columns[colIndex].getColumnName())); //NOI18N
                             attrs.add(genUtils.createAnnotationArgument("referencedColumnName", refColumns[colIndex].getColumnName())); //NOI18N
                             if (regenTablesAttrs && !columns[colIndex].isNullable()) {
@@ -1491,11 +1491,11 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                         }
                         joinTableAnnArguments.add(genUtils.createAnnotationArgument("joinColumns", joinCols)); // NOI18N
 
-                        List<AnnotationTree> inverseCols = new ArrayList<AnnotationTree>();
+                        List<AnnotationTree> inverseCols = new ArrayList<>();
                         ColumnData[] invColumns = joinColumnMap.getInverseColumns();
                         ColumnData[] refInvColumns = joinColumnMap.getReferencedInverseColumns();
                         for (int colIndex = 0; colIndex < invColumns.length; colIndex++) {
-                            List<ExpressionTree> attrs = new ArrayList<ExpressionTree>();
+                            List<ExpressionTree> attrs = new ArrayList<>();
                             attrs.add(genUtils.createAnnotationArgument("name", invColumns[colIndex].getColumnName())); //NOI18N
                             attrs.add(genUtils.createAnnotationArgument("referencedColumnName", refInvColumns[colIndex].getColumnName())); //NOI18N
                             if (regenTablesAttrs && !invColumns[colIndex].isNullable()) {
@@ -1514,7 +1514,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                             if (existingJoinColumns.get(columns[0].getColumnName()) != null) {
                                 return;
                             }
-                            List<ExpressionTree> attrs = new ArrayList<ExpressionTree>();
+                            List<ExpressionTree> attrs = new ArrayList<>();
                             attrs.add(genUtils.createAnnotationArgument("name", columns[0].getColumnName())); //NOI18N
                             attrs.add(genUtils.createAnnotationArgument("referencedColumnName", invColumns[0].getColumnName())); //NOI18N
                             if (regenTablesAttrs && !columns[0].isNullable()) {
@@ -1527,9 +1527,9 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                                 return; //currently do not overgenerate and do not update etc existing JoinColumns
                             }
 
-                            List<AnnotationTree> joinCols = new ArrayList<AnnotationTree>();
+                            List<AnnotationTree> joinCols = new ArrayList<>();
                             for (int colIndex = 0; colIndex < columns.length; colIndex++) {
-                                List<ExpressionTree> attrs = new ArrayList<ExpressionTree>();
+                                List<ExpressionTree> attrs = new ArrayList<>();
                                 attrs.add(genUtils.createAnnotationArgument("name", columns[colIndex].getColumnName())); //NOI18N
                                 attrs.add(genUtils.createAnnotationArgument("referencedColumnName", invColumns[colIndex].getColumnName())); //NOI18N
                                 if (regenTablesAttrs && !columns[colIndex].isNullable()) {
@@ -1611,7 +1611,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     // if different than pk fields constructor, add constructor
                     // which takes all non-nullable non-relationship fields as args
                     if (nonNullableProps.size() > 0) {
-                        List<VariableTree> nonNullableParams = new ArrayList<VariableTree>(nonNullableProps.size() + 1);
+                        List<VariableTree> nonNullableParams = new ArrayList<>(nonNullableProps.size() + 1);
                         nonNullableParams.add(pkFieldParam);
                         for (Property property : nonNullableProps) {
                             nonNullableParams.add(genUtils.removeModifiers(property.getField()));
@@ -1715,7 +1715,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
             @Override
             protected void finish() {
                 // add a constructor which takes the fields of the primary key class as arguments
-                List<VariableTree> parameters = new ArrayList<VariableTree>(properties.size());
+                List<VariableTree> parameters = new ArrayList<>(properties.size());
                 for (Property property : properties) {
                     parameters.add(genUtils.removeModifiers(property.getField()));
                 }

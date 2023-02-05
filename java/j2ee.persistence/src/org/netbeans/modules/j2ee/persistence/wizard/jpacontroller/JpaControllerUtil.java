@@ -223,7 +223,7 @@ public class JpaControllerUtil {
     }
     
     public static List<AnnotationMirror> findNestedAnnotations(AnnotationMirror annotationMirror, String annotationFqn) {
-        List<AnnotationMirror> result = new ArrayList<AnnotationMirror>();
+        List<AnnotationMirror> result = new ArrayList<>();
         findNestedAnnotationsInternal(annotationMirror, annotationFqn, result);
         return result;
     }
@@ -512,7 +512,7 @@ public class JpaControllerUtil {
         if (desiredMethodElement == null) {
             throw new IllegalArgumentException("Could not find " + methodName + " in " + fqClass);
         }
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         List<? extends TypeMirror> thrownTypes = desiredMethodElement.getThrownTypes();
         for (TypeMirror thrownType : thrownTypes) {
             if (thrownType.getKind() == TypeKind.DECLARED) {
@@ -532,7 +532,7 @@ public class JpaControllerUtil {
      * classes or mapped superclasses.
      */
     public static ExecutableElement[] getEntityMethods(TypeElement entityTypeElement) {
-        List<ExecutableElement> result = new LinkedList<ExecutableElement>();
+        List<ExecutableElement> result = new LinkedList<>();
         TypeElement typeElement = entityTypeElement;
         while (typeElement != null) {
             if (isAnnotatedWith(typeElement, "javax.persistence.Entity") || isAnnotatedWith(typeElement, "javax.persistence.MappedSuperclass")) { // NOI18N
@@ -577,7 +577,7 @@ public class JpaControllerUtil {
     // ----------------------------------------------------------------------------------------- Nested Classes
     
     public static class EmbeddedPkSupport {
-        private Map<TypeElement,EmbeddedPkSupportInfo> typeToInfo = new HashMap<TypeElement,EmbeddedPkSupportInfo>();
+        private Map<TypeElement,EmbeddedPkSupportInfo> typeToInfo = new HashMap<>();
         
         public Set<ExecutableElement> getPkAccessorMethods(TypeElement type) {
             EmbeddedPkSupportInfo info = getInfo(type);
@@ -645,14 +645,14 @@ public class JpaControllerUtil {
     }
     
     private static class EmbeddedPkSupportInfo {
-        private Map<String,ExecutableElement> joinColumnNameToRelationshipMethod = new HashMap<String,ExecutableElement>();
-        private Map<ExecutableElement,List<String>> relationshipMethodToJoinColumnNames = new HashMap<ExecutableElement,List<String>>(); //used only in isRedundantWithPkFields
-        private Map<String,String> joinColumnNameToReferencedColumnName = new HashMap<String,String>();
-        private Map<String,String> columnNameToAccessorString = new HashMap<String,String>();
-        private Map<String,String> columnNameToSetterString = new HashMap<String,String>();
-        private Map<ExecutableElement,String> pkAccessorMethodToColumnName = new HashMap<ExecutableElement,String>();
-        private Map<ExecutableElement,String> pkSetterMethodToColumnName = new HashMap<ExecutableElement,String>();
-        private Map<ExecutableElement,String> pkAccessorMethodToPopulationCode = new HashMap<ExecutableElement,String>(); //derived
+        private Map<String,ExecutableElement> joinColumnNameToRelationshipMethod = new HashMap<>();
+        private Map<ExecutableElement,List<String>> relationshipMethodToJoinColumnNames = new HashMap<>(); //used only in isRedundantWithPkFields
+        private Map<String,String> joinColumnNameToReferencedColumnName = new HashMap<>();
+        private Map<String,String> columnNameToAccessorString = new HashMap<>();
+        private Map<String,String> columnNameToSetterString = new HashMap<>();
+        private Map<ExecutableElement,String> pkAccessorMethodToColumnName = new HashMap<>();
+        private Map<ExecutableElement,String> pkSetterMethodToColumnName = new HashMap<>();
+        private Map<ExecutableElement,String> pkAccessorMethodToPopulationCode = new HashMap<>(); //derived
         private boolean isFieldAccess;
         
         public Set<ExecutableElement> getPkAccessorMethods() {
@@ -901,14 +901,14 @@ public class JpaControllerUtil {
             TreeMaker make = wc.getTreeMaker();
             TypeInfo[] pTypes = mInfo.getParameterTypes();
             String[] pNames = mInfo.getParameterNames();
-            List<VariableTree> params = new ArrayList<VariableTree>();
+            List<VariableTree> params = new ArrayList<>();
             for (int i = 0 ; pTypes != null && i < pTypes.length; i++) {
                 VariableTree vtree = createVariable(wc, pNames[i], pTypes[i]);
                 params.add(vtree);
             }
             
             TypeInfo[] excepTypes = mInfo.getExceptionTypes();
-            List<ExpressionTree> throwsList = new ArrayList<ExpressionTree>();
+            List<ExpressionTree> throwsList = new ArrayList<>();
             for (int i = 0 ; excepTypes != null && i < excepTypes.length; i++) {
                 throwsList.add((ExpressionTree)createType(wc, excepTypes[i]));
             }
@@ -1023,14 +1023,14 @@ public class JpaControllerUtil {
                 return wc.getTreeMaker().Modifiers(flags, Collections.<AnnotationTree>emptyList());
             }
             GenerationUtils generationUtils = GenerationUtils.newInstance(wc);
-            List<AnnotationTree> annotationTrees = new ArrayList<AnnotationTree>();
+            List<AnnotationTree> annotationTrees = new ArrayList<>();
             for (AnnotationInfo annotation : annotations) {
                 //append an AnnotationTree
                 String[] argNames = annotation.getArgNames();
                 if (argNames != null && argNames.length > 0) {
                     //one or more args in this annotation
                     Object[] argValues = annotation.getArgValues();
-                    List<ExpressionTree> argTrees = new ArrayList<ExpressionTree>();
+                    List<ExpressionTree> argTrees = new ArrayList<>();
                     for (int i = 0; i < argNames.length; i++) {
                         ExpressionTree argTree = generationUtils.createAnnotationArgument(argNames[i], argValues[i]);
                         argTrees.add(argTree);

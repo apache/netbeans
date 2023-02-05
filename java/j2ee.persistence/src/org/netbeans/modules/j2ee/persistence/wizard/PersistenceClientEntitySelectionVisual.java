@@ -91,14 +91,14 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
     }
 
     private Set<String> getSelectedEntities(JList list) {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (Object elem : Util.getSelectedItems(list, true)){
             result.add((String) elem);
         }
         return result;
     }
     private Set<String> getEnabledEntities(JList list) {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (Object elem : Util.getEnabledItems(list)){
             result.add((String) elem);
         }
@@ -499,7 +499,7 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
     private class EntityListModel extends AbstractListModel implements ChangeListener {
 
         private EntityClosure entityClosure;
-        private List<String> entities = new ArrayList<String>();
+        private List<String> entities = new ArrayList<>();
         private boolean available;
 
         EntityListModel(EntityClosure entityClosure, boolean available) {

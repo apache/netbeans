@@ -225,7 +225,7 @@ public class ProviderUtil {
             return null;
         }
 
-        HashMap<String, String> ret = new HashMap<String,String>();
+        HashMap<String, String> ret = new HashMap<>();
         Property[] properties = pu.getProperties().getProperty2();
         Provider provider = getProvider(pu);
 
@@ -548,7 +548,7 @@ public class ProviderUtil {
         if (providers == null) {
             providers = getAllProviders();
         }
-        Set<Provider> candidates = new HashSet<Provider>();
+        Set<Provider> candidates = new HashSet<>();
         for (Provider each : providers) {
             if (each.getProviderClass().equals(persistenceUnit.getProvider())) {
                 candidates.add(each);
@@ -600,7 +600,7 @@ public class ProviderUtil {
             ret = new HashSet(providers);
         } else {
             ret = new HashSet(providers);
-            HashMap <Integer, ArrayList<Provider>> rates = new HashMap<Integer, ArrayList<Provider>>();
+            HashMap <Integer, ArrayList<Provider>> rates = new HashMap<>();
             int lowrate = Integer.MAX_VALUE;
             for(Provider each : providers){
                 int rate = 0;
@@ -646,7 +646,7 @@ public class ProviderUtil {
      */
     public static ArrayList<Provider> getProviders(PersistenceUnit persistenceUnit) {
         Parameters.notNull("persistenceUnit", persistenceUnit); //NOI18N
-        ArrayList<Provider> providers = new ArrayList<Provider>();
+        ArrayList<Provider> providers = new ArrayList<>();
         for (Provider each : getAllProviders()) {
             if (each.getProviderClass().equals(persistenceUnit.getProvider())) {
                 providers.add(each);

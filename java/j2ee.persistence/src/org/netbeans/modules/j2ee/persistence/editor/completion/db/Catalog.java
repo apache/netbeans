@@ -33,7 +33,7 @@ public class Catalog {
     private final DBMetaDataProvider provider;
     private final String name;
     
-    private Map/*<String, Schema>*/ schemas;
+    private Map<String, Schema> schemas;
     
     Catalog(DBMetaDataProvider provider, String name) {
         this.provider = provider;

@@ -288,7 +288,7 @@ public final class PersistenceProviderComboboxHelper {
         
         @Override
         public List<Provider> getSupportedProviders() {
-            ArrayList<Provider> providers = new ArrayList<Provider>();
+            ArrayList<Provider> providers = new ArrayList<>();
             for (Provider each : PersistenceLibrarySupport.getProvidersFromLibraries()){
                 boolean found = false;
                 for (int i = 0; i < providers.size(); i++) {

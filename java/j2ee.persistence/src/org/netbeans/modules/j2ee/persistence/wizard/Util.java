@@ -212,7 +212,7 @@ public class Util {
             aProviderSupplier = new DefaultPersistenceProviderSupplier();
         }
 
-        ArrayList<Provider> providers = new ArrayList<Provider>(aProviderSupplier.getSupportedProviders());
+        ArrayList<Provider> providers = new ArrayList<>(aProviderSupplier.getSupportedProviders());
         if (providers.isEmpty() && aProviderSupplier.supportsDefaultProvider()) {
             providers.add(ProviderUtil.DEFAULT_PROVIDER);
         }
@@ -801,7 +801,7 @@ public class Util {
 
         @Override
         public List<Provider> getSupportedProviders() {
-            List<Provider> model = new ArrayList<Provider>();
+            List<Provider> model = new ArrayList<>();
             //get all, but remove duplicates
             for (Provider each : PersistenceLibrarySupport.getProvidersFromLibraries()) {
                 boolean found = false;

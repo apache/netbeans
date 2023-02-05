@@ -65,7 +65,7 @@ public final class ContainerManagedJTAInjectableInWeb extends EntityManagerGener
         FieldInfo em = getEntityManagerFieldInfo();
         
         if(!em.isExisting()){
-            List<ExpressionTree> attribs = new ArrayList<ExpressionTree>();
+            List<ExpressionTree> attribs = new ArrayList<>();
             attribs.add(getGenUtils().createAnnotationArgument("name", "persistence/LogicalName")); //NOI18N
             attribs.add(getGenUtils().createAnnotationArgument("unitName", getPersistenceUnitName())); //NOI18N
             modifiedClazz = getGenUtils().addAnnotation(modifiedClazz, getGenUtils().createAnnotation(PERSISTENCE_CONTEXT_FQN, attribs));

@@ -55,7 +55,7 @@ import org.openide.util.Utilities;
  */
 public class CustomClassLoader extends URLClassLoader {
 
-    private Map<String, File> package2File = new HashMap<String, File>();
+    private Map<String, File> package2File = new HashMap<>();
     private static final Logger logger = Logger.getLogger(CustomClassLoader.class.getName());
 
     public CustomClassLoader(URL[] urls, ClassLoader parent) {

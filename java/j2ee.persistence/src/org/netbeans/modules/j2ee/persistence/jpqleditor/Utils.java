@@ -63,7 +63,7 @@ public class Utils {
     public static List<String> substitutePersistenceProperties(PersistenceEnvironment pe, PersistenceUnit pu, DatabaseConnection dbconn, Map<String, String> props) {
         final boolean containerManaged = Util.isSupportedJavaEEVersion(pe.getProject());
         final Provider provider = ProviderUtil.getProvider(pu.getProvider(), pe.getProject());
-        ArrayList<String> problems = new ArrayList<String>();
+        ArrayList<String> problems = new ArrayList<>();
         if (containerManaged) {
             props.put("javax.persistence.provider", provider.getProviderClass());//NOI18N
             props.put("javax.persistence.transactionType", "RESOURCE_LOCAL");//NOI18N
@@ -87,7 +87,7 @@ public class Utils {
     public static List<String> collectClassPathURLs(PersistenceEnvironment pe, PersistenceUnit pu, DatabaseConnection dbconn, List<URL> localResourcesURLList) {
         final boolean containerManaged = Util.isSupportedJavaEEVersion(pe.getProject());
         final Provider provider = ProviderUtil.getProvider(pu.getProvider(), pe.getProject());
-        ArrayList<String> problems = new ArrayList<String>();
+        ArrayList<String> problems = new ArrayList<>();
         // Construct custom classpath here.
         List<URL> projectURLs = pe.getProjectClassPath(pe.getLocation());
         int sources_count = 0;

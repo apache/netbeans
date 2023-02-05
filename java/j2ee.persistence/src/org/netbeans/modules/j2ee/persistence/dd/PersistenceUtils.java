@@ -105,7 +105,7 @@ public class PersistenceUtils {
             return new PersistenceUnit[0];
         }
         
-        List<PersistenceUnit> result = new ArrayList<PersistenceUnit>();
+        List<PersistenceUnit> result = new ArrayList<>();
         ClassPath cp = ClassPath.getClassPath(sourceFile, ClassPath.SOURCE);
         for (PersistenceScope persistenceScope : getPersistenceScopes(project, cp != null ? cp.findOwnerRoot(sourceFile) : null)) {
             Persistence persistence = null;

@@ -44,7 +44,7 @@ public class PersistenceUnitPanelFactory implements InnerPanelFactory, PropertyC
      * A naive cache for preventing reinitialization of persistence unit panels
      * if nothing has changed.
      */
-    private Map<PersistenceUnit, PersistenceUnitPanel> cache = new HashMap<PersistenceUnit, PersistenceUnitPanel>(10);
+    private Map<PersistenceUnit, PersistenceUnitPanel> cache = new HashMap<>(10);
     
     /** Creates a new instance of PersistenceUnitPanelFactory */
     PersistenceUnitPanelFactory(ToolBarDesignEditor editor, PUDataObject dObj) {

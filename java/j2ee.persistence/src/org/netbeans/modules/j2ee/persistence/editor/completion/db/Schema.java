@@ -41,7 +41,7 @@ public class Schema {
     private DBMetaDataProvider provider;
     private Catalog catalog;
     private String name;
-    private Set/*<String>*/ tableNames;
+    private Set<String> tableNames;
     
     private ConnectionProvider cp;
     private SchemaElementImpl schemaElementImpl;
@@ -106,8 +106,8 @@ public class Schema {
         tableNames = null;
     }
     
-    private Set/*<String>*/ getTableNamesByType(String type) throws SQLException {
-        Set/*<String>*/ result = new TreeSet();
+    private Set<String> getTableNamesByType(String type) throws SQLException {
+        Set<String> result = new TreeSet();
 
         try (ResultSet rs = provider.getMetaData().getTables(catalog.getName(), name, "%", new String[] { type })) { // NOI18N
             while (rs.next()) {

@@ -289,7 +289,7 @@ public class CompletionContext {
     }
     
     private List<String> getExistingAttributesLocked(TokenSequence ts) {
-        List<String> existingAttributes = new ArrayList<String>();
+        List<String> existingAttributes = new ArrayList<>();
         while (ts.movePrevious()) {
             Token<XMLTokenId> item = ts.token();
             XMLTokenId tokenId = item.id();

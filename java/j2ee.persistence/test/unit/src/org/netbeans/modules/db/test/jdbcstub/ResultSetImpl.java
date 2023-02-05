@@ -32,9 +32,9 @@ import org.netbeans.test.stub.api.StubDelegate;
  */
 public class ResultSetImpl extends StubDelegate {
     
-    private List/*<List<Object>>*/ columns;
-    private Map/*<String, List<Object>*/ names2iterators = new HashMap();
-    private Map/*<String, Object>*/ names2values; // current row values
+    private List<Object> columns;
+    private Map<String, Iterator> names2iterators = new HashMap();
+    private Map<String, Object> names2values; // current row values
 
     public ResultSetImpl(List columns) {
         this.columns = columns;

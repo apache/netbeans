@@ -54,7 +54,7 @@ public class AddEntityPanel extends javax.swing.JPanel {
         initComponents();
         MetadataModel<EntityMappingsMetadata> model = entityClassScope.getEntityMappingsModel(true);
         readHelper = MetadataModelReadHelper.create(model, (EntityMappingsMetadata metadata) -> {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             for (Entity entity : metadata.getRoot().getEntity()) {
                 String className = entity.getClass2();
                 if (!ignoreClassNames.contains(className)) {
@@ -94,7 +94,7 @@ public class AddEntityPanel extends javax.swing.JPanel {
      * @return fully qualified names of the selected entities' classes.
      */
     public List<String> getSelectedEntityClasses(){
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (Object elem : entityList.getSelectedValues()) {
             result.add((String)elem);
         }

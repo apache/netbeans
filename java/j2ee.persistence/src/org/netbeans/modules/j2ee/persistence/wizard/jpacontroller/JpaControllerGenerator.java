@@ -81,10 +81,10 @@ public class JpaControllerGenerator {
         String persistenceUnit = Util.getPersistenceUnitAsString(project, entityClass);
         final String fieldName = JpaControllerUtil.fieldFromClassName(simpleEntityName);
 
-        final List<ElementHandle<ExecutableElement>> idGetter = new ArrayList<ElementHandle<ExecutableElement>>();
+        final List<ElementHandle<ExecutableElement>> idGetter = new ArrayList<>();
         final FileObject[] arrEntityClassFO = new FileObject[1];
-        final List<ElementHandle<ExecutableElement>> toOneRelMethods = new ArrayList<ElementHandle<ExecutableElement>>();
-        final List<ElementHandle<ExecutableElement>> toManyRelMethods = new ArrayList<ElementHandle<ExecutableElement>>();
+        final List<ElementHandle<ExecutableElement>> toOneRelMethods = new ArrayList<>();
+        final List<ElementHandle<ExecutableElement>> toManyRelMethods = new ArrayList<>();
         final boolean[] fieldAccess = new boolean[] { false };
 
         //detect access type
@@ -278,8 +278,8 @@ public class JpaControllerGenerator {
                 
                 CompilationUnitTree modifiedImportCut = null;
                 
-                List<String> parameterTypes = new ArrayList<String>();
-                List<String> parameterNames = new ArrayList<String>();
+                List<String> parameterTypes = new ArrayList<>();
+                List<String> parameterNames = new ArrayList<>();
                 String body = "";   //NOI18N
                 boolean isUserTransaction = workingCopy.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE).findResource("javax/transaction/UserTransaction.class")!=null;  //NOI18N
                 if (isUserTransaction && isInjection) {
@@ -312,7 +312,7 @@ public class JpaControllerGenerator {
                 StringBuilder illegalOrphansInDestroy = new StringBuilder();
                 StringBuilder initCollectionsInCreate = new StringBuilder();  //useful in case user removes listbox from New.jsp
                 
-                List<ElementHandle<ExecutableElement>> allRelMethods = new ArrayList<ElementHandle<ExecutableElement>>(toOneRelMethods);
+                List<ElementHandle<ExecutableElement>> allRelMethods = new ArrayList<>(toOneRelMethods);
                 allRelMethods.addAll(toManyRelMethods);
                 
                 String[] importFqs = {"javax.persistence.Query",
@@ -667,7 +667,7 @@ public class JpaControllerGenerator {
                         (isInjection || !isGenerated ? "throw ex;\n" : "") +
                         "} finally {\n if (em != null) {\nem.close();\n}\n}";
                 
-                List<String> methodExceptionTypeList = new ArrayList<String>();
+                List<String> methodExceptionTypeList = new ArrayList<>();
                 if (illegalOrphansInCreate.length() > 0) {
                     methodExceptionTypeList.add(exceptionPackage + ".IllegalOrphanException");
                 }

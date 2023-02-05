@@ -73,7 +73,7 @@ public class DBSchemaManager {
 
         schemaElement = null;
 
-        List<ProgressSupport.Action> actions = new ArrayList<ProgressSupport.Action>();
+        List<ProgressSupport.Action> actions = new ArrayList<>();
 
         if (oldDBConn != null && oldDBConn != dbconn && !oldDBConnWasConnected) {
             // need to disconnect the old connection
@@ -223,7 +223,7 @@ public class DBSchemaManager {
         schemaFileObject = null;
         fileSchemaElement = null;
 
-        List<ProgressSupport.Action> actions = new ArrayList<ProgressSupport.Action>();
+        List<ProgressSupport.Action> actions = new ArrayList<>();
 
         actions.add(new ProgressSupport.BackgroundAction() {
             @Override

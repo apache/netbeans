@@ -62,7 +62,7 @@ public class SelectedTablesTest extends NbTestCase {
         package1FO.createData("Table3", "java");
         SourceGroup location = new SourceGroupImpl(locationFO);
 
-        Map<String, Set<String>> tablesAndRefs = new HashMap<String, Set<String>>();
+        Map<String, Set<String>> tablesAndRefs = new HashMap<>();
         tablesAndRefs.put("TABLE1", Collections.<String>emptySet());
         tablesAndRefs.put("TABLE2", Collections.<String>emptySet());
 

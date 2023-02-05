@@ -177,7 +177,7 @@ public class JPQLExecutor {
             final Project project = pe.getProject();
             SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
             JavaSource js = JavaSource.create(ClasspathInfo.create(sourceGroups[0].getRootFolder()));
-            final List<JPQLQueryProblem> problems = new ArrayList<JPQLQueryProblem>();
+            final List<JPQLQueryProblem> problems = new ArrayList<>();
             final String jpql0 = jpql;
             try {
                 js.runUserActionTask( (CompilationController controller) -> {

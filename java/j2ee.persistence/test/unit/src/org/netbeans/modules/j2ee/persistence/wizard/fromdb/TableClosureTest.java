@@ -42,7 +42,7 @@ public class TableClosureTest extends TestCase {
 
     @Override
     public void setUp() {
-        Map<String, Set<String>> tablesAndRefs = new HashMap<String, Set<String>>();
+        Map<String, Set<String>> tablesAndRefs = new HashMap<>();
         Set<String> empty = Collections.emptySet();
 
         tablesAndRefs.put("A", Collections.singleton("B"));

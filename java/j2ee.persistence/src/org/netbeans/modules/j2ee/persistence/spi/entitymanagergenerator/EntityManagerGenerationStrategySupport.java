@@ -184,7 +184,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         
         TypeElement annotationType = asTypeElement(annotationTypeFqn);
         TypeElement classElement = getClassElement();
-        List<Element> elements = new ArrayList<Element>();
+        List<Element> elements = new ArrayList<>();
         elements.add(classElement);
         elements.addAll(ElementFilter.fieldsIn(classElement.getEnclosedElements()));
         elements.addAll(ElementFilter.methodsIn(classElement.getEnclosedElements()));
@@ -291,7 +291,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         
         ClassTree result = getClassTree();
         
-        List<AnnotationTree> anns = new ArrayList<AnnotationTree>();
+        List<AnnotationTree> anns = new ArrayList<>();
         ExpressionTree expressionTree = null;
         String emfName = ENTITY_MANAGER_FACTORY_DEFAULT_NAME;
         

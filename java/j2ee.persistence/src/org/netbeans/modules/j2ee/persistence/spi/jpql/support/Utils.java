@@ -71,7 +71,7 @@ public class Utils {
     }
 
     public static ExecutableElement[] getMethod(TypeElement clazz, String methodName) {
-        List<ExecutableElement> methods = new ArrayList<ExecutableElement>();
+        List<ExecutableElement> methods = new ArrayList<>();
 
         for (ExecutableElement method : ElementFilter.methodsIn(clazz.getEnclosedElements())) {
             if (method.getSimpleName().contentEquals(methodName)) {

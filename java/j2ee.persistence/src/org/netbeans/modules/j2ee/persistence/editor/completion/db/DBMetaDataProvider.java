@@ -48,7 +48,7 @@ public class DBMetaDataProvider {
     // instead of List in order to be consistent with dbschema.
     
     // Maps java.sql.Connection-s to DB metadata providers.
-    private static final Map/*<Connection, DBMetadataProvider>*/ CONN_TO_PROVIDER = new WeakHashMap();
+    private static final Map<Connection, DBMetaDataProvider> CONN_TO_PROVIDER = new WeakHashMap();
     
     // must be a weak reference -- we don't want to prevent the connection from being GCd
     // it is OK to be a weak reference -- the connection is hold strongly by the DB Explorer
@@ -56,7 +56,7 @@ public class DBMetaDataProvider {
     private final Reference<Connection> conn;
     private final String driverClass;
     
-    private Map/*<String, Catalog>*/ catalogs;
+    private Map<String, Catalog> catalogs;
     
     /**
      * Returns a DB metadata provider for the given connection.

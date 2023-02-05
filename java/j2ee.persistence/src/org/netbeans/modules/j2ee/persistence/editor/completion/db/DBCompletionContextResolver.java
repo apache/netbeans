@@ -271,7 +271,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
         if (databaseUrl == null || user == null) {
             return Collections.emptyList();
         }
-        List<DatabaseConnection> result = new ArrayList<DatabaseConnection>();
+        List<DatabaseConnection> result = new ArrayList<>();
         for (DatabaseConnection dbconn : ConnectionManager.getDefault().getConnections()) {
             if (databaseUrl.equals(dbconn.getDatabaseURL()) && user.equals(dbconn.getUser())) {
                 result.add(dbconn);
@@ -395,7 +395,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
         Map<String,Object> members = nn.getAttributes();
         
         if ("table".equals(completedMember)) { // NOI18N
-            Set/*<String>*/ mappingTables = getMappingEntityTableNames(((TypeElement) ctx.getJavaClass()).getQualifiedName().toString());
+            Set<String> mappingTables = getMappingEntityTableNames(((TypeElement) ctx.getJavaClass()).getQualifiedName().toString());
             for (Iterator i = mappingTables.iterator(); i.hasNext();) {
                 String tableName = (String)i.next();
                 results.add(new JPACompletionItem.TableElementItem(tableName, nnattr.isValueQuoted(), nnattr.getValueOffset()));
@@ -672,8 +672,8 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                 Entity entity = PersistenceUtils.getEntity(cdef.getQualifiedName().toString(), ctx.getEntityMappings());
                 if(entity != null) {
                     //the class is entity => get all its properties
-                    List<ExecutableElement> resultMethods = new LinkedList<ExecutableElement>();
-                    List<VariableElement> resultFields = new LinkedList<VariableElement>();
+                    List<ExecutableElement> resultMethods = new LinkedList<>();
+                    List<VariableElement> resultFields = new LinkedList<>();
                     TypeElement typeElement = cdef;
                     while (typeElement != null) {
                         if (org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil.isAnnotatedWith(cdef, "javax.persistence.Entity") || org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil.isAnnotatedWith(cdef, "javax.persistence.MappedSuperclass")) { // NOI18N
@@ -720,7 +720,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
     /**
      * Returns the tables to which this class is mapped.
      */
-    private Set/*<String>*/ getMappingEntityTableNames(TypeElement clazz) {
+    private Set<String> getMappingEntityTableNames(TypeElement clazz) {
         Set result = new TreeSet();
         List<? extends AnnotationMirror> annotations = clazz.getAnnotationMirrors();
         

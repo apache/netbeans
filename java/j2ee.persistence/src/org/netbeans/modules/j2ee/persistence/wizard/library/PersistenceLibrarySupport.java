@@ -317,7 +317,7 @@ public class PersistenceLibrarySupport {
         return createLibraries(null);
     }
     private static List<ProviderLibrary> createLibraries(String providerClass) {
-        List<ProviderLibrary> providerLibs = new ArrayList<ProviderLibrary>();
+        List<ProviderLibrary> providerLibs = new ArrayList<>();
         for (Library each : LibraryManager.getDefault().getLibraries()) {
             if (!"j2se".equals(each.getType())) { // NOI18N
                 continue;
@@ -343,7 +343,7 @@ public class PersistenceLibrarySupport {
      * @return list of the providers that are defined in the IDE's libraries.
      */
     public static List<Provider> getProvidersFromLibraries() {
-        List<Provider> providerLibs = new ArrayList<Provider>();
+        List<Provider> providerLibs = new ArrayList<>();
         for (ProviderLibrary each : createLibraries()) {
             providerLibs.add(each.getProvider());
         }

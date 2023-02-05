@@ -100,7 +100,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
             PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
             if (isContainerManaged){
                 comboHelper.connect(providerCombo);
-                ArrayList<Provider> providers = new ArrayList<Provider>();
+                ArrayList<Provider> providers = new ArrayList<>();
                 for(int i=0; i<providerCombo.getItemCount(); i++){
                     Object obj = providerCombo.getItemAt(i);
                     if(obj instanceof Provider){
@@ -297,7 +297,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
                         (persistenceUnit.getTransactionType() == null 
                         || persistenceUnit.getTransactionType().equals(PersistenceUnit.JTA_TRANSACTIONTYPE)));//JTA is default for container managed (enabled checkbox)
             
-            ArrayList<Provider> providers = new ArrayList<Provider>();
+            ArrayList<Provider> providers = new ArrayList<>();
             for(int i=0; i<providerCombo.getItemCount(); i++){
                 Object obj = providerCombo.getItemAt(i);
                 if(obj instanceof Provider){
@@ -353,7 +353,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
      * Sets selected item in library combo box.
      */
     private void setSelectedLibrary(){
-        ArrayList<Provider> providers = new ArrayList<Provider>();
+        ArrayList<Provider> providers = new ArrayList<>();
         for(int i=0; i<libraryComboBox.getItemCount(); i++){
             Object obj = libraryComboBox.getItemAt(i);
             if(obj instanceof Provider){
@@ -426,7 +426,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
             if (props != null){
                 Property[] properties = props.getProperty2();
                 String url = null;
-                ArrayList<Provider> providers = new ArrayList<Provider>();
+                ArrayList<Provider> providers = new ArrayList<>();
                 JComboBox activeCB = providerCombo.isVisible() ? providerCombo : libraryComboBox;
                 for(int i=0; i<activeCB.getItemCount(); i++){
                     Object obj = activeCB.getItemAt(i);
@@ -1079,7 +1079,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
             return;
         }
         String[] existingClassNames = persistenceUnit.getClass2();
-        Set<String> ignoreClassNames = new HashSet<String>(Arrays.asList(existingClassNames));
+        Set<String> ignoreClassNames = new HashSet<>(Arrays.asList(existingClassNames));
         List<String> addedClassNames = AddEntityDialog.open(entityClassScope, ignoreClassNames);
         for (String entityClass : addedClassNames) {
             if (dObj.addClass(persistenceUnit, entityClass, true)){

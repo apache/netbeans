@@ -341,7 +341,7 @@ public class JPAEditorUtil {
         if (databaseUrl == null || user == null) {
             return Collections.emptyList();
         }
-        List<DatabaseConnection> result = new ArrayList<DatabaseConnection>();
+        List<DatabaseConnection> result = new ArrayList<>();
         for (DatabaseConnection dbconn : ConnectionManager.getDefault().getConnections()) {
             if (databaseUrl.equals(dbconn.getDatabaseURL()) && user.equals(dbconn.getUser())) {
                 result.add(dbconn);

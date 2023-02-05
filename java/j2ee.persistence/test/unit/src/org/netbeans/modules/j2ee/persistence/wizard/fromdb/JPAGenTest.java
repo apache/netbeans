@@ -95,7 +95,7 @@ public class JPAGenTest extends SourceTestSupport{
         
         EntityMember id = getId("PRODUCT");
         
-        List<EntityMember> fields = new ArrayList<EntityMember>();
+        List<EntityMember> fields = new ArrayList<>();
         fields.add(id);
         fields.add(description);
         
@@ -117,7 +117,7 @@ public class JPAGenTest extends SourceTestSupport{
         SchemaElement schema = getSampleSchema();
         TableProvider tableProvider = new DBSchemaTableProvider(schema, generator);
         
-        Set<String> tables = new HashSet<String>();
+        Set<String> tables = new HashSet<>();
         for (Table each : tableProvider.getTables()){
             if(each.getName().equals("CUSTOMER")){
                 tables.add(each.getName());
@@ -196,7 +196,7 @@ public class JPAGenTest extends SourceTestSupport{
         
         EntityMember id = getId("USER");
         
-        List<EntityMember> fields = new ArrayList<EntityMember>();
+        List<EntityMember> fields = new ArrayList<>();
         fields.add(id);
         fields.add(name);
         

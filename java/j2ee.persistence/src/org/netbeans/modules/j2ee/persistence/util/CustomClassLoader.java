@@ -78,7 +78,7 @@ public class CustomClassLoader extends URLClassLoader {
             return clazz;
         }
         String packageName = null;
-        int lastDotIndex = name.lastIndexOf(".");
+        int lastDotIndex = name.lastIndexOf('.');
         if (lastDotIndex != -1) {
             packageName = name.substring(0, lastDotIndex);
         }
@@ -104,7 +104,7 @@ public class CustomClassLoader extends URLClassLoader {
             // the logging output
             throw new ClassNotFoundException("Log4J is forbidden");
         }
-        int dotIndex = name.indexOf(".");
+        int dotIndex = name.indexOf('.');
         String fileName;
         String separator = File.separator;
         if (separator.equals("\\")) {

@@ -313,7 +313,7 @@ public class TableUISupport {
                     tables.add(refTable);
                 }
             }
-            if(tables.size() == 0){ // issue 149542
+            if(tables.isEmpty()){ // issue 149542
                 return null;
             } else {
                 return NbBundle.getMessage(TableUISupport.class, bundleKey, createTableList(tables));
@@ -321,7 +321,7 @@ public class TableUISupport {
         }
 
         private static String createTableList(List<Table> tables) {
-            assert tables.size() > 0;
+            assert !tables.isEmpty();
 
             if (tables.size() == 1) {
                 return tables.iterator().next().getName();

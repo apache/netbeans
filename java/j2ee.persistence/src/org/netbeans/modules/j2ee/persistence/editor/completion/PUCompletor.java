@@ -349,7 +349,7 @@ public abstract class PUCompletor {
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
             String propertyName = getPropertyName(context.getTag());
-            if (propertyName == null || propertyName.equals("")) {
+            if (propertyName == null || propertyName.isEmpty()) {
                 return results;
             }
             String providerClass = getProviderClass(context.getTag());

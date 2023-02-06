@@ -408,7 +408,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     case RECREATE:
                         if (entity == null) {//we hit case when old entity position is different from target package
                             String fqn = persistenceGen.getFQClassName(entityClass.getTableName());
-                            int ind = fqn.lastIndexOf(".");
+                            int ind = fqn.lastIndexOf('.');
                             String pkg = ind > -1 ? fqn.substring(0, ind) : "";
                             String rel = pkg.replaceAll("\\.", "/");
                             FileObject oldPackage = entityClass.getRootFolder().getFileObject(rel);
@@ -420,7 +420,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                             FileObject pkFO = packageFileObject.getFileObject(pkClassName, "java");
                             if (pkFO == null) { // NOI18N
                                 String fqn = persistenceGen.getFQClassName(entityClass.getTableName());
-                                int ind = fqn.lastIndexOf(".");
+                                int ind = fqn.lastIndexOf('.');
                                 String pkg = ind > -1 ? fqn.substring(0, ind) : "";
                                 String rel = pkg.replaceAll("\\.", "/");
                                 FileObject oldPackage = entityClass.getRootFolder().getFileObject(rel);
@@ -1610,7 +1610,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
                     // if different than pk fields constructor, add constructor
                     // which takes all non-nullable non-relationship fields as args
-                    if (nonNullableProps.size() > 0) {
+                    if (!nonNullableProps.isEmpty()) {
                         List<VariableTree> nonNullableParams = new ArrayList<>(nonNullableProps.size() + 1);
                         nonNullableParams.add(pkFieldParam);
                         for (Property property : nonNullableProps) {
@@ -1620,7 +1620,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     }
 
                     // create a constructor which takes the fields of the primary key class as arguments
-                    if (pkClassVariables.size() > 0) {
+                    if (!pkClassVariables.isEmpty()) {
                         StringBuilder body = new StringBuilder(30 + 30 * pkClassVariables.size());
                         body.append("{"); // NOI18N
                         body.append("this." + pkProperty.getField().getName() + " = new " + pkClassName + "("); // NOI18N

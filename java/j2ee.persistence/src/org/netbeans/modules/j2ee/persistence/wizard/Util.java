@@ -196,7 +196,7 @@ public class Util {
         PersistenceProviderSupplier providerSupplier = project.getLookup().lookup(PersistenceProviderSupplier.class);
         if ((providerSupplier != null && providerSupplier.supportsDefaultProvider())) {
             List<Provider> providers = providerSupplier.getSupportedProviders();
-            if (providers.size() > 0) {
+            if (!providers.isEmpty()) {
                 return providers.get(0);
             }
             Logger.getLogger(RelatedCMPWizard.class.getName()).log(Level.WARNING, "Default provider support is reported without any supported providers. See: {0}", providerSupplier);
@@ -244,7 +244,7 @@ public class Util {
         if(providers.isEmpty()) {
             Logger.getLogger(RelatedCMPWizard.class.getName()).log(Level.INFO, "Can't find any providers supported by the project: {0}", project); //NOI18N
         }
-        return providers.size()>0 ? providers.get(defIndex) : null;
+        return !providers.isEmpty() ? providers.get(defIndex) : null;
     }
 
     public static boolean isDefaultProvider(Project project, Provider provider) {
@@ -468,10 +468,10 @@ public class Util {
             punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
         }
         if (isContainerManaged) {
-            if (preselectedDB == null || preselectedDB.trim().equals("")) {
+            if (preselectedDB == null || preselectedDB.trim().isEmpty()) {
                 //find first with default/sample part in name
                 JPADataSourceProvider dsProvider = project.getLookup().lookup(JPADataSourceProvider.class);
-                if (dsProvider.getDataSources().size() > 0) {
+                if (!dsProvider.getDataSources().isEmpty()) {
                     preselectedDB = dsProvider.getDataSources().get(0).getDisplayName();
                 }
             }
@@ -487,7 +487,7 @@ public class Util {
             punit.setExcludeUnlistedClasses(false);
         } else {
             DatabaseConnection connection = null;
-            if (preselectedDB != null && !preselectedDB.trim().equals("")) {
+            if (preselectedDB != null && !preselectedDB.trim().isEmpty()) {
                 connection = ConnectionManager.getDefault().getConnection(preselectedDB);
             }
             if (connection == null) {

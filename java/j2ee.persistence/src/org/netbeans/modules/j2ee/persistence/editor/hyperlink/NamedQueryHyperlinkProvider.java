@@ -196,7 +196,7 @@ public class NamedQueryHyperlinkProvider implements HyperlinkProviderExt {
                                 }
                                 
                             } else if (next.getAnnotationType().toString().equals("javax.persistence.NamedQuery")) {//NOI18N
-                                if (next.getElementValues().size() > 0) {
+                                if (!next.getElementValues().isEmpty()) {
                                     Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = next.getElementValues();
                                     for (ExecutableElement el : elementValues.keySet()) {
                                         if (el.getSimpleName().contentEquals("name")) { //NOI18N

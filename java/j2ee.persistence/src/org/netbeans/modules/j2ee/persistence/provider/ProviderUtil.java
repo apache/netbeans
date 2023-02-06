@@ -652,7 +652,7 @@ public class ProviderUtil {
                 providers.add(each);
             }
         }
-        if (providers.size() == 0) {
+        if (providers.isEmpty()) {
             providers.add(DEFAULT_PROVIDER2_1);
         }
         return providers;

@@ -96,7 +96,7 @@ public class EntityWizardDescriptor implements WizardDescriptor.FinishablePanel,
                     NbBundle.getMessage(EntityWizardDescriptor.class, "ERR_NeedProperSourceLevel")); // NOI18N
             return false;
         }
-        if (p.getPrimaryKeyClassName().trim().equals("")) { //NOI18N
+        if (p.getPrimaryKeyClassName().trim().isEmpty()) { //NOI18N
             wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(EntityWizardDescriptor.class,"ERR_PrimaryKeyNotEmpty")); //NOI18N
             return false;
         }

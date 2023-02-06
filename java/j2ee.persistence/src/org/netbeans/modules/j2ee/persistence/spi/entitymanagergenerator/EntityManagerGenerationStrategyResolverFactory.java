@@ -79,7 +79,7 @@ public final class EntityManagerGenerationStrategyResolverFactory {
             String transactionType = persistenceUnit.getTransactionType();
             boolean isInjectionTarget = isInjectionTarget(target);
             boolean isJTA = (transactionType == null || transactionType.equals("JTA")); // JTA is default value for transaction type in non-J2SE projects
-            boolean isContainerManaged = (jtaDataSource != null && !jtaDataSource.equals("")) && isJTA; //NO18N
+            boolean isContainerManaged = (jtaDataSource != null && !jtaDataSource.isEmpty()) && isJTA; //NO18N
 
             ContainerClassPathModifier modifier = project.getLookup().lookup(ContainerClassPathModifier.class);
             if (modifier != null) {

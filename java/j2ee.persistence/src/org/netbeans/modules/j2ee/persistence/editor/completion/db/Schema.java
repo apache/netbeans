@@ -64,7 +64,7 @@ public class Schema {
             tableNames = getTableNamesByType("TABLE"); // NOI18N
         }
         
-        return (String[])tableNames.toArray(new String[tableNames.size()]);
+        return (String[])tableNames.toArray(new String[0]);
     }
     
     public TableElement getTable(String tableName) throws SQLException {

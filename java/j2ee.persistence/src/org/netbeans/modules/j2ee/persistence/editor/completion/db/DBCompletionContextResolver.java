@@ -246,7 +246,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
             return null;
         }
         List<DatabaseConnection> dbconns = findDatabaseConnections(datasource);
-        if (dbconns.size() > 0) {
+        if (!dbconns.isEmpty()) {
             return dbconns.get(0);
         }
         return null;
@@ -277,7 +277,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                 result.add(dbconn);
             }
         }
-        if (result.size() > 0) {
+        if (!result.isEmpty()) {
             return Collections.unmodifiableList(result);
         } else {
             return Collections.emptyList();
@@ -336,8 +336,8 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                 int testLen = cmplOffset - nnattr.getValueOffset();
                 String toParse = nnattr.getValue().toString();
                 //column list is simple structure with space and ',' separator
-                int lastSpace = toParse.lastIndexOf(" ");
-                int lastComma = toParse.lastIndexOf(",");
+                int lastSpace = toParse.lastIndexOf(' ');
+                int lastComma = toParse.lastIndexOf(',');
                 int shift  =  Math.max(lastComma, lastSpace) + 1 + (nnattr.isValueQuoted() ? 1 : 0);
                 //
                 boolean compleTables = false;
@@ -753,7 +753,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
     
     private String getThisOrDefaultCatalog(String catalogName) throws SQLException {
         assert provider != null;
-        if (catalogName != null && !catalogName.equals("")) {
+        if (catalogName != null && !catalogName.isEmpty()) {
             return catalogName;
         } else {
             return provider.getDefaultCatalog();
@@ -762,7 +762,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
     
     private String getThisOrDefaultSchema(String schemaName) {
         assert dbconn != null;
-        if (schemaName != null && !schemaName.equals("")) {
+        if (schemaName != null && !schemaName.isEmpty()) {
             return schemaName;
         } else {
             // XXX this may be wrong, the persistence provider would use

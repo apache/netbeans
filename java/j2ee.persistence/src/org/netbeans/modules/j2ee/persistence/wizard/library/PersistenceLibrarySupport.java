@@ -216,13 +216,13 @@ public class PersistenceLibrarySupport {
     }
 
     private static boolean containsPath(List<URL> roots, String relativePath) {
-        ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
         return cp.findResource(relativePath) != null;
     }
 
     private static ClassPath getLibraryClassPath(Library library) {
         List<URL> urls = library.getContent("classpath"); //NOI18N
-        URL[] result = urls.toArray(new URL[urls.size()]);
+        URL[] result = urls.toArray(new URL[0]);
         return ClassPathSupport.createClassPath(result);
     }
 

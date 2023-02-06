@@ -198,7 +198,7 @@ public class DbSchemaEjbGenerator {
     }
     
     public EntityRelation[] getRelations() {
-        return relations.toArray(new EntityRelation[relations.size()]);
+        return relations.toArray(new EntityRelation[0]);
     }
     
     

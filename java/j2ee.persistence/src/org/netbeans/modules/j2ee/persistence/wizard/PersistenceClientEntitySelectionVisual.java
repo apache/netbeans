@@ -474,7 +474,7 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
         buttonAdd.setEnabled(!selectedItems.isEmpty());
         updateAddAllButton();
         buttonRemove.setEnabled(listSelected.getSelectedValues().length > 0);
-        buttonRemoveAll.setEnabled(entityClosure.getSelectedEntities().size() > 0);
+        buttonRemoveAll.setEnabled(!entityClosure.getSelectedEntities().isEmpty());
     }
 
     private void updateAddAllButton(){

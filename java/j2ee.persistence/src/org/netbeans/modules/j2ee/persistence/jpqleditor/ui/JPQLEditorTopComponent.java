@@ -215,14 +215,14 @@ public final class JPQLEditorTopComponent extends TopComponent {
         @Override
         protected void showPopup(MouseEvent evt) {
             // Series of checks.. to enable or disable menus.
-            if (jpqlEditor.getText().trim().equals("")) {
+            if (jpqlEditor.getText().trim().isEmpty()) {
                 runJPQLMenuItem.setEnabled(false);
                 selectAllMenuItem.setEnabled(false);
             } else {
                 runJPQLMenuItem.setEnabled(true);
                 selectAllMenuItem.setEnabled(true);
             }
-            if (jpqlEditor.getSelectedText() == null || jpqlEditor.getSelectedText().trim().equals("")) {
+            if (jpqlEditor.getSelectedText() == null || jpqlEditor.getSelectedText().trim().isEmpty()) {
                 cutMenuItem.setEnabled(false);
                 copyMenuItem.setEnabled(false);
             } else {
@@ -274,7 +274,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
                     } catch (IOException ex) {
                         logger.log(Level.INFO, "IOException during paste operation", ex);
                     }
-                    if (!clipboardContents.equals("")) {
+                    if (!clipboardContents.isEmpty()) {
                         if (jpqlEditor.getSelectedText() != null) {
                             jpqlEditor.replaceSelection(clipboardContents);
                         } else {
@@ -301,7 +301,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
         public void run() {
             while (!isSqlTranslationProcessDone) {
                 String jpql = jpqlEditor.getText().trim();
-                if (jpql.equals("")) {
+                if (jpql.isEmpty()) {
                     return;
                 }
                 if (puComboBox.getSelectedItem() == null) {
@@ -335,7 +335,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
                     }
                     try {
                         initialProblems.addAll(Utils.collectClassPathURLs(pe, selectedConfigObject, dbconn, localResourcesURLList));
-                        if(initialProblems.size()==0) {
+                        if(initialProblems.isEmpty()) {
                             ClassLoader customClassLoader = pe.getProjectClassLoader(
                                     localResourcesURLList.toArray(new URL[]{}));
                             Thread.currentThread().setContextClassLoader(customClassLoader);
@@ -359,7 +359,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
                             if (Thread.interrupted() || isSqlTranslationProcessDone) {
                                 return;    // Cancel the task
                             }
-                            if (jpqlResult.getExceptions() != null && jpqlResult.getExceptions().size() > 0) {
+                            if (jpqlResult.getExceptions() != null && !jpqlResult.getExceptions().isEmpty()) {
                                 logger.log(Level.INFO, "", jpqlResult.getExceptions());
                                 showSQLError("GeneralError", jpqlResult.getQueryProblems());//NOI18N
                             } else {

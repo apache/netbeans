@@ -119,7 +119,7 @@ public class PersistenceUtils {
             }
         }
         
-        return result.toArray(new PersistenceUnit[result.size()]);
+        return result.toArray(new PersistenceUnit[0]);
     }
     
     /**
@@ -225,7 +225,7 @@ public class PersistenceUtils {
 
     public static String getJPAVersion(Library lib) {
         List<URL> roots=lib.getContent("classpath");
-        ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
         String version=null;
         if(cp.findResource("javax/persistence/criteria/CriteriaUpdate.class")!=null) {
             version=Persistence.VERSION_2_1;

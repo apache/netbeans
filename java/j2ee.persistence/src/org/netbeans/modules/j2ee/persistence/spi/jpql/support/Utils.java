@@ -79,6 +79,6 @@ public class Utils {
             }
         }
 
-        return methods.toArray(new ExecutableElement[methods.size()]);
+        return methods.toArray(new ExecutableElement[0]);
     }
 }

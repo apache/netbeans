@@ -135,27 +135,16 @@ public abstract class PersistenceEditorTestBase extends PUDataObjectTestBase {
     }
     
     protected String readFileObject(FileObject fo){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int i;
-        InputStream stream = null;
-        try {
-            stream = fo.getInputStream();
+        try (InputStream stream = fo.getInputStream()) {
             while ((i = stream.read()) != -1) {
                 sb.append((char) i);
             }
         } catch (IOException ex) {
             fail(ex.getMessage());
-        } finally {
-            if (stream != null){
-                try {
-                    stream.close();
-                } catch (IOException ex) {
-                    fail(ex.getMessage());
-                }
-            }
         }
         return sb.toString();
-        
     }
     
     

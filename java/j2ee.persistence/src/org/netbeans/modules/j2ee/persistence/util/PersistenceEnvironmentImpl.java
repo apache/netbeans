@@ -50,7 +50,6 @@ import org.openide.filesystems.FileObject;
 public class PersistenceEnvironmentImpl implements PersistenceEnvironment{
         /** Handle to the current project to which this HibernateEnvironment is bound*/
     private Project project;
-    private Logger logger = Logger.getLogger(PersistenceEnvironmentImpl.class.getName());
     private WeakReference<CustomClassLoader> loaderRef;
 
     /**

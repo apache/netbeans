@@ -109,7 +109,7 @@ public class PersistenceLibraryPanel extends javax.swing.JPanel {
     
     void checkValidity() {
         String libraryName = libraryNameTextField.getText();
-        if (libraryName.trim().equals("")) {
+        if (libraryName.trim().isEmpty()) {
             setErrorMessage(NbBundle.getMessage(PersistenceLibrarySupport.class, "ERR_EmptyName"), false); //NOI18N
             firePropertyChange(IS_VALID, true, false);
         } else if (LibraryManager.getDefault().getLibrary(libraryName) != null) {

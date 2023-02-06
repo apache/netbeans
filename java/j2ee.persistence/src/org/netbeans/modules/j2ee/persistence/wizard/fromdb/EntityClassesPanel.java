@@ -703,7 +703,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
             }
 
             String packageName = getComponent().getPackageName();
-            if (packageName.trim().equals("")) { // NOI18N
+            if (packageName.trim().isEmpty()) { // NOI18N
                 setErrorMessage(NbBundle.getMessage(EntityClassesPanel.class, "ERR_JavaTargetChooser_CantUseDefaultPackage"));
                 return false;
             }
@@ -737,7 +737,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
                     if (providers == null) {
                         providers = PersistenceLibrarySupport.getProvidersFromLibraries();
                     }
-                    if (providers.size() == 0) {
+                    if (providers.isEmpty()) {
                         setErrorMessage(NbBundle.getMessage(EntityClassesPanel.class, "ERR_NoJavaPersistenceAPI")); // NOI18N
                         return false;
                     }

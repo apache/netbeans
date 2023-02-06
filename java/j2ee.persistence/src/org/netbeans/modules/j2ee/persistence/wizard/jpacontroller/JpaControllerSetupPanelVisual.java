@@ -251,7 +251,7 @@ public class JpaControllerSetupPanelVisual extends javax.swing.JPanel implements
 //            }
         
             String packageName = getPackage();
-            if (packageName.trim().equals("")) { // NOI18N
+            if (packageName.trim().isEmpty()) { // NOI18N
                 wizard.putProperty("WizardPanel_errorMessage", NbBundle.getMessage(JpaControllerSetupPanelVisual.class, "ERR_JavaTargetChooser_CantUseDefaultPackage"));
                 return false;
             }

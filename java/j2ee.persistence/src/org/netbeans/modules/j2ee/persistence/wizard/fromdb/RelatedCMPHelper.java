@@ -310,7 +310,7 @@ public class RelatedCMPHelper {
             if( ut == UpdateType.UPDATE){
                 String fqn = persistenceGen.getFQClassName(table.getName());
                 if(fqn != null){
-                    int ind = fqn.lastIndexOf(".");
+                    int ind = fqn.lastIndexOf('.');
                     if(ind>-1){
                         pkg = fqn.substring(0, ind);
                     } else {

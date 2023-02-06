@@ -154,22 +154,32 @@ public class DBSchemaManager {
                     String propertyName = event.getPropertyName();
                     String message = null;
                     
-                    if ("totalCount".equals(propertyName)) { // NOI18N
-                        int workunits = ((Integer)event.getNewValue());
-                        actionContext.switchToDeterminate(workunits);
-                    } else if ("progress".equals(propertyName)) { // NOI18N
-                        int workunit = ((Integer)event.getNewValue());
-                        actionContext.progress(workunit);
-                    } else if ("tableName".equals(propertyName)) { // NOI18N
-                        message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingTable", event.getNewValue());
-                    } else if ("viewName".equals(propertyName)) { // NOI18N
-                        message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingView", event.getNewValue());
-                    } else if ("FKt".equals(propertyName)) { // NOI18N
-                        message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingTableKeys", event.getNewValue());
-                    } else if ("FKv".equals(propertyName)) { // NOI18N
-                        message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingViewKeys", event.getNewValue());
+                    if (null != propertyName) {
+                        switch (propertyName) {
+                            case "totalCount": // NOI18N
+                                int workunits = ((Integer)event.getNewValue());
+                                actionContext.switchToDeterminate(workunits);
+                                break;
+                            case "progress": // NOI18N
+                                int workunit = ((Integer)event.getNewValue());
+                                actionContext.progress(workunit);
+                                break;
+                            case "tableName": // NOI18N
+                                message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingTable", event.getNewValue());
+                                break;
+                            case "viewName": // NOI18N
+                                message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingView", event.getNewValue());
+                                break;
+                            case "FKt": // NOI18N
+                                message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingTableKeys", event.getNewValue());
+                                break;
+                            case "FKv": // NOI18N
+                                message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingViewKeys", event.getNewValue());
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                    
                     if (message != null) {
                         actionContext.progress(message);
                     }

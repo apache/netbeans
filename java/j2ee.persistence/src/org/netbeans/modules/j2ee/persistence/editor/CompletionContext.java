@@ -98,12 +98,12 @@ public class CompletionContext {
                     break;
                 }
                 String previousTokenText = previousTokenItem.text().toString().trim();
-                if (chars != null && chars.equals("") &&
+                if (chars != null && chars.isEmpty() &&
                         previousTokenText.equals("/>")) { // NOI18N
                     completionType = CompletionType.NONE;
                     break;
                 }
-                if (chars != null && chars.equals("") &&
+                if (chars != null && chars.isEmpty() &&
                         previousTokenText.equals(">")) { // NOI18N
                     completionType = CompletionType.VALUE;
                     break;

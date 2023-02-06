@@ -223,7 +223,7 @@ public class JPQLExecutor {
                     emf.close();
                 }
             }
-            if (problems.size() > 0) {
+            if (!problems.isEmpty()) {
                 //use parsed result for errors
                 StringBuilder message = new StringBuilder();
                 for (int i = 0; i < problems.size(); i++) {

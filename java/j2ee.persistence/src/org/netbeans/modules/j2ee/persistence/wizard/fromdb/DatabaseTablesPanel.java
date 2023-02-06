@@ -360,7 +360,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
                 result.add(dbconn);
             }
         }
-        if (result.size() > 0) {
+        if (!result.isEmpty()) {
             return Collections.unmodifiableList(result);
         } else {
             return Collections.emptyList();
@@ -491,7 +491,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
             JPADataSource jpaDS = dsProvider != null ? dsProvider.toJPADataSource(item) : null;
             if (jpaDS != null) {
                 List<DatabaseConnection> dbconns = findDatabaseConnections(jpaDS);
-                if (dbconns.size() > 0) {
+                if (!dbconns.isEmpty()) {
                     dbconn = dbconns.get(0);
                 } else {
                     String drvClass = jpaDS.getDriverClassName();
@@ -570,12 +570,12 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         Set<Table> allSelectedTables = TableUISupport.getSelectedTables(availableTablesList, false);
         addButton.setEnabled(tableClosure.canAddAllTables(addTables));
 
-        addAllButton.setEnabled(TableUISupport.getEnabledTables(availableTablesList).size()>0);
+        addAllButton.setEnabled(!TableUISupport.getEnabledTables(availableTablesList).isEmpty());
 
         Set<Table> tables = TableUISupport.getSelectedTables(selectedTablesList);
         removeButton.setEnabled(tableClosure.canRemoveAllTables(tables));
 
-        removeAllButton.setEnabled(tableClosure.getSelectedTables().size() > 0);
+        removeAllButton.setEnabled(!tableClosure.getSelectedTables().isEmpty());
         String problems = "";
         for (Table t : allSelectedTables) {
             if (t.isDisabled()) {

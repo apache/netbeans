@@ -540,7 +540,7 @@ public class JpaControllerUtil {
             }
             typeElement = getSuperclassTypeElement(typeElement);
         }
-        return result.toArray(new ExecutableElement[result.size()]);
+        return result.toArray(new ExecutableElement[0]);
     }
     
     public static VariableElement guessField(ExecutableElement getter) {
@@ -955,24 +955,36 @@ public class JpaControllerUtil {
             }
             
             TypeKind primitiveTypeKind = null;
-            if ("boolean".equals(rawType)) {           // NOI18N
-                primitiveTypeKind = TypeKind.BOOLEAN;
-            } else if ("byte".equals(rawType)) {       // NOI18N
-                primitiveTypeKind = TypeKind.BYTE;
-            } else if ("short".equals(rawType)) {      // NOI18N
-                primitiveTypeKind = TypeKind.SHORT;
-            } else if ("int".equals(rawType)) {        // NOI18N
-                primitiveTypeKind = TypeKind.INT;
-            } else if ("long".equals(rawType)) {       // NOI18N
-                primitiveTypeKind = TypeKind.LONG;
-            } else if ("char".equals(rawType)) {       // NOI18N
-                primitiveTypeKind = TypeKind.CHAR;
-            } else if ("float".equals(rawType)) {      // NOI18N
-                primitiveTypeKind = TypeKind.FLOAT;
-            } else if ("double".equals(rawType)) {     // NOI18N
-                primitiveTypeKind = TypeKind.DOUBLE;
-            } else if ("void".equals(rawType)) {
-                primitiveTypeKind = TypeKind.VOID;
+            switch (rawType) {
+                case "boolean": // NOI18N
+                    primitiveTypeKind = TypeKind.BOOLEAN;
+                    break;
+                case "byte": // NOI18N
+                    primitiveTypeKind = TypeKind.BYTE;
+                    break;
+                case "short": // NOI18N
+                    primitiveTypeKind = TypeKind.SHORT;
+                    break;
+                case "int": // NOI18N
+                    primitiveTypeKind = TypeKind.INT;
+                    break;
+                case "long": // NOI18N
+                    primitiveTypeKind = TypeKind.LONG;
+                    break;
+                case "char": // NOI18N
+                    primitiveTypeKind = TypeKind.CHAR;
+                    break;
+                case "float": // NOI18N
+                    primitiveTypeKind = TypeKind.FLOAT;
+                    break;
+                case "double": // NOI18N
+                    primitiveTypeKind = TypeKind.DOUBLE;
+                    break;
+                case "void": // NOI18N
+                    primitiveTypeKind = TypeKind.VOID;
+                    break;
+                default:
+                    break;
             }
             if (primitiveTypeKind != null) {
                 return make.PrimitiveType(primitiveTypeKind);

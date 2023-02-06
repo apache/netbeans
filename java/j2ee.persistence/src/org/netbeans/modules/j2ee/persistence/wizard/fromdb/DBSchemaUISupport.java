@@ -62,7 +62,7 @@ public class DBSchemaUISupport {
 
         @Override
         public void setSelectedItem(Object anItem) {
-            if (dbschemaFileList.getFileList().size() > 0) {
+            if (!dbschemaFileList.getFileList().isEmpty()) {
                 selectedItem = anItem;
             }
         }
@@ -70,7 +70,7 @@ public class DBSchemaUISupport {
         @Override
         public Object getElementAt(int index) {
             List<FileObject> dbschemaFiles = dbschemaFileList.getFileList();
-            if (dbschemaFiles.size() > 0) {
+            if (!dbschemaFiles.isEmpty()) {
                 return dbschemaFiles.get(index);
             } else {
                 return NbBundle.getMessage(DBSchemaUISupport.class, "LBL_NoSchemas");
@@ -85,7 +85,7 @@ public class DBSchemaUISupport {
 
         @Override
         public Object getSelectedItem() {
-            return dbschemaFileList.getFileList().size() > 0 ? selectedItem : NbBundle.getMessage(DBSchemaUISupport.class, "LBL_NoSchemas");
+            return !dbschemaFileList.getFileList().isEmpty() ? selectedItem : NbBundle.getMessage(DBSchemaUISupport.class, "LBL_NoSchemas");
         }
     }
 

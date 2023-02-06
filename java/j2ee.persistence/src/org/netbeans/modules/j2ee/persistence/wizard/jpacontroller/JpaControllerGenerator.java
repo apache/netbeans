@@ -226,47 +226,62 @@ public class JpaControllerGenerator {
                 idGetterName[0] = idGetterElement.getSimpleName().toString();
                 TypeMirror idType = idGetterElement.getReturnType();
                 TypeElement idClass = null;
-                if (TypeKind.DECLARED == idType.getKind()) {
-                    DeclaredType declaredType = (DeclaredType) idType;
-                    idClass = (TypeElement) declaredType.asElement();
-                    embeddable[0] = idClass != null && JpaControllerUtil.isEmbeddableClass(idClass);
-                    idPropertyType[0] = idClass.getQualifiedName().toString();
-                    if(!embeddable[0] && JpaControllerUtil.haveId(idClass)){//NOI18N
-                        //handle derived id, case entity/relationship without composite keys
-                        derived[0] =  JpaControllerUtil.isRelationship(idGetterElement ,JpaControllerUtil.isFieldAccess(idClass)) != JpaControllerUtil.REL_NONE;
-                        if(derived[0]){
-                            ExecutableElement derivedIdGetterElement  = findPrimaryKeyGetter(workingCopy, idClass);
-                            derivedIdGetterName[0] = derivedIdGetterElement.getSimpleName().toString();
-                            TypeMirror derivedIdType = derivedIdGetterElement.getReturnType();
-                            TypeElement derivedIdClass;
-                            if (TypeKind.DECLARED == idType.getKind()) {
-                                DeclaredType derivedDeclaredType = (DeclaredType) derivedIdType;
-                                derivedIdClass = (TypeElement) derivedDeclaredType.asElement();
-                                derivedIdPropertyType[0] = derivedIdClass.getQualifiedName().toString();
-                            }
-                        }
-                    }
-                } else if (TypeKind.BOOLEAN == idType.getKind()) {
-                    idPropertyType[0] = "boolean";//NOI18N
-                } else if (TypeKind.BYTE == idType.getKind()) {
-                    idPropertyType[0] = "byte";//NOI18N
-                } else if (TypeKind.CHAR == idType.getKind()) {
-                    idPropertyType[0] = "char";//NOI18N
-                } else if (TypeKind.DOUBLE == idType.getKind()) {
-                    idPropertyType[0] = "double";//NOI18N
-                } else if (TypeKind.FLOAT == idType.getKind()) {
-                    idPropertyType[0] = "float";//NOI18N
-                } else if (TypeKind.INT == idType.getKind()) {
-                    idPropertyType[0] = "int";//NOI18N
-                } else if (TypeKind.LONG == idType.getKind()) {
-                    idPropertyType[0] = "long";//NOI18N
-                } else if (TypeKind.SHORT == idType.getKind()) {
-                    idPropertyType[0] = "short";//NOI18N
-                } else {
+                if (null == idType.getKind()) {
                     //instead of throwing exceptions later, just use Object
                     idPropertyType[0] = "java.lang.Object";//NOI18N
+                } else {
+                    switch (idType.getKind()) {
+                        case DECLARED:
+                            DeclaredType declaredType = (DeclaredType) idType;
+                            idClass = (TypeElement) declaredType.asElement();
+                            embeddable[0] = idClass != null && JpaControllerUtil.isEmbeddableClass(idClass);
+                            idPropertyType[0] = idClass.getQualifiedName().toString();
+                            if(!embeddable[0] && JpaControllerUtil.haveId(idClass)){//NOI18N
+                                //handle derived id, case entity/relationship without composite keys
+                                derived[0] =  JpaControllerUtil.isRelationship(idGetterElement ,JpaControllerUtil.isFieldAccess(idClass)) != JpaControllerUtil.REL_NONE;
+                                if(derived[0]){
+                                    ExecutableElement derivedIdGetterElement  = findPrimaryKeyGetter(workingCopy, idClass);
+                                    derivedIdGetterName[0] = derivedIdGetterElement.getSimpleName().toString();
+                                    TypeMirror derivedIdType = derivedIdGetterElement.getReturnType();
+                                    TypeElement derivedIdClass;
+                                    if (TypeKind.DECLARED == idType.getKind()) {
+                                        DeclaredType derivedDeclaredType = (DeclaredType) derivedIdType;
+                                        derivedIdClass = (TypeElement) derivedDeclaredType.asElement();
+                                        derivedIdPropertyType[0] = derivedIdClass.getQualifiedName().toString();
+                                    }
+                                }
+                            }
+                            break;
+                        case BOOLEAN:
+                            idPropertyType[0] = "boolean";//NOI18N
+                            break;
+                        case BYTE:
+                            idPropertyType[0] = "byte";//NOI18N
+                            break;
+                        case CHAR:
+                            idPropertyType[0] = "char";//NOI18N
+                            break;
+                        case DOUBLE:
+                            idPropertyType[0] = "double";//NOI18N
+                            break;
+                        case FLOAT:
+                            idPropertyType[0] = "float";//NOI18N
+                            break;
+                        case INT:
+                            idPropertyType[0] = "int";//NOI18N
+                            break;
+                        case LONG:
+                            idPropertyType[0] = "long";//NOI18N
+                            break;
+                        case SHORT:
+                            idPropertyType[0] = "short";//NOI18N
+                            break;
+                        default:
+                            //instead of throwing exceptions later, just use Object
+                            idPropertyType[0] = "java.lang.Object";//NOI18N
+                            break;
+                    }
                 }
-                
                 String simpleIdPropertyType = JpaControllerUtil.simpleClassName(idPropertyType[0]);
                 
                 TypeElement controllerTypeElement = SourceUtils.getPublicTopLevelElement(workingCopy);
@@ -293,8 +308,8 @@ public class JpaControllerGenerator {
                 parameterTypes.add("javax.persistence.EntityManagerFactory");   //NOI18N
                 parameterNames.add("emf");   //NOI18N
                 body += "this.emf = emf;";   //NOI18N
-                MethodInfo mi = new MethodInfo("<init>", publicModifier, "void", null, parameterTypes.toArray(new String[parameterTypes.size()]),   //NOI18N
-                        parameterNames.toArray(new String[parameterNames.size()]), body, null, null);
+                MethodInfo mi = new MethodInfo("<init>", publicModifier, "void", null, parameterTypes.toArray(new String[0]),   //NOI18N
+parameterNames.toArray(new String[0]), body, null, null);
                 modifiedClassTree = JpaControllerUtil.TreeMakerUtils.modifyDefaultConstructor(classTree, modifiedClassTree, workingCopy, mi);
                 
                 MethodInfo methodInfo = new MethodInfo("getEntityManager", publicModifier, "javax.persistence.EntityManager", null, null, null, "return emf.createEntityManager();", null, null);
@@ -680,7 +695,7 @@ public class JpaControllerGenerator {
                 if (isInjection || !isGenerated) {
                     methodExceptionTypeList.add("java.lang.Exception");
                 }
-                String[] createExceptionTypes = methodExceptionTypeList.toArray(new String[methodExceptionTypeList.size()]);
+                String[] createExceptionTypes = methodExceptionTypeList.toArray(new String[0]);
                 methodInfo = new MethodInfo("create", publicModifier, "void", createExceptionTypes, new String[]{entityClass}, new String[]{fieldName}, bodyText, null, null);
                 modifiedClassTree = JpaControllerUtil.TreeMakerUtils.addMethod(modifiedClassTree, workingCopy, methodInfo);
                 
@@ -717,7 +732,7 @@ public class JpaControllerGenerator {
                     methodExceptionTypeList.add(exceptionPackage + ".RollbackFailureException");
                 }
                 methodExceptionTypeList.add("java.lang.Exception");
-                String[] editExceptionTypes = methodExceptionTypeList.toArray(new String[methodExceptionTypeList.size()]);
+                String[] editExceptionTypes = methodExceptionTypeList.toArray(new String[0]);
                 methodInfo = new MethodInfo("edit", publicModifier, "void", editExceptionTypes, new String[]{entityClass}, new String[]{fieldName}, bodyText, null, null);
                 modifiedClassTree = JpaControllerUtil.TreeMakerUtils.addMethod(modifiedClassTree, workingCopy, methodInfo);
                 
@@ -757,7 +772,7 @@ public class JpaControllerGenerator {
                     methodExceptionTypeList.add(exceptionPackage + ".RollbackFailureException");
                     methodExceptionTypeList.add("java.lang.Exception");
                 }
-                String[] destroyExceptionTypes = methodExceptionTypeList.toArray(new String[methodExceptionTypeList.size()]);
+                String[] destroyExceptionTypes = methodExceptionTypeList.toArray(new String[0]);
                 String[] findDestroyType = derived[0] && derivedIdPropertyType[0]!=null ? derivedIdPropertyType : idPropertyType;
                 methodInfo = new MethodInfo("destroy", publicModifier, "void", destroyExceptionTypes, findDestroyType, new String[]{"id"}, bodyText, null, null);
                 modifiedClassTree = JpaControllerUtil.TreeMakerUtils.addMethod(modifiedClassTree, workingCopy, methodInfo);

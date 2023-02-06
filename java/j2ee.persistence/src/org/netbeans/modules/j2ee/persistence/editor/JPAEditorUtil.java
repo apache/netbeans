@@ -167,7 +167,7 @@ public class JPAEditorUtil {
         } else {
             // get containing package
             String packageName = ""; // NOI18N
-            int dotIndex = binaryName.lastIndexOf("."); // NOI18N
+            int dotIndex = binaryName.lastIndexOf('.'); // NOI18N
             if (dotIndex != -1) {
                 packageName = binaryName.substring(0, dotIndex);
             }
@@ -288,7 +288,7 @@ public class JPAEditorUtil {
             return null;
         }
         List<DatabaseConnection> dbconns = findDatabaseConnections(datasource);
-        if (dbconns.size() > 0) {
+        if (!dbconns.isEmpty()) {
             return dbconns.get(0);
         }
         return null;
@@ -297,7 +297,7 @@ public class JPAEditorUtil {
 
         // try to find a connection specified using the PU properties
         HashMap<String,String> props = ProviderUtil.getConnectionProperties(pu);
-        if (props != null && props.size()>0) {
+        if (props != null && !props.isEmpty()) {
             return props;
         }
 
@@ -347,7 +347,7 @@ public class JPAEditorUtil {
                 result.add(dbconn);
             }
         }
-        if (result.size() > 0) {
+        if (!result.isEmpty()) {
             return Collections.unmodifiableList(result);
         } else {
             return Collections.emptyList();

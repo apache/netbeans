@@ -139,7 +139,7 @@ public class TypeDeclaration implements ITypeDeclaration {
             }
         }
 
-        return parameterTypes.toArray(new ITypeDeclaration[parameterTypes.size()]);
+        return parameterTypes.toArray(new ITypeDeclaration[0]);
     }
 
     private TypeDeclaration buildTypeDeclaration(Object genericType) {

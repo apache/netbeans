@@ -439,8 +439,8 @@ final class DocRenderer {
                 }
             }
 
-            // field without phpdoc
-            if (phpDocBlock == null
+            // field without phpdoc or with but without @var tag
+            if ((phpDocBlock == null || !tagInTagsList(tags, PHPDocTag.Type.VAR))
                     && indexedElement instanceof FieldElement) {
                 FieldElement fieldElement = (FieldElement) indexedElement;
                 Set<TypeResolver> types = fieldElement.getInstanceTypes();
@@ -454,6 +454,20 @@ final class DocRenderer {
                     others.toString()));
         }
 
+        private boolean tagInTagsList(List<PHPDocTag> tags, AnnotationParsedLine tagKind) {
+            boolean hasVarTag = false;
+            
+            for (PHPDocTag tag : tags) {
+                AnnotationParsedLine kind = tag.getKind();
+                if (kind.equals(tagKind)) {
+                    hasVarTag = true;
+                    break;
+                }
+            }    
+            
+            return hasVarTag;
+        }
+        
         protected String processDescription(String text) {
             StringBuilder result = new StringBuilder();
             int lastIndex = 0;

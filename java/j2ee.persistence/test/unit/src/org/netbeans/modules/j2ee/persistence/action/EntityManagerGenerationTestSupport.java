@@ -97,10 +97,8 @@ public abstract class EntityManagerGenerationTestSupport  extends SourceTestSupp
             result.setGenerationOptions(options);
             result.setTreeMaker(make);
             result.setPersistenceUnit(getPersistenceUnit());
-        } catch (IllegalAccessException iae){
-            throw new RuntimeException(iae);
-        } catch (InstantiationException ie){
-            throw new RuntimeException(ie);
+        } catch (IllegalAccessException | InstantiationException ex){
+            throw new RuntimeException(ex);
         }
         
         return result;

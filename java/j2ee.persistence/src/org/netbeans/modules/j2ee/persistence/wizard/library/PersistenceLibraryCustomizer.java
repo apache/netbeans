@@ -44,7 +44,7 @@ public class PersistenceLibraryCustomizer {
             if (evt.getPropertyName().equals(PersistenceLibraryPanel.IS_VALID)) {
                 Object newvalue = evt.getNewValue();
                 if (newvalue instanceof Boolean) {
-                    descriptor.setValid(((Boolean)newvalue).booleanValue());
+                    descriptor.setValid(((Boolean)newvalue));
                 }
             }
         });

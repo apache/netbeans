@@ -401,11 +401,7 @@ public class EntityClosure {
         try {
             Future result = model.runReadActionWhenReady( (EntityMappingsMetadata metadata) -> true );
             result.get();
-        } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (MetadataModelException ex) {
+        } catch (InterruptedException | ExecutionException | MetadataModelException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);

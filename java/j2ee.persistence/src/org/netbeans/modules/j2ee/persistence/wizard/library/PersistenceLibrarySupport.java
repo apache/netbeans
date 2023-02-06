@@ -301,9 +301,7 @@ public class PersistenceLibrarySupport {
                         }
                         try {
                             ProjectClassPathModifier.addRoots(new URL[]{u}, fo, ClassPath.COMPILE);
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
-                        } catch (UnsupportedOperationException ex) {
+                        } catch (IOException | UnsupportedOperationException ex) {
                             Exceptions.printStackTrace(ex);
                         }
                     }

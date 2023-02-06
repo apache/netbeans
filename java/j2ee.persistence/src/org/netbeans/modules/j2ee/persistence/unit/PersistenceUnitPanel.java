@@ -280,9 +280,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
                 } else {
                     try {
                         SwingUtilities.invokeAndWait( () -> dsPopulator.connect(dsCombo) );
-                    } catch (InterruptedException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (InvocationTargetException ex) {
+                    } catch (InterruptedException | InvocationTargetException ex) {
                         Exceptions.printStackTrace(ex);
                     }
                 }

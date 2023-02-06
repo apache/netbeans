@@ -167,10 +167,8 @@ public final class EntityManagerGenerator {
             result.setGenerationOptions(options);
             result.setTreeMaker(make);
             result.setPersistenceUnit(getPersistenceUnit());
-        } catch (IllegalAccessException iae){
-            throw new RuntimeException(iae); //TODO
-        } catch (InstantiationException ie){
-            throw new RuntimeException(ie); //TODO
+        } catch (IllegalAccessException | InstantiationException ex){
+            throw new RuntimeException(ex); //TODO
         }
         
         return result;

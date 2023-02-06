@@ -120,9 +120,7 @@ public final class EntityWizard implements WizardDescriptor.InstantiatingIterato
         boolean noPuNeeded = true;
         try {
             noPuNeeded = ProviderUtil.persistenceExists(project, Templates.getTargetFolder(wiz)) || !ProviderUtil.isValidServerInstanceOrNone(project);
-        } catch (InvalidPersistenceXmlException ex){
-            Logger.getLogger(EntityWizard.class.getName()).log(Level.FINE, "Invalid persistence.xml"); //NOI18N
-        } catch (RuntimeException ex){
+        } catch (InvalidPersistenceXmlException | RuntimeException ex){
             Logger.getLogger(EntityWizard.class.getName()).log(Level.FINE, "Invalid persistence.xml"); //NOI18N
         }
         if(noPuNeeded){

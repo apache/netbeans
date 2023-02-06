@@ -316,8 +316,8 @@ public class Util {
             if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
                 Object newvalue = evt.getNewValue();
                 if (newvalue instanceof Boolean) {
-                    nd.setValid(((Boolean) newvalue).booleanValue());
-                    createPUButton.setEnabled(((Boolean) newvalue).booleanValue());
+                    nd.setValid(((Boolean) newvalue));
+                    createPUButton.setEnabled(((Boolean) newvalue));
                 }
             }
         });
@@ -742,9 +742,7 @@ public class Util {
         FileObject fo = firstGroup.getRootFolder();
         try {
             ProjectClassPathModifier.addLibraries(new Library[]{library}, fo, classpathType);
-        } catch (IOException ex) {
-            Logger.getLogger("global").log(Level.FINE, "Can't add library to the project", ex);
-        } catch (UnsupportedOperationException ex) {
+        } catch (IOException | UnsupportedOperationException ex) {
             Logger.getLogger("global").log(Level.FINE, "Can't add library to the project", ex);
         }
     }

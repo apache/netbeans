@@ -141,10 +141,7 @@ public class CustomClassLoader extends URLClassLoader {
             }
             byte[] b = os.toByteArray();
             return defineClass(className, b, 0, b.length);
-        } catch (ClassFormatError ex) {
-            ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
-            return null;
-        } catch (IOException ex) {
+        } catch (ClassFormatError | IOException ex) {
             ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
             return null;
         }
@@ -197,9 +194,7 @@ public class CustomClassLoader extends URLClassLoader {
                         }
                     } catch (ZipException ex) {
                         // continue
-                    } catch (IOException ex) {
-                        // continue
-                    } catch (URISyntaxException ex) {
+                    } catch (IOException | URISyntaxException ex) {
                         // continue
                     }
                 }

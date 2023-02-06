@@ -377,7 +377,7 @@ public class JpaControllerUtil {
         String[] fieldAnnotationFqns = {"javax.persistence.ManyToOne", "javax.persistence.OneToOne", "javax.persistence.Basic"};
         Boolean isFieldOptionalBoolean = findAnnotationValueAsBoolean(fieldElement, fieldAnnotationFqns, "optional");
         if (isFieldOptionalBoolean != null) {
-            isFieldOptional = isFieldOptionalBoolean.booleanValue();
+            isFieldOptional = isFieldOptionalBoolean;
         }
         if (!isFieldOptional) {
             return false;
@@ -386,7 +386,7 @@ public class JpaControllerUtil {
         fieldAnnotationFqns = new String[]{"javax.persistence.Column", "javax.persistence.JoinColumn"};
         isFieldNullable = findAnnotationValueAsBoolean(fieldElement, fieldAnnotationFqns, "nullable");
         if (isFieldNullable != null) {
-            return isFieldNullable.booleanValue();
+            return isFieldNullable;
         }
         //new ballgame
         boolean result = true;

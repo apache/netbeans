@@ -155,10 +155,10 @@ public class DBSchemaManager {
                     String message = null;
                     
                     if ("totalCount".equals(propertyName)) { // NOI18N
-                        int workunits = ((Integer)event.getNewValue()).intValue();
+                        int workunits = ((Integer)event.getNewValue());
                         actionContext.switchToDeterminate(workunits);
                     } else if ("progress".equals(propertyName)) { // NOI18N
-                        int workunit = ((Integer)event.getNewValue()).intValue();
+                        int workunit = ((Integer)event.getNewValue());
                         actionContext.progress(workunit);
                     } else if ("tableName".equals(propertyName)) { // NOI18N
                         message = NbBundle.getMessage(DBSchemaManager.class, "LBL_RetrievingTable", event.getNewValue());

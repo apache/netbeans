@@ -128,13 +128,7 @@ public abstract class PersistenceEditorTestBase extends PUDataObjectTestBase {
             Field updateTaskField = puSynchronizer.getClass().getSuperclass().getDeclaredField("updateTask");
             updateTaskField.setAccessible(true);
             updateTask = (RequestProcessor.Task) updateTaskField.get(puSynchronizer);
-        } catch (IllegalArgumentException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        } catch (SecurityException ex) {
-            throw new RuntimeException(ex);
-        } catch (NoSuchFieldException ex) {
+        } catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException ex) {
             throw new RuntimeException(ex);
         }
         return updateTask;

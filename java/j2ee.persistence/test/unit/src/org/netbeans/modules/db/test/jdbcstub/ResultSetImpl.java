@@ -88,7 +88,7 @@ public class ResultSetImpl extends StubDelegate {
     public short getShort(String columnName) throws SQLException {
         Object value = getObject(columnName);
         if (value instanceof Short) {
-            return ((Short)value).shortValue();
+            return ((Short)value);
         } else {
             throw new SQLException(value + "is not a short.");
         }
@@ -97,7 +97,7 @@ public class ResultSetImpl extends StubDelegate {
     public int getInt(String columnName) throws SQLException {
         Object value = getObject(columnName);
         if (value instanceof Integer){
-            return ((Integer)value).intValue();
+            return ((Integer)value);
         } else {
             throw new SQLException(value + " is not an int.");
         }
@@ -106,7 +106,7 @@ public class ResultSetImpl extends StubDelegate {
     public boolean getBoolean(String columnName) throws SQLException {
         Object value = getObject(columnName);
         if (value instanceof Boolean) {
-            return ((Boolean)value).booleanValue();
+            return ((Boolean)value);
         } else {
             throw new SQLException(value + " is not a boolean.");
         }

@@ -214,12 +214,9 @@ public class PUDataObject extends XmlMultiViewDataObject {
                         }
                     }
                 }
-            } catch (IOException ioe){
-                LOG.log(Level.INFO, null, ioe);
-                return false;
-            } catch (IllegalStateException e) {
+            } catch (IOException | IllegalStateException ex) {
                 //issue 134726, sometimes faled to parser document if it's changed during update, just skip, should be parsed with next event
-                LOG.log(Level.INFO, null, e);
+                LOG.log(Level.INFO, null, ex);
                 return false;
             }
         }
@@ -451,9 +448,7 @@ public class PUDataObject extends XmlMultiViewDataObject {
             try (Writer out = new StringWriter()) {
                 ((BaseBean) model).write(out);
                 getDataCache().setData(lock, out.toString(), modify);
-            } catch (IOException e) {
-                LOG.log(Level.INFO, null, e);
-            } catch (Schema2BeansException e) {
+            } catch (IOException | Schema2BeansException e) {
                 LOG.log(Level.INFO, null, e);
             } finally {
                 if (lock != null){

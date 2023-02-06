@@ -55,7 +55,7 @@ import org.openide.windows.WindowManager;
     "OneLetter=The wallet download password should contain at least 1 letter.",
     "WalletPassword=Enter the wallet password",
     "WalletReEnterPassword=Re-enter the wallet password",
-    "JDBCUsername=Enter the conenction username",
+    "JDBCUsername=Enter the connection username",
     "JDBCPassword=Enter the conenction password"
 })
 final class DownloadWalletDialog extends AbstractPasswordPanel {

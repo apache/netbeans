@@ -861,7 +861,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             c.onRequest(ExecInHtmlPageRequest.type, execInHtmlPage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
-                const selected = await window.showQuickPick(param.items, { title: param.title, placeHolder: param.placeHolder, canPickMany: param.canPickMany });
+                const selected = await window.showQuickPick(param.items, { title: param.title, placeHolder: param.placeHolder, canPickMany: param.canPickMany, ignoreFocusOut: true });
                 return selected ? Array.isArray(selected) ? selected : [selected] : undefined;
             });
             c.onRequest(UpdateConfigurationRequest.type, async (param) => {

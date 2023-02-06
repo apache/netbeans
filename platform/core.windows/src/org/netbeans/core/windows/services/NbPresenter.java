@@ -81,6 +81,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -106,6 +107,7 @@ import org.openide.util.Utilities;
  */
 class NbPresenter extends JDialog
 implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparator<Object> {
+    private static final boolean USE_VERTICALLY_CENTERED_ICON = false;
 
     /** variable holding current modal dialog in the system */
     public static NbPresenter currentModalDialog;
@@ -508,22 +510,24 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             null // value
             );
         }
-        tweakIconLabelVerticalAlignment(optionPane);
 
         if (UIManager.getLookAndFeel().getClass() == MetalLookAndFeel.class ||
-            UIManager.getLookAndFeel().getClass() == BasicLookAndFeel.class) {
+            UIManager.getLookAndFeel().getClass() == BasicLookAndFeel.class ||
+            UIManager.getLookAndFeel().getID().startsWith("FlatLaf")) {
             optionPane.setUI(new javax.swing.plaf.basic.BasicOptionPaneUI() {
                 @Override
                 public Dimension getMinimumOptionPaneSize() {
+                    final int minimumHeight = 50;
                     if (minimumSize == null) {
                         //minimumSize = UIManager.getDimension("OptionPane.minimumSize");
                         // this is called before defaults initialized?!!!
-                        return new Dimension(MinimumWidth, 50);
+                        return new Dimension(MinimumWidth, minimumHeight);
                     }
-                    return new Dimension(minimumSize.width, 50);
+                    return new Dimension(minimumSize.width, minimumHeight);
                 }
             });
         }
+        tweakIconLabelVerticalAlignment(optionPane);
         optionPane.setWantsInput(false);
         optionPane.getAccessibleContext().setAccessibleDescription(strMsg);
         if( null != strMsg ) {
@@ -591,7 +595,15 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
     private static void tweakIconLabelVerticalAlignment(Component component) {
         if (component instanceof JLabel) {
             if ("OptionPane.iconLabel".equals(component.getName())) {
-                ((JLabel) component).setVerticalAlignment(SwingConstants.CENTER);
+                JLabel label = (JLabel) component;
+                if (USE_VERTICALLY_CENTERED_ICON) {
+                    label.setVerticalAlignment(SwingConstants.CENTER);
+                } else {
+                    /* Push the icon a bit down so that it is more likely to line up well with text,
+                    in particular in the common case of a single-line message (which will be
+                    vertically centered at the JOptionPane's minimum height). */
+                    label.setBorder(new EmptyBorder(8, 0, 0, 0));
+                }
             }
         } else if (component instanceof JComponent) {
             for (Component childComponent : ((JComponent) component).getComponents()) {

@@ -26,7 +26,7 @@ public final class Constants {
     public static final String NETTE_ACTION_METHOD_PREFIX = "action"; //NOI18N
     public static final String NETTE_RENDER_METHOD_PREFIX = "render"; //NOI18N
     public static final String NETTE_PRESENTER_EXTENSION = ".php"; //NOI18N
-    public static final String VALID_ACTION_NAME_REGEX = "^[a-zA-Z0-9][a-zA-Z0-9_]*$"; //NOI18N
+    public static final String VALID_ACTION_NAME_REGEX = "^[a-zA-Z0-9]\\w*$"; //NOI18N
     public static final String NETTE_PRESENTER_SUFFIX = "Presenter"; //NOI18N
     public static final String LATTE_MIME_TYPE = "text/x-latte"; //NOI18N
     public static final String LATTE_TEMPLATE_EXTENSION = ".latte"; //NOI18N

@@ -1667,7 +1667,7 @@ public final class JFXProjectUtils {
      * @return modified name usable as file name
      */
     public static String makeSafe(@NonNull String name) {
-        return name.replaceAll("[^a-zA-Z0-9_.-]", "_"); // NOI18N;
+        return name.replaceAll("[^\\w.-]", "_"); // NOI18N;
     }
 
     public static EditableProperties readFromFile(final @NonNull Project project, final @NonNull String relativePath) throws IOException {

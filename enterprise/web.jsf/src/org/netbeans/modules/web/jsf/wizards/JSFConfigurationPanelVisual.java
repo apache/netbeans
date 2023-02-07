@@ -1278,7 +1278,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
     }
 
     // the name of the library is used as ant property
-    private static final Pattern VALID_PROPERTY_NAME = Pattern.compile("[-._a-zA-Z0-9]+"); // NOI18N
+    private static final Pattern VALID_PROPERTY_NAME = Pattern.compile("[-.\\w]+"); // NOI18N
 
     private String checkLibraryName(String name) {
         String message = null;

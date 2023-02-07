@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 public final class CompletionUtils {
-    private static final Pattern TYPE_NAME_PATTERN = Pattern.compile("([a-zA-Z0-9_\\\\]+)::[a-zA-Z0-9_]*");
-    private static final Pattern METHOD_PREFIX_PATTERN = Pattern.compile("[a-zA-Z0-9_\\\\]+::([a-zA-Z0-9_]*)");
+    private static final Pattern TYPE_NAME_PATTERN = Pattern.compile("([\\w\\\\]+)::\\w*");
+    private static final Pattern METHOD_PREFIX_PATTERN = Pattern.compile("[\\w\\\\]+::(\\w*)");
 
     private CompletionUtils() {
     }

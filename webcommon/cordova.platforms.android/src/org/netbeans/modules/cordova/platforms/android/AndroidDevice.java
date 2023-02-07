@@ -47,7 +47,7 @@ public class AndroidDevice implements Device {
     public static Collection<org.netbeans.modules.cordova.platforms.spi.Device> parse(String output) throws IOException {
         BufferedReader r = new BufferedReader(new StringReader(output));
 
-        Pattern pattern = Pattern.compile("([-\\w]+)\\s+([\\w]+) *"); //NOI18N
+        Pattern pattern = Pattern.compile("([-\\w]+)\\s+(\\w+) *"); //NOI18N
 
         ArrayList<org.netbeans.modules.cordova.platforms.spi.Device> result = new ArrayList<org.netbeans.modules.cordova.platforms.spi.Device>();
         //ignore first line

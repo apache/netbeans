@@ -100,6 +100,6 @@ public class BuildNumberJDK11 extends Task {
      */
     private static final Pattern PATTERN = Pattern.compile(
             "jdk-([1-9][0-9]*)((\\.0)*\\.([1-9])([0-9]*))*\\+([0-9]{2})" + // NOI18N
-            "_([a-z]+)-([A-Za-z0-9_-]+)_bin\\.tar\\.gz"); // NOI18N
+            "_([a-z]+)-([\\w-]+)_bin\\.tar\\.gz"); // NOI18N
     
 }

@@ -411,7 +411,7 @@ public class MakeOSGi extends Task {
                 buildVersion = netbeans.getValue("OpenIDE-Module-Implementation-Version");
             }
             if (buildVersion != null) {
-                bundleVersion += "." + buildVersion.replaceAll("[^a-zA-Z0-9_-]", "_");
+                bundleVersion += "." + buildVersion.replaceAll("[^\\w-]", "_");
             }
             osgi.putValue("Bundle-Version", bundleVersion);
         }

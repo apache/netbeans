@@ -111,7 +111,7 @@ public class MakeNBM extends Task {
                         while ((line = r.readLine()) != null) {
                             if (html) {
                                 // Clean out any markup first. First tags:
-                                line = line.replaceAll("</?[a-zA-Z0-9_.:-]+( +[a-zA-Z0-9_.:-]+( *= *([^ \"]+|\"[^\"]*\"))?)*/?>", "");
+                                line = line.replaceAll("</?[\\w.:-]+( +[\\w.:-]+( *= *([^ \"]+|\"[^\"]*\"))?)*/?>", "");
                                 // DOCTYPE:
                                 line = line.replaceAll("<![a-zA-Z]+[^>]*>", "");
                                 // Comments (single-line only at the moment):

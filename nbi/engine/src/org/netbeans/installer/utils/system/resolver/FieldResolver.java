@@ -34,7 +34,7 @@ public class FieldResolver implements StringResolver {
     public String resolve(String string, ClassLoader loader) {
         Matcher matcher;
         String parsed = string;
-        matcher = Pattern.compile("(?<!\\\\)\\$F\\{((?:[a-zA-Z_][a-zA-Z_0-9]*\\.)+[a-zA-Z_][a-zA-Z_0-9]*)\\.([a-zA-Z_][a-zA-Z_0-9]*)\\}").matcher(parsed);
+        matcher = Pattern.compile("(?<!\\\\)\\$F\\{((?:[a-zA-Z_]\\w*\\.)+[a-zA-Z_]\\w*)\\.([a-zA-Z_]\\w*)\\}").matcher(parsed);
         while (matcher.find()) {
             String classname = matcher.group(1);
             String fieldname = matcher.group(2);

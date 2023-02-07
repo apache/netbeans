@@ -115,7 +115,7 @@ public class BuildNumberJDK extends Task {
      */
     private static final Pattern PATTERN = Pattern.compile(
             "jdk-([0-9]+)u([0-9]+)-([a-z]+)-bin-" + // NOI18N
-            "b(([0-9]+)+)-([A-Za-z0-9_-]+)\\.tar.gz"); // NOI18N
+            "b(([0-9]+)+)-([\\w-]+)\\.tar.gz"); // NOI18N
     
     /**
      * Pattern for which to look in the input file. No update number
@@ -123,6 +123,6 @@ public class BuildNumberJDK extends Task {
      */
     private static final Pattern PATTERN_NO_UPDATE = Pattern.compile(
             "jdk-([0-9]+)-([a-z]+)-bin-" + // NOI18N
-            "b(([0-9]+)+)-([A-Za-z0-9_-]+)\\.tar.gz"); // NOI18N
+            "b(([0-9]+)+)-([\\w-]+)\\.tar.gz"); // NOI18N
     
 }

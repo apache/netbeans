@@ -258,7 +258,7 @@ public class CustomizerRun extends JPanel implements HelpCtx.Provider {
                         NotifyDescriptor.WARNING_MESSAGE));
                 return;
             }
-            String config = name.replaceAll("[^a-zA-Z0-9_.-]", "_"); // NOI18N
+            String config = name.replaceAll("[^\\w.-]", "_"); // NOI18N
 
             if (manager.exists(config)) {
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(

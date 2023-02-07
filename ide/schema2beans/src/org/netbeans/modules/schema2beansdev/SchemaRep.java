@@ -1628,13 +1628,13 @@ public class SchemaRep implements PrefixGuesser {
             fixed =fixed.replaceAll(java.util.regex.Pattern.quote("\\\\i"), // NOI18N
                     Matcher.quoteReplacement("[_:A-Za-z]")); // NOI18N
             fixed = fixed.replaceAll(java.util.regex.Pattern.quote("\\\\c-[:]"), // NOI18N
-                    Matcher.quoteReplacement("[-._A-Za-z0-9]")); // NOI18N
+                    Matcher.quoteReplacement("[-.\\w]")); // NOI18N
             fixed = fixed.replaceAll(java.util.regex.Pattern.quote("\\\\c"), // NOI18N
-                    Matcher.quoteReplacement("[-._:A-Za-z0-9]")); // NOI18N
+                    Matcher.quoteReplacement("[-.:\\w]")); // NOI18N
             fixed =fixed.replaceAll(java.util.regex.Pattern.quote("\\\\I"), // NOI18N
                     Matcher.quoteReplacement("[^_:A-Za-z]")); // NOI18N
             fixed = fixed.replaceAll(java.util.regex.Pattern.quote("\\\\C"), // NOI18N
-                    Matcher.quoteReplacement("[^-._:A-Za-z0-9]")); // NOI18N
+                    Matcher.quoteReplacement("[^-.:\\w]")); // NOI18N
             return fixed;
         }
     }

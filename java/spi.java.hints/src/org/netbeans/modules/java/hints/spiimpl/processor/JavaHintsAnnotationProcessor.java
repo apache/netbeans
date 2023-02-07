@@ -409,7 +409,7 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
         return false;
     }
 
-    private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$[a-zA-Z0-9_]+");
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\w+");
     private boolean verifyTriggerAnnotations(ExecutableElement method) {
         List<AnnotationMirror> patternAnnotations = new ArrayList<>();
         AnnotationMirror am = findAnnotation(method.getAnnotationMirrors(), "org.netbeans.spi.java.hints.TriggerPattern");

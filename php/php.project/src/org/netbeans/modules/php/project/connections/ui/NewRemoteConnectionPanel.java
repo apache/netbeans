@@ -92,7 +92,7 @@ public final class NewRemoteConnectionPanel extends JPanel {
 
     public String getOldConfigName() {
         // Backwards compatibility with new getConfigName - #190930
-        return getConnectionName().replaceAll("[^a-zA-Z0-9_.-]", "_"); // NOI18N
+        return getConnectionName().replaceAll("[^\\w.-]", "_"); // NOI18N
     }
 
     public String getConfigName() {

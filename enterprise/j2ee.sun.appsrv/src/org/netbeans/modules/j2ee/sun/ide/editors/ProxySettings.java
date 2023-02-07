@@ -368,7 +368,7 @@ public class ProxySettings {
 
     private static String normalizeProxyHost (String proxyHost) {
         if (proxyHost.toLowerCase (Locale.US).startsWith ("http://")) { // NOI18N
-            return proxyHost.substring (7, proxyHost.length ());
+            return proxyHost.substring (7);
         } else {
             return proxyHost;
         }

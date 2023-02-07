@@ -33,7 +33,7 @@ public class ALT_Baseline03Test extends LayoutTestCase {
         super(name);
         try {
 	    className = this.getClass().getName();
-	    className = className.substring(className.lastIndexOf('.') + 1, className.length());
+	    className = className.substring(className.lastIndexOf('.') + 1);
             startingFormFile = FileUtil.toFileObject(new File(url.getFile() + goldenFilesPath + className + "-StartingForm.form").getCanonicalFile());
         } catch (IOException ioe) {
             fail(ioe.toString());

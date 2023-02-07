@@ -714,7 +714,7 @@ public class MakeLNBM extends MatchingTask {
       if( second_idx != -1) {
 
 	// Return the string after the second slash. //
-	ret = mod_info.substring( second_idx+1, mod_info.length()) ;
+	ret = mod_info.substring( second_idx+1);
       }
     }
 
@@ -741,7 +741,7 @@ public class MakeLNBM extends MatchingTask {
 
       // Else return the string after the first slash. //
       else {
-	ret = mod_info.substring( first_idx+1, mod_info.length()) ;
+	ret = mod_info.substring( first_idx+1) ;
       }
     }
 

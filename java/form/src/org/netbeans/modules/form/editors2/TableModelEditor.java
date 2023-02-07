@@ -462,7 +462,7 @@ public class TableModelEditor implements PropertyEditor, XMLPropertyEditor,
 
         String s = o.getClass ().getName ();
         int g = s.lastIndexOf ('.');
-        if (g >= 0) s = s.substring (g + 1, s.length ());
+        if (g >= 0) s = s.substring (g + 1);
 
         String cast = ""; // NOI18N
         if (o instanceof Byte)

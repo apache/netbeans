@@ -158,7 +158,7 @@ public class CompletionUtil {
     public static String getLocalNameFromTag(String tagName) {
         if (tagName == null) return null;
         return (tagName.indexOf(":") == -1) ? tagName :
-                tagName.substring(tagName.indexOf(":") + 1, tagName.length());
+                tagName.substring(tagName.indexOf(":") + 1);
     }
     
     /**

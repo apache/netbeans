@@ -528,7 +528,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                         NbMavenProject nbprj = getNbMavenProject(doc);
                         if (nbprj != null) {
                             if (prop != null && (prop.startsWith("project.") || prop.startsWith("pom."))) {//NOI18N
-                                String val = prop.substring(prop.indexOf('.') + 1, prop.length());//NOI18N
+                                String val = prop.substring(prop.indexOf('.') + 1);//NOI18N
                                 //TODO eventually we want to process everything through an evaluation engine..
                                 InputLocation iloc = nbprj.getMavenProject().getModel().getLocation(val);
                                 if (iloc != null) {

@@ -356,7 +356,7 @@ public final class GlobalSourceForBinaryImpl implements SourceForBinaryQueryImpl
                 if (st.countTokens() > /*ModuleList.DEPTH_NB_ALL*/3) {
                     continue;
                 }
-                String name = path.substring(path.lastIndexOf('/') + 1, path.length());
+                String name = path.substring(path.lastIndexOf('/') + 1);
                 if (ModuleList.EXCLUDED_DIR_NAMES.contains(name)) {
                     // #61579: known to not be project dirs, so skip to save time.
                     continue;

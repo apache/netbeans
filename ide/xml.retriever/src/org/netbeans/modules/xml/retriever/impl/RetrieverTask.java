@@ -270,7 +270,7 @@ public class RetrieverTask {
         String resultStr = absURI.getSchemeSpecificPart().replace(':','_');
         resultStr = resultStr.replace('?', '.');
         if(resultStr.contains(".")){
-            String fileExtension = resultStr.substring(resultStr.lastIndexOf('.'), resultStr.length());
+            String fileExtension = resultStr.substring(resultStr.lastIndexOf('.'));
             
             if(!fileExtension.equals(fileExtension.toLowerCase())){
                 resultStr = resultStr.substring(0, resultStr.lastIndexOf('.'))+fileExtension.toLowerCase();

@@ -1813,7 +1813,7 @@ public class SchemaRep implements PrefixGuesser {
                 out.write("String _tmp = "+JavaUtil.typeToString(type, var)+";\n");
                 out.write("int dotPos = _tmp.indexOf('.');\n");
                 out.write("if (dotPos >= 0) {\n");
-                out.write("_tmp = _tmp.substring(dotPos+1, _tmp.length());\n");
+                out.write("_tmp = _tmp.substring(dotPos+1);\n");
                 out.write("int digitCount = 0;\n");
                 out.write("for (int _index1 = 0; _index1 < _tmp.length(); ++_index1) {\n");
                 out.write("if (Character.isDigit(_tmp.charAt(_index1))) {\n");
@@ -1831,7 +1831,7 @@ public class SchemaRep implements PrefixGuesser {
                 out.write("String _tmp = "+JavaUtil.typeToString(type, var)+";\n");
                 out.write("int dotPos = _tmp.indexOf('.');\n");
                 out.write("if (dotPos >= 0) {\n");
-                out.write("_tmp = _tmp.substring(dotPos+1, _tmp.length());\n");
+                out.write("_tmp = _tmp.substring(dotPos+1);\n");
                 out.write("int digitCount = 0;\n");
                 out.write("for (int _index1 = 0; _index1 < _tmp.length(); ++_index1) {\n");
                 out.write("if (Character.isDigit(_tmp.charAt(_index1))) {\n");

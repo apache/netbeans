@@ -299,11 +299,11 @@ public class ResourceConfigurator implements ResourceConfiguratorInterface {
         //To clean up the default generation a little
         if(filename.indexOf("://") != -1) { // NOI18N
             filename = filename.substring(0, filename.indexOf("://")) + "_" +  // NOI18N
-                    filename.substring(filename.indexOf("://")+3, filename.length()); // NOI18N
+                    filename.substring(filename.indexOf("://")+3); // NOI18N
         }
         if(filename.indexOf("//") != -1) { // NOI18N
             filename = filename.substring(0, filename.indexOf("//")) + "_" +  // NOI18N
-                    filename.substring(filename.indexOf("//")+2, filename.length()); // NOI18N
+                    filename.substring(filename.indexOf("//")+2); // NOI18N
         }
         filename = makeLegalFilename(filename);
 
@@ -345,7 +345,7 @@ public class ResourceConfigurator implements ResourceConfiguratorInterface {
         String databaseName = urlData.getDatabaseName();
 
         url = stripExtraDBInfo(url);
-        String workingUrl = url.substring(url.indexOf("//") + 2, url.length()); //NOI18N
+        String workingUrl = url.substring(url.indexOf("//") + 2); //NOI18N
         PropertyElement servName = jdbcConnectionPool.newPropertyElement();
         servName.setName(WizardConstants.__ServerName);
         servName.setValue(hostName);

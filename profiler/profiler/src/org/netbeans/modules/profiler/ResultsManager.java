@@ -208,7 +208,7 @@ public final class ResultsManager {
     public String getSnapshotDisplayName(String fileName, int snapshotType) {
         String displayName;
         if (fileName.startsWith(SNAPSHOT_PREFIX)) {
-            String time = fileName.substring(SNAPSHOT_PREFIX.length(), fileName.length());
+            String time = fileName.substring(SNAPSHOT_PREFIX.length());
             try {
                 long timeStamp = Long.parseLong(time);
                 if (timeStamp > MINIMAL_TIMESTAMP) {
@@ -244,7 +244,7 @@ public final class ResultsManager {
     public String getHeapDumpDisplayName(String fileName) {
         String displayName;
         if (fileName.startsWith(HEAPDUMP_PREFIX)) {
-            String time = fileName.substring(HEAPDUMP_PREFIX.length(), fileName.length());
+            String time = fileName.substring(HEAPDUMP_PREFIX.length());
             try {
                 long timeStamp = Long.parseLong(time);
                 if (timeStamp > MINIMAL_TIMESTAMP) {

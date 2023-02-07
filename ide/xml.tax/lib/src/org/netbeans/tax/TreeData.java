@@ -170,7 +170,7 @@ public abstract class TreeData extends TreeChild {
         checkReadOnly ();
         try {
             String preData = data.substring (0, offset);
-            String postData = data.substring (offset, data.length ());
+            String postData = data.substring (offset);
             setData (preData + inData + postData);
         } catch (IndexOutOfBoundsException ex) {
             throw new InvalidArgumentException (ex);
@@ -185,7 +185,7 @@ public abstract class TreeData extends TreeChild {
         checkReadOnly ();
         try {
             String preData = data.substring (0, offset);
-            String postData = data.substring (offset + count, data.length ());
+            String postData = data.substring (offset + count);
             setData (preData + postData);
         } catch (IndexOutOfBoundsException ex) {
             throw new InvalidArgumentException (ex);
@@ -200,7 +200,7 @@ public abstract class TreeData extends TreeChild {
         checkReadOnly ();
         try {
             String preData = data.substring (0, offset);
-            String postData = data.substring (offset + count, data.length ());
+            String postData = data.substring (offset + count);
             setData (preData + repData + postData);
         } catch (IndexOutOfBoundsException ex) {
             throw new InvalidArgumentException (ex);
@@ -216,7 +216,7 @@ public abstract class TreeData extends TreeChild {
         TreeData splitedData;
         try {
             String preData = data.substring (0, offset);
-            String postData = data.substring (offset, data.length ());
+            String postData = data.substring (offset);
             splitedData = createData (preData);
             setData (postData);
         } catch (IndexOutOfBoundsException ex) {

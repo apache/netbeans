@@ -321,7 +321,7 @@ public class CordovaPerformer implements BuildPerformer {
            "org.netbeans.modules.cordova" , true); // NOI18N
         props.put(PROP_UPDATE_TASK_JAR, antTaskJar.getAbsolutePath());
         final String id = getConfig(p).getId();
-        String activity = id.substring(id.lastIndexOf(".")+1, id.length()); // NOI18N
+        String activity = id.substring(id.lastIndexOf(".")+1); // NOI18N
         props.put(PROP_ANDROID_PROJECT_ACTIVITY, activity);//NOI18N
         
         MobilePlatform iosPlatform = PlatformManager.getPlatform(PlatformManager.IOS_TYPE);

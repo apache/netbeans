@@ -479,7 +479,7 @@ implements ChangeListener, DocumentListener, ListDataListener, WizardConstants {
                     String portNumber = "";
                     String databaseName = "";
                     try{
-                        String workingUrl = url.substring(url.indexOf("//") + 2, url.length());
+                        String workingUrl = url.substring(url.indexOf("//") + 2);
                         ResourceConfigurator rci = new ResourceConfigurator();
                         hostName = rci.getDerbyServerName(workingUrl);
                         portNumber = rci.getDerbyPortNo(workingUrl);

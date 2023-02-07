@@ -283,7 +283,7 @@ public class Feature {
             do {
                 int ss = expression.indexOf ('$', start);
                 if (ss < 0) {
-                    l.add (expression.substring (start, expression.length ()));
+                    l.add (expression.substring (start));
                     break;
                 }
                 l.add (expression.substring (start, ss));

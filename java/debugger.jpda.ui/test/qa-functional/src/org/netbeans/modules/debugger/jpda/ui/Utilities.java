@@ -229,10 +229,10 @@ public class Utilities {
         } else {
             while (in.indexOf('<') >= 0) {
                 if (in.indexOf('<') == 0) {
-                    in = in.substring(in.indexOf('>') + 1, in.length());
+                    in = in.substring(in.indexOf('>') + 1);
                 } else {
                     out += in.substring(0, in.indexOf('<'));
-                    in = in.substring(in.indexOf('<'), in.length());
+                    in = in.substring(in.indexOf('<'));
                 }
             }
         }

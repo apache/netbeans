@@ -694,7 +694,7 @@ widthcheck:  {
 
         String name = clazz.getName().replace('$', '.');
 
-        return name.substring(name.lastIndexOf('.') + 1, name.length()); // NOI18N
+        return name.substring(name.lastIndexOf('.') + 1); // NOI18N
     }
 
     /**

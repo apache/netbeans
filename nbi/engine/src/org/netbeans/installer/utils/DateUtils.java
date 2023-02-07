@@ -19,23 +19,28 @@
 
 package org.netbeans.installer.utils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
  * @author Kirill Sorokin
  */
 public final class DateUtils {
+
+    /////////////////////////////////////////////////////////////////////////////////
+    // Constants
+    public static final DateTimeFormatter COMPACT_TIMESTAMP = DateTimeFormatter.ofPattern("yyyyMMddHHmmss"); // NOI18N
+    public static final DateTimeFormatter DETAILED_TIMESTAMP = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"); // NOI18N
+
     /////////////////////////////////////////////////////////////////////////////////
     // Static
     public static String getTimestamp() {
-        return COMPACT_TIMESTAMP.format(new Date());
+        return COMPACT_TIMESTAMP.format(LocalDateTime.now());
     }
     
     public static String getFormattedTimestamp() {
-        return DETAILED_TIMESTAMP.format(new Date());
+        return DETAILED_TIMESTAMP.format(LocalDateTime.now());
     }
     
     /////////////////////////////////////////////////////////////////////////////////
@@ -43,12 +48,5 @@ public final class DateUtils {
     private DateUtils() {
         // does nothing
     }
-    
-    /////////////////////////////////////////////////////////////////////////////////
-    // Constants
-    public static final DateFormat COMPACT_TIMESTAMP =
-            new SimpleDateFormat("yyyyMMddHHmmss"); // NOI18N
-    
-    public static final DateFormat DETAILED_TIMESTAMP =
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); // NOI18N
+
 }

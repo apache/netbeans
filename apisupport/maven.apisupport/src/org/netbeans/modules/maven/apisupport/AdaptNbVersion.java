@@ -18,8 +18,8 @@
  */
 package org.netbeans.modules.maven.apisupport;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.StringTokenizer;
 
 /**
@@ -33,7 +33,9 @@ public class AdaptNbVersion {
     public static final String TYPE_IMPLEMENTATION = "impl"; //NOI18N
     
     private static final String SNAPSHOT = "SNAPSHOT"; //NOI18N
-    
+
+    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyyMMdd");
+
     public static String adaptVersion(String version, Object type) {
         StringTokenizer tok = new StringTokenizer(version,"."); //NOI18N
         if (SNAPSHOT.equals(version) && TYPE_IMPLEMENTATION.equals(type)) {
@@ -83,7 +85,7 @@ public class AdaptNbVersion {
     }
     
     private static String generateSnapshotValue() {
-        return new SimpleDateFormat("yyyyMMdd").format(new Date()); //NOI18N
+        return DTF.format(LocalDate.now()); //NOI18N
     }
     
 }

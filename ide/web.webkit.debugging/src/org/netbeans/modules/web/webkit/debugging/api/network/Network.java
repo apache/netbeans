@@ -20,8 +20,10 @@ package org.netbeans.modules.web.webkit.debugging.api.network;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -454,8 +456,7 @@ public class Network {
             JSONObject response = (JSONObject)params.get("response"); // NOI18N
             Number timestamp = (Number)params.get("timestamp"); // NOI18N
             Number opcode = (Number)response.get("opcode"); // NOI18N
-            WebSocketFrame frame = new WebSocketFrame(new Date(
-                    timestamp.longValue()), direction, response, opcode.intValue());
+            WebSocketFrame frame = new WebSocketFrame(timestamp.longValue(), direction, response, opcode.intValue());
             frames.add(frame);
             support.firePropertyChange(PROP_FRAMES, null, null);
         }
@@ -491,11 +492,11 @@ public class Network {
 
         private final Direction direction;
         private final JSONObject data;
-        private final Date timestamp;
+        private final long timestampMilli;
         private final int opcode;
 
-        private WebSocketFrame(Date timestamp, Direction direction, JSONObject data, int opcode) {
-            this.timestamp = timestamp;
+        private WebSocketFrame(long timestampMilli, Direction direction, JSONObject data, int opcode) {
+            this.timestampMilli = timestampMilli;
             this.direction = direction;
             this.data = data;
             this.opcode = opcode;
@@ -509,8 +510,12 @@ public class Network {
             return direction;
         }
 
-        public Date getTimestamp() {
-            return timestamp;
+        public long getTimestamp() {
+            return timestampMilli;
+        }
+
+        public LocalDateTime getTimestampDate() {
+            return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestampMilli), ZoneId.systemDefault());
         }
 
         public int getOpcode() {

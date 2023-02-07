@@ -23,6 +23,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +69,8 @@ class ModelItem implements PropertyChangeListener {
     private final BrowserFamilyId browserFamilyId;
     private final Project project;
     private final AtomicBoolean dataLoaded = new AtomicBoolean(false);
+
+    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("HH:mm:ss:SSS");
 
     public ModelItem(Network.Request request, Network.WebSocketRequest wsRequest,
             BrowserFamilyId browserFamilyId, Project project) {
@@ -429,7 +435,7 @@ class ModelItem implements PropertyChangeListener {
         Style infoStyle = doc.addStyle("comment", defaultStyle);
         StyleConstants.setForeground(infoStyle, Color.darkGray);
         StyleConstants.setBold(infoStyle, true);
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
+
         pane.setText("");
         StringBuilder sb = new StringBuilder();
         int lastFrameType = -1;
@@ -442,20 +448,20 @@ class ModelItem implements PropertyChangeListener {
             }
             if (opcode == 1) { // "text frame"
                 if (!rawData) {
-                    doc.insertString(doc.getLength(), formatter.format(f.getTimestamp()), timingStyle);
+                    doc.insertString(doc.getLength(), DTF.format(f.getTimestampDate()), timingStyle);
                     doc.insertString(doc.getLength(), f.getDirection() == Network.Direction.SEND ? " SENT " : " RECV ", timingStyle);
                 }
                 doc.insertString(doc.getLength(), f.getPayload()+"\n", defaultStyle);
             } else if (opcode == 2) { // "binary frame"
                 if (!rawData) {
-                    doc.insertString(doc.getLength(), formatter.format(f.getTimestamp()), timingStyle);
+                    doc.insertString(doc.getLength(), DTF.format(f.getTimestampDate()), timingStyle);
                     doc.insertString(doc.getLength(), f.getDirection() == Network.Direction.SEND ? " SENT " : " RECV ", timingStyle);
                 }
                 // XXX: binary data???
                 doc.insertString(doc.getLength(), f.getPayload()+"\n", defaultStyle);
             } else if (opcode == 8) { // "close frame"
                 if (!rawData) {
-                    doc.insertString(doc.getLength(), formatter.format(f.getTimestamp()), timingStyle);
+                    doc.insertString(doc.getLength(), DTF.format(f.getTimestampDate()), timingStyle);
                     doc.insertString(doc.getLength(), f.getDirection() == Network.Direction.SEND ? " SENT " : " RECV ", timingStyle);
                 }
                 doc.insertString(doc.getLength(), "Frame closed\n", infoStyle);

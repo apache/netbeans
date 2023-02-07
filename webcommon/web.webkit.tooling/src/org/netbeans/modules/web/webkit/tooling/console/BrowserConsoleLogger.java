@@ -31,8 +31,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -183,9 +185,9 @@ public class BrowserConsoleLogger implements Console.Listener {
         }
     }
     
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
+    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("HH:mm:ss:SSS");
     public static String getCurrentTime() {
-        return formatter.format(new Date(System.currentTimeMillis()));
+        return DTF.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault()));
     }
     
     private boolean shouldLogMessage(ConsoleMessage msg) {

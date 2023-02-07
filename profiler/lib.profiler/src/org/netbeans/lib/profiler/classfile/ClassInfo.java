@@ -431,13 +431,13 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
         private void setOffsetDelta(int methodIdx, StackMapFrame frame, int newOffsetDelta) {
             FrameType frameType = frame.frameType;
             
-            if (frameType.equals(FrameType.SAME) && newOffsetDelta > 63) {
+            if (frameType == FrameType.SAME && newOffsetDelta > 63) {
                  extendFrame(methodIdx,frame,2);
                 frame.setFrameType(FrameType.SAME_FRAME_EXTENDED);
             }
-            if (frameType.equals(FrameType.SAME_LOCALS_1_STACK_ITEM) && newOffsetDelta > 63) {
+            if (frameType == FrameType.SAME_LOCALS_1_STACK_ITEM && newOffsetDelta > 63) {
                 extendFrame(methodIdx,frame,2);
-                frame.setFrameType(frameType.SAME_LOCALS_1_STACK_ITEM_EXTENDED);
+                frame.setFrameType(FrameType.SAME_LOCALS_1_STACK_ITEM_EXTENDED);
             }
             frame.setOffsetDelta(newOffsetDelta);
         }

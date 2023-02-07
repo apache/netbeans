@@ -86,6 +86,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumMap;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -809,7 +810,7 @@ public class Utilities {
     private static final Map<Kind, String> operator2DN;
 
     static {
-        operator2DN = new HashMap<Kind, String>();
+        operator2DN = new EnumMap<>(Kind.class);
 
         operator2DN.put(AND, "&");
         operator2DN.put(XOR, "^");

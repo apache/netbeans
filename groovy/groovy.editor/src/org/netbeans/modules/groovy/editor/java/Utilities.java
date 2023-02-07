@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumSet;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
@@ -89,7 +90,7 @@ public final class Utilities {
     }
 
     public static Set<javax.lang.model.element.Modifier> reflectionModifiersToModel(int modifiers) {
-        Set<javax.lang.model.element.Modifier> ret = new HashSet<javax.lang.model.element.Modifier>();
+        Set<javax.lang.model.element.Modifier> ret = EnumSet.noneOf(javax.lang.model.element.Modifier.class);
 
         if (java.lang.reflect.Modifier.isAbstract(modifiers)) {
             ret.add(javax.lang.model.element.Modifier.ABSTRACT);
@@ -129,7 +130,7 @@ public final class Utilities {
     public static Set<javax.lang.model.element.Modifier> gsfModifiersToModel(Set<Modifier> modifiers,
             javax.lang.model.element.Modifier defaultModifier) {
 
-        Set<javax.lang.model.element.Modifier> ret = new HashSet<javax.lang.model.element.Modifier>();
+        Set<javax.lang.model.element.Modifier> ret = EnumSet.noneOf(javax.lang.model.element.Modifier.class);
 
         if (modifiers.contains(Modifier.STATIC)) {
             ret.add(javax.lang.model.element.Modifier.STATIC);

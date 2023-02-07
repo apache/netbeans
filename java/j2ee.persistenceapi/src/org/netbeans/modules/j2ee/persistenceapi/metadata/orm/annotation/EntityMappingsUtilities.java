@@ -133,7 +133,7 @@ public class EntityMappingsUtilities {
 
     public static String getElementTypeName(Element element) {
         TypeMirror elementType = element.asType();
-        if (TypeKind.DECLARED.equals(elementType.getKind())) {
+        if (TypeKind.DECLARED == elementType.getKind()) {
             return ((TypeElement)((DeclaredType)elementType).asElement()).getQualifiedName().toString(); // NOI18N
         }
         return void.class.getName();

@@ -476,7 +476,15 @@ public class JsStructureScanner implements StructureScanner {
 
         @Override
         public Set<Modifier> getModifiers() {
-            Set<Modifier> modifiers = modelElement.getModifiers().isEmpty() ? Collections.EMPTY_SET : EnumSet.copyOf(modelElement.getModifiers());
+            Set<Modifier> modifiers;
+
+            if (modelElement.getModifiers().isEmpty()) {
+                modifiers = Collections.EMPTY_SET;
+            } else {
+                modifiers = EnumSet.noneOf(Modifier.class);
+                modifiers.addAll(modelElement.getModifiers());
+            }
+
             if (modifiers.contains(Modifier.PRIVATE) && (modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED))) {
                 modifiers.remove(Modifier.PUBLIC);
                 modifiers.remove(Modifier.PROTECTED);

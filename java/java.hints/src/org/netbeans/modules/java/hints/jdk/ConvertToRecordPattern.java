@@ -86,7 +86,7 @@ public class ConvertToRecordPattern {
             return null;
         }
         ElementKind kind = ctx.getInfo().getTrees().getElement(ctx.getVariables().get("$typeI0")).getKind();
-        if (kind.equals(ElementKind.RECORD)) {
+        if (kind == ElementKind.RECORD) {
             Set<TreePath> convertPath = new HashSet<>();
             Set<String> localVarList = new HashSet<>();
             localVarList.add(ctx.getInfo().getTrees().getElement(ctx.getVariables().get("$expr")).getSimpleName().toString());

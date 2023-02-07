@@ -908,8 +908,8 @@ public class MoveMembersTransformer extends RefactoringVisitor {
             builder.append("\n"); // NOI18N
         }
         boolean hasReturn = false;
-        if (returnType != null && returnType.getKind().equals(Tree.Kind.PRIMITIVE_TYPE)) {
-            if (!((PrimitiveTypeTree) returnType).getPrimitiveTypeKind().equals(TypeKind.VOID)) {
+        if (returnType != null && returnType.getKind() == Tree.Kind.PRIMITIVE_TYPE) {
+            if (((PrimitiveTypeTree) returnType).getPrimitiveTypeKind() != TypeKind.VOID) {
                 hasReturn = true;
             }
         }

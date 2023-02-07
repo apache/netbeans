@@ -223,8 +223,8 @@ public class TableUISupport {
 
             JLabel component = (JLabel)super.getListCellRendererComponent(list, displayName, index, isSelected, cellHasFocus);
             boolean needDisable = (disabledReason instanceof Table.NoPrimaryKeyDisabledReason) || (disabledReason instanceof Table.ExistingNotInSourceDisabledReason) || 
-                    (filter.equals(FilterAvailable.NEW) && (disabledReason instanceof Table.ExistingDisabledReason)) ||
-                    (filter.equals(FilterAvailable.UPDATE) && (disabledReason==null));
+                    (filter == FilterAvailable.NEW && (disabledReason instanceof Table.ExistingDisabledReason)) ||
+                    (filter == FilterAvailable.UPDATE && (disabledReason==null));
             component.setEnabled(!needDisable);
             component.setToolTipText(disabledReason != null ? disabledReason.getDescription() : null);
 

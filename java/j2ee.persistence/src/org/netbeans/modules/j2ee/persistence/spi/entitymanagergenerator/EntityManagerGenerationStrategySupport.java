@@ -120,7 +120,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         {
             found=false;
             for(Tree membr:members) {
-                if(Tree.Kind.METHOD.equals(membr.getKind())){
+                if(Tree.Kind.METHOD == membr.getKind()) {
                     MethodTree mt = membr instanceof MethodTree ? (MethodTree) membr : null;
                     if(mt!=null && name.equals(mt.getName().toString())) {
                         found = true;

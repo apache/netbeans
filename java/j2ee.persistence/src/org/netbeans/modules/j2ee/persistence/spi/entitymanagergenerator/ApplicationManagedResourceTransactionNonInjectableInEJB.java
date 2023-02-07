@@ -61,11 +61,6 @@ public final class ApplicationManagedResourceTransactionNonInjectableInEJB exten
                 Collections.<AnnotationTree>emptyList()
                 );
         
-        Set<Modifier> modifiers = new HashSet<Modifier>();
-        modifiers.add(Modifier.PRIVATE);
-        modifiers.add(Modifier.STATIC);
-        
-        
         MethodTree newMethod = getTreeMaker().Method(
                 methodModifiers,
                 computeMethodName(),

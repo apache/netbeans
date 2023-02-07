@@ -1630,7 +1630,7 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
 
         MemberReferenceTree t = (MemberReferenceTree) p.getLeaf();
         
-        if (!node.getMode().equals(t.getMode()))
+        if (node.getMode() != t.getMode())
             return false;
 
         if (!scan(node.getQualifierExpression(), t.getQualifierExpression(), p))

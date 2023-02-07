@@ -526,7 +526,7 @@ public class RefactoringUtils {
 
     public static boolean elementExistsIn(TypeElement target, Element member, CompilationInfo info) {
         for (Element currentMember : target.getEnclosedElements()) {
-            if (currentMember.getKind().equals(member.getKind())
+            if (currentMember.getKind() == member.getKind()
                     && currentMember.getSimpleName().equals(member.getSimpleName())) {
                 if (currentMember.getKind() == ElementKind.METHOD) {
                     ExecutableElement exMethod = (ExecutableElement) currentMember;
@@ -943,8 +943,8 @@ public class RefactoringUtils {
         if (oldMods.getFlags().contains(Modifier.ABSTRACT)) {
             return oldMods;
         }
-        Set<Modifier> flags = new HashSet<Modifier>(oldMods.getFlags());
-        flags.add(Modifier.ABSTRACT);
+        Set<Modifier> flags = EnumSet.of(Modifier.ABSTRACT);
+        flags.addAll(oldMods.getFlags());
         flags.remove(Modifier.FINAL);
         return make.Modifiers(flags, oldMods.getAnnotations());
     }

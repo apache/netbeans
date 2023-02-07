@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.EnumSet;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.source.Comment;
@@ -81,9 +82,7 @@ public class OAuthHelper {
         // create fields
         ModifiersTree privateModif =  maker.Modifiers(Collections.<Modifier>singleton(Modifier.PRIVATE));
         ModifiersTree publicModif =  maker.Modifiers(Collections.<Modifier>singleton(Modifier.PUBLIC));
-        Set<Modifier> modifiersSet = new HashSet<Modifier>();
-        modifiersSet.add(Modifier.PRIVATE);
-        modifiersSet.add(Modifier.STATIC);
+        Set<Modifier> modifiersSet = EnumSet.of(Modifier.PRIVATE, Modifier.STATIC);
         ModifiersTree privateStaticModif =  maker.Modifiers(modifiersSet);
         modifiersSet.add(Modifier.FINAL);
         ModifiersTree privateStaticFinalModif =  maker.Modifiers(modifiersSet);
@@ -240,9 +239,7 @@ public class OAuthHelper {
 
             modifiedClass = maker.addClassMember(modifiedClass, methodTree);
         } else if (Wadl2JavaHelper.PROJEC_TYPE_WEB.equals(projectType)) {
-
-            modifiersSet = new HashSet<Modifier>();
-            modifiersSet.add(Modifier.PUBLIC); modifiersSet.add(Modifier.STATIC);
+            modifiersSet = EnumSet.of(Modifier.PUBLIC, Modifier.STATIC);
             ModifiersTree publicStaticModif =  maker.Modifiers(modifiersSet);
 
             // getRequestToken method
@@ -335,9 +332,7 @@ public class OAuthHelper {
             modifiedClass = maker.addClassMember(modifiedClass, methodTree);
 
         } else if (Wadl2JavaHelper.PROJEC_TYPE_NB_MODULE.equals(projectType)) {
-
-            modifiersSet = new HashSet<Modifier>();
-            modifiersSet.add(Modifier.PUBLIC); modifiersSet.add(Modifier.STATIC);
+            modifiersSet = EnumSet.of(Modifier.PUBLIC, Modifier.STATIC);
             ModifiersTree publicStaticModif =  maker.Modifiers(modifiersSet);
 
             // login method
@@ -956,9 +951,7 @@ public class OAuthHelper {
         ClassTree modifiedClass = originalClass;
         TreeMaker maker = copy.getTreeMaker();
         TypeElement servletAn = copy.getElements().getTypeElement("javax.servlet.annotation.WebServlet"); //NOI18N    
-        Set<Modifier> classModifs = new HashSet<Modifier>();
-        classModifs.add(Modifier.PUBLIC);
-        classModifs.add(Modifier.STATIC);
+        Set<Modifier> classModifs = EnumSet.of(Modifier.PUBLIC, Modifier.STATIC);
 
         // OAuthLoginServlet
         ModifiersTree classModifiers =  maker.Modifiers(classModifs);

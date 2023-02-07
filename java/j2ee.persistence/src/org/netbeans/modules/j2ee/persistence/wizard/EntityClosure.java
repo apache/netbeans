@@ -334,7 +334,7 @@ public class EntityClosure {
                 
                 TypeElement entity = parameter.getElements().getTypeElement(entityClass);
                 for (Element element : parameter.getElements().getAllMembers(entity)){
-                    if (ElementKind.METHOD.equals(element.getKind())){
+                    if (ElementKind.METHOD == element.getKind()) {
                         ExecutableType methodType = (ExecutableType)parameter.getTypes().
                                 asMemberOf((DeclaredType)entity.asType(), element);
                          TypeMirror returnType = methodType.getReturnType();
@@ -345,7 +345,7 @@ public class EntityClosure {
                              addTypeMirror(result, parameter, paramType, entitiesFqn);
                         }
                     }
-                    else if  (ElementKind.FIELD.equals(element.getKind())){
+                    else if  (ElementKind.FIELD == element.getKind()) {
                         TypeMirror typeMirror = parameter.getTypes().
                                 asMemberOf((DeclaredType)entity.asType(), element);
                         addTypeMirror(result, parameter, typeMirror, entitiesFqn );

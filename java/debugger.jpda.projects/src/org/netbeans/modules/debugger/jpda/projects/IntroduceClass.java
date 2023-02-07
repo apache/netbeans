@@ -98,7 +98,7 @@ class IntroduceClass {
                 Element lastStatementElement;
                 if (lastStatement != null && (lastStatementElement = getElement(info, new TreePath(treePath, lastStatement))) != null) {
                     type = lastStatementElement.asType();
-                    if (TypeKind.EXECUTABLE.equals(type.getKind())) {
+                    if (TypeKind.EXECUTABLE == type.getKind()) {
                         ExecutableType eType = (ExecutableType) type;
                         type = eType.getReturnType();
                         // Check that it ends with a semicolon:
@@ -116,7 +116,7 @@ class IntroduceClass {
                     }
                 }
             }
-            if (type != null && !TypeKind.VOID.equals(type.getKind())) {
+            if (type != null && TypeKind.VOID != type.getKind()) {
                 returnType = type.toString();
                 // Prepend a return statement:
                 long lsBegin = sourcePositions.getStartPosition(compilationUnit, lastStatement);
@@ -235,7 +235,7 @@ class IntroduceClass {
                 break;
             default:
                 Tree first = firstLeaf.getLeaf();
-                if (Tree.Kind.EXPRESSION_STATEMENT.equals(first.getKind())) {
+                if (Tree.Kind.EXPRESSION_STATEMENT == first.getKind()) {
                     statements = Collections.singletonList((StatementTree) firstLeaf.getLeaf());
                 } else {
                     statements = Collections.emptyList();

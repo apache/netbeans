@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.element.Modifier;
@@ -292,11 +293,7 @@ public final class EntityWizard implements WizardDescriptor.InstantiatingIterato
                 TypeMirror type = workingCopy.getTreeUtilities().parseType(primaryKeyClassName, typeElement);
                 Tree typeTree = make.Type(type);
                 
-                Set<Modifier> serialVersionUIDModifiers = new HashSet<Modifier>();
-                serialVersionUIDModifiers.add(Modifier.PRIVATE);
-                serialVersionUIDModifiers.add(Modifier.STATIC);
-                serialVersionUIDModifiers.add(Modifier.FINAL);
-                
+                Set<Modifier> serialVersionUIDModifiers = EnumSet.of(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL);
                 VariableTree serialVersionUID = make.Variable(make.Modifiers(serialVersionUIDModifiers), "serialVersionUID", genUtils.createType("long", typeElement), make.Literal(Long.valueOf("1"))); //NOI18N
                 VariableTree idField = make.Variable(genUtils.createModifiers(Modifier.PRIVATE), idFieldName, typeTree, null);
                 ModifiersTree idMethodModifiers = genUtils.createModifiers(Modifier.PUBLIC);

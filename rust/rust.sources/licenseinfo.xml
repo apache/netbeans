@@ -21,18 +21,8 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/rust/project/resources/rust-logo-2.png</file>
-        <file>src/org/netbeans/modules/rust/project/resources/rust-logo.png</file>
-        <file>src/org/netbeans/modules/rust/project/resources/rust-red-icon.png</file>
-        <file>src/org/netbeans/modules/rust/project/templates/RustProjectTemplateProject.zip</file>
-        <file>src/org/netbeans/modules/rust/project/ui/resources/config-badge.gif</file>
-        <file>src/org/netbeans/modules/rust/project/ui/resources/defaultFolder.gif</file>
-        <file>src/org/netbeans/modules/rust/project/ui/resources/defaultFolderOpen.gif</file>
-        <file>src/org/netbeans/modules/rust/project/ui/resources/libraries-badge.png</file>
-        <file>src/org/netbeans/modules/rust/project/ui/resources/sources-badge.png</file>
+        <file>src/org/netbeans/modules/rust/sources/rs/RustFileTemplate.rs</file>
         <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED">
-            Images and sample empty project.
-        </comment>
+        <comment type="TEMPLATE_MINIMAL_IP" />
     </fileset>
 </licenseinfo>

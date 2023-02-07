@@ -178,7 +178,7 @@ public final class Parser {
         return result;
     }
 
-    private static final Pattern URL_PATTERN = Pattern.compile("(ht|f|n)(tp(s?)|ile|bfs)://[0-9a-zA-Z/.?%+_~=\\\\&@$\\-#,:!/(/)]*"); //NOI18N
+    private static final Pattern URL_PATTERN = Pattern.compile("(ht|f|n)(tp(s?)|ile|bfs)://[\\w/.?%+~=\\\\&@$\\-#,:!/(/)]*"); //NOI18N
 
     public static Iterable<int[]> recognizeURLsREBased(CharSequence text) {
         Matcher m = URL_PATTERN.matcher(text);

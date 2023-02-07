@@ -124,7 +124,7 @@ final class RegexpUtils {
             = XML_SPACE_REGEX + '*' + '=' + XML_SPACE_REGEX + '*';
     /** */
     static final String XML_ENC_REGEX
-            = "[A-Za-z][-A-Za-z0-9._]*";                                //NOI18N
+            = "[A-Za-z][-\\w.]*";                                //NOI18N
     /** */
     static final String XML_DECL_REGEX
             = "\\Q" + XML_DECL_PREFIX + "\\E"                           //NOI18N
@@ -132,7 +132,7 @@ final class RegexpUtils {
                     + XML_EQ_REGEX + "(?:\"1\\.0\"|'1\\.0')"            //NOI18N
               + "(?:"                                                   //NOI18N
                   + XML_SPACE_REGEX + '+' + "encoding"    //encoding    //NOI18N
-                    + XML_EQ_REGEX + "(['\"])[A-Za-z][-A-Za-z0-9._]*\\1"//NOI18N
+                    + XML_EQ_REGEX + "(['\"])[A-Za-z][-\\w.]*\\1"//NOI18N
               + ")?"                                                    //NOI18N
               + "(?:"                                                   //NOI18N
                   + XML_SPACE_REGEX + '+' + "standalone"  //standalone  //NOI18N

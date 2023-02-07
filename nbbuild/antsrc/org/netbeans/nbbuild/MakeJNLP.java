@@ -703,7 +703,7 @@ public class MakeJNLP extends Task {
             int basedir = removeWhat.lastIndexOf('/');
             String base = basedir == -1 ? "" : removeWhat.substring(0, basedir);
             String name = removeWhat.substring(basedir + 1, removeWhat.length() - 4);
-            Pattern p = Pattern.compile(base + "/locale/" + name + "(|_[a-zA-Z0-9_]+)\\.jar");
+            Pattern p = Pattern.compile(base + "/locale/" + name + "(\\w+)\\.jar");
             
             Iterator<String> it = removeFrom.keySet().iterator();
             while (it.hasNext()) {

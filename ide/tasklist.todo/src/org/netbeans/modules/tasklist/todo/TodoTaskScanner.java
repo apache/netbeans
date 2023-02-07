@@ -298,7 +298,7 @@ public class TodoTaskScanner extends FileTaskScanner implements PropertyChangeLi
                 // no word on the right...
                 if (Character.isJavaIdentifierPart(s.charAt(0))) {
                     // isJavaIdentifierPart - roughly matches what regex
-                    // considers a word ([a-zA-Z_0-9])
+                    // considers a word ([\\w])
 
                     // \W instead of \b: Workarond for issue 30250
                     sb.append("\\W"); // NOI18N

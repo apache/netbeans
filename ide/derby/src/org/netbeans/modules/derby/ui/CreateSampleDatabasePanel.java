@@ -114,7 +114,7 @@ public class CreateSampleDatabasePanel extends javax.swing.JPanel {
         if (s == null || s.isEmpty()) {
             // empty value
             return false;
-        } else if (s.matches("[\\w&&[^\\d_]](_|\\d|\\w)*")) { //NOI18N
+        } else if (s.matches("[\\w&&[^\\d_]](\\d|\\w)*")) { //NOI18N
             // ordinary identifier
             return true;
         } else if (s.matches("\\\".+\\\"")) { //NOI18N

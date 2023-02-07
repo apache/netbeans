@@ -28,7 +28,7 @@ import org.netbeans.api.db.sql.support.SQLIdentifiers.Quoter;
  */
 public class NonASCIIQuoter extends Quoter {
 
-    private static final Pattern ASCII_IDENTIFIER = Pattern.compile("[a-zA-z][a-zA-Z0-9_]+");
+    private static final Pattern ASCII_IDENTIFIER = Pattern.compile("[a-zA-z]\\w+");
 
     public NonASCIIQuoter(String quoteString) {
         super(quoteString);

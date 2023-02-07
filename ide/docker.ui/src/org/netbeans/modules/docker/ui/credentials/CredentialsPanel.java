@@ -36,7 +36,7 @@ import org.openide.util.NbBundle;
 public class CredentialsPanel extends javax.swing.JPanel {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+            "^[\\w-\\+]+(\\.[\\w-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
     private final JPasswordField reference = new JPasswordField();
 

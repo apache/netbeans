@@ -74,7 +74,7 @@ import org.openide.util.lookup.Lookups;
 
 public final class LibrariesCustomizer extends JPanel implements ExplorerManager.Provider, HelpCtx.Provider {
 
-    private static final Pattern VALID_LIBRARY_NAME = Pattern.compile("[-._a-zA-Z0-9]+"); // NOI18N
+    private static final Pattern VALID_LIBRARY_NAME = Pattern.compile("[-.\\w]+"); // NOI18N
     private ExplorerManager manager;
     private LibrariesModel model;
     private BeanTreeView libraries;

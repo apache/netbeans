@@ -390,7 +390,7 @@ begin
   if cgi.request_method == 'POST'
     value = cgi['file']
     content = value.read
-    name = value.original_filename.gsub(/\.\.|[^a-zA-Z0-9._+-]/, '_')
+    name = value.original_filename.gsub(/\.\.|[^\\w.+-]/, '_')
     sha1 = Digest::SHA1.hexdigest(content).upcase
     open("#{repository}/#{sha1}-#{name}", "w") do |f|
       f.write content

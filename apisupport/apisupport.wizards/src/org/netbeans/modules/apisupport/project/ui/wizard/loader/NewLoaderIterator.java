@@ -255,7 +255,7 @@ public final class NewLoaderIterator extends BasicWizardIterator {
         }
         
         // 2. dataobject file
-        final boolean isEditable = Pattern.matches("(application/([a-zA-Z0-9_.-])*\\+xml|text/([a-zA-Z0-9_.+-])*)", //NOI18N
+        final boolean isEditable = Pattern.matches("(application/([\\w.-])*\\+xml|text/([\\w.+-])*)", //NOI18N
                 mime);
         if (isEditable) {
             StringBuffer editorBuf = new StringBuffer();
@@ -364,7 +364,7 @@ public final class NewLoaderIterator extends BasicWizardIterator {
             }
         } else {
             // 7. register manifest entry
-            boolean isXml = Pattern.matches("(application/([a-zA-Z0-9_.-])*\\+xml|text/([a-zA-Z0-9_.-])*\\+xml)", //NOI18N
+            boolean isXml = Pattern.matches("(application/([\\w.-])*\\+xml|text/([\\w.-])*\\+xml)", //NOI18N
                     mime);
             String installBefore = null;
             if (isXml) {

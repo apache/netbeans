@@ -292,7 +292,7 @@ public final class ShortcutWizard extends WizardDescriptor {
         if (doc != null) {
             projname = doc.getDocumentElement().getAttribute("name"); // NOI18N
         }
-        return (projname + '-' + target.getAttribute("name")).replaceAll("[^a-zA-Z0-9_-]", "-"); // NOI18N
+        return (projname + '-' + target.getAttribute("name")).replaceAll("[^\\w-]", "-"); // NOI18N
     }
 
 }

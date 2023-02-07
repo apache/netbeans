@@ -87,7 +87,7 @@ public class TestOutputListenerProvider implements OutputProcessor {
         runningPattern = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*(?:\\[surefire\\] )?Running (.*)", Pattern.DOTALL); //NOI18N
         outDirPattern = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*(?:Surefire)?(?:Failsafe)? report directory\\: (.*)", Pattern.DOTALL); //NOI18N
         outDirPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*Setting reports dir\\: (.*)", Pattern.DOTALL); //NOI18N
-        runningPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*---\\smaven-surefire-plugin:\\d+(?:.\\d+)+[-_a-zA-Z0-9]*:test\\s.*", Pattern.DOTALL);
+        runningPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*---\\smaven-surefire-plugin:\\d+(?:.\\d+)+[-\\w]*:test\\s.*", Pattern.DOTALL);
     }
     
     public String[] getWatchedGoals() {

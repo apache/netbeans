@@ -518,7 +518,7 @@ public class PropertyUtils {
         return l.toArray(new String[l.size()]);
     }
 
-    private static final Pattern VALID_PROPERTY_NAME = Pattern.compile("[-._a-zA-Z0-9]+"); // NOI18N
+    private static final Pattern VALID_PROPERTY_NAME = Pattern.compile("[-.\\w]+"); // NOI18N
 
     /**
      * Checks whether the name is usable as Ant property name.

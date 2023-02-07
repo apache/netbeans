@@ -48,7 +48,7 @@ import org.netbeans.modules.j2ee.dd.api.web.WebApp;
 class ServletData extends DeployData {
 
     private static final Logger LOG = Logger.getLogger(ServletData.class.getName());
-    private static final Pattern VALID_URI_PATTERN = Pattern.compile("[-_.!~*'();/?:@&=+$,a-zA-Z0-9]+"); // NOI18N
+    private static final Pattern VALID_URI_PATTERN = Pattern.compile("[-.!~*'();/?:@&=+$,\\w]+"); // NOI18N
     private String errorMessage = null;
     private String name = null;
     // These are URL mappings - they're used by both Servlets and Filters

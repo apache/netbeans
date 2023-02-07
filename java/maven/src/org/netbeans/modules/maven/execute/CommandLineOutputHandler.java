@@ -85,7 +85,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
      */
     private static final Pattern linePattern = Pattern.compile("(\\[(DEBUG|TRACE|INFO|WARN|WARNING|ERROR|FATAL)\\]\\s)?(?:\\[(?:stderr|stdout)\\]\\s)?(.*)"); // NOI18N
 
-    public static final Pattern startPatternM2 = Pattern.compile("\\[INFO\\] \\[([\\w]*):([\\w]*)[ ]?.*\\]"); // NOI18N
+    public static final Pattern startPatternM2 = Pattern.compile("\\[INFO\\] \\[(\\w*):(\\w*)[ ]?.*\\]"); // NOI18N
     public static final Pattern startPatternM3 = Pattern.compile("\\[INFO\\] --- (\\S+):\\S+:(\\S+)(?: [(]\\S+[)])? @ \\S+ ---"); // ExecutionEventLogger.mojoStarted NOI18N
 
     private static final Pattern mavenSomethingPlugin = Pattern.compile("maven-(.+)-plugin"); // NOI18N

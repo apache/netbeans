@@ -41,7 +41,7 @@ public interface IndexabilityQueryImplementation {
 
     /**
      * @return name of the IndexabilityQueryImplementation. The allowed
-     * characters are from the range: [A-Za-z0-9$_.+/].
+     * characters are from the range: [\\w$.+/].
      **/
     public String getName();
 
@@ -61,7 +61,7 @@ public interface IndexabilityQueryImplementation {
      * not change between NetBeans restarts - else a full reindex will be done.
      *
      * @return an identifier, that identifies the state of the indexability
-     * query.  The allowed characters are from the range: [A-Za-z0-9$_.+/].
+     * query.  The allowed characters are from the range: [\\w$.+/].
      */
     public String getStateIdentifier();
 

@@ -201,7 +201,7 @@ public class BasicInfoVisualPanel extends NewTemplateVisualPanel
     private boolean internalUpdate = false;
     //#218964 it's unclear to me what patterns are allowed in project name.
     //the pattern applied comes from maven support
-    private static Pattern nameValid = Pattern.compile("[a-zA-Z0-9_\\-.]+");
+    private static Pattern nameValid = Pattern.compile("[\\w\\-.]+");
 
     @Messages("MSG_NameCannotBeInvalid={0} is not a valid project name.")
     void updateAndCheck() {

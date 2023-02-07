@@ -633,7 +633,7 @@ class ModelItem implements PropertyChangeListener {
     }
 
     static String getJSONPResponse(String data) {
-        Pattern p = Pattern.compile("([0-9a-zA-Z_$]+?\\()([\\{\\[].*?[\\}\\]])(\\)[\\;]?[\n\r]?)", Pattern.DOTALL);
+        Pattern p = Pattern.compile("([\\w$]+?\\()([\\{\\[].*?[\\}\\]])(\\)[\\;]?[\n\r]?)", Pattern.DOTALL);
         Matcher m = p.matcher(data);
         if (m.matches()) {
             return m.group(2);

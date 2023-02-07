@@ -1653,7 +1653,7 @@ public final class Utilities {
      * Similar behaviour applies to <b>filenames</b> provided by layers (system filesystem). Filenames
      * can be also translated to adapt to location changes e.g. in action registrations. Note that 
      * <b>no spaces or special characters</b> are allowed in both translated filenames or translation 
-     * results. Filenames must conform to regexp {@code ^[/a-zA-Z0-9$_.+-]+$}. Keys and values are treated
+     * results. Filenames must conform to regexp {@code ^[/\\w$.+-]+$}. Keys and values are treated
      * as paths from fs root.
      * 
      * <p/>

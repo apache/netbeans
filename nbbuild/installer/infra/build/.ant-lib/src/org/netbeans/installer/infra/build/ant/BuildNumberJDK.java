@@ -114,15 +114,15 @@ public class BuildNumberJDK extends Task {
      * ${jdk_builds_host}/java/re/jdk/7u25/promoted/latest/bundles/linux-x64/jdk-7u25-fcs-bin-b15-linux-x64-05_jun_2013.tar.gz
      */
     private static final Pattern PATTERN = Pattern.compile(
-            "jdk-([0-9]+)u([0-9]+)-([a-z]+)-bin-" + // NOI18N
-            "b(([0-9]+)+)-([A-Za-z0-9_-]+)\\.tar.gz"); // NOI18N
+            "jdk-(\\d+)u(\\d+)-([a-z]+)-bin-" + // NOI18N
+            "b((\\d+)+)-([A-Za-z0-9_-]+)\\.tar.gz"); // NOI18N
     
     /**
      * Pattern for which to look in the input file. No update number
      * ${jdk_builds_host}/java/re/jdk/8/promoted/latest/bundles/linux-x64/jdk-8-fcs-bin-b127-linux-x64-29_jan_2014.tar.gz 
      */
     private static final Pattern PATTERN_NO_UPDATE = Pattern.compile(
-            "jdk-([0-9]+)-([a-z]+)-bin-" + // NOI18N
-            "b(([0-9]+)+)-([A-Za-z0-9_-]+)\\.tar.gz"); // NOI18N
+            "jdk-(\\d+)-([a-z]+)-bin-" + // NOI18N
+            "b((\\d+)+)-([A-Za-z0-9_-]+)\\.tar.gz"); // NOI18N
     
 }

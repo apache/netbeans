@@ -203,7 +203,7 @@ implements FileNameMapper, URIResolver, EntityResolver {
                             continue;
                         }
                         String show = mf.getMainAttributes().getValue("AutoUpdate-Show-In-Client");
-                        String base = modname.replaceFirst("/[0-9]+$", "");
+                        String base = modname.replaceFirst("/\\d+$", "");
                         if (!"false".equals(show)) {
                             modules.append(sep).append(base);
                             sep = ",\\\n    ";

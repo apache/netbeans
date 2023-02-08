@@ -591,7 +591,7 @@ public class ActionProviderImpl implements ActionProvider {
         }
     }
 
-    private static final Pattern STACK_TRACE_PATTERN = Pattern.compile("\\s*at\\s*(([^/]*/[^/]*/)|([^/]*/))?(?<location>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*(\\.\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)*(\\.<init>|\\.<clinit>)?)\\s*\\([^:)]*(:(?<line>[0-9]+))?\\)");
+    private static final Pattern STACK_TRACE_PATTERN = Pattern.compile("\\s*at\\s*(([^/]*/[^/]*/)|([^/]*/))?(?<location>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*(\\.\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)*(\\.<init>|\\.<clinit>)?)\\s*\\([^:)]*(:(?<line>\\d+))?\\)");
 
     static StackTraceLine matches(String line) {
         Matcher m = STACK_TRACE_PATTERN.matcher(line);

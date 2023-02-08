@@ -75,8 +75,8 @@ public class FeaturesOffDemandWithAutoloadDepsTest extends NbTestCase implements
         return NbModuleSuite.create(
             NbModuleSuite.emptyConfiguration().
             addTest(FeaturesOffDemandWithAutoloadDepsTest.class).
-            clusters("ergonomics[0-9]*").
-            clusters("ide[0-9]*|extide[0-9]*|java[0-9]*").
+            clusters("ergonomics\\d*").
+            clusters("ide\\d*|extide\\d*|java\\d*").
             gui(false)
         );
     }

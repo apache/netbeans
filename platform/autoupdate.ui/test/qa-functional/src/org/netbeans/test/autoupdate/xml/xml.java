@@ -48,7 +48,7 @@ public class xml extends Autoupdate {
     int iCount = 0;
     int iIndex = tabs.findPage( "Available" );
     //System.out.println( "+++" + iIndex );
-    Pattern p = Pattern.compile( "Available Plugins [(]([0-9]+)[)]" );
+    Pattern p = Pattern.compile( "Available Plugins [(](\\d+)[)]" );
     while( true )
     {
       String s = tabs.getTitleAt( iIndex );

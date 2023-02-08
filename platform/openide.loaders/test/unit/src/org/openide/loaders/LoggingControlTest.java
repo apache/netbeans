@@ -129,7 +129,7 @@ public class LoggingControlTest extends LoggingTestCaseHid {
         Run run = new Run();
         
         String order = 
-            "THREAD:Para MSG:[0-9]*A" + 
+            "THREAD:Para MSG:\\d*A" +
             "THREAD:main MSG:0" + 
             "THREAD:main MSG:^1$" +
             "THREAD:Para MSG:B" +

@@ -415,7 +415,7 @@ public class VerifyLibsAndLicenses extends Task {
                     continue;
                 }
                 String path = module + "/external/" + n;
-                if (!n.matches(".+[0-9].+")) {
+                if (!n.matches(".+\\d.+")) {
                     msg.append("\n" + path + " does not appear to include a version number");
                 }
                 if (!referencedBinaries.contains(n)) {

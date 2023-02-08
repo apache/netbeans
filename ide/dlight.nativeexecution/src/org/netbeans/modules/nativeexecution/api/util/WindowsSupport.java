@@ -223,7 +223,7 @@ public final class WindowsSupport {
 
         ExitStatus res = ProcessUtils.execute(pb);
         List<String> output = res.getOutputLines();
-        Pattern pat = Pattern.compile("[I]*[\t ]*([0-9]+)[\t ]*([0-9]+)[\t ]*([0-9]+)[\t ]*([0-9]+).*"); // NOI18N
+        Pattern pat = Pattern.compile("[I]*[\t ]*(\\d+)[\t ]*(\\d+)[\t ]*(\\d+)[\t ]*(\\d+).*"); // NOI18N
         for (String s : output) {
             Matcher m = pat.matcher(s);
             if (m.matches()) {

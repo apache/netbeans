@@ -54,7 +54,7 @@ public final class JavaCompilerProcessorFactory implements OutputProcessorFactor
 
     static class StackTraceProcessor implements OutputProcessor {
 
-        private static final Pattern STACKTRACE_PATTERN = Pattern.compile("(.*)at ((\\w[\\w\\.]*)/)?(\\w[\\w\\.\\$<>]*)\\((\\w+)\\.java\\:([0-9]+)\\)(.*)");
+        private static final Pattern STACKTRACE_PATTERN = Pattern.compile("(.*)at ((\\w[\\w\\.]*)/)?(\\w[\\w\\.\\$<>]*)\\((\\w+)\\.java\\:(\\d+)\\)(.*)");
         private static final IOColors.OutputType OUT_TYPE = IOColors.OutputType.ERROR;
         private final Project project;
         private final ClassPath classPath;

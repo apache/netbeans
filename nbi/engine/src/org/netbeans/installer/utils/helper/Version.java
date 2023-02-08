@@ -28,7 +28,7 @@ public class Version {
     // Static
     public static Version getVersion(
             final String string) {
-        if (string!=null && string.matches("([0-9]+[\\._\\-]+)*[0-9]+")) {
+        if (string!=null && string.matches("(\\d+[\\._\\-]+)*\\d+")) {
             return new Version(string);
         } else {
             return null;

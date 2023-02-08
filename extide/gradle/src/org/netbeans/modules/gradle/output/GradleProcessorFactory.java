@@ -97,7 +97,7 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
     static class GradleOutputProcessor implements OutputProcessor {
 
-        private static final Pattern GRADLE_ERROR = Pattern.compile("(Build file|Script) '(.*)\\.gradle' line: ([0-9]+)");
+        private static final Pattern GRADLE_ERROR = Pattern.compile("(Build file|Script) '(.*)\\.gradle' line: (\\d+)");
 
         @Override
         public boolean processLine(OutputDisplayer out, String line) {
@@ -122,7 +122,7 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
     static class JavaCompilerProcessor implements OutputProcessor {
 
-        private static final Pattern JAVA_ERROR = Pattern.compile("(.*)\\.java\\:([0-9]+)\\: (error|warning)\\:(.*)");
+        private static final Pattern JAVA_ERROR = Pattern.compile("(.*)\\.java\\:(\\d+)\\: (error|warning)\\:(.*)");
 
         @Override
         public boolean processLine(OutputDisplayer out, String line) {
@@ -151,8 +151,8 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
     static class GroovyCompilerProcessor implements OutputProcessor {
 
-        private static final Pattern GROOVY_ERROR = Pattern.compile("(.*)\\.groovy\\: ([0-9]+)\\: (.+)");
-        private static final Pattern COLUMN_INFO = Pattern.compile(" @ line ([0-9]+), column ([0-9]+)\\.$");
+        private static final Pattern GROOVY_ERROR = Pattern.compile("(.*)\\.groovy\\: (\\d+)\\: (.+)");
+        private static final Pattern COLUMN_INFO = Pattern.compile(" @ line (\\d+), column (\\d+)\\.$");
 
         @Override
         public boolean processLine(OutputDisplayer out, String line) {

@@ -303,7 +303,7 @@ public final class GrailsCommandSupport {
     private static class DebugOutputProcessor implements LineProcessor {
 
         private static final Pattern DEBUGGER_PATTERN =
-                Pattern.compile("Listening\\s+for\\s+transport\\s+(\\w+)\\s+at\\s+address:\\s+([0-9]+).*");
+                Pattern.compile("Listening\\s+for\\s+transport\\s+(\\w+)\\s+at\\s+address:\\s+(\\d+).*");
 
         private final GrailsProject project;
 

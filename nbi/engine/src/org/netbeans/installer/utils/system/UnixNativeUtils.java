@@ -1358,9 +1358,9 @@ public class UnixNativeUtils extends NativeUtils {
                 LogManager.log(e);
             }
             String stdout = SystemUtils.executeCommand("id").getStdOut();
-            Matcher matcher = Pattern.compile("euid=([0-9]+)\\(").matcher(stdout);
+            Matcher matcher = Pattern.compile("euid=(\\d+)\\(").matcher(stdout);
             if (!matcher.find()) {
-                matcher = Pattern.compile("uid=([0-9]+)\\(").matcher(stdout);
+                matcher = Pattern.compile("uid=(\\d+)\\(").matcher(stdout);
             }
             if (matcher.find()) {
                 adm = Integer.parseInt(matcher.group(1)) == 0;

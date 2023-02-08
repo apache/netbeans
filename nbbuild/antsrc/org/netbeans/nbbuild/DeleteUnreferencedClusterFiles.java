@@ -80,7 +80,7 @@ public class DeleteUnreferencedClusterFiles extends Task {
                 }
                 try {
                     Document doc = XMLUtil.parse(new InputSource(module.toURI().toString()), false, false, null, null);
-                    String cnb = doc.getDocumentElement().getAttribute("codename").replaceFirst("/[0-9]+$", "");
+                    String cnb = doc.getDocumentElement().getAttribute("codename").replaceFirst("/\\d+$", "");
                     NodeList nl = doc.getElementsByTagName("file");
                     for (int i = 0; i < nl.getLength(); i++) {
                         String file = ((Element) nl.item(i)).getAttribute("name");

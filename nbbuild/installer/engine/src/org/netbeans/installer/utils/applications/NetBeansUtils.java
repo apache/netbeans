@@ -854,7 +854,7 @@ public class NetBeansUtils {
     public static final String USAGE_STATISTICS_ENABLED_PROPERTY = 
             "usageStatisticsEnabled";//NOI18N
     public static final String DIGITS_PATTERN =
-            "[0-9]+"; // NOI18N
+            "\\d+"; // NOI18N
     public static final String CLUSTER_NUMBER_PATTERN =
             "(" + DIGITS_PATTERN + "(\\." + DIGITS_PATTERN + ")?)?"; // NOI18N
     

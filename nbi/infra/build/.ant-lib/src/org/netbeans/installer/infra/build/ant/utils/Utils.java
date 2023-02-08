@@ -220,7 +220,7 @@ public final class Utils {
                 String string = read(fis).toString();  
                 fis.close();
                 final Matcher matcher = Pattern.compile(
-                       "MIDlet-Jar-Size: ([0-9]+).*").
+                       "MIDlet-Jar-Size: (\\d+).*").
                         matcher(string);
                 if (matcher.find()) {
                     final long size = new Long(matcher.group(1)).longValue();

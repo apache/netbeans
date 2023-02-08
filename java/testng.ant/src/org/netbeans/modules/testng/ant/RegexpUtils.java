@@ -57,14 +57,14 @@ final class RegexpUtils {
     static final String TESTSUITE_STATS_PREFIX = "Tests run: ";         //NOI18N
     /** */
     static final String FLOAT_NUMBER_REGEX
-            = "[0-9]*(?:\\.[0-9]+)?";                                   //NOI18N
+            = "\\d*(?:\\.\\d+)?";                                   //NOI18N
     /** */
     static final String SECONDS_REGEX
             = "s(?:ec(?:ond)?(?:s|\\(s\\))?)?";                         //NOI18N
     /** */
     static final String TESTSUITE_STATS_REGEX
-        = "Tests run: +([0-9]+)," +                                     //NOI18N
-          " +Failures: +([0-9]+), +Errors: +([0-9]+)," +                //NOI18N
+        = "Tests run: +(\\d+)," +                                     //NOI18N
+          " +Failures: +(\\d+), +Errors: +(\\d+)," +                //NOI18N
           " +Time elapsed: +(.+)" + SECONDS_REGEX;                      //NOI18N
     /** */
     static final String OUTPUT_DELIMITER_PREFIX = "--------";           //NOI18N
@@ -113,7 +113,7 @@ final class RegexpUtils {
     static final String NESTED_EXCEPTION_REGEX
             = "(" + JAVA_ID_REGEX_FULL + ")(?:: (.*))?";//NOI18N
     static final String LOCATION_IN_FILE_REGEX
-            = JAVA_ID_REGEX_FULL + "(?:\\:[0-9]+)?";     //NOI18N
+            = JAVA_ID_REGEX_FULL + "(?:\\:\\d+)?";     //NOI18N
     /** */
     static final String XML_DECL_PREFIX = "<?xml";                      //NOI18N
     /** */

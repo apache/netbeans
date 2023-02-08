@@ -212,7 +212,7 @@ public final class BuildInstallersAction extends AbstractAction implements Conte
                         Properties props = new Properties();
                         props.put("suite.location", suiteLocation.getAbsolutePath().replace("\\", "/"));
                         props.put("suite.nbi.product.uid",
-                                appName.replaceAll("[0-9]+", "").replace("_", "-").toLowerCase(Locale.ENGLISH));
+                                appName.replaceAll("\\d+", "").replace("_", "-").toLowerCase(Locale.ENGLISH));
 
 
                         props.put("nbi.stub.location", InstalledFileLocator.getDefault().locate(

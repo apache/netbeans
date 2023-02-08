@@ -119,7 +119,7 @@ public final class JavaAntLogger extends AntLogger {
      */
     private static final Pattern STACK_TRACE = Pattern.compile(
             "(.*?((?:" + JIDENT + "[.])*)(" + JIDENT + ")[.](?:" + JIDENT + "|<init>|<clinit>)" + // NOI18N
-            "[(])(((?:"+JIDENT+"(?:\\."+JIDENT+")*/)?" + JIDENT + "[.]java):([0-9]+)|Unknown Source)([)].*)"); // NOI18N
+            "[(])(((?:"+JIDENT+"(?:\\."+JIDENT+")*/)?" + JIDENT + "[.]java):(\\d+)|Unknown Source)([)].*)"); // NOI18N
     static StackTraceParse/*|null*/ parseStackTraceLine(String line) {
         if (line.length() >= LOGGER_MAX_LINE_LENGTH) { // too long message, probably coming from user, so do not check for stacktrace
             return null;

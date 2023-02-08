@@ -513,7 +513,7 @@ public class StandardLoggerTest extends NbTestCase {
      */
     private static final class MockStackTraceLogger extends AntLogger {
         
-        private static final Pattern STACK_TRACE_LINE = Pattern.compile("\tat ([a-zA-Z]+\\.java):([0-9]+)");
+        private static final Pattern STACK_TRACE_LINE = Pattern.compile("\tat ([a-zA-Z]+\\.java):(\\d+)");
         
         public MockStackTraceLogger() {}
 

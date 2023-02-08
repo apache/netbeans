@@ -328,7 +328,7 @@ public class FixDependencies extends Task {
                         }
                         if (m.releaseVersion == null) {
                             a = a.replaceAll (
-                                "<release-version>[0-9]*</release-version>[\n\r ]*", 
+                                "<release-version>\\d*</release-version>[\n\r ]*", 
                                 ""
                             );
                         }

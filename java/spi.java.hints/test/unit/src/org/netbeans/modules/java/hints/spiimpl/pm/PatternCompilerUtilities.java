@@ -42,7 +42,7 @@ public class PatternCompilerUtilities {
     }
 
     public static String parseOutTypesFromPattern(CompilationInfo info, String pattern, Map<String, TypeMirror> variablesToTypes) {
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile("(\\$[0-9])(\\{([^}]*)\\})?");
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile("(\\$\\d)(\\{([^}]*)\\})?");
         StringBuilder filtered = new StringBuilder();
         Matcher m = p.matcher(pattern);
         int i = 0;

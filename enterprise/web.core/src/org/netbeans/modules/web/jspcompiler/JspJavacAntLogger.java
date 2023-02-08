@@ -51,7 +51,7 @@ public final class JspJavacAntLogger extends AntLogger {
      * org.apache.jasper.JasperException: file:C:/project/AntParseTestProject2/build/web/index.jsp(6,0) Include action: Mandatory attribute page missing
      */
 //    private static final Pattern JSP_COMPILER_ERROR = Pattern.compile(
-//        "(.*)(org.apache.jasper.JasperException: file:)([^\\(]*)\\(([0-9]+),([0-9]+)\\)(.*)"); // NOI18N
+//        "(.*)(org.apache.jasper.JasperException: file:)([^\\(]*)\\((\\d+),(\\d+)\\)(.*)"); // NOI18N
 
 
     private static final String[] TASKS_OF_INTEREST = AntLogger.ALL_TASKS;

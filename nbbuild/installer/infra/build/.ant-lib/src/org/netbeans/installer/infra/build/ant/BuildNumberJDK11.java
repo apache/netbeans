@@ -99,7 +99,7 @@ public class BuildNumberJDK11 extends Task {
      * ${jdk_builds_host}/artifactory/re-release-local/jdk/11.0.1/13/bundles/linux-x64/jdk-11.0.1+13_linux-x64_bin.tar.gz
      */
     private static final Pattern PATTERN = Pattern.compile(
-            "jdk-([1-9][0-9]*)((\\.0)*\\.([1-9])([0-9]*))*\\+([0-9]{2})" + // NOI18N
+            "jdk-([1-9]\\d*)((\\.0)*\\.([1-9])(\\d*))*\\+(\\d{2})" + // NOI18N
             "_([a-z]+)-([A-Za-z0-9_-]+)_bin\\.tar\\.gz"); // NOI18N
     
 }

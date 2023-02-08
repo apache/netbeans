@@ -128,7 +128,7 @@ public class BuildNumberBluePrints extends Task {
      * Pattern for which to look in the input file.
      */
     private static final Pattern PATTERN = Pattern.compile(
-            "java_ee_sdk-([0-9]+)_([0-9]+)-([A-Za-z0-9]+)-bin-b([0-9]+)-blueprints-([A-Za-z0-9_]+).zip");//NOI18N
+            "java_ee_sdk-(\\d+)_(\\d+)-([A-Za-z0-9]+)-bin-b(\\d+)-blueprints-([A-Za-z0-9_]+).zip");//NOI18N
     
     /**
      * Date format used in the input file.

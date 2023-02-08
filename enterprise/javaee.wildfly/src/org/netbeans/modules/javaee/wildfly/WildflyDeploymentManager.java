@@ -54,9 +54,8 @@ import org.netbeans.modules.javaee.wildfly.deploy.WildflyProgressObject;
 import org.netbeans.modules.javaee.wildfly.ide.commands.WildflyClient;
 import org.netbeans.modules.javaee.wildfly.ide.commands.WildflyModule;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties;
-
+import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_ADMIN_PORT;
 import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.PROPERTY_ADMIN_PORT;
-
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils.Version;
 import org.netbeans.modules.javaee.wildfly.util.WildFlyProperties;
@@ -70,18 +69,15 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
     private static final Logger LOGGER = Logger.getLogger(WildflyDeploymentManager.class.getName());
 
     private static final int DEBUGGING_PORT = 8787;
-    private static final int CONTROLLER_PORT = 9990;
 
     private final Version version;
     private final boolean isWildfly;
     private final WildflyClient client;
 
     /**
-     * Stores information about running instances. instance is represented by
-     * its InstanceProperties, running state by Boolean.TRUE, stopped state
-     * Boolean.FALSE. WeakHashMap should guarantee erasing of an unregistered
-     * server instance bcs instance properties are also removed along with
-     * instance.
+     * Stores information about running instances. instance is represented by its InstanceProperties, running
+     * state by Boolean.TRUE, stopped state Boolean.FALSE. WeakHashMap should guarantee erasing of an
+     * unregistered server instance bcs instance properties are also removed along with instance.
      */
     private static final Map<InstanceProperties, Boolean> PROPERTIES_TO_IS_RUNNING
             = Collections.synchronizedMap(new WeakHashMap());
@@ -105,9 +101,9 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
         File serverPath = new File(this.instanceProperties.getProperty(WildflyPluginProperties.PROPERTY_ROOT_DIR));
         version = WildflyPluginUtils.getServerVersion(serverPath);
         isWildfly = WildflyPluginUtils.isWildFly(serverPath);
-        int controllerPort = CONTROLLER_PORT;
+        int controllerPort = DEFAULT_ADMIN_PORT;
         String adminPort = this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT);
-        if(adminPort != null) {
+        if (adminPort != null) {
             controllerPort = Integer.parseInt(this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT));
         }
         if (username != null && password != null) {
@@ -119,8 +115,8 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
     }
 
     /**
-     * Returns true if the given instance properties are present in the map and
-     * value equals true. Otherwise return false.
+     * Returns true if the given instance properties are present in the map and value equals true. Otherwise
+     * return false.
      */
     public static boolean isRunningLastCheck(InstanceProperties ip) {
         return PROPERTIES_TO_IS_RUNNING.containsKey(ip) && PROPERTIES_TO_IS_RUNNING.get(ip).equals(Boolean.TRUE);
@@ -254,7 +250,7 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
             if (ModuleType.EJB.equals(mt)) {
                 for (WildflyModule module : modules) {
                     if (module.getArchiveName().endsWith("jar") && module.isRunning()) {
-                        result.add(new WildflyTargetModuleID(targets[0], module.getArchiveName(),  Type.fromJsrType(mt), false));
+                        result.add(new WildflyTargetModuleID(targets[0], module.getArchiveName(), Type.fromJsrType(mt), false));
                     }
                 }
             } else if (ModuleType.WAR.equals(mt)) {
@@ -392,17 +388,18 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
     public boolean isWildfly() {
         return isWildfly;
     }
+
     /**
-     * Mark the server with a needs restart flag. This may be needed for
-     * instance when JDBC driver is deployed to a running server.
+     * Mark the server with a needs restart flag. This may be needed for instance when JDBC driver is deployed
+     * to a running server.
      */
     public synchronized void setNeedsRestart(boolean needsRestart) {
         this.needsRestart = needsRestart;
     }
 
     /**
-     * Returns true if the server needs to be restarted. This may occur for
-     * instance when JDBC driver was deployed to a running server
+     * Returns true if the server needs to be restarted. This may occur for instance when JDBC driver was
+     * deployed to a running server
      */
     public synchronized boolean getNeedsRestart() {
         return needsRestart;

@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils.Version;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
@@ -29,11 +30,14 @@ import org.openide.filesystems.FileUtil;
 
 /**
  * Plugin Properties Singleton class
+ *
  * @author Ivan Sidorkin
  */
 public final class WildflyPluginProperties {
 
-    public static final String PROPERTY_DISPLAY_NAME ="displayName";//NOI18N
+    public static final int DEFAULT_HOST_PORT = 8080;
+    public static final int DEFAULT_ADMIN_PORT = 9990;
+    public static final String PROPERTY_DISPLAY_NAME = "displayName";//NOI18N
     public static final String PROPERTY_SERVER = "server";//NOI18N
     public static final String PROPERTY_DEPLOY_DIR = "deploy-dir";//NOI18N
     public static final String PROPERTY_SERVER_DIR = "server-dir";//NOI18N
@@ -50,17 +54,16 @@ public final class WildflyPluginProperties {
     private String configLocation;
     private Version serverVersion = WildflyPluginUtils.WILDFLY_8_0_0;
 
-
-    public static WildflyPluginProperties getInstance(){
-        if(pluginProperties==null){
+    public static WildflyPluginProperties getInstance() {
+        if (pluginProperties == null) {
             pluginProperties = new WildflyPluginProperties();
         }
         return pluginProperties;
     }
 
-
-
-    /** Creates a new instance of */
+    /**
+     * Creates a new instance of
+     */
     private WildflyPluginProperties() {
         java.io.InputStream inStream = null;
         try {
@@ -95,7 +98,7 @@ public final class WildflyPluginProperties {
             }
         }
         String loc = inProps.getProperty(INSTALL_ROOT_KEY);
-        if (loc!=null){// try to get the default value
+        if (loc != null) {// try to get the default value
             setInstallLocation(loc);
         }
     }
@@ -103,23 +106,21 @@ public final class WildflyPluginProperties {
     private static final String INSTALL_ROOT_KEY = "installRoot"; // NOI18N
     public static final String INSTALL_ROOT_PROP_NAME = "com.sun.aas.installRoot"; //NOI18N
 
-
-    private  FileObject propertiesFile = null;
+    private FileObject propertiesFile = null;
 
     private FileObject getPropertiesFile() throws java.io.IOException {
         FileObject dir = FileUtil.getConfigFile("J2EE");
         FileObject retVal = null;
         if (null != dir) {
-            retVal = dir.getFileObject("jb","properties"); // NOI18N
+            retVal = dir.getFileObject("jb", "properties"); // NOI18N
             if (null == retVal) {
-                retVal = dir.createData("jb","properties"); //NOI18N
+                retVal = dir.createData("jb", "properties"); //NOI18N
             }
         }
         return retVal;
     }
 
-
-    public void saveProperties(){
+    public void saveProperties() {
         Properties outProp = new Properties();
         String installRoot = getInstallLocation();
         if (installRoot != null) {
@@ -161,12 +162,11 @@ public final class WildflyPluginProperties {
     }
 
     public int getAdminPort() {
-        if(this.installLocation == null || WildflyPluginUtils.WILDFLY_8_0_0.compareTo(serverVersion) > 0){
+        if (this.installLocation == null || WildflyPluginUtils.WILDFLY_8_0_0.compareTo(serverVersion) > 0) {
             return 9999;
         }
-        return 9990;
+        return DEFAULT_ADMIN_PORT;
     }
-
 
     public void setInstallLocation(String installLocation) {
         if (installLocation.endsWith(File.separator)) {
@@ -187,16 +187,15 @@ public final class WildflyPluginProperties {
 
     public void setConfigLocation(String configLocation) {
         if (configLocation.endsWith(File.separator)) {
-            configLocation = configLocation.substring(0, configLocation.length() - 1);
+            this.configLocation = configLocation.substring(0, configLocation.length() - 1);
         }
         this.configLocation = configLocation;
     }
 
     public void setDomainLocation(String domainLocation) {
         if (domainLocation.endsWith(File.separator)) {
-            domainLocation = domainLocation.substring(0, domainLocation.length() - 1);
+            this.domainLocation = domainLocation.substring(0, domainLocation.length() - 1);
         }
-
         this.domainLocation = domainLocation;
     }
 

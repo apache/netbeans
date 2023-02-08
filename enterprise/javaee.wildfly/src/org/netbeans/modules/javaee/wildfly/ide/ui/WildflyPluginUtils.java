@@ -18,11 +18,10 @@
  */
 package org.netbeans.modules.javaee.wildfly.ide.ui;
 
-import java.io.File;
-
 import static java.io.File.separatorChar;
 
 import java.beans.PropertyVetoException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -34,11 +33,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.openide.filesystems.JarFileSystem;
@@ -188,7 +189,7 @@ public class WildflyPluginUtils {
     }
 
     public static boolean isGoodJBInstanceLocation(File serverDir, File candidate) {
-       return WildflyPluginUtils.isGoodJBInstanceLocation8x(serverDir, candidate);
+        return WildflyPluginUtils.isGoodJBInstanceLocation8x(serverDir, candidate);
     }
 
     private static boolean isGoodJBServerLocation(File candidate, List<String> requirements) {
@@ -211,12 +212,10 @@ public class WildflyPluginUtils {
     }
 
     /**
-     * Checks whether the given candidate has all required childrens. Children
-     * can be both files and directories. Method does not distinguish between
-     * them.
+     * Checks whether the given candidate has all required childrens. Children can be both files and
+     * directories. Method does not distinguish between them.
      *
-     * @return true if the candidate has all files/directories named in
-     * requiredChildren, false otherwise
+     * @return true if the candidate has all files/directories named in requiredChildren, false otherwise
      */
     private static boolean hasRequiredChildren(File candidate, List<String> requiredChildren) {
         if (null == candidate || null == candidate.list()) {
@@ -240,13 +239,11 @@ public class WildflyPluginUtils {
     }
 
     public static String getHTTPConnectorPort(String configFile) {
-        String defaultPort = "8080"; // NOI18N
-        return defaultPort;
+        return String.valueOf(WildflyPluginProperties.DEFAULT_HOST_PORT);
     }
 
-     public static String getManagementConnectorPort(String configFile) {
-        String defaultPort = "9990"; // NOI18N
-        return defaultPort;
+    public static String getManagementConnectorPort(String configFile) {
+        return String.valueOf(WildflyPluginProperties.DEFAULT_ADMIN_PORT);
     }
 
     /**
@@ -271,8 +268,8 @@ public class WildflyPluginUtils {
     }
 
     /**
-     * Return the version of the server located at the given path. If the server
-     * version can't be determined returns <code>null</code>.
+     * Return the version of the server located at the given path. If the server version can't be determined
+     * returns <code>null</code>.
      *
      * @param serverPath path to the server directory
      * @return specification version of the server
@@ -296,15 +293,15 @@ public class WildflyPluginUtils {
                 }
             }
         }
-        if(version == null) {
+        if (version == null) {
             return WILDFLY_8_0_0;
         }
         return version;
     }
 
     /**
-     * Return the version of the server located at the given path. If the server
-     * version can't be determined returns <code>null</code>.
+     * Return the version of the server located at the given path. If the server version can't be determined
+     * returns <code>null</code>.
      *
      * @param serverPath path to the server directory
      * @return specification version of the server using product.conf.
@@ -313,7 +310,7 @@ public class WildflyPluginUtils {
     public static Version getProductVersion(File serverPath) {
         assert serverPath != null : "Can't determine version with null server path"; // NOI18N
         String productConf = getProductConf(serverPath);
-        if(productConf != null) {
+        if (productConf != null) {
             try (FileReader reader = new FileReader(productConf)) {
                 Properties props = new Properties();
                 props.load(reader);
@@ -323,10 +320,10 @@ public class WildflyPluginUtils {
                     InputStream stream = new FileInputStream(manifestFile);
                     Manifest manifest = new Manifest(stream);
                     String productName = manifest.getMainAttributes().getValue("JBoss-Product-Release-Name");
-                    if(productName == null || productName.isEmpty()) {
+                    if (productName == null || productName.isEmpty()) {
                         productName = manifest.getMainAttributes().getValue("JBoss-Project-Release-Name");
                     }
-                    boolean wildfly =  productName == null || !productName.toLowerCase().contains("eap");
+                    boolean wildfly = productName == null || !productName.toLowerCase().contains("eap");
                     return new Version(manifest.getMainAttributes().getValue("JBoss-Product-Release-Version"), wildfly);
                 }
             } catch (Exception e) {
@@ -346,8 +343,8 @@ public class WildflyPluginUtils {
     }
 
     /**
-     * Check the product name of the server located at the given path. If the server
-     * version can't be determined returns <code>null</code>.
+     * Check the product name of the server located at the given path. If the server version can't be
+     * determined returns <code>null</code>.
      *
      * @param serverPath path to the server directory
      * @return specification version of the server using product.conf.
@@ -356,7 +353,7 @@ public class WildflyPluginUtils {
     public static boolean isWildFly(File serverPath) {
         assert serverPath != null : "Can't determine version with null server path"; // NOI18N
         String productConf = getProductConf(serverPath);
-        if(productConf != null) {
+        if (productConf != null) {
             try (FileReader reader = new FileReader(productConf)) {
                 Properties props = new Properties();
                 props.load(reader);
@@ -366,7 +363,7 @@ public class WildflyPluginUtils {
                     InputStream stream = new FileInputStream(manifestFile);
                     Manifest manifest = new Manifest(stream);
                     String productName = manifest.getMainAttributes().getValue("JBoss-Product-Release-Name");
-                    if(productName == null || productName.isEmpty()) {
+                    if (productName == null || productName.isEmpty()) {
                         productName = manifest.getMainAttributes().getValue("JBoss-Project-Release-Name");
                     }
                     return productName == null || !productName.toLowerCase().contains("eap");
@@ -379,8 +376,8 @@ public class WildflyPluginUtils {
     }
 
     /**
-     * Check the product name of the server located at the given path. If the server
-     * version can't be determined returns <code>null</code>.
+     * Check the product name of the server located at the given path. If the server version can't be
+     * determined returns <code>null</code>.
      *
      * @param serverPath path to the server directory
      * @return specification version of the server using product.conf.
@@ -389,9 +386,9 @@ public class WildflyPluginUtils {
     public static boolean isWildFlyServlet(File serverPath) {
         assert serverPath != null : "Can't determine version with null server path"; // NOI18N
         String productConf = getProductConf(serverPath);
-        if(productConf != null) {
+        if (productConf != null) {
             File productConfFile = new File(productConf);
-            if(productConfFile.exists() && productConfFile.canRead()) {
+            if (productConfFile.exists() && productConfFile.canRead()) {
                 try (FileReader reader = new FileReader(productConf)) {
                     Properties props = new Properties();
                     props.load(reader);
@@ -401,7 +398,7 @@ public class WildflyPluginUtils {
                         InputStream stream = new FileInputStream(manifestFile);
                         Manifest manifest = new Manifest(stream);
                         String productName = manifest.getMainAttributes().getValue("JBoss-Product-Release-Name");
-                        if(productName == null || productName.isEmpty()) {
+                        if (productName == null || productName.isEmpty()) {
                             productName = manifest.getMainAttributes().getValue("JBoss-Project-Release-Name");
                         }
                         return productName != null && (productName.contains("WildFly Web Lite") || productName.contains("WildFly Servlet"));
@@ -462,8 +459,8 @@ public class WildflyPluginUtils {
         private boolean wildfly = true;
 
         /**
-         * Constructs the version from the spec version string. Expected format
-         * is <code>MAJOR_NUMBER[.MINOR_NUMBER[.MICRO_NUMBER[.UPDATE]]]</code>.
+         * Constructs the version from the spec version string. Expected format is
+         * <code>MAJOR_NUMBER[.MINOR_NUMBER[.MICRO_NUMBER[.UPDATE]]]</code>.
          *
          * @param version spec version string with the following format:
          * <code>MAJOR_NUMBER[.MINOR_NUMBER[.MICRO_NUMBER[.UPDATE]]]</code>
@@ -524,12 +521,13 @@ public class WildflyPluginUtils {
         /**
          * {@inheritDoc}
          * <p>
-         * Two versions are equal if and only if they have same major, minor,
-         * micro number and update.
+         * Two versions are equal if and only if they have same major, minor, micro number and update.
          */
         @Override
         public boolean equals(Object obj) {
-            // XXX thiw want match compareTo contract in case there will be numbers like "1" and "01".
+            if (this == obj) {
+                return true;
+            }
             if (obj == null) {
                 return false;
             }
@@ -537,26 +535,16 @@ public class WildflyPluginUtils {
                 return false;
             }
             final Version other = (Version) obj;
-            if (this.majorNumber != other.majorNumber
-                    && (this.majorNumber == null || !this.majorNumber.equals(other.majorNumber))) {
+            if (!Objects.equals(this.majorNumber, other.getMajorNumber())) {
                 return false;
             }
-            if (this.minorNumber != other.minorNumber
-                    && (this.minorNumber == null || !this.minorNumber.equals(other.minorNumber))) {
+            if (!Objects.equals(this.minorNumber, other.getMinorNumber())) {
                 return false;
             }
-            if (this.microNumber != other.microNumber
-                    && (this.microNumber == null || !this.microNumber.equals(other.microNumber))) {
+            if (!Objects.equals(this.microNumber, other.getMicroNumber())) {
                 return false;
             }
-            if (this.update != other.update
-                    && (this.update == null || !this.update.equals(other.update))) {
-                return false;
-            }
-            if(this.wildfly != other.wildfly) {
-                return false;
-            }
-            return true;
+            return Objects.equals(this.update, other.getUpdate());
         }
 
         public boolean isWidlfy() {
@@ -581,9 +569,8 @@ public class WildflyPluginUtils {
         /**
          * {@inheritDoc}
          * <p>
-         * Compares the versions based on its major, minor, micro and update.
-         * Major number is the most significant. Implementation is consistent
-         * with {@link #equals(Object)}.
+         * Compares the versions based on its major, minor, micro and update. Major number is the most
+         * significant. Implementation is consistent with {@link #equals(Object)}.
          */
         @Override
         public int compareTo(Version o) {
@@ -591,12 +578,12 @@ public class WildflyPluginUtils {
             if (comparison != 0) {
                 return comparison;
             }
-            return update.compareTo(o.update);
+            return update.compareTo(o.getUpdate());
         }
 
         /**
-         * Compares the versions based on its major, minor, micro. Update field
-         * is ignored. Major number is the most significant.
+         * Compares the versions based on its major, minor, micro. Update field is ignored. Major number is
+         * the most significant.
          *
          * @param o version to compare with
          */
@@ -604,19 +591,19 @@ public class WildflyPluginUtils {
             if (o == null) {
                 return 1;
             }
-            if(this.wildfly != o.wildfly) {
-               return convertEAP(this).compareToIgnoreUpdate(convertEAP(o));
+            if (this.wildfly != o.isWidlfy()) {
+                return convertEAP(this).compareToIgnoreUpdate(convertEAP(o));
 
             }
-            int comparison = compare(majorNumber, o.majorNumber);
+            int comparison = compare(majorNumber, o.getMajorNumber());
             if (comparison != 0) {
                 return comparison;
             }
-            comparison = compare(minorNumber, o.minorNumber);
+            comparison = compare(minorNumber, o.getMinorNumber());
             if (comparison != 0) {
                 return comparison;
             }
-            return compare(microNumber, o.microNumber);
+            return compare(microNumber, o.getMicroNumber());
         }
 
         private Version convertEAP(Version version) {
@@ -632,8 +619,8 @@ public class WildflyPluginUtils {
         private int compare(String number1, String number2) {
             if (number1.length() != number2.length()) {
                 try {
-                    Integer i1 = Integer.parseInt(number1);
-                    Integer i2 = Integer.parseInt(number2);
+                    Integer i1 = Integer.valueOf(number1);
+                    Integer i2 = Integer.valueOf(number2);
                     return i1.compareTo(i2);
                 } catch (NumberFormatException ex) {
                     // compare as strings below

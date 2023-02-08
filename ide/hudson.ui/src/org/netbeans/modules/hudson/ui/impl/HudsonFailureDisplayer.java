@@ -249,7 +249,7 @@ public class HudsonFailureDisplayer extends FailureDataDisplayerImpl {
                         public @Override
                         void actionPerformed(ActionEvent e) {
                             // XXX should have utility API to parse stack traces
-                            final Matcher m = Pattern.compile("\tat (.+[.])[^.]+[.][^.]+[(]([^.]+[.]java):([0-9]+)[)]").matcher(frameInfo); //NOI18N
+                            final Matcher m = Pattern.compile("\tat (.+[.])[^.]+[.][^.]+[(]([^.]+[.]java):(\\d+)[)]").matcher(frameInfo); //NOI18N
                             if (m.matches()) {
                                 final String resource = m.group(1).replace('.', '/') + m.group(2);
                                 RP.post(new Runnable() {

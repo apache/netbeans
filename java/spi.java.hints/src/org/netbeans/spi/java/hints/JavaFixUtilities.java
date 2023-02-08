@@ -316,7 +316,7 @@ public class JavaFixUtilities {
         }
     }
 
-    private static java.util.regex.Pattern SPEC_VERSION = java.util.regex.Pattern.compile("[0-9]+(\\.[0-9]+)+");
+    private static java.util.regex.Pattern SPEC_VERSION = java.util.regex.Pattern.compile("\\d+(\\.\\d+)+");
 
     static SpecificationVersion computeSpecVersion(CompilationInfo info, Element el) {
         if (!Utilities.isJavadocSupported(info)) return null;

@@ -122,7 +122,7 @@ public class BuildNumberSjsam extends Task {
      * Pattern for which to look in the input file.
      */
     private static final Pattern PATTERN = Pattern.compile(
-            "access_manager-7_1-p([0-9]+)-rr-bin-b([0-9]+)-(\\w+).zip", 
+            "access_manager-7_1-p(\\d+)-rr-bin-b(\\d+)-(\\w+).zip", 
             Pattern.MULTILINE); // NOI18N
     
     /**

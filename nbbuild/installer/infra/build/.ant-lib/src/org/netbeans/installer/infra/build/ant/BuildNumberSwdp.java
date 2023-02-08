@@ -129,7 +129,7 @@ public class BuildNumberSwdp extends Task {
      * Pattern for which to look in the input file.
      */
     private static final Pattern PATTERN = Pattern.compile(            
-            "swdp-R([0-9]+)-([a-z]+)-bin-b([0-9]+)-windows-i586-(\\w+)\\.exe");//NOI18N
+            "swdp-R(\\d+)-([a-z]+)-bin-b(\\d+)-windows-i586-(\\w+)\\.exe");//NOI18N
     
     /**
      * Date format used in the input file.

@@ -53,7 +53,7 @@ public final class ServerUtilities {
     public static final TimeUnit ACTION_TIMEOUT_UNIT = TimeUnit.MILLISECONDS;
     public static final String GFV3_MODULES_DIR_NAME = "modules"; // NOI18N
     public static final String GFV3_LIB_DIR_NAME = "lib"; // NOI18N
-    public static final String GFV3_VERSION_MATCHER = "(?:-[0-9bSNAPHOT]+(?:\\.[0-9]+(?:_[0-9]+|)|).*|).jar"; // NOI18N
+    public static final String GFV3_VERSION_MATCHER = "(?:-[0-9bSNAPHOT]+(?:\\.\\d+(?:_\\d+|)|).*|).jar"; // NOI18N
     public static final String GFV3_JAR_MATCHER = "glassfish" + GFV3_VERSION_MATCHER; // NOI18N
     public static final String PROP_FIRST_RUN = "first_run";
     private GlassfishInstanceProvider gip;

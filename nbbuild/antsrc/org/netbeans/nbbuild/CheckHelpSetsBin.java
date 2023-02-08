@@ -109,7 +109,7 @@ public class CheckHelpSetsBin extends Task {
                 log(moduleJar + " is not a module", Project.MSG_WARN);
                 continue;
             }
-            m.put(codename.replaceFirst("/[0-9]+$", ""), new URLClassLoader(new URL[] {moduleJar.toURI().toURL()}, ClassLoader.getSystemClassLoader().getParent(), new NbDocsStreamHandler.Factory()));
+            m.put(codename.replaceFirst("/\\d+$", ""), new URLClassLoader(new URL[] {moduleJar.toURI().toURL()}, ClassLoader.getSystemClassLoader().getParent(), new NbDocsStreamHandler.Factory()));
         }
         return m;
     }

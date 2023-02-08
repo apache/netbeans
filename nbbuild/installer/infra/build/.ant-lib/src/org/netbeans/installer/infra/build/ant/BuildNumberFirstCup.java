@@ -130,7 +130,7 @@ public class BuildNumberFirstCup extends Task {
      * Pattern for which to look in the input file.
      */
     private static final Pattern PATTERN = Pattern.compile(
-            "firstcup-([0-9]+)_([0-9]+)-bin-b([0-9]+)-(\\w+).zip");//NOI18N
+            "firstcup-(\\d+)_(\\d+)-bin-b(\\d+)-(\\w+).zip");//NOI18N
     
     /**
      * Date format used in the input file.

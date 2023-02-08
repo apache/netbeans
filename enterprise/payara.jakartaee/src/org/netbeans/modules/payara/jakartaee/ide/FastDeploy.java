@@ -448,7 +448,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
         final PayaraModule commonSupport = dm.getCommonServerSupport();
         String url = commonSupport.getInstanceProperties().get(PayaraModule.URL_ATTR);
 
-        if (!url.trim().matches(".*:[0-9]+$"))  // NOI18N
+        if (!url.trim().matches(".*:\\d+$"))  // NOI18N
             return url.trim().endsWith("server");
 
         return true;
@@ -556,7 +556,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
         final PayaraModule commonSupport = dm.getCommonServerSupport();
         String url = commonSupport.getInstanceProperties().get(PayaraModule.URL_ATTR);
 
-        if (!url.trim().matches(".*:[0-9]+$")) // NOI18N
+        if (!url.trim().matches(".*:\\d+$")) // NOI18N
             return url.trim().endsWith("server");
         return !"false".equals(System.getProperty("glassfish.javaee.deployonsave"));
     }

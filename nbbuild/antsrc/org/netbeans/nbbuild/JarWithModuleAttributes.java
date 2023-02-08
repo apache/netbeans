@@ -44,7 +44,7 @@ public class JarWithModuleAttributes extends Jar {
     public JarWithModuleAttributes() {}
 
     private static final Pattern COMMA_SPACE = Pattern.compile(", *");
-    private static final Pattern IMPL_DEP = Pattern.compile(" *([\\w.]+)(/[0-9]+)? *= *(.+) *");
+    private static final Pattern IMPL_DEP = Pattern.compile(" *([\\w.]+)(/\\d+)? *= *(.+) *");
     
     private File stamp;
     /** Location of a stamp file to create and/or make newer than the JAR file.
@@ -219,7 +219,7 @@ public class JarWithModuleAttributes extends Jar {
                 }
             }
             String javaDep = getProject().getProperty("javac.target");
-            if (javaDep != null && javaDep.matches("[0-9]+(\\.[0-9]+)*")) {
+            if (javaDep != null && javaDep.matches("\\d+(\\.\\d+)*")) {
                 if (isOSGiMode) {
                     if (javaDep.matches("1\\.[0-5]")) {
                         added.addConfiguredAttribute(new Manifest.Attribute("Bundle-RequiredExecutionEnvironment", "J2SE-" + javaDep));
@@ -356,7 +356,7 @@ public class JarWithModuleAttributes extends Jar {
         return arr;
     }
     private static int parseInt(String v) throws NumberFormatException {
-        if (!v.matches("0|[1-9][0-9]*")) { // 050123 is a date, -12 is illegal, etc.
+        if (!v.matches("0|[1-9]\\d*")) { // 050123 is a date, -12 is illegal, etc.
             throw new NumberFormatException(v);
         }
         return Integer.parseInt(v);

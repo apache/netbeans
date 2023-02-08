@@ -59,7 +59,7 @@ public class ForkedJavaOverride extends Java {
     private static final String JIDENT = "[\\p{javaJavaIdentifierStart}][\\p{javaJavaIdentifierPart}]*"; // NOI18N
     private static final Pattern STACK_TRACE = Pattern.compile(
             "(.*?((?:" + JIDENT + "[.])*)(" + JIDENT + ")[.](?:" + JIDENT + "|<init>|<clinit>)" + // NOI18N
-            "[(])(((?:"+JIDENT+"(?:\\."+JIDENT+")*/)?" + JIDENT + "[.]java):([0-9]+)|Unknown Source)([)].*)"); // NOI18N
+            "[(])(((?:"+JIDENT+"(?:\\."+JIDENT+")*/)?" + JIDENT + "[.]java):(\\d+)|Unknown Source)([)].*)"); // NOI18N
 
     public ForkedJavaOverride() {
         redirector = new NbRedirector(this);

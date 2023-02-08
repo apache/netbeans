@@ -35,7 +35,7 @@ class AttachmentHyperlinkSupport {
     private static final int ATTACHMENT_HYPERLINK_START_FALLBACK  = PREFIX.indexOf("attachment");            //NOI18N
     private static final int ATTACHMENT_HYPERLINK_START_FALLBACK2  = PREFIX2.indexOf("attachment");            //NOI18N
     //private static final Pattern pattern = Pattern.compile(
-    //                 "([0-9]++)\\)[^\\r\\n]*+(?:[\\r\\n]++(.*+))?+"); //NOI18N
+    //                 "(\\d++)\\)[^\\r\\n]*+(?:[\\r\\n]++(.*+))?+"); //NOI18N
 
     private static final char CR = '\r';
     private static final char LF = '\n';

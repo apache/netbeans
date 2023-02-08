@@ -103,7 +103,7 @@ public class BuildNumberNbIde extends Task {
      * Pattern for which to look in the input file.
      */
     private static final Pattern PATTERN = Pattern.compile(
-            "netbeans-6_0-daily-bin-([0-9]+)-.*?\\.zip"); // NOI18N
+            "netbeans-6_0-daily-bin-(\\d+)-.*?\\.zip"); // NOI18N
 
     /**
      * Build number property suffix.

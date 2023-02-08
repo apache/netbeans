@@ -86,7 +86,7 @@ public class OQLQueryRepositoryTest {
     @Test
     public void testListNonMatchingCategories() {
         System.out.println("listNonMatchingCategories");
-        String pattern = "[0-9]+";
+        String pattern = "\\d+";
         List result = instance.listCategories(pattern);
         assertEquals(0, result.size());
     }

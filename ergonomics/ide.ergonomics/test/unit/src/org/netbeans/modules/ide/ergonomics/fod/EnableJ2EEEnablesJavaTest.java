@@ -55,7 +55,7 @@ public class EnableJ2EEEnablesJavaTest extends NbTestCase {
             gui(false).
             clusters("ergonomics.*").
             clusters(".*").
-            enableModules("ide[0-9]*", ".*").
+            enableModules("ide\\d*", ".*").
             honorAutoloadEager(true)
         );
         return test;

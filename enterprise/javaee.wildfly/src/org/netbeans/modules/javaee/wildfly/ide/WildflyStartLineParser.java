@@ -37,13 +37,13 @@ public class WildflyStartLineParser {
 
     private static final Pattern WILDFLY_10_STARTED_ML = Pattern.compile(".*WFLYSRV0025: WildFly .* \\d+(\\..*)* .* started in \\d+ms .*");
 
-    private static final Pattern EAP6_STARTED_ML = Pattern.compile(".*JBAS015874: JBoss EAP 6\\.[0-9]{0,2}?.[0-9]{0,2}?\\.GA .* \\d+ms .*");
+    private static final Pattern EAP6_STARTED_ML = Pattern.compile(".*JBAS015874: JBoss EAP 6\\.\\d{0,2}?.\\d{0,2}?\\.GA .* \\d+ms .*");
 
-    private static final Pattern EAP6_STARTING_ML = Pattern.compile(".*JBAS015899: JBoss EAP 6\\.[0-9]{0,2}?.[0-9]{0,2}?\\.GA .*");
+    private static final Pattern EAP6_STARTING_ML = Pattern.compile(".*JBAS015899: JBoss EAP 6\\.\\d{0,2}?.\\d{0,2}?\\.GA .*");
 
-    private static final Pattern EAP7_STARTED_ML = Pattern.compile(".*WFLYSRV0025: JBoss EAP 7\\.[0-9]{0,2}?.[0-9]{0,2}?\\.GA .* \\d+\\s?ms .*");
+    private static final Pattern EAP7_STARTED_ML = Pattern.compile(".*WFLYSRV0025: JBoss EAP 7\\.\\d{0,2}?.\\d{0,2}?\\.GA .* \\d+\\s?ms .*");
 
-    private static final Pattern EAP7_STARTING_ML = Pattern.compile(".*WFLYSRV0049: JBoss EAP 7\\.[0-9]{0,2}?.[0-9]{0,2}?\\.GA .*");
+    private static final Pattern EAP7_STARTING_ML = Pattern.compile(".*WFLYSRV0049: JBoss EAP 7\\.\\d{0,2}?.\\d{0,2}?\\.GA .*");
 
     /**
      * Check whether the given line indicates the wildfly server is starting.

@@ -511,7 +511,7 @@ public class OQLEngineTest {
                 return false;
             }
         });
-        output[0] = output[0].replaceAll("UID=301077366599181[0-9]*", "UID=301077366599181567");
+        output[0] = output[0].replaceAll("UID=301077366599181\\d*", "UID=301077366599181567");
         assertEquals(output[1], output[0]);
     }
 

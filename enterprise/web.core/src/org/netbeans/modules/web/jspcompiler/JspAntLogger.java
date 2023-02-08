@@ -51,7 +51,7 @@ public final class JspAntLogger extends AntLogger {
         "(.*)(org.apache.jasper.JasperException: file:)(.*)"); // NOI18N
 
     private static final Pattern FILE_PATTERN = Pattern.compile(
-        "([^\\(]*)\\(([0-9]+),([0-9]+)\\)"); // NOI18N
+        "([^\\(]*)\\((\\d+),(\\d+)\\)"); // NOI18N
 
     private static final String[] TASKS_OF_INTEREST = AntLogger.ALL_TASKS;
     

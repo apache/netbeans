@@ -44,7 +44,7 @@ public class UrlData {
            "(?://|@|([^ \\t]+)@)" + // alternate db name (optional)
            "([^:;/\\\\ \\t]+)" + // hostname (mandatory)
            "(?:\\\\([^ \\t:/;]+)|)" + // instance name (optional)
-           "(?::([0-9]+)|)" + // port (optional)
+           "(?::(\\d+)|)" + // port (optional)
            "(?:(?:/|:)([^:/;?&]+)|)((?:(?:;|\\?|&|:)" + // database (optional)
            "(?:[^;&]+)|)+)"; // delimited properties (optional) 
 

@@ -72,7 +72,7 @@ public class GenerateFilesLayout extends Task {
                 }
                 for (File xml : updateTracking.listFiles()) {
                     Document doc = XMLUtil.parse(new InputSource(xml.toURI().toString()), false, false, null, null);
-                    String cnb = LayerIndex.shortenCNB(doc.getDocumentElement().getAttribute("codename").replaceFirst("/[0-9]+$", ""));
+                    String cnb = LayerIndex.shortenCNB(doc.getDocumentElement().getAttribute("codename").replaceFirst("/\\d+$", ""));
                     maxlength = Math.max(maxlength, cnb.length());
                     NodeList nl = doc.getElementsByTagName("file");
                     for (int i = 0; i < nl.getLength(); i++) {

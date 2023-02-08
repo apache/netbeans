@@ -151,8 +151,8 @@ public class Test {
 
     /**
      * {@snippet :
-     * class HelloWorld1 {//@highlight regex="[0-9]+" type="highlighted"
-     *     public static void main(String... args) {// @replace region regex="[0-9]+" replacement="num"
+     * class HelloWorld1 {//@highlight regex="\\d+" type="highlighted"
+     *     public static void main(String... args) {// @replace region regex="\\d+" replacement="num"
      *         System.out.println(9);  // @replace region = "here" regex="[A-Z]+" replacement="UPPER"
      *         System.out.println(99);
      *         System.out.println("ABC"); //@end region= "here"

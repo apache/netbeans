@@ -265,7 +265,7 @@ public class SearchForJavaAction extends WizardAction {
     
     private static File getCanonicalFile(final File file) {
         File location = file;
-        if (SystemUtils.isWindows() && location.getAbsolutePath().matches(".*~[0-9]+.*")) {
+        if (SystemUtils.isWindows() && location.getAbsolutePath().matches(".*~\\d+.*")) {
             //Issue #166036
             try {
                 // if C:\Program Files == C:\Progra~1, get canonical representation

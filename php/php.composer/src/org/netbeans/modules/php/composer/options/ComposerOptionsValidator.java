@@ -31,7 +31,7 @@ public final class ComposerOptionsValidator {
 
     private static final Pattern VENDOR_REGEX = Pattern.compile("^[a-z0-9-]+$"); // NOI18N
     private static final Pattern EMAIL_REGEX = Pattern.compile("^\\w+[.\\w\\-]*@\\w+[.\\w\\-]*\\.[a-z]{2,}$", Pattern.CASE_INSENSITIVE); // NOI18N
-    private static final Pattern AUTHOR_NAME_REGEX = Pattern.compile("^[^\\d]+$"); // NOI18N
+    private static final Pattern AUTHOR_NAME_REGEX = Pattern.compile("^\\D+$"); // NOI18N
 
 
     private final ValidationResult result = new ValidationResult();

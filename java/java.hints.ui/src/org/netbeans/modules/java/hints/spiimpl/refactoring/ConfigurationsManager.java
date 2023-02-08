@@ -82,7 +82,7 @@ public class ConfigurationsManager {
             String[] configList = prefs.childrenNames();
             //fix sorting for JDK migrators
             List<String> sl = Arrays.asList(configList);
-            final String exp = "([0-9]+)$"; //NOI18N
+            final String exp = "(\\d+)$"; //NOI18N
 
             sl.sort(new Comparator<String>() {
                 @Override

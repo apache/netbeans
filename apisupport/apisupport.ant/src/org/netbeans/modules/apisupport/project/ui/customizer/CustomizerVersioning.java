@@ -181,13 +181,13 @@ final class CustomizerVersioning extends NbPropertyPanel.Single {
         } else if (exportOnlyToFriend.isSelected() && getPublicPackagesModel().getSelectedPackages().size() < 1) {
             category.setErrorMessage(getMessage("MSG_PublicPackageMustBeSelected"));
             category.setValid(false);
-        } else if (implVerValue.getText().matches(".*[^0-9].*")) { // NOI18N
+        } else if (implVerValue.getText().matches(".*\\D.*")) { // NOI18N
             category.setErrorMessage(getMessage("MSG_integer_impl_version_recommended"));
             category.setValid(true);
         } else {
             boolean ok = true;
             String text = specificationVerValue.getText();
-            if (text != null && !text.isEmpty() && !text.matches(/* nb-module-project3.xsd#specificationVersionType */"(0|[1-9][0-9]*)([.](0|[1-9][0-9]*))*")) {
+            if (text != null && !text.isEmpty() && !text.matches(/* nb-module-project3.xsd#specificationVersionType */"(0|[1-9]\\d*)([.](0|[1-9]\\d*))*")) {
                 ok = false;
             }
             if (ok) {

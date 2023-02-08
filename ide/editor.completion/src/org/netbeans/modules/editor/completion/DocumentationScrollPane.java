@@ -462,7 +462,7 @@ public class DocumentationScrollPane extends JScrollPane {
         public void hyperlinkUpdate(HyperlinkEvent e) {
             if (e != null && e.getEventType() == HyperlinkEvent.EventType.ACTIVATED && e.getDescription().startsWith("copy.snippet")) {
                 Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                String snippetCount = e.getDescription().replaceAll("[^0-9]", "");
+                String snippetCount = e.getDescription().replaceAll("\\D", "");
                 HTMLDocument HtmlDoc = (HTMLDocument) e.getSourceElement().getDocument();
                 HTMLDocView source = (HTMLDocView) e.getSource();
                 source.getText();

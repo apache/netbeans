@@ -47,7 +47,7 @@ public final class TldAntLogger extends AntLogger {
         "(.*)(org.apache.jasper.JasperException:)(.*)( file )(.*)"); // NOI18N
 
     private static final Pattern FILE_PATTERN = Pattern.compile(
-        "([^\\(]*)(: )\\(line ([0-9]+), col ([0-9-]+)\\)"); // NOI18N
+        "([^\\(]*)(: )\\(line (\\d+), col ([0-9-]+)\\)"); // NOI18N
 
     private static final String[] TASKS_OF_INTEREST = AntLogger.ALL_TASKS;
     

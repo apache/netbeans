@@ -55,7 +55,7 @@ public class Utils {
     public static final int DELAY = 50;
     public static final String NEWLINE_REGEXP = "(?:\n\r|\r\n|\n|\r)";
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
-    private static final Pattern PATTERN = Pattern.compile("(20[0-9]{10})");
+    private static final Pattern PATTERN = Pattern.compile("(20\\d{10})");
     public static final String NB_DIR_NAME = "NetBeans";
     public static final String GF2_DIR_NAME = "GlassFish2";
     public static final String GF2_PRELUDE_DIR_NAME = "gf-prelude";

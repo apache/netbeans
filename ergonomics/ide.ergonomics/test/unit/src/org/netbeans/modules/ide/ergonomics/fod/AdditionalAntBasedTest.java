@@ -54,7 +54,7 @@ implements LookupListener {
             gui(false).
             clusters("ergonomics.*").
             clusters(".*").
-            enableModules("ide[0-9]*", ".*")
+            enableModules("ide\\d*", ".*")
         );
     }
 

@@ -42,7 +42,7 @@ public class SourceLevelChecker {
      */
     public static boolean isSourceLevel14orLower(Project project) {
         String srcLevel = getSourceLevel(project);
-        return srcLevel != null ? srcLevel.matches("1\\.[0-4]([^0-9].*)?"): false;//only 1.0-1.4 should return true, also 1.1.3, 1.1_3 should return true, 1.10>1.9 and return false.
+        return srcLevel != null ? srcLevel.matches("1\\.[0-4](\\D.*)?"): false;//only 1.0-1.4 should return true, also 1.1.3, 1.1_3 should return true, 1.10>1.9 and return false.
     }
     
     /**

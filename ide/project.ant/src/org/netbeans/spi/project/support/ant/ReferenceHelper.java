@@ -1187,10 +1187,10 @@ public final class ReferenceHelper {
     }
     
     
-    private static final Pattern FOREIGN_FILE_REFERENCE = Pattern.compile("\\$\\{reference\\.([^.${}]+)\\.([^.${}]+)\\.([\\d&&[^.${}]]+)\\}"); // NOI18N
-    private static final Pattern FOREIGN_FILE_REFERENCE_OLD = Pattern.compile("\\$\\{reference\\.([^.${}]+)\\.([^.${}]+)\\}"); // NOI18N
-    private static final Pattern FOREIGN_PLAIN_FILE_REFERENCE = Pattern.compile("\\$\\{file\\.reference\\.([^${}]+)\\}"); // NOI18N
-    private static final Pattern LIBRARY_REFERENCE = Pattern.compile("\\$\\{libs\\.([^${}]+)\\.[^${}]+\\}"); // NOI18N
+    private static final Pattern FOREIGN_FILE_REFERENCE = Pattern.compile("\\$\\{reference\\.([^.${}]+)\\.([^.${}]+)\\.([\\d&&[^.${}]]+)}"); // NOI18N
+    private static final Pattern FOREIGN_FILE_REFERENCE_OLD = Pattern.compile("\\$\\{reference\\.([^.${}]+)\\.([^.${}]+)}"); // NOI18N
+    private static final Pattern FOREIGN_PLAIN_FILE_REFERENCE = Pattern.compile("\\$\\{file\\.reference\\.([^${}]+)}"); // NOI18N
+    private static final Pattern LIBRARY_REFERENCE = Pattern.compile("\\$\\{libs\\.([^${}]+)\\.[^${}]+}"); // NOI18N
     
     /**
      * Try to find an <code>AntArtifact</code> object corresponding to a given

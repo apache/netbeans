@@ -76,14 +76,14 @@ public class JavaOutputListenerProvider implements OutputProcessor {
     private static final String GROUP_LINE_NR = "linenr";
     private static final String GROUP_TEXT = "text";
     private static final String GROUP_DRIVE_NAME = "drive";
-    private static final Pattern windowsDriveInfoPattern = Pattern.compile("(?:\\[INFO\\] )?Compiling \\d+ source files? to (?<" + GROUP_DRIVE_NAME + ">[A-Za-z]:)\\\\.+");
+    private static final Pattern windowsDriveInfoPattern = Pattern.compile("(?:\\[INFO] )?Compiling \\d+ source files? to (?<" + GROUP_DRIVE_NAME + ">[A-Za-z]:)\\\\.+");
     
     /** Creates a new instance of JavaOutputListenerProvider */
     public JavaOutputListenerProvider(RunConfig config) {
         this.config = config;
         //[javac] required because of forked compilation
         //DOTALL seems to fix MEVENIDE-455 on windows. one of the characters seems to be a some kind of newline and that's why the line doesnt' get matched otherwise.
-        failPattern = Pattern.compile("\\s*(?:\\[(WARNING|WARN|ERROR)\\])?(?:\\[javac\\])?(?:Compilation failure)?\\s*(?<" + GROUP_CLAZZ_NAME + ">.*)\\.java\\:\\[(?<" + GROUP_LINE_NR + ">\\d*),(\\d*)\\] (?<" + GROUP_TEXT + ">.*)", Pattern.DOTALL); //NOI18N
+        failPattern = Pattern.compile("\\s*(?:\\[(WARNING|WARN|ERROR)])?(?:\\[javac])?(?:Compilation failure)?\\s*(?<" + GROUP_CLAZZ_NAME + ">.*)\\.java:\\[(?<" + GROUP_LINE_NR + ">\\d*),(\\d*)] (?<" + GROUP_TEXT + ">.*)", Pattern.DOTALL); //NOI18N
     }
     
     private static final Pattern COMPILER_PROBLEM = Pattern.compile(".*module-info\\.java:.*module not found: .*");

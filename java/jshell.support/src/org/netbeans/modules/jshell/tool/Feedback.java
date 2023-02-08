@@ -57,7 +57,7 @@ import static java.util.stream.Collectors.toMap;
 class Feedback {
 
     // Patern for substituted fields within a customized format string
-    private static final Pattern FIELD_PATTERN = Pattern.compile("\\{(.*?)\\}");
+    private static final Pattern FIELD_PATTERN = Pattern.compile("\\{(.*?)}");
 
     // Internal field name for truncation length
     private static final String TRUNCATION_FIELD = "<truncation>";

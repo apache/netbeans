@@ -115,7 +115,7 @@ public class ConvertClusterPath extends Task {
                             }
                         });
                         if (alternate == null) {
-                            Matcher matcher = Pattern.compile("^\\$\\{nbplatform\\.(.*)\\.netbeans\\.dest\\.dir\\}$").matcher(parent.getName());
+                            Matcher matcher = Pattern.compile("^\\$\\{nbplatform\\.(.*)\\.netbeans\\.dest\\.dir}$").matcher(parent.getName());
                             if (matcher.matches()) {
                                 throw new BuildException("Unknown platform name '" + matcher.group(1) + "'.", getLocation());
                             } else {

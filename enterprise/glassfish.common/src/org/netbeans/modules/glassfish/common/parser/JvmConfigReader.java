@@ -149,7 +149,7 @@ public class JvmConfigReader extends TreeParser.NodeReader {
             }
         }
     }
-    private Pattern pattern = Pattern.compile("\\$\\{([^}]+)\\}"); // NOI18N
+    private Pattern pattern = Pattern.compile("\\$\\{([^}]+)}"); // NOI18N
 
     private String doSub(String value) {
         try {

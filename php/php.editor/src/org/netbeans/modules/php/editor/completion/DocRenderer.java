@@ -237,7 +237,7 @@ final class DocRenderer {
         // #183594
         private static final Pattern LIST_PATTERN = Pattern.compile("(\r?\n)(?=([-+#o]\\s|\\d\\.?\\s))"); // NOI18N
         private static final Pattern DESC_HEADER_PATTERN = Pattern.compile("(\r?\n)*(.*?((\r?\n){2,}|\\.\\s*\r?\n)|.*)", Pattern.DOTALL); // NOI18N
-        private static final Pattern INLINE_INHERITDOC_PATTERN = Pattern.compile("\\{@inheritdoc *\\}", Pattern.CASE_INSENSITIVE); // NOI18N
+        private static final Pattern INLINE_INHERITDOC_PATTERN = Pattern.compile("\\{@inheritdoc *}", Pattern.CASE_INSENSITIVE); // NOI18N
         private static final ArrayList<String> LINK_TAGS = new ArrayList<>();
         // see: https://pear.php.net/package/PhpDocumentor/docs/latest/phpDocumentor/tutorial_tags.inlineinheritdoc.pkg.html
         // phpdocumentor separates a doc comment into a header and description.

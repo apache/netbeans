@@ -105,7 +105,7 @@ public class Utils {
     /**
      * Pattern that matches strings like ${com.sun.aas.instanceRoot}
      */
-    private static Pattern pattern = Pattern.compile("\\$\\{([^}]+)\\}"); // NOI18N
+    private static Pattern pattern = Pattern.compile("\\$\\{([^}]+)}"); // NOI18N
     
     /**
      * Utility method that finds all occurrences of variable references and

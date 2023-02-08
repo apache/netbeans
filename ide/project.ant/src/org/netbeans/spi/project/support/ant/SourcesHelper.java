@@ -245,7 +245,7 @@ public final class SourcesHelper {
             if (patterns == null) {
                 return null;
             }
-            if (patterns.matches("\\$\\{[^}]+\\}")) { // NOI18N
+            if (patterns.matches("\\$\\{[^}]+}")) { // NOI18N
                 // Unevaluated single property, treat like null.
                 return null;
             }

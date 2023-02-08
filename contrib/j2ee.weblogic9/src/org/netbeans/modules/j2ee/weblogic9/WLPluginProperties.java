@@ -110,7 +110,7 @@ public final class WLPluginProperties {
         Pattern.compile("\\s*(set) JAVA_VENDOR\\s*=(.*)");
     
     private static final Pattern SHELL_JAVA_VENDOR_CHECK_PATTERN = 
-        Pattern.compile("\\s*if\\s+\\[\\s+\"\\$\\{JAVA_VENDOR\\}\"\\s*=\\s*\"([^\"]+)\"\\s*\\].*");
+        Pattern.compile("\\s*if\\s+\\[\\s+\"\\$\\{JAVA_VENDOR}\"\\s*=\\s*\"([^\"]+)\"\\s*].*");
     
     private static final Pattern SHELL_BEA_JAVA_HOME_PATTERN = 
         Pattern.compile("\\s*(export)?\\s*BEA_JAVA_HOME\\s*=(.*)");

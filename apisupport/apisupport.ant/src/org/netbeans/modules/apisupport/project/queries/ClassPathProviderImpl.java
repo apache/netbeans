@@ -496,7 +496,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider {
                     CPI() {
                         project.evaluator().addPropertyChangeListener(WeakListeners.propertyChange(this, project.evaluator()));
                         project.getHelper().addAntProjectListener(WeakListeners.create(AntProjectListener.class, this, project.getHelper()));
-                        Matcher m = Pattern.compile("\\$\\{([^{}]+)\\}").matcher(cpS);
+                        Matcher m = Pattern.compile("\\$\\{([^{}]+)}").matcher(cpS);
                         while (m.find()) {
                             relevantProperties.add(m.group(1));
                         }

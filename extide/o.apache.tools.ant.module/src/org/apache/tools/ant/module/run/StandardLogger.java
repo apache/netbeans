@@ -478,7 +478,7 @@ public final class StandardLogger extends AntLogger {
         getSessionData(event.getSession()).lastHyperlink = null;
     }
 
-    private static final Pattern UNIMPORTANT_MESSAGE = Pattern.compile("\\[deprecation\\]|warning|stopped|cannot find symbol|wrong ELF class");
+    private static final Pattern UNIMPORTANT_MESSAGE = Pattern.compile("\\[deprecation]|warning|stopped|cannot find symbol|wrong ELF class");
     public static boolean isImportant(String message) {
         if (message.length() >= LOGGER_MAX_LINE_LENGTH) { // too long message, probably coming from user, so not really important
             return false;

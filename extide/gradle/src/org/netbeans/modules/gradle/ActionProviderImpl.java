@@ -111,7 +111,7 @@ public class ActionProviderImpl implements ActionProvider {
     public static final String COMMAND_DL_JAVADOC = "download.javadoc"; //NOI18N
     public static final String COMMAND_DL_SOURCES_JAVADOC = "download.sourcesanddoc"; //NOI18N
 
-    private static final Pattern INPUT_PROP_REGEXP = Pattern.compile("\\$\\{input:([ \\w]+)(,([^\\}]+))?\\}"); //NOI18N
+    private static final Pattern INPUT_PROP_REGEXP = Pattern.compile("\\$\\{input:([ \\w]+)(,([^}]+))?}"); //NOI18N
 
     private final Project project;
 

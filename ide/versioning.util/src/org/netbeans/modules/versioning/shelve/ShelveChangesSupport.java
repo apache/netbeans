@@ -163,7 +163,7 @@ public abstract class ShelveChangesSupport {
         private final Timer timer;
         private final ShelveChangesPanel panel;
         private final Dialog dialog;
-        private static final Pattern p = Pattern.compile("([\\\\/:\\*\\?\"\\<\\>\\|\\s])"); //NOI18N
+        private static final Pattern p = Pattern.compile("([\\\\/:\\*\\?\"<>\\|\\s])"); //NOI18N
 
         private PatchNameListener (ShelveChangesPanel panel, JButton okButton, Dialog dialog) {
             this.panel = panel;

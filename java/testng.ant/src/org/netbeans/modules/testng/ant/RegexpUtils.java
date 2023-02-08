@@ -151,10 +151,10 @@ final class RegexpUtils {
     static final String ADD_FAILURE_PREFIX = "addFailure";      //NOI18N
     static final String ADD_ERROR_PREFIX = "addError";          //NOI18N
 
-    static final String COMPARISON_REGEX = ".*expected:<(.*)\\[(.*)\\](.*)> but was:<(.*)\\[(.*)\\](.*)>$"; //NOI18N
+    static final String COMPARISON_REGEX = ".*expected:<(.*)\\[(.*)](.*)> but was:<(.*)\\[(.*)](.*)>$"; //NOI18N
     static final String COMPARISON_HIDDEN_REGEX = ".*expected:<(.*)> but was:<(.*)>$"; //NOI18N
-    static final String COMPARISON_AFTER_65_REGEX = ".*expected \\[(.*)\\[(.*)\\](.*)\\] but found \\[(.*)\\[(.*)\\](.*)\\]$"; //NOI18N
-    static final String COMPARISON_AFTER_65_HIDDEN_REGEX = ".*expected \\[(.*)\\] but found \\[(.*)\\]$"; //NOI18N
+    static final String COMPARISON_AFTER_65_REGEX = ".*expected \\[(.*)\\[(.*)](.*)] but found \\[(.*)\\[(.*)](.*)]$"; //NOI18N
+    static final String COMPARISON_AFTER_65_HIDDEN_REGEX = ".*expected \\[(.*)] but found \\[(.*)]$"; //NOI18N
 
     /**
      * Regexp matching part of a Java task's invocation debug message

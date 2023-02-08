@@ -673,7 +673,7 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
                                     Element includesE = XMLUtil.findElement(folderE, "includes", Util.NAMESPACE); // NOI18N
                                     if (includesE != null) {
                                         incl = evaluator.evaluate(XMLUtil.findText(includesE));
-                                        if (incl != null && incl.matches("\\$\\{[^}]+\\}")) { // NOI18N
+                                        if (incl != null && incl.matches("\\$\\{[^}]+}")) { // NOI18N
                                             // Clearly intended to mean "include everything".
                                             incl = null;
                                         }

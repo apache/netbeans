@@ -81,13 +81,13 @@ public class TestOutputListenerProvider implements OutputProcessor {
     
     /** Creates a new instance of TestOutputListenerProvider */
     public TestOutputListenerProvider() {
-        failSeparatePattern = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*(?:\\[surefire\\] )?Tests run.*[<]* FAILURE[!]*(.*)", Pattern.DOTALL); //NOI18N
-        failWindowsPattern1 = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*(?:\\[surefire\\] )?Tests run.*", Pattern.DOTALL); //NOI18N
-        failWindowsPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+\\])?.*[<]* FAILURE [!]*.*", Pattern.DOTALL); //NOI18N
-        runningPattern = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*(?:\\[surefire\\] )?Running (.*)", Pattern.DOTALL); //NOI18N
-        outDirPattern = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*(?:Surefire)?(?:Failsafe)? report directory\\: (.*)", Pattern.DOTALL); //NOI18N
-        outDirPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*Setting reports dir\\: (.*)", Pattern.DOTALL); //NOI18N
-        runningPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*---\\smaven-surefire-plugin:\\d+(?:.\\d+)+[-\\w]*:test\\s.*", Pattern.DOTALL);
+        failSeparatePattern = Pattern.compile("(?:\\[[a-zA-Z]+])?\\s*(?:\\[surefire] )?Tests run.*[<]* FAILURE[!]*(.*)", Pattern.DOTALL); //NOI18N
+        failWindowsPattern1 = Pattern.compile("(?:\\[[a-zA-Z]+])?\\s*(?:\\[surefire] )?Tests run.*", Pattern.DOTALL); //NOI18N
+        failWindowsPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+])?.*[<]* FAILURE [!]*.*", Pattern.DOTALL); //NOI18N
+        runningPattern = Pattern.compile("(?:\\[[a-zA-Z]+])?\\s*(?:\\[surefire] )?Running (.*)", Pattern.DOTALL); //NOI18N
+        outDirPattern = Pattern.compile("(?:\\[[a-zA-Z]+])?\\s*(?:Surefire)?(?:Failsafe)? report directory\\: (.*)", Pattern.DOTALL); //NOI18N
+        outDirPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+])?\\s*Setting reports dir: (.*)", Pattern.DOTALL); //NOI18N
+        runningPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+])?\\s*---\\smaven-surefire-plugin:\\d+(?:.\\d+)+[-\\w]*:test\\s.*", Pattern.DOTALL);
     }
     
     public String[] getWatchedGoals() {

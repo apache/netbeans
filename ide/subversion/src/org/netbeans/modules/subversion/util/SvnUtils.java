@@ -1309,8 +1309,8 @@ public class SvnUtils {
 
         exp = exp.replaceAll("\\$", "\\\\\\$"); // NOI18N
         exp = exp.replaceAll("\\^", "\\\\^");   // NOI18N
-        exp = exp.replaceAll("\\<", "\\\\<");   // NOI18N
-        exp = exp.replaceAll("\\>", "\\\\>");   // NOI18N
+        exp = exp.replaceAll("<", "\\\\<");   // NOI18N
+        exp = exp.replaceAll(">", "\\\\>");   // NOI18N
         exp = patchRegExpClassCharacters(exp);
         exp = exp.replaceAll("\\{", "\\\\{");   // NOI18N
         exp = exp.replaceAll("\\}", "\\\\}");   // NOI18N

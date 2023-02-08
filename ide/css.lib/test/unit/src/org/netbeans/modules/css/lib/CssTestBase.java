@@ -31,6 +31,7 @@ import org.netbeans.modules.css.lib.api.Node;
 import org.netbeans.modules.css.lib.api.NodeType;
 import org.netbeans.modules.css.lib.api.NodeVisitor;
 import org.netbeans.modules.css.lib.api.ProblemDescription;
+import org.netbeans.modules.css.lib.api.properties.GrammarElement;
 import org.netbeans.modules.css.lib.api.properties.GrammarResolver;
 import org.netbeans.modules.css.lib.api.properties.GroupGrammarElement;
 import org.netbeans.modules.css.lib.api.properties.PropertyDefinition;
@@ -204,7 +205,7 @@ public class CssTestBase extends CslTestBase {
             System.out.println("Tokens:");
             System.out.println(dumpList(pv.getTokens()));
             System.out.println("Grammar:");
-            System.out.println(tree.toString2(0));
+            System.out.println(dumpGETree(tree));
         }
         if (PRINT_GRAMMAR_RESOLVE_TIMES) {
             System.out.println(String.format("Input '%s' resolved in %s ms.", inputText, c - a));
@@ -324,6 +325,47 @@ public class CssTestBase extends CslTestBase {
         pw.println();
         for (org.netbeans.modules.css.lib.api.properties.Node c : tree.children()) {
             dump(c, level + 1, pw);
+        }
+    }
+
+    protected static final String dumpGETree(GrammarElement ge) {
+        StringBuilder result = new StringBuilder();
+        dumpTree(result, ge, new ArrayList<>());
+        return result.toString();
+    }
+
+    private static final void dumpTree(StringBuilder sb, GrammarElement ge, List<GrammarElement> parentList) {
+        int level = parentList.size();
+        if (ge instanceof GroupGrammarElement) {
+            List<GrammarElement> newParentList = new ArrayList<>(parentList.size() + 1);
+            newParentList.addAll(parentList);
+            newParentList.add(ge);
+            String heading = ge.toString();
+            heading = heading.substring(0, heading.length() - 1);
+            indentString(sb, level);
+            sb.append(heading);
+            if (ge.getName() != null) {
+                sb.append("(").append(ge.getName()).append(") "); //NOI18N
+            }
+
+            sb.append('\n');
+            if (!parentList.contains(ge)) {
+                for (GrammarElement e : ((GroupGrammarElement) ge).elements()) {
+                    dumpTree(sb, e, newParentList);
+                }
+                indentString(sb, level);
+                sb.append("]\n");
+            }
+        } else {
+            indentString(sb, level);
+            sb.append(ge.toString());
+            sb.append("\n");
+        }
+    }
+
+    private static void indentString(StringBuilder sb, int level) {
+        for (int i = 0; i < level; i++) {
+            sb.append("  ");
         }
     }
 }

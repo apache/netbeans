@@ -36,6 +36,9 @@
 //    from the module directory (ide/css.lib)
 // 3. Rerun unittests
 // 4. Commit Css3.g together with generated Css3Lexer.java and Css3Parser.java
+//
+// INFO: It is known, that the grammar does not compile without warnings
+//
 
 grammar Css3;
 
@@ -895,14 +898,15 @@ pseudo
                 )
                 | {isScssSource()}? sass_interpolation_expression_var
                 | ( NOT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
-                | {tokenNameEquals("is") || tokenNameEquals("where")}? ( IDENT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
+                | {tokenNameEquals("is") || tokenNameEquals("where") || tokenNameEquals("has")}? ( IDENT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
                 | ({isLessSource()}? {tokenNameEquals("extend")}? IDENT ws? LPAREN ws? selectorsGroup? RPAREN)
              ) 
     ;
 
 propertyDeclaration
     :
-{isCssPreprocessorSource()}? STAR? property ws? COLON ws? cp_propertyValue //cp_expression may contain the IMPORT_SYM
+      {isCssPreprocessorSource() && !tokenNameStartsWith("--")}? STAR? property ws? COLON ws? cp_propertyValue //cp_expression may contain the IMPORT_SYM
+    | {tokenNameStartsWith("--")}? property ws? COLON ws? componentValueOuter?
     | STAR? property ws? COLON ws? propertyValue (ws? prio)?
     
     ;
@@ -931,6 +935,20 @@ expressionPredicate
     :
     ( ~ (AT_IDENT | STAR | SOLIDUS | LBRACE | SEMI | RBRACE | SASS_VAR) )+ ( SEMI | RBRACE )
     ;
+
+preservedToken: ~ (LPAREN | LBRACE | LBRACKET | RPAREN | RBRACE | RBRACKET);
+
+preservedTokenTopLevel: ~ (LPAREN | LBRACE | LBRACKET | RPAREN | RBRACE | RBRACKET | SEMI );
+
+braceBlock: LBRACE componentValue+ RBRACE;
+
+bracketBlock: LBRACKET componentValue+ RBRACKET;
+
+parenBlock: LPAREN componentValue+ RPAREN;
+
+componentValue: parenBlock | braceBlock | bracketBlock | (functionName ws? LPAREN) => function | preservedToken;
+
+componentValueOuter: (parenBlock | braceBlock | bracketBlock | (functionName ws? LPAREN) => function | preservedTokenTopLevel) componentValueOuter*;
 
 //recovery: syncs the parser to the first identifier in the token input stream or the closing curly bracket
 //since the rule matches epsilon it will always be entered

@@ -134,7 +134,7 @@ public final class NodeUtil {
 
     public static Node getAncestorByType(Node node, final NodeType type) {
         AtomicReference<Node> found = new AtomicReference<>();
-        NodeVisitor visitor = new NodeVisitor<AtomicReference<Node>>(found) {
+        NodeVisitor<AtomicReference<Node>> visitor = new NodeVisitor<AtomicReference<Node>>(found) {
 
             @Override
             public boolean visit(Node node) {

@@ -134,7 +134,7 @@ public class RegistriesManagerImpl implements RegistriesManager {
             
             FileUtils.unjar(archive, archiveDir);
             FileUtils.modifyFile(archiveRegistryXml,
-                    "(\\>)resource:(.*?\\<\\/)",
+                    "(>)resource:(.*?<\\/)",
                     "$1" + componentsDir.toURI() + "$2", true,
                     StringUtils.ENCODING_UTF8);
             

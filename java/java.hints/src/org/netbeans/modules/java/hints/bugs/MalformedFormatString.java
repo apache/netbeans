@@ -98,7 +98,7 @@ public class MalformedFormatString {
      * taken from JDK's Formatter
      */
     private static final String formatSpecifier
-        = "%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])"; // NOI18N
+        = "%(\\d+\\$)?([-#+ 0,(<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])"; // NOI18N
     
     private static final Pattern formatPattern = Pattern.compile(formatSpecifier);
     

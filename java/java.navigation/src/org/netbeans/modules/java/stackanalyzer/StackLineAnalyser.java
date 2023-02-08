@@ -60,7 +60,7 @@ class StackLineAnalyser {
         "at\\s" +                                       //  initial at // NOI18N
         "("+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" + // optional module name // NOI18N
         "(("+IDENTIFIER+"(\\."+IDENTIFIER+")*)\\.)?("+IDENTIFIER+")" + // class name // NOI18N
-        "\\.("+IDENTIFIER+"|\\<init\\>|\\<clinit\\>)\\((?:"+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" +IDENTIFIER+"\\.java" + // method and file name // NOI18N
+        "\\.("+IDENTIFIER+"|<init>|<clinit>)\\((?:"+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" +IDENTIFIER+"\\.java" + // method and file name // NOI18N
         "\\:(\\d*)\\)");                              // line number // NOI18N
 
     static boolean matches(String line) {

@@ -352,8 +352,8 @@ public class MasterDetailGenerator {
      * @return regular expression for the mark of the given name.
      */
     private static String markerRegexp(String name, boolean java) {
-        String open = java ? "/\\*[\\*\\s]*" : "\\<\\!\\-\\-\\s*"; // NOI18N
-        String close = java ? "[\\*\\s]*\\*/" : "\\s*\\-\\-\\>"; // NOI18N
+        String open = java ? "/\\*[\\*\\s]*" : "<\\!\\-\\-\\s*"; // NOI18N
+        String close = java ? "[\\*\\s]*\\*/" : "\\s*\\-\\->"; // NOI18N
         return open + Pattern.quote(name) + close;
     }
 

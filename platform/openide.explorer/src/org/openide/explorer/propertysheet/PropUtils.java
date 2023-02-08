@@ -1355,8 +1355,8 @@ final class PropUtils {
     static String createHtmlTooltip(String title, String s) {
         boolean wasHtml = false;
 
-        if (s.matches("\\<(html|HTML)\\>.*\\<\\/(html|HTML)\\>")) { // NOI18N
-            s = s.replaceAll("\\<\\/{0,1}(html|HTML)\\>", ""); // NOI18N
+        if (s.matches("<(html|HTML)>.*<\\/(html|HTML)>")) { // NOI18N
+            s = s.replaceAll("<\\/{0,1}(html|HTML)>", ""); // NOI18N
             wasHtml = true;
         }
 

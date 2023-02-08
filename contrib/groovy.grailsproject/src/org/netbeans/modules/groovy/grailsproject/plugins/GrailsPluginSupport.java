@@ -464,7 +464,7 @@ public class GrailsPluginSupport {
          * ---------------------------------------
          * name version -- description
         */
-        private static final Pattern PLUGIN_PATTERN = Pattern.compile("(.+)[\\s]+<(.+)>[\\s]+--(.+)"); // NOI18N
+        private static final Pattern PLUGIN_PATTERN = Pattern.compile("(.+)\\s+<(.+)>\\s+--(.+)"); // NOI18N
 
         @Override
         public void processLine(String line) {

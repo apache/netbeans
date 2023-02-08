@@ -1368,7 +1368,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
 
         @Override public void actionPerformed(ActionEvent e) {
             String replace = TestChecker.PROP_SKIP_TEST + "=true"; //NOI18N
-            String pattern = ".*" + TestChecker.PROP_SKIP_TEST + "([\\s]*=[\\s]*[\\S]+).*"; //NOI18N
+            String pattern = ".*" + TestChecker.PROP_SKIP_TEST + "(\\s*=\\s*[\\S]+).*"; //NOI18N
             replacePattern(pattern, area, replace, true);
         }
     }
@@ -1383,7 +1383,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
 
         @Override public void actionPerformed(ActionEvent e) {
             String replace = Constants.ACTION_PROPERTY_JPDALISTEN + "=maven"; //NOI18N
-            String pattern = ".*" + Constants.ACTION_PROPERTY_JPDALISTEN + "([\\s]*=[\\s]*[\\S]+).*"; //NOI18N
+            String pattern = ".*" + Constants.ACTION_PROPERTY_JPDALISTEN + "(\\s*=\\s*[\\S]+).*"; //NOI18N
             replacePattern(pattern, area, replace, true);
         }
     }

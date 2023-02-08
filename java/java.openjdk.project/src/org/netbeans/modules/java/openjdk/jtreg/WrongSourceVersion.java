@@ -54,7 +54,7 @@ public class WrongSourceVersion {
             if (!"compile".equals(tag.getName())) {
                 continue;
             }
-            String[] params = tag.getValue().split("[\\s]+");
+            String[] params = tag.getValue().split("\\s+");
             boolean hasEnablePreview = Arrays.stream(params).anyMatch(s -> "--enable-preview".equals(s));
             if (hasEnablePreview) {
                 for (int i = 0; i < params.length; i++) {

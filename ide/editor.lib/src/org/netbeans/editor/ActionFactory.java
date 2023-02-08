@@ -2619,7 +2619,7 @@ public class ActionFactory {
                         // till end of line
                         if (toLineEnd) {
                             String text = target.getText(caretOffset, boundOffset - caretOffset);
-                            if (boundOffset < doc.getLength() && text != null && text.matches("^[\\s]*$")) { // NOI18N
+                            if (boundOffset < doc.getLength() && text != null && text.matches("^\\s*$")) { // NOI18N
                                 boundOffset += 1; // Include line separator
                             }
                         }

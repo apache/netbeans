@@ -62,7 +62,7 @@ public class AddFinalModifierTest extends ErrorHintsTestBase {
 		+ "            }"
 		+ "        };"
 		+ "    }"
-		+ "}").replaceAll("[\\s]+", " "));
+		+ "}").replaceAll("\\s+", " "));
     }
     public void testAddFinalToParameter() throws Exception {
 	performFixTest("test/Test.java",
@@ -88,7 +88,7 @@ public class AddFinalModifierTest extends ErrorHintsTestBase {
 		+ "            }"
 		+ "        };"
 		+ "    }"
-		+ "}").replaceAll("[\\s]+", " "));
+		+ "}").replaceAll("\\s+", " "));
     }
 
     @Override

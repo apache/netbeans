@@ -435,7 +435,7 @@ public final class ModelUtils {
         String dependencies = properties.get(LIBRARY_PROP_DEPENDENCIES);
         if (dependencies != null) {
             //http://www.netbeans.org/ns/library-declaration/3
-            for (String dep : dependencies.split("([\\s])+")) {
+            for (String dep : dependencies.split("(\\s)+")) {
                 String[] v = dep.trim().split(":");
                 if (v.length < 4) {
                     //TODO log.
@@ -450,7 +450,7 @@ public final class ModelUtils {
             }
             String repositories = properties.get(LIBRARY_PROP_REPOSITORIES);
             if (repositories != null) {
-                for (String r : repositories.split("([\\s])+")) {
+                for (String r : repositories.split("(\\s)+")) {
                     String[] rep = r.split(":", 2);
                     if (rep.length < 2) {
                         //TODO log.

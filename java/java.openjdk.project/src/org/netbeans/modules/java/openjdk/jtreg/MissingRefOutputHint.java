@@ -57,7 +57,7 @@ public class MissingRefOutputHint {
                 continue;
             }
             if (tag.getValue().startsWith("/")) {
-                String firstParam = tag.getValue().split("[\\s]+", 2)[0];
+                String firstParam = tag.getValue().split("\\s+", 2)[0];
                 boolean hasFail = false;
                 boolean hasRef  = false;
                 int pos = tag.getTagEnd();

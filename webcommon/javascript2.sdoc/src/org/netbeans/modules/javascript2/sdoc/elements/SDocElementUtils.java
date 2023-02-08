@@ -83,7 +83,7 @@ public class SDocElementUtils {
         TypeInformation typeInformation = new TypeInformation();
         int process = 0;
         
-        String[] parts = elementText.split("[\\s]+"); //NOI18N
+        String[] parts = elementText.split("\\s+"); //NOI18N
         if (parts.length > process) {
             // get type value if any
             if (parts[0].startsWith("{")) { //NOI18N

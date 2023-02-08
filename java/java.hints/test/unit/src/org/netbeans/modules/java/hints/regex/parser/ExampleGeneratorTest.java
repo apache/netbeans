@@ -80,7 +80,7 @@ public class ExampleGeneratorTest {
                 "a|(b|c|d)|e",
                 "z*[1-9d-f](ab|bc|cd)\\d+",
                 "a*|b{2,4}",
-                "[\\s]",
+                "\\s",
                 "\\d+(\\.\\d\\d)?",
                 "rege(x(es)?|xps?)",
                 "[2-9]|[12]\\d|3[0-6]",

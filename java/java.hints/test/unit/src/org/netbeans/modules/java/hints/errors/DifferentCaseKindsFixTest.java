@@ -108,7 +108,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "             default -> result = \"3\";\n"
                 + "         }\n"
                 + "     }\n"
-                + "}\n").replaceAll("[\\s]+", " "));
+                + "}\n").replaceAll("\\s+", " "));
     }
 
     public void testCase2() throws Exception {
@@ -136,7 +136,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "             default -> result = \"3\";\n"
                 + "         }\n"
                 + "     }\n"
-                + "}\n").replaceAll("[\\s]+", " "));
+                + "}\n").replaceAll("\\s+", " "));
     }
 
     public void testCase3() throws Exception {
@@ -164,7 +164,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "             case 3 -> { System.err.println(3); result = \"3\";}\n"
                 + "         }\n"
                 + "     }\n"
-                + "}\n").replaceAll("[\\s]+", " "));
+                + "}\n").replaceAll("\\s+", " "));
     }
     
     public void testCase4() throws Exception {
@@ -191,7 +191,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "             case 2 -> result = \"2\";\n"
                 + "         }\n"
                 + "     }\n"
-                + "}\n").replaceAll("[\\s]+", " "));
+                + "}\n").replaceAll("\\s+", " "));
     }
     
     public void testCase5() throws Exception {
@@ -231,7 +231,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "                 }\n"
                 + "         }\n"
                 + "     }\n"
-                + "}\n").replaceAll("[\\s]+", " "));
+                + "}\n").replaceAll("\\s+", " "));
     }
     
     public void testCase6() throws Exception {
@@ -259,7 +259,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "             default -> { yield 3; }\n"
                 + "         }\n"
                 + "     }\n"
-                + "}\n").replaceAll("[\\s]+", " "));
+                + "}\n").replaceAll("\\s+", " "));
     }
 
     public void testCase7() throws Exception {
@@ -287,7 +287,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "             default -> { yield 3; }\n"
                 + "         }\n"
                 + "     }\n"
-                + "}\n").replaceAll("[\\s]+", " "));
+                + "}\n").replaceAll("\\s+", " "));
     }
 
     public void testCase8() throws Exception {
@@ -321,7 +321,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "     private int getTest() {\n"
                 + "         return 10;\n"
                 + "     }\n"
-                + "}\n").replaceAll("[\\s]+", " "));
+                + "}\n").replaceAll("\\s+", " "));
     }
     
     public void testCase9() throws Exception {
@@ -348,7 +348,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "             case 2 -> { yield \"2\"; }\n"
                 + "         }\n"
                 + "     }\n"
-                + "}\n").replaceAll("[\\s]+", " "));
+                + "}\n").replaceAll("\\s+", " "));
     }
     
     public void testCase10() throws Exception {
@@ -385,7 +385,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "             }\n"
                 + "         }\n"
                 + "     }\n"
-                + "}\n").replaceAll("[\\s]+", " "));
+                + "}\n").replaceAll("\\s+", " "));
     }
 
     @Override

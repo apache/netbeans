@@ -150,7 +150,7 @@ public class JavaNetRepositoryError implements POMErrorFixProvider {
     private Set<String> getForbidden() {
         String urls = configuration.getPreferences().get(PROP_URLS, DEFAULT_URLS);
         HashSet<String> toRet = new HashSet<String>();
-        for (String s : urls.split("([\\s])+")) {
+        for (String s : urls.split("(\\s)+")) {
             s = s.trim();
             if (!s.endsWith("/")) {
                 s = s + "/";

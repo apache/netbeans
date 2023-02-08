@@ -133,7 +133,7 @@ public class JsDocElementUtils {
         String types = "", desc = ""; //NOI18N
         StringBuilder name = new StringBuilder();
         int process = 0;
-        String[] parts = elementText.split("[\\s]+"); //NOI18N
+        String[] parts = elementText.split("\\s+"); //NOI18N
 
         if (parts.length > process) {
             //extract type info, handle {} inside of type
@@ -181,13 +181,13 @@ public class JsDocElementUtils {
 
             //if type at index=0, extract name and desc from the remaining text
             if ((curlyStart == 0) && (curlyEnd != -1)) {
-                parts = elementText.substring(Math.min(curlyEnd + 1, elementText.length())).trim().split("[\\s]+");
+                parts = elementText.substring(Math.min(curlyEnd + 1, elementText.length())).trim().split("\\s+");
             } else if (curlyStart > 0) {
                 //use entire text minus the types part to get name and desc
                 String typesStr = elementText.substring(curlyStart, Math.min(curlyEnd + 1, elementText.length()));
                 StringBuilder buf = new StringBuilder(elementText);
                 elementText = buf.replace(curlyStart, curlyStart + typesStr.length(), "").toString();
-                parts = elementText.split("[\\s]+");
+                parts = elementText.split("\\s+");
             }
 
             // get name value (mandatory part)

@@ -58,7 +58,7 @@ public class AccessErrorTest extends ErrorHintsTestBase  {
                         "}\n" +
                         "class Acc {\n" +
                         "    static int i;\n" +
-                        "}\n").replaceAll("[\\s]+", " "));
+                        "}\n").replaceAll("\\s+", " "));
     }
 
     @Override

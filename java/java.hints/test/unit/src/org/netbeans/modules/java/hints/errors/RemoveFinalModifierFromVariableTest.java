@@ -54,7 +54,7 @@ public class RemoveFinalModifierFromVariableTest extends ErrorHintsTestBase {
 		+ "         int localvar = 1;"
 		+ "         localvar = 2;"
 		+ "     }"
-		+ "}").replaceAll("[\\s]+", " "));
+		+ "}").replaceAll("\\s+", " "));
     }
 
     public void testRemoveFinalFromClassMemberVariable() throws Exception {
@@ -74,7 +74,7 @@ public class RemoveFinalModifierFromVariableTest extends ErrorHintsTestBase {
 		+ "    public static void main1() {"
 		+ "        member = 2;"
 		+ "    }"
-		+ "}").replaceAll("[\\s]+", " "));
+		+ "}").replaceAll("\\s+", " "));
     }
 
     public void testRemoveFinalFromStaticClassMemberVariable() throws Exception {
@@ -94,7 +94,7 @@ public class RemoveFinalModifierFromVariableTest extends ErrorHintsTestBase {
 		+ "    public static void main1() {"
 		+ "        staticmember = 2;"
 		+ "    }"
-		+ "}").replaceAll("[\\s]+", " "));
+		+ "}").replaceAll("\\s+", " "));
     }
 
     @Override

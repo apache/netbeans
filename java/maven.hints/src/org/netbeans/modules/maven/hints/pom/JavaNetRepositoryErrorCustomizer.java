@@ -53,7 +53,7 @@ public class JavaNetRepositoryErrorCustomizer extends javax.swing.JPanel {
         rbSelected.setSelected(selected);
         rbAny.setSelected(!selected);
         String values = preferences.get(JavaNetRepositoryError.PROP_URLS, JavaNetRepositoryError.DEFAULT_URLS);
-        String[] vals = values.split("([\\s])+");
+        String[] vals = values.split("(\\s)+");
         StringBuilder sb = new StringBuilder();
         for (String v : vals) {
             sb.append(v.trim()).append("\n");
@@ -154,7 +154,7 @@ public class JavaNetRepositoryErrorCustomizer extends javax.swing.JPanel {
     }//GEN-LAST:event_rbSelectedActionPerformed
 
     private void taSelectedKeyReleased(KeyEvent evt) {//GEN-FIRST:event_taSelectedKeyReleased
-        String[] vals = taSelected.getText().split("([\\s])+");
+        String[] vals = taSelected.getText().split("(\\s)+");
         StringBuilder sb = new StringBuilder();
         for (String v : vals) {
             sb.append(v.trim()).append(" ");

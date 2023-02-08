@@ -61,7 +61,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "        var v = 1;\n" +
                        "        var v1 = 10;\n" +
                        "    } \n" +
-                       "}").replaceAll("[\\s]+", " "));
+                       "}").replaceAll("\\s+", " "));
     }
     @RandomlyFails
     public void testCase2() throws Exception {        
@@ -81,7 +81,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "        var v1 = 10;\n" +
                        "        var v2 = 100;\n" +
                        "    } \n" +
-                       "}").replaceAll("[\\s]+", " "));
+                       "}").replaceAll("\\s+", " "));
     }
     @RandomlyFails
     public void testCase3() throws Exception {
@@ -100,7 +100,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "        var v = 10; \n" +
                        "        var v1 = \"test\";\n" +
                        "    } \n" +
-                       "}").replaceAll("[\\s]+", " "));
+                       "}").replaceAll("\\s+", " "));
     }
     @RandomlyFails
     public void testCase4() throws Exception {
@@ -120,7 +120,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "        var v1 = 11; \n" +
                        "        var test_123 = new Object(); \n" +
                        "    } \n" +
-                       "}").replaceAll("[\\s]+", " "));
+                       "}").replaceAll("\\s+", " "));
     }
     @RandomlyFails
     public void testCase5() throws Exception {
@@ -149,7 +149,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "        } \n" +
                        "      }; \n" +
                        "    } \n" +
-                       "}").replaceAll("[\\s]+", " "));       
+                       "}").replaceAll("\\s+", " "));       
     }
     @RandomlyFails
     public void testCase6() throws Exception {
@@ -167,7 +167,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "    private void test() { \n" +
                        "        var v = 10; \n" +
                        "        var v1 = 11;} \n" +
-                       "}").replaceAll("[\\s]+", " "));       
+                       "}").replaceAll("\\s+", " "));       
     }
     @RandomlyFails
     public void testCase7() throws Exception {
@@ -185,7 +185,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "    private void test() { \n" +
                        "        @DA final var x = 10; \n" +
                        "        @DA final var y = 11;} \n" +
-                       "}").replaceAll("[\\s]+", " "));       
+                       "}").replaceAll("\\s+", " "));       
     }
     @RandomlyFails
     public void testCase8() throws Exception {
@@ -204,7 +204,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "        @DA final var v = 1;\n" +
                        "        @DA final var v1 = 10;\n" +
                        "    } \n" +
-                       "}").replaceAll("[\\s]+", " "));
+                       "}").replaceAll("\\s+", " "));
     }
     @RandomlyFails
     public void testCase9() throws Exception {
@@ -231,7 +231,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "            var v1 = 10;\n" +
                        "            } \n" +
                        "    } \n" +
-                       "}").replaceAll("[\\s]+", " "));
+                       "}").replaceAll("\\s+", " "));
     }
     @RandomlyFails
     public void testCase10() throws Exception {
@@ -258,7 +258,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "            final var v1 = 10;\n" +
                        "            } \n" +
                        "    } \n" +
-                       "}").replaceAll("[\\s]+", " "));
+                       "}").replaceAll("\\s+", " "));
     }
     @RandomlyFails
     public void testCase11() throws Exception {
@@ -277,7 +277,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "        var v = {1, 2};\n" +
                        "        var w = 2;\n" +
                        "    } \n" +
-                       "}").replaceAll("[\\s]+", " "));
+                       "}").replaceAll("\\s+", " "));
     }
 
     @Override

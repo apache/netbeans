@@ -65,7 +65,7 @@ public class CompletionUtil {
 
     // Pattern: ("<" + ("blank space" or "\n") + "any characters")
     //          ("<" + "/" + ("blank space" or "\n") + "any characters")
-    public static final Pattern PATTERN_TEXT_TAG_EOLs = Pattern.compile("</?[\\s]+.*");
+    public static final Pattern PATTERN_TEXT_TAG_EOLs = Pattern.compile("</?\\s+.*");
     
     private static final Logger _logger = Logger.getLogger(CompletionUtil.class.getName());
 

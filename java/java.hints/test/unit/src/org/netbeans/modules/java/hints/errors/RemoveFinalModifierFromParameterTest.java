@@ -52,7 +52,7 @@ public class RemoveFinalModifierFromParameterTest extends ErrorHintsTestBase {
 		+ "	public static void main1(int parameter) {"
 		+ "		parameter = 2;"
 		+ "	}"
-		+ "}").replaceAll("[\\s]+", " "));
+		+ "}").replaceAll("\\s+", " "));
     }
 
     @Override

@@ -405,9 +405,9 @@ public final class JWSProjectPropertiesUtils {
             if ((target.getAttribute("depends") != null && target.getAttribute("depends").contains("jnlp"))) { // NOI18N
                 String old = target.getAttribute("depends"); // NOI18N
                 old = old.replaceAll("jnlp", ""); // NOI18N
-                old = old.replaceAll(",[\\s]*$", ""); // NOI18N
-                old = old.replaceAll("^[\\s]*,", ""); // NOI18N
-                old = old.replaceAll(",[\\s]*,", ","); // NOI18N
+                old = old.replaceAll(",\\s*$", ""); // NOI18N
+                old = old.replaceAll("^\\s*,", ""); // NOI18N
+                old = old.replaceAll(",\\s*,", ","); // NOI18N
                 old = old.trim();
                 if (old.length() == 0) {
                     target.removeAttribute("depends"); // NOI18N

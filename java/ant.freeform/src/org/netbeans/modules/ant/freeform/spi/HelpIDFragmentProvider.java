@@ -41,7 +41,7 @@ public interface HelpIDFragmentProvider {
      * <code>getHelpIDFragment().equals(getHelpIDFragment())</code>, but is allowed to
      * <code>getHelpIDFragment() != getHelpIDFragment()</code>). The string should be unique
      * among all the freeform project natures. The string is required to match this
-     * regular expression: <code>([A-Za-z0-9])+</code>.
+     * regular expression: <code>([A-Za-z\\d])+</code>.
      *
      * Please note that the returned fragment is part of the contract between the
      * code and documentation, so be carefull when you need to change it.

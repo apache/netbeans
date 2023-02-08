@@ -94,7 +94,7 @@ class QueryUtil {
             @NonNull Occur operator) {
         Parameters.notNull("packageName", packageName); //NOI18N
         Parameters.notNull("mask", mask); //NOI18N
-        final String pattern = Pattern.quote(packageName) + "\\.[^\\.]+";   //NOI18N
+        final String pattern = Pattern.quote(packageName) + "\\.[^.]+";   //NOI18N
         if (operator == Occur.SHOULD) {
             final BooleanQuery query = new BooleanQuery ();
             for (ClassIndexImpl.UsageType ut : mask) {

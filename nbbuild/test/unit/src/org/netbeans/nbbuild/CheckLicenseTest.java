@@ -471,7 +471,7 @@ public class CheckLicenseTest extends TestBase {
 "        <line text='enclosed by brackets [] replaced by your own identifying information:'/>\n" +
 "        <line text='\"Portions Copyrighted [year] [name of copyright owner]\"'/>\n" +
 "   </convert>\n" +
-"   <convert token='1997-[0-2][09][09][0-9]' replace='1997-2006'/>\n" +
+"   <convert token='1997-[0-2][09][09]\\d' replace='1997-2006'/>\n" +
 "   <convert token='Original\\n[^A-Za-z]*Code' replace='Original\\nSoftware' replaceall='true'/>\n" +
 "   <convert token='Original Code' replace='Original Software' replaceall='true'/>\n" +
 "        </checklicense>\n" +

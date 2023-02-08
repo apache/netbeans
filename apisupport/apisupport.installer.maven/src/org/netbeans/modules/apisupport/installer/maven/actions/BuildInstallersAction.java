@@ -217,7 +217,7 @@ public final class BuildInstallersAction extends AbstractAction implements Conte
                         + "-" + watcher.getMavenProject().getVersion());
 
                 props.put("suite.nbi.product.uid",
-                        appName.replaceAll("[0-9]+", "").replace("_", "-").toLowerCase(Locale.ENGLISH));
+                        appName.replaceAll("\\d+", "").replace("_", "-").toLowerCase(Locale.ENGLISH));
 
 
                 props.put("nbi.stub.location", InstalledFileLocator.getDefault().locate(

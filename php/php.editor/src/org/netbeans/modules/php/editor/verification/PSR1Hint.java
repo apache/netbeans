@@ -81,7 +81,7 @@ public abstract class PSR1Hint extends HintRule {
 
     public static class ConstantDeclarationHint extends PSR1Hint {
         private static final String HINT_ID = "PSR1.Hint.Constant"; //NOI18N
-        private static final Pattern CONSTANT_PATTERN = Pattern.compile("[A-Z0-9]+[A-Z0-9_]*[A-Z0-9]+"); //NOI18N
+        private static final Pattern CONSTANT_PATTERN = Pattern.compile("[A-Z\\d]+[A-Z\\d_]*[A-Z\\d]+"); //NOI18N
 
         @Override
         CheckVisitor createVisitor(FileObject fileObject, BaseDocument baseDocument) {
@@ -132,7 +132,7 @@ public abstract class PSR1Hint extends HintRule {
     public static class MethodDeclarationHint extends PSR1Hint {
         private static final String HINT_ID = "PSR1.Hint.Method"; //NOI18N
         private static final String MAGIC_METHODS = "__(construct|destruct|call|callStatic|get|set|isset|unset|sleep|wakeup|toString|invoke|set_state|clone)"; //NOI18N
-        private static final Pattern METHOD_PATTERN = Pattern.compile("([a-z]|" + MAGIC_METHODS + ")[a-zA-Z0-9]*"); //NOI18N
+        private static final Pattern METHOD_PATTERN = Pattern.compile("([a-z]|" + MAGIC_METHODS + ")[a-zA-Z\\d]*"); //NOI18N
 
         @Override
         CheckVisitor createVisitor(FileObject fileObject, BaseDocument baseDocument) {
@@ -195,8 +195,8 @@ public abstract class PSR1Hint extends HintRule {
         }
 
         private static final class TypeDeclarationVisitor extends CheckVisitor {
-            private static final Pattern PHP52_TYPE_NAME_PATTERN = Pattern.compile("([A-Z][a-zA-Z0-9]*_)+[A-Z][a-zA-Z0-9]+"); //NOI18N
-            private static final Pattern PHP53_TYPE_NAME_PATTERN = Pattern.compile("[A-Z][a-zA-Z0-9]+"); //NOI18N
+            private static final Pattern PHP52_TYPE_NAME_PATTERN = Pattern.compile("([A-Z][a-zA-Z\\d]*_)+[A-Z][a-zA-Z\\d]+"); //NOI18N
+            private static final Pattern PHP53_TYPE_NAME_PATTERN = Pattern.compile("[A-Z][a-zA-Z\\d]+"); //NOI18N
             private final boolean isPhp52;
             private boolean isInNamedNamespaceDeclaration = false;
             private boolean isDeclaredType = false;
@@ -310,9 +310,9 @@ public abstract class PSR1Hint extends HintRule {
         }
 
         private static final class PropertyNameVisitor extends CheckVisitor {
-            private static final Pattern STUDLY_CAPS_PATTERN = Pattern.compile("[A-Z][a-zA-Z0-9]*"); //NOI18N
-            private static final Pattern CAMEL_CASE_PATTERN = Pattern.compile("[a-z]+([A-Z][a-z0-9]*)*"); //NOI18N
-            private static final Pattern UNDER_SCORE_PATTERN = Pattern.compile("[a-z]+(_[a-z0-9]*)*"); //NOI18N
+            private static final Pattern STUDLY_CAPS_PATTERN = Pattern.compile("[A-Z][a-zA-Z\\d]*"); //NOI18N
+            private static final Pattern CAMEL_CASE_PATTERN = Pattern.compile("[a-z]+([A-Z][a-z\\d]*)*"); //NOI18N
+            private static final Pattern UNDER_SCORE_PATTERN = Pattern.compile("[a-z]+(_[a-z\\d]*)*"); //NOI18N
             private final List<Pattern> possiblePatterns = new ArrayList<>();
 
             public PropertyNameVisitor(PSR1Hint psr1hint, FileObject fileObject, BaseDocument baseDocument) {

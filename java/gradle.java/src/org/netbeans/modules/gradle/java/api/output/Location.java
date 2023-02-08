@@ -179,7 +179,7 @@ public final class Location {
         return sb.toString();
     }
 
-    private static final Pattern CALLSTACK_ITEM_PARSER = Pattern.compile("(.*)at (\\w[\\w\\.\\$<>]*)\\.(\\w+)\\((\\w+)\\.java\\:([0-9]+)\\)");
+    private static final Pattern CALLSTACK_ITEM_PARSER = Pattern.compile("(.*)at (\\w[\\w.\\$<>]*)\\.(\\w+)\\((\\w+)\\.java\\:(\\d+)\\)");
 
     public static final Location locationFromCallStackItem(String item) {
         Matcher m = CALLSTACK_ITEM_PARSER.matcher(item);

@@ -256,9 +256,9 @@ public class ModuleDescription {
         return null;
     }
 
-    private static final Pattern MODULE = Pattern.compile("module\\s+(?<modulename>([a-zA-Z0-9]+\\.)*[a-zA-Z0-9]+)");
-    private static final Pattern REQUIRES = Pattern.compile("requires\\s+(?<flags>(transitive\\s+|public\\s+|static\\s+)*)(?<dependency>([a-zA-Z0-9]+\\.)*[a-zA-Z0-9]+)\\s*;");
-    private static final Pattern EXPORTS = Pattern.compile("exports\\s+([^;]*?\\\\s+)?(?<package>([a-zA-Z0-9]+\\.)*[a-zA-Z0-9]+)(\\s+to\\s+(?<to>([a-zA-Z0-9]+\\.)*[a-zA-Z0-9]+(\\s*,\\s*([a-zA-Z0-9]+\\.)*[a-zA-Z0-9]+)*))?\\s*;");
+    private static final Pattern MODULE = Pattern.compile("module\\s+(?<modulename>([a-zA-Z\\d]+\\.)*[a-zA-Z\\d]+)");
+    private static final Pattern REQUIRES = Pattern.compile("requires\\s+(?<flags>(transitive\\s+|public\\s+|static\\s+)*)(?<dependency>([a-zA-Z\\d]+\\.)*[a-zA-Z\\d]+)\\s*;");
+    private static final Pattern EXPORTS = Pattern.compile("exports\\s+([^;]*?\\\\s+)?(?<package>([a-zA-Z\\d]+\\.)*[a-zA-Z\\d]+)(\\s+to\\s+(?<to>([a-zA-Z\\d]+\\.)*[a-zA-Z\\d]+(\\s*,\\s*([a-zA-Z\\d]+\\.)*[a-zA-Z\\d]+)*))?\\s*;");
     private static ModuleDescription parseModuleInfo(FileObject f) throws IOException {
         try (Reader r = new InputStreamReader(f.getInputStream())) {
             ModuleDescription desc = parseModuleInfo(r);

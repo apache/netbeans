@@ -389,7 +389,7 @@ public final class ModelUtils {
      * 3 - artifactId
      * 4 - version
      */
-    private static Pattern LEGACY = Pattern.compile("(.+/)([^/]+)/poms/([a-zA-Z0-9_]+[a-zA-Z_-]+)-([0-9].+)[.]pom");
+    private static Pattern LEGACY = Pattern.compile("(.+/)([^/]+)/poms/([a-zA-Z0-9_]+[a-zA-Z_-]+)-(\\d.+)[.]pom");
 
     /** Returns a library descriptor corresponding to the given library,
      * or null if not recognized successfully.

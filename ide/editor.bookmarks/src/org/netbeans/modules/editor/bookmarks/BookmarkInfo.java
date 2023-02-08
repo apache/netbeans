@@ -185,7 +185,7 @@ public final class BookmarkInfo {
     public void setKey(String key) {
         if (key.length() > 0) {
             key = key.substring(0, 1).toUpperCase();
-            if (!key.matches("[0-9A-Z]")) {
+            if (!key.matches("[\\dA-Z]")) {
                 key = "";
             }
         } else {

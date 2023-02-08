@@ -333,7 +333,7 @@ public enum GlassFishVersion {
         if (version == null) {
             List<Integer> versionNumbers = new ArrayList<>(4);
 
-            String[] versionParts = versionStr.split("[^0-9.]", 2);
+            String[] versionParts = versionStr.split("[^\\d.]", 2);
             String[] versionNumberStrings = versionParts[0].split("\\.");
             for (int i = 0; i < Math.min(4, versionNumberStrings.length); i++) {
                 try {

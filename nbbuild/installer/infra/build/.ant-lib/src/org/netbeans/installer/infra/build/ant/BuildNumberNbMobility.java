@@ -127,7 +127,7 @@ public class BuildNumberNbMobility extends Task {
      * Pattern for which to look in the input file.
      */
     private static final Pattern PATTERN = Pattern.compile(
-            "netbeans-mobility-([0-9_]+)\\.zip"); // NOI18N
+            "netbeans-mobility-([\\d_]+)\\.zip"); // NOI18N
     
     /**
      * Build number property suffix.

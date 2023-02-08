@@ -57,7 +57,7 @@ public class Test {
     /**
      * {@snippet :
      *   public static void main(String... args1) {
-     *       for (var arg : args1) {                 // @highlight regex="[0-9]+"
+     *       for (var arg : args1) {                 // @highlight regex="\\d+"
      *           if (!arg.isBlankarg()) {           // @highlight regex = "\barg\b"
      *               System.out.println(args1);       // @highlight regex = "out"
      * }
@@ -71,7 +71,7 @@ public class Test {
     /**
      * {@snippet :
      *   public static void main(String... args1) {
-     *       for (var arg : args1) {                 // @highlight regex="[0-9]+" @highlight substring="var"
+     *       for (var arg : args1) {                 // @highlight regex="\\d+" @highlight substring="var"
      *           if (!arg.isBlankarg()) {           // @highlight regex = "\barg\b" @highlight substring = "()"
      *               System.out.println("outs");       // @highlight regex = "\bout\b" @highlight substring="System"
      * }

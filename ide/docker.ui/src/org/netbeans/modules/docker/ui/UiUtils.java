@@ -161,7 +161,7 @@ public final class UiUtils {
                     host = host.substring(0, index);
                 }
                 // compress IPv6 address
-                host = host.replaceFirst("(^|:)(0+(:|$)){2,8}", "::").replaceAll("(:|^)0+([0-9A-Fa-f])", "$1$2"); // NOI18N
+                host = host.replaceFirst("(^|:)(0+(:|$)){2,8}", "::").replaceAll("(:|^)0+([\\dA-Fa-f])", "$1$2"); // NOI18N
             }
             ret.add(host);
         }

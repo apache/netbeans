@@ -178,7 +178,7 @@ public class ServerUtils {
     public static String GF_LOG_FILE_NAME = "server.log";
 
     public static final String GFV3_VERSION_MATCHER
-            = "(?:-[0-9bSNAPHOT]+(?:\\.[0-9]+(?:_[0-9]+|)|).*|).jar";
+            = "(?:-[\\dbSNAPHOT]+(?:\\.\\d+(?:_\\d+|)|).*|).jar";
     public static final String GFV3_JAR_MATCHER
             = "glassfish" + GFV3_VERSION_MATCHER;
 
@@ -214,7 +214,7 @@ public class ServerUtils {
 
     /** Regex pattern to retrieve version string like 3.1.2.2 from
      *  full version string. */
-    private static String FULL_VERSION_PATTERN = "[0-9]+(\\.[0-9]+){1,3}";
+    private static String FULL_VERSION_PATTERN = "\\d+(\\.\\d+){1,3}";
 
     /** GlassFish full version string getter method name. */
     private static String FULL_VERSION_METHOD = "getFullVersion";

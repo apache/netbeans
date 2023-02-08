@@ -38,7 +38,7 @@ public abstract class SourceClassInfo {
         }
     };
     
-    private static final Pattern anonymousInnerClassPattern = Pattern.compile(".*?\\$[0-9]*$");
+    private static final Pattern anonymousInnerClassPattern = Pattern.compile(".*?\\$\\d*$");
     
     private String simpleName, qualName, vmName;
     

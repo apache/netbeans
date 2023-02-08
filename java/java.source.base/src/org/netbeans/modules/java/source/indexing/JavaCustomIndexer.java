@@ -134,7 +134,7 @@ public class JavaCustomIndexer extends CustomIndexer {
     private static final String DUMP_ON_LOW_MEM = System.getProperty(JavaCustomIndexer.class.getName() + ".dump.on.low.mem");    //NOI18N
     private static final String SOURCE_PATH = "sourcePath"; //NOI18N
     private static final String APT_SOURCE_OUTPUT = "apSrcOut"; //NOI18N
-    private static final Pattern ANONYMOUS = Pattern.compile("\\$[0-9]"); //NOI18N
+    private static final Pattern ANONYMOUS = Pattern.compile("\\$\\d"); //NOI18N
     private static final ClassPath EMPTY = ClassPathSupport.createClassPath(new URL[0]);
     private static final String PROP_JAVAC_VERSION = "javac.version"; //NOI18N
 

@@ -100,7 +100,7 @@ public final class ClusterUtils {
      */
     public static File evaluateClusterPathEntry(String rawEntry, File root, PropertyEvaluator eval, File nbPlatformRoot) {
         // When cluster does not exist, it is either bare name or one with different number
-        final Pattern pat = Pattern.compile("(?:.*[\\\\/])?([^/\\\\]*?)([0-9.]+)?[/\\\\]?$");
+        final Pattern pat = Pattern.compile("(?:.*[\\\\/])?([^/\\\\]*?)([\\d.]+)?[/\\\\]?$");
         final String nbDirProp = "${" + SuiteProperties.ACTIVE_NB_PLATFORM_DIR_PROPERTY + "}";
         if (rawEntry.startsWith(nbDirProp)) {
             rawEntry = nbPlatformRoot.getAbsolutePath()

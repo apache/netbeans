@@ -65,14 +65,14 @@ public class SvnUtilsTest extends NbTestCase {
         // predefined patterns to be tested
         patterns.add("full pattern.file");  // 0
         patterns.add("partial pattern*");   // 1
-        patterns.add("[0-9]full pattern.file"); // 2
-        patterns.add("[0-9]-[0-9]-[0-9]*.file");    // 3
+        patterns.add("\\dfull pattern.file"); // 2
+        patterns.add("\\d-\\d-\\d*.file");    // 3
         patterns.add("  *  ");  // 4
-        patterns.add("\\[0-9].file");  // 5
+        patterns.add("\\\\d.file");  // 5
         patterns.add("\\[*]*");  // 6
         patterns.add("\\[*\\]*");  // 7
         patterns.add("[0_a-d]*");  // 8
-        patterns.add("?<([0-9][a-z]\\[\\[]]>).file");  // 9
+        patterns.add("?<(\\d[a-z]\\[\\[]]>).file");  // 9
         patterns.add("?*F?.file");  // 10
         patterns.add("??.file");  // 11
 
@@ -110,7 +110,7 @@ public class SvnUtilsTest extends NbTestCase {
         expectedResults.add(patterns.get(5));
         expectedResults.add(patterns.get(6));
         expectedResults.add(patterns.get(7));
-        testData.put("[0-9].file", expectedResults);
+        testData.put("\\d.file", expectedResults);
 
         expectedResults = new LinkedList<String>();
         expectedResults.add(patterns.get(6));

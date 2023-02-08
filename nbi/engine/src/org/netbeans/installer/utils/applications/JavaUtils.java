@@ -390,26 +390,26 @@ public class JavaUtils {
                 
                 // convert 1.6.0-b105 to 1.6.0.0.105
                 if (versionString.matches(
-                        "[0-9]+\\.[0-9]+\\.[0-9]+-b[0-9]+")) {
+                        "\\d+\\.\\d+\\.\\d+-b\\d+")) {
                     versionString = versionString.replace("-b", ".0.");
                 }
                 
                 // convert 1.6.0_01-b105 to 1.6.0_01.105
                 if (versionString.matches(
-                        "[0-9]+\\.[0-9]+\\.[0-9]+_[0-9]+-b[0-9]+")) {
+                        "\\d+\\.\\d+\\.\\d+_\\d+-b\\d+")) {
                     versionString = versionString.replace("-b", ".");
                 }
                 
                 // hack for BEA: 1.6.0-20061129 -> 1.6.0.0.20061129
                 if (vendor.contains("BEA")) {
                     versionString = versionString.replaceAll(
-                            "([0-9]+\\.[0-9]+\\.[0-9])+-([0-9]+)",
+                            "(\\d+\\.\\d+\\.\\d)+-(\\d+)",
                             "$1.0.$2");
                 }
                 LogManager.log("... version string : " + versionString);
                 // and create the version
                 final Matcher matcher = Pattern.
-                        compile("[0-9][0-9_\\.\\-]+[0-9]").
+                        compile("\\d[\\d_.\\-]+\\d").
                         matcher(versionString);
                 
                 if (matcher.find()) {
@@ -521,8 +521,8 @@ public class JavaUtils {
             5; // java.version, java.vm.version, java.vendor, os.name, os.arch
     
     public static final String NON_FINAL_JVM_PATTERN =
-            "-(ea|rc[0-9]*|beta[0-9]*|preview[0-9]*|" + // NOI18N
-            "dp[0-9]*|alpha[0-9]*|fcs)"; // NOI18N
+            "-(ea|rc\\d*|beta\\d*|preview\\d*|" + // NOI18N
+            "dp\\d*|alpha\\d*|fcs)"; // NOI18N
     
     public static final String ERROR_VERIFICATION_KEY =
             "JU.error.verification";//NOI18N

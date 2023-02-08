@@ -61,7 +61,7 @@ class StackLineAnalyser {
         "("+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" + // optional module name // NOI18N
         "(("+IDENTIFIER+"(\\."+IDENTIFIER+")*)\\.)?("+IDENTIFIER+")" + // class name // NOI18N
         "\\.("+IDENTIFIER+"|\\<init\\>|\\<clinit\\>)\\((?:"+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" +IDENTIFIER+"\\.java" + // method and file name // NOI18N
-        "\\:([0-9]*)\\)");                              // line number // NOI18N
+        "\\:(\\d*)\\)");                              // line number // NOI18N
 
     static boolean matches(String line) {
         Matcher matcher = LINE_PATTERN.matcher(line);

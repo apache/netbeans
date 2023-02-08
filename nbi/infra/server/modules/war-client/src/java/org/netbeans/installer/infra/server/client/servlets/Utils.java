@@ -52,7 +52,7 @@ public final class Utils {
                 
                 StreamUtils.transferData(input, output);
             } else {
-                Matcher matcher = Pattern.compile("^bytes=([0-9]*)-([0-9]*)$").matcher(range);
+                Matcher matcher = Pattern.compile("^bytes=(\\d*)-(\\d*)$").matcher(range);
                 
                 if (!matcher.find()) {
                     response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);

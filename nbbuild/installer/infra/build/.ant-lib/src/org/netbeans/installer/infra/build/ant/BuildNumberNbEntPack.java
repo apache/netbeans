@@ -127,7 +127,7 @@ public class BuildNumberNbEntPack extends Task {
      * Pattern for which to look in the input file.
      */
     private static final Pattern PATTERN = Pattern.compile(
-            "ent_pack-hula-([0-9_]+)\\.zip"); // NOI18N
+            "ent_pack-hula-([\\d_]+)\\.zip"); // NOI18N
     
     /**
      * Build number property suffix.

@@ -127,7 +127,7 @@ public class BuildNumberNbUml extends Task {
      * Pattern for which to look in the input file.
      */
     private static final Pattern PATTERN = Pattern.compile(
-            "uml_cluster-hydra-([0-9_]+)\\.zip"); // NOI18N
+            "uml_cluster-hydra-([\\d_]+)\\.zip"); // NOI18N
     
     /**
      * Build number property suffix.

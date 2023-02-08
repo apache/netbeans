@@ -216,7 +216,7 @@ public class GlassFishUtils {
         
         Version version = null;
         
-        Matcher matcher = Pattern.compile("[0-9][0-9_\\.]+[0-9]").matcher(results.getStdOut());
+        Matcher matcher = Pattern.compile("\\d[\\d_.]+\\d").matcher(results.getStdOut());
         
         if (matcher.find()) {
             version = Version.getVersion(matcher.group());

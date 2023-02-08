@@ -166,7 +166,7 @@ final class LibraryStartVisualPanel extends NewTemplateVisualPanel {
             if (inddd > -1) {
                 name = name.substring(0, inddd);
             }
-            name = name.replaceAll("[0-9._-]+$", ""); // NOI18N
+            name = name.replaceAll("[\\d._-]+$", ""); // NOI18N
             if (assignValues) {
                 data.setProjectName(name);
             }
@@ -179,12 +179,12 @@ final class LibraryStartVisualPanel extends NewTemplateVisualPanel {
                     if (manifest != null) {
                         Attributes attributes = manifest.getMainAttributes();
                         if(attributes.getValue("Specification-Title") != null) {
-                            data.setProjectName(attributes.getValue("Specification-Title").replaceAll("[0-9._-]+$", "").replace(" ", "-"));
+                            data.setProjectName(attributes.getValue("Specification-Title").replaceAll("[\\d._-]+$", "").replace(" ", "-"));
                         } else {
                             if (manifest.getEntries().size() == 1) {
                                 attributes = manifest.getEntries().values().iterator().next();
                                 if(attributes.getValue("Specification-Title") != null) {
-                                    data.setProjectName(attributes.getValue("Specification-Title").replaceAll("[0-9._-]+$", "").replace(" ", "-"));
+                                    data.setProjectName(attributes.getValue("Specification-Title").replaceAll("[\\d._-]+$", "").replace(" ", "-"));
                                 }
                             }
                         }

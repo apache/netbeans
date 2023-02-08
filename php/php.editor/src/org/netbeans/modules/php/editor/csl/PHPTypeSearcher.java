@@ -377,7 +377,7 @@ public class PHPTypeSearcher implements IndexSearcher {
                 sb.append("."); //NOI18N
             } else if (Character.isUpperCase(chars[i])) {
                 if (incamel) {
-                    sb.append("[a-z0-9_]*"); //NOI18N
+                    sb.append("[a-z\\d_]*"); //NOI18N
                 }
                 sb.append(chars[i]);
                 incamel = true;

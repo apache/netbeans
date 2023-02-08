@@ -522,7 +522,7 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
         
         sb.delete (indx, indx + "</api-answers>".length());
 
-        Matcher m = Pattern.compile("question-version='([0-9\\.]*)'").matcher(sb);
+        Matcher m = Pattern.compile("question-version='([\\d.]*)'").matcher(sb);
         if (m.find()) {
             sb.delete(m.start(1), m.end(1));
             sb.insert(m.start(1), version);

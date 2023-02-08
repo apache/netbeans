@@ -30,7 +30,7 @@ import org.openide.util.NotImplementedException;
   (interactive)
   (while
       (let ((p (point)))
-        (and (re-search-forward "\\(-?[0-9][0-9]?[0-9]?\\),?" nil t)
+        (and (re-search-forward "\\(-?\\d\\d?\\d?\\),?" nil t)
              (= p (match-beginning 0))))
     (replace-match (char-to-string
                     (let ((x (string-to-int (match-string 1))))

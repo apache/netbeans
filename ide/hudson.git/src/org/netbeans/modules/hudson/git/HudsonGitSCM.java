@@ -165,7 +165,7 @@ public class HudsonGitSCM implements HudsonSCM {
     private boolean looksLikeGitChangeLog(Element itemXML) {
         Element idE = XMLUtil.findElement(itemXML, "id", null);         //NOI18N
         return idE != null
-                && XMLUtil.findText(idE).matches("[0-9a-f]{40}");       //NOI18N
+                && XMLUtil.findText(idE).matches("[\\da-f]{40}");       //NOI18N
     }
 
     static @CheckForNull URI getRemoteOrigin(URI repository, @NullAllowed HudsonJob job) {

@@ -144,7 +144,7 @@ public abstract class BrandingModel {
     }
     
     public void setName(String name) /*throws IllegalArgumentException*/ {
-        /*if (name != null && !name.matches("[a-z][a-z0-9]*(_[a-z][a-z0-9]*)*")) { // NOI18N
+        /*if (name != null && !name.matches("[a-z][a-z\\d]*(_[a-z][a-z\\d]*)*")) { // NOI18N
             throw new IllegalArgumentException("Malformed name: " + name); // NOI18N
         }*/
      
@@ -408,8 +408,8 @@ public abstract class BrandingModel {
         }
         
         if (name == null) {
-            name = getSimpleName().toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9]", "_"); // NOI18N
-            if (!name.matches("[a-z][a-z0-9]*(_[a-z][a-z0-9]*)*")) { // NOI18N
+            name = getSimpleName().toLowerCase(Locale.ENGLISH).replaceAll("[^a-z\\d]", "_"); // NOI18N
+            if (!name.matches("[a-z][a-z\\d]*(_[a-z][a-z\\d]*)*")) { // NOI18N
                 // Too far from a decent name, forget it.
                 name = "app"; // NOI18N
             }

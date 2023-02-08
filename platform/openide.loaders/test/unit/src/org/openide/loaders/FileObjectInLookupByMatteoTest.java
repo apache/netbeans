@@ -213,7 +213,7 @@ public class FileObjectInLookupByMatteoTest extends NbTestCase {
         public static final String PRIMARY_EXTENSION = "primary"; // NOI18N
         public static final String SECONDARY_EXTENSION = "secondary"; // NOI18N
         public static final String REQUIRED_MIME = "text/x-primary"; // NOI18N
-        private static final Pattern SECONDARY_PATTERN = Pattern.compile("(.*)\\.[0-9]{3}\\." + SECONDARY_EXTENSION);
+        private static final Pattern SECONDARY_PATTERN = Pattern.compile("(.*)\\.\\d{3}\\." + SECONDARY_EXTENSION);
         private static final long serialVersionUID = 1L;
 
         public TestDataLoader() {

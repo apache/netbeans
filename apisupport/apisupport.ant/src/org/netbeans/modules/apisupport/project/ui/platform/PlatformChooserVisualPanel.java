@@ -229,7 +229,7 @@ public class PlatformChooserVisualPanel extends BasicVisualPanel
         plafNameValue.getAccessibleContext().setAccessibleDescription(getMessage("ACS_CTL_plafLabelValue"));
     }
 
-    private static final Pattern LABEL_PATTERN = Pattern.compile("NetBeans (?:Platform|IDE) (Dev|[0-9.]+)(?: [(]Build .+[)])?"); // NOI18N
+    private static final Pattern LABEL_PATTERN = Pattern.compile("NetBeans (?:Platform|IDE) (Dev|[\\d.]+)(?: [(]Build .+[)])?"); // NOI18N
     static String cleanupLabel(String label) { // #200660
         Matcher m = LABEL_PATTERN.matcher(label);
         if (m.matches()) {

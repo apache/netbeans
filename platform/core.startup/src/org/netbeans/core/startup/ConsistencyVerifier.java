@@ -114,7 +114,7 @@ public class ConsistencyVerifier {
                         man.putValue("OpenIDE-Module", bsn); // NOI18N
                     }
                     if (man.getValue("OpenIDE-Module-Specification-Version") == null) { // NOI18N
-                        Matcher match = Pattern.compile("[0-9]*(\\.[0-9]*)?(\\.[0-9]*)?").matcher(ver);
+                        Matcher match = Pattern.compile("\\d*(\\.\\d*)?(\\.\\d*)?").matcher(ver);
                         if (match.find()) {
                             ver = match.group();
                         }

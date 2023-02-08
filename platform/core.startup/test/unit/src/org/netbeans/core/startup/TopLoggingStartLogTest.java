@@ -107,7 +107,7 @@ public class TopLoggingStartLogTest extends NbTestCase {
     public void testProgress() throws Exception {
         StartLog.logProgress("First visible message");
 
-        Pattern p = Pattern.compile("@[0-9]+.*First visible message");
+        Pattern p = Pattern.compile("@\\d+.*First visible message");
         Matcher m = p.matcher(getStream().toString());
 
         if (!m.find()) {
@@ -128,7 +128,7 @@ public class TopLoggingStartLogTest extends NbTestCase {
         StartLog.logEnd("run");
 
         {
-            Pattern p = Pattern.compile("@[0-9]+.*run.*started");
+            Pattern p = Pattern.compile("@\\d+.*run.*started");
             Matcher m = p.matcher(getStream().toString());
 
             if (!m.find()) {
@@ -144,7 +144,7 @@ public class TopLoggingStartLogTest extends NbTestCase {
         }
         
         {
-            Pattern p = Pattern.compile("@[0-9]+.*run.*finished");
+            Pattern p = Pattern.compile("@\\d+.*run.*finished");
             Matcher m = p.matcher(getStream().toString());
 
             if (!m.find()) {
@@ -167,7 +167,7 @@ public class TopLoggingStartLogTest extends NbTestCase {
         LOG.log(Level.FINE, "end", "run");
 
         {
-            Pattern p = Pattern.compile("@[0-9]+.*run.*started");
+            Pattern p = Pattern.compile("@\\d+.*run.*started");
             Matcher m = p.matcher(getStream().toString());
 
             if (!m.find()) {
@@ -183,7 +183,7 @@ public class TopLoggingStartLogTest extends NbTestCase {
         }
         
         {
-            Pattern p = Pattern.compile("@[0-9]+.*run.*finished");
+            Pattern p = Pattern.compile("@\\d+.*run.*finished");
             Matcher m = p.matcher(getStream().toString());
 
             if (!m.find()) {

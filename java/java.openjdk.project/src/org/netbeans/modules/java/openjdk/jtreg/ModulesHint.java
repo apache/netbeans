@@ -364,7 +364,7 @@ public class ModulesHint {
         return Pair.of(module2UsedUnexportedPackages, new int[] {modules.getStart(), modules.getEnd()});
     }
 
-    private static final Pattern EXPORTS = Pattern.compile("exports\\s+(([a-zA-Z0-9]+\\.)*[a-zA-Z0-9]+)(?<to>\\s+to)?");
+    private static final Pattern EXPORTS = Pattern.compile("exports\\s+(([a-zA-Z\\d]+\\.)*[a-zA-Z\\d]+)(?<to>\\s+to)?");
 
     private static Set<String> readExports(FileObject moduleInfo) {
         Set<String> exported = new HashSet<>();

@@ -29,11 +29,11 @@ import java.net.ServerSocket;
 public class Main {
     public static void main(String[] args) {
         for (String arg: args) {
-            if (arg.matches("[0-9]+")) {
+            if (arg.matches("\\d+")) {
                 occupy(Integer.parseInt(arg));
             }
             
-            if (arg.matches("[0-9]+-[0-9]+")) {
+            if (arg.matches("\\d+-\\d+")) {
                 int start = Integer.parseInt(arg.substring(0, arg.indexOf("-")));
                 int end = Integer.parseInt(arg.substring(arg.indexOf("-") + 1));
                 

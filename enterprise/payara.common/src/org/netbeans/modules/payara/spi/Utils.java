@@ -98,7 +98,7 @@ public class Utils {
         }
     }
 
-    public static final String VERSIONED_JAR_SUFFIX_MATCHER = "(?:-[0-9]+(?:\\.[0-9]+(?:_[0-9]+|)|).*|).jar"; // NOI18N
+    public static final String VERSIONED_JAR_SUFFIX_MATCHER = "(?:-\\d+(?:\\.\\d+(?:_\\d+|)|).*|).jar"; // NOI18N
 
     /**
      *

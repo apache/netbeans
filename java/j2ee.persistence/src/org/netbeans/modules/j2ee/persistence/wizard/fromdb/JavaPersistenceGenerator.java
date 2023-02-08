@@ -749,9 +749,9 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 if (length != null && isCharacterType(memberType)) {
                     if (generateValidationConstraints) {
                         if (memberName.equalsIgnoreCase("email")) { //NOI18N
-                            String regexpString = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\\\."    //NOI18N
-                                                   +"[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"  //NOI18N
-                                                   +"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";   //NOI18N
+                            String regexpString = "[a-z\\d!#$%&'*+/=?^_`{|}~-]+(?:\\\\."    //NOI18N
+                                                   +"[a-z\\d!#$%&'*+/=?^_`{|}~-]+)*@"  //NOI18N
+                                                   +"(?:[a-z\\d](?:[a-z\\d-]*[a-z\\d])?\\\\.)+[a-z\\d](?:[a-z\\d-]*[a-z\\d])?";   //NOI18N
                             String commentString = NbBundle.getMessage(JavaPersistenceGenerator.class, "MSG_ANNOTATION_EMAIL_COMMENT");
                             comment = Comment.create(Comment.Style.LINE, "@Pattern(regexp=\""+regexpString+"\", " +
                                                                         "message=\""+ NbBundle.getMessage(JavaPersistenceGenerator.class, "ERR_INVALID_EMAIL")+"\")" +

@@ -77,9 +77,9 @@ public class JavaUtils {
      */
 //    private static final String VM_VERSION_PATTERN =
 //            " *[jJ][aA][vV][aA] +[vV][eE][rR][sS][iI][oO][nN] +" +
-//            "\"{0,1}([0-9]+).([0-9]+).([0-9]+)_([0-9]+)\"{0,1} *";
+//            "\"{0,1}(\\d+).(\\d+).(\\d+)_(\\d+)\"{0,1} *";
     private static final String VM_VERSION_PATTERN =
-            "[^0-9]*([0-9]+)\\.([0-9]+)(?:\\.([0-9]+)(?:[-_\\.]([0-9]+)){0,1}){0,1}[^0-9]*";
+            "\\D*(\\d+)\\.(\\d+)(?:\\.(\\d+)(?:[-_.](\\d+)){0,1}){0,1}\\D*";
 
     /** Number of <code>Matcher</code> groups (REGEX tokens) expected in Java VM
      *  version output. */
@@ -242,7 +242,7 @@ public class JavaUtils {
                 if (matcher.find()) {
                     int groupCount = matcher.groupCount();
                     if (groupCount >= VM_MIN_VERSION_TOKENS) {
-                        // [0-9]+ REGEX pattern is validating numbers in tokens.
+                        // \\d+ REGEX pattern is validating numbers in tokens.
                         // NumberFormatException can't be thrown.
                         major = Integer.parseInt(matcher.group(1));
                         minor = Integer.parseInt(matcher.group(2));

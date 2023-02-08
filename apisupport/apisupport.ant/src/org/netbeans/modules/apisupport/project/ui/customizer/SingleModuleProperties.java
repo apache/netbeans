@@ -731,7 +731,7 @@ public final class SingleModuleProperties extends ModuleProperties {
 
     static String clusterBaseName(String clusterName) {
         // when changing, change also org.netbeans.nbbuild.ModuleSelector
-        return clusterName.replaceFirst("[0-9.]+$", ""); // NOI18N
+        return clusterName.replaceFirst("[\\d.]+$", ""); // NOI18N
     }
 
     /**

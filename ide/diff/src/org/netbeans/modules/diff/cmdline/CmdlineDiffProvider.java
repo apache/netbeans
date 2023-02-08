@@ -45,9 +45,9 @@ import org.openide.ErrorManager;
 public class CmdlineDiffProvider extends DiffProvider implements java.io.Serializable {
 
     //private static final String REVISION_STR = "retrieving revision";
-    public static final String DIFF_REGEXP = "(^[0-9]+(,[0-9]+|)[d][0-9]+$)|"+
-                                              "(^[0-9]+(,[0-9]+|)[c][0-9]+(,[0-9]+|)$)|"+
-                                              "(^[0-9]+[a][0-9]+(,[0-9]+|)$)";
+    public static final String DIFF_REGEXP = "(^\\d+(,\\d+|)[d]\\d+$)|"+
+                                              "(^\\d+(,\\d+|)[c]\\d+(,\\d+|)$)|"+
+                                              "(^\\d+[a]\\d+(,\\d+|)$)";
     private static final int BUFF_LENGTH = 1024;
 
     private String diffCmd;

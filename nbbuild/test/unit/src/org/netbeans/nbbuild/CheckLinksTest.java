@@ -67,7 +67,7 @@ public class CheckLinksTest extends TestBase {
             "<target name=\"all\" >" +
             "  <checklinks checkexternal='false' basedir='" + html.getParent() + "' >" +
             "    <include name=\"" + html.getName () + "\" />" +
-            "    <filter accept='false' pattern='http://www.netbeans.org/download/[a-zA-Z0-9\\.]*/javadoc/.*' /> " +
+            "    <filter accept='false' pattern='http://www.netbeans.org/download/[a-zA-Z0-9.]*/javadoc/.*' /> " +
             "  </checklinks>" +
             "</target>" +
             "</project>"

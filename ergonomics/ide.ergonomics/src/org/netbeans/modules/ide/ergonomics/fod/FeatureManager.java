@@ -213,7 +213,7 @@ implements PropertyChangeListener, LookupListener {
             String[] paths = clusters.split(File.pathSeparator);
             for (String c : paths) {
                 int last = c.lastIndexOf(File.separatorChar);
-                String clusterName = c.substring(last + 1).replaceFirst("[0-9\\.]*$", "");
+                String clusterName = c.substring(last + 1).replaceFirst("[\\d.]*$", "");
                 String basename = "/org/netbeans/modules/ide/ergonomics/" + clusterName;
                 String layerName = basename + "/layer.xml";
                 String bundleName = basename + "/Bundle.properties";

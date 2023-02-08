@@ -344,7 +344,7 @@ public class GrailsArtifactWizardIterator implements WizardDescriptor.ProgressIn
     private static class DialogLineProcessor implements LineProcessor {
 
         private static final Pattern OVERWRITE_PATTERN =
-                Pattern.compile("^.*\\s([^\\s]+\\.groovy) already exists\\. Overwrite\\? \\[y/n\\]$"); // NOI18N
+                Pattern.compile("^.*\\s(\\S+\\.groovy) already exists\\. Overwrite\\? \\[y/n\\]$"); // NOI18N
 
         private static final Pattern DEFAULT_PACKAGE_PATTERN =
                 Pattern.compile("^WARNING: You have not specified a package\\. .* Do you want to continue\\? \\(y, n\\)$"); // NOI18N

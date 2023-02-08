@@ -97,7 +97,7 @@ public class TestServer {
 
     private static class ServerThread extends Thread {
 
-        private static final Pattern HTTP_PATTERN = Pattern.compile("(GET|HEAD) (/[^\\s]*) HTTP/1\\.[01]");
+        private static final Pattern HTTP_PATTERN = Pattern.compile("(GET|HEAD) (/\\S*) HTTP/1\\.[01]");
         private final Socket socket;
 
         public ServerThread(Socket socket) {

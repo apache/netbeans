@@ -1696,7 +1696,7 @@ public class ElementJavadoc {
             link = link.replace("<code>", "");
             link = link.replace("</code>", "");
 
-            String linkValue = link.replaceAll("\\<.*?>", "");
+            String linkValue = link.replaceAll("<.*?>", "");
             linkHtmlStartTag = link.substring(0, link.indexOf(linkValue));
             linkHtmlEndTag = link.substring(link.indexOf(linkValue) + linkValue.length());
         } catch (IOException ex) {

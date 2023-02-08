@@ -34,7 +34,7 @@ public class BundlePropertyResolver implements StringResolver{
         String parsed = string;
         
         // P for Properties
-        matcher = Pattern.compile("(?<!\\\\)\\$P\\{(.*?), (.*?)(?:, (.*?))?\\}").matcher(parsed);
+        matcher = Pattern.compile("(?<!\\\\)\\$P\\{(.*?), (.*?)(?:, (.*?))?}").matcher(parsed);
         while (matcher.find()) {
             String basename        = matcher.group(1);
             String key             = matcher.group(2);

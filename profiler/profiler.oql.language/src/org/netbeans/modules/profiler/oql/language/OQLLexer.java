@@ -59,7 +59,7 @@ class OQLLexer implements Lexer<OQLTokenId> {
     private TokenFactory<OQLTokenId>
                                 tokenFactory;
     private State               state = State.INIT;
-    private final Pattern       classPattern = Pattern.compile("(\\[*)[a-z]+(?:[a-z \\d]*)(?:[. \\$][a-z \\d]+)*(\\[\\])*", Pattern.CASE_INSENSITIVE); // NOI18N
+    private final Pattern       classPattern = Pattern.compile("(\\[*)[a-z]+(?:[a-z \\d]*)(?:[. $][a-z \\d]+)*(\\[])*", Pattern.CASE_INSENSITIVE); // NOI18N
     private final Pattern       classIdPattern = Pattern.compile("(0X)?([\\d a-f A-F]+)");
 
 

@@ -449,7 +449,7 @@ out:                for (int tmp = 0; tmp == 0; tmp++) {
             }
             Item itm = new Item( type, null, property, true);
             if (type == TYPE_LIBRARY) {
-                Pattern LIBRARY_REFERENCE = Pattern.compile("\\$\\{libs\\.([^${}]+)\\.[^${}]+\\}"); // NOI18N
+                Pattern LIBRARY_REFERENCE = Pattern.compile("\\$\\{libs\\.([^${}]+)\\.[^${}]+}"); // NOI18N
                 Matcher m = LIBRARY_REFERENCE.matcher(property);
                 if (m.matches()) {
                     itm.libraryName = m.group(1);

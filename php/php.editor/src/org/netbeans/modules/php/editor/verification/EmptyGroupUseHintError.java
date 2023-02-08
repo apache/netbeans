@@ -40,7 +40,7 @@ import org.openide.util.NbBundle;
 public class EmptyGroupUseHintError extends UnhandledErrorRule {
 
     private static final Logger LOGGER = Logger.getLogger(EmptyGroupUseHintError.class.getName());
-    private static final Pattern GROUP_USE_PATTERN = Pattern.compile(".*\\{(.+)\\}", Pattern.DOTALL); // NOI18N
+    private static final Pattern GROUP_USE_PATTERN = Pattern.compile(".*\\{(.+)}", Pattern.DOTALL); // NOI18N
 
     @NbBundle.Messages("EmptyGroupUseHintError.displayName=Syntax error, syntax error, unexpected '}', expecting identifier.")
     @Override

@@ -198,7 +198,7 @@ public class ManagerBean implements Manager {
             
             FileUtils.unjar(archive, packageRegistryDir);
             FileUtils.modifyFile(packageRegistryXml,
-                    "(\\>)resource:(.*?\\<\\/)",
+                    "(>)resource:(.*?<\\/)",
                     "$1" + uriPrefix.replace("&", "&amp;") + "$2", true, StringUtils.ENCODING_UTF8);
             
             final Registry localRegistry = new Registry();

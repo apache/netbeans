@@ -82,7 +82,7 @@ public final class JavaRegexpUtils {
     public static final String CALLSTACK_LINE_PREFIX_CATCH = "[catch] ";       //NOI18N
     /** */
     public static final String CALLSTACK_LINE_REGEX
-            = "(?:\\t\\t?|  +| *\\t? *\\[catch\\] )"                    //NOI18N
+            = "(?:\\t\\t?|  +| *\\t? *\\[catch] )"                    //NOI18N
               + CALLSTACK_LINE_PREFIX
               + "(?:" + JavaRegexpPatterns.JAVA_ID_REGEX_FULL +"/)?"    //NOI18N
               + JavaRegexpPatterns.JAVA_ID_REGEX + "(?:\\."                 //NOI18N
@@ -135,7 +135,7 @@ public final class JavaRegexpUtils {
     public static final String ADD_ERROR_PREFIX = "addError";          //NOI18N
 
     public static final String COMPARISON_REGEX = 
-      ".*expected:<(.*)\\[(.*)\\](.*)> but was:<(.*)\\[(.*)\\](.*)>.*"; //NOI18N
+      ".*expected:<(.*)\\[(.*)](.*)> but was:<(.*)\\[(.*)](.*)>.*"; //NOI18N
     public static final String COMPARISON_HIDDEN_REGEX = 
       ".*expected:<(.*)> but was:<(.*)>.*"; //NOI18N
 

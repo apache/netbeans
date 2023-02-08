@@ -70,7 +70,7 @@ public class EmbeddingProviderImpl extends EmbeddingProvider {
         result.add(snapshot.create(GLOBAL_PATTERN_CLASS, "text/x-java"));
 
         for (HintTextDescription hint : parsed.hints) {
-            result.add(snapshot.create(SNIPPET_PATTERN_PREFIX_PART1.replaceAll("\\{0\\}", "" + (index++)), "text/x-java"));
+            result.add(snapshot.create(SNIPPET_PATTERN_PREFIX_PART1.replaceAll("\\{0}", "" + (index++)), "text/x-java"));
 
             StringBuilder builder = new StringBuilder();
             boolean first = true;
@@ -103,7 +103,7 @@ public class EmbeddingProviderImpl extends EmbeddingProvider {
 
             for (FixTextDescription f : hint.fixes) {
                 int[] fixes = f.fixSpan;
-                result.add(snapshot.create(SNIPPET_PATTERN_PREFIX_PART1.replaceAll("\\{0\\}", "" + (index++)), "text/x-java"));
+                result.add(snapshot.create(SNIPPET_PATTERN_PREFIX_PART1.replaceAll("\\{0}", "" + (index++)), "text/x-java"));
                 result.add(snapshot.create(builder.toString(), "text/x-java"));
                 result.add(snapshot.create(SNIPPET_PATTERN_PREFIX_PART2, "text/x-java"));
                 result.add(snapshot.create(fixes[0], fixes[1] - fixes[0], "text/x-java"));

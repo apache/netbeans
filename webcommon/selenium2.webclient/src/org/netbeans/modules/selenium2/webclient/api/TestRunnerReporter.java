@@ -50,8 +50,8 @@ public final class TestRunnerReporter {
 
     private final String NB_LINE;
     
-    static final Pattern MULTI_CAPABILITIES = Pattern.compile("\\[launcher\\] Running (?<MULTICAPABILITIES>\\d+) instances of WebDriver"); // NOI18N
-    static final String CAPABILITY = "(\\[(?<BROWSER>.*) #(?<CAPABILITY>\\d+)\\] )?"; // NOI18N
+    static final Pattern MULTI_CAPABILITIES = Pattern.compile("\\[launcher] Running (?<MULTICAPABILITIES>\\d+) instances of WebDriver"); // NOI18N
+    static final String CAPABILITY = "(\\[(?<BROWSER>.*) #(?<CAPABILITY>\\d+)] )?"; // NOI18N
     static final Pattern OK_PATTERN = Pattern.compile("^" + CAPABILITY + "([^(not )]*)ok (?<INDEX>\\d+) (?<FULLTITLE>.*), suite=(?<SUITE>.*), testcase=(?<TESTCASE>.*), duration=(?<DURATION>\\d+)"); // NOI18N
     static final Pattern OK_SKIP_PATTERN = Pattern.compile("^" + CAPABILITY + "([^(not )]*)ok (?<INDEX>\\d+) (?<FULLTITLE>.*) # SKIP -, suite=(?<SUITE>.*), testcase=(?<TESTCASE>.*)"); // NOI18N
     static final Pattern NOT_OK_PATTERN = Pattern.compile("^" + CAPABILITY + "(.*)not ok (?<INDEX>\\d+) (?<FULLTITLE>.*), suite=(?<SUITE>.*), testcase=(?<TESTCASE>.*), duration=(?<DURATION>\\d+)"); // NOI18N

@@ -175,7 +175,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
                 p.equals(CP) || p.endsWith(".cp") || p.endsWith(".cp.extra"); // NOI18N
     }
     
-    private static final Pattern ANT_PROP_REGEX = Pattern.compile("\\$\\{([\\w.-]+)\\}"); // NOI18N
+    private static final Pattern ANT_PROP_REGEX = Pattern.compile("\\$\\{([\\w.-]+)}"); // NOI18N
     private boolean isModuleListDependentValue(String v) {
         if (v == null) {
             return false;

@@ -62,7 +62,7 @@ public class GlobalOutputProcessor implements OutputProcessor {
     private static final String SECTION_SESSION = "session-execute"; //NOI18N
     private static final String SECTION_PROJECT = "project-execute"; //NOI18N
     private static final Pattern LOW_MVN = Pattern.compile("(.*)Error resolving version for (.*): Plugin requires Maven version (.*)"); //NOI18N
-    private static final Pattern HELP = Pattern.compile("(?:\\[ERROR\\] )?\\[Help \\d+\\] (https?://.+)"); // NOI18N
+    private static final Pattern HELP = Pattern.compile("(?:\\[ERROR] )?\\[Help \\d+] (https?://.+)"); // NOI18N
     /**
      * @see org.apache.maven.model.building.ModelProblemUtils#formatLocation
      * @see org.apache.maven.model.building.ModelBuildingException#toMessage

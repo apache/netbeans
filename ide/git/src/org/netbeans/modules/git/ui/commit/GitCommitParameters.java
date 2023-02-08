@@ -142,10 +142,10 @@ public class GitCommitParameters extends DefaultCommitParameters implements Item
         return errorMessage;
     }    
     
-    private Pattern validUserFormat = Pattern.compile("(.+)\\<(.*)\\>");        // NOI18N
+    private Pattern validUserFormat = Pattern.compile("(.+)<(.*)>");        // NOI18N
     
     // cli rejects "<>", "<bla>", "bla>" or ">"
-    private Pattern invalidUserFormat = Pattern.compile("(\\<)?(.*)\\>");       // NOI18N
+    private Pattern invalidUserFormat = Pattern.compile("(<)?(.*)>");       // NOI18N
     
     /** package private to support testing */
     GitUser getUser(JComboBox combo) {

@@ -127,7 +127,7 @@ public class SDocElementUtils {
     }
 
     private static void parseAndStoreTypeDetails(TypeInformation typeInfo, int nameOffset, String nameText) {
-        boolean optional = nameText.matches("\\[.*\\]"); //NOI18N
+        boolean optional = nameText.matches("\\[.*]"); //NOI18N
         if (optional) {
             nameOffset++;
             nameText = nameText.substring(1, nameText.length() - 1);

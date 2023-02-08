@@ -304,7 +304,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
                     byte [] arr;
                     arr = readData(is);
                     String s1 = new String(arr, StandardCharsets.UTF_8);
-                    String s2 = s1.replaceAll("\\{0\\}",moduleName); // NOI18N
+                    String s2 = s1.replaceAll("\\{0}",moduleName); // NOI18N
                     arr = s2.getBytes(StandardCharsets.UTF_8);
                     stream = new ByteArrayInputStream(arr);
                 } else {

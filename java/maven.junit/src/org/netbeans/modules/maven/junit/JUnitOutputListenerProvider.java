@@ -103,9 +103,9 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     private static final String GROUP_FILE_NAME = "dir";
     
     public JUnitOutputListenerProvider(RunConfig config) {
-        runningPattern = Pattern.compile("(?:\\[surefire\\] )?Running (.*)", Pattern.DOTALL); //NOI18N        
-        outDirPattern = Pattern.compile ("(?:\\[INFO\\] )?Surefire report directory\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
-        outDirPattern2 = Pattern.compile("(?:\\[INFO\\] )?Setting reports dir\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
+        runningPattern = Pattern.compile("(?:\\[surefire] )?Running (.*)", Pattern.DOTALL); //NOI18N
+        outDirPattern = Pattern.compile ("(?:\\[INFO] )?Surefire report directory: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
+        outDirPattern2 = Pattern.compile("(?:\\[INFO] )?Setting reports dir: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
         this.config = config;
         usedNames = new HashSet<String>();
         startTimeStamp = System.currentTimeMillis();
@@ -564,7 +564,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     }
 
     private static final Pattern COMPARISON_PATTERN = Pattern.compile(".*expected:<(.*)> but was:<(.*)>$"); //NOI18N
-    private static final Pattern COMPARISON_PATTERN_AFTER_65 = Pattern.compile(".*expected \\[(.*)\\] but found \\[(.*)\\]$"); //NOI18N
+    private static final Pattern COMPARISON_PATTERN_AFTER_65 = Pattern.compile(".*expected \\[(.*)] but found \\[(.*)]$"); //NOI18N
 
     static Trouble constructTrouble(@NonNull String type, @NullAllowed String message, @NullAllowed String text, boolean error) {
         Trouble t = new Trouble(error);

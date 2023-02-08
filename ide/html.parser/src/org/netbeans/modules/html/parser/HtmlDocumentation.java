@@ -48,8 +48,8 @@ import org.openide.util.CharSequences;
  */
 public class HtmlDocumentation implements HelpResolver {
 
-    static final String SECTIONS_PATTERN_CODE = "<h\\d\\s*?id=['\\\"]?([\\w\\d-,:]*)['\\\"]?[^\\>]*>";//NOI18N
-//    static final String SECTIONS_PATTERN_CODE ="<[\\w\\d]*.*?id=\\\"([\\w\\d-]*)\\\"[^\\>]*>";//NOI18N
+    static final String SECTIONS_PATTERN_CODE = "<h\\d\\s*?id=['\\\"]?([\\w\\d-,:]*)['\\\"]?[^>]*>";//NOI18N
+//    static final String SECTIONS_PATTERN_CODE ="<[\\w\\d]*.*?id=\\\"([\\w\\d-]*)\\\"[^>]*>";//NOI18N
     static final Pattern SECTIONS_PATTERN = Pattern.compile(SECTIONS_PATTERN_CODE);
     private static final String DOC_ZIP_FILE_NAME = "docs/html5doc.zip"; //NOI18N
     private static URL DOC_ZIP_URL;

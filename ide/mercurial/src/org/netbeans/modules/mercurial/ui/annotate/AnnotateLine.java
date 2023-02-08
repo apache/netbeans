@@ -39,7 +39,7 @@ public class AnnotateLine {
     private int prevLineNum;
 
     private String commitMessage;
-    private static final Pattern validUserFormat = Pattern.compile("(.+)\\<(.*)\\>.*"); //NOI18N
+    private static final Pattern validUserFormat = Pattern.compile("(.+)<(.*)>.*"); //NOI18N
     
     /**
      * The default is true to enable rollback even if we were unable to determine the correct value.  

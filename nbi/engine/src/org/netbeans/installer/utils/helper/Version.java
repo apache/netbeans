@@ -28,7 +28,7 @@ public class Version {
     // Static
     public static Version getVersion(
             final String string) {
-        if (string!=null && string.matches("([0-9]+[\\._\\-]+)*[0-9]+")) {
+        if (string!=null && string.matches("([0-9]+[._\\-]+)*[0-9]+")) {
             return new Version(string);
         } else {
             return null;
@@ -44,7 +44,7 @@ public class Version {
     private long build;
     
     private Version(final String string) {
-        String[] split = string.split("[\\._\\-]+"); //NOI18N
+        String[] split = string.split("[._\\-]+"); //NOI18N
 
         if (split.length > 0) {
             major = Long.parseLong(split[0]);

@@ -361,7 +361,7 @@ public final class WindowsSupport {
             ProcessBuilder pb = new ProcessBuilder(activeShell.bindir + "\\uname.exe", "-r"); // NOI18N
             ExitStatus res = ProcessUtils.execute(pb);
             String output = res.getOutputString();
-            Pattern p = Pattern.compile("^([0-9\\.]*).*"); // NOI18N
+            Pattern p = Pattern.compile("^([0-9.]*).*"); // NOI18N
             Matcher m = p.matcher(output);
             if (m.matches()) {
                 cygwinVersion = m.group(1);

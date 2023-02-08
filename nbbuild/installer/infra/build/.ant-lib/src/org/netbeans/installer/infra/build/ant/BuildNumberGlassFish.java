@@ -146,11 +146,11 @@ public class BuildNumberGlassFish extends Task {
             "sjsas-9_1_02-([a-z0-9]+)-bin-" + // NOI18N
             "b(([0-9]+)[a-z]?)-linux-(\\w+)\\.bin"); // NOI18N
     private static final Pattern PATTERN_V3 = Pattern.compile(            
-            "glassfish-([0-9]+[\\.0-9]+)-b(([0-9]+)[a-z]?)\\.zip"); // NOI18N
+            "glassfish-([0-9]+[.0-9]+)-b(([0-9]+)[a-z]?)\\.zip"); // NOI18N
     
     // glassfish-3.1.2-2-b03.zip
     private static final Pattern PATTERN_V3_P02 = Pattern.compile(            
-            "glassfish-([0-9]+[\\.0-9]+)-[0-9]-b(([0-9]+)[a-z]?)\\.zip"); // NOI18N
+            "glassfish-([0-9]+[.0-9]+)-[0-9]-b(([0-9]+)[a-z]?)\\.zip"); // NOI18N
     
     /**
      * Date format used in the input file.

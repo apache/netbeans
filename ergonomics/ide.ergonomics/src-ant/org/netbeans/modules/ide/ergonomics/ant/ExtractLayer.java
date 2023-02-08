@@ -290,7 +290,7 @@ implements FileNameMapper, URIResolver, EntityResolver {
                             JarEntry je = en.nextElement();
                             if (concatPattern.matcher(je.getName()).matches()) {
                                 ZipEntry zipEntry = new ZipEntry(je);
-                                String noExt = je.getName().replaceFirst("\\.[^\\.]*$", "");
+                                String noExt = je.getName().replaceFirst("\\.[^.]*$", "");
                                 int index = noExt.indexOf("_");
                                 String suffix = index == -1 ? "" : noExt.substring(index + 1);
                                 ResArray ra = bundles.get(suffix);
@@ -482,7 +482,7 @@ implements FileNameMapper, URIResolver, EntityResolver {
                         url = url.substring(1);
                     }
                 }
-                url = url.replaceFirst("(\\.[^\\.])+$*", ".*$1");
+                url = url.replaceFirst("(\\.[^.])+$*", ".*$1");
                 copy.add(url);
             }
         });

@@ -151,7 +151,7 @@ public final class IncrementSpecificationVersions extends Task {
                 if (manifest) {
                     Matcher mC = Pattern.compile("([0-9]+\\.)([0-9]+)").matcher(old);
                     Matcher mW1 = Pattern.compile("([0-9]+)").matcher(old);
-                    Matcher mW2 = Pattern.compile("([0-9]+\\.)([0-9]+)\\.([0-9\\.]+)").matcher(old);
+                    Matcher mW2 = Pattern.compile("([0-9]+\\.)([0-9]+)\\.([0-9.]+)").matcher(old);
                     if (mC.matches()) {        // Correct e.g 1.0 -> 1.1
                         nue = mC.group(1) + (Integer.parseInt(mC.group(2)) + 1);
                     }
@@ -165,7 +165,7 @@ public final class IncrementSpecificationVersions extends Task {
                     Matcher mC = Pattern.compile("([0-9]+\\.)([0-9]+)(\\.0)").matcher(old);
                     Matcher mW1 = Pattern.compile("([0-9]+)").matcher(old);
                     Matcher mW2 = Pattern.compile("([0-9]+\\.)([0-9]+)").matcher(old);
-                    Matcher mW3 = Pattern.compile("([0-9]+\\.)([0-9]+)\\.([0-9\\.]+)").matcher(old);
+                    Matcher mW3 = Pattern.compile("([0-9]+\\.)([0-9]+)\\.([0-9.]+)").matcher(old);
                                         
                     if (mC.matches()) {  // Correct 1.1.0 -> 1.2.0
                         nue = mC.group(1) + (Integer.parseInt(mC.group(2)) + 1) + mC.group(3);
@@ -189,7 +189,7 @@ public final class IncrementSpecificationVersions extends Task {
                     Matcher mC1 = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)").matcher(old);
                     Matcher mC2 = Pattern.compile("([0-9]+\\.[0-9]+)").matcher(old);
                     Matcher mW1 = Pattern.compile("([0-9]+)").matcher(old);
-                    Matcher mW2 = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)\\.([0-9\\.]+)").matcher(old);
+                    Matcher mW2 = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)\\.([0-9.]+)").matcher(old);
                     if (mC1.matches()) { // Correct 1.2.3 -> 1.2.4
                         nue = mC1.group(1) + (Integer.parseInt(mC1.group(2)) + 1);
                     } 
@@ -207,7 +207,7 @@ public final class IncrementSpecificationVersions extends Task {
                     Matcher mC = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)").matcher(old);
                     Matcher mW1 = Pattern.compile("([0-9]+)").matcher(old);                    
                     Matcher mW2 = Pattern.compile("([0-9]+\\.)([0-9]+)").matcher(old);
-                    Matcher mW3 = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)\\.([0-9\\.]+)").matcher(old);                    
+                    Matcher mW3 = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)\\.([0-9.]+)").matcher(old);
                     if (mC.matches()) { // Correct 1.2.3 -> 1.2.4
                         nue = mC.group(1) + (Integer.parseInt(mC.group(2)) + 1);
                     }

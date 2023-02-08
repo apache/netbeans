@@ -380,7 +380,7 @@ public class W3CSelectorsTest extends CssTestBase {
 //            Matcher matcher = STYLE_CONTENT_PATTERN.matcher(sb);
 //            if (matcher.find()) {
 //                String css = matcher.group(1);
-//                String methodName = test.replaceAll("[-/\\.]", "_");
+//                String methodName = test.replaceAll("[-/.]", "_");
 //
 //                code.append("public void ");
 //                code.append(methodName);

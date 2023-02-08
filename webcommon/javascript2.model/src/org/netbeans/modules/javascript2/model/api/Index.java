@@ -228,7 +228,7 @@ public final class Index {
         prefix = prefix == null ? "" : prefix; //NOI18N
         ArrayList<IndexedElement> globals = new ArrayList<>();
         long start = System.currentTimeMillis();
-        String indexPrefix = escapeRegExp(prefix) + "[^\\.]*[" + IndexedElement.OBJECT_POSFIX + "]";   //NOI18N
+        String indexPrefix = escapeRegExp(prefix) + "[^.]*[" + IndexedElement.OBJECT_POSFIX + "]";   //NOI18N
         Collection<? extends IndexResult> globalObjects = query(Index.FIELD_FQ_NAME, indexPrefix, QuerySupport.Kind.REGEXP, TERMS_BASIC_INFO); //NOI18N
         for (IndexResult indexResult : globalObjects) {
             IndexedElement indexedElement = IndexedElement.create(indexResult);

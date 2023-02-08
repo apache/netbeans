@@ -57,7 +57,7 @@ import org.openide.util.RequestProcessor;
 class StackTraceSupport {
 
     private static final Pattern ST_PATTERN =
-           Pattern.compile("([\\p{Alnum}\\.\\$_<>]*?)\\((?:Native Method|Unknown Source|Compiled Code|([\\p{Alnum}\\.\\$_]*?):(\\p{Digit}+?))\\)", Pattern.DOTALL);
+           Pattern.compile("([\\p{Alnum}.\\$_<>]*?)\\((?:Native Method|Unknown Source|Compiled Code|([\\p{Alnum}.\\$_]*?):(\\p{Digit}+?))\\)", Pattern.DOTALL);
 
     private StackTraceSupport() { }
 

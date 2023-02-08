@@ -216,12 +216,13 @@ public abstract class PUCompletor {
                     ecs = provider.findEntityClassScope(fo);
                 }
                 if (ecs != null) {
-                    entities = ecs.getEntityMappingsModel(false).runReadAction( (EntityMappingsMetadata metadata) -> metadata.getRoot().getEntity() );
+                    entities = ecs.getEntityMappingsModel(false).runReadAction( metadata -> metadata.getRoot().getEntity() );
                 }
                 // add classes
                 if(entities != null) {
                     for (Entity entity : entities) {
-                        if (typedPrefix.length() == 0 || entity.getClass2().toLowerCase().startsWith(typedPrefix.toLowerCase()) || entity.getName().toLowerCase().startsWith(typedPrefix.toLowerCase())) {
+                        if (typedPrefix.length() == 0 || entity.getClass2().toLowerCase().startsWith(typedPrefix.toLowerCase()) 
+                                || entity.getName().toLowerCase().startsWith(typedPrefix.toLowerCase())) {
                             JPACompletionItem item = JPACompletionItem.createAttribValueItem(substitutionOffset, entity.getClass2());
                             results.add(item);
                         }

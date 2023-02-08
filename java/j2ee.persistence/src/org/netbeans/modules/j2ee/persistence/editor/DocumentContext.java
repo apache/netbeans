@@ -22,6 +22,7 @@ package org.netbeans.modules.j2ee.persistence.editor;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
@@ -209,7 +210,8 @@ public class DocumentContext {
             return false;
         }
         final DocumentContext other = (DocumentContext) obj;
-        return !(this.document != other.document && (this.document == null || !this.document.equals(other.document)));
+        
+        return !(Objects.equals(this.document, other.document));
     }
 
     @Override

@@ -194,10 +194,10 @@ public final class SelectedTables {
         String className = table2ClassName.get(table);
         if (className == null) {
             String exClassName = persistenceGen.getFQClassName(table.getName());
-            if(exClassName != null) {
+            if (exClassName != null) {
                 int i = exClassName.lastIndexOf('.');
-                if(i>-1) {
-                    exClassName = exClassName.substring(i+1);
+                if (i > -1) {
+                    exClassName = exClassName.substring(i + 1);
                 }
                 className = persistenceGen.generateEntityName(exClassName);
             } else {

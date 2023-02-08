@@ -119,8 +119,11 @@ public final class ContextUtilities {
         if(tagName == null) {
             return null;
         }
-        return (tagName.indexOf(':') == -1) ? null : // NOI18N
-            tagName.substring(0, tagName.indexOf(':')); // NOI18N
+        if(tagName.indexOf(':') == -1) {
+            return null;
+        } else {
+            return tagName.substring(0, tagName.indexOf(':'));
+        }
     }
     
     /**
@@ -130,8 +133,11 @@ public final class ContextUtilities {
         if(tagName == null) {
             return null;
         }
-        return (tagName.indexOf(':') == -1) ? tagName : // NOI18N
-            tagName.substring(tagName.indexOf(':')+1, tagName.length()); // NOI18N
+        if(tagName.indexOf(':') == -1) {
+            return tagName;
+        } else {
+            return tagName.substring(tagName.indexOf(':') + 1);
+        }
     }
     
     /**

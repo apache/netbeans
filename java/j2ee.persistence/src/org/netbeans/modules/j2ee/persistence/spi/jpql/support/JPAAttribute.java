@@ -153,57 +153,55 @@ public class JPAAttribute {
         } else {
             tm = var.asType();
         }
-        if( tm != null ){
-            if(null != tm.getKind()) {
-                switch (tm.getKind()) {
-                    case DECLARED:
-                        DeclaredType declaredType = (DeclaredType) tm;
-                        if(declaredType.getTypeArguments()!=null && declaredType.getTypeArguments().size()>0) {//it's some generic type
-                            if(mType == IMappingType.ONE_TO_MANY || mType == IMappingType.MANY_TO_MANY) {//we suppose it should be for relationship mapping only
-                                tm = declaredType.getTypeArguments().get(0);
-                                if(tm.getKind() == TypeKind.DECLARED){
-                                    declaredType = (DeclaredType) tm;
-                                }
+        if(tm != null && tm.getKind() != null) {
+            switch (tm.getKind()) {
+                case DECLARED:
+                    DeclaredType declaredType = (DeclaredType) tm;
+                    if(declaredType.getTypeArguments()!=null && declaredType.getTypeArguments().size()>0) {//it's some generic type
+                        if(mType == IMappingType.ONE_TO_MANY || mType == IMappingType.MANY_TO_MANY) {//we suppose it should be for relationship mapping only
+                            tm = declaredType.getTypeArguments().get(0);
+                            if(tm.getKind() == TypeKind.DECLARED){
+                                declaredType = (DeclaredType) tm;
                             }
                         }
-                        typeElement =  (TypeElement) declaredType.asElement();
-                        typeName = typeElement.getQualifiedName().toString();
-                        break;
-                    case BOOLEAN:
-                        typeName = ("boolean");//NOI18N
-                        cl = boolean.class;
-                        break;
-                    case BYTE:
-                        typeName = "byte";//NOI18N
-                        cl = byte.class;
-                        break;
-                    case CHAR:
-                        typeName = "char";//NOI18N
-                        cl = char.class;
-                        break;
-                    case DOUBLE:
-                        typeName = "double";//NOI18N
-                        cl = double.class;
-                        break;
-                    case FLOAT:
-                        typeName = "float";//NOI18N
-                        cl = float.class;
-                        break;
-                    case INT:
-                        typeName = "int";//NOI18N
-                        cl = int.class;
-                        break;
-                    case LONG:
-                        typeName = "long";//NOI18N
-                        cl = long.class;
-                        break;
-                    case SHORT:
-                        typeName = "short";//NOI18N
-                        cl = short.class;
-                        break;
-                    default:
-                        break;
-                }
+                    }
+                    typeElement =  (TypeElement) declaredType.asElement();
+                    typeName = typeElement.getQualifiedName().toString();
+                    break;
+                case BOOLEAN:
+                    typeName = ("boolean");//NOI18N
+                    cl = boolean.class;
+                    break;
+                case BYTE:
+                    typeName = "byte";//NOI18N
+                    cl = byte.class;
+                    break;
+                case CHAR:
+                    typeName = "char";//NOI18N
+                    cl = char.class;
+                    break;
+                case DOUBLE:
+                    typeName = "double";//NOI18N
+                    cl = double.class;
+                    break;
+                case FLOAT:
+                    typeName = "float";//NOI18N
+                    cl = float.class;
+                    break;
+                case INT:
+                    typeName = "int";//NOI18N
+                    cl = int.class;
+                    break;
+                case LONG:
+                    typeName = "long";//NOI18N
+                    cl = long.class;
+                    break;
+                case SHORT:
+                    typeName = "short";//NOI18N
+                    cl = short.class;
+                    break;
+                default:
+                    break;
             }
         }
     }

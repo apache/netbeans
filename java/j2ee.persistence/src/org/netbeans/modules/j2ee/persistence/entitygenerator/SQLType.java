@@ -148,8 +148,8 @@ class SQLType {
     // the no-arg getMemberType method are sufficient
     private Class getClassForNumericType(Integer precision, 
             Integer scale, boolean isNullable) {
-        int precValue = ((precision == null) ? -1 : precision);
-        int scaleValue = ((scale == null) ? -1 : scale);
+        int precValue = (precision == null) ? -1 : precision;
+        int scaleValue = (scale == null) ? -1 : scale;
 
         switch (sqlType) {
             case Types.DECIMAL:
@@ -160,7 +160,6 @@ class SQLType {
                 if ((precValue <= 0) && (scaleValue <= 0)){
                     return BigInteger.class;
                 }
-
                 if (scaleValue > 0) {
                     return BigDecimal.class;
                 }

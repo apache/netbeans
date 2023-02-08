@@ -157,8 +157,8 @@ public class NamedQueryHyperlinkProvider implements HyperlinkProviderExt {
                     AnnotationMirror foundAm = null;
                     AnnotationValue get = null;
                     Trees trees = parameter.getTrees();
+                    TypeElement entityElement = parameter.getElements().getTypeElement(entClasst);
                     
-                    TypeElement entityElement = parameter.getElements().getTypeElement(entClasst);trees.getSourcePositions().getStartPosition(parameter.getCompilationUnit(), trees.getPath(entityElement).getLeaf());
                     List<? extends AnnotationMirror> annotationMirrors = entityElement.getAnnotationMirrors();
                     if (annotationMirrors != null) {
                         Iterator<? extends AnnotationMirror> iterator = annotationMirrors.iterator();

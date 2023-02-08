@@ -703,7 +703,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
             }
 
             String packageName = getComponent().getPackageName();
-            if (packageName.trim().isEmpty()) { // NOI18N
+            if (packageName.trim().isEmpty()) {
                 setErrorMessage(NbBundle.getMessage(EntityClassesPanel.class, "ERR_JavaTargetChooser_CantUseDefaultPackage"));
                 return false;
             }

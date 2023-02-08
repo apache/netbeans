@@ -21,6 +21,7 @@ package org.netbeans.modules.j2ee.persistence.unit;
 
 import java.awt.Image;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.logging.Level;
@@ -175,7 +176,7 @@ public class PUDataObject extends XmlMultiViewDataObject {
             try{
                 String oldVersion = persistence.getVersion();
                 String version=Persistence.VERSION_1_0;
-                try (java.io.InputStream is = getEditorSupport().getInputStream()) {
+                try (InputStream is = getEditorSupport().getInputStream()) {
                     version=JPAParseUtils.getVersion(is);
                 } catch (SAXException ex) {
                     LOG.log(Level.INFO, null, ex);//persistence.xml may be corrupted, but no need to show exception dialog

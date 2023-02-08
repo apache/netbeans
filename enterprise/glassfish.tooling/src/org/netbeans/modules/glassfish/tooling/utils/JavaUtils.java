@@ -79,7 +79,7 @@ public class JavaUtils {
 //            " *[jJ][aA][vV][aA] +[vV][eE][rR][sS][iI][oO][nN] +" +
 //            "\"{0,1}([0-9]+).([0-9]+).([0-9]+)_([0-9]+)\"{0,1} *";
     private static final String VM_VERSION_PATTERN =
-            "[^0-9]*([0-9]+)\\.([0-9]+)(?:\\.([0-9]+)(?:[-_\\.]([0-9]+)){0,1}){0,1}[^0-9]*";
+            "[^0-9]*([0-9]+)\\.([0-9]+)(?:\\.([0-9]+)(?:[-_.]([0-9]+)){0,1}){0,1}[^0-9]*";
 
     /** Number of <code>Matcher</code> groups (REGEX tokens) expected in Java VM
      *  version output. */

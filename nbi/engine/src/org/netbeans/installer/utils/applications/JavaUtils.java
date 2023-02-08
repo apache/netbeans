@@ -409,7 +409,7 @@ public class JavaUtils {
                 LogManager.log("... version string : " + versionString);
                 // and create the version
                 final Matcher matcher = Pattern.
-                        compile("[0-9][0-9_\\.\\-]+[0-9]").
+                        compile("[0-9][0-9_.\\-]+[0-9]").
                         matcher(versionString);
                 
                 if (matcher.find()) {

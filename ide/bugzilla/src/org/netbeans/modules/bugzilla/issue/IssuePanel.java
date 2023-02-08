@@ -3737,7 +3737,7 @@ private void workedFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     }
 
     static String parseProductVersion(String productVersionValue) {
-        Pattern p = Pattern.compile("NetBeans IDE\\s([a-zA-Z0-9\\.?]*)\\s?.*"); // NOI18N
+        Pattern p = Pattern.compile("NetBeans IDE\\s([a-zA-Z0-9.?]*)\\s?.*"); // NOI18N
         Matcher m = p.matcher(productVersionValue);
         if(m.matches()) {
             String version = m.group(1);

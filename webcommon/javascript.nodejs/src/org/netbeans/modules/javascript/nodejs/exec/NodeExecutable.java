@@ -437,7 +437,7 @@ public class NodeExecutable {
 
     static class VersionOutputProcessorFactory implements ExecutionDescriptor.InputProcessorFactory2 {
 
-        private static final Pattern VERSION_PATTERN = Pattern.compile("^v([\\d\\.]+)$"); // NOI18N
+        private static final Pattern VERSION_PATTERN = Pattern.compile("^v([\\d.]+)$"); // NOI18N
 
         volatile String version;
 

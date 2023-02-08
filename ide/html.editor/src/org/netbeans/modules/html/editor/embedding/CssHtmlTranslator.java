@@ -53,7 +53,7 @@ public class CssHtmlTranslator implements CssEmbeddingProvider.Translator {
     static final Pattern CDATA_FILTER_PATTERN = Pattern.compile(".*<!\\[CDATA\\[\\s*(\\*/)?\\s*(<!--)?(.*?)(-->)?\\s*(/\\*)?\\s*]]>.*", Pattern.DOTALL | Pattern.MULTILINE);
     static final int CDATA_BODY_GROUP_INDEX = 3; //                                                  ^^^^
 
-    static final Pattern ILLEGAL_CHARS_IN_SELECTOR = Pattern.compile("[#/{}\\.:\\[\\]]");
+    static final Pattern ILLEGAL_CHARS_IN_SELECTOR = Pattern.compile("[#/{}.:\\[\\]]");
 
     @Override
     public List<Embedding> getEmbeddings(Snapshot snapshot) {

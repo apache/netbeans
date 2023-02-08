@@ -225,7 +225,7 @@ final class Compile implements DiagnosticListener<JavaFileObject> {
         errors.add(diagnostic);
     }
     private static String findPkg(String java) throws IOException {
-        Pattern p = Pattern.compile("package\\p{javaWhitespace}*([\\p{Alnum}\\.]+)\\p{javaWhitespace}*;", Pattern.MULTILINE);
+        Pattern p = Pattern.compile("package\\p{javaWhitespace}*([\\p{Alnum}.]+)\\p{javaWhitespace}*;", Pattern.MULTILINE);
         Matcher m = p.matcher(java);
         if (!m.find()) {
             throw new IOException("Can't find package declaration in the java file");
@@ -234,7 +234,7 @@ final class Compile implements DiagnosticListener<JavaFileObject> {
         return pkg;
     }
     private static String findCls(String java) throws IOException {
-        Pattern p = Pattern.compile("class\\p{javaWhitespace}*([\\p{Alnum}\\.]+)\\p{javaWhitespace}", Pattern.MULTILINE);
+        Pattern p = Pattern.compile("class\\p{javaWhitespace}*([\\p{Alnum}.]+)\\p{javaWhitespace}", Pattern.MULTILINE);
         Matcher m = p.matcher(java);
         if (!m.find()) {
             throw new IOException("Can't find package declaration in the java file");

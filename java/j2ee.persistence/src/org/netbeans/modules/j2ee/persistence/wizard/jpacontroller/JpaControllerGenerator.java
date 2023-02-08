@@ -309,7 +309,7 @@ public class JpaControllerGenerator {
                 parameterNames.add("emf");   //NOI18N
                 body += "this.emf = emf;";   //NOI18N
                 MethodInfo mi = new MethodInfo("<init>", publicModifier, "void", null, parameterTypes.toArray(new String[0]),   //NOI18N
-parameterNames.toArray(new String[0]), body, null, null);
+                parameterNames.toArray(new String[0]), body, null, null);
                 modifiedClassTree = JpaControllerUtil.TreeMakerUtils.modifyDefaultConstructor(classTree, modifiedClassTree, workingCopy, mi);
                 
                 MethodInfo methodInfo = new MethodInfo("getEntityManager", publicModifier, "javax.persistence.EntityManager", null, null, null, "return emf.createEntityManager();", null, null);

@@ -104,7 +104,8 @@ public class ETCompletionContextResolver implements CompletionContextResolver {
         }
         if (ecs != null) {
             try {
-                entities = ecs.getEntityMappingsModel(false).runReadAction( (EntityMappingsMetadata metadata) -> metadata.getRoot().getEntity() );
+                entities = ecs.getEntityMappingsModel(false)
+                              .runReadAction( (EntityMappingsMetadata metadata) -> metadata.getRoot().getEntity() );
             } catch (MetadataModelException ex) {
             } catch (IOException ex) {
             }

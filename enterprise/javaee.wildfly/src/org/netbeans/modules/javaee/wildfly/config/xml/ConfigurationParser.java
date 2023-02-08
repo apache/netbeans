@@ -20,58 +20,63 @@ package org.netbeans.modules.javaee.wildfly.config.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
+import org.netbeans.modules.javaee.wildfly.config.SocketContainer;
 import org.netbeans.modules.javaee.wildfly.config.xml.ds.WildflyDatasourcesHandler;
+import org.netbeans.modules.javaee.wildfly.config.xml.sockets.WildflySocketBindingsHandler;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.xml.sax.SAXException;
 
 /**
- *
- * @author Emmanuel Hugonnet (ehsavoie) <ehsavoie@netbeans.org>
+ * A parser for entries of an XML config file.
  */
 public class ConfigurationParser {
 
     private static final String LOAD_EXTERNAL_DTD_FEATURE = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
-    private static final Map<String, String> NAMESPACES = new HashMap<String, String>();
-
-    static {
-        NAMESPACES.put("ds", "urn:jboss:domain:datasources:2.0");
-    }
 
     public static final ConfigurationParser INSTANCE = new ConfigurationParser();
 
     public Set<Datasource> listDatasources(FileObject xmlFile) {
-        InputStream data = null;
-        try {
-            data = xmlFile.getInputStream();
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            SAXParser sp = spf.newSAXParser();
-            sp.getXMLReader().setFeature(LOAD_EXTERNAL_DTD_FEATURE, false);
+        try (InputStream data = xmlFile.getInputStream()) {
+            SAXParser sp = getConfiguredParser();
             WildflyDatasourcesHandler handler = new WildflyDatasourcesHandler(sp.getXMLReader());
             sp.parse(data, handler);
             return handler.getDatasources();
-        } catch (SAXException ex) {
+        } catch (SAXException | ParserConfigurationException | IOException ex) {
             Exceptions.printStackTrace(ex);
-        } catch (ParserConfigurationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
-            if (data != null) {
-                try {
-                    data.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
         }
         return null;
+    }
+
+    /**
+     * Retrieves an {@link Optional} {@link SocketContainer} that contains all socket bindings defined in the
+     * given config XML file.
+     *
+     * @param xmlFile The XML config {@link FileObject}.
+     * @return The optional socket container.
+     */
+    public Optional<SocketContainer> getSockets(FileObject xmlFile) {
+        try (InputStream data = xmlFile.getInputStream()) {
+            SAXParser sp = getConfiguredParser();
+            WildflySocketBindingsHandler socketsHandler = new WildflySocketBindingsHandler();
+            sp.parse(data, socketsHandler);
+            return Optional.of(socketsHandler.getSocketContainer());
+        } catch (SAXException | ParserConfigurationException | IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return Optional.empty();
+    }
+
+    private SAXParser getConfiguredParser() throws ParserConfigurationException, SAXException {
+        SAXParserFactory spf = SAXParserFactory.newInstance();
+        SAXParser sp = spf.newSAXParser();
+        sp.getXMLReader().setFeature(LOAD_EXTERNAL_DTD_FEATURE, false);
+        return sp;
     }
 }

@@ -28,7 +28,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
@@ -38,7 +37,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import org.openide.util.NbBundle;
 
 /**
@@ -138,8 +136,8 @@ public class AddServerPropertiesVisualPanel extends JPanel {
         DomainComboModel model = (DomainComboModel) domainField.getModel();
         String path = model.getCurrentPath();
         domainPathField.setText(path);
-        portField.setText(WildflyPluginUtils.getHTTPConnectorPort(path));
-        managementPortField.setText(WildflyPluginUtils.getManagementConnectorPort(path));
+        portField.setText(String.valueOf(WildflyPluginUtils.getHTTPConnectorPort(path)));
+        managementPortField.setText(String.valueOf(WildflyPluginUtils.getManagementConnectorPort(path)));
         fireChangeEvent();
     }
 
@@ -410,7 +408,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
         add(panel1, gridBagConstraints);
 
         hostField.setText("localhost");//NOI18N
-        portField.setText(WildflyPluginUtils.getHTTPConnectorPort(domainPathField.getText()));//NOI18N
+        portField.setText(String.valueOf(WildflyPluginUtils.getHTTPConnectorPort(domainPathField.getText())));//NOI18N
         domainChanged();
 
     }

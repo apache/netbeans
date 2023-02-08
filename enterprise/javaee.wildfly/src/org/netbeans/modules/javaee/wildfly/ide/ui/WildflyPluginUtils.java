@@ -18,10 +18,9 @@
  */
 package org.netbeans.modules.javaee.wildfly.ide.ui;
 
-import static java.io.File.separatorChar;
-
 import java.beans.PropertyVetoException;
 import java.io.File;
+import static java.io.File.separatorChar;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -34,14 +33,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.j2ee.deployment.common.api.SocketBinding;
+import org.netbeans.modules.javaee.wildfly.config.SocketContainer;
+import org.netbeans.modules.javaee.wildfly.config.xml.ConfigurationParser;
+import org.netbeans.modules.javaee.wildfly.ide.commands.Constants;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.JarFileSystem;
 
 /**
@@ -238,12 +243,12 @@ public class WildflyPluginUtils {
         return domainDir + separatorChar + "deployments"; //NOI18N
     }
 
-    public static String getHTTPConnectorPort(String configFile) {
-        return String.valueOf(WildflyPluginProperties.DEFAULT_HOST_PORT);
+    public static int getHTTPConnectorPort(String configFile) {
+        return getPortByName(configFile, Constants.HOST_HTTP, WildflyPluginProperties.DEFAULT_HOST_PORT);
     }
 
-    public static String getManagementConnectorPort(String configFile) {
-        return String.valueOf(WildflyPluginProperties.DEFAULT_ADMIN_PORT);
+    public static int getManagementConnectorPort(String configFile) {
+        return getPortByName(configFile, Constants.MANAGEMENT_HTTP, WildflyPluginProperties.DEFAULT_ADMIN_PORT);
     }
 
     /**
@@ -409,6 +414,19 @@ public class WildflyPluginUtils {
             }
         }
         return false;
+    }
+
+    private static int getPortByName(String configFile, String portName, int fallback) {
+        File config = new File(configFile);
+        FileObject configFileObject = FileUtil.toFileObject(config);
+        Optional<SocketContainer> sockets = ConfigurationParser.INSTANCE.getSockets(configFileObject);
+        if (sockets.isPresent()) {
+            Optional<SocketBinding> socketByName = sockets.get().getSocketByName(portName);
+            return socketByName
+                    .map(SocketBinding::getPort)
+                    .orElse(fallback);
+        }
+        return fallback;
     }
 
     private static class VersionJarFileFilter implements FilenameFilter {

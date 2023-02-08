@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.javaee.wildfly.config.xml.ds;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
 import org.netbeans.modules.javaee.wildfly.config.WildflyDatasource;
 import org.xml.sax.Attributes;
@@ -35,10 +37,10 @@ import org.xml.sax.helpers.DefaultHandler;
 public class WildflyDatasourcesHandler extends DefaultHandler {
 
     private final XMLReader parser;
-    private final Set<Datasource> datasources = new HashSet<Datasource>();
-    private final Set<WildflyDataSource> parsedDatasources = new HashSet<WildflyDataSource>();
+    private final Set<Datasource> datasources = new HashSet<>();
+    private final Set<WildflyDataSource> parsedDatasources = new HashSet<>();
 
-    boolean isDatasource = false;
+    private boolean isDatasource = false;
 
     private WildflyDatasourceHandler datasourceHandler;
     private WildflyDriversHandler driversHandler;
@@ -48,7 +50,7 @@ public class WildflyDatasourcesHandler extends DefaultHandler {
     }
 
     public Set<Datasource> getDatasources() {
-        return datasources;
+        return Collections.unmodifiableSet(datasources);
     }
 
     @Override

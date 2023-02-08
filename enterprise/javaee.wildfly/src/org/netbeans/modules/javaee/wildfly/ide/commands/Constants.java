@@ -202,6 +202,7 @@ public class Constants {
     public static final String HOST_STATE = "host-state";// NOI18N
     public static final String HTTP_UPGRADE_ENABLED = "http-upgrade-enabled";// NOI18N
     public static final String HTTP_INTERFACE = "http-interface";// NOI18N
+    public static final String HOST_HTTP = "http";// NOI18N
     public static final String IGNORED = "ignored-by-unaffected-host-controller";// NOI18N
     public static final String IGNORED_RESOURCES = "ignored-resources";// NOI18N
     public static final String IGNORED_RESOURCE_TYPE = "ignored-resource-type";// NOI18N
@@ -220,6 +221,7 @@ public class Constants {
     public static final String INITIAL_SERVER_GROUPS = "initial-server-groups";// NOI18N
     public static final String INPUT_STREAM_INDEX = "input-stream-index";// NOI18N
     public static final String INTERFACE = "interface";// NOI18N
+    public static final String INTERFACES = "interfaces";// NOI18N
     public static final String ITERATIVE = "iterative";// NOI18N
     public static final String JAXRS_SUBSYSTEM = "jaxrs";// NOI18N
     public static final String JAXRS_RESOURCE = "jaxrs-resource";// NOI18N
@@ -239,6 +241,7 @@ public class Constants {
     public static final String LOG_BOOT = "log-boot";// NOI18N
     public static final String LOG_READ_ONLY = "log-read-only";// NOI18N
     public static final String MANAGEMENT = "management";// NOI18N
+    public static final String MANAGEMENT_HTTP = "management-http";// NOI18N
     public static final String MANAGEMENT_CLIENT_CONTENT = "management-client-content";// NOI18N
     public static final String MANAGEMENT_INTERFACE = "management-interface";// NOI18N
     public static final String MANAGEMENT_MAJOR_VERSION = "management-major-version";// NOI18N
@@ -512,5 +515,5 @@ public class Constants {
     public static final String WRITE = "write";// NOI18N
     public static final String WRITE_ATTRIBUTE_OPERATION = "write-attribute";// NOI18N
     public static final String XML_NAMESPACES = "xml-namespaces";// NOI18N
-
+    
 }

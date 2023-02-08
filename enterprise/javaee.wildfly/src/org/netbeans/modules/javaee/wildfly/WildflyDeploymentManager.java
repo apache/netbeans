@@ -54,8 +54,7 @@ import org.netbeans.modules.javaee.wildfly.deploy.WildflyProgressObject;
 import org.netbeans.modules.javaee.wildfly.ide.commands.WildflyClient;
 import org.netbeans.modules.javaee.wildfly.ide.commands.WildflyModule;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties;
-import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_ADMIN_PORT;
-import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.PROPERTY_ADMIN_PORT;
+import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.PROPERTY_CONFIG_FILE;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils.Version;
 import org.netbeans.modules.javaee.wildfly.util.WildFlyProperties;
@@ -101,15 +100,15 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
         File serverPath = new File(this.instanceProperties.getProperty(WildflyPluginProperties.PROPERTY_ROOT_DIR));
         version = WildflyPluginUtils.getServerVersion(serverPath);
         isWildfly = WildflyPluginUtils.isWildFly(serverPath);
-        int controllerPort = DEFAULT_ADMIN_PORT;
-        String adminPort = this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT);
-        if (adminPort != null) {
-            controllerPort = Integer.parseInt(this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT));
+        String configFilePath = this.instanceProperties.getProperty(PROPERTY_CONFIG_FILE);
+        int adminPort = WildflyPluginProperties.DEFAULT_ADMIN_PORT;
+        if (configFilePath != null) {
+            adminPort = WildflyPluginUtils.getManagementConnectorPort(configFilePath);
         }
         if (username != null && password != null) {
-            this.client = new WildflyClient(instanceProperties, version, getHost(), controllerPort, username, password);
+            this.client = new WildflyClient(instanceProperties, version, getHost(), adminPort, username, password);
         } else {
-            this.client = new WildflyClient(instanceProperties, version, getHost(), controllerPort);
+            this.client = new WildflyClient(instanceProperties, version, getHost(), adminPort);
         }
         ChangelogWildflyPlugin.showChangelog();
     }

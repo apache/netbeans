@@ -169,7 +169,7 @@ public class DumpTokens {
             new EventTool().waitNoEvent(1000);
         }
         
-           return ts.toString().replaceAll("(st=.*)*IHC=[0-9]*", "");// remove System.identityHashCode
+           return ts.toString().replaceAll("(st=.*)*IHC=\\d*", "");// remove System.identityHashCode
            
     }
 }

@@ -725,7 +725,7 @@ public class ModuleDependencies extends Task {
             for (String clusterProp : standardClustersS.split(",")) {
                 String dir = getProject().getProperty(clusterProp + ".dir");
                 if (dir != null) {
-                    standardClusters.add(dir.replaceFirst("[0-9.]+$", ""));
+                    standardClusters.add(dir.replaceFirst("[\\d.]+$", ""));
                 }
             }
         }
@@ -1049,7 +1049,7 @@ public class ModuleDependencies extends Task {
                     continue;
                 }
                 Input i = new Input();
-                i.name = cluster.getName().replaceFirst("[0-9.]+$", "");
+                i.name = cluster.getName().replaceFirst("[\\d.]+$", "");
                 i.jars = new FileSet();
                 i.jars.setDir(cluster);
                 i.jars.createInclude().setName("modules/*.jar");

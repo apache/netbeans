@@ -49,7 +49,7 @@ public class ExpandFolderTest extends NbTestCase implements Callable<Long> {
         
         NbTestSuite s = new NbTestSuite();
         s.addTest(create(null, ".*"));
-        s.addTest(create("ide[0-9]*|java[0-9]*", ".*"));
+        s.addTest(create("ide\\d*|java\\d*", ".*"));
         s.addTest(create(".*", ".*"));
         s.addTest(new CompareResults(s));
         return s;

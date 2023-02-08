@@ -130,7 +130,7 @@ public class Autoupdate extends JellyTestCase
     Sleep( 2000 );
     sSelected = jtTabs.getTitleAt( jtTabs.getSelectedIndex( ) );
     System.out.println( "===" + sSelected );
-    if( !sSelected.matches( "Installed [(][0-9]+/[0-9]+[)]" ) )
+    if( !sSelected.matches( "Installed [(]\\d+/\\d+[)]" ) )
       fail( "Invalid result of filtering." );
     jtSearch.enterText( "" );
 

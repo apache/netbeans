@@ -95,7 +95,7 @@ public final class ModuleStateSelector extends BaseExtendSelector {
         return false;
     }
     static String clusterBaseName(String clusterName) {
-        return clusterName.replaceFirst("[0-9.]+$", ""); // NOI18N
+        return clusterName.replaceFirst("[\\d.]+$", ""); // NOI18N
     }
 
     @Override

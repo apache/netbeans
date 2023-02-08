@@ -32,7 +32,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 final class LaunchProcess implements Callable<Process> {
-    private static final Pattern JVM_ARGS_PATTERN = Pattern.compile("(.*) (--source[ ]* [0-9]*)(.*)");  //NOI18N
+    private static final Pattern JVM_ARGS_PATTERN = Pattern.compile("(.*) (--source[ ]* \\d*)(.*)");  //NOI18N
 
     private final FileObject fileObject;
     private final JPDAStart start;

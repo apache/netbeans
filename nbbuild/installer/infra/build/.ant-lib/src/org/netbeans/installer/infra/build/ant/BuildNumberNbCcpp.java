@@ -127,7 +127,7 @@ public class BuildNumberNbCcpp extends Task {
      * Pattern for which to look in the input file.
      */
     private static final Pattern PATTERN = Pattern.compile(
-            "cnd-cluster-([0-9_]+)\\.zip"); // NOI18N
+            "cnd-cluster-([\\d_]+)\\.zip"); // NOI18N
     
     /**
      * Build number property suffix.

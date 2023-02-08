@@ -163,7 +163,7 @@ public class ClassPathProviderImplTest extends TestBase {
                 // Unevaluated Ant reference (after octet escaping), so skip.
                 continue;
             }
-            String simplifiedJarName = url.replaceFirst("^.+/([^/]+?)[0-9_.-]*\\.jar!/$", "$1.jar");
+            String simplifiedJarName = url.replaceFirst("^.+/([^/]+?)[\\d_.-]*\\.jar!/$", "$1.jar");
             if (TESTLIBS.contains(simplifiedJarName)) {
                 s.add(simplifiedJarName);
             } else {

@@ -171,7 +171,7 @@ public final class InputOutputCache {
         if (!toMatch.startsWith(base)) {
             return false;
         }
-        return toMatch.substring(base.length()).matches("^(\\ #[0-9]+)?$"); // NOI18N
+        return toMatch.substring(base.length()).matches("^(\\ #\\d+)?$"); // NOI18N
     }
 
     @NbBundle.Messages({

@@ -778,12 +778,12 @@ public class MakeUpdateDesc extends MatchingTask {
                         continue;
                     }
                     String val = m2.group(2);
-                    if (val.matches("[0-9]+([.][0-9]+)*")) {
+                    if (val.matches("\\d+([.]\\d+)*")) {
                         // non-range dep occasionally used in OSGi; no exact equivalent in NB
                         depSB.append(" > ").append(val);
                         continue;
                     }
-                    Matcher m3 = Pattern.compile("\\[([0-9]+)((?:[.][0-9]+)*),([0-9.]+)\\)").matcher(val);
+                    Matcher m3 = Pattern.compile("\\[(\\d+)((?:[.]\\d+)*),([\\d.]+)\\)").matcher(val);
                     if (!m3.matches()) {
                         throw new BuildException("Could not parse version range: " + val + " in " + whereFrom);
                     }

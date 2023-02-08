@@ -322,13 +322,13 @@ public class FixDependencies extends Task {
                     } else {
                         if (m.specVersion != null) {
                             a = a.replaceAll (
-                                "<specification-version>[0-9.]*</specification-version>",
+                                "<specification-version>[\\d.]*</specification-version>",
                                 "<specification-version>" + m.specVersion + "</specification-version>"
                             );
                         }
                         if (m.releaseVersion == null) {
                             a = a.replaceAll (
-                                "<release-version>[0-9]*</release-version>[\n\r ]*", 
+                                "<release-version>\\d*</release-version>[\n\r ]*", 
                                 ""
                             );
                         }

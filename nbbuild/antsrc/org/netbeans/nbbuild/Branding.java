@@ -66,7 +66,7 @@ public final class Branding extends Task {
         if (overrides == null || !overrides.isDirectory()) {
             throw new BuildException("Must specify a valid overrides directory", getLocation());
         }
-        if (token == null || !token.matches("[a-z][a-z0-9]*(_[a-z][a-z0-9]*)*")) { // cf. NbBundle.setBranding
+        if (token == null || !token.matches("[a-z][a-z\\d]*(_[a-z][a-z\\d]*)*")) { // cf. NbBundle.setBranding
             throw new BuildException("Must specify a valid branding token: " + token, getLocation());
         }
         try {

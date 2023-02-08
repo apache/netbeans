@@ -86,7 +86,7 @@ public final class EnvWriter {
         if (!env.isEmpty()) {
             String value = null;
             // Very simple sanity check of vars...
-            Pattern pattern = Pattern.compile("[A-Z0-9_]+"); // NOI18N
+            Pattern pattern = Pattern.compile("[A-Z\\d_]+"); // NOI18N
 
             for (String name : env.getExportVariablesSet()) {
                 // check capitalized key by pattern

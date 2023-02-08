@@ -58,7 +58,7 @@ public class OpenEditorEnablesEditMenuFactoryTest extends NbTestCase {
             gui(true).
             clusters("ergonomics.*").
             clusters(".*").
-            enableModules("ide[0-9]*", ".*").
+            enableModules("ide\\d*", ".*").
             honorAutoloadEager(true)
         );
     }

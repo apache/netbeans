@@ -113,7 +113,7 @@ class MercurialHyperlink implements OutputListener {
     }
 
     private static final Map<String,String> parents = new HashMap<String,String>();
-    private static final Pattern PARENT_COMMENT = Pattern.compile("# Parent +([0-9a-f]{40})"); // NOI18N
+    private static final Pattern PARENT_COMMENT = Pattern.compile("# Parent +([\\da-f]{40})"); // NOI18N
     private static synchronized String findParent(URI repo, String node) throws IOException {
         String parent = parents.get(node);
         if (parent == null) {

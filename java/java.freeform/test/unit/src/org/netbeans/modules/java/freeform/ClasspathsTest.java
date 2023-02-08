@@ -175,7 +175,7 @@ public class ClasspathsTest extends TestBase {
         ClassPath.Entry entry = entries.get(0);
         String u = entry.getURL().toExternalForm();
         // Cf. DummyJavaPlatformProvider.
-        Pattern p = Pattern.compile("jar:file:/c:/java/([0-9.]+)/jre/lib/rt\\.jar!/");
+        Pattern p = Pattern.compile("jar:file:/c:/java/([\\d.]+)/jre/lib/rt\\.jar!/");
         Matcher m = p.matcher(u);
         if (m.matches()) {
             return m.group(1);

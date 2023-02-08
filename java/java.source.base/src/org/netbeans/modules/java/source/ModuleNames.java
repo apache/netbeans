@@ -356,7 +356,7 @@ public final class ModuleNames {
             moduleName = moduleName.substring(0, start);
         }
         moduleName =  moduleName
-            .replaceAll("[^A-Za-z0-9]", ".")  // replace non-alphanumeric
+            .replaceAll("[^A-Za-z\\d]", ".")  // replace non-alphanumeric
             .replaceAll("(\\.)(\\1)+", ".")   // collapse repeating dots
             .replaceAll("^\\.", "")           // drop leading dots
             .replaceAll("\\.$", "");          // drop trailing dots

@@ -77,7 +77,7 @@ final class SuiteCustomizerBasicBranding extends NbPropertyPanel.Suite  {
             panelValid = false;
         }
 
-        if (panelValid && !nameValue.getText().trim().matches("[a-z][a-z0-9]*(_[a-z][a-z0-9]*)*")) {//NOI18N
+        if (panelValid && !nameValue.getText().trim().matches("[a-z][a-z\\d]*(_[a-z][a-z\\d]*)*")) {//NOI18N
             category.setErrorMessage(ERR_InvalidName());//NOI18N
             panelValid = false;
         }

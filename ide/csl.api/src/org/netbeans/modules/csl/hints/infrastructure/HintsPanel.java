@@ -151,7 +151,7 @@ public final class HintsPanel extends javax.swing.JPanel implements TreeCellRend
             if (r instanceof UserConfigurableRule) {
                 String htmlDesc = (((UserConfigurableRule)r)).getDescription().toLowerCase();
                 // filter out opening and closing tags. Hope that > does not appear in attribute values.
-                String untagged = htmlDesc.replaceAll("</?[a-z0-9]+.*?>", ""); // NOI18N
+                String untagged = htmlDesc.replaceAll("</?[a-z\\d]+.*?>", ""); // NOI18N
                 return untagged.
                         toLowerCase().contains(filterText);
             }

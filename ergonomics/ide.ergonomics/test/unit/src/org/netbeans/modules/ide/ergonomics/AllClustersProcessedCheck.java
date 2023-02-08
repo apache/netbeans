@@ -43,7 +43,7 @@ public class AllClustersProcessedCheck extends NbTestCase {
 
         StringBuilder sb = new StringBuilder();
         for (String c : clusters.split(File.pathSeparator)) {
-            String n = new File(c).getName().replaceFirst("[.0-9]+$", "");
+            String n = new File(c).getName().replaceFirst("[.\\d]+$", "");
             if (n.equals("platform")) {
                 continue;
             }

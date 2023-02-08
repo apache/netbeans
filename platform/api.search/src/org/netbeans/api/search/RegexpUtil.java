@@ -47,7 +47,7 @@ public final class RegexpUtil {
             return simplePatternList;
         }
 
-        if (Pattern.matches("[a-zA-Z0-9]*", simplePatternList)) {       //NOI18N
+        if (Pattern.matches("[a-zA-Z\\d]*", simplePatternList)) {       //NOI18N
             return simplePatternList;                       //trivial case
         }
 

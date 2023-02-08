@@ -117,7 +117,7 @@ public final class NbModuleLogHandler extends Handler {
     }
 
     private static final List<String> hexes = new ArrayList<String>();
-    private static final String integerToHexString = "[0-9a-fA-F]{5,8}";
+    private static final String integerToHexString = "[\\da-fA-F]{5,8}";
     private static final Pattern hex = Pattern.compile("(?<=@(?:" + integerToHexString + ":)?)" + integerToHexString,
         isLikelyCaseInsensitive() ? Pattern.CASE_INSENSITIVE : 0
     );

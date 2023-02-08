@@ -29,13 +29,13 @@ import org.openide.util.Parameters;
  */
 public final class Validations {
 
-    private static final Pattern CONTAINER_PATTERN = Pattern.compile("^[a-zA-Z0-9][\\w.-]+$");
+    private static final Pattern CONTAINER_PATTERN = Pattern.compile("^[a-zA-Z\\d][\\w.-]+$");
 
-    private static final Pattern REPOSITORY_PATTERN = Pattern.compile("^[a-z0-9_.-]+$");
+    private static final Pattern REPOSITORY_PATTERN = Pattern.compile("^[a-z\\d_.-]+$");
 
-    private static final Pattern NAMESPACE_PATTERN = Pattern.compile("^[a-z0-9_-]+$");
+    private static final Pattern NAMESPACE_PATTERN = Pattern.compile("^[a-z\\d_-]+$");
 
-    private static final Pattern FORBIDDEN_REPOSITORY_PATTERN = Pattern.compile("^[a-f0-9]{64}$");
+    private static final Pattern FORBIDDEN_REPOSITORY_PATTERN = Pattern.compile("^[a-f\\d]{64}$");
 
     private static final Pattern TAG_PATTERN = Pattern.compile("^[\\w.-]+$");
 
@@ -46,7 +46,7 @@ public final class Validations {
     @NbBundle.Messages({
         "MSG_ErrorContainerShort=Name length must be at least 2 characters.",
         "# {0} - error token",
-        "MSG_ErrorContainerCharacter=Only [a-zA-Z0-9][\\w.-] allowed in name ({0})."
+        "MSG_ErrorContainerCharacter=Only [a-zA-Z\\d][\\w.-] allowed in name ({0})."
     })
     public static String validateContainer(String container) {
         Parameters.notNull("container", container);
@@ -70,12 +70,12 @@ public final class Validations {
         "MSG_ErrorSchema=Repository must not contain schema definition.",
         "MSG_ErrorRepositoryEmpty=Repository name can't be empty.",
         "# {0} - error token",
-        "MSG_ErrorRepositoryCharacter=Only [a-z0-9_.-] allowed in repository ({0}).",
+        "MSG_ErrorRepositoryCharacter=Only [a-z\\d_.-] allowed in repository ({0}).",
         "MSG_ErrorRepository64HexBytes=Repository name can't be 64 hex characters.",
         "# {0} - error token",
         "MSG_ErrorRegistryStartEndHyphen=Registry can''t start or end with hyphen ({0}).",
         "# {0} - error token",
-        "MSG_ErrorNamespaceCharacter=Only [a-z0-9_-] allowed in namespace ({0}).",
+        "MSG_ErrorNamespaceCharacter=Only [a-z\\d_-] allowed in namespace ({0}).",
         "MSG_ErrorNamespaceShort=Namespace length must at least 2 characters.",
         "MSG_ErrorNamespaceLong=Namespace length must be at most 255 characters.",
         "# {0} - error token",

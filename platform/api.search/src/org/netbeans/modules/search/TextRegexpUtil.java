@@ -84,7 +84,7 @@ public final class TextRegexpUtil {
         }
 
         if (!wholeWords
-                && Pattern.matches("[a-zA-Z0-9 ]*", simplePattern)) {   //NOI18N
+                && Pattern.matches("[a-zA-Z\\d ]*", simplePattern)) {   //NOI18N
             return simplePattern;                       //trivial case
         }
 

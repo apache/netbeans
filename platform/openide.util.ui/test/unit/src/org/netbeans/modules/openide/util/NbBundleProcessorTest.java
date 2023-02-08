@@ -303,7 +303,7 @@ public class NbBundleProcessorTest extends NbTestCase {
             // java.runtime.version=1.7.0-b147
             // are known to fail testIncrementalCompilation
             // target release 7u2; 8-ea-b09 should also have fix; cf. #7068451
-            Pattern buildNumber = Pattern.compile("1\\.7\\.0-b([0-9]+)");
+            Pattern buildNumber = Pattern.compile("1\\.7\\.0-b(\\d+)");
             Matcher m = buildNumber.matcher(run);
             if (m.matches()) {
                 if (Integer.parseInt(m.group(1)) <= 147) {

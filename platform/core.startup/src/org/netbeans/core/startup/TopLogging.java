@@ -227,7 +227,7 @@ public final class TopLogging {
                 try {
                     try (Reader r = new FileReader(buildInfo)) {
                         BufferedReader b = new BufferedReader(r);
-                        Pattern p = Pattern.compile("Hg ID:    ([0-9a-f]{12})"); // NOI18N
+                        Pattern p = Pattern.compile("Hg ID:    ([\\da-f]{12})"); // NOI18N
                         for (;;) {
                             String line = b.readLine();
                             if (line == null) {

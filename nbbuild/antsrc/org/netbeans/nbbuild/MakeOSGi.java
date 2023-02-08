@@ -711,7 +711,7 @@ public class MakeOSGi extends Task {
     }
 
     static String findFragmentHost(File jar) {
-        String cnb = jar.getName().replaceFirst("(_[a-z][a-z0-9]*)*[.]jar$", "").replace('-', '.');
+        String cnb = jar.getName().replaceFirst("(_[a-z][a-z\\d]*)*[.]jar$", "").replace('-', '.');
         // Historical naming patterns:
         if (cnb.equals("core") && jar.getParentFile().getParentFile().getName().equals("core")) {
             return "org.netbeans.core.startup";

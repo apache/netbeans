@@ -38,7 +38,7 @@ public class Util {
     
     public static final ErrorManager err = ErrorManager.getDefault().getInstance("org.netbeans.modules.ant.freeform"); // NOI18N
     
-    private static final Pattern VALIDATION = Pattern.compile("([A-Za-z0-9])+"); // NOI18N
+    private static final Pattern VALIDATION = Pattern.compile("([A-Za-z\\d])+"); // NOI18N
     
     public static String getMergedHelpIDFragments(Project p) {
         List<String> fragments = new ArrayList<String>();

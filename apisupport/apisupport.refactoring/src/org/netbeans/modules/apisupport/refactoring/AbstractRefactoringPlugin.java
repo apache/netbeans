@@ -332,7 +332,7 @@ public abstract class AbstractRefactoringPlugin implements RefactoringPlugin {
                             }
                         }
                         String pattern1 = fqname.replaceAll("\\.", "\\."); //NOI18N
-                        String pattern2 = "[a-zA-Z0-9/-]*" + fqname.replaceAll("\\.", "-") + "\\.instance"; //NOI18N
+                        String pattern2 = "[a-zA-Z\\d/-]*" + fqname.replaceAll("\\.", "-") + "\\.instance"; //NOI18N
 
                         if (value.matches(pattern1) || value.matches(pattern2)) {
                             RefactoringElementImplementation elem = createLayerRefactoring(fqname, handle, fo, attrKey);

@@ -127,7 +127,7 @@ public class BuildNumberNbVisualWeb extends Task {
      * Pattern for which to look in the input file.
      */
     private static final Pattern PATTERN = Pattern.compile(
-            "RAVE-vw-([0-9_]+)\\.zip"); // NOI18N
+            "RAVE-vw-([\\d_]+)\\.zip"); // NOI18N
     
     /**
      * Build number property suffix.

@@ -187,7 +187,7 @@ public abstract class TokenAcceptor {
 
     public static class HashColor extends TokenAcceptor {
 
-        private static final Pattern COLOR_PATTERN = Pattern.compile("#[0-9a-fA-F]{3,8}");
+        private static final Pattern COLOR_PATTERN = Pattern.compile("#[\\da-fA-F]{3,8}");
 
         public HashColor(String id) {
             super(id);

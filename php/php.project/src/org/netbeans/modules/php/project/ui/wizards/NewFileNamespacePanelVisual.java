@@ -44,7 +44,7 @@ import org.openide.util.NbBundle;
 public class NewFileNamespacePanelVisual extends JPanel {
 
     private static final String NAMESPACE_SEPARATOR = "\\"; // NOI18N
-    private static final Pattern NAMESPACE_PART_PATTERN = Pattern.compile("^[a-z][a-z0-9_]*$", Pattern.CASE_INSENSITIVE); // NOI18N
+    private static final Pattern NAMESPACE_PART_PATTERN = Pattern.compile("^[a-z][a-z\\d_]*$", Pattern.CASE_INSENSITIVE); // NOI18N
 
     private final NamespaceComboBoxModel comboBoxModel = new NamespaceComboBoxModel();
     private final ChangeSupport changeSupport = new ChangeSupport(this);

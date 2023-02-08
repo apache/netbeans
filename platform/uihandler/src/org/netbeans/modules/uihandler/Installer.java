@@ -168,7 +168,7 @@ public class Installer extends ModuleInstall implements Runnable {
     static final String UI_PERFORMANCE_LOGGER_NAME = NbBundle.getMessage(Installer.class, "UI_PERFORMANCE_LOGGER_NAME");
     private static Pattern ENCODING = Pattern.compile(
         "<meta.*http-equiv=['\"]Content-Type['\"]" +
-        ".*content=.*charset=([A-Za-z0-9\\-]+)['\"]>", Pattern.CASE_INSENSITIVE
+        ".*content=.*charset=([A-Za-z\\d\\-]+)['\"]>", Pattern.CASE_INSENSITIVE
     ); // NOI18N
 
     static boolean preferencesWritable = false;

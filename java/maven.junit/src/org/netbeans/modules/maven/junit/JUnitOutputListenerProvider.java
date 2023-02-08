@@ -227,7 +227,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     }
     
     private static final String SECONDS_REGEX = "s(?:ec(?:ond)?(?:s|\\(s\\))?)?"; //NOI18N
-    private static final String TESTSUITE_STATS_REGEX = "Tests run: +([0-9]+), +Failures: +([0-9]+), +Errors: +([0-9]+), +Skipped: +([0-9]+), +Time elapsed: +(.+)" + SECONDS_REGEX + " - in (.*)";
+    private static final String TESTSUITE_STATS_REGEX = "Tests run: +(\\d+), +Failures: +(\\d+), +Errors: +(\\d+), +Skipped: +(\\d+), +Time elapsed: +(.+)" + SECONDS_REGEX + " - in (.*)";
     private static final Pattern testSuiteStatsPattern = Pattern.compile(TESTSUITE_STATS_REGEX);
     
     static boolean isTestSuiteStats(String line) {

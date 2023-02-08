@@ -100,7 +100,7 @@ public class DockerAction {
 
     private static final Logger LOGGER = Logger.getLogger(DockerAction.class.getName());
 
-    private static final Pattern ID_PATTERN = Pattern.compile(".*([0-9a-f]{12}([0-9a-f]{52})?).*");
+    private static final Pattern ID_PATTERN = Pattern.compile(".*([\\da-f]{12}([\\da-f]{52})?).*");
 
     private static final Pattern PORT_PATTERN = Pattern.compile("^(\\d+)/(tcp|udp)$");
 

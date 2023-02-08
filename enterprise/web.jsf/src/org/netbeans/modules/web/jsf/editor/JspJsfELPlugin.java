@@ -285,7 +285,7 @@ public class JspJsfELPlugin extends ELPlugin {
         
         String textToCaret = htmlParserResultText.subSequence(0, elementAtCaretEmbeddedOffset).toString();
         int spaceLastIndex = textToCaret.lastIndexOf(" ");
-        String attributeName = textToCaret.substring(spaceLastIndex).replaceAll("[^A-Za-z0-9 ]", "").trim();
+        String attributeName = textToCaret.substring(spaceLastIndex).replaceAll("[^A-Za-z\\d ]", "").trim();
         
         JsfSupport jsfSupport = JsfSupportProvider.get(source);
         if (jsfSupport == null) {

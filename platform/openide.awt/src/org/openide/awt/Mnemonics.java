@@ -267,7 +267,7 @@ public final class Mnemonics extends Object {
     /**
      * Wrapper for AbstractButton.setMnemonic and JLabel.setDisplayedMnemonic
      * @param item AbstractButton/JLabel
-     * @param mnem Mnemonic char to set, latin [a-z,A-Z], digit [0-9], or any VK_ code
+     * @param mnem Mnemonic char to set, latin [a-z,A-Z], digit \\d, or any VK_ code
      */
     private static void setMnemonic(Object item, int mnem) {
         if (isAquaLF()) {

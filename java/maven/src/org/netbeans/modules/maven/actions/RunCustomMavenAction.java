@@ -148,7 +148,7 @@ public class RunCustomMavenAction extends AbstractAction implements ContextAware
         }
         assert mavenCategory != null;
         //is that enough?
-        String name = fsAction + ".instance"; //action.replaceAll("[^a-z0-9_]+", "_");
+        String name = fsAction + ".instance"; //action.replaceAll("[^a-z\\d_]+", "_");
         FileObject instance = mavenCategory.getFileObject(name);
         if (instance != null) {
             return; //what to do if we already have the action?
@@ -187,7 +187,7 @@ public class RunCustomMavenAction extends AbstractAction implements ContextAware
         if (actions != null) {
             FileObject mavenCategory = actions.getFileObject("Maven");
             if (mavenCategory != null) {
-                String name = fsAction + ".instance"; //action.replaceAll("[^a-z0-9_]+", "_");
+                String name = fsAction + ".instance"; //action.replaceAll("[^a-z\\d_]+", "_");
                 FileObject instance = mavenCategory.getFileObject(name);
                 if (instance != null && action.equals(instance.getAttribute(MAVEN_ATTR))) {
                     return true;
@@ -205,7 +205,7 @@ public class RunCustomMavenAction extends AbstractAction implements ContextAware
         if (actions != null) {
             FileObject mavenCategory = actions.getFileObject("Maven");
             if (mavenCategory != null) {
-                String name = fsAction + ".instance"; //action.replaceAll("[^a-z0-9_]+", "_");
+                String name = fsAction + ".instance"; //action.replaceAll("[^a-z\\d_]+", "_");
                 FileObject instance = mavenCategory.getFileObject(name);
                 if (instance != null && action.equals(instance.getAttribute(MAVEN_ATTR))) {
                     String path = (String) instance.getAttribute("imagePath");

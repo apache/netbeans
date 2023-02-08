@@ -503,7 +503,7 @@ public final class NbModuleProject implements Project {
         }
         String svb = evaluator().getProperty(SingleModuleProperties.SPEC_VERSION_BASE);
         if (svb != null) {
-            return svb/* #72826 */.replaceAll("(\\.[0-9]+)\\.0$", "$1"); // NOI18N
+            return svb/* #72826 */.replaceAll("(\\.\\d+)\\.0$", "$1"); // NOI18N
         }
         return null;
     }

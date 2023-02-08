@@ -59,7 +59,7 @@ class LogFormatter extends XMLFormatter{
     private final Pattern filePrefix = Pattern.compile("file:", Pattern.LITERAL);
     private final Pattern nbjclPrefix = Pattern.compile("nbjcl:", Pattern.LITERAL);
     private final Pattern jarPrefix = Pattern.compile("jar:", Pattern.LITERAL);
-    private final Pattern hexPattern = Pattern.compile("@[0-9a-fA-F]*");
+    private final Pattern hexPattern = Pattern.compile("@[\\da-fA-F]*");
 
     /** Creates a new instance of LogFormatter */
     public LogFormatter() {

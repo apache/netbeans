@@ -5143,7 +5143,7 @@ public class SchemaRep implements PrefixGuesser {
             restrict.addSubElement(ws);
         }
         addRestriction((SimpleType) st.get("language"), namespace+"token",
-                    new WhiteSpace("collapse"), new Pattern("[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"));
+                    new WhiteSpace("collapse"), new Pattern("[a-zA-Z]{1,8}(-[a-zA-Z\\d]{1,8})*"));
         addRestriction((SimpleType) st.get("nonPositiveInteger"), namespace+"integer", new MaxInclusive("0"));
         addRestriction((SimpleType) st.get("negativeInteger"), namespace+"nonPositiveInteger", new MaxExclusive("0"));
         addRestriction((SimpleType) st.get("nonNegativeInteger"), namespace+"integer", new MinInclusive("0"));

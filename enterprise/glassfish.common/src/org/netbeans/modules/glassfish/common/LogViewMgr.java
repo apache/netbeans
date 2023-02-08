@@ -566,7 +566,7 @@ public class LogViewMgr {
     }
 
     private static Pattern colorPattern = Pattern.compile(
-            "\\033\\[([\\d]{1,3})(?:;([\\d]{1,3}))?(?:;([\\d]{1,3}))?(?:;([\\d]{1,3}))?(?:;([\\d]{1,3}))?m"); // NOI18N
+            "\\033\\[(\\d{1,3})(?:;(\\d{1,3}))?(?:;(\\d{1,3}))?(?:;(\\d{1,3}))?(?:;(\\d{1,3}))?m"); // NOI18N
 
     private static final Color LOG_RED = new Color(204, 0, 0);
     private static final Color LOG_GREEN = new Color(0, 192, 0);

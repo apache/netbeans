@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  */
 public final class GradleTask implements Serializable {
 
-    private static final Pattern CAMLE_CASE_SPLITTER = Pattern.compile("(?<!^)(?=[A-Z0-9])");
+    private static final Pattern CAMLE_CASE_SPLITTER = Pattern.compile("(?<!^)(?=[A-Z\\d])");
 
     final String path;
     final String group;

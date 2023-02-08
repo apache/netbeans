@@ -385,7 +385,7 @@ public class BreadCrumbsNodeImpl implements BreadcrumbsElement {
             return null;
     }
 
-    private static final Pattern UNICODE_SEQUENCE = Pattern.compile("\\\\u([0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z])");
+    private static final Pattern UNICODE_SEQUENCE = Pattern.compile("\\\\u([\\da-zA-Z][\\da-zA-Z][\\da-zA-Z][\\da-zA-Z])");
     static String escape(String s) {
         if (s != null) {
             //unescape unicode sequences first (would be better if Pretty would not print them, but that might be more difficult):

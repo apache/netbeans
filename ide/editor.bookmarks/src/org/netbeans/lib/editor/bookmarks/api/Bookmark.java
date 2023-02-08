@@ -135,7 +135,7 @@ public final class Bookmark {
     }
     
     /**
-     * Current implementation returns a single char [0-9a-z] used for jumping
+     * Current implementation returns a single char [\\da-z] used for jumping
      * to the bookmark by a keystroke in a Goto dialog or an empty string
      * when no shortcut was assigned yet.
      * <br/>

@@ -48,7 +48,7 @@ public class Target implements SDK {
     public static Collection<SDK> parse(String output) throws IOException {
         BufferedReader r = new BufferedReader(new StringReader(output));
         
-        Pattern pattern = Pattern.compile("id: ([\\d]*) or \"([^\"]+)\" *"); //NOI18N
+        Pattern pattern = Pattern.compile("id: (\\d*) or \"([^\"]+)\" *"); //NOI18N
         
         ArrayList<SDK> result = new ArrayList<SDK>();
         //ignore first 2 lines

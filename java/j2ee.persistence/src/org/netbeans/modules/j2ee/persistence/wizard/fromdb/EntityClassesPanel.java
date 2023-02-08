@@ -336,7 +336,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
             if(getCreatePersistenceUnit()){
                 String sourceLevel = SourceLevelChecker.getSourceLevel(project);
                 if(sourceLevel !=null ){
-                    if(sourceLevel.matches("1\\.[0-5]([^0-9].*)?")){//1.0-1.5
+                    if(sourceLevel.matches("1\\.[0-5](\\D.*)?")){//1.0-1.5
                         Provider provider = Util.getPreferredProvider(project);
                         if(provider!=null) {
                             String ver = ProviderUtil.getVersion(provider);

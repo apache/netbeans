@@ -34,7 +34,7 @@ public class VendorNameMgr {
     private static final char DOT   = '.';
     private static final char []	ILLEGAL_FILENAME_CHARS	= {'/', '\\', ':', '*', '?', '"', '<', '>', '|', ',', '=', ';' };
 
-    private static final String ILLEGAL_CHARS_PATTERN = "[/\\:*\"<>|,=; \\.]"; // NOI18N
+    private static final String ILLEGAL_CHARS_PATTERN = "[/\\:*\"<>|,=; .]"; // NOI18N
     private static final String REPLACEMENT_PATTERN = "_"; // NOI18N
     
 

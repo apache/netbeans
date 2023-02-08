@@ -118,7 +118,7 @@ public class WLJ2eePlatformFactory extends J2eePlatformFactory {
             "^.*glassfish\\.jaxws\\.rt.*\\.jar$");
 
     private static final Pattern GLASSFISH_JSF2_PATTERN = Pattern.compile(
-            "^.*glassfish\\.jsf(_[\\d]+(\\.[\\d]+)*)?_2[\\.-].*\\.jar$");
+            "^.*glassfish\\.jsf(_[\\d]+(\\.[\\d]+)*)?_2[.-].*\\.jar$");
 
     private static final Pattern OEPE_CONTRIBUTIONS_PATTERN = Pattern.compile("^.*oepe-contributions\\.jar.*$"); // NOI18N
 

@@ -322,7 +322,7 @@ public class FixDependencies extends Task {
                     } else {
                         if (m.specVersion != null) {
                             a = a.replaceAll (
-                                "<specification-version>[0-9\\.]*</specification-version>", 
+                                "<specification-version>[0-9.]*</specification-version>",
                                 "<specification-version>" + m.specVersion + "</specification-version>"
                             );
                         }

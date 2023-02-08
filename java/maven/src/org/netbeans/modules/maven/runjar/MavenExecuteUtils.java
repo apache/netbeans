@@ -654,7 +654,7 @@ public final class MavenExecuteUtils {
                 } else {
                     jvms =  jvms + (jvms.isEmpty() ? "" : (newLines ? "\n" : " ")) + s;
                 }
-            } else if (s.equals(PACKAGE_CLASS_NAME_TOKEN) || s.equals(RUN_MAIN_CLASS_TOKEN) || s.matches("[\\w]+[\\.]{0,1}[\\w\\.]*")) { //NOI18N
+            } else if (s.equals(PACKAGE_CLASS_NAME_TOKEN) || s.equals(RUN_MAIN_CLASS_TOKEN) || s.matches("[\\w]+[.]{0,1}[\\w.]*")) { //NOI18N
                 break;
             } else {
                 jvms =  jvms + " " + s;
@@ -673,7 +673,7 @@ public final class MavenExecuteUtils {
             if (s.startsWith("-") || s.contains("%classpath")) { //NOI18N
                 s = ps.nextPair();
                 continue;
-            } else if (s.equals(PACKAGE_CLASS_NAME_TOKEN) || s.equals(RUN_MAIN_CLASS_TOKEN) || s.matches("[\\w]+[\\.]{0,1}[\\w\\.]*")) { //NOI18N
+            } else if (s.equals(PACKAGE_CLASS_NAME_TOKEN) || s.equals(RUN_MAIN_CLASS_TOKEN) || s.matches("[\\w]+[.]{0,1}[\\w.]*")) { //NOI18N
                 return s;
             } else {
                 Logger.getLogger(RunJarPanel.class.getName()).fine("failed splitting main class from=" + line); //NOI18N

@@ -584,7 +584,7 @@
       </xsd:documentation>
     </xsd:annotation>
     <xsd:restriction base="xsd:token">
-      <xsd:pattern value="[!-~-[\(\)&#60;&#62;@,;:&#34;/\[\]?=\{\}\\\p{Z}]]+"/>
+      <xsd:pattern value="[!-~-[()&#60;&#62;@,;:&#34;/\[\]?={}\\\p{Z}]]+"/>
     </xsd:restriction>
   </xsd:simpleType>
 

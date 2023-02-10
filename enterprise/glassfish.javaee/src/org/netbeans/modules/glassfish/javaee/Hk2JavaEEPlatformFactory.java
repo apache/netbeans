@@ -71,6 +71,10 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      *  when changing it. */
     private static final String V6_LOOKUP_KEY = "J2EE/DeploymentPlugins/gfv6ee9/Lookup";
     private static final String V610_LOOKUP_KEY = "J2EE/DeploymentPlugins/gfv610ee9/Lookup";
+    
+    /** GlassFish V7 JakartaEE platform lookup key.
+     *  <p/>We will keep V3 value now because no one knows what will get broken
+     *  when changing it. */
     private static final String V7_LOOKUP_KEY = "J2EE/DeploymentPlugins/gfv700ee10/Lookup";
 
     /** GlassFish JavaEE platform factory singleton object. */

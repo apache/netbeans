@@ -262,6 +262,18 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
     public void testFunctionIntersectionTypeWithoutPhpDoc() throws Exception {
         checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "testIntersectionTy^pe(null, null); // function", false, "");
     }
+    
+    public void testIssueGH5427_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5427.php", "$this->test_without_d^oc", false, "");
+    }
+      
+    public void testIssueGH5427_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5427.php", "$this->test_without_v^ar_tag", false, "");
+    }
+    
+    public void testIssueGH5427_03() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5427.php", "$this->test_with_v^ar_tag", false, "");
+    }
 
     @Override
     protected String alterDocumentationForTest(String documentation) {

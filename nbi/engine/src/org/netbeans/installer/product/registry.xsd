@@ -286,7 +286,7 @@
     <xsd:simpleType name="platform-type">
         <xsd:restriction base="xsd:string">
             <xsd:pattern 
-                value="([A-Za-z0-9\-\._])+"/>
+                value="([\w\-\.])+"/>
         </xsd:restriction>
     </xsd:simpleType>
     

@@ -678,7 +678,7 @@ public final class PlatformUiSupport {
         public String getDisplayName() {
             String tmp = sourceLevel.toString();
             if (JDK_1_5.compareTo(sourceLevel) <= 0) {
-                tmp = tmp.replaceFirst("^1\\.([5-9]|\\d\\d+)$", "$1"); //NOI18N
+                tmp = tmp.replaceFirst("^1\\.([5-9]|\\d{2,})$", "$1"); //NOI18N
             }
             return NbBundle.getMessage(PlatformUiSupport.class, "LBL_JDK", tmp);
         }

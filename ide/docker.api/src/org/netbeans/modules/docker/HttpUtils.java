@@ -45,7 +45,7 @@ import org.openide.util.Pair;
  */
 public final class HttpUtils {
 
-    private static final Pattern HTTP_RESPONSE_PATTERN = Pattern.compile("^HTTP/1\\.1 (\\d\\d\\d) (.*)$");
+    private static final Pattern HTTP_RESPONSE_PATTERN = Pattern.compile("^HTTP/1\\.1 (\\d{3}) (.*)$");
 
     private HttpUtils() {
         super();

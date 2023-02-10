@@ -65,7 +65,7 @@ public class JsEmbeddingProvider extends EmbeddingProvider {
     private final Language JS_LANGUAGE;
     private final JsEPPluginQuery PLUGINS;
     
-    private static final Pattern GENERIC_MARK_PATTERN = Pattern.compile("@@@"); //NOI18N
+    private static final Pattern GENERIC_MARK_PATTERN = Pattern.compile("@{3}"); //NOI18N
     private static final String GENERATED_JS_IDENTIFIER = "__UNKNOWN__"; // NOI18N
     
     /** Files with mime types defined in this collection will use transitional

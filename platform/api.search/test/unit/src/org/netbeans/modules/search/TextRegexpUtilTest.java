@@ -302,7 +302,7 @@ public class TextRegexpUtilTest extends NbTestCase {
     }
     
     public void testCanBeMultilinePattern() {
-        assertFalse(TextRegexpUtil.isMultilineOrMatchesMultiline("a\\d\\d\\da"));
+        assertFalse(TextRegexpUtil.isMultilineOrMatchesMultiline("a\\d{3}a"));
         assertFalse(TextRegexpUtil.isMultilineOrMatchesMultiline(".*"));
         assertFalse(TextRegexpUtil.isMultilineOrMatchesMultiline("(?m)^x.*y$"));
         assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("(?ms-x)test.*test"));

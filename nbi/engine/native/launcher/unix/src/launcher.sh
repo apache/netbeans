@@ -309,8 +309,8 @@ ifLess() {
 
 formatVersion() {
         formatted=`echo "$1" | sed "s/-ea//g;s/-rc[0-9]*//g;s/-beta[0-9]*//g;s/-preview[0-9]*//g;s/-dp[0-9]*//g;s/-alpha[0-9]*//g;s/-fcs//g;s/_/./g;s/-/\./g"`
-        formatted=`echo "$formatted" | sed "s/^\(\([0-9][0-9]*\)\.\([0-9][0-9]*\)\.\([0-9][0-9]*\)\)\.b\([0-9][0-9]*\)/\1\.0\.\5/g"`
-        formatted=`echo "$formatted" | sed "s/\.b\([0-9][0-9]*\)/\.\1/g"`
+        formatted=`echo "$formatted" | sed "s/^\(\([0-9]{2}*\)\.\([0-9]{2}*\)\.\([0-9]{2}*\)\)\.b\([0-9]{2}*\)/\1\.0\.\5/g"`
+        formatted=`echo "$formatted" | sed "s/\.b\([0-9]{2}*\)/\.\1/g"`
 	echo "$formatted"
 
 }

@@ -96,7 +96,7 @@ public final class OptionsExportModel {
      * Simple regex to match build.version in format "YYYY MM DD HH mm".
      * HHmm is optional and YYYY starts from 2000 until 2099
      */
-    private static final String DATE_SIMPLE_REGEX = "(?<YEAR>(20)\\d\\d)(?<MONTH>0[1-9]|1[012])(?<DAY>0[1-9]|[12]\\d|3[01])((?<HOURS>[0-1]\\d|2[0-3])(?<MINUTES>[0-5]\\d))?"; // NOI18N
+    private static final String DATE_SIMPLE_REGEX = "(?<YEAR>(20)\\d{2})(?<MONTH>0[1-9]|1[012])(?<DAY>0[1-9]|[12]\\d|3[01])((?<HOURS>[0-1]\\d|2[0-3])(?<MINUTES>[0-5]\\d))?"; // NOI18N
     private static final Pattern DATE_SIMPLE_PATTERN = Pattern.compile(DATE_SIMPLE_REGEX);
 
     /** Returns instance of export options model.

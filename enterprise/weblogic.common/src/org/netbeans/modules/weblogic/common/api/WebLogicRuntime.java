@@ -84,7 +84,7 @@ public final class WebLogicRuntime {
     private static final RequestProcessor RUNTIME_RP = new RequestProcessor(WebLogicRuntime.class.getName(), 2);
 
     private static final Pattern LOG_PARSING_PATTERN = Pattern.compile(
-            "^####(<.*>)\\s+(<.*>)\\s+(<.*>)\\s+(<.*>)\\s+(<.*>)\\s+(<.*>)\\s+" // NOI18N
+            "^#{4}(<.*>)\\s+(<.*>)\\s+(<.*>)\\s+(<.*>)\\s+(<.*>)\\s+(<.*>)\\s+" // NOI18N
                     + "(<.*>)\\s+(<.*>)\\s+(<.*>)\\s+(<.*>)\\s+(<.*>)\\s+(<.*>?)(\\s+|$)"); // NOI18N
 
     private static final String STARTUP_SH = "startWebLogic.sh";   // NOI18N

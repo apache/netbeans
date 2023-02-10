@@ -48,7 +48,7 @@ import org.xml.sax.SAXException;
 @ServiceProvider(service=Validator.class, position=10)
 public class ValidatorImpl implements Validator {
     
-    private static final Pattern TEMPLATING_MARKS_PATTERN = Pattern.compile("@@@"); //NOI18N
+    private static final Pattern TEMPLATING_MARKS_PATTERN = Pattern.compile("@{3}"); //NOI18N
     private static final String TEMPLATING_MARKS_MASK = "   "; //NOI18N
 
     @Override

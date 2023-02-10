@@ -104,7 +104,7 @@ public final class HostInfoFactory {
         }
         String[] parts = id.split(" +"); // NOI18N
         boolean error = false;
-        StringBuilder sb;
+        StringBuilder sb = null;
         if (parts.length > 0 && parts[0].startsWith("uid=")) { // NOI18N
             sb = new StringBuilder();
             info.uid = parseIdAndName(parts[0].substring(4), sb);
@@ -126,8 +126,13 @@ public final class HostInfoFactory {
                 if (groupPairs.length > 0) {
                     List<Integer> gids = new ArrayList<>(groupPairs.length);
                     List<String> groups = new ArrayList<>(groupPairs.length);
-                    for (String pair : groupPairs) {
+
+                    if (sb == null) {
                         sb = new StringBuilder();
+                    }
+
+                    for (String pair : groupPairs) {
+                        sb.setLength(0);
                         int gid = parseIdAndName(pair, sb);
                         error |= (info.uid < 0);
                         if (gid >= 0) {

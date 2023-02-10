@@ -669,7 +669,7 @@ public class J2SEModularProjectProperties {
             projectProperties.put(ProjectProperties.ANNOTATION_PROCESSING_PROCESSORS_LIST, ""); // NOI18N
         }
 
-        sb = new StringBuilder();
+        sb.setLength(0);
         for (int i = 0; i < PROCESSOR_OPTIONS_MODEL.getRowCount(); i++) {
             String key = (String) PROCESSOR_OPTIONS_MODEL.getValueAt(i, 0);
             String value = (String) PROCESSOR_OPTIONS_MODEL.getValueAt(i, 1);

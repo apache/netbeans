@@ -412,7 +412,7 @@ public class ProjectViewTest extends NbTestCase {
                     sb.append(a.getDisplayName());
                 }
                 System.out.println("*** Error - node " + l + " does not exist in " + item.label + ", node list: " + sb.toString());
-                sb = new StringBuilder();
+                sb.setLength(0);
                 for (TreeItem candidate : getChildren(parent)) {
                     if (sb.length() > 0) {
                         sb.append(", ");

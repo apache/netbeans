@@ -259,7 +259,7 @@ public class GenerateDOMScannerSupport implements XMLGenerateCookie {
                           
                           
                             //create the bpdy
-                            sb = new StringBuffer ();
+                            sb.setLength(0);
                             sb.append("{");
                             sb.append (" // <").append (tagName).append (">\n// element.getValue();\n"); // NOI18N
                             Iterator<TreeAttlistDeclAttributeDef> it2;

@@ -1779,7 +1779,7 @@ public abstract class CslTestBase extends NbTestCase {
         }
         // Only print lines with result
         String[] lines = sb.toString().split("\n");
-        sb = new StringBuilder();
+        sb.setLength(0);
         int lineno = 1;
         for (String line : lines) {
             if (line.indexOf("|>") != -1) {
@@ -1928,7 +1928,7 @@ public abstract class CslTestBase extends NbTestCase {
 
         for (TestIndexDocumentImpl doc : documents) {
 
-            sb = new StringBuilder();
+            sb.setLength(0);
 
             sb.append("Searchable Keys:");
             sb.append("\n");
@@ -1980,7 +1980,7 @@ public abstract class CslTestBase extends NbTestCase {
 
         Collections.sort(emptyDocuments);
         Collections.sort(nonEmptyDocuments);
-        sb = new StringBuilder();
+        sb.setLength(0);
         int documentNumber = 0;
         for (String s : emptyDocuments) {
             sb.append("\n\nDocument ");

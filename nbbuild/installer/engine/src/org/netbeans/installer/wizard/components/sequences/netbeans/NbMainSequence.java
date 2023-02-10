@@ -621,7 +621,7 @@ public class NbMainSequence extends WizardSequence {
                 LIST_OF_PRODUCTS_TO_INSTALL_PROPERTY,
                 list.toString());
 
-        list = new StringBuilder();
+        list.setLength(0);
         for (Product product : toUninstall) {
             list.append(product.getUid() + "," + product.getVersion() + ";");
         }
@@ -629,7 +629,7 @@ public class NbMainSequence extends WizardSequence {
                 LIST_OF_PRODUCTS_TO_UNINSTALL_PROPERTY,
                 list.toString());
 
-        list = new StringBuilder();
+        list.setLength(0);
         for (Product product : toInstall) {
             for (WizardComponent component : productSequences.get(product).getChildren()) {
                 list.append(component.getClass().getName() + ";");

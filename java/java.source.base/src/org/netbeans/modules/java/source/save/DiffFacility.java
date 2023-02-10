@@ -179,13 +179,13 @@ class DiffFacility {
                         builder.append(lines1[i].data);
                     }
                     String match1 = builder.toString();
-                    builder = new StringBuilder();
+                    builder.setLength(0);
                     for (int i = addStart; i <= addStart + delEnd - delStart; i++) {
                         builder.append(lines2[i].data);
                     }
                     String match2 = builder.toString();
                     makeTokenListMatch(match1, match2, lines1[delStart].start + offset);
-                    builder = new StringBuilder();
+                    builder.setLength(0);
                     for (int i = addStart + delEnd - delStart + 1; i <= addEnd; i++) {
                         builder.append(lines2[i].data);
                     }
@@ -200,7 +200,7 @@ class DiffFacility {
                         builder.append(lines1[i].data);
                     }
                     String match1 = builder.toString();
-                    builder = new StringBuilder();
+                    builder.setLength(0);
                     for (int i = addStart; i <= addEnd; i++) {
                         builder.append(lines2[i].data);
                     }

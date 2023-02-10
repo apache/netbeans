@@ -101,8 +101,10 @@ public class SwingLayoutCodeGenerator {
         } else {
             extraRoots = null;
         }
+
+        StringBuilder sb = new StringBuilder();
         for (int dim=0; dim < LayoutConstants.DIM_COUNT; dim++) {
-            StringBuilder sb = new StringBuilder();
+            sb.setLength(0);
             composeGroup(sb, container.getLayoutRoot(0, dim),
                          extraRoots != null ? extraRoots[dim] : null,
                          true, true);
@@ -110,7 +112,7 @@ public class SwingLayoutCodeGenerator {
                     + (dim == LayoutConstants.HORIZONTAL ? ".setHorizontalGroup(\n" : ".setVerticalGroup(\n") // NOI18N
                     + sb.toString() + "\n);\n"); // NOI18N
 
-            sb = new StringBuilder();
+            sb.setLength(0);
             composeLinks(sb, container, layoutVarName, dim);
             writer.write(sb.toString());
         }

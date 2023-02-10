@@ -110,7 +110,7 @@ public final class TimerOptions {
                 continue;
             }
             finalSections.add(sb.toString());
-            sb = new StringBuilder();
+            sb.setLength(0);
         }
 
         if (!"".equals(sb.toString())) {

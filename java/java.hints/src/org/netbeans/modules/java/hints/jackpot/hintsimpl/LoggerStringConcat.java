@@ -222,10 +222,10 @@ public class LoggerStringConcat {
                         // must join, some const-reference which must be preserved
                         if (singleLeaf != null) {
                             newMessage.add(singleLeaf);
-                            workingLiteral = new StringBuilder();
+                            workingLiteral.setLength(0);
                         } else if (workingLiteral.length() > 0) {
                             newMessage.add(make.Literal(workingLiteral.toString()));
-                            workingLiteral = new StringBuilder();
+                            workingLiteral.setLength(0);
                         }
                         newMessage.add(l);
                     }

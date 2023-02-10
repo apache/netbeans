@@ -83,8 +83,8 @@ public class AnnotationExpression {
         if (m.matches()) {
             String ae = getAnnotationExp();
 
-            StringBuffer copyName = new StringBuffer();
-            StringBuffer groupStr = new StringBuffer();                    
+            StringBuilder copyName = new StringBuilder();
+            StringBuilder groupStr = new StringBuilder();
             boolean inGroup = false;
 
             for (int i = 0; i < ae.length(); i++) {
@@ -104,7 +104,7 @@ public class AnnotationExpression {
                                 copyName.append('\\');
                                 copyName.append(groupStr);
                             }
-                            groupStr = new StringBuffer();                    
+                            groupStr.setLength(0);
                         } else {
                             copyName.append('\\');
                             copyName.append(c);

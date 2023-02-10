@@ -116,6 +116,9 @@ public class LexerRandomTest extends DemoTokenUpdater {
             boolean forceRemove = false;
             
             int moduloOperationCount = operationCount / 10;
+
+            StringBuffer insertBuffer = null;
+
             while (--operationCount >= 0) {
                 double operationRatio = Math.random() * operationRatioSum;
                 operationRatio -= insertRatio;
@@ -124,7 +127,13 @@ public class LexerRandomTest extends DemoTokenUpdater {
                 }
 
                 if (operationRatio <  0 || incompleteString != null) { // do insert
-                    StringBuffer insertBuffer = new StringBuffer();
+
+                    if (insertBuffer == null) {
+                        insertBuffer = new StringBuffer();
+                    } else {
+                        insertBuffer.setLength(0);
+                    }
+
                     int insertLength = (int)(maxInsertLength * Math.random()) + 1;
                     int insertOffset = (int)((getDocument().getLength() + 1) * Math.random());
                     if (incompleteString != null && operationRatio >= 0) { // would be remove normally

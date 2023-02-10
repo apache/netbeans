@@ -130,6 +130,8 @@ public class Patch extends Reader {
     }
     
     private void doRetrieve(int length) throws IOException {
+        StringBuffer newLineBuffer = null;
+
         for (int size = 0; size < length; line++) {
             if (currDiff < diffs.length &&
                 ((Difference.ADD == diffs[currDiff].getType() &&
@@ -144,10 +146,15 @@ public class Patch extends Reader {
                     throw new IOException("Patch not applicable.");
                 }
             }
-            StringBuffer newLineBuffer = null;
+
             if (newLine == null) {
-                newLineBuffer = new StringBuffer();
+                if (newLineBuffer == null) {
+                    newLineBuffer = new StringBuffer();
+                } else {
+                    newLineBuffer.setLength(0);
+                }
             }
+
             String lineStr = readLine(source, newLineBuffer);
             if (newLineBuffer != null) newLine = newLineBuffer.toString();
             if (lineStr == null) break;

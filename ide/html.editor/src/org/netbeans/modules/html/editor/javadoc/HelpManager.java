@@ -296,7 +296,11 @@ public class HelpManager {
             while((line = br.readLine()) != null) {
                 if(line.indexOf(pattern) != -1) {
                     //found the anchor -> cut off everything before
-                    textAfterAnchor = new StringBuffer();
+                    if (textAfterAnchor == null) {
+                        textAfterAnchor = new StringBuffer();
+                    } else {
+                        textAfterAnchor.setLength(0);
+                    }
                     textAfterAnchor.append(line.substring(line.indexOf(pattern)));
                 } else if(textAfterAnchor != null) {
                     //missing <pre> tag hack

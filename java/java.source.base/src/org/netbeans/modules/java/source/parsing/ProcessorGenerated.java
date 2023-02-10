@@ -273,7 +273,7 @@ public final class ProcessorGenerated extends TransactionContext.Service {
             }
         } catch (IOException ioe) {
             if (sb.length() != 0) {
-                sb = new StringBuilder();
+                sb.setLength(0);
             }
         }
         return sb;

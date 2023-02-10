@@ -283,7 +283,7 @@ public class AngularJsEmbeddingProviderPlugin extends JsEmbeddingProviderPlugin 
             }
 
             embeddings.add(snapshot.create(sb.toString(), Constants.JAVASCRIPT_MIMETYPE));
-            sb = new StringBuilder();
+            sb.setLength(0);
 
             if (!fqn.isEmpty()) {
                 int propNameOffset = controllerName.indexOf(parts[1].trim());
@@ -294,7 +294,7 @@ public class AngularJsEmbeddingProviderPlugin extends JsEmbeddingProviderPlugin 
             }
 
             embeddings.add(snapshot.create(sb.toString(), Constants.JAVASCRIPT_MIMETYPE));
-            sb = new StringBuilder();
+            sb.setLength(0);
             if (!parts[0].isEmpty()) {
                 embeddings.add(snapshot.create(tokenSequence.offset() + 1, parts[0].length(), Constants.JAVASCRIPT_MIMETYPE));
                 sb.append(";");
@@ -325,7 +325,7 @@ public class AngularJsEmbeddingProviderPlugin extends JsEmbeddingProviderPlugin 
             }
             sb.append("$scope;\n");   //NOI18N
             embeddings.add(snapshot.create(sb.toString(), Constants.JAVASCRIPT_MIMETYPE));
-            sb = new StringBuilder();
+            sb.setLength(0);
             final int embeddingEndOffset = tokenSequence.offset() + 1 + controllerName.length();
             if (!controllerName.isEmpty() && embeddingEndOffset <= snapshot.getText().length()) {
                 embeddings.add(snapshot.create(tokenSequence.offset() + 1, controllerName.length(), Constants.JAVASCRIPT_MIMETYPE));

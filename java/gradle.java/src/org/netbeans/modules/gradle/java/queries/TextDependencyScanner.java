@@ -372,7 +372,11 @@ public class TextDependencyScanner {
                                 dep = new DependencyText(container, startKpos);
                                 dep.keyword = "project";
                                 kwd = null;
-                                typedProjects = new StringBuilder();
+                                if (typedProjects == null) {
+                                    typedProjects = new StringBuilder();
+                                } else {
+                                    typedProjects.setLength(0);
+                                }
                             }
                         } else if (typedProjects != null) {
                             typedProjects.append(':').append(kwd);

@@ -61,8 +61,11 @@ public class CPMethodInfo extends CPFieldMethodInfo {
         sb.append('(');
         index = 0;
         int paramsLength = params.length();
+
+        StringBuffer p = new StringBuffer();
+
         while (index < paramsLength) {
-            StringBuffer p = new StringBuffer();
+            p.setLength(0);
             char ch = params.charAt(index++);
             while (ch == '[') {
                 p.append(ch);

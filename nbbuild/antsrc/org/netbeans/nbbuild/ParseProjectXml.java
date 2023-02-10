@@ -476,13 +476,16 @@ public final class ParseProjectXml extends Task {
                 if (getModuleType(pDoc) != ModuleType.NB_ORG) {
                     throw new BuildException("Cannot set " + commitMailProperty + " for a non-netbeans.org module", getLocation());
                 }
-                String name = getProject().getBaseDir().getName() + "/";
-                StringBuilder aliases = null;
+
+                StringBuilder aliases = new StringBuilder();
                 File hgmail = new File(getProject().getProperty("nb_all"), ".hgmail");
+
                 if (hgmail.canRead()) {
                     try (Reader r = new FileReader(hgmail)) {
                         BufferedReader br = new BufferedReader(r);
                         String line;
+                        String name = getProject().getBaseDir().getName() + "/";
+
                         while ((line = br.readLine()) != null) {
                             int equals = line.indexOf('=');
                             if (equals == -1) {
@@ -490,11 +493,7 @@ public final class ParseProjectXml extends Task {
                             }
                             for (String piece: line.substring(equals + 1).split(",")) {
                                 if (name.matches(piece.replace(".", "[.]").replace("*", ".*"))) {
-                                    if (aliases == null) {
-                                        aliases = new StringBuilder();
-                                    } else {
-                                        aliases.append(' ');
-                                    }
+                                    aliases.append(' ');
                                     aliases.append(line.substring(0, equals));
                                 }
                             }
@@ -503,7 +502,7 @@ public final class ParseProjectXml extends Task {
                 } else {
                     log("Cannot find " + hgmail + " to read addresses from", Project.MSG_VERBOSE);
                 }
-                if (aliases != null) {
+                if (aliases.length() > 0) {
                     define(commitMailProperty, aliases.toString());
                 }
             }

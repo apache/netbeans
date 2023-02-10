@@ -100,7 +100,7 @@ public interface CompilerOptionsQueryImplementation {
                         if (!escape && !quote && !doubleQuote) {
                             if (current.length() > 0) {
                                 result.add(current.toString());
-                                current = new StringBuilder();
+                                current.setLength(0);
                             }
                         } else {
                             current.append(c);

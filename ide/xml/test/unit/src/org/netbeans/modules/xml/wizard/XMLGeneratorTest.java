@@ -123,7 +123,7 @@ public class XMLGeneratorTest extends TestCase {
     }
     
     public void testLocalQualified() throws Exception {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         URL url = XMLGeneratorTest.class.getResource("../resources/BothQualified.xsd");
         File file = new File(url.toURI());
         SchemaModel model = TestCatalogModel.getDefault().getSchemaModel(url.toURI());  
@@ -134,7 +134,7 @@ public class XMLGeneratorTest extends TestCase {
         String str = doc.getText(0, doc.getLength());
         assertEquals(sb.toString().trim(), str.trim());
         
-        sb = new StringBuffer();
+        sb.setLength(0);
         url = XMLGeneratorTest.class.getResource("../resources/BothUnqualified.xsd");
         file = new File(url.toURI());
         model = TestCatalogModel.getDefault().getSchemaModel(url.toURI()); 
@@ -146,7 +146,7 @@ public class XMLGeneratorTest extends TestCase {
         System.out.println(sb.toString());
         assertEquals(sb.toString().trim(), str.trim());
         
-        sb = new StringBuffer();
+        sb.setLength(0);
         url = XMLGeneratorTest.class.getResource("../resources/ElementQualified.xsd");
         file = new File(url.toURI());
         model = TestCatalogModel.getDefault().getSchemaModel(url.toURI()); 
@@ -156,7 +156,7 @@ public class XMLGeneratorTest extends TestCase {
         str = doc.getText(0, doc.getLength());
         assertEquals(sb.toString().trim(), str.trim());
         
-         sb = new StringBuffer();
+         sb.setLength(0);
         url = XMLGeneratorTest.class.getResource("../resources/AttrQualified.xsd");
         file = new File(url.toURI());
         model = TestCatalogModel.getDefault().getSchemaModel(url.toURI()); 

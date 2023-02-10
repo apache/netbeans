@@ -547,7 +547,7 @@ public final class ModuleList {
             }
         } catch(IllegalArgumentException e) {
             LOG.log(Level.WARNING, "Error getting subelements, malformed xml");
-            cpextra = new StringBuilder();
+            cpextra.setLength(0);
         }
         File manifest = new File(basedir, "manifest.mf"); // NOI18N
         ManifestManager mm = (manifest.isFile() ? 

@@ -1252,7 +1252,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     tu.attributeTree(st, scope);
                     TreePath tp = tu.pathFor(new TreePath(path, st), offset - pos, sp[0]);
                     TypeMirror tm = tp != null ? trees.getTypeMirror(tp) : null;
-                    sb = new StringBuilder();
+                    sb.setLength(0);
                     sb.append('{').append(stmt).append(((TypeElement)type.asElement()).getQualifiedName()).append("<>();}"); //NOI18N
                     st = tu.parseStatement(sb.toString(), sp);
                     tu.attributeTree(st, scope);

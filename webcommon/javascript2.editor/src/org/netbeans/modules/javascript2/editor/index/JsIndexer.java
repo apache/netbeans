@@ -141,7 +141,7 @@ public class JsIndexer extends EmbeddingIndexer {
         elementDocument.addPair(Index.FIELD_ASSIGNMENTS, sb.toString(), false, true);
 
         if (object.getJSKind().isFunction()) {
-            sb = new StringBuilder();
+            sb.setLength(0);
             for(TypeUsage type : ((JsFunction)object).getReturnTypes()) {
                 sb.append(type.getType());
                 sb.append(","); //NOI18N
@@ -155,7 +155,7 @@ public class JsIndexer extends EmbeddingIndexer {
         }
 
         if (object instanceof JsArray) {
-            sb = new StringBuilder();
+            sb.setLength(0);
             for(TypeUsage type : ((JsArray)object).getTypesInArray()) {
                 sb.append(type.getType());
                 sb.append(","); //NOI18N
@@ -189,7 +189,7 @@ public class JsIndexer extends EmbeddingIndexer {
         elementDocument.addPair(Index.FIELD_ASSIGNMENTS, sb.toString(), false, true);
 
         if (object.getJSKind().isFunction()) {
-            sb = new StringBuilder();
+            sb.setLength(0);
             for(TypeUsage type : ((JsFunction)object).getReturnTypes()) {
                 sb.append(type.getType());
                 sb.append(","); //NOI18N
@@ -203,7 +203,7 @@ public class JsIndexer extends EmbeddingIndexer {
         }
 
         if (object instanceof JsArray) {
-            sb = new StringBuilder();
+            sb.setLength(0);
             for(TypeUsage type : ((JsArray)object).getTypesInArray()) {
                 sb.append(type.getType());
                 sb.append(","); //NOI18N

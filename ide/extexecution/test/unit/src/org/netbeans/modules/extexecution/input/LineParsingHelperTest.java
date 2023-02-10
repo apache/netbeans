@@ -40,8 +40,9 @@ public class LineParsingHelperTest extends NbTestCase {
     }
 
     public void testParsingCharacterIterator() {
+        StringBuffer testInput = new StringBuffer();
         for (String separator : TEST_SEPARATORS) {
-            StringBuffer testInput = new StringBuffer();
+            testInput.setLength(0);
             for (String line : TEST_LINES) {
                 testInput.append(line).append(separator);
             }
@@ -53,8 +54,9 @@ public class LineParsingHelperTest extends NbTestCase {
     }
 
     public void testParsingCharacterArray() {
+        StringBuffer testInput = new StringBuffer();
         for (String separator : TEST_SEPARATORS) {
-            StringBuffer testInput = new StringBuffer();
+            testInput.setLength(0);
             for (String line : TEST_LINES) {
                 testInput.append(line).append(separator);
             }

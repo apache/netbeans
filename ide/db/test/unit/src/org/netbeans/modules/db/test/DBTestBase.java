@@ -586,8 +586,8 @@ public abstract class DBTestBase extends TestBase {
         
         LOGGER.log(DEBUGLEVEL, "RESULTS FROM " + queryName);
         assert(rs != null);
-        
-        StringBuffer buf = new StringBuffer();
+
+        StringBuilder buf = new StringBuilder();
 
         buf.append("|");        
         for ( int i = 1 ; i <= numcols ; i++ ) {
@@ -597,7 +597,7 @@ public abstract class DBTestBase extends TestBase {
         
         while ( rs.next() ) {
             numrows++;
-            buf = new StringBuffer();
+            buf.setLength(0);
             buf.append("|");
             for ( int i = 1 ; i <= numcols ; i++ ) {
                 buf.append(rs.getString(i) + "|");

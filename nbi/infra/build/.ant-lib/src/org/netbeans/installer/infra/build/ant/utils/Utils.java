@@ -1005,7 +1005,11 @@ public final class Utils {
                         }
                         i++;
                         inside = true;
-                        buf = new StringBuilder();
+                        if (buf == null) {
+                            buf = new StringBuilder();
+                        } else {
+                            buf.setLength(0);
+                        }
                     } else {
                         (inside ? buf : result).append("$");
                     }

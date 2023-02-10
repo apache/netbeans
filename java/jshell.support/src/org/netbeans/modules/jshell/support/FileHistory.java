@@ -180,7 +180,7 @@ public class FileHistory implements ShellHistory {
                 if (!continuation) {
                     sb.append(s);
                     loadedItems.add(string2Item(sb.toString()));
-                    sb = new StringBuilder();
+                    sb.setLength(0);
                 } else {
                     sb.append(s, 0, s.length() - 1);
                     sb.append("\n");

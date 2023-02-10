@@ -151,7 +151,7 @@ final class OptionsExportModel {
                             partPattern.append(c);
                         } else if (c == '|') {
                             patterns.add(partPattern.toString());
-                            partPattern = new StringBuilder();
+                            partPattern.setLength(0);
                         } else {
                             partPattern.append(c);
                         }
@@ -167,7 +167,7 @@ final class OptionsExportModel {
                         if (c == '|') {
                             state = ParserState.START;
                             patterns.add(partPattern.toString());
-                            partPattern = new StringBuilder();
+                            partPattern.setLength(0);
                         } else {
                             assert false : "Wrong OptionsExport pattern " + pattern + ". Only format like filePattern1#keyPattern#|filePattern2 is supported.";  //NOI18N
                         }

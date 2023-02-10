@@ -260,7 +260,7 @@ implements FileNameMapper, URIResolver, EntityResolver {
             }
             concatPattern = Pattern.compile(sb.toString());
 
-            sb = new StringBuilder();
+            sb.setLength(0);
             sep = "";
             for (String s : copyregs) {
                 sb.append(sep);

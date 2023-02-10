@@ -378,7 +378,7 @@ public class LiveFlatProfileCollectorPanel extends FlatProfilePanel implements L
 
     private void exportCSV(String separator, ExportDataDumper eDD) {
         // Header
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String newLine = "\r\n"; // NOI18N
         String quote = "\""; // NOI18N
 
@@ -391,7 +391,7 @@ public class LiveFlatProfileCollectorPanel extends FlatProfilePanel implements L
 
         // Data
         for (int i=0; i < flatProfileContainer.getNRows(); i++) {
-            result = new StringBuffer();
+            result.setLength(0);
             result.append(quote).append(flatProfileContainer.getMethodNameAtRow(i)).append(quote).append(separator);
             result.append(quote).append(flatProfileContainer.getPercentAtRow(i)).append(quote).append(separator);
             result.append(quote).append((double)flatProfileContainer.getTimeInMcs0AtRow(i)/1000).append(" ms").append(quote).append(separator);

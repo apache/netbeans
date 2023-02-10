@@ -69,15 +69,15 @@ public class CharSequenceUtilitiesTest extends TestCase {
         assertTrue(CharSequenceUtilities.toString(string, start, end).equals(string.substring(start, end)));
         
         // append
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         CharSequenceUtilities.append(buf, string);
         CharSequenceUtilities.append(buf, string_2);
-        StringBuffer buff = new StringBuffer();
+        StringBuilder buff = new StringBuilder();
         buff.append(string);
         buff.append(string_2);
         assertTrue(buff.toString().equals(buf.toString()));
         
-        buf = new StringBuffer();
+        buf.setLength(0);
         CharSequenceUtilities.append(buf, string, start, end);
         assertTrue(buf.toString().equals(string.substring(start, end)));
         
@@ -101,7 +101,7 @@ public class CharSequenceUtilitiesTest extends TestCase {
         assertTrue(string.lastIndexOf(eta, CHARS_LENGTH) == CharSequenceUtilities.lastIndexOf(string, eta, CHARS_LENGTH));
         
         // trim
-        buf = new StringBuffer();
+        buf.setLength(0);
         for (int x = 0; x < SUBSTR_LENGTH; x++) {
             buf.append((char)rnd.nextInt(' ' + 1));
         }

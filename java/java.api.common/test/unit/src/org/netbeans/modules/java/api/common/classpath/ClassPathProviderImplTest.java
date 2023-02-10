@@ -139,7 +139,11 @@ public class ClassPathProviderImplTest extends NbTestCase {
                     }
                 } else {
                     if (c == '$' && text.charAt(i+1) == '{') {  //NOI18N
-                        inProp = new StringBuilder();
+                        if (inProp == null) {
+                            inProp = new StringBuilder();
+                        } else {
+                            inProp.setLength(0);
+                        }
                         i++;
                     } else {
                         builder.append(c);

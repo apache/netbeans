@@ -768,7 +768,7 @@ public abstract class LivenessResultsPanel extends MemoryResultsPanel {
 
     private void exportCSV(String separator, ExportDataDumper eDD) {
         // Header
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String newLine = "\r\n"; // NOI18N
         String quote = "\""; // NOI18N
 
@@ -784,7 +784,7 @@ public abstract class LivenessResultsPanel extends MemoryResultsPanel {
         // Data
         
         for (int i=0; i < nTrackedItems; i++) {
-            result = new StringBuffer();
+            result.setLength(0);
             result.append(quote).append(sortedClassNames[i]).append(quote).append(separator);
             result.append(quote).append(trackedLiveObjectsSize[i]).append(quote).append(separator);
             result.append(quote).append(nTrackedLiveObjects[i]).append(quote).append(separator);

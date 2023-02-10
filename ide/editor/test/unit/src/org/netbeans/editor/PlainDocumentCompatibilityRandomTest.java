@@ -158,6 +158,8 @@ implements DocumentListener {
         int ratioSum = insertRatio + removeRatio
             + createPositionRatio + releasePositionRatio
             + undoRatio + redoRatio;
+
+        StringBuffer sb = null;
         
         for (int op = 0; op < opCount; op++) {
             double r = random.nextDouble() * ratioSum;
@@ -170,8 +172,13 @@ implements DocumentListener {
             if ((r -= insertRatio) < 0) {
                 int offset = (int)((docLength + 1) * random.nextDouble());
                 int length = (int)(insertMaxLength * random.nextDouble());
-                StringBuffer sb = new StringBuffer();
                 StringBuffer debugSb = debug ? new StringBuffer() : null;
+
+                if (sb == null) {
+                    sb = new StringBuffer();
+                } else {
+                    sb.setLength(0);
+                }
 
                 for (int i = length - 1; i >= 0; i--) {
                     char ch;

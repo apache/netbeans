@@ -5802,12 +5802,12 @@ public class GandalfPersistenceManager extends PersistenceManager {
 
         char[] bisChars = strValue.toCharArray();
         byte[] bytes = new byte[bisChars.length];
-        StringBuffer singleNum = new StringBuffer();
+        StringBuilder singleNum = new StringBuilder();
         int count = 0;
         for (int i = 0; i < bisChars.length; i++) {
             if (',' == bisChars[i]) {
                 bytes[count++] = Byte.parseByte(singleNum.toString());
-                singleNum = new StringBuffer();
+                singleNum.setLength(0);
             } else {
                 singleNum.append(bisChars[i]);
             }

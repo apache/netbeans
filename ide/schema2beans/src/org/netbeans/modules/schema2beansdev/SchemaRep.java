@@ -314,7 +314,7 @@ public class SchemaRep implements PrefixGuesser {
                     else
                         subOut.append(", ");	// NOI18N
                     subOut.append(freshOut.toString());
-                    freshOut = new StringBuffer();
+                    freshOut.setLength(0);
                 }
             }
             if (!hasNamedSubElements)

@@ -112,7 +112,7 @@ public class ExtDocParser {
                     } else {
                         sDocElements.add(ExtDocElementUtils.createElementForType(lastType, sb.toString().trim(), lastOffset));
                     }
-                    sb = new StringBuilder();
+                    sb.setLength(0);
                 }
 
                 while (ets.moveNext() && ets.token().id() == JsDocumentationTokenId.WHITESPACE) {

@@ -607,12 +607,16 @@ public class FmtImports extends javax.swing.JPanel implements Runnable, ListSele
         @Override
         protected void storeTableData(final JTable table, final String optionID, final Preferences node) {
             StringBuilder sb = null;
-            for (int i = 0; i < table.getRowCount(); i++) {
-                if (sb == null) {
-                    sb = new StringBuilder();
-                } else {
-                    sb.append(';');
-                }
+
+            int rowCnt = table.getRowCount();
+
+            if (rowCnt > 0) {
+                sb = new StringBuilder();
+            }
+
+            for (int i = 0; i < rowCnt; i++) {
+                sb.append(';');
+
                 for (int j = 0; j < table.getColumnCount(); j++) {
                     if (Boolean.class.equals(table.getColumnClass(j))) {
                         if (((Boolean)table.getValueAt(i, j)).booleanValue())

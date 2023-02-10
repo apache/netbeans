@@ -325,7 +325,7 @@ public class LiveSampledResultsPanel extends SampledResultsPanel implements Live
 
     private void exportCSV(String separator, ExportDataDumper eDD) {
         // Header
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String newLine = "\r\n"; // NOI18N
         String quote = "\""; // NOI18N
 
@@ -338,7 +338,7 @@ public class LiveSampledResultsPanel extends SampledResultsPanel implements Live
 
         // Data
         for (int i=0; i < nTrackedItems; i++) {
-            result = new StringBuffer();
+            result.setLength(0);
             result.append(quote).append(sortedClassNames[i]).append(quote).append(separator);
             result.append(quote).append(percentFormat.format(((double) totalLiveObjectsSize[i])/nTotalLiveBytes)).append(quote).append(separator);
             result.append(quote).append(totalLiveObjectsSize[i]).append(quote).append(separator);

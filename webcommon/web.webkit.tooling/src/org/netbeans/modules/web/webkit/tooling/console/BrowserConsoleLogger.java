@@ -262,15 +262,23 @@ public class BrowserConsoleLogger implements Console.Listener {
         
         boolean doPrintStackTrace = LEVEL_ERROR.equals(level) ||
                                     LEVEL_DEBUG.equals(level);
-        
-        StringBuilder sb;
+
         boolean first = true;
         if (doPrintStackTrace && msg.getStackTrace() != null) {
             FoldHandle fold = null;
             if (isFoldingSupported) {
                 fold = IOFolding.startFold(io, false);
             }
-            for (ConsoleMessage.StackFrame sf : msg.getStackTrace()) {
+
+            StringBuilder sb = null;
+
+            List<ConsoleMessage.StackFrame> stackTrace = msg.getStackTrace();
+
+            if (!stackTrace.isEmpty()) {
+                sb = new StringBuilder();
+            }
+
+            for (ConsoleMessage.StackFrame sf : stackTrace) {
                 String indent;
                 if (first) {
                     indent = "    at ";
@@ -280,8 +288,7 @@ public class BrowserConsoleLogger implements Console.Listener {
                 }
                 ow.print(indent);
                 ow.print(sf.getFunctionName());
-                sb = new StringBuilder();
-                
+                sb.setLength(0);
                 String urlStr = sf.getURLString();
                 urlStr = getProjectPath(project, urlStr);
                 sb.append(" (").append(urlStr).append(":").append(sf.getLine()).append(":").append(sf.getColumn()).append(")");
@@ -300,7 +307,7 @@ public class BrowserConsoleLogger implements Console.Listener {
             ow.print("  at ");
             String url = msg.getURLString();
             String file = getProjectPath(project, url);
-            sb = new StringBuilder(file);
+            StringBuilder sb = new StringBuilder(file);
             int line = msg.getLine();
             if (line != -1 && line != 0) {
                 sb.append(":");

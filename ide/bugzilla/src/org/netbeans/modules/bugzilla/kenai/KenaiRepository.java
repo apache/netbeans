@@ -167,9 +167,7 @@ public class KenaiRepository extends BugzillaRepository implements PropertyChang
     public synchronized BugzillaQuery getAllIssuesQuery() throws MissingResourceException {
         if(!providePredefinedQueries() || BugzillaUtil.isNbRepository(this)) return null;
         if (allIssues == null) {
-            StringBuffer url = new StringBuffer();
-            url = new StringBuffer();
-            url.append(urlParam);
+            StringBuilder url = new StringBuilder(urlParam);
             url.append(MessageFormat.format(BugzillaConstants.ALL_ISSUES_PARAMETERS, product));
             allIssues = 
                 new KenaiQuery(

@@ -67,13 +67,16 @@ public class StringEscapeUtils {
      */
     public static String escapeHtml(String text) {
         StringBuilder builder = null;
+
+        if (!text.isEmpty()) {
+            builder = new StringBuilder();
+        }
+
         int lastChange = 0;
         for (int i = 0; i < text.length(); i++) {
             final char chr = text.charAt(i);
             if (Escape.isInBasicEscape(chr)) {
-                if (builder == null) {
-                    builder = new StringBuilder();
-                }
+                builder.setLength(0);
                 builder.append(text.substring(lastChange, i));
                 lastChange = i + 1;
                 builder.append(Escape.get(chr).getEscapedString());

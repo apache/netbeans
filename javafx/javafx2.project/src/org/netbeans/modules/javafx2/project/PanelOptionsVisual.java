@@ -243,7 +243,7 @@ public class PanelOptionsVisual extends SettingsPanel implements PropertyChangeL
                     if (!needsEscape || main.length() > 0) {
                         main.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1));
                     }
-                    sb = new StringBuilder();
+                    sb.setLength(0);
                     first = true;
                     needsEscape = false;
                 }

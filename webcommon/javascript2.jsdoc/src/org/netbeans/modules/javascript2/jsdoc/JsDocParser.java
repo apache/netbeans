@@ -133,7 +133,7 @@ public class JsDocParser {
                     } else {
                         jsDocElements.add(JsDocElementUtils.createElementForType(type, sb.toString().trim(), offset));
                     }
-                    sb = new StringBuilder();
+                    sb.setLength(0);
                 }
 
                 while (ets.moveNext() && ets.token().id() == JsDocumentationTokenId.WHITESPACE) {

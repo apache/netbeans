@@ -293,7 +293,7 @@ public class ParserServletContext implements ServletContext {
      */
     public int getMajorVersion() {
         
-        return (3);
+        return (4);
         
     }
     
@@ -631,7 +631,7 @@ public class ParserServletContext implements ServletContext {
 
     @Override
     public int getEffectiveMajorVersion() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -658,6 +658,12 @@ public class ParserServletContext implements ServletContext {
 
     @Override
     public Dynamic addServlet(String string, Class<? extends Servlet> type) {
+        return null;
+    }
+    
+    @Override
+    public Dynamic addJspFile(String servletName, String jspFile) {
+        System.err.println("** addJspFile(servletName,jspFile)");
         return null;
     }
 
@@ -759,6 +765,36 @@ public class ParserServletContext implements ServletContext {
 
     @Override
     public void declareRoles(String... strings) {
+        
+    }
+    
+    @Override
+    public int getSessionTimeout() {
+        return 0;
+    }
+      
+    @Override
+    public void setSessionTimeout(int sessionTimeout) {
+        
+    }
+    
+    @Override
+    public String getRequestCharacterEncoding() {
+        return "";
+    }
+    
+    @Override
+    public void setRequestCharacterEncoding(String encoding) {
+        
+    }
+    
+    @Override
+    public String getResponseCharacterEncoding() {
+        return "";
+    }
+    
+    @Override
+    public void setResponseCharacterEncoding(String encoding) {
         
     }
     

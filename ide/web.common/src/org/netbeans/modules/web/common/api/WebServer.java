@@ -242,36 +242,37 @@ public final class WebServer {
         @Override
         public void run() {
             readMimeTypes();
-            ExecutorService pool = new RequestProcessor(WebServer.class.getName(), 10);
-            while (!stop.get()) {
-                final Socket s;
-                try {
-                    s = sock.accept();
-                } catch (SocketException ex) {
-                    if (!stop.get()) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                    // abort server:
-                    return;
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                    // abort server:
-                    return;
-                }
-                if (stop.get()) {
-                    break;
-                }
-                pool.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            read(s.getInputStream(), s.getOutputStream());
-                        } catch (IOException ex) {
-                            // do not abort server in this case
-                            LOGGER.log(Level.FINE, "reading socket failed", ex); // NOI18N
+            try (ExecutorService pool = new RequestProcessor(WebServer.class.getName(), 10)) {
+                while (!stop.get()) {
+                    final Socket s;
+                    try {
+                        s = sock.accept();
+                    } catch (SocketException ex) {
+                        if (!stop.get()) {
+                            Exceptions.printStackTrace(ex);
                         }
+                        // abort server:
+                        return;
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                        // abort server:
+                        return;
                     }
-                });
+                    if (stop.get()) {
+                        break;
+                    }
+                    pool.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                read(s.getInputStream(), s.getOutputStream());
+                            } catch (IOException ex) {
+                                // do not abort server in this case
+                                LOGGER.log(Level.FINE, "reading socket failed", ex); // NOI18N
+                            }
+                        }
+                    });
+                }
             }
         }
 

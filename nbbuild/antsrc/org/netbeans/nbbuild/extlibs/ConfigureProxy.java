@@ -86,42 +86,43 @@ public final class ConfigureProxy extends Task {
         final List<Exception> errs = new CopyOnWriteArrayList<>();
         final StringBuffer msgs = new StringBuffer();
         final CountDownLatch connected = new CountDownLatch(1);
-        ExecutorService connectors = Executors.newFixedThreadPool(3);
-        connectors.submit(() -> {
-            checkProxyProperty("http_proxy", url, conn, connectedVia, connected, errs, msgs);
-        });
-        connectors.submit(() -> {
-            checkProxyProperty("https_proxy", url, conn, connectedVia, connected, errs, msgs);
-        });
-        connectors.submit(() -> {
+        try (ExecutorService connectors = Executors.newFixedThreadPool(3)) {
+            connectors.submit(() -> {
+                checkProxyProperty("http_proxy", url, conn, connectedVia, connected, errs, msgs);
+            });
+            connectors.submit(() -> {
+                checkProxyProperty("https_proxy", url, conn, connectedVia, connected, errs, msgs);
+            });
+            connectors.submit(() -> {
+                try {
+                    URLConnection test = url.openConnection(Proxy.NO_PROXY);
+                    test.connect();
+                    conn[0] = test;
+                    msgs.append("\nNo proxy connected");
+                    connected.countDown();
+                } catch (IOException ex) {
+                    errs.add(ex);
+                }
+            });
             try {
-                URLConnection test = url.openConnection(Proxy.NO_PROXY);
-                test.connect();
-                conn[0] = test;
-                msgs.append("\nNo proxy connected");
-                connected.countDown();
-            } catch (IOException ex) {
-                errs.add(ex);
+                if (!connected.await(connectTimeoutMs, TimeUnit.MILLISECONDS)) {
+                    throw new IOException("Could not connect to " + url + " within " + connectTimeoutMs + " milliseconds");
+                }
+            } catch (InterruptedException ex) {
             }
-        });
-        try {
-            if (!connected.await(connectTimeoutMs, TimeUnit.MILLISECONDS)) {
-                throw new IOException("Could not connect to " + url + " within " + connectTimeoutMs + " milliseconds");
+            if (conn[0] == null) {
+                for (Exception ex : errs) {
+                    task.log(ex, Project.MSG_ERR);
+                }
+                if (msgs.length() > 0) {
+                    task.log(msgs.toString(), Project.MSG_ERR);
+                }
+                throw new IOException("Cannot connect to " + url);
+            } else {
+                task.log(msgs.toString(), Project.MSG_DEBUG);
             }
-        } catch (InterruptedException ex) {
+            return conn[0];
         }
-        if (conn[0] == null) {
-            for (Exception ex : errs) {
-                task.log(ex, Project.MSG_ERR);
-            }
-            if (msgs.length() > 0) {
-                task.log(msgs.toString(), Project.MSG_ERR);
-            }
-            throw new IOException("Cannot connect to " + url);
-        } else {
-            task.log(msgs.toString(), Project.MSG_DEBUG);
-        }
-        return conn[0];
     }
 
     private static void checkProxyProperty(

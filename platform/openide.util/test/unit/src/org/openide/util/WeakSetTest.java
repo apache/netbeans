@@ -202,31 +202,32 @@ public class WeakSetTest extends NbTestCase {
     public void testWeakSetIntegrity() throws Exception {
         //CharSequence log = Log.enable(WeakSet.class.getName(), Level.FINE);
         ArrayList<WeakReference<TestObj>> awr = new ArrayList<WeakReference<TestObj>>();
-        ExecutorService exec = Executors.newFixedThreadPool(5);
-        exec.execute(new GC());
-        for (int i = 0; i < 1000; i++) {
-            TestObj to = new TestObj("T" + i);
-            awr.add(new WeakReference<TestObj>(to));
-            Thread.yield();
-            for (WeakReference<TestObj> wro : awr) {
-                TestObj wroo = wro.get();
-                if (wroo != null) {
-                    synchronized (TestObj.testObjs) {
-                        boolean found = false;
-                        for (TestObj o : TestObj.testObjs) {
-                            if (o == wroo) {
-                                found = true;
+        try (ExecutorService exec = Executors.newFixedThreadPool(5)) {
+            exec.execute(new GC());
+            for (int i = 0; i < 1000; i++) {
+                TestObj to = new TestObj("T" + i);
+                awr.add(new WeakReference<TestObj>(to));
+                Thread.yield();
+                for (WeakReference<TestObj> wro : awr) {
+                    TestObj wroo = wro.get();
+                    if (wroo != null) {
+                        synchronized (TestObj.testObjs) {
+                            boolean found = false;
+                            for (TestObj o : TestObj.testObjs) {
+                                if (o == wroo) {
+                                    found = true;
+                                }
                             }
-                        }
-                        if (found != TestObj.testObjs.contains(wroo)) {
-                            //System.out.println(log.toString());
-                            fail("Inconsistency of iterator chain and hash map");
+                            if (found != TestObj.testObjs.contains(wroo)) {
+                                //System.out.println(log.toString());
+                                fail("Inconsistency of iterator chain and hash map");
+                            }
                         }
                     }
                 }
             }
+            exec.shutdownNow();
         }
-        exec.shutdownNow();
     }    
     
     public void testAddRemove() {

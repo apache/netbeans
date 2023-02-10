@@ -359,6 +359,7 @@ public final class BaseExecutionService {
                     @Override
                     public Void run() {
                         processingExecutor.shutdown();
+                        processingExecutor.close();
                         return null;
                     }
                 });

@@ -171,9 +171,8 @@ public class DatabaseUtils {
             props.put("password", password);
         }
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Connection> future = executor.submit(new Callable<Connection>() {
-            public Connection call() throws Exception {
+        try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
+            Future<Connection> future = executor.submit(() -> {
                 props.put("connectTimeout", MySQLOptions.getDefault().getConnectTimeout());
 
                 try {
@@ -196,23 +195,23 @@ public class DatabaseUtils {
                         throw new DatabaseException(sqle);
                     }
                 }
-            }
-        });
+            });
 
-        try {
-            return future.get(timeToWait, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException ie) {
-            Thread.currentThread().interrupt();
-            throw new DatabaseException(ie);
-        } catch (ExecutionException e) {
-            if (e.getCause() instanceof DatabaseException) {
-                throw new DatabaseException(e.getCause());
-            } else {
-                throw Utils.launderThrowable(e.getCause());
+            try {
+                return future.get(timeToWait, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseException(ie);
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof DatabaseException) {
+                    throw new DatabaseException(e.getCause());
+                } else {
+                    throw Utils.launderThrowable(e.getCause());
+                }
+            } catch (TimeoutException te) {
+                future.cancel(true);
+                throw new TimeoutException(NbBundle.getMessage(DatabaseUtils.class, "MSG_ConnectTimedOut"));
             }
-        } catch (TimeoutException te) {
-            future.cancel(true);
-            throw new TimeoutException(NbBundle.getMessage(DatabaseUtils.class, "MSG_ConnectTimedOut"));
         }
     }
 

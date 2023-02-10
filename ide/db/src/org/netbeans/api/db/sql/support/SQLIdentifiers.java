@@ -372,7 +372,7 @@ public final class SQLIdentifiers {
 
     private static class FallbackQuoter extends Quoter {
 
-        private static final Pattern ASCII_IDENTIFIER = Pattern.compile("[a-zA-z][a-zA-Z0-9_]+");
+        private static final Pattern ASCII_IDENTIFIER = Pattern.compile("[a-zA-z]\\w+");
 
         public FallbackQuoter() {
             super("\"");

@@ -31,7 +31,7 @@
                 <xsd:element name="minimum-ant-version" minOccurs="0">
                     <xsd:simpleType>
                         <xsd:restriction base="xsd:NMTOKEN">
-                            <xsd:pattern value="1\.[0-9]+(\.[0-9]+)?"/>
+                            <xsd:pattern value="1\.\d+(\.\d+)?"/>
                         </xsd:restriction>
                     </xsd:simpleType>
                 </xsd:element>

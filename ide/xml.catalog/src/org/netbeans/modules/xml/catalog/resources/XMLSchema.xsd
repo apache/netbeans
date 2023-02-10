@@ -1904,7 +1904,7 @@ use</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:token">
       <xs:pattern
-        value="[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        value="[a-zA-Z]{1,8}(-[a-zA-Z\d]{1,8})*"
                 id="language.pattern">
         <xs:annotation>
           <xs:documentation
@@ -2077,7 +2077,7 @@ use</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:decimal">
       <xs:fractionDigits value="0" fixed="true" id="integer.fractionDigits"/>
-      <xs:pattern value="[\-+]?[0-9]+"/>
+      <xs:pattern value="[\-+]?\d+"/>
     </xs:restriction>
   </xs:simpleType>
 

@@ -474,7 +474,7 @@
       <xs:documentation source="http://www.w3.org/TR/xmlschema-2/#language"/>
     </xs:annotation>
     <xs:restriction base="xs:token">
-      <xs:pattern value="[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+      <xs:pattern value="[a-zA-Z]{1,8}(-[a-zA-Z\d]{1,8})*"
                   id="language.pattern">
         <xs:annotation>
           <xs:documentation source="http://www.ietf.org/rfc/rfc3066.txt">
@@ -621,7 +621,7 @@
     </xs:annotation>
     <xs:restriction base="xs:decimal">
       <xs:fractionDigits fixed="true" value="0" id="integer.fractionDigits"/>
-      <xs:pattern value="[\-+]?[0-9]+"/>
+      <xs:pattern value="[\-+]?\d+"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="nonPositiveInteger" id="nonPositiveInteger">

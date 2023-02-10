@@ -61,7 +61,7 @@
    <xsd:element name="zip-code">
       <xsd:simpleType>
          <xsd:restriction base="xsd:string">
-        	 <xsd:pattern value="[0-9]{5}(-[0-9]{4})?"/>
+        	 <xsd:pattern value="\d{5}(-\d{4})?"/>
       	 </xsd:restriction>
       </xsd:simpleType>
    </xsd:element>
@@ -81,7 +81,7 @@
    <xsd:simpleType name="TelephoneNumberType">
    		<xsd:restriction base="xsd:string">
    			<xsd:length value="12"/>
-   			<xsd:pattern value="[0-9]{3}-[0-9]{3}-[0-9]{4}"/>
+   			<xsd:pattern value="\d{3}-\d{3}-\d{4}"/>
    		</xsd:restriction>
    </xsd:simpleType> 
 

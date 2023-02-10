@@ -78,7 +78,7 @@
 
     <xsd:simpleType name="pathType">
         <xsd:restriction base="xsd:token">
-            <xsd:pattern value="[a-z0-9_.\-][a-z0-9_.\-]*(/[a-z0-9_.\-][a-z0-9_.\-]*)*"/>
+            <xsd:pattern value="[a-z\d_.\-][a-z\d_.\-]*(/[a-z\d_.\-][a-z\d_.\-]*)*"/>
         </xsd:restriction>
     </xsd:simpleType>
 </xsd:schema>

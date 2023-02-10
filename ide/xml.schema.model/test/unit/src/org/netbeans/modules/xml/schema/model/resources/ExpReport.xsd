@@ -28,7 +28,7 @@
 							<xs:element name="Phone">
 								<xs:simpleType>
 									<xs:restriction base="xs:string">
-										<xs:pattern value="[0-9 \-]*"/>
+										<xs:pattern value="[\d \-]*"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>

@@ -35,7 +35,7 @@
     
     <xs:simpleType name="orderidtype">
 	<xs:restriction base="xs:string">
-	    <xs:pattern value="[0-9]{6}"/>
+	    <xs:pattern value="\d{6}"/>
 	</xs:restriction>
     </xs:simpleType>
     

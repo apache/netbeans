@@ -59,7 +59,7 @@
 			<xs:documentation xml:lang="en">Used for codes in the OTA code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:pattern value="[0-9A-Z]{1,3}(\.[A-Z]{3}(\.X){0,1}){0,1}"/>
+			<xs:pattern value="[\dA-Z]{1,3}(\.[A-Z]{3}(\.X){0,1}){0,1}"/>
 		</xs:restriction>
 	</xs:simpleType>	
 	<xs:simpleType name="StringLength1to32">

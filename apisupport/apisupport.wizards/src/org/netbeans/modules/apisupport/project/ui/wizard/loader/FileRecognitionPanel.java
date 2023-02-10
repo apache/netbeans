@@ -43,7 +43,7 @@ import org.openide.util.NbBundle;
 final class FileRecognitionPanel extends BasicWizardIterator.Panel {
     
     private static final Pattern EXTENSION_PATTERN = Pattern.compile("([.]?\\w+){1}([ ,]+[.]?\\w+)*[ ]*"); // NOI18N
-    private static final Pattern ELEMENT_PATTERN = Pattern.compile("(application/([a-zA-Z0-9_.-])*\\+xml|text/([a-zA-Z0-9_.-])*\\+xml)"); // NOI18N
+    private static final Pattern ELEMENT_PATTERN = Pattern.compile("(application/([\\w.-])*\\+xml|text/([\\w.-])*\\+xml)"); // NOI18N
     private static final Pattern REG_NAME_PATTERN = Pattern.compile("^[[\\p{Alnum}][!#$&.+\\-^_]]{1,127}$"); //NOI18N
     private static final Set<String> WELL_KNOWN_TYPES = new HashSet<String>(Arrays.asList(
         "application", //NOI18N

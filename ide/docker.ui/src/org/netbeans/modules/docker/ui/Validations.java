@@ -29,7 +29,7 @@ import org.openide.util.Parameters;
  */
 public final class Validations {
 
-    private static final Pattern CONTAINER_PATTERN = Pattern.compile("^[a-zA-Z\\d][a-zA-Z0-9_.-]+$");
+    private static final Pattern CONTAINER_PATTERN = Pattern.compile("^[a-zA-Z\\d][\\w.-]+$");
 
     private static final Pattern REPOSITORY_PATTERN = Pattern.compile("^[a-z\\d_.-]+$");
 
@@ -37,7 +37,7 @@ public final class Validations {
 
     private static final Pattern FORBIDDEN_REPOSITORY_PATTERN = Pattern.compile("^[a-f\\d]{64}$");
 
-    private static final Pattern TAG_PATTERN = Pattern.compile("^[A-Za-z0-9_.-]+$");
+    private static final Pattern TAG_PATTERN = Pattern.compile("^[\\w.-]+$");
 
     private Validations() {
         super();
@@ -46,7 +46,7 @@ public final class Validations {
     @NbBundle.Messages({
         "MSG_ErrorContainerShort=Name length must be at least 2 characters.",
         "# {0} - error token",
-        "MSG_ErrorContainerCharacter=Only [a-zA-Z\\d][a-zA-Z0-9_.-] allowed in name ({0})."
+        "MSG_ErrorContainerCharacter=Only [a-zA-Z\\d][\\w.-] allowed in name ({0})."
     })
     public static String validateContainer(String container) {
         Parameters.notNull("container", container);
@@ -134,7 +134,7 @@ public final class Validations {
 
     @NbBundle.Messages({
         "# {0} - error token",
-        "MSG_ErrorTagCharacter=Only [A-Za-z0-9_.-] allowed in tag ({0}).",
+        "MSG_ErrorTagCharacter=Only [\\w.-] allowed in tag ({0}).",
         "MSG_ErrorTagLong=Tag length must be at most 128 characters."
     })
     public static String validateTag(String tag) {

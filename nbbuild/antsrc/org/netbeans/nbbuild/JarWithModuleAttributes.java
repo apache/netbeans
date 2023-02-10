@@ -44,7 +44,7 @@ public class JarWithModuleAttributes extends Jar {
     public JarWithModuleAttributes() {}
 
     private static final Pattern COMMA_SPACE = Pattern.compile(", *");
-    private static final Pattern IMPL_DEP = Pattern.compile(" *([a-zA-Z0-9_.]+)(/\\d+)? *= *(.+) *");
+    private static final Pattern IMPL_DEP = Pattern.compile(" *([\\w.]+)(/\\d+)? *= *(.+) *");
     
     private File stamp;
     /** Location of a stamp file to create and/or make newer than the JAR file.

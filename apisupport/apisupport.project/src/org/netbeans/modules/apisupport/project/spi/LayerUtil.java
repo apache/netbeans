@@ -106,7 +106,7 @@ public class LayerUtil {
     public static String generateBundleKeyForFile(String filePath) {
         // might result in the same key for filles that differ in replaced chars, but probably good enough;
         // otherwise may check for duplicates and add "_n" when properties are passed as param
-        return filePath.replaceAll("[^-a-zA-Z0-9_./]", "");    // NOI18N
+        return filePath.replaceAll("[^-\\w./]", "");    // NOI18N
     }
 
     private static final Set<String> XML_LIKE_TYPES = new HashSet<String>();

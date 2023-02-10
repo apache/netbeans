@@ -533,7 +533,7 @@ public class CustomizerRun extends JPanel implements HelpCtx.Provider {
             return false;
         }
         String name = ((CreateConfigurationPanel) d.getMessage()).getConfigName();
-        String config = name.replaceAll("[^a-zA-Z0-9_.-]", "_"); // NOI18N
+        String config = name.replaceAll("[^\\w.-]", "_"); // NOI18N
         if (config.trim().length() == 0) {
             //#143764
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(

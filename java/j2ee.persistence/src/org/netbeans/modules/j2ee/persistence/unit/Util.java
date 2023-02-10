@@ -69,7 +69,7 @@ public class Util {
         List<String> propsList = getPropsNamesExceptGeneral(propCat);
 
         if (pu != null) {
-            ArrayList<String> availProps = new ArrayList<String>(propsList);
+            ArrayList<String> availProps = new ArrayList<>(propsList);
             if(pu.getProperties() != null) {
                 for (int i = 0; i < pu.getProperties().sizeProperty2(); i++) {
                     String propName = pu.getProperties().getProperty2(i).getName();

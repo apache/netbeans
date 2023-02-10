@@ -36,7 +36,6 @@ import org.eclipse.persistence.jpa.jpql.tools.spi.IEntity;
 import org.eclipse.persistence.jpa.jpql.tools.spi.IMapping;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelException;
 import org.netbeans.modules.j2ee.persistence.api.EntityClassScope;
 import org.netbeans.modules.j2ee.persistence.api.metadata.orm.*;
@@ -105,12 +104,8 @@ public class ETCompletionContextResolver implements CompletionContextResolver {
         }
         if (ecs != null) {
             try {
-                entities = ecs.getEntityMappingsModel(false).runReadAction(new MetadataModelAction<EntityMappingsMetadata, Entity[]>() {
-                   @Override
-                    public Entity[] run(EntityMappingsMetadata metadata) throws Exception {
-                        return metadata.getRoot().getEntity();
-                    }
-                });
+                entities = ecs.getEntityMappingsModel(false)
+                              .runReadAction( (EntityMappingsMetadata metadata) -> metadata.getRoot().getEntity() );
             } catch (MetadataModelException ex) {
             } catch (IOException ex) {
             }

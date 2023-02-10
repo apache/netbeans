@@ -41,15 +41,11 @@ public class PropertiesTablePanel extends DefaultTablePanel {
         this.configDataObject = dObj;
         this.propParam = propParam;
 
-        removeButton.addActionListener(new java.awt.event.ActionListener() {
-
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                configDataObject.modelUpdatedFromUI();
-                int row = getTable().getSelectedRow();
-                model.removeRow(row);
-                enableAddButton();
-            }
+        removeButton.addActionListener( (java.awt.event.ActionEvent evt) -> {
+            configDataObject.modelUpdatedFromUI();
+            int row = getTable().getSelectedRow();
+            model.removeRow(row);
+            enableAddButton();
         });
         editButton.addActionListener(new TableActionListener(false));
         addButton.addActionListener(new TableActionListener(true));

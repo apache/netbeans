@@ -43,7 +43,6 @@ import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
-import org.netbeans.modules.j2ee.persistence.action.GenerationOptions.*;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
 import org.openide.util.Parameters;
@@ -185,7 +184,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         
         TypeElement annotationType = asTypeElement(annotationTypeFqn);
         TypeElement classElement = getClassElement();
-        List<Element> elements = new ArrayList<Element>();
+        List<Element> elements = new ArrayList<>();
         elements.add(classElement);
         elements.addAll(ElementFilter.fieldsIn(classElement.getEnclosedElements()));
         elements.addAll(ElementFilter.methodsIn(classElement.getEnclosedElements()));
@@ -292,7 +291,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         
         ClassTree result = getClassTree();
         
-        List<AnnotationTree> anns = new ArrayList<AnnotationTree>();
+        List<AnnotationTree> anns = new ArrayList<>();
         ExpressionTree expressionTree = null;
         String emfName = ENTITY_MANAGER_FACTORY_DEFAULT_NAME;
         
@@ -391,6 +390,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return treeMaker;
     }
     
+    @Override
     public void setTreeMaker(TreeMaker treeMaker) {
         this.treeMaker = treeMaker;
     }
@@ -399,6 +399,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return classTree;
     }
     
+    @Override
     public void setClassTree(ClassTree classTree) {
         this.classTree = classTree;
     }
@@ -407,6 +408,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return workingCopy;
     }
     
+    @Override
     public void setWorkingCopy(WorkingCopy workingCopy) {
         this.workingCopy = workingCopy;
     }
@@ -418,6 +420,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return genUtils;
     }
     
+    @Override
     public void setGenUtils(GenerationUtils genUtils) {
         this.genUtils = genUtils;
     }
@@ -426,6 +429,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return persistenceUnit;
     }
     
+    @Override
     public void setPersistenceUnit(PersistenceUnit persistenceUnit) {
         this.persistenceUnit = persistenceUnit;
     }
@@ -434,6 +438,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return generationOptions;
     }
     
+    @Override
     public void setGenerationOptions(GenerationOptions generationOptions) {
         this.generationOptions = generationOptions;
     }

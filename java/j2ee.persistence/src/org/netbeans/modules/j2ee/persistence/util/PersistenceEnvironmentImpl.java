@@ -50,7 +50,6 @@ import org.openide.filesystems.FileObject;
 public class PersistenceEnvironmentImpl implements PersistenceEnvironment{
         /** Handle to the current project to which this HibernateEnvironment is bound*/
     private Project project;
-    private Logger logger = Logger.getLogger(PersistenceEnvironmentImpl.class.getName());
     private WeakReference<CustomClassLoader> loaderRef;
 
     /**
@@ -93,7 +92,7 @@ public class PersistenceEnvironmentImpl implements PersistenceEnvironment{
      */
     @Override
     public List<URL> getProjectClassPath(FileObject projectFile) {
-        List<URL> projectClassPathEntries = new ArrayList<URL>();
+        List<URL> projectClassPathEntries = new ArrayList<>();
         SourceGroup[] sgs = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         if (sgs.length < 1) {
             return projectClassPathEntries;
@@ -122,7 +121,7 @@ public class PersistenceEnvironmentImpl implements PersistenceEnvironment{
      */
     @Override
     public List<URL> getProjectClassPath() {
-        List<URL> projectClassPathEntries = new ArrayList<URL>();
+        List<URL> projectClassPathEntries = new ArrayList<>();
         for (SourceGroup sourceGroup : getSourceGroups(project)) {
             if (sourceGroup == null) {
                 continue;

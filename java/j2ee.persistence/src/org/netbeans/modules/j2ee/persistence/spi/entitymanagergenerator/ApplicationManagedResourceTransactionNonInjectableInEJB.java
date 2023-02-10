@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
-import org.netbeans.modules.j2ee.persistence.action.GenerationOptions.*;
 
 /**
  * Generates the code needed for invoking an <code>EntityManager</code> in EJB 2.x
@@ -40,6 +39,7 @@ import org.netbeans.modules.j2ee.persistence.action.GenerationOptions.*;
  */
 public final class ApplicationManagedResourceTransactionNonInjectableInEJB extends EntityManagerGenerationStrategySupport {
     
+    @Override
     public ClassTree generate(){
         
         ClassTree modifiedClazz = getClassTree();

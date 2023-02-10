@@ -51,10 +51,12 @@ public class TableSourceTest extends NbTestCase {
 
     private static final class ProjectImpl implements Project {
 
+        @Override
         public FileObject getProjectDirectory() {
             return null;
         }
 
+        @Override
         public Lookup getLookup() {
             return null;
         }

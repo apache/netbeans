@@ -19,9 +19,6 @@
 
 package org.netbeans.modules.j2ee.persistence.wizard.dbscript;
 
-import org.netbeans.modules.j2ee.persistence.wizard.entity.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;

@@ -45,12 +45,14 @@ public class ProviderUtilTest extends NbTestCase {
         super(testName);
     }
     
+    @Override
     protected void setUp() throws Exception {
         this.persistenceUnit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
         this.persistenceUnit2 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
         this.persistenceUnit3 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
     }
     
+    @Override
     protected void tearDown() throws Exception {
     }
     

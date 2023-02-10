@@ -46,7 +46,6 @@ import org.netbeans.modules.j2ee.persistence.spi.server.ServerStatusProvider2;
 import org.netbeans.modules.j2ee.persistence.unit.*;
 import org.netbeans.modules.j2ee.persistence.wizard.Util;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
@@ -96,7 +95,7 @@ public class ProviderUtil {
      * @param providerClass the FQN of the class that specifies the persistence provider.
      *
      * @return the provider that the given providerClass represents or null if it was
-     * an empty string and the project doesn't suppport a default (container managed)
+     * an empty string and the project doesn't support a default (container managed)
      * persistence provider.
      */
     public static Provider getProvider(String providerClass, Project project) {
@@ -123,7 +122,9 @@ public class ProviderUtil {
        for (Provider each : getAllProviders()) {
             if (each.getProviderClass().equals(providerClass.trim())) {
                 ret = each;
-                if(ver.equals(ProviderUtil.getVersion(each)))return each;
+                if(ver.equals(ProviderUtil.getVersion(each))) {
+                    return each;
+                }
             }
         }
         
@@ -131,7 +132,7 @@ public class ProviderUtil {
 
     }
 
-    /*
+    /**
      * Gets the default persistence provider of the target server
      * of the given <code>project</code>.
      *
@@ -162,7 +163,7 @@ public class ProviderUtil {
      * be retrieved; must not be null.
      * 
      * @return the connection specified in the given persistence unit or
-     * <code>null</code> if it didn't specify a connectioh.
+     * <code>null</code> if it didn't specify a connection.
      * 
      */
     public static DatabaseConnection getConnection(PersistenceUnit pu) {
@@ -206,14 +207,14 @@ public class ProviderUtil {
         return null;
     }
     /**
-     * Gets the database connection properties (irl,name,password) specified in the given persistence
+     * Gets the database connection properties (url,name,password) specified in the given persistence
      * unit.
      * 
      * @param pu the persistence unit whose database connection is to 
      * be retrieved; must not be null.
      * 
      * @return the connection properties specified in the given persistence unit or
-     * <code>null</code> if it didn't specify a connectioh.
+     * <code>null</code> if it didn't specify a connection.
      * 
      */
     public static HashMap<String, String> getConnectionProperties(PersistenceUnit pu) {
@@ -224,7 +225,7 @@ public class ProviderUtil {
             return null;
         }
 
-        HashMap<String, String> ret = new HashMap<String,String>();
+        HashMap<String, String> ret = new HashMap<>();
         Property[] properties = pu.getProperties().getProperty2();
         Provider provider = getProvider(pu);
 
@@ -415,8 +416,8 @@ public class ProviderUtil {
      * @param connection the database connections whose properties are to be set. Must
      * not be null.
      * @param provider it's persistence provider,  most database connection properties are 
-     * based on provider supported properties, if null profider is received from provider class from persistence unit.
-     * it's better to pass provider as differnt providers may have the same provider class.
+     * based on provider supported properties, if null provider is received from provider class from persistence unit.
+     * it's better to pass provider as different providers may have the same provider class.
      */
     public static void setDatabaseConnection(PersistenceUnit persistenceUnit, Provider provider, DatabaseConnection connection) {
 
@@ -547,7 +548,7 @@ public class ProviderUtil {
         if (providers == null) {
             providers = getAllProviders();
         }
-        Set<Provider> candidates = new HashSet<Provider>();
+        Set<Provider> candidates = new HashSet<>();
         for (Provider each : providers) {
             if (each.getProviderClass().equals(persistenceUnit.getProvider())) {
                 candidates.add(each);
@@ -595,22 +596,31 @@ public class ProviderUtil {
     private static Set<Provider> filterProvidersByProperties(Set<Provider> providers, Property[] properties){
         Set<Provider> ret = null;
         if(providers == null){}
-        else if(providers.size()<= 1 || properties==null || properties.length==0) ret = new HashSet(providers);
-        else {
+        else if(providers.size()<= 1 || properties==null || properties.length==0) {
             ret = new HashSet(providers);
-            HashMap <Integer, ArrayList<Provider>> rates = new HashMap<Integer, ArrayList<Provider>>();
+        } else {
+            ret = new HashSet(providers);
+            HashMap <Integer, ArrayList<Provider>> rates = new HashMap<>();
             int lowrate = Integer.MAX_VALUE;
             for(Provider each : providers){
                 int rate = 0;
                 for(Property prop: properties){
-                    if(each.getPropertyNames().contains(prop.getName()))rate++;
+                    if(each.getPropertyNames().contains(prop.getName())) {
+                        rate++;
+                    }
                 }
-                if(rates.get(rate) == null)rates.put(rate, new ArrayList<Provider>());
+                if(rates.get(rate) == null) {
+                    rates.put(rate, new ArrayList<Provider>());
+                }
                 rates.get(rate).add(each);
-                if(rate<lowrate)lowrate=rate;
+                if(rate<lowrate) {
+                    lowrate=rate;
+                }
             }
             if(rates.size()>1){
-                for(Provider prov:rates.get(lowrate))ret.remove(prov);
+                for(Provider prov:rates.get(lowrate)) {
+                    ret.remove(prov);
+                }
             }
         }
         return ret;
@@ -636,13 +646,13 @@ public class ProviderUtil {
      */
     public static ArrayList<Provider> getProviders(PersistenceUnit persistenceUnit) {
         Parameters.notNull("persistenceUnit", persistenceUnit); //NOI18N
-        ArrayList<Provider> providers = new ArrayList<Provider>();
+        ArrayList<Provider> providers = new ArrayList<>();
         for (Provider each : getAllProviders()) {
             if (each.getProviderClass().equals(persistenceUnit.getProvider())) {
                 providers.add(each);
             }
         }
-        if (providers.size() == 0) {
+        if (providers.isEmpty()) {
             providers.add(DEFAULT_PROVIDER2_1);
         }
         return providers;
@@ -660,7 +670,7 @@ public class ProviderUtil {
      * Gets the persistence units that are defined in the given <code>
      * puDataObject</code>.
      * 
-     * @param puDataObject the PUDataObject whose persistence units are to be retrived.
+     * @param puDataObject the PUDataObject whose persistence units are to be retrieved.
      * 
      * @return the persistence units specified in the given <code>puDataObject</code>
      * or an empty array if there were no persistence units defined in it.
@@ -715,7 +725,7 @@ public class ProviderUtil {
     }
 
     /**
-     * Adds the given <code>persistenceUnit</code> to the <code>PUDataObject<code>
+     * Adds the given <code>persistenceUnit</code> to the <code>PUDataObject</code>
      *  of the given <code>project</code> and saves it.
      * @param persistenceUnit the unit to be added
      * @param project the project to which the unit is to be added.
@@ -727,7 +737,7 @@ public class ProviderUtil {
     }
 
     /**
-     * Adds the given <code>persistenceUnit</code> to the <code>PUDataObject<code>
+     * Adds the given <code>persistenceUnit</code> to the <code>PUDataObject</code>
      *  of the given <code>project</code>'s <code>root</code> and saves it.
      * @param persistenceUnit the unit to be added
      * @param project the project to which the unit is to be added.
@@ -751,7 +761,7 @@ public class ProviderUtil {
     /**
      *Gets the <code>PUDataObject</code> associated with the given <code>fo</code>.
      * 
-     *@param fo the file object thas has an associated <code>PUDataObject</code>. Must
+     *@param fo the file object that has an associated <code>PUDataObject</code>. Must
      * not be null.
      * 
      *@return the <code>PUDataObject</code> associated with the given <code>fo</code>.
@@ -863,12 +873,9 @@ public class ProviderUtil {
         String ret = vers == null ? PersistenceUtils.getJPAVersion(project) : vers;
         final String version = ret != null ? ret : Persistence.VERSION_1_0;
         // must create the file using AtomicAction, see #72058
-        persistenceLocation.getFileSystem().runAtomicAction(new FileSystem.AtomicAction() {
-
-            public void run() throws IOException {
-                dd[0] = FileUtil.copyFile(FileUtil.getConfigFile(
-                        "org-netbeans-modules-j2ee-persistence/persistence-" + version + ".xml"), persistenceLocation, "persistence"); //NOI18N
-            }
+        persistenceLocation.getFileSystem().runAtomicAction( () -> {
+            dd[0] = FileUtil.copyFile(FileUtil.getConfigFile(
+                    "org-netbeans-modules-j2ee-persistence/persistence-" + version + ".xml"), persistenceLocation, "persistence"); //NOI18N
         });
         PersistenceUtils.logUsage(ProviderUtil.class, "USG_PERSISTENCE_XML_CREATED", new String[]{version});
         return dd[0];
@@ -1114,9 +1121,6 @@ public class ProviderUtil {
         ClassPath classPath = ClassPath.getClassPath(sourceRoot, ClassPath.COMPILE);
         //this package name will change when open source, should just rely on subclass to use file names
         FileObject utxClass = classPath.findResource("org/springframework/transaction/annotation/Transactional.class"); // NOI18N
-        if (utxClass != null) {
-            return true;
-        }
-        return false;
+        return utxClass != null;
     }
 }

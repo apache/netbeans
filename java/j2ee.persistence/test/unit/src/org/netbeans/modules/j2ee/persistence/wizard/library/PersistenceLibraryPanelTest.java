@@ -20,9 +20,7 @@
 package org.netbeans.modules.j2ee.persistence.wizard.library;
 
 import junit.framework.TestCase;
-import org.netbeans.modules.j2ee.persistence.wizard.library.PersistenceLibraryPanel;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Utilities;
 
 /**
  *

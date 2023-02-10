@@ -20,7 +20,6 @@ package org.netbeans.modules.j2ee.persistence.wizard;
 
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Container;
@@ -197,7 +196,7 @@ public class Util {
         PersistenceProviderSupplier providerSupplier = project.getLookup().lookup(PersistenceProviderSupplier.class);
         if ((providerSupplier != null && providerSupplier.supportsDefaultProvider())) {
             List<Provider> providers = providerSupplier.getSupportedProviders();
-            if (providers.size() > 0) {
+            if (!providers.isEmpty()) {
                 return providers.get(0);
             }
             Logger.getLogger(RelatedCMPWizard.class.getName()).log(Level.WARNING, "Default provider support is reported without any supported providers. See: {0}", providerSupplier);
@@ -213,11 +212,11 @@ public class Util {
             aProviderSupplier = new DefaultPersistenceProviderSupplier();
         }
 
-        ArrayList<Provider> providers = new ArrayList<Provider>(aProviderSupplier.getSupportedProviders());
+        ArrayList<Provider> providers = new ArrayList<>(aProviderSupplier.getSupportedProviders());
         if (providers.isEmpty() && aProviderSupplier.supportsDefaultProvider()) {
             providers.add(ProviderUtil.DEFAULT_PROVIDER);
         }
-        //
+        
         return providers;
     }
 
@@ -245,7 +244,7 @@ public class Util {
         if(providers.isEmpty()) {
             Logger.getLogger(RelatedCMPWizard.class.getName()).log(Level.INFO, "Can't find any providers supported by the project: {0}", project); //NOI18N
         }
-        return providers.size()>0 ? providers.get(defIndex) : null;
+        return !providers.isEmpty() ? providers.get(defIndex) : null;
     }
 
     public static boolean isDefaultProvider(Project project, Provider provider) {
@@ -313,16 +312,12 @@ public class Util {
                 DialogDescriptor.DEFAULT_ALIGN,
                 null,
                 null);
-        panel.addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
-                    Object newvalue = evt.getNewValue();
-                    if (newvalue instanceof Boolean) {
-                        nd.setValid(((Boolean) newvalue).booleanValue());
-                        createPUButton.setEnabled(((Boolean) newvalue).booleanValue());
-                    }
+        panel.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
+                Object newvalue = evt.getNewValue();
+                if (newvalue instanceof Boolean) {
+                    nd.setValid(((Boolean) newvalue));
+                    createPUButton.setEnabled(((Boolean) newvalue));
                 }
             }
         });
@@ -473,10 +468,10 @@ public class Util {
             punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
         }
         if (isContainerManaged) {
-            if (preselectedDB == null || preselectedDB.trim().equals("")) {
+            if (preselectedDB == null || preselectedDB.trim().isEmpty()) {
                 //find first with default/sample part in name
                 JPADataSourceProvider dsProvider = project.getLookup().lookup(JPADataSourceProvider.class);
-                if (dsProvider.getDataSources().size() > 0) {
+                if (!dsProvider.getDataSources().isEmpty()) {
                     preselectedDB = dsProvider.getDataSources().get(0).getDisplayName();
                 }
             }
@@ -492,7 +487,7 @@ public class Util {
             punit.setExcludeUnlistedClasses(false);
         } else {
             DatabaseConnection connection = null;
-            if (preselectedDB != null && !preselectedDB.trim().equals("")) {
+            if (preselectedDB != null && !preselectedDB.trim().isEmpty()) {
                 connection = ConnectionManager.getDefault().getConnection(preselectedDB);
             }
             if (connection == null) {
@@ -747,9 +742,7 @@ public class Util {
         FileObject fo = firstGroup.getRootFolder();
         try {
             ProjectClassPathModifier.addLibraries(new Library[]{library}, fo, classpathType);
-        } catch (IOException ex) {
-            Logger.getLogger("global").log(Level.FINE, "Can't add library to the project", ex);
-        } catch (UnsupportedOperationException ex) {
+        } catch (IOException | UnsupportedOperationException ex) {
             Logger.getLogger("global").log(Level.FINE, "Can't add library to the project", ex);
         }
     }
@@ -806,7 +799,7 @@ public class Util {
 
         @Override
         public List<Provider> getSupportedProviders() {
-            List<Provider> model = new ArrayList<Provider>();
+            List<Provider> model = new ArrayList<>();
             //get all, but remove duplicates
             for (Provider each : PersistenceLibrarySupport.getProvidersFromLibraries()) {
                 boolean found = false;

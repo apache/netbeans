@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.j2ee.persistence.wizard.fromdb;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import junit.framework.*;
@@ -27,9 +26,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.netbeans.api.progress.ProgressHandle;
-import org.openide.WizardDescriptor;
-import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -44,8 +40,9 @@ public class TableClosureJoinTest extends TestCase {
         super(testName);
     }
 
+    @Override
     public void setUp() {
-        Map<String, Set<String>> tablesAndRefs = new HashMap<String, Set<String>>();
+        Map<String, Set<String>> tablesAndRefs = new HashMap<>();
         Set<String> empty = Collections.emptySet();
 
         tablesAndRefs.put("BAR", empty);
@@ -61,6 +58,7 @@ public class TableClosureJoinTest extends TestCase {
         closure = new TableClosure(provider);
     }
 
+    @Override
     public void tearDown() {
         closure = null;
     }

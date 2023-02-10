@@ -21,8 +21,6 @@ package org.netbeans.modules.j2ee.persistence.wizard.library;
 
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -30,7 +28,6 @@ import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.spi.project.libraries.LibraryImplementation;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 /**
  *
  * @author Martin Adamek
@@ -81,22 +78,21 @@ public class PersistenceLibraryPanel extends javax.swing.JPanel {
         libraryNameTextField.setText(libraryName + index);
         // listen on libray name changes
         libraryNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
             public void changedUpdate(DocumentEvent e) {
                 checkValidity();
             }
+            @Override
             public void insertUpdate(DocumentEvent e) {
                 checkValidity();
             }
+            @Override
             public void removeUpdate(DocumentEvent e) {
                 checkValidity();
             }
         });
         // listen on library changes (added/removed content)
-        libImpl.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                checkValidity();
-            }
-        });
+        libImpl.addPropertyChangeListener( (PropertyChangeEvent evt) -> checkValidity() );
     }
     
     @Override
@@ -113,7 +109,7 @@ public class PersistenceLibraryPanel extends javax.swing.JPanel {
     
     void checkValidity() {
         String libraryName = libraryNameTextField.getText();
-        if (libraryName.trim().equals("")) {
+        if (libraryName.trim().isEmpty()) {
             setErrorMessage(NbBundle.getMessage(PersistenceLibrarySupport.class, "ERR_EmptyName"), false); //NOI18N
             firePropertyChange(IS_VALID, true, false);
         } else if (LibraryManager.getDefault().getLibrary(libraryName) != null) {
@@ -134,7 +130,7 @@ public class PersistenceLibraryPanel extends javax.swing.JPanel {
     private void setErrorMessage(String msg, Boolean canContinue) {
         errorMessage.setForeground(nbErrorForeground);
         if (msg != null && msg.trim().length() > 0 && canContinue != null) {
-            if (canContinue.booleanValue()) {
+            if (canContinue) {
                 errorMessage.setIcon(ImageUtilities.loadImageIcon(WARNING_GIF, false));
                 errorMessage.setForeground(nbWarningForeground);
             } else {

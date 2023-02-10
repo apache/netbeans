@@ -22,8 +22,12 @@ package org.netbeans.modules.debugger.jpda.models;
 import com.sun.jdi.ArrayReference;
 import com.sun.jdi.ArrayType;
 import com.sun.jdi.CharValue;
+import com.sun.jdi.ClassNotLoadedException;
 import com.sun.jdi.ClassObjectReference;
 import com.sun.jdi.ClassType;
+import com.sun.jdi.IncompatibleThreadStateException;
+import com.sun.jdi.InvalidTypeException;
+import com.sun.jdi.InvocationException;
 import com.sun.jdi.Method;
 import com.sun.jdi.ObjectReference;
 import com.sun.jdi.PrimitiveValue;
@@ -519,14 +523,14 @@ public class AbstractObjectVariable extends AbstractVariable implements ObjectVa
                 str = "\"" + str + "\""; // NOI18N
             }
             return str;
-        } catch (InternalExceptionWrapper ex) {
+        } catch (InternalExceptionWrapper | ClassNotPreparedExceptionWrapper |
+                ClassNotLoadedException | IncompatibleThreadStateException |
+                InvalidTypeException | InvocationException ex) {
             return ex.getLocalizedMessage();
         } catch (VMDisconnectedExceptionWrapper ex) {
             return NbBundle.getMessage(AbstractVariable.class, "MSG_Disconnected");
         } catch (ObjectCollectedExceptionWrapper ocex) {
             return NbBundle.getMessage(AbstractVariable.class, "MSG_ObjCollected");
-        } catch (ClassNotPreparedExceptionWrapper cnpex) {
-            return cnpex.getLocalizedMessage();
         }
     }
     

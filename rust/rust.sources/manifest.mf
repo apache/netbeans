@@ -3,4 +3,6 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.rust.sources
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/rust/sources/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.11
+OpenIDE-Module-Layer: org/netbeans/modules/rust/sources/layer.xml
+
 

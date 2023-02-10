@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.rust.project.templates.privileged;
+package org.netbeans.modules.rust.sources.rs.templates;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,8 +24,10 @@ import org.netbeans.api.templates.CreateDescriptor;
 import org.netbeans.api.templates.CreateFromTemplateHandler;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.api.templates.TemplateRegistrations;
-import org.netbeans.modules.rust.project.RustProject;
+import org.netbeans.modules.rust.project.api.RustProjectAPI;
+import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
+import org.netbeans.spi.project.ui.RecommendedTemplates;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle.Messages;
 
@@ -33,24 +35,51 @@ import org.openide.util.NbBundle.Messages;
  * PrivilegedTemplates for Rust projects.
  */
 @TemplateRegistrations({
-    @TemplateRegistration(folder = "rust",
+    @TemplateRegistration(
+            folder = "rust",
             content = "rust-file.rs",
             scriptEngine = "freemarker",
             category = "rust",
             displayName = "#RustFile",
-            iconBase = RustProject.ICON),})
+            iconBase = "org/netbeans/modules/rust/sources/rs/templates/rust-file.png",
+            position = 1000,
+            requireProject = false,
+            description = "rust-file-description.html"
+    ),})
 @Messages({
-    "RustFile=Rust file",})
-public final class RustPrivilegedTemplates extends CreateFromTemplateHandler
-        implements PrivilegedTemplates {
+    "RustFile=Rust file",
+})
+public final class RustTemplates extends CreateFromTemplateHandler
+        implements PrivilegedTemplates, RecommendedTemplates {
 
-    private static final String[] TEMPLATES = new String[]{
-        "Templates/rust/file.rs", // NOI18N
+    private static final String[] TEMPLATES = {
+        "Templates/rust/rust-file.rs", // NOI18N
     };
+
+    private static final String[] TYPES = {
+        "rust", // NOI18N
+        "XML", // NOI18N
+        "simple-files", // NOI18N
+    };
+
+    @ProjectServiceProvider(service = PrivilegedTemplates.class, projectType = RustProjectAPI.RUST_PROJECT_KEY)
+    public static PrivilegedTemplates privilegedTemplates() {
+        return new RustTemplates();
+    }
+
+    @ProjectServiceProvider(service = RecommendedTemplates.class, projectType = RustProjectAPI.RUST_PROJECT_KEY)
+    public static RecommendedTemplates recommendedTemplates() {
+        return new RustTemplates();
+    }
 
     @Override
     public String[] getPrivilegedTemplates() {
         return TEMPLATES;
+    }
+
+    @Override
+    public String[] getRecommendedTypes() {
+        return TYPES;
     }
 
     @Override

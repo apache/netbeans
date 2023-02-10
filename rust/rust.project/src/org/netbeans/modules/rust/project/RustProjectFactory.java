@@ -19,16 +19,15 @@
 package org.netbeans.modules.rust.project;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.rust.project.api.RustProjectAPI;
 import org.netbeans.modules.rust.project.cargotoml.CargoTOML;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectFactory2;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -64,7 +63,7 @@ public final class RustProjectFactory implements ProjectFactory2 {
         if (src == null || ! src.isFolder()) {
             return null;
         }
-        return new ProjectManager.Result(new ImageIcon(ImageUtilities.loadImage(RustProject.ICON)));
+        return new ProjectManager.Result(new ImageIcon(ImageUtilities.loadImage(RustProjectAPI.ICON)));
     }
 
     @Override

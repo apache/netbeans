@@ -20,6 +20,7 @@ package org.netbeans.modules.rust.project.ui.customizer;
 
 import java.awt.Dialog;
 import org.netbeans.modules.rust.project.RustProject;
+import org.netbeans.modules.rust.project.api.RustProjectAPI;
 import org.netbeans.spi.project.ui.CustomizerProvider2;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.util.HelpCtx;
@@ -43,7 +44,7 @@ public class RustProjectCustomizerProvider2 implements CustomizerProvider2 {
     @Override
     public void showCustomizer(String preselectedCategory, String preselectedSubCategory) {
         Dialog customizerDialog = ProjectCustomizer.createCustomizerDialog(
-                "Projects/" + RustProject.RUST_PROJECT_KEY + "/Customizer",
+                "Projects/" + RustProjectAPI.RUST_PROJECT_KEY + "/Customizer",
                 project.getLookup(),
                 preselectedCategory,
                 evt -> {

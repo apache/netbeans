@@ -24,6 +24,7 @@ import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.rust.project.RustProject;
+import org.netbeans.modules.rust.project.api.RustProjectAPI;
 import org.netbeans.spi.project.support.ant.ui.CustomizerUtilities;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.filesystems.FileObject;
@@ -113,7 +114,7 @@ public final class RustCompositeCategoryProvider implements ProjectCustomizer.Co
     }
 
     @ProjectCustomizer.CompositeCategoryProvider.Registration(
-            projectType = RustProject.RUST_PROJECT_KEY,
+            projectType = RustProjectAPI.RUST_PROJECT_KEY,
             position = 1000
     )
     public static ProjectCustomizer.CompositeCategoryProvider createLicenseCustomizer() {

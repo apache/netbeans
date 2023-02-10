@@ -20,14 +20,15 @@ package org.netbeans.modules.rust.project;
 
 import java.io.IOException;
 import java.util.logging.Logger;
-import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.Sources;
+import org.netbeans.modules.rust.project.api.RustProjectAPI;
 import org.netbeans.modules.rust.project.cargotoml.CargoTOML;
-import org.netbeans.modules.rust.project.templates.privileged.RustPrivilegedTemplates;
 import org.netbeans.modules.rust.project.ui.RustProjectLogicalViewProvider;
 import org.netbeans.modules.rust.project.ui.customizer.RustProjectCustomizerProvider2;
 import org.netbeans.spi.project.ProjectState;
+import org.netbeans.spi.project.support.LookupProviderSupport;
+import org.netbeans.spi.project.ui.PrivilegedTemplates;
+import org.netbeans.spi.project.ui.RecommendedTemplates;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
@@ -50,14 +51,6 @@ public final class RustProject implements Project {
 
     static final Logger LOG = Logger.getLogger(RustProject.class.getName());
 
-    @StaticResource
-    public static final String ICON = "org/netbeans/modules/rust/project/resources/rust-logo-2.png";
-
-    /**
-     * Used to register stuff in the "layer.xml" file.
-     * For instance, under "/Projects/RUST_PROJECT_KEY/Customizer", for example.
-     */
-    public static final String RUST_PROJECT_KEY = "org-netbeans-modules-rust-project";
 
     private final FileObject projectDirectory;
     private final InstanceContent instanceContent;
@@ -79,10 +72,14 @@ public final class RustProject implements Project {
         instanceContent.add(new RustProjectLogicalViewProvider(this));
         instanceContent.add(new RustSources(this));
         instanceContent.add(new RustProjectActionProvider(this));
-        instanceContent.add(new RustPrivilegedTemplates());
+        // instanceContent.add(new RustPrivilegedTemplates());
         instanceContent.add(this);
         instanceContent.add(new RustProjectCustomizerProvider2(this));
-        this.lookup = new AbstractLookup(instanceContent);
+        AbstractLookup ourLookup = new AbstractLookup(instanceContent);
+
+        // Mix our lookup with providers registered in the file filesystem
+        this.lookup = LookupProviderSupport.createCompositeLookup(ourLookup, 
+                "Projects/" + RustProjectAPI.RUST_PROJECT_KEY + "/Lookup"); // NOI18N
     }
 
     @Override

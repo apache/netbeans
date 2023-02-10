@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.swing.Action;
 import org.netbeans.modules.rust.project.RustProject;
+import org.netbeans.modules.rust.project.api.RustProjectAPI;
 import org.netbeans.modules.rust.project.cargotoml.CargoTOML;
 import org.netbeans.modules.rust.project.ui.important.RustProjectImportantFilesNode;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
@@ -130,7 +131,7 @@ public class RustProjectRootNode extends AbstractNode implements PropertyChangeL
 
     @Override
     public Action[] getActions(boolean context) {
-        Action [] actionArray = CommonProjectActions.forType(RustProject.RUST_PROJECT_KEY);
+        Action [] actionArray = CommonProjectActions.forType(RustProjectAPI.RUST_PROJECT_KEY);
 
         return actionArray;
     }
@@ -146,7 +147,7 @@ public class RustProjectRootNode extends AbstractNode implements PropertyChangeL
 
     @Override
     public Image getIcon(int type) {
-        return ImageUtilities.loadImage(RustProject.ICON);
+        return ImageUtilities.loadImage(RustProjectAPI.ICON);
     }
 
     @Override

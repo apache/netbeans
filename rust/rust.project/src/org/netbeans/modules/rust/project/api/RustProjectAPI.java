@@ -16,7 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-@TemplateRegistration(folder = "Rust", content = "RustFileTemplate.rs")
-package org.netbeans.modules.rust.sources.rs;
+package org.netbeans.modules.rust.project.api;
 
-import org.netbeans.api.templates.TemplateRegistration;
+import org.netbeans.api.annotations.common.StaticResource;
+
+/**
+ *
+ * @author antonio
+ */
+public class RustProjectAPI {
+
+    /**
+     * Used to register stuff in the "layer.xml" file.
+     * For instance, under "/Projects/RUST_PROJECT_KEY/Customizer", for example.
+     */
+    public static final String RUST_PROJECT_KEY = "org-netbeans-modules-rust-project";
+    @StaticResource
+    public static final String ICON = "org/netbeans/modules/rust/project/resources/rust-logo-2.png";
+    
+}

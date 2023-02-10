@@ -40,7 +40,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @DataObject.Registration(
         mimeType = "text/x-rust",
-        iconBase = "org/netbeans/modules/rust/sources/rs/rust-file.png",
+        iconBase = "org/netbeans/modules/rust/sources/rs/templates/rust-file.png",
         displayName = "#LBL_RustFile_LOADER",
         position = 300
 )
@@ -96,6 +96,7 @@ import org.openide.util.NbBundle.Messages;
             position = 1400
     )
 })
+
 public class RustFileDataObject extends MultiDataObject {
 
     public RustFileDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {

@@ -166,7 +166,9 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>org.netbeans.modules.rust.project.api</package>
+            </public-packages>
         </data>
     </configuration>
 </project>

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.rust.cargo.nodes;
+package org.netbeans.modules.rust.cargo.impl.nodes;
 
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
@@ -24,8 +24,8 @@ import java.beans.PropertyChangeListener;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.cargo.api.RustPackage;
+import org.netbeans.modules.rust.cargo.impl.nodes.RustPackageNode;
 import org.netbeans.modules.rust.project.api.RustIconFactory;
-import org.netbeans.modules.rust.project.api.RustProjectAPI;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -43,16 +43,10 @@ public final class RustProjectDependenciesNode extends AbstractNode {
             extends Children.Keys<RustPackage>
             implements PropertyChangeListener {
 
-        private final Project project;
         private final CargoTOML cargotoml;
 
-        private RustProjectDependenciesChildren(Project project) {
-            this.project = project;
-            this.cargotoml = project.getLookup().lookup(CargoTOML.class);
-            if (this.cargotoml == null) {
-                throw new IllegalStateException("This project has no CargoTOML capability");
-            }
-            cargotoml.addPropertyChangeListener(this);
+        private RustProjectDependenciesChildren(CargoTOML cargotoml) {
+            this.cargotoml = cargotoml;
         }
 
         @Override
@@ -64,6 +58,7 @@ public final class RustProjectDependenciesNode extends AbstractNode {
         @Override
         protected void addNotify() {
             super.addNotify();
+            cargotoml.addPropertyChangeListener(this);
             setKeys(cargotoml.getDependencies());
         }
 
@@ -76,21 +71,23 @@ public final class RustProjectDependenciesNode extends AbstractNode {
 
         @Override
         protected Node[] createNodes(RustPackage key) {
-            AbstractNode node = new AbstractNode(Children.LEAF);
-            node.setDisplayName(key.toString());
-            node.setIconBaseWithExtension(RustProjectAPI.ICON);
-            return new Node[]{node};
+            return new Node[]{new RustPackageNode(key)};
         }
 
     }
 
     public static final String NAME = "rust-dependencies"; // NOI18N
 
-    private final Project project;
+    private final CargoTOML cargotoml;
+    private final boolean isDevelopment;
 
-    public RustProjectDependenciesNode(Project project) {
-        super(new RustProjectDependenciesChildren(project), Lookups.fixed(project, project.getProjectDirectory()));
-        this.project = project;
+    public RustProjectDependenciesNode(CargoTOML cargotoml, boolean development) {
+        super(new RustProjectDependenciesChildren(cargotoml),
+                Lookups.fixed(
+                        cargotoml,
+                        cargotoml.getFileObject()));
+        this.cargotoml = cargotoml;
+        this.isDevelopment = development;
     }
 
     public @Override

@@ -18,8 +18,11 @@
  */
 package org.netbeans.modules.rust.project;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.rust.cargo.api.CargoBuild;
+import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Lookup;
 
@@ -35,8 +38,7 @@ public final class RustProjectActionProvider implements ActionProvider {
         COMMAND_CLEAN,
         COMMAND_REBUILD,
         COMMAND_RUN,
-        COMMAND_DEBUG,
-    };
+        COMMAND_DEBUG,};
 
     private final RustProject project;
 
@@ -51,12 +53,37 @@ public final class RustProjectActionProvider implements ActionProvider {
 
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
-        LOG.log(Level.INFO, String.format("Invoked action %s", command));
+        // TODO: Enhance this
+        CargoBuild build = Lookup.getDefault().lookup(CargoBuild.class);
+        if (build == null) {
+            LOG.log(Level.INFO, String.format("No CargoBuild in this application."));
+        } else {
+            CargoBuild.CargoBuildMode modes[] = {};
+            CargoTOML cargotoml = project.getCargoTOML();
+            switch (command) {
+                case COMMAND_BUILD:
+                    modes = new CargoBuild.CargoBuildMode[]{CargoBuild.CargoBuildMode.CARGO_BUILD};
+                    break;
+                case COMMAND_CLEAN:
+                    modes = new CargoBuild.CargoBuildMode[]{CargoBuild.CargoBuildMode.CARGO_CLEAN};
+                    break;
+                case COMMAND_REBUILD:
+                    modes = new CargoBuild.CargoBuildMode[]{CargoBuild.CargoBuildMode.CARGO_BUILD, CargoBuild.CargoBuildMode.CARGO_CLEAN};
+                    break;
+                default:
+                    LOG.log(Level.WARNING, String.format("Invoked action %s but cannot find a CargoBuild mode for it", command));
+            }
+            try {
+                build.build(project, modes);
+            } catch (IOException ioe) {
+                throw new IllegalArgumentException(ioe.getMessage(), ioe);
+            }
+        }
     }
 
     @Override
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
         return true;
     }
-    
+
 }

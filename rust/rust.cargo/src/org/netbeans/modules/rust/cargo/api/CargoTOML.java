@@ -323,4 +323,12 @@ public final class CargoTOML implements FileChangeListener {
         propertyChangeSupport.firePropertyChange(PROP_DEPENDENCIES, oldDependencies, dependencies);
     }
 
+    /**
+     * Returns the FileObject for this Cargo.toml file.
+     * @return the FileObject for this Cargo.toml file.
+     */
+    public FileObject getFileObject() {
+        return cargotoml;
+    }
+
 }

@@ -16,13 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.rust.cargo.api;
+package org.netbeans.modules.rust.cargo.api.nodes;
+
+import org.netbeans.modules.rust.cargo.api.CargoTOML;
+import org.netbeans.modules.rust.cargo.impl.nodes.RustProjectDependenciesNode;
+import org.openide.nodes.Node;
 
 /**
- * CargoBuildSupport is responsible for running different cargo actions,
- * such as "cargo build", etc.
+ * Useful Nodes for Cargo.toml files..
+ *
  * @author antonio
  */
-public final class CargoBuildSupport {
-    
+public final class CargoNodes {
+
+    /**
+     * Returns a Node that shows the dependencies in a project.
+     *
+     * @param project The project.
+     * @return The Node containing the dependencies in the given project.
+     */
+    public static final Node newCargoDependenciesNode(CargoTOML cargotoml) {
+        return new RustProjectDependenciesNode(cargotoml, false);
+    }
+
 }

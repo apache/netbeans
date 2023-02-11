@@ -80,7 +80,7 @@ public final class RustPackageNode extends AbstractNode {
         Sheet.Set set = Sheet.createPropertiesSet();
 
         // The Name read-only property
-        Property name = new PropertySupport.ReadOnly<String>(PROPS.NAME.name(), String.class, I18N("NAME"), I18N("NAME_DESC")) {
+        Property<String> name = new PropertySupport.ReadOnly<String>(PROPS.NAME.name(), String.class, I18N("NAME"), I18N("NAME_DESC")) {
             @Override
             public String getValue() throws IllegalAccessException, InvocationTargetException {
                 return rustPackage.getName();
@@ -88,7 +88,7 @@ public final class RustPackageNode extends AbstractNode {
         };
         set.put(name);
 
-        Property major
+        Property<String> major
                 = new PropertySupport.ReadOnly<String>(PROPS.MAJOR.name(), String.class, I18N("MAJOR"), I18N("MAJOR_DESC")) {
 
             @Override
@@ -99,7 +99,7 @@ public final class RustPackageNode extends AbstractNode {
         };
         set.put(major);
 
-        Property minor
+        Property<String> minor
                 = new PropertySupport.ReadOnly<String>(PROPS.MINOR.name(), String.class, I18N("MINOR"), I18N("MINOR_DESC")) {
 
             @Override
@@ -110,7 +110,7 @@ public final class RustPackageNode extends AbstractNode {
         };
         set.put(minor);
 
-        Property patch
+        Property<String> patch
                 = new PropertySupport.ReadOnly<String>(PROPS.PATCH.name(), String.class, I18N("PATCH"), I18N("PATCH_DESC")) {
 
             @Override

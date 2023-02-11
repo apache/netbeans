@@ -19,12 +19,7 @@
 package org.netbeans.modules.rust.cargo.impl.nodes;
 
 import java.awt.Image;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
-import org.netbeans.modules.rust.cargo.api.RustPackage;
-import org.netbeans.modules.rust.cargo.impl.nodes.RustPackageNode;
 import org.netbeans.modules.rust.project.api.RustIconFactory;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -39,9 +34,14 @@ import org.openide.util.lookup.Lookups;
  */
 public final class RustProjectDependenciesNode extends AbstractNode {
 
+    public enum DependencyType {
+        DEPENDENCY,
+        DEV_DEPENDENCY,
+        BUILD_DEPENDENCY,
+    }
+
     private static final class RustProjectDependenciesChildren
-            extends Children.Keys<RustPackage>
-            implements PropertyChangeListener {
+            extends Children.Keys<DependencyType> {
 
         private final CargoTOML cargotoml;
 
@@ -50,28 +50,23 @@ public final class RustProjectDependenciesNode extends AbstractNode {
         }
 
         @Override
-        protected void removeNotify() {
-            cargotoml.removePropertyChangeListener(this);
-            super.removeNotify();
-        }
-
-        @Override
         protected void addNotify() {
             super.addNotify();
-            cargotoml.addPropertyChangeListener(this);
-            setKeys(cargotoml.getDependencies());
+            setKeys(DependencyType.values());
         }
 
         @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (CargoTOML.PROP_DEPENDENCIES.equals(evt.getPropertyName())) {
-                setKeys(cargotoml.getDependencies());
+        protected Node[] createNodes(DependencyType key) {
+            switch (key) {
+                case DEPENDENCY:
+                    return new Node[]{new RustProjectDependenciesByTypeNode(cargotoml, DependencyType.DEPENDENCY)};
+                case BUILD_DEPENDENCY:
+                    return new Node[]{new RustProjectDependenciesByTypeNode(cargotoml, DependencyType.BUILD_DEPENDENCY)};
+                case DEV_DEPENDENCY:
+                    return new Node[]{new RustProjectDependenciesByTypeNode(cargotoml, DependencyType.DEV_DEPENDENCY)};
+                default:
+                    return new Node[0];
             }
-        }
-
-        @Override
-        protected Node[] createNodes(RustPackage key) {
-            return new Node[]{new RustPackageNode(key)};
         }
 
     }
@@ -79,15 +74,13 @@ public final class RustProjectDependenciesNode extends AbstractNode {
     public static final String NAME = "rust-dependencies"; // NOI18N
 
     private final CargoTOML cargotoml;
-    private final boolean isDevelopment;
 
-    public RustProjectDependenciesNode(CargoTOML cargotoml, boolean development) {
+    public RustProjectDependenciesNode(CargoTOML cargotoml) {
         super(new RustProjectDependenciesChildren(cargotoml),
                 Lookups.fixed(
                         cargotoml,
                         cargotoml.getFileObject()));
         this.cargotoml = cargotoml;
-        this.isDevelopment = development;
     }
 
     public @Override
@@ -95,10 +88,10 @@ public final class RustProjectDependenciesNode extends AbstractNode {
         return NAME;
     }
 
-    @NbBundle.Messages("display-name=Dependencies")
+    @NbBundle.Messages("dependencies-display-name=Dependencies")
     public @Override
     String getDisplayName() {
-        return NbBundle.getMessage(RustProjectDependenciesNode.class, "display-name"); // NOI18N
+        return NbBundle.getMessage(RustProjectDependenciesNode.class, "dependencies-display-name"); // NOI18N
     }
 
     public @Override

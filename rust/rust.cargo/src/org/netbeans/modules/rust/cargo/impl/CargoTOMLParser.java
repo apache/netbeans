@@ -26,7 +26,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -80,6 +79,8 @@ public class CargoTOMLParser {
             String documentation = parseResult.getString("package.documentation"); // NOI18N
             String homepage = parseResult.getString("package.homepage");
             // TODO: Read more stuff...
+            // TODO: Fire property change only if required.
+
             cargotoml.setPackageName(packageName);
             cargotoml.setVersion(version);
             cargotoml.setEdition(edition);
@@ -89,34 +90,53 @@ public class CargoTOMLParser {
             cargotoml.setRustVersion(rustVersion);
 
             // dependencies
-            TomlTable declaredDependencies = parseResult.getTable("dependencies");
-            if (declaredDependencies != null && declaredDependencies.size() > 0) {
-                ArrayList<RustPackage> packages = new ArrayList<>(declaredDependencies.size());
-                for (Map.Entry<String, Object> declaredDependency : declaredDependencies.entrySet()) {
-                    String key = declaredDependency.getKey();
-                    Object value = declaredDependency.getValue();
-                    if (value instanceof String) {
-                        String stringValue = (String) value;
-                        packages.add(new RustPackage(cargotoml, key, stringValue));
-                    } else {
-                        LOG.warning(String.format("Unrecognized cargo dependency with key '%s', value '%s'", key, value));
-                    }
-                }
-                Collections.sort(packages, (RustPackage a, RustPackage b) -> {
-                    int diff = a.getName().compareTo(b.getName());
-                    if (diff == 0) {
-                        diff = a.getSemver().compareTo(b.getSemver());
-                    }
-                    return diff;
-                });
-                cargotoml.setDependencies(packages);
-            } else {
-                cargotoml.setDependencies(Collections.EMPTY_LIST);
+            {
+                List<RustPackage> dependencies = getDependencies(cargotoml, parseResult, "dependencies");
+                cargotoml.setDependencies(dependencies);
+            }
+
+            // dev-dependencies
+            {
+                List<RustPackage> devDependencies = getDependencies(cargotoml, parseResult, "dev-dependencies");
+                cargotoml.setDevDependencies(devDependencies);
+            }
+
+            // build-dependencies
+            {
+                List<RustPackage> buildDependencies = getDependencies(cargotoml, parseResult, "build-dependencies");
+                cargotoml.setBuildDependencies(buildDependencies);
             }
 
         }
         long end = System.currentTimeMillis();
         LOG.info(String.format("Parsed '%s' in %5.2g ms.", file.getAbsolutePath(), (end - start) / 1000.0)); //NOI18N
+    }
+
+    private static final List<RustPackage> getDependencies(CargoTOML cargotoml, TomlParseResult parseResult, String propertyKey) {
+        TomlTable dependencies = parseResult.getTable(propertyKey);
+        if (dependencies == null || dependencies.isEmpty()) {
+            return Collections.<RustPackage>emptyList();
+        }
+        ArrayList<RustPackage> packages = new ArrayList<>(dependencies.size());
+        for (Map.Entry<String, Object> declaredDependency : dependencies.entrySet()) {
+            String key = declaredDependency.getKey();
+            Object value = declaredDependency.getValue();
+            if (value instanceof String) {
+                String stringValue = (String) value;
+                packages.add(new RustPackage(cargotoml, key, stringValue));
+            } else {
+                // TODO: Add support for github dependencies and registry dependencies https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
+                LOG.warning(String.format("Unrecognized cargo dev-dependency with key '%s', value '%s'", key, value));
+            }
+        }
+        Collections.sort(packages, (RustPackage a, RustPackage b) -> {
+            int diff = a.getName().compareTo(b.getName());
+            if (diff == 0) {
+                diff = a.getSemver().compareTo(b.getSemver());
+            }
+            return diff;
+        });
+        return packages;
     }
 
 }

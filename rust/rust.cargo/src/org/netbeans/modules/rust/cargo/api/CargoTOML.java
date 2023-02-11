@@ -331,4 +331,52 @@ public final class CargoTOML implements FileChangeListener {
         return cargotoml;
     }
 
+    private List<RustPackage> devDependencies = new ArrayList<>();
+
+    public static final String PROP_DEVDEPENDENCIES = "devDependencies";
+
+    /**
+     * Get the value of devDependencies
+     *
+     * @return the value of devDependencies
+     */
+    public List<RustPackage> getDevDependencies() {
+        return devDependencies;
+    }
+
+    /**
+     * Set the value of devDependencies
+     *
+     * @param devDependencies new value of devDependencies
+     */
+    public void setDevDependencies(List<RustPackage> devDependencies) {
+        List<RustPackage> oldDevDependencies = this.devDependencies;
+        this.devDependencies = Collections.unmodifiableList(devDependencies);
+        propertyChangeSupport.firePropertyChange(PROP_DEVDEPENDENCIES, oldDevDependencies, devDependencies);
+    }
+
+    private List<RustPackage> buildDependencies = new ArrayList<>();
+
+    public static final String PROP_BUILDDEPENDENCIES = "buildDependencies";
+
+    /**
+     * Get the value of buildDependencies
+     *
+     * @return the value of buildDependencies
+     */
+    public List<RustPackage> getBuildDependencies() {
+        return buildDependencies;
+    }
+
+    /**
+     * Set the value of buildDependencies
+     *
+     * @param buildDependencies new value of buildDependencies
+     */
+    public void setBuildDependencies(List<RustPackage> buildDependencies) {
+        List<RustPackage> oldBuildDependencies = this.buildDependencies;
+        this.buildDependencies = Collections.unmodifiableList(buildDependencies);
+        propertyChangeSupport.firePropertyChange(PROP_BUILDDEPENDENCIES, oldBuildDependencies, buildDependencies);
+    }
+
 }

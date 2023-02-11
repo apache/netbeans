@@ -50,6 +50,7 @@ public final class RustProjectDefaultChildrenNodes implements NodeFactory {
         SRC,
         IMPORTANT_FILES,
         DEPENDENCIES,
+        DEV_DEPENDENCIES,
     };
 
     private static final class RustProjectNodeList implements NodeList<ROOT_CHILDREN> {

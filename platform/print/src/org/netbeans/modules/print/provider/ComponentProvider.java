@@ -50,7 +50,6 @@ public class ComponentProvider implements PrintProvider {
     }
 
     public PrintPage[][] getPages(int pageWidth, int pageHeight, double pageZoom) {
-        List<ComponentPage> pages = new ArrayList<ComponentPage>();
         JComponent component = getComponent();
 
         if (component == null) {
@@ -67,6 +66,7 @@ public class ComponentProvider implements PrintProvider {
         int row = 0;
         int column = 0;
 
+        List<ComponentPage> pages = new ArrayList<ComponentPage>();
         for (int h = 0; h < componentHeight; h += pageHeight) {
             row++;
             column = 0;
@@ -78,7 +78,6 @@ public class ComponentProvider implements PrintProvider {
             }
         }
         PrintPage[][] printPages = new PrintPage[row][column];
-
         for (ComponentPage page : pages) {
             printPages[page.getRow()][page.getColumn()] = page;
         }

@@ -280,12 +280,12 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
      * Was mouse upon the popup table when mouse action had been taken.
      */
     private boolean onSwitcherTable(MouseEvent e) {
-        Point p = e.getPoint();
         //#118828
         if (! (e.getSource() instanceof Component)) {
             return false;
         }
-        
+
+        Point p = e.getPoint();
         p = SwingUtilities.convertPoint((Component) e.getSource(), p, pTable);
         return pTable.contains(p);
     }

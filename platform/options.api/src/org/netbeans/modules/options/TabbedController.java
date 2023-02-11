@@ -255,7 +255,6 @@ public class TabbedController extends OptionsPanelController {
     @Override
     protected void setCurrentSubcategory(String path) {
         String subcategoryID = path.indexOf('/') == -1 ? path : path.substring(0, path.indexOf('/'));
-        final String subcategorySubpath = path.indexOf('/') == -1 ? null : path.substring(path.indexOf('/')+1);
         LOGGER.fine("Set current subcategory: "+path); // NOI18N
         if(!id2tabTitle.containsKey(subcategoryID)) {
             LOGGER.warning("Subcategory "+subcategoryID+" not found.");  //NOI18N
@@ -272,6 +271,9 @@ public class TabbedController extends OptionsPanelController {
                 }
             }
         }
+
+        final String subcategorySubpath = path.indexOf('/') == -1 ? null : path.substring(path.indexOf('/')+1);
+
         if(subcategorySubpath != null) {
             OptionsPanelControllerAccessor.getDefault().setCurrentSubcategory(tabTitle2controller.get(newTabTitle), subcategorySubpath);
         }

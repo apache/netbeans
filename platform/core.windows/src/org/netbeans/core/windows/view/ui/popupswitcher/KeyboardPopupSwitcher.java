@@ -121,10 +121,6 @@ public final class KeyboardPopupSwitcher implements WindowFocusListener {
     private static WeakReference<Component> lastSource;
 
     static boolean doProcessShortcut( KeyEvent kev ) {
-        boolean isCtrlTab = kev.getKeyCode() == KeyEvent.VK_TAB &&
-                kev.getModifiers() == InputEvent.CTRL_MASK;
-        boolean isCtrlShiftTab = kev.getKeyCode() == KeyEvent.VK_TAB &&
-                kev.getModifiers() == (InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK);
         if (KeyboardPopupSwitcher.isShown()) {
             assert instance != null;
             instance.processKeyEvent(kev);
@@ -132,6 +128,12 @@ public final class KeyboardPopupSwitcher implements WindowFocusListener {
             kev.consume();
             return true;
         }
+
+        boolean isCtrlTab = kev.getKeyCode() == KeyEvent.VK_TAB &&
+                            kev.getModifiers() == InputEvent.CTRL_MASK;
+        boolean isCtrlShiftTab = kev.getKeyCode() == KeyEvent.VK_TAB &&
+                                 kev.getModifiers() == (InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK);
+
         if ((isCtrlTab || isCtrlShiftTab)) { // && !KeyboardPopupSwitcher.isShown()
             if( kev.getID() == KeyEvent.KEY_PRESSED ) {
                 lastSource = new WeakReference<Component>(kev.getComponent());

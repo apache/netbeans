@@ -479,10 +479,11 @@ public final class ExternalBrowserPlugin {
 
         private void handleURLChange( Message message, SelectionKey key  ){
             int tabId = message.getTabId();
-            String url = (String)message.getValue().get(URL);
             if ( tabId == -1 ){
                 return;
             }
+
+            String url = (String)message.getValue().get(URL);
             for (BrowserTabDescriptor browserTab : knownBrowserTabs) {
                 if ( tabId == browserTab.tabID ) {
                     browserTab.browserImpl.urlHasChanged(url);
@@ -800,12 +801,13 @@ public final class ExternalBrowserPlugin {
 
             // lookup which contains Project instance if URL being opened is from a project:
             Lookup projectContext = browserImpl.getProjectContext();
-            
-            WebKitDebuggingTransport transport = browserImpl.getLookup().lookup(WebKitDebuggingTransport.class);
+
             WebKitDebugging webkitDebugger = browserImpl.getLookup().lookup(WebKitDebugging.class);
             if (webkitDebugger == null || projectContext == null) {
                 return;
             }
+
+            WebKitDebuggingTransport transport = browserImpl.getLookup().lookup(WebKitDebuggingTransport.class);
             transport.attach();
             if (browserImpl.getBrowserFeatures().isLiveHTMLEnabled()) {
                 webkitDebugger.getDebugger().enableDebuggerInLiveHTMLMode();
@@ -847,7 +849,7 @@ public final class ExternalBrowserPlugin {
                 return;
             }
             initialized = false;
-            WebKitDebuggingTransport transport = browserImpl.getLookup().lookup(WebKitDebuggingTransport.class);
+
             WebKitDebugging webkitDebugger = browserImpl.getLookup().lookup(WebKitDebugging.class);
             if (webkitDebugger == null) {
                 return;
@@ -872,6 +874,8 @@ public final class ExternalBrowserPlugin {
                 webkitDebugger.getDebugger().disable();
             }
             webkitDebugger.reset();
+
+            WebKitDebuggingTransport transport = browserImpl.getLookup().lookup(WebKitDebuggingTransport.class);
             transport.detach();
             if (browserImpl.hasTemporaryEnhancedMode()) {
                 browserImpl.setTemporaryEnhancedMode(false);

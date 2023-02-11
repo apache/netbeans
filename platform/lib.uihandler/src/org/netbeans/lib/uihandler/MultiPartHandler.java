@@ -250,9 +250,6 @@ class MultiPartHandler {
    * Content-Transfer-Encoding: binary
    */
   private HashMap parsePartHeaders() throws IOException {
-    HashMap<String,String> partHeaders = new HashMap<String,String>();
-
-    Vector<String> headers = new Vector<String>();
     String line = readLine();
     if (line == null) {
       // No parts left, we're done
@@ -262,6 +259,8 @@ class MultiPartHandler {
       // IE4 on Mac sends an empty line at the end; treat that as the end.
       return null;
     }
+
+    Vector<String> headers = new Vector<String>();
     headers.addElement(line);
 
     // Read the following header lines we hit an empty line
@@ -274,6 +273,7 @@ class MultiPartHandler {
       return null;
     }
 
+    HashMap<String,String> partHeaders = new HashMap<>();
     // default part content type (rfc1867)
     partHeaders.put("content-type", "text/plain");  
 

@@ -274,11 +274,11 @@ final class LibrariesNode extends AbstractNode {
         }
 
         private Node createLibraryPackageViewNode(FileObject jfo) {
-            Icon icon = getLibrariesIcon();
             FileObject root = FileUtil.getArchiveRoot(jfo);
             if (root == null) {
                 return Node.EMPTY;
             }
+            Icon icon = getLibrariesIcon();
             String name = String.format(getMessage("LBL_WrappedLibraryFmt"), FileUtil.toFile(jfo).getName());
             return ActionFilterNode.create(PackageView.createPackageView(new LibrariesSourceGroup(root, name, icon, icon)));
         }

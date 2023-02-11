@@ -360,7 +360,6 @@ class Table extends JTable {
     }
 
     private void changeRow( int step ) {
-        int selCol = Math.max( getSelectedColumn(), 0 );
         int selRow = Math.max( getSelectedRow(), 0 );
         selRow += step;
         if( selRow < 0 ) {
@@ -368,6 +367,9 @@ class Table extends JTable {
                 changeColumn( 2*step, false );
             return;
         }
+
+        int selCol = Math.max( getSelectedColumn(), 0 );
+
         if( selRow > getRowCount() || null == getValueAt( selRow, selCol ) ) {
             if( getSwitcherModel().isTopItemColumn( selCol ) ) {
                 if( !getSwitcherModel().isTopItemColumn( selCol+step ) )

@@ -141,19 +141,19 @@ public final class ToolbarConfiguration implements ToolbarPool.Configuration {
             menu.add(mi);
             return;
         }
-        boolean fullScreen = MainWindow.getInstance().isFullScreenMode();
 
         ToolbarConfiguration conf = findConfiguration(ToolbarPool.getDefault().getConfiguration());
         if (conf == null) {
             return;
         }
+
+        boolean fullScreen = MainWindow.getInstance().isFullScreenMode();
         Map<String, ToolbarConstraints> name2constr = conf.collectAllConstraints();
         // generate list of available toolbars
         for( Toolbar tb : pool.getToolbars() ) {
             final Toolbar bar = tb;
             final String tbName = tb.getName();
             ToolbarConstraints tc = name2constr.get(tbName);
-
 
             if (tc != null && tb != null) {
                 //May be null if a toolbar has been renamed

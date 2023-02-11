@@ -46,12 +46,13 @@ public final class ServerMapping {
 
 
     public FileObject fromServer(Project project, URL serverUrl) {
-        String serverUrlString = WebUtils.urlToString(serverUrl);
         // try absolute first
         String prefix = KarmaServers.getInstance().getServerUrl(project, ABSOLUTE_PREFIX);
         if (prefix == null) {
             return null;
         }
+
+        String serverUrlString = WebUtils.urlToString(serverUrl);
         if (serverUrlString.startsWith(prefix)) {
             String absolutePath = serverUrlString.substring(prefix.length());
             try {

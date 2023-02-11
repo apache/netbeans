@@ -1337,7 +1337,6 @@ public class WizardDescriptor extends DialogDescriptor {
     private <A> void setValueOpen(Object value, SettingsAndIterator<A> data) {
         Object convertedValue = backConvertOption(value);
         // set new value w/o fire PROP_VALUE change
-        Object oldValue = getValue();
         setValueWithoutPCH(convertedValue);
 
         // #17360: Reset wizard on CLOSED_OPTION too.
@@ -1353,6 +1352,7 @@ public class WizardDescriptor extends DialogDescriptor {
             return;
         }
 
+        Object oldValue = getValue();
         // notify listeners about PROP_VALUE change
         firePropertyChange(PROP_VALUE, oldValue, convertedValue);
     }
@@ -2226,7 +2226,6 @@ public class WizardDescriptor extends DialogDescriptor {
                             @Override
                             public void run () {
                                 err.log (Level.FINE, "performFinish entry."); // NOI18N
-                                Object oldValue = getValue();
 
                                 // do instantiate
                                 try {
@@ -2258,6 +2257,8 @@ public class WizardDescriptor extends DialogDescriptor {
                                     // if validation failed => cannot move to next panel
                                     return;
                                 }
+
+                                Object oldValue = getValue();
                                 firePropertyChange(PROP_VALUE, oldValue, OK_OPTION);
 
                                 SwingUtilities.invokeLater (new Runnable () {

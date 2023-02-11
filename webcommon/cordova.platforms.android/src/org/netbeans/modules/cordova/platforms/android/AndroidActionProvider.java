@@ -90,7 +90,6 @@ public class AndroidActionProvider implements ActionProvider {
     })
     @Override
     public void invokeAction(String command, final Lookup context) throws IllegalArgumentException {
-        final BuildPerformer build = Lookup.getDefault().lookup(BuildPerformer.class);
         String checkAndroid = checkAndroid();
         if (checkAndroid != null) {
             NotifyDescriptor not = new NotifyDescriptor(
@@ -125,6 +124,7 @@ public class AndroidActionProvider implements ActionProvider {
             }
         }
 
+        final BuildPerformer build = Lookup.getDefault().lookup(BuildPerformer.class);
         if (COMMAND_BUILD.equals(command) || COMMAND_CLEAN.equals(command) || COMMAND_REBUILD.equals(command)) {
             try {
                 switch (command) {

@@ -120,13 +120,12 @@ public interface Index extends Node.Cookie {
         * @exception IndexOutOfBoundsException if an index is out of bounds
         */
         public void move(final int x, final int y) {
-            int[] perm = new int[getNodesCount()];
-
             // if the positions are the same then no move
             if (x == y) {
                 return;
             }
 
+            int[] perm = new int[getNodesCount()];
             for (int i = 0; i < perm.length; i++) {
                 if (((i < x) && (i < y)) || ((i > x) && (i > y))) {
                     // this area w/o change

@@ -401,11 +401,6 @@ public final class SuiteCustomizerLibraries extends NbPropertyPanel.Suite
     
     @Override
     public void store() {
-        // TODO C.P: disable buttons/show button "Upgrade"??? on old harness
-        Set<String> enabledClusters = new TreeSet<String>();
-        Set<String> disabledModules = new TreeSet<String>();
-        List<ClusterInfo> clusterPath = new ArrayList<ClusterInfo>();
-
         boolean oldPlaf = getProperties().getActivePlatform().getHarnessVersion().compareTo(HarnessVersion.V67) < 0;
 
         assert refreshTask != null;
@@ -413,6 +408,12 @@ public final class SuiteCustomizerLibraries extends NbPropertyPanel.Suite
             // trying to store before nodes are up-to-date, just bail out
             return;
         }
+
+        // TODO C.P: disable buttons/show button "Upgrade"??? on old harness
+        Set<String> enabledClusters = new TreeSet<String>();
+        Set<String> disabledModules = new TreeSet<String>();
+        List<ClusterInfo> clusterPath = new ArrayList<ClusterInfo>();
+
         for (ClusterNode e : libChildren.platformNodes()) {
             if (e.isEnabled()) {
                 if (oldPlaf)

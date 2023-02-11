@@ -462,7 +462,7 @@ final class ModuleList implements Stamps.Updater {
      */
     private Map<String, Object> readStatus(InputStream is, boolean checkEOF) throws IOException {
         PushbackInputStream pbis = new PushbackInputStream(is, 1);
-        Map<String,Object> m = new HashMap<String,Object>(15);
+
         if (!expect(pbis, MODULE_XML_INTRO)) {
             LOG.fine("Could not read intro");
             return null;
@@ -472,6 +472,8 @@ final class ModuleList implements Stamps.Updater {
             LOG.fine("Could not read code name base");
             return null;
         }
+
+        Map<String,Object> m = new HashMap<>(15);
         m.put("name", name.intern()); // NOI18N
         if (!expect(pbis, MODULE_XML_INTRO_END)) {
             LOG.fine("Could not read stuff after cnb");

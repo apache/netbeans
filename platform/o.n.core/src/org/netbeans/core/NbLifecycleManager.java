@@ -78,12 +78,13 @@ public final class NbLifecycleManager extends LifecycleManager {
     
     @Override
     public void saveAll() {
-        ArrayList<DataObject> bad = new ArrayList<>();
         DataObject[] modifs = DataObject.getRegistry().getModified();
         if (modifs.length == 0) {
             // Do not show MSG_AllSaved
             return;
         }
+
+        ArrayList<DataObject> bad = new ArrayList<>();
         for (DataObject dobj : modifs) {
             try {
                 SaveCookie sc = dobj.getLookup().lookup(SaveCookie.class);

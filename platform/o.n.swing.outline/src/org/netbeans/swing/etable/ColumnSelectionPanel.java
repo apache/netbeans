@@ -386,7 +386,6 @@ class ColumnSelectionPanel extends JPanel {
      * changes to the visible column for the given table.
      */
     private static void makeVisibleColumns(ETable table, String[] visibleColumns) {
-        HashSet<String> visible = new HashSet<String>(Arrays.asList(visibleColumns));
         TableColumnModel columnModel = table.getColumnModel();
         if (! (columnModel instanceof ETableColumnModel)) {
             return;
@@ -395,6 +394,7 @@ class ColumnSelectionPanel extends JPanel {
         List<TableColumn> columns = etcm.getAllColumns();
         Collections.sort(columns, ETableColumnComparator.DEFAULT);
         Map<String, ETableColumn> nameToColumn = new HashMap<String, ETableColumn>();
+        HashSet<String> visible = new HashSet<String>(Arrays.asList(visibleColumns));
         for (Iterator<TableColumn> it = columns.iterator(); it.hasNext(); ) {
             final ETableColumn etc = (ETableColumn)it.next();
             String dName = table.getColumnDisplayName(etc.getHeaderValue().toString());

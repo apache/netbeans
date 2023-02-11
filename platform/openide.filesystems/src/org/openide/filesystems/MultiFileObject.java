@@ -819,8 +819,6 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
             }
         }
 
-        FileSystem[] systems = getMultiFileSystem().getDelegates();
-
         Number maxWeight = 0;
         Object attr = null;
         FileSystem writable = getMultiFileSystem().writableLayer(path);
@@ -832,6 +830,7 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
             return collectRevealedFiles();
         }
 
+        FileSystem[] systems = getMultiFileSystem().getDelegates();
         //        boolean isLoaderAttr = /* DataObject.EA_ASSIGNED_LOADER */ "NetBeansAttrAssignedLoader".equals (attrName); // NOI18N                
         for (int i = 0; i < systems.length; i++) {
             if (systems[i] == null) {
@@ -941,9 +940,6 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
         // Similar to getAttribute. Here we use createWritableOn to decide which fs
         // the attribute should be stored on; it is stored on the actual file if
         // possible, if not then the lowest containing folder.
-        String path = getPath();
-        FileSystem fs = getMultiFileSystem().createWritableOn(path);
-        FileObject fo = getMultiFileSystem().findResourceOn(fs, path);
         Object oldValue = null;
         String attrToSet = attrName;
 
@@ -953,6 +949,10 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
                 return;
             }
         }
+
+        String path = getPath();
+        FileSystem fs = getMultiFileSystem().createWritableOn(path);
+        FileObject fo = getMultiFileSystem().findResourceOn(fs, path);
 
         if (fo == null) {
             fo = fs.getRoot();
@@ -2178,7 +2178,7 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
      */
     private Collection<FileObject> collectRevealedFiles() {
         String path = getPath();
-        FileSystem[] systems = getMultiFileSystem().getDelegates();
+
         FileSystem writable = getMultiFileSystem().writableLayer(path);
         
         if (writable == null) {
@@ -2189,7 +2189,9 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
         if (writableFolder == null) {
             return Collections.emptyList();
         }
+
         FileObject[] ch = writableFolder.getChildren();
+        FileSystem[] systems = getMultiFileSystem().getDelegates();
         int sl = systems.length;
         
         Collection<FileObject> result = null;

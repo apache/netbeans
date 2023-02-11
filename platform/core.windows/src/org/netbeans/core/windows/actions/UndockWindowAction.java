@@ -59,10 +59,11 @@ public final class UndockWindowAction extends AbstractAction {
     @Override
     public void actionPerformed (ActionEvent e) {
         // contextTC shound never be null thanks to isEnabled impl
-        WindowManagerImpl wmi = WindowManagerImpl.getInstance();
         TopComponent contextTC = getTC2WorkWith();
         if( null == contextTC )
             return;
+
+        WindowManagerImpl wmi = WindowManagerImpl.getInstance();
         boolean isDocked = wmi.isDocked(contextTC);
         ModeImpl mode = (ModeImpl)wmi.findMode(contextTC);
 

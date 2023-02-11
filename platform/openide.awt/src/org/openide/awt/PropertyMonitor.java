@@ -473,10 +473,11 @@ class PropertyMonitor<T> implements ContextAction.StatefulMonitor<T>, PropertyCh
     }
     
     public boolean enabled(List<? extends T> data, Supplier<Action> aFactory) {
-        T first = data.isEmpty() ? null : data.get(0);
         if (data.isEmpty()) {
             return false;
         }
+
+        T first = data.get(0);
         refreshListeners(first);
         if (first == null) {
             return false;
@@ -612,11 +613,11 @@ class PropertyMonitor<T> implements ContextAction.StatefulMonitor<T>, PropertyCh
                 }
                 return method.invoke(this, args);
             }
-            ChangeListener target = get();
             Object data = theData.get();
             if (data == null) {
                 return null;
             }
+            ChangeListener target = get();
             if (target == null) {
                 return null;
             }

@@ -40,10 +40,11 @@ class NoNativeAccessWindowSystem extends NativeWindowSystem {
     @Override
     public void setWindowAlpha(Window w, float alpha) {
         GraphicsConfiguration gc = w.getGraphicsConfiguration();
-        GraphicsDevice gd = gc.getDevice();
         if (gc.getDevice().getFullScreenWindow() == w) {
             return;
         }
+
+        GraphicsDevice gd = gc.getDevice();
         if (!gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
             return;
         }
@@ -53,10 +54,11 @@ class NoNativeAccessWindowSystem extends NativeWindowSystem {
     @Override
     public void setWindowMask(Window w, Shape mask) {
         GraphicsConfiguration gc = w.getGraphicsConfiguration();
-        GraphicsDevice gd = gc.getDevice();
         if (gc.getDevice().getFullScreenWindow() == w) {
             return;
         }
+
+        GraphicsDevice gd = gc.getDevice();
         if (!gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
             return;
         }

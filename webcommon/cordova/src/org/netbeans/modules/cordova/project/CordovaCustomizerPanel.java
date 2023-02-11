@@ -229,7 +229,6 @@ public class CordovaCustomizerPanel extends javax.swing.JPanel implements Action
     }
     
     private List<CordovaPlugin> getCurrent() throws IOException {
-        List<CordovaPlugin> requestedPlugins = new ArrayList<CordovaPlugin>();
         FileObject fileObject = project.getProjectDirectory().getFileObject("nbproject/plugins.properties");
 
         if (fileObject == null) {
@@ -239,6 +238,8 @@ public class CordovaCustomizerPanel extends javax.swing.JPanel implements Action
         try (InputStream inputStream = fileObject.getInputStream()) {
             props.load(inputStream);
         }
+
+        List<CordovaPlugin> requestedPlugins = new ArrayList<>();
         for (String name : props.stringPropertyNames()) {
             requestedPlugins.add(new CordovaPlugin(name, props.getProperty(name)));
         }

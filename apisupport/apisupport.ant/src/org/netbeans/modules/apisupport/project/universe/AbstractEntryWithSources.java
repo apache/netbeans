@@ -99,7 +99,6 @@ abstract class AbstractEntryWithSources extends AbstractEntry {
     }
 
     public String[] getRunDependencies() {
-        Set<String> deps = new TreeSet<String>();
         FileObject source = getSourceLocationFileObject();
         if (source == null) { // ??
             return new String[0];
@@ -119,6 +118,7 @@ abstract class AbstractEntryWithSources extends AbstractEntry {
         Element moduleDependencies = XMLUtil.findElement(data,
             "module-dependencies", NbModuleProject.NAMESPACE_SHARED); // NOI18N
         assert moduleDependencies != null : "Malformed metadata in " + project;
+        Set<String> deps = new TreeSet<>();
         for (Element dep : XMLUtil.findSubElements(moduleDependencies)) {
             if (XMLUtil.findElement(dep, "run-dependency", // NOI18N
                     NbModuleProject.NAMESPACE_SHARED) == null) {

@@ -115,13 +115,13 @@ final class DecorationUtils {
         @Override
         public void mouseDragged(MouseEvent e) {
             check(e);
-            Window w = SwingUtilities.getWindowAncestor((Component)e.getSource());
 
             if (Cursor.DEFAULT_CURSOR == cursorType) {
                 // resize only when mouse pointer in resize areas
                 return;
             }
 
+            Window w = SwingUtilities.getWindowAncestor((Component)e.getSource());
             Rectangle newBounds = computeNewBounds(w, getScreenLoc(e));
             if (!w.getBounds().equals(newBounds)) {
                 w.setBounds(newBounds);

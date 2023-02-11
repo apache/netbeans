@@ -168,7 +168,7 @@ public class Utilities {
                 return new ArrayList <UnitCategory>();
             }
         }
-        Map<String, UnitCategory> categories = new HashMap<String, UnitCategory>();
+
         if (units.isEmpty()) {
             return Collections.emptyList();
         }
@@ -176,6 +176,7 @@ public class Utilities {
         Set<UpdateUnit> invisibleUnits = new HashSet <UpdateUnit> ();
         
         Map<UpdateUnit, Unit.CompoundUpdate> uu2compoundUnit = new HashMap<UpdateUnit, Unit.CompoundUpdate>();
+        Map<String, UnitCategory> categories = new HashMap<String, UnitCategory>();
 
         for (UpdateUnit u : units) {
             UpdateElement el = u.getInstalled ();

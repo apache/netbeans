@@ -215,7 +215,6 @@ public class CSSUtils {
             Lookup dobLookup = dob.getLookup();
             EditorCookie ec = dobLookup.lookup(EditorCookie.class);
             LineCookie lc = dobLookup.lookup(LineCookie.class);
-            OpenCookie oc = dobLookup.lookup(OpenCookie.class);
 
             if ((ec != null) && (lc != null) && (columnNo != -1)) {
                 StyledDocument doc;
@@ -249,6 +248,8 @@ public class CSSUtils {
                     }
                 }
             }
+
+            OpenCookie oc = dobLookup.lookup(OpenCookie.class);
 
             if (oc != null) {
                 oc.open();

@@ -62,8 +62,8 @@ public class FileProxy {
     }
     
     public void deleteFile(String uri) throws IOException {
-        final File file = cache.get(uri);
         if (uri != null && uri.startsWith("file")) return;
+        final File file = cache.get(uri);
         if (file != null) FileUtils.deleteFile(file);
         cache.remove(uri);
     }

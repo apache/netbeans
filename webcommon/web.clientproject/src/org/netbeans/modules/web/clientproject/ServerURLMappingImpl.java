@@ -47,7 +47,6 @@ public class ServerURLMappingImpl implements ServerURLMappingImplementation {
             if (project.isUsingEmbeddedServer()) {
                 u = WebServer.getWebserver().toServer(projectFile);
             } else {
-                String relPath = FileUtil.getRelativePath(project.getSiteRootFolder(), projectFile);
                 String root = project.getEvaluator().getProperty(ClientSideProjectConstants.PROJECT_PROJECT_URL);
                 if (root == null) {
                     return null;
@@ -63,6 +62,7 @@ public class ServerURLMappingImpl implements ServerURLMappingImplementation {
                     root = root.replace(":443/", "/");
                 }
 
+                String relPath = FileUtil.getRelativePath(project.getSiteRootFolder(), projectFile);
                 u = WebUtils.stringToUrl(root + relPath);
             }
             WebBrowser browser = project.getProjectWebBrowser();

@@ -86,13 +86,13 @@ public class NbRenameRefactoringPlugin extends AbstractRefactoringPlugin {
             
             TreePathHandle handle = lkp.lookup(TreePathHandle.class);
             if (handle != null) {
-                InfoHolder infoholder = examineLookup(lkp);
                 Project project = FileOwnerQuery.getOwner(handle.getFileObject());
                 if (project == null || project.getLookup().lookup(NbModuleProvider.class) == null) {
                     // take just netbeans module development into account..
                     return null;
                 }
-                
+
+                InfoHolder infoholder = examineLookup(lkp);
                 if (infoholder.isClass) {
                     checkManifest(project, infoholder.fullName, refactoringElements);
                     checkLayer(project, infoholder.fullName, refactoringElements);

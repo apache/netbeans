@@ -679,13 +679,14 @@ public class MakeOSGi extends Task {
     }
 
     private void processFragment(File fragment) throws Exception {
-        String cnb = findFragmentHost(fragment);
         File bundleFile = new File(destdir, fragment.getName());
         if (bundleFile.lastModified() > fragment.lastModified()) {
             log("Skipping " + fragment + " since " + bundleFile + " is newer", Project.MSG_VERBOSE);
             return;
         }
         log("Processing " + fragment + " into " + bundleFile);
+
+        String cnb = findFragmentHost(fragment);
         Manifest mf = new Manifest();
         Attributes attr = mf.getMainAttributes();
         attr.putValue("Manifest-Version", "1.0"); // workaround for JDK bug

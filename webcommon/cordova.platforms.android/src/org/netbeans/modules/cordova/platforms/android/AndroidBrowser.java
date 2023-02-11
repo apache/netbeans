@@ -123,8 +123,6 @@ public class AndroidBrowser extends HtmlBrowser.Impl implements EnhancedBrowser{
 
     @Override
     public void setURL(final URL url) {
-        final WebKitDebuggingSupport build = WebKitDebuggingSupport.getDefault();
-
         final String checkAndroid = AndroidActionProvider.checkAndroid();
         if (checkAndroid != null) {
             SwingUtilities.invokeLater(new Runnable() {
@@ -145,6 +143,8 @@ public class AndroidBrowser extends HtmlBrowser.Impl implements EnhancedBrowser{
             });
             return;
         }
+
+        final WebKitDebuggingSupport build = WebKitDebuggingSupport.getDefault();
 
         ProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override

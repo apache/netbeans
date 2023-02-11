@@ -346,8 +346,6 @@ public class Repository implements Serializable {
      * @since 9.5 support for multiple contexts
      */
     public static Repository getDefault() {
-        final Lookup lkp = Lookup.getDefault();
-
         synchronized (Repository.class) {
             if (repository != null) {
                 return repository;
@@ -356,6 +354,7 @@ public class Repository implements Serializable {
         try {
             Repository newRepo = delayFileSystemAttachImpl(new Callable<Repository>() {
                 public Repository call() throws Exception {
+                    Lookup lkp = Lookup.getDefault();
                     Repository r = lkp.lookup(Repository.class);
                     if (r == null) {
                         // if not provided use default one

@@ -174,12 +174,12 @@ public class SlidingButtonUI extends BasicToggleButtonUI {
     }  
     
     protected void paintBackground(Graphics2D g, AbstractButton b) {
-        Dimension size = b.getSize();
-        
         Insets insets = b.getInsets();
         Insets margin = b.getMargin();
         if( null == insets || null == margin )
             return;
+
+        Dimension size = b.getSize();
         g.fillRect(insets.left - margin.left,
             insets.top - margin.top,
         size.width - (insets.left-margin.left) - (insets.right - margin.right),

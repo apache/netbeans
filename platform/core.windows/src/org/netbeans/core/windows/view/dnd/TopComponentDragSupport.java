@@ -209,13 +209,14 @@ implements AWTEventListener, DragSourceListener, DragSourceMotionListener {
         if(srcComp == null) {
             return;
         }
-        
-        final Point point = new Point(startingPoint);
-        Point currentPoint = me.getPoint();
+
         Component currentComponent = me.getComponent();
         if(currentComponent == null) {
             return;
         }
+
+        final Point point = new Point(startingPoint);
+        Point currentPoint = me.getPoint();
         currentPoint = SwingUtilities.convertPoint(currentComponent, currentPoint, srcComp);
         if(Math.abs(currentPoint.x - point.x) <= Constants.DRAG_GESTURE_START_DISTANCE
         && Math.abs(currentPoint.y - point.y) <= Constants.DRAG_GESTURE_START_DISTANCE) {

@@ -1043,12 +1043,11 @@ final class XMLMapAttr implements Map {
          * @return Index to array of allowed keys or -1 which means error.
          */
         final int isValid() {
-            String[] keyArray = getAttrTypes();
-
             if (obj != null) {
                 return isValid("SERIALVALUE"); //back compatibility // NOI18N
             }
 
+            String[] keyArray = getAttrTypes();
             if ((keyIndex >= keyArray.length) || (keyIndex < 0)) {
                 return -1;
             }

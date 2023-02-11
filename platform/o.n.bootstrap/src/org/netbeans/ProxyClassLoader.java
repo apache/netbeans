@@ -150,8 +150,6 @@ public class ProxyClassLoader extends ClassLoader {
         String pkg = (last >= 0) ? name.substring(0, last) : ""; 
 
         final String path = pkg.replace('.', '/') + "/";
-
-        Set<ProxyClassLoader> del = ProxyClassPackages.findCoveredPkg(pkg);
  
         Boolean boo = isSystemPackage(pkg);
         if ((boo == null || boo.booleanValue()) && shouldDelegateResource(path, null)) {
@@ -163,6 +161,8 @@ public class ProxyClassLoader extends ClassLoader {
                 // No dissaster, try other loaders
             }
         }
+
+        Set<ProxyClassLoader> del = ProxyClassPackages.findCoveredPkg(pkg);
 
         if (del == null) {
             // uncovered package, go directly to SCL (may throw the CNFE for us)

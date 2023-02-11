@@ -131,7 +131,6 @@ public class CodeSetupPanel extends javax.swing.JPanel {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
                 boolean hasFocus, int row, int column) {
-            Component ret = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             String paramName = (String) tableModel.getValueAt(row, 0);
 
             if (value == null) {
@@ -147,7 +146,7 @@ public class CodeSetupPanel extends javax.swing.JPanel {
             } else if (paramName.contains(Constants.PASSWORD)) {
                 return new JPasswordField((String) value);
             } 
-            return ret;
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
     }
 

@@ -93,7 +93,6 @@ class DocumentSwitcherTable extends SwitcherTable {
                 int y = rect.y + (rect.height-size.height)/2;
                 Rectangle btnRect = new Rectangle( x, y, size.width, size.height);
                 boolean inButton = btnRect.contains( p );
-                boolean mustRepaint = inCloseButtonRect != inButton;
                 inCloseButtonRect = inButton;
                 if( inButton ) {
                     if( e.getID() == MouseEvent.MOUSE_PRESSED ) {
@@ -106,6 +105,8 @@ class DocumentSwitcherTable extends SwitcherTable {
                         }
                     }
                 }
+
+                boolean mustRepaint = inCloseButtonRect != inButton;
                 if( mustRepaint && lastRow == selRow && lastCol == selCol )
                     repaint( btnRect );
                 lastCol = selCol;

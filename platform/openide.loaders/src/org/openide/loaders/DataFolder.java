@@ -549,8 +549,6 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
     protected DataObject handleCopy (DataFolder f) throws IOException {
         testNesting(this, f);
 
-        Enumeration<DataObject> en = children ();
-
         DataObject newFolderDO = super.handleCopy (f);
         DataFolder newFolderDF;
         if (newFolderDO instanceof DataFolder) {
@@ -566,6 +564,7 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
             return newFolderDO;
         }
 
+        Enumeration<DataObject> en = children ();
         while (en.hasMoreElements ()) {
             try {
                 DataObject obj = en.nextElement ();

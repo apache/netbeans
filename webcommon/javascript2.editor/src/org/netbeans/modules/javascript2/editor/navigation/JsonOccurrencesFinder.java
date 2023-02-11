@@ -137,10 +137,12 @@ public class JsonOccurrencesFinder extends OccurrencesFinder<JsonParserResult> {
             CharSequence text = token.text();
             findRanges(model.getGlobalObject(), text.subSequence(1, text.length() - 1).toString(), includeQuotes, ranges);
         }
-        final Map<OffsetRange, ColoringAttributes> res = new HashMap<>();
+
         if (cancelled.getAndSet(false)) {
             return null;
         }
+
+        final Map<OffsetRange, ColoringAttributes> res = new HashMap<>();
         for (OffsetRange offsetRange : ranges) {
             res.put(ModelUtils.documentOffsetRange(result, offsetRange.getStart(), offsetRange.getEnd()), ColoringAttributes.MARK_OCCURRENCES);
         }

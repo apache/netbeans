@@ -185,8 +185,7 @@ implements FileChangeListener, LexicalHandler, LookupListener {
         if (realXML == null) {
             return NULL;
         }
-        
-        FileObject myFileObject = realXML.getPrimaryFile();
+
         String newID = null;
         if (XMLDataObject.ERR.isLoggable(Level.FINE)) {
             XMLDataObject.ERR.fine("Going to read parsedId for " + realXML);
@@ -204,6 +203,7 @@ implements FileChangeListener, LexicalHandler, LookupListener {
 
         URL url = null;
         InputStream in = null;
+        FileObject myFileObject = realXML.getPrimaryFile();
         url = myFileObject.toURL();
 
         synchronized (this) {

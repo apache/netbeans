@@ -502,16 +502,16 @@ public class IpAddressUtils {
         
         @Override
         public int compare(InetAddress a1, InetAddress a2) {
-            byte[] bArr1 = a1.getAddress();
-            byte[] bArr2 = a2.getAddress();
-
             if ((a1 instanceof Inet4Address) && (a2 instanceof Inet6Address)) {
                 return (ip4BeforeIp6) ? -1 : 1;
             }
             if ((a1 instanceof Inet6Address) && (a2 instanceof Inet4Address)) {
                 return (ip4BeforeIp6) ? 1 : -1;
             }
-            
+
+            byte[] bArr1 = a1.getAddress();
+            byte[] bArr2 = a2.getAddress();
+
             if (bArr1.length != bArr2.length) {
                 // according to JDK spec, this shouldn't be possible
                 // but we take no risks here. This could happen if one day

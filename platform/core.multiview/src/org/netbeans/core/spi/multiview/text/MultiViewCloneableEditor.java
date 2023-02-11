@@ -197,7 +197,6 @@ class MultiViewCloneableEditor extends CloneableEditor  implements MultiViewElem
     })
     @Override
     public CloseOperationState canCloseElement() {
-        final CloneableEditorSupport sup = getLookup().lookup(CloneableEditorSupport.class);
         Enumeration<CloneableTopComponent> en = getReference().getComponents();
         if (en.hasMoreElements()) {
             en.nextElement();
@@ -213,6 +212,7 @@ class MultiViewCloneableEditor extends CloneableEditor  implements MultiViewElem
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
+                        CloneableEditorSupport sup = getLookup().lookup(CloneableEditorSupport.class);
                         sup.saveDocument();
                     } catch (IOException ex) {
                         Exceptions.printStackTrace(ex);

@@ -1554,12 +1554,12 @@ public class ModelUtils {
 
     public static Collection<Identifier> getDefinedGlobal(final Snapshot snapshot, final int offset) {
         ArrayList<Identifier> names = new ArrayList<>();
-        List<JsTokenId> findToken = Arrays.asList(JsTokenId.BLOCK_COMMENT);
         TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(snapshot, offset);
         if (ts == null) {
             return names;
         }
         ts.move(0);
+        List<JsTokenId> findToken = Arrays.asList(JsTokenId.BLOCK_COMMENT);
         Token<? extends JsTokenId> token = LexUtilities.findNextIncluding(ts, findToken);
         while (token != null && token.id() == JsTokenId.BLOCK_COMMENT) {
             int iOffset = ts.offset();

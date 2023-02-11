@@ -139,11 +139,11 @@ public class ClusterUpdateProvider implements UpdateProvider {
         if (cluster == null || ! cluster.exists ()) {
             return Collections.emptySet ();
         }
-        Collection<File> res = new HashSet<File> ();
         File config = new File (new File (cluster, "config"), "Modules"); // NOI18N
         if (config.listFiles () == null) {
             return Collections.emptySet ();
         }
+        Collection<File> res = new HashSet<File> ();
         for (File cf : config.listFiles ()) {
             if(cf.getName ().endsWith(".xml_hidden")) {
                 //158204

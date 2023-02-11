@@ -94,13 +94,13 @@ public class JSBreakpointsManager extends DebuggerManagerAdapter {
     
     private void submitExistingBreakpoints(V8Debugger dbg) {
         breakpointsAddedDuringInit.set(false);
-        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
         Boolean added = breakpointsAddedDuringInit.get();
         breakpointsAddedDuringInit.remove();
         if (added) {
             return ;
         }
         ScriptsHandler scriptsHandler = dbg.getScriptsHandler();
+        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
         for (Breakpoint b : breakpoints) {
             if (!(b instanceof JSLineBreakpoint)) {
                 continue;

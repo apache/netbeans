@@ -502,13 +502,12 @@ final class CustomEditorDisplayer implements PropertyDisplayer_Editable {
      * @param event The event to be fired
      */
     private void fireActionPerformed() {
-        ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "userChangedValue"); //NOI18N
-
         if (listenerList == null) {
             return;
         }
 
         Object[] listeners = listenerList.getListenerList();
+        ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "userChangedValue"); //NOI18N
 
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == ActionListener.class) {

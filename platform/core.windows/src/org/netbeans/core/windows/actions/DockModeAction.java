@@ -67,7 +67,7 @@ public final class DockModeAction extends AbstractAction {
         if( null == contextMode )
             return; //just being paranoid
         if( null != slidingMode ) {
-            WindowManagerImpl.getInstance().userRestoredMode( slidingMode, contextMode );
+            wmi.userRestoredMode( slidingMode, contextMode );
         } else {
             boolean isDocked = contextMode.getState() == Constants.MODE_STATE_JOINED;
 

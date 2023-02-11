@@ -2605,11 +2605,13 @@ final class Central implements ControllerHandler {
         boolean intoSliding = mode.getKind() == Constants.MODE_KIND_SLIDING;
         boolean intoSeparate = mode.getState() == Constants.MODE_STATE_SEPARATED;
         ModeImpl prevMode = null;
-        String tcID = WindowManagerImpl.getInstance().findTopComponentID(tc);
+
         // XXX
         if(!mode.canContain(tc)) {
             return false;
         }
+
+        String tcID = WindowManagerImpl.getInstance().findTopComponentID(tc);
         TopComponentTracker.getDefault().add( tc, mode );
         for(Iterator it = model.getModes().iterator(); it.hasNext(); ) {
             ModeImpl m = (ModeImpl)it.next();

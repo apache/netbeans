@@ -65,7 +65,7 @@ public class DataObjectEncodingQueryImplementation extends FileEncodingQueryImpl
     @Override
     public Charset getEncoding(FileObject file) {
         assert file != null;
-        DataFolder df = TARGET.get();
+
         String mimeType = file.getMIMEType();
         FileEncodingQueryImplementation impl = MimeLookup.getLookup(mimeType).lookup(FileEncodingQueryImplementation.class);
         if (impl != null) {
@@ -74,6 +74,8 @@ public class DataObjectEncodingQueryImplementation extends FileEncodingQueryImpl
                 return charset;
             }
         }
+
+        DataFolder df = TARGET.get();
         if (df != null && df.getPrimaryFile().equals(file.getParent())) {
             // do not create new data objects
             return null;

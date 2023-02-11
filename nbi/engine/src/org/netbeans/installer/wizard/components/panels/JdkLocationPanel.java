@@ -439,18 +439,17 @@ public class JdkLocationPanel extends ApplicationLocationPanel {
     
     @Override
     public String validateLocation(final String path) {
-        final File file = new File(path);
-        
         if (path.equals(StringUtils.EMPTY_STRING)) {
             return StringUtils.format(
                     getProperty(ERROR_NULL_PROPERTY));
         }
-        
+
         if (!SystemUtils.isPathValid(path)) {
             return StringUtils.format(
                     getProperty(ERROR_NOT_VALID_PATH_PROPERTY), path);
         }
-                
+
+        final File file = new File(path);
         if (!file.exists()) {
             if(JavaUtils.getInfo(file)==null) { 
                 // JDK location does not exist and is not in the list of installable JDKs

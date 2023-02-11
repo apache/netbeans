@@ -267,7 +267,6 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
      * @return previous value of the property or null if there was not any
      */
     public String setProperty(String key, String[] value) {
-        String result = get(key);
         if (key == null || value == null) {
             throw new NullPointerException();
         }
@@ -279,7 +278,7 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
         } else {
             addItem(new Item(key, valueList), alphabetize);
         }
-        return result;
+        return get(key);
     }
 
     /**

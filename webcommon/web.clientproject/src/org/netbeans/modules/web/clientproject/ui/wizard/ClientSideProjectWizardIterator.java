@@ -136,7 +136,7 @@ public final class ClientSideProjectWizardIterator implements WizardDescriptor.P
     public Set<FileObject> instantiate(ProgressHandle handle) throws IOException {
         handle.start();
         handle.progress(Bundle.ClientSideProjectWizardIterator_progress_creatingProject());
-        Set<FileObject> files = new LinkedHashSet<>();
+
         File projectDirectory = FileUtil.normalizeFile((File) wizardDescriptor.getProperty(Wizard.PROJECT_DIRECTORY));
         String name = (String) wizardDescriptor.getProperty(Wizard.NAME);
         if (!projectDirectory.isDirectory() && !projectDirectory.mkdirs()) {
@@ -145,6 +145,7 @@ public final class ClientSideProjectWizardIterator implements WizardDescriptor.P
         FileObject dir = FileUtil.toFileObject(projectDirectory);
         CommonProjectHelper projectHelper = ClientSideProjectUtilities.setupProject(dir, name);
         // Always open top dir as a project:
+        Set<FileObject> files = new LinkedHashSet<>();
         files.add(dir);
 
         ClientSideProject project = (ClientSideProject) FileOwnerQuery.getOwner(projectHelper.getProjectDirectory());

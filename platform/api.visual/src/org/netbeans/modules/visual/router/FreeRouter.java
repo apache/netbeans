@@ -37,13 +37,14 @@ public class FreeRouter implements Router {
     }
     
     public List<Point> routeConnection(ConnectionWidget widget) {
-        ArrayList<Point> list = new ArrayList<Point> ();
-        
+
         Anchor sourceAnchor = widget.getSourceAnchor();
         Anchor targetAnchor = widget.getTargetAnchor();
-        if (sourceAnchor == null  ||  targetAnchor == null)
+        if (sourceAnchor == null  ||  targetAnchor == null) {
             return Collections.emptyList();
+        }
 
+        ArrayList<Point> list = new ArrayList<> ();
         list.add(sourceAnchor.compute(widget.getSourceAnchorEntry()).getAnchorSceneLocation());
 
         List<Point> oldControlPoints = widget.getControlPoints ();

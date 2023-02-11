@@ -678,8 +678,8 @@ public abstract class ErrorManager extends Object {
             }
 
             if (delegates.isEmpty()) {
-                Level sev = convertSeverity(severity, false, Level.FINE);
                 if (enterLogger()) return;
+                Level sev = convertSeverity(severity, false, Level.FINE);
                 try {
                     logger().log(sev, s);
                 } finally {

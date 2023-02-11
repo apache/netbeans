@@ -904,11 +904,11 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
         }
 
         private int calculateOptimalDown(LayoutNode n) {
-
-            List<Integer> values = new ArrayList<Integer>();
             if (n.preds.size() == 0) {
                 return n.x;
             }
+
+            List<Integer> values = new ArrayList<>();
             for (LayoutEdge e : n.preds) {
                 int cur = e.from.x + e.relativeFrom - e.relativeTo;
                 values.add(cur);
@@ -917,11 +917,10 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
         }
 
         private int calculateOptimalUp(LayoutNode n) {
-
-            List<Integer> values = new ArrayList<Integer>();
             if (n.succs.size() == 0) {
                 return n.x;
             }
+            List<Integer> values = new ArrayList<>();
             for (LayoutEdge e : n.succs) {
                 int cur = e.to.x + e.relativeTo - e.relativeFrom;
                 values.add(cur);

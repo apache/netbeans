@@ -310,17 +310,19 @@ public class QuickSearch {
             new KeyAdapter() {
             @Override
                 public void keyTyped(KeyEvent e) {
-                    int modifiers = e.getModifiers();
-                    int keyCode = e.getKeyCode();
                     char c = e.getKeyChar();
 
                     //#43617 - don't eat + and -
                     //#98634 - and all its duplicates dont't react to space
                     if ((c == '+') || (c == '-') || (c==' ')) return; // NOI18N
 
+                    int modifiers = e.getModifiers();
+
                     if (((modifiers > 0) && (modifiers != KeyEvent.SHIFT_MASK)) || e.isActionKey()) {
                         return;
                     }
+
+                    int keyCode = e.getKeyCode();
 
                     if (Character.isISOControl(c) ||
                             (keyCode == KeyEvent.VK_SHIFT) ||

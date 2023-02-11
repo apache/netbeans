@@ -242,8 +242,6 @@ public class RunOffEDTImpl implements RunOffEDTProvider, Progress, Progress2 {
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicReference<Dialog> d = new AtomicReference<Dialog>();
         final AtomicReference<RequestProcessor.Task> t  = new AtomicReference<RequestProcessor.Task>();
-        
-        JDialog dialog = createModalDialog(operation, operationDescr, contentPanel, d, t, operation instanceof Cancellable);
 
         final Task rt = TI_WORKER.post(new Runnable() {
 
@@ -291,6 +289,8 @@ public class RunOffEDTImpl implements RunOffEDTProvider, Progress, Progress2 {
         if (waitMomentarily(glassPane, wait, dialogAfter, latch, window)) {
             return;
         }
+
+        JDialog dialog = createModalDialog(operation, operationDescr, contentPanel, d, t, operation instanceof Cancellable);
 
         d.set(dialog);
         if (EventQueue.isDispatchThread()) {

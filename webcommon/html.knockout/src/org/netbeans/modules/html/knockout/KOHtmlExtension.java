@@ -243,7 +243,6 @@ public class KOHtmlExtension extends HtmlExtension {
 
     @Override
     public List<CompletionItem> completeOpenTags(CompletionContext context) {
-        List<CompletionItem> items = new ArrayList<>();
         FileObject fo = context.getResult().getSnapshot().getSource().getFileObject();
         if (fo == null) {
             return Collections.emptyList();
@@ -254,6 +253,7 @@ public class KOHtmlExtension extends HtmlExtension {
         }
         Collection<KnockoutCustomElement> customElements = getAllCustomElements(project, context.getPrefix());
         List<String> alreadyAddedComponents = new ArrayList<>();
+        List<CompletionItem> items = new ArrayList<>();
         for (KnockoutCustomElement customElement : customElements) {
             if (!alreadyAddedComponents.contains(customElement.getName())) {
                 items.add(new KOTagCompletionItem(customElement, context.getCCItemStartOffset()));

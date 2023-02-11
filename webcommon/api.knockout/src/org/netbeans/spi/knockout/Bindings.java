@@ -145,11 +145,10 @@ public final class Bindings {
     }
 
     final String generate() {
-        StringBuilder sb = new StringBuilder();
         //sb.append("(function() {\n");
         HashSet<Bindings> visited = new HashSet<>();
         Collection<Bindings> lhs = new LinkedHashSet<>();
-        StringBuilder delayedInit = new StringBuilder();
+
         if (!walkBindings(visited, lhs)) {
             Map<Bindings, List<Bindings>> edges = new HashMap<>();
             for (Bindings b : lhs) {
@@ -163,6 +162,10 @@ public final class Bindings {
                 lhs = Collections.checkedList(ex.partialSort(), Bindings.class);
             }
         }
+
+        StringBuilder sb = new StringBuilder();
+        StringBuilder delayedInit = new StringBuilder();
+
         for (Bindings b : lhs) {
             b.generate(sb, delayedInit, visited);
             visited.remove(b);

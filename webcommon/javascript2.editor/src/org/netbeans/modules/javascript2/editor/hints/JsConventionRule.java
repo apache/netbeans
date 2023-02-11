@@ -243,7 +243,6 @@ public class JsConventionRule extends JsAstRule {
                     }
                 }
             } else if (!ts.moveNext() && ts.movePrevious() && ts.moveNext()) {
-                int originalOffset = ts.offset();
                 CharSequence originalText = ts.token().text();
 
                 Token<? extends JsTokenId> previous = LexUtilities.findPrevious(ts, IGNORED);
@@ -251,6 +250,7 @@ public class JsConventionRule extends JsAstRule {
                     return;
                 }
                 // we are probably at the end of file without the semicolon
+                int originalOffset = ts.offset();
                 fileOffset = context.parserResult.getSnapshot().getOriginalOffset(originalOffset);
                 addMissingSemicolonHint(fileOffset, originalText.toString());
             }

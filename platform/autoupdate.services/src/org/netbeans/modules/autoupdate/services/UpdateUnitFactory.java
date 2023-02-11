@@ -215,9 +215,6 @@ public class UpdateUnitFactory {
     }
     
     private void addElement (Map<String, UpdateUnit> impls, UpdateElement element, UpdateProvider provider) {
-        // find if corresponding element exists
-        UpdateUnit unit = impls.get (element.getCodeName ());
-        
         // XXX: it's should be moved in UI what should filter all elements w/ broken dependencies
         // #101515: Plugin Manager must filter updates by platform dependency
         boolean passed = false;
@@ -244,6 +241,8 @@ public class UpdateUnitFactory {
         }
         
         UpdateUnitImpl unitImpl = null;
+        // find if corresponding element exists
+        UpdateUnit unit = impls.get (element.getCodeName ());
         
         if (unit == null) {
             switch (elImpl.getType ()) {

@@ -65,19 +65,25 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<JsParserResult> {
     @Override
     public void run(JsParserResult result, SchedulerEvent event) {
         //remove the last occurrences - the CSL caches the last found occurences for us
-        range2Attribs = null;
+        if (range2Attribs != null) {
+            range2Attribs.clear();
+        }
 
         if(cancelled) {
             cancelled = false;
             return ;
         }
         int offset = result.getSnapshot().getEmbeddedOffset(caretPosition);
-        Set<OffsetRange> ranges = findOccurrenceRanges(result, offset);
-        range2Attribs = new HashMap<>();
         if(cancelled) {
             cancelled = false;
             return ;
         }
+
+        if (range2Attribs == null) {
+            range2Attribs = new HashMap<>();
+        }
+
+        Set<OffsetRange> ranges = findOccurrenceRanges(result, offset);
         for (OffsetRange offsetRange : ranges) {
             range2Attribs.put(ModelUtils.documentOffsetRange(result, offsetRange.getStart(), offsetRange.getEnd()), ColoringAttributes.MARK_OCCURRENCES);
         }

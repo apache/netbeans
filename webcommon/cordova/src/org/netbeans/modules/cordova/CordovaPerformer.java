@@ -231,8 +231,7 @@ public class CordovaPerformer implements BuildPerformer {
                                 //#231037
                                 URL u = ServerURLMapping.toServer(project, startFile);
                                 activeConfiguration.toBrowserURL(project, startFile, u);
-                                
-                                BrowserURLMapperImplementation.BrowserURLMapper mapper = ((CordovaBrowserFactory) activeConfiguration.getHtmlBrowserFactory()).getMapper();
+
                                 if (!device.isEmulator() && target.equals(BuildPerformer.RUN_IOS)) {
                                     DialogDescriptor dd = new DialogDescriptor(Bundle.LBL_InstallThroughItunes(), Bundle.CTL_InstallAndRun());
                                     if (DialogDisplayer.getDefault().notify(dd) != DialogDescriptor.OK_OPTION) {
@@ -245,6 +244,8 @@ public class CordovaPerformer implements BuildPerformer {
                                         Exceptions.printStackTrace(ex);
                                 } 
                                 }
+
+                                BrowserURLMapperImplementation.BrowserURLMapper mapper = ((CordovaBrowserFactory) activeConfiguration.getHtmlBrowserFactory()).getMapper();
                                 WebKitDebuggingSupport.getDefault().startDebugging(device, 
                                         project, 
                                         Lookups.fixed(

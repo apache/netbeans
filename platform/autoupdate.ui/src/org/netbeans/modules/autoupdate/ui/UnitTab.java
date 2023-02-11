@@ -356,10 +356,10 @@ public final class UnitTab extends javax.swing.JPanel {
             getDownloadSizeTask = DOWNLOAD_SIZE_PROCESSOR.post (new Runnable () {
                 @Override
                 public void run () {
-                    int downloadSize = model.getDownloadSize ();
                     if (Thread.interrupted ()) {
                         return ;
                     }
+                    int downloadSize = model.getDownloadSize ();
                     if (model.getMarkedUnits ().isEmpty()) {
                         cleanSelectionInfo ();
                     } else {

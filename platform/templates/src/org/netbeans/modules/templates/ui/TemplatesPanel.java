@@ -1466,15 +1466,15 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         assert nodes.length == 1 : "Only one node can be moveUp, not " + Arrays.asList (nodes);
         assert nodes [0].isLeaf () : "Only leaf node can be moveUp, not " + nodes [0];
         Node n = nodes  [0];
-        
-        Index supp = getIndexSupport (n);
+
         int origPos = getNodePosition (n);
         
         // workaround issue 62192, don't try to move on broken index
         if (origPos == -1) {
             return ;
         }
-        
+
+        Index supp = getIndexSupport (n);
         supp.moveUp (origPos);
         // getNodePosition() is not really reliable here.
         // assert origPos - 1 == getNodePosition (n) : "Node " + n + " has been moved from " + origPos + " to pos " + getNodePosition (n);
@@ -1485,15 +1485,15 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         assert nodes.length == 1 : "Only one node can be moveDown, not " + Arrays.asList (nodes);
         assert nodes [0].isLeaf () : "Only leaf node can be moveDown, not " + nodes [0];
         Node n = nodes  [0];
-        
-        Index supp = getIndexSupport (n);
+
         int origPos = getNodePosition (n);
         
         // workaround issue 62192, don't try to move on broken index
         if (origPos == -1) {
             return ;
         }
-        
+
+        Index supp = getIndexSupport (n);
         supp.moveDown (origPos);
         // getNodePosition() is not really reliable here.
         // assert origPos + 1 == getNodePosition (n) : "Node " + n + " has been moved from " + origPos + " to pos " + getNodePosition (n);

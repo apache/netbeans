@@ -53,8 +53,6 @@ public class GoToNodeSourceAction extends NodeAction  {
     @Override
     protected void performAction(org.openide.nodes.Node[] activatedNodes) {
         org.openide.nodes.Node selection = activatedNodes[0];
-        org.netbeans.modules.web.webkit.debugging.api.dom.Node node = selection
-                .getLookup().lookup(org.netbeans.modules.web.webkit.debugging.api.dom.Node.class);
         Resource resource = getNodeOrigin(selection);
         FileObject fob = resource.toFileObject();
         if (fob == null) {
@@ -63,6 +61,8 @@ public class GoToNodeSourceAction extends NodeAction  {
         try {
             Source source = Source.create(fob);
             if (source != null) {
+                org.netbeans.modules.web.webkit.debugging.api.dom.Node node = selection
+                        .getLookup().lookup(org.netbeans.modules.web.webkit.debugging.api.dom.Node.class);
                 ParserManager.parse(Collections.singleton(source), new GoToNodeTask(node, fob));
             }
         } catch (ParseException ex) {

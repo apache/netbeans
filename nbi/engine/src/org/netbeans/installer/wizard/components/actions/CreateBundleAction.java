@@ -296,11 +296,11 @@ public class CreateBundleAction extends WizardAction {
                 // transfer the configuration logic files
                 final List<ExtendedUri> logicUris = product.getLogicUris();
                 for (int i = 0; i < logicUris.size(); i++) {
-                    final ExtendedUri logicUri = logicUris.get(i);
-                    
                     // check for cancel status
                     if (isCanceled()) return;
-                    
+
+                    final ExtendedUri logicUri = logicUris.get(i);
+
                     // transfer the file
                     putNextEntry(output,
                             entryPrefix + "/logic/logic," + (i + 1) + ".jar");
@@ -324,11 +324,11 @@ public class CreateBundleAction extends WizardAction {
                 // transfer the installation data files
                 final List<ExtendedUri> dataUris = product.getDataUris();
                 for (int i = 0; i < dataUris.size(); i++) {
-                    final ExtendedUri dataUri = dataUris.get(i);
-                    
                     // check for cancel status
                     if (isCanceled()) return;
-                    
+
+                    final ExtendedUri dataUri = dataUris.get(i);
+
                     // transfer the file                    
                     if (System.getProperty(CUSTOM_DATA_URI_PREFIX_PROPERTY) == null) {
                         putNextEntry(output,

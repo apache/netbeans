@@ -288,11 +288,12 @@ final class TableViewDropSupport implements DropTargetListener, Runnable {
         // check location
         int index = table.rowAtPoint(dtde.getLocation());
         if (index == -1) return -1;
-        Object obj = view.getNodeFromRow(index);
 
         if (index < 0) {
             return -1;
         }
+
+        Object obj = view.getNodeFromRow(index);
 
         if (!(obj instanceof Node)) {
             return -1;

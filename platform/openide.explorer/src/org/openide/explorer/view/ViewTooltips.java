@@ -217,9 +217,6 @@ final class ViewTooltips extends MouseAdapter implements MouseMotionListener {
         Point p = SwingUtilities.convertPoint(view, 
                 pt.x, pt.y, tree);
         
-        int row = tree.getClosestRowForLocation(
-                p.x, p.y);
-        
         TreePath path = 
                 tree.getClosestPathForLocation(p.x, 
                 p.y);
@@ -229,6 +226,10 @@ final class ViewTooltips extends MouseAdapter implements MouseMotionListener {
             hide();
             return;
         }
+
+        int row = tree.getClosestRowForLocation(
+                p.x, p.y);
+
         if (setCompAndRow (tree, row)) {
             Rectangle visible = getShowingRect (view);
             Rectangle[] rects = getRects (bds, visible);

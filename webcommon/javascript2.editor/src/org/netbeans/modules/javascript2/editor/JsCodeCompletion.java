@@ -103,7 +103,6 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
 
         ParserResult info = ccContext.getParserResult();
         int caretOffset = ccContext.getParserResult().getSnapshot().getEmbeddedOffset(ccContext.getCaretOffset());
-        FileObject fileObject = ccContext.getParserResult().getSnapshot().getSource().getFileObject();
         JsParserResult jsParserResult = (JsParserResult)info;
         CompletionContext context = CompletionContextFinder.findCompletionContext(info, caretOffset);
 
@@ -125,11 +124,14 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
         request.cancelSupport = cancelSupport;
 
         Model.getModel(jsParserResult, false).resolve();
-        final List<CompletionProposal> resultList = new ArrayList<>();
-        HashMap<String, List<JsElement>> added = new HashMap<>();
         if (cancelSupport.isCancelled()) {
             return CodeCompletionResult.NONE;
         }
+
+        final List<CompletionProposal> resultList = new ArrayList<>();
+        HashMap<String, List<JsElement>> added = new HashMap<>();
+        FileObject fileObject = ccContext.getParserResult().getSnapshot().getSource().getFileObject();
+
         if (ccContext.getQueryType() == QueryType.ALL_COMPLETION) {
             switch (context) {
                 case GLOBAL:

@@ -35,10 +35,10 @@ public class AdaptNbVersion {
     private static final String SNAPSHOT = "SNAPSHOT"; //NOI18N
     
     public static String adaptVersion(String version, Object type) {
-        StringTokenizer tok = new StringTokenizer(version,"."); //NOI18N
         if (SNAPSHOT.equals(version) && TYPE_IMPLEMENTATION.equals(type)) {
             return "0.0.0." + generateSnapshotValue(); //NOI18N
         }
+        StringTokenizer tok = new StringTokenizer(version,"."); //NOI18N
         StringBuffer toReturn = new StringBuffer();
         while (tok.hasMoreTokens()) {
             String token = tok.nextToken();

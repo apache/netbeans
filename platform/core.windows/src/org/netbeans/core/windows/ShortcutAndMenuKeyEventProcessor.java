@@ -264,14 +264,15 @@ final class ShortcutAndMenuKeyEventProcessor implements KeyEventDispatcher, KeyE
             ev.consume();
             return true;
         }
-        
-        KeyStroke ks = KeyStroke.getKeyStrokeForEvent(ev);
+
         Window w = SwingUtilities.windowForComponent(ev.getComponent());
 
         // don't process shortcuts if this is a help frame
         if ((w instanceof JFrame) && ((JFrame)w).getRootPane().getClientProperty("netbeans.helpframe") != null) // NOI18N
             return true;
-        
+
+        KeyStroke ks = KeyStroke.getKeyStrokeForEvent(ev);
+
         // don't let action keystrokes to propagate from both
         // modal and nonmodal dialogs, but propagate from separate floating windows,
         // even if they are backed by JDialog

@@ -1945,7 +1945,6 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
     /*private*/ boolean switchRole( String newRole, boolean keepDocumentWindows ) {
         final WindowSystemImpl ws = Lookup.getDefault().lookup( WindowSystemImpl.class );
         assert null != ws;
-        final PersistenceManager pm = PersistenceManager.getDefault();
         
         PersistenceHandler.getDefault().finishLazyLoading();
 
@@ -1976,6 +1975,8 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         ws.save();
         
         deselectEditorTopComponents();
+
+        final PersistenceManager pm = PersistenceManager.getDefault();
 
         //reset
         resetModel();

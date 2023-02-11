@@ -474,9 +474,6 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
     }
     
     public void revertActions(String profile, Collection<ShortcutAction> actions) throws IOException {
-        Map<ShortcutAction, Set<String>> defaultKeyMap = getDefaultKeymap(profile);
-        Map<ShortcutAction, Set<String>> keyMap = getKeymap(profile);
-        
         DataFolder root = getRootFolder (KEYMAPS_FOLDER, profile);
         if (root == null) {
             return;
@@ -485,7 +482,10 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
         final Collection<FileObject> entries = (Collection<FileObject>)fo.getAttribute("revealEntries");
         final Set<String> keys = new HashSet<String>();
         final Set<String> discard = new HashSet<String>();
-        
+
+        Map<ShortcutAction, Set<String>> defaultKeyMap = getDefaultKeymap(profile);
+        Map<ShortcutAction, Set<String>> keyMap = getKeymap(profile);
+
         for (ShortcutAction ac : actions) {
             Set<String> sc = defaultKeyMap.get(ac);
             if (sc != null) {

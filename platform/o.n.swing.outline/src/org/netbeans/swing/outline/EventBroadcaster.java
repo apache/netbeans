@@ -666,17 +666,17 @@ final class EventBroadcaster implements TableModelListener, TreeModelListener, E
             //offscreen nodes as a normal part of usage
             return null;
         }
-        
-        //Get all the expanded descendants of the path that was expanded/collapsed
-        TreePath[] paths = getTreePathSupport().getExpandedDescendants(path);
-        
+
         //Start with the number of children of whatever was expanded/collapsed
         int count = getTreeModel().getChildCount(path.getLastPathComponent());
         
         if (count == 0) {
             return null;
         }
-        
+
+        //Get all the expanded descendants of the path that was expanded/collapsed
+        TreePath[] paths = getTreePathSupport().getExpandedDescendants(path);
+
         //Iterate any of the expanded children, adding in their child counts
         for (int i=0; i < paths.length; i++) {
             count += getTreeModel().getChildCount(paths[i].getLastPathComponent());

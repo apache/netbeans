@@ -363,7 +363,7 @@ class EntrySupportLazy extends EntrySupport {
             // no such entry
             return;
         }
-        Node oldNode = info.currentNode();
+
         EntryInfo newInfo = null;
         Node newNode = null;
         if (info.isHidden()) {
@@ -378,6 +378,8 @@ class EntrySupportLazy extends EntrySupport {
             // dummy is already hidden
             return;
         }
+
+        Node oldNode = info.currentNode();
         if (newNode.equals(oldNode)) {
             // same node =>
             return;

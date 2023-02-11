@@ -852,13 +852,15 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
                 changeItem(item().changePrimaryFile (mf));
             }
         }
-        Op op = new Op();
+
         ProgressInfo pi = getProgressInfo();
         if (pi == null) {
             pi = initProgressInfo(Bundle.LBL_Moving(this.getName()), this);
         } else if (pi.isTerminated()) {
             return;
         }
+
+        Op op = new Op();
         try {
             pi.updateProgress(this);
             invokeAtomicAction(df.getPrimaryFile(), op, synchObject());

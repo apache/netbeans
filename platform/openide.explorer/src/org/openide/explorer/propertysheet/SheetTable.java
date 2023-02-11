@@ -555,13 +555,13 @@ final class SheetTable extends BaseTable implements PropertySetModelListener, Cu
             PropUtils.log(SheetTable.class, "RepaintProperty: " + name);
         }
 
-        PropertySetModel psm = getPropertySetModel();
         int min = getFirstVisibleRow();
 
         if (min == -1) {
             return;
         }
 
+        PropertySetModel psm = getPropertySetModel();
         int max = min + getVisibleRowCount();
 
         for (int i = min; i < max; i++) {
@@ -888,7 +888,6 @@ final class SheetTable extends BaseTable implements PropertySetModelListener, Cu
         //see if we're in the approximate bounds of the custom editor button
         Point pt = e.getPoint();
         int row = rowAtPoint(pt);
-        int col = columnAtPoint(pt);
         FeatureDescriptor fd = getSheetModel().getPropertySetModel().getFeatureDescriptor(row);
         if( null == fd ) {
             //prevent NPE when the activated Node has been destroyed and a new one hasn't been set yet
@@ -930,6 +929,8 @@ final class SheetTable extends BaseTable implements PropertySetModelListener, Cu
                 }
             }
         }
+
+        int col = columnAtPoint(pt);
 
         try {
             if (success) { //NOI18N

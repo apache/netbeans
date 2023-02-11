@@ -311,12 +311,13 @@ final class SlideGestureRecognizer implements ActionListener, MouseListener, Mou
                     return false;
                 }
             }
-            Point mouseLoc = evt.getPoint();
+
             //#118828
             if (! (evt.getSource() instanceof Component)) {
                 return false;
             }
-            
+
+            Point mouseLoc = evt.getPoint();
             SwingUtilities.convertPointToScreen(mouseLoc, (Component)evt.getSource());
             
             boolean isMouseOut = !activeArea.contains(mouseLoc);

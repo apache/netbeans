@@ -770,7 +770,6 @@ public abstract class TreeView extends JScrollPane {
         }
 
         // check the contiguous selection mode
-        TreePath[] paths = new TreePath[nodes.length];
         RowMapper rowMapper = tree.getSelectionModel().getRowMapper();
 
         // if rowMapper is null then tree bahaves as discontiguous selection mode is set
@@ -779,6 +778,7 @@ public abstract class TreeView extends JScrollPane {
         }
 
         ArrayList<Node> toBeExpaned = new ArrayList<Node>(3);
+        TreePath[] paths = new TreePath[nodes.length];
 
         for (int i = 0; i < nodes.length; i++) {
             toBeExpaned.clear();
@@ -1992,18 +1992,19 @@ public abstract class TreeView extends JScrollPane {
 
         private List<TreePath> doSearch(String prefix) {
             List<TreePath> results = new ArrayList<TreePath>();
-            Set<TreePath> resSet = new HashSet<TreePath>();
             
             // starting index of substring matches within the results
             int startOfSubstringMatches = 0;
 
-            int startIndex = origSelectionPaths != null ? Math.max(0, getRowForPath(origSelectionPaths[0])) : 0;
             int size = getRowCount();
 
             if (size == 0) {
                 // Empty tree (no root visible); cannot match anything.
                 return results;
             }
+
+            Set<TreePath> resSet = new HashSet<>();
+            int startIndex = origSelectionPaths != null ? Math.max(0, getRowForPath(origSelectionPaths[0])) : 0;
 
             while (true) {
                 startIndex = startIndex % size;

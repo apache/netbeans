@@ -65,12 +65,13 @@ public final class Utils {
     }
     
     public static String[] getUserPaths(String... paths) {
-        String[] result = new String[paths.length];
         String appRoot = getUserHome();
 
         if (appRoot == null) {
             return null;
         }
+
+        String[] result = new String[paths.length];
         for (int i = 0; i < paths.length; i++) {
             result[i] = appRoot + paths[i];
         }

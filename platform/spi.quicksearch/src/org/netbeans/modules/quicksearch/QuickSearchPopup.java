@@ -387,8 +387,6 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             lPane.add(this, new Integer(JLayeredPane.POPUP_LAYER + 1) );
         }
 
-        boolean statusVisible = updateStatusPanel(isInProgress);
-
         try {
             computePopupBounds(popupBounds, lPane, modelSize);
         } catch (Exception e) { //sometimes the hack in computePopupBounds fails
@@ -397,6 +395,8 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             return;
         }
         setBounds(popupBounds);
+
+        boolean statusVisible = updateStatusPanel(isInProgress);
 
         // popup visibility constraints
         if ((modelSize > 0 || statusVisible) && comboBar.getCommand().isFocusOwner()) {

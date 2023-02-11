@@ -75,10 +75,7 @@ public class GoToPropertySourceAction extends AbstractAction {
             Lookup lookup = node.getLookup();
             org.netbeans.modules.web.webkit.debugging.api.css.Rule rule =
                     lookup.lookup(org.netbeans.modules.web.webkit.debugging.api.css.Rule.class);
-            Property property = lookup.lookup(Property.class);
             Node parent = node.getParentNode();
-            Property shorthandProperty = parent.getLookup().lookup(Property.class);
-            String shorthand = (shorthandProperty == null) ? null : shorthandProperty.getName();
             Resource resource = lookup.lookup(Resource.class);
             FileObject fob = resource.toFileObject();
             if (fob == null || fob.isFolder() /* issue 233463 */) {
@@ -90,6 +87,9 @@ public class GoToPropertySourceAction extends AbstractAction {
             }
             try {
                 Source source = Source.create(fob);
+                Property property = lookup.lookup(Property.class);
+                Property shorthandProperty = parent.getLookup().lookup(Property.class);
+                String shorthand = (shorthandProperty == null) ? null : shorthandProperty.getName();
                 ParserManager.parse(Collections.singleton(source), new GoToPropertySourceAction.GoToPropertyTask(fob, rule, property, shorthand));
             } catch (ParseException ex) {
                 Logger.getLogger(GoToRuleSourceAction.class.getName()).log(Level.INFO, null, ex);

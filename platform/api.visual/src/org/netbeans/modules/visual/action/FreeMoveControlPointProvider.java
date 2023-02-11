@@ -33,8 +33,8 @@ public final class FreeMoveControlPointProvider implements MoveControlPointProvi
     public List<Point> locationSuggested(ConnectionWidget connectionWidget, int index, Point suggestedLocation) {
         List<Point> controlPoints = connectionWidget.getControlPoints();
         int cpSize=controlPoints.size()-1;
-        ArrayList<Point> list = new ArrayList<Point> (controlPoints);
         if (index <= 0 || index >= cpSize)return null;
+        ArrayList<Point> list = new ArrayList<> (controlPoints);
         if(index==1)list.set(0,connectionWidget.getSourceAnchor().compute(connectionWidget.getSourceAnchorEntry()).getAnchorSceneLocation());
         if(index==cpSize - 1)
             list.set(cpSize,connectionWidget.getTargetAnchor().compute(connectionWidget.getTargetAnchorEntry()).getAnchorSceneLocation());

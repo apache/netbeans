@@ -110,11 +110,12 @@ public class BasicComposition extends SearchComposition<MatchingObject.Def> {
     }
 
     public List<FileObject> getRootFiles() {
-        List<FileObject> list = new LinkedList<>();
         List<SearchRoot> searchRoots = searchInfo.getSearchRoots();
         if (searchRoots == null) {
             return Collections.emptyList();
         }
+
+        List<FileObject> list = new LinkedList<>();
         for (SearchRoot sr : searchRoots) {
             list.add(sr.getFileObject());
         }

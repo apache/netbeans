@@ -205,7 +205,6 @@ public class JQueryDeclarationFinder implements DeclarationFinder {
 
         @Override
         public String getDisplayHtml(HtmlFormatter formatter) {
-            StringBuilder b = new StringBuilder();
             //colorize the 'current line text' a bit
             //find out if there's the opening curly bracket
             String lineText = entryHandle.entry().getLineText().toString();
@@ -250,6 +249,7 @@ public class JQueryDeclarationFinder implements DeclarationFinder {
                 postfix = postfix.substring(0, postfix.length() - stripFromPostfix) + "..";
             }
 
+            StringBuilder b = new StringBuilder();
             b.append("<font color=007c00>");//NOI18N
             b.append(prefix);
             b.append(' '); //NOI18N

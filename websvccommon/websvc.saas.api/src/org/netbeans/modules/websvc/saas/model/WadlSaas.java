@@ -219,11 +219,11 @@ public class WadlSaas extends Saas {
         if (wadlModel == null) {
             throw new IllegalStateException("Should transition state to at least RETRIEVED");
         }
-        FileObject wadlDir = getLocalWadlFile().getParent();
         schemaFiles = new ArrayList<FileObject>();
         if (wadlModel.getGrammars() == null || wadlModel.getGrammars().getInclude() == null) {
             return schemaFiles;
         }
+        FileObject wadlDir = getLocalWadlFile().getParent();
         for (Include include : wadlModel.getGrammars().getInclude()) {
             String uri = include.getHref();
             FileObject schemaFile = wadlDir.getFileObject(uri);

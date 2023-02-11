@@ -542,7 +542,6 @@ public final class Model {
             return;
         }
         String fqn = object.getFullyQualifiedName();
-        boolean isTopObject = object.getJSKind() == JsElement.Kind.FILE;
         if (alreadyResolvedObjects.contains(fqn)) {
             if (!assertFired.get()) {
                 assertFired.set(true);
@@ -551,6 +550,7 @@ public final class Model {
             System.out.println("alreadyResolved: " + fqn);
             return;
         }
+        boolean isTopObject = object.getJSKind() == JsElement.Kind.FILE;
         if (!isTopObject) {
             alreadyResolvedObjects.add(fqn);
         }

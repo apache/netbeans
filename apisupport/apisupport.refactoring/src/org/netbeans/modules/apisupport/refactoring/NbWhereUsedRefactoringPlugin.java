@@ -94,15 +94,15 @@ public class NbWhereUsedRefactoringPlugin extends AbstractRefactoringPlugin {
             
             Problem problem = null;
             Lookup lkp = whereUsedRefactor.getRefactoringSource();
-            InfoHolder infoholder = examineLookup(lkp);
             final TreePathHandle handle = lkp.lookup(TreePathHandle.class);
-            
+
             Project project = FileOwnerQuery.getOwner(handle.getFileObject());
             if (project == null || project.getLookup().lookup(NbModuleProvider.class) == null) {
                 // take just netbeans module development into account..
                 return null;
             }
-            
+
+            InfoHolder infoholder = examineLookup(lkp);
             if (infoholder.isClass) {
                 checkManifest(project, infoholder.fullName, refactoringElements);
                 checkLayer(project, infoholder.fullName, refactoringElements);

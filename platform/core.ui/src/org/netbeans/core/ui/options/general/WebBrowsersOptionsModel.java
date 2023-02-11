@@ -351,12 +351,12 @@ public class WebBrowsersOptionsModel extends DefaultListModel {
             try {
                 
                 FileObject extWebBrowserTemplate = FileUtil.getConfigFile(BROWSER_TEMPLATE);
-                FileObject browsersFolderFO = FileUtil.getConfigFile(BROWSERS_FOLDER);
-                
+
                 if (extWebBrowserTemplate == null) {
                     return null;
                 }
 
+                FileObject browsersFolderFO = FileUtil.getConfigFile(BROWSERS_FOLDER);
                 DataObject templateDO = DataObject.find(extWebBrowserTemplate);
                 DataFolder browsersFolderDF = DataFolder.findFolder(browsersFolderFO);
                 createdSettings = templateDO.createFromTemplate(browsersFolderDF, name); 

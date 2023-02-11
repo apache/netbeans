@@ -327,8 +327,6 @@ System.out.println("Rendering using comp renderer...");
 
         @Override
         public void paint(Graphics g) {
-            Rectangle bounds = getBounds();
-            
             if (origImage == null) {
                 if (comp == null) {
                     return;
@@ -346,6 +344,8 @@ System.out.println("Rendering using comp renderer...");
                 (double)bounds.width / (double)scaleSource.width,
                 (double)bounds.height / (double)scaleSource.height);
             g2d.setTransform(at);*/
+            Rectangle bounds = getBounds();
+
             g2d.drawImage(img, 0, 0, bounds.width, bounds.height, null);
             //SwingUtilities.paintComponent(g, getComponent(0), this, 0, 0, bounds.width, bounds.height);
             //super.paint(g2d);

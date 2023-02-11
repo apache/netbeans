@@ -429,7 +429,6 @@ public abstract class DialogDisplayer {
             }
 
             public void updateOptions() {
-                Set<Object> addedOptions = new HashSet<Object>(5);
                 Object[] options = nd.getOptions();
 
                 if (options == null) {
@@ -486,6 +485,7 @@ public abstract class DialogDisplayer {
                 buttonPanel.removeAll();
 
                 JRootPane rp = getRootPane();
+                Set<Object> addedOptions = new HashSet<>(5);
 
                 for (int i = 0; i < options.length; i++) {
                     addedOptions.add(options[i]);

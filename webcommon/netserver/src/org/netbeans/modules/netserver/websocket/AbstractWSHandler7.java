@@ -251,7 +251,6 @@ abstract class AbstractWSHandler7<T extends SocketFramework> extends AbstractWSH
     private boolean readFinalFrame( ByteBuffer byteBuffer,
             SocketChannel socketChannel, byte leadingByte) throws IOException
     {
-        int frameType = leadingByte == FIRST_BYTE_MESSAGE? 1:2;
         byteBuffer.clear();
         byteBuffer.limit(1);
         int size ;
@@ -274,6 +273,8 @@ abstract class AbstractWSHandler7<T extends SocketFramework> extends AbstractWSH
             close();
             return false;
         }
+
+        int frameType = leadingByte == FIRST_BYTE_MESSAGE? 1:2;
         int length = masknLength&0x7F;
         if ( length <126 ){
             return readData(byteBuffer, socketChannel, frameType, length, hasMask );

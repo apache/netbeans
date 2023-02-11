@@ -117,7 +117,7 @@ public class BreakpointModel extends ViewModelSupport
         }
         Breakpoint b = (Breakpoint) node;
         boolean disabled = !b.isEnabled();
-        boolean invalid = b.getValidity() == Breakpoint.VALIDITY.INVALID;
+
         String iconBase;
         if (node instanceof AbstractBreakpoint) {
             AbstractBreakpoint breakpoint = (AbstractBreakpoint) node;
@@ -129,6 +129,9 @@ public class BreakpointModel extends ViewModelSupport
         } else {
             throw new UnknownTypeException(node);
         }
+
+        boolean invalid = b.getValidity() == Breakpoint.VALIDITY.INVALID;
+
         if (invalid && !disabled) {
             iconBase += "_broken";
         }

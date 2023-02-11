@@ -388,7 +388,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
         }
         int dotPos = context.getOffset();
         Document doc = context.getDocument();
-        LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
+
         if (isEscapeSequence(doc, dotPos)) { // \" or \' typed
             return;
         }
@@ -401,6 +401,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
         TokenSequence<? extends JsTokenId> ts = LexUtilities.getTokenSequence(
                 doc, dotPos, language);
 
+        LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
         if (ts == null || ld == null) {
             return;
         }

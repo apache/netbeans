@@ -558,8 +558,6 @@ public class Util {
         assert targetFolder != null;
 
         FileObject templateFO = FileUtil.getConfigFile(template);
-        DataObject templateDO = DataObject.find(templateFO);
-        DataFolder dataFolder = DataFolder.findFolder(targetFolder);
 
         //Check if already exists
         String fileName = targetName;
@@ -570,6 +568,9 @@ public class Util {
         if (targetFO != null) {
             return DataFolder.find(targetFO);
         }
+
+        DataObject templateDO = DataObject.find(templateFO);
+        DataFolder dataFolder = DataFolder.findFolder(targetFolder);
 
         if ( map == null ){
             return templateDO.createFromTemplate(dataFolder, targetName);

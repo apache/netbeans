@@ -195,11 +195,7 @@ final class DefaultTabSelectionModel implements SingleSelectionModel,
                 //no differences
                 return;
             }
-            
-            //Get the deleted and added indices
-            Set<Integer> deleted = dif.getDeletedIndices();
-            Set<Integer> added = dif.getAddedIndices();
-            
+
             //create an Integer to compare
             Integer idx = new Integer(getSelectedIndex());
             
@@ -209,7 +205,11 @@ final class DefaultTabSelectionModel implements SingleSelectionModel,
                 cs.fireChange();
                 return;
             }
-            
+
+            //Get the deleted and added indices
+            Set<Integer> deleted = dif.getDeletedIndices();
+            Set<Integer> added = dif.getAddedIndices();
+
             //Iterate all of the deleted items, and count how many were
             //removed at indices lower than the selection, so we can subtract
             //that from the selected index to keep selection on the same tab

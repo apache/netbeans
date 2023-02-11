@@ -278,7 +278,6 @@ public class PluginImporter {
     }
 
     private static Collection<String> getPluginFiles (File cluster, String cnb, File updateTracking) {
-        Collection<String> res = new HashSet<String> ();
         LOG.log(Level.FINE, "Read update_tracking " + updateTracking + " file.");
         Node updateTrackingConf = getUpdateTrackingConf(updateTracking);
         if (updateTrackingConf == null) {
@@ -288,6 +287,7 @@ public class PluginImporter {
         String configFile = "config/Modules/" + cnb.replace ('.', '-') + ".xml"; // NOI18N
 
         moduleFiles.remove (configFile);
+        Collection<String> res = new HashSet<> ();
 
         for (String fileName : moduleFiles) {
             File file = new File (cluster, fileName);

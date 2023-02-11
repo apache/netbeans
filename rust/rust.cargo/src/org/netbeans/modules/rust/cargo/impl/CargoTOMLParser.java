@@ -91,25 +91,25 @@ public class CargoTOMLParser {
 
             // dependencies
             {
-                List<RustPackage> dependencies = getDependencies(cargotoml, parseResult, "dependencies");
+                List<RustPackage> dependencies = getDependencies(cargotoml, parseResult, "dependencies"); // NOI18N
                 cargotoml.setDependencies(dependencies);
             }
 
             // dev-dependencies
             {
-                List<RustPackage> devDependencies = getDependencies(cargotoml, parseResult, "dev-dependencies");
+                List<RustPackage> devDependencies = getDependencies(cargotoml, parseResult, "dev-dependencies"); // NOI18N
                 cargotoml.setDevDependencies(devDependencies);
             }
 
             // build-dependencies
             {
-                List<RustPackage> buildDependencies = getDependencies(cargotoml, parseResult, "build-dependencies");
+                List<RustPackage> buildDependencies = getDependencies(cargotoml, parseResult, "build-dependencies"); // NOI18N
                 cargotoml.setBuildDependencies(buildDependencies);
             }
 
         }
         long end = System.currentTimeMillis();
-        LOG.info(String.format("Parsed '%s' in %5.2g ms.", file.getAbsolutePath(), (end - start) / 1000.0)); //NOI18N
+        LOG.info(String.format("Parsing '%s' took %5.2g ms.", file.getAbsolutePath(), (end - start) / 1000.0)); //NOI18N
     }
 
     private static final List<RustPackage> getDependencies(CargoTOML cargotoml, TomlParseResult parseResult, String propertyKey) {
@@ -126,7 +126,7 @@ public class CargoTOMLParser {
                 packages.add(new RustPackage(cargotoml, key, stringValue));
             } else {
                 // TODO: Add support for github dependencies and registry dependencies https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
-                LOG.warning(String.format("Unrecognized cargo dev-dependency with key '%s', value '%s'", key, value));
+                LOG.warning(String.format("Unrecognized cargo dev-dependency with key '%s', value '%s'", key, value)); // NOI18N
             }
         }
         Collections.sort(packages, (RustPackage a, RustPackage b) -> {

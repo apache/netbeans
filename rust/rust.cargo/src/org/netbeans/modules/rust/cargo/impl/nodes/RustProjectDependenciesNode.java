@@ -19,6 +19,7 @@
 package org.netbeans.modules.rust.cargo.impl.nodes;
 
 import java.awt.Image;
+import javax.swing.Action;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.project.api.RustIconFactory;
 import org.openide.nodes.AbstractNode;
@@ -102,6 +103,11 @@ public final class RustProjectDependenciesNode extends AbstractNode {
     public @Override
     Image getOpenedIcon(int type) {
         return RustIconFactory.getDependenciesFolderIcon(true);
+    }
+
+    @Override
+    public Action[] getActions(boolean context) {
+        return new Action[0];
     }
 
 }

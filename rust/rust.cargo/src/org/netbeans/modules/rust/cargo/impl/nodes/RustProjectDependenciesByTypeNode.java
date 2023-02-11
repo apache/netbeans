@@ -25,6 +25,7 @@ import javax.swing.Action;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.cargo.api.RustPackage;
 import org.netbeans.modules.rust.cargo.impl.nodes.RustProjectDependenciesNode.DependencyType;
+import org.netbeans.modules.rust.cargo.impl.nodes.actions.dependencies.RustAddDependencyAction;
 import org.netbeans.modules.rust.project.api.RustIconFactory;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -90,7 +91,7 @@ public final class RustProjectDependenciesByTypeNode extends AbstractNode {
 
         @Override
         protected Node[] createNodes(RustPackage key) {
-            return new Node[]{new RustPackageNode(key)};
+            return new Node[]{new RustPackageNode(key, dependencyType)};
         }
 
     }
@@ -139,10 +140,16 @@ public final class RustProjectDependenciesByTypeNode extends AbstractNode {
         return RustIconFactory.getDependenciesFolderIcon(true);
     }
 
+    @NbBundle.Messages({
+        "add-dependency=Add dependency...",
+        "add-dev-dependency=Add dev dependency...",
+        "add-build-dependency=Add build dependency...",
+    })
     @Override
     public Action[] getActions(boolean context) {
-        // TODO: Add action here.
-        return new Action[0];
+        return new Action[]{
+            new RustAddDependencyAction(cargotoml, dependencyType)
+        };
     }
 
 }

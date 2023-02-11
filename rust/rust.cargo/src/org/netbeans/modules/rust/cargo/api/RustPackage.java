@@ -32,12 +32,18 @@ public final class RustPackage {
     private final String name;
     private final String version;
     private final SemVer semver;
+    private final String description;
 
     public RustPackage(CargoTOML cargotoml, String name, String version) {
+        this(cargotoml, name, version, null);
+    }
+
+    public RustPackage(CargoTOML cargotoml, String name, String version, String description) {
         this.cargotoml = cargotoml;
         this.name = name;
         this.version = version;
         this.semver = new SemVer(version);
+        this.description = description;
     }
 
     public CargoTOML getCargotoml() {
@@ -56,9 +62,13 @@ public final class RustPackage {
         return semver;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public String toString() {
-        return String.format("%s (%s)", name, version);
+        return String.format("%s (%s)", name, version); // NOI18N
     }
 
 }

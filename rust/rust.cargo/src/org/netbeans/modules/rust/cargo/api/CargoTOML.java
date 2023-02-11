@@ -33,6 +33,9 @@ import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  * CargoTOML is responsible for parsing the "Cargo.toml" file in a Rust project.
@@ -46,6 +49,8 @@ public final class CargoTOML implements FileChangeListener {
 
     private final FileObject cargotoml;
     private transient final PropertyChangeSupport propertyChangeSupport;
+    private final InstanceContent instanceContent;
+    private final Lookup lookup;
 
     /**
      * Creates, and parses, a Rust Cargo.toml file.
@@ -57,6 +62,8 @@ public final class CargoTOML implements FileChangeListener {
     public CargoTOML(FileObject cargotoml) throws IOException {
         this.cargotoml = cargotoml;
         this.propertyChangeSupport = new SwingPropertyChangeSupport(this);
+        this.instanceContent = new InstanceContent();
+        this.lookup = new AbstractLookup(this.instanceContent);
         if (cargotoml == null) {
             throw new IOException("File Cargo.toml cannot be null"); // NOI18N
         }
@@ -64,18 +71,21 @@ public final class CargoTOML implements FileChangeListener {
         cargotoml.addFileChangeListener(this);
     }
 
+    public Lookup getLookup() {
+        return lookup;
+    }
+
     private void reparse() throws IOException {
         try {
             CargoTOMLParser.parseCargoToml(cargotoml, this);
         } catch (IOException ioe) {
             throw ioe;
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             String message = String.format("Couldn't load Cargo.toml file: %s:%s", e.getMessage(), e.getClass().getName());
             LOG.log(Level.SEVERE, message, e);
             throw new IOException(message);
         }
     }
-
 
     /**
      * Add PropertyChangeListener.
@@ -133,7 +143,7 @@ public final class CargoTOML implements FileChangeListener {
     // - Getters / setters
     private String packageName;
 
-    public static final String PROP_PACKAGENAME = "packageName";
+    public static final String PROP_PACKAGENAME = "packageName"; // NOI18N
 
     /**
      * Get the value of packageName
@@ -157,7 +167,7 @@ public final class CargoTOML implements FileChangeListener {
 
     private String version;
 
-    public static final String PROP_VERSION = "version";
+    public static final String PROP_VERSION = "version"; // NOI18N
 
     /**
      * Get the value of version
@@ -179,9 +189,9 @@ public final class CargoTOML implements FileChangeListener {
         propertyChangeSupport.firePropertyChange(PROP_VERSION, oldVersion, version);
     }
 
-    private String edition = "2015";
+    private String edition = "2015"; // NOI18N
 
-    public static final String PROP_EDITION = "edition";
+    public static final String PROP_EDITION = "edition"; // NOI18N
 
     /**
      * Get the value of edition
@@ -205,7 +215,7 @@ public final class CargoTOML implements FileChangeListener {
 
     private String documentation;
 
-    public static final String PROP_DOCUMENTATION = "documentation";
+    public static final String PROP_DOCUMENTATION = "documentation"; // NOI18N
 
     /**
      * Get the value of documentation
@@ -229,7 +239,7 @@ public final class CargoTOML implements FileChangeListener {
 
     private String homePage;
 
-    public static final String PROP_HOMEPAGE = "homePage";
+    public static final String PROP_HOMEPAGE = "homePage"; // NOI18N
 
     /**
      * Get the value of homePage
@@ -253,7 +263,7 @@ public final class CargoTOML implements FileChangeListener {
 
     private String rustVersion;
 
-    public static final String PROP_RUSTVERSION = "rustVersion";
+    public static final String PROP_RUSTVERSION = "rustVersion"; // NOI18N
 
     /**
      * Get the value of rustVersion
@@ -277,7 +287,7 @@ public final class CargoTOML implements FileChangeListener {
 
     private String description;
 
-    public static final String PROP_DESCRIPTION = "description";
+    public static final String PROP_DESCRIPTION = "description"; // NOI18N
 
     /**
      * Get the value of description
@@ -301,7 +311,7 @@ public final class CargoTOML implements FileChangeListener {
 
     private List<RustPackage> dependencies = new ArrayList<>();
 
-    public static final String PROP_DEPENDENCIES = "dependencies";
+    public static final String PROP_DEPENDENCIES = "dependencies"; // NOI18N
 
     /**
      * Get the value of dependencies
@@ -325,6 +335,7 @@ public final class CargoTOML implements FileChangeListener {
 
     /**
      * Returns the FileObject for this Cargo.toml file.
+     *
      * @return the FileObject for this Cargo.toml file.
      */
     public FileObject getFileObject() {
@@ -333,7 +344,7 @@ public final class CargoTOML implements FileChangeListener {
 
     private List<RustPackage> devDependencies = new ArrayList<>();
 
-    public static final String PROP_DEVDEPENDENCIES = "devDependencies";
+    public static final String PROP_DEVDEPENDENCIES = "devDependencies"; // NOI18N
 
     /**
      * Get the value of devDependencies
@@ -357,7 +368,7 @@ public final class CargoTOML implements FileChangeListener {
 
     private List<RustPackage> buildDependencies = new ArrayList<>();
 
-    public static final String PROP_BUILDDEPENDENCIES = "buildDependencies";
+    public static final String PROP_BUILDDEPENDENCIES = "buildDependencies"; // NOI18N
 
     /**
      * Get the value of buildDependencies

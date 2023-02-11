@@ -19,7 +19,10 @@
 package org.netbeans.modules.rust.cargo.impl.nodes;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Function;
+import javax.swing.Action;
 import org.netbeans.modules.rust.cargo.api.RustPackage;
+import org.netbeans.modules.rust.cargo.impl.nodes.actions.dependencies.RustRemoveDependencyAction;
 import org.netbeans.modules.rust.project.api.RustProjectAPI;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -36,35 +39,49 @@ import org.openide.util.lookup.InstanceContent;
  */
 @NbBundle.Messages({
     "NAME=Name",
+    "VERSION=Version",
     "MAJOR=Major version",
     "MINOR=Minor version",
     "PATCH=Patch version",
+    "DESCRIPTION=Description",
     "NAME_DESC=The name of this package",
+    "VERSION_DESC=The version of this package",
     "MAJOR_DESC=The major version of this package",
     "MINOR_DESC=The minor version of this package",
-    "PATCH_DESC=The patch version of this package",})
+    "PATCH_DESC=The patch version of this package",
+    "DESCRIPTION_DESC=The description of this package"
+})
 public final class RustPackageNode extends AbstractNode {
 
     public enum PROPS {
         NAME,
+        VERSION,
         MAJOR,
         MINOR,
-        PATCH;
+        PATCH,
+        DESCRIPTION;
     }
 
     private final RustPackage rustPackage;
+    private final RustProjectDependenciesNode.DependencyType dependencyType;
 
-    public RustPackageNode(RustPackage rustPackage) {
-        this(rustPackage, new InstanceContent());
+    public RustPackageNode(RustPackage rustPackage, RustProjectDependenciesNode.DependencyType dependencyType) {
+        this(rustPackage, dependencyType, new InstanceContent());
     }
 
-    private RustPackageNode(RustPackage rustPackage, InstanceContent ic) {
+    private RustPackageNode(RustPackage rustPackage, RustProjectDependenciesNode.DependencyType dependencyType, InstanceContent ic) {
         super(Children.LEAF, new AbstractLookup(ic));
         this.rustPackage = rustPackage;
+        this.dependencyType = dependencyType;
         setIconBaseWithExtension(RustProjectAPI.ICON);
-        setDisplayName(String.format("%s (%s)", rustPackage.getName(), rustPackage.getVersion()));
-        ic.add(rustPackage);
-        ic.add(rustPackage.getCargotoml());
+        if (rustPackage != null) {
+            setDisplayName(String.format("%s (%s)", rustPackage.getName(), rustPackage.getVersion()));
+            if (rustPackage.getDescription() != null) {
+                setShortDescription(rustPackage.getDescription());
+            }
+            ic.add(rustPackage);
+            ic.add(rustPackage.getCargotoml());
+        }
     }
 
     private static final String I18N(String key) {
@@ -79,52 +96,57 @@ public final class RustPackageNode extends AbstractNode {
         // Create a set of properties
         Sheet.Set set = Sheet.createPropertiesSet();
 
-        // The Name read-only property
-        Property<String> name = new PropertySupport.ReadOnly<String>(PROPS.NAME.name(), String.class, I18N("NAME"), I18N("NAME_DESC")) {
-            @Override
-            public String getValue() throws IllegalAccessException, InvocationTargetException {
-                return rustPackage.getName();
-            }
-        };
-        set.put(name);
-
-        Property<String> major
-                = new PropertySupport.ReadOnly<String>(PROPS.MAJOR.name(), String.class, I18N("MAJOR"), I18N("MAJOR_DESC")) {
-
-            @Override
-            public String getValue() throws IllegalAccessException, InvocationTargetException {
-                return Long.toString(rustPackage.getSemver().getMajor());
-            }
-
-        };
-        set.put(major);
-
-        Property<String> minor
-                = new PropertySupport.ReadOnly<String>(PROPS.MINOR.name(), String.class, I18N("MINOR"), I18N("MINOR_DESC")) {
-
-            @Override
-            public String getValue() throws IllegalAccessException, InvocationTargetException {
-                return Long.toString(rustPackage.getSemver().getMinor());
-            }
-
-        };
-        set.put(minor);
-
-        Property<String> patch
-                = new PropertySupport.ReadOnly<String>(PROPS.PATCH.name(), String.class, I18N("PATCH"), I18N("PATCH_DESC")) {
-
-            @Override
-            public String getValue() throws IllegalAccessException, InvocationTargetException {
-                return Long.toString(rustPackage.getSemver().getMinor());
-            }
-
-        };
-        set.put(patch);
+        set.put(getNameProperty());
+        set.put(getMajorProperty());
+        set.put(getMinorProperty());
+        set.put(getPatchProperty());
+        set.put(getDescriptionProperty());
 
         // Add the set of properties to the sheet
         sheet.put(set);
 
         return sheet;
+    }
+
+    public Property<String> getNameProperty() {
+        return getStringProperty(PROPS.NAME, RustPackage::getName);
+    }
+
+    public Property<String> getMajorProperty() {
+        return getStringProperty(PROPS.MAJOR, (p) -> "" + p.getSemver().getMajor());
+    }
+
+    public Property<String> getMinorProperty() {
+        return getStringProperty(PROPS.MINOR, p -> "" + p.getSemver().getMinor());
+    }
+
+    public Property<String> getPatchProperty() {
+        return getStringProperty(PROPS.PATCH, p -> "" + p.getSemver().getPatch());
+    }
+
+    public Property<String> getVersionProperty() {
+        return getStringProperty(PROPS.VERSION, RustPackage::getVersion);
+    }
+
+    public Property<String> getDescriptionProperty() {
+        return getStringProperty(PROPS.DESCRIPTION, RustPackage::getDescription);
+    }
+
+    private Property<String> getStringProperty(PROPS props, Function<RustPackage, String> value) {
+        Property<String> property = new PropertySupport.ReadOnly<String>(props.name(), String.class, I18N(props.name()), I18N(props.name() + "_DESC")) {
+            @Override
+            public String getValue() throws IllegalAccessException, InvocationTargetException {
+                return value.apply(rustPackage);
+            }
+        };
+        return property;
+    }
+
+    @Override
+    public Action[] getActions(boolean context) {
+        return new Action[]{
+            new RustRemoveDependencyAction(rustPackage.getCargotoml(), rustPackage, dependencyType)
+        };
     }
 
 }

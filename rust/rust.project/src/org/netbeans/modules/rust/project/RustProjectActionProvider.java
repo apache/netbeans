@@ -21,10 +21,11 @@ package org.netbeans.modules.rust.project;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.rust.cargo.api.CargoBuild;
+import org.netbeans.modules.rust.cargo.api.CargoCommand;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Lookup;
+import org.netbeans.modules.rust.cargo.api.Cargo;
 
 /**
  * An ActionProvider for Rust projects.
@@ -54,29 +55,29 @@ public final class RustProjectActionProvider implements ActionProvider {
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
         // TODO: Enhance this
-        CargoBuild build = Lookup.getDefault().lookup(CargoBuild.class);
+        Cargo build = Lookup.getDefault().lookup(Cargo.class);
         if (build == null) {
             LOG.log(Level.INFO, String.format("No CargoBuild in this application."));
         } else {
-            CargoBuild.CargoBuildCommand[] commands = {};
+            CargoCommand[] commands = {};
             CargoTOML cargotoml = project.getCargoTOML();
             switch (command) {
                 case COMMAND_BUILD:
-                    commands = new CargoBuild.CargoBuildCommand[]{CargoBuild.CargoBuildCommand.CARGO_BUILD};
+                    commands = new CargoCommand[]{CargoCommand.CARGO_BUILD};
                     break;
                 case COMMAND_CLEAN:
-                    commands = new CargoBuild.CargoBuildCommand[]{CargoBuild.CargoBuildCommand.CARGO_CLEAN};
+                    commands = new CargoCommand[]{CargoCommand.CARGO_CLEAN};
                     break;
                 case COMMAND_REBUILD:
-                    commands = new CargoBuild.CargoBuildCommand[]{CargoBuild.CargoBuildCommand.CARGO_CLEAN, CargoBuild.CargoBuildCommand.CARGO_BUILD};
+                    commands = new CargoCommand[]{CargoCommand.CARGO_CLEAN, CargoCommand.CARGO_BUILD};
                     break;
                 case COMMAND_RUN:
-                    commands = new CargoBuild.CargoBuildCommand[]{CargoBuild.CargoBuildCommand.CARGO_RUN};
+                    commands = new CargoCommand[]{CargoCommand.CARGO_RUN};
                 default:
                     LOG.log(Level.WARNING, String.format("Invoked action %s but cannot find a CargoBuild mode for it", command));
             }
             try {
-                build.build(project, commands);
+                build.cargo(project.getCargoTOML(), commands);
             } catch (IOException ioe) {
                 throw new IllegalArgumentException(ioe.getMessage(), ioe);
             }

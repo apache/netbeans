@@ -18,85 +18,104 @@
  */
 package org.netbeans.modules.rust.cargo.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.rust.cargo.api.CargoBuild;
+import org.netbeans.modules.rust.cargo.api.CargoCommand;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
+import org.netbeans.modules.rust.cargo.api.Cargo;
+import org.netbeans.modules.rust.cargo.api.RustPackage;
+import org.openide.LifecycleManager;
 
 /**
+ * CargoBuildImpl is used to invoke a set of predefined "cargo" commands.
  *
  * @author antonio
  */
-@ServiceProvider(service = CargoBuild.class)
-public class CargoBuildImpl implements CargoBuild {
+@ServiceProvider(service = Cargo.class)
+public class CargoBuildImpl implements Cargo {
 
     private static final Logger LOG = Logger.getLogger(CargoBuildImpl.class.getName());
 
     /**
-     * A Callable used to invoke one Cargo command (such as "cargo build", for
-     * instance.
+     * A Callable used to invoke a single Cargo command (such as "cargo cargo",
+     * for instance.
      */
     private static class CargoProcess implements Callable<Process> {
 
-        private final Project project;
-        private final CargoBuildCommand command;
+        private final CargoTOML cargotoml;
+        private final CargoCommand command;
         private final InputOutput console;
+        private final String[] options;
 
-        CargoProcess(Project project, CargoBuildCommand command, InputOutput console) {
-            this.project = project;
+        CargoProcess(CargoTOML cargotoml, CargoCommand command, String[] options, InputOutput console) {
+            this.cargotoml = cargotoml;
             this.command = command;
             this.console = console;
+            this.options = options;
         }
 
         @Override
         public Process call() throws Exception {
             org.netbeans.api.extexecution.base.ProcessBuilder pb = org.netbeans.api.extexecution.base.ProcessBuilder.getLocal();
 
-            File workingDirectory = FileUtil.toFile(project.getProjectDirectory());
+            ArrayList<String> arguments = new ArrayList<>();
+            arguments.addAll(Arrays.asList(command.arguments));
+            if (options != null) {
+                arguments.addAll(Arrays.asList(options));
+            }
+
+            File workingDirectory = FileUtil.toFile(cargotoml.getFileObject()).getParentFile();
             pb.setWorkingDirectory(workingDirectory.getAbsolutePath());
             pb.setRedirectErrorStream(false);
-            pb.setExecutable("cargo");
-            pb.setArguments(Arrays.asList(command.arguments));
+            pb.setExecutable("cargo"); // NOI18N
+            pb.setArguments(arguments);
 
-            console.getOut().println(String.format("-- cargo %s --", String.join(",", command.arguments)));
+            console.getOut().println(String.format("%n$ cargo %s", String.join(" ", arguments))); // NOI18N
 
             return pb.call();
         }
     }
 
     /**
-     *
+     * A Callable used to invoke an array of commands.
      */
     public static class SequentialCargoProcesses implements Callable<Integer> {
 
-        private final Project project;
-        private final CargoBuildCommand[] commands;
+        private final CargoTOML cargotoml;
+        private final CargoCommand[] commands;
+        private final String[] options;
 
-        SequentialCargoProcesses(Project project, CargoBuildCommand[] commands) {
-            this.project = project;
+        SequentialCargoProcesses(CargoTOML cargotoml, CargoCommand[] commands, String[] options) {
+            this.cargotoml = cargotoml;
             this.commands = commands;
+            this.options = options;
         }
 
         @Override
         public Integer call() throws Exception {
             // Get a proper console for the input/output
-            String projectName = ProjectUtils.getInformation(project).getName();
-            String commandNames = Arrays.stream(commands).map(CargoBuildCommand::getDisplayName).collect(Collectors.joining(","));
-            String ioName = String.format("%s (%s)", projectName, commandNames);
+            String projectName = cargotoml.getPackageName();
+            String commandNames = Arrays.stream(commands).map(CargoCommand::getDisplayName).collect(Collectors.joining(",")); // NOI18N
+            String ioName = String.format("%s (%s)", projectName, commandNames); // NOI18N
             InputOutput console = IOProvider.getDefault().getIO(ioName, false);
 
             ExecutionDescriptor ed = new ExecutionDescriptor()
@@ -110,13 +129,13 @@ public class CargoBuildImpl implements CargoBuild {
 
             int resultCode = 0;
 
-            for (CargoBuildCommand command : commands) {
-                CargoProcess process = new CargoProcess(project, command, console);
+            for (CargoCommand command : commands) {
+                CargoProcess process = new CargoProcess(cargotoml, command, options, console);
                 ExecutionService service = ExecutionService.newService(process, ed, ioName);
                 Future<Integer> resultCodeFuture = service.run();
                 resultCode = resultCodeFuture.get();
                 if (resultCode != 0) {
-                    console.getErr().println(String.format("Command \"cargo %s\" failed with exit status %d",
+                    console.getErr().println(String.format("Command \"cargo %s\" failed with exit status %d", // NOI18N
                             String.join(" ", command.arguments),
                             resultCode));
                     break;
@@ -134,16 +153,106 @@ public class CargoBuildImpl implements CargoBuild {
     }
 
     @Override
-    public void build(Project project, CargoBuildCommand[] commands) throws IOException {
-        CargoTOML cargotoml = project.getLookup().lookup(CargoTOML.class);
+    public void cargo(CargoTOML cargotoml, CargoCommand[] commands, String... options) throws IOException {
         if (cargotoml == null) {
-            throw new IOException(String.format("Don't know how to run  project (%s) that has not a Cargo.toml on its lookup",
-                    project.getProjectDirectory().getNameExt()));
+            throw new NullPointerException("Missing Cargo.tomml file"); // NOI18N
         }
         if (commands.length == 0) {
             return;
         }
-        requestProcessor.submit(new SequentialCargoProcesses(project, commands));
+        // Let's save stuff just in case
+        LifecycleManager.getDefault().saveAll();
+        requestProcessor.submit(new SequentialCargoProcesses(cargotoml, commands, options));
+    }
+
+    /**
+     * Runs `cargo search [text] --limit 15 --color never`
+     */
+    private static final class CargoSearch implements Callable<List<RustPackage>> {
+
+        private final String text;
+        private final CargoTOML cargotoml;
+
+        public CargoSearch(CargoTOML cargotoml, String text) {
+            this.cargotoml = cargotoml;
+            this.text = text;
+        }
+
+        @Override
+        public List<RustPackage> call() throws Exception {
+            org.netbeans.api.extexecution.base.ProcessBuilder pb = org.netbeans.api.extexecution.base.ProcessBuilder.getLocal();
+            File workingDirectory = new File(System.getProperty("user.home")); // NOI18N
+            pb.setWorkingDirectory(workingDirectory.getAbsolutePath());
+            pb.setRedirectErrorStream(false);
+            pb.setExecutable("cargo");
+            String[] arguments = {
+                "search", // NOI18N
+                text, // TODO: What happens with spaces?
+                "--limit", // NOI18N
+                "15", // NOI18N
+                "--color", // NOI18N
+                "never", // NOI18N
+            };
+            pb.setArguments(Arrays.asList(arguments));
+            Process process = pb.call();
+            ArrayList<String> lines = new ArrayList<>(20);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                do {
+                    String line = reader.readLine();
+                    if (line == null) {
+                        break;
+                    }
+                    lines.add(line);
+                } while (true);
+            }
+            process.waitFor(5, TimeUnit.SECONDS);
+            List<RustPackage> packages = filterLines(cargotoml, lines);
+            process.destroy();
+            return packages;
+        }
+
+    }
+
+    static List<RustPackage> filterLines(CargoTOML cargotoml, List<String> lines) {
+        ArrayList<RustPackage> packages = new ArrayList<>(lines.size());
+        for (String line : lines) {
+            String name = null;
+            String version = null;
+            String description = null;
+            int i = line.indexOf(' ');
+            if (i == -1) {
+                break;
+            }
+            name = line.substring(0, i);
+            line = line.substring(i + 1);
+
+            i = line.indexOf('"');
+            if (i == -1) {
+                break;
+            }
+            line = line.substring(i + 1);
+            i = line.indexOf('"');
+            if (i == -1) {
+                break;
+            }
+            version = line.substring(0, i);
+            line = line.substring(i + 1);
+            i = line.indexOf('#');
+            if (i == -1) {
+                break;
+            }
+            description = line.substring(i + 1);
+            description = description.replace("\n", "");
+
+            RustPackage rustPackage = new RustPackage(cargotoml, name, version, description);
+            packages.add(rustPackage);
+        }
+        return packages;
+    }
+
+    @Override
+    public Future<List<RustPackage>> search(CargoTOML cargotoml, String text) throws IOException {
+        return requestProcessor.submit(new CargoSearch(cargotoml, text));
     }
 
 }

@@ -20,7 +20,7 @@ package org.netbeans.modules.rust.project.ui.src;
 
 import java.awt.Image;
 import org.netbeans.modules.rust.project.RustProject;
-import org.netbeans.modules.rust.project.ui.resources.IconFactory;
+import org.netbeans.modules.rust.project.api.RustIconFactory;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.FilterNode;
@@ -53,12 +53,12 @@ public class RustProjectSrcNode extends FilterNode {
 
     @Override
     public Image getOpenedIcon(int type) {
-        return IconFactory.getSourceFolderIcon(true);
+        return RustIconFactory.getSourceFolderIcon(true);
     }
 
     @Override
     public Image getIcon(int type) {
-        return IconFactory.getSourceFolderIcon(false);
+        return RustIconFactory.getSourceFolderIcon(false);
     }
 
 }

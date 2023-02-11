@@ -26,9 +26,8 @@ import javax.swing.ImageIcon;
 import javax.swing.event.SwingPropertyChangeSupport;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.project.api.RustProjectAPI;
-import org.netbeans.modules.rust.project.cargotoml.CargoTOML;
-import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 
 /**

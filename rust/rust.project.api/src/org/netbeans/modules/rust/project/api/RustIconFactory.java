@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.rust.project.ui.resources;
+package org.netbeans.modules.rust.project.api;
 
 import java.awt.Image;
 import javax.swing.Icon;
@@ -24,16 +24,16 @@ import javax.swing.UIManager;
 import org.openide.util.ImageUtilities;
 
 /**
- * Images/icons for different nodes.
+ * Images/icons for different Rust nodes.
  */
-public final class IconFactory {
+public final class RustIconFactory {
 
     private static final String ICON_KEY_UIMANAGER = "Tree.closedIcon"; // NOI18N
     private static final String OPENED_ICON_KEY_UIMANAGER = "Tree.openIcon"; // NOI18N
     private static final String ICON_KEY_UIMANAGER_NB = "Nb.Explorer.Folder.icon"; // NOI18N
     private static final String OPENED_ICON_KEY_UIMANAGER_NB = "Nb.Explorer.Folder.openedIcon"; // NOI18N
-    private static final String OPENED_ICON_PATH = "org/netbeans/modules/rust/project/ui/resources/defaultFolderOpen.gif";  // NOI18N
-    private static final String ICON_PATH = "org/netbeans/modules/rust/project/ui/resources/defaultFolder.gif"; // NOI18N
+    private static final String OPENED_ICON_PATH = "org/netbeans/modules/rust/project/api/defaultFolderOpen.gif";  // NOI18N
+    private static final String ICON_PATH = "org/netbeans/modules/rust/project/api/defaultFolder.gif"; // NOI18N
 
     public static Image getTreeFolderIcon(boolean opened) {
         Image base = (Image) UIManager.get(opened ? OPENED_ICON_KEY_UIMANAGER_NB : ICON_KEY_UIMANAGER_NB); // #70263;
@@ -51,19 +51,19 @@ public final class IconFactory {
 
     public static Image getSourceFolderIcon(boolean opened) {
         Image base = getTreeFolderIcon(opened);
-        Image badge = ImageUtilities.loadImage("org/netbeans/modules/rust/project/ui/resources/sources-badge.png"); // NOI18N
+        Image badge = ImageUtilities.loadImage("org/netbeans/modules/rust/project/api/sources-badge.png"); // NOI18N
         return ImageUtilities.mergeImages(base, badge, 8, 8);
     }
 
     public static Image getDependenciesFolderIcon(boolean opened) {
         Image base = getTreeFolderIcon(opened);
-        Image badge = ImageUtilities.loadImage("org/netbeans/modules/rust/project/ui/resources/libraries-badge.png"); // NOI18N
+        Image badge = ImageUtilities.loadImage("org/netbeans/modules/rust/project/api/libraries-badge.png"); // NOI18N
         return ImageUtilities.mergeImages(base, badge, 8, 8);
     }
 
     public static Image getImportantFilesFolderIcon(boolean opened) {
         Image base = getTreeFolderIcon(opened);
-        Image badge = ImageUtilities.loadImage("org/netbeans/modules/rust/project/ui/resources/config-badge.gif"); // NOI18N
+        Image badge = ImageUtilities.loadImage("org/netbeans/modules/rust/project/api/config-badge.gif"); // NOI18N
         return ImageUtilities.mergeImages(base, badge, 8, 8);
     }
 

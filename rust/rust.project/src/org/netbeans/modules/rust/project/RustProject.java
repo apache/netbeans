@@ -21,14 +21,12 @@ package org.netbeans.modules.rust.project;
 import java.io.IOException;
 import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.project.api.RustProjectAPI;
-import org.netbeans.modules.rust.project.cargotoml.CargoTOML;
 import org.netbeans.modules.rust.project.ui.RustProjectLogicalViewProvider;
 import org.netbeans.modules.rust.project.ui.customizer.RustProjectCustomizerProvider2;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.support.LookupProviderSupport;
-import org.netbeans.spi.project.ui.PrivilegedTemplates;
-import org.netbeans.spi.project.ui.RecommendedTemplates;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
@@ -59,12 +57,11 @@ public final class RustProject implements Project {
     private final RustProjectInformation information;
     private final CargoTOML cargotoml;
 
-    public RustProject(FileObject projectDirectory, ProjectState state) throws IOException {
+    public RustProject(FileObject projectDirectory, CargoTOML cargotoml, ProjectState state) throws IOException {
         this.projectDirectory = projectDirectory;
         this.instanceContent = new InstanceContent();
         this.state = state;
-        FileObject cargotmolFile = projectDirectory.getFileObject("Cargo.toml"); // NOI18N
-        this.cargotoml = new CargoTOML(cargotmolFile);
+        this.cargotoml = cargotoml;
         this.information = new RustProjectInformation(this);
         // Prepare lookup
         instanceContent.add(information);

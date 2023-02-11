@@ -22,8 +22,8 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.project.api.RustProjectAPI;
-import org.netbeans.modules.rust.project.cargotoml.CargoTOML;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectFactory2;
 import org.netbeans.spi.project.ProjectState;
@@ -39,15 +39,22 @@ public final class RustProjectFactory implements ProjectFactory2 {
 
     @Override
     public Project loadProject(FileObject projectDirectory, ProjectState state) throws IOException {
-        if (!isProject(projectDirectory)) {
+        if (isProject2(projectDirectory) == null) {
             return null;
         }
-        return new RustProject(projectDirectory, state);
+        FileObject cargotoml = projectDirectory.getFileObject("Cargo.toml");
+        CargoTOML cargo = null;
+        try {
+            cargo = new CargoTOML(cargotoml);
+        } catch (IOException ex) {
+            return null;
+        }
+        return new RustProject(projectDirectory, cargo, state);
     }
 
     @Override
     public void saveProject(Project project) throws IOException, ClassCastException {
-        ((RustProject)project).save();
+        ((RustProject) project).save();
     }
 
     @Override
@@ -60,7 +67,7 @@ public final class RustProjectFactory implements ProjectFactory2 {
             return null;
         }
         FileObject src = projectDirectory.getFileObject("src");
-        if (src == null || ! src.isFolder()) {
+        if (src == null || !src.isFolder()) {
             return null;
         }
         return new ProjectManager.Result(new ImageIcon(ImageUtilities.loadImage(RustProjectAPI.ICON)));

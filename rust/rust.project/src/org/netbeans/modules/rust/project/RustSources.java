@@ -25,7 +25,7 @@ import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.modules.rust.project.ui.resources.IconFactory;
+import org.netbeans.modules.rust.project.api.RustIconFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
@@ -87,7 +87,7 @@ public class RustSources implements Sources, SourceGroup {
 
     @Override
     public Icon getIcon(boolean opened) {
-        return new ImageIcon(IconFactory.getSourceFolderIcon(opened));
+        return new ImageIcon(RustIconFactory.getSourceFolderIcon(opened));
     }
 
     @Override

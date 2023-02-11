@@ -36,6 +36,7 @@ import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.templates.TemplateRegistration;
+import org.netbeans.modules.rust.project.api.RustProjectAPI;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -50,7 +51,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-@TemplateRegistration(folder = "Project/Rust", displayName = "#RustProjectTemplate_displayName", description = "RustProjectTemplateDescription.html", iconBase = "org/netbeans/modules/rust/project/resources/rust-logo.png", content = "RustProjectTemplateProject.zip", position = 1000)
+@TemplateRegistration(folder = "Project/Rust",
+        displayName = "#RustProjectTemplate_displayName", 
+        description = "RustProjectTemplateDescription.html", 
+        iconBase = RustProjectAPI.ICON, 
+        content = "RustProjectTemplateProject.zip", 
+        position = 1000)
 @Messages("RustProjectTemplate_displayName=New Rust project")
 public class RustProjectTemplateWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
 

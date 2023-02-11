@@ -16,31 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.rust.project.cargotoml;
+package org.netbeans.modules.rust.cargo.api;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.swing.event.SwingPropertyChangeSupport;
-import org.netbeans.modules.rust.project.RustProject;
+import org.netbeans.modules.rust.cargo.impl.CargoTOMLParser;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
-import org.openide.filesystems.FileUtil;
-import org.tomlj.Toml;
-import org.tomlj.TomlParseError;
-import org.tomlj.TomlParseResult;
 
 /**
  * CargoTOML is responsible for parsing the "Cargo.toml" file in a Rust project.
@@ -48,7 +40,7 @@ import org.tomlj.TomlParseResult;
  * @see <a href="https://doc.rust-lang.org/cargo/reference/manifest.html">Rust -
  * The Manifest Format</a>
  */
-public class CargoTOML implements FileChangeListener {
+public final class CargoTOML implements FileChangeListener {
 
     private static final Logger LOG = Logger.getLogger(CargoTOML.class.getName());
 
@@ -73,60 +65,17 @@ public class CargoTOML implements FileChangeListener {
     }
 
     private void reparse() throws IOException {
-        parseCargoToml(cargotoml, this);
+        try {
+            CargoTOMLParser.parseCargoToml(cargotoml, this);
+        } catch (IOException ioe) {
+            throw ioe;
+        } catch(Throwable e) {
+            String message = String.format("Couldn't load Cargo.toml file: %s:%s", e.getMessage(), e.getClass().getName());
+            LOG.log(Level.SEVERE, message, e);
+            throw new IOException(message);
+        }
     }
 
-    /**
-     * Parses a Cargo.toml file.
-     *
-     * @param cargoTomlFile The "Cargo.toml" file to parse.
-     * @param cargotoml The CargoTOML resulting object.
-     * @throws IOException in case of error.
-     */
-    public static void parseCargoToml(FileObject cargoTomlFile, CargoTOML cargotoml) throws IOException {
-        File file = FileUtil.toFile(cargoTomlFile);
-        if (!file.exists() || !file.isFile() || !file.canRead()) {
-            throw new IOException(String.format("Cannot read file '%s'", file.getAbsolutePath())); // NOI18N
-        }
-        long start = System.currentTimeMillis();
-        // As per the specification, .toml files are always UTF-8
-        try (BufferedReader fileContent = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
-
-            TomlParseResult parseResult = Toml.parse(fileContent);
-
-            List<TomlParseError> errors = parseResult.errors().stream().collect(Collectors.toList());
-            if (!errors.isEmpty()) {
-                final String fileName = file.getAbsolutePath();
-                errors.forEach((e) -> {
-                    LOG.warning(String.format("Error parsing '%s': '%s'", fileName, e.getMessage())); // NOI18N
-                });
-                throw new IOException(String.format("Errors parsing '%s'. See log for details", fileName)); // NOI18N
-            }
-
-            String packageName = parseResult.getString("package.name"); // NOI18N
-            String version = parseResult.getString("package.version"); // NOI18N
-            String edition = parseResult.getString("package.edition"); // NOI18N
-            edition = edition == null ? "2015" : edition;
-            String rustVersion = parseResult.getString("package.rust-version"); // NOI18N
-            String description = parseResult.getString("package.description"); // NOI18N
-            String documentation = parseResult.getString("package.documentation"); // NOI18N
-            String homepage = parseResult.getString("package.homepage");
-
-            // TODO: Read more stuff, including 
-            cargotoml.setPackageName(packageName);
-            cargotoml.setVersion(version);
-            cargotoml.setEdition(edition);
-            cargotoml.setDocumentation(documentation);
-            cargotoml.setHomePage(homepage);
-            cargotoml.setDescription(description);
-            cargotoml.setRustVersion(rustVersion);
-
-        }
-        long end = System.currentTimeMillis();
-
-        LOG.info(String.format("Parsed '%s' in %5.2g ms.", file.getAbsolutePath(), (end - start) / 1000.00));  //NOI18N
-
-    }
 
     /**
      * Add PropertyChangeListener.
@@ -348,6 +297,30 @@ public class CargoTOML implements FileChangeListener {
         String oldDescription = this.description;
         this.description = description;
         propertyChangeSupport.firePropertyChange(PROP_DESCRIPTION, oldDescription, description);
+    }
+
+    private List<RustPackage> dependencies = new ArrayList<>();
+
+    public static final String PROP_DEPENDENCIES = "dependencies";
+
+    /**
+     * Get the value of dependencies
+     *
+     * @return the value of dependencies
+     */
+    public List<RustPackage> getDependencies() {
+        return dependencies;
+    }
+
+    /**
+     * Set the value of dependencies
+     *
+     * @param dependencies new value of dependencies
+     */
+    public void setDependencies(List<RustPackage> dependencies) {
+        List<RustPackage> oldDependencies = this.dependencies;
+        this.dependencies = Collections.unmodifiableList(dependencies);
+        propertyChangeSupport.firePropertyChange(PROP_DEPENDENCIES, oldDependencies, dependencies);
     }
 
 }

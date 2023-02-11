@@ -18,23 +18,17 @@
  */
 package org.netbeans.modules.rust.project.ui;
 
-import org.netbeans.modules.rust.project.ui.src.RustProjectSrcNode;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.util.List;
 import javax.swing.Action;
+import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.project.RustProject;
 import org.netbeans.modules.rust.project.api.RustProjectAPI;
-import org.netbeans.modules.rust.project.cargotoml.CargoTOML;
-import org.netbeans.modules.rust.project.ui.important.RustProjectImportantFilesNode;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
-import org.openide.loaders.DataObjectNotFoundException;
+import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -44,62 +38,6 @@ import org.openide.util.lookup.InstanceContent;
  */
 public class RustProjectRootNode extends AbstractNode implements PropertyChangeListener {
 
-    private enum ROOT_CHILDREN {
-        SRC,
-        DEPENDENCIES,
-        IMPORTANT_FILES,
-    };
-
-    private static final class RustProjectRootNodeChildren extends Children.Keys<ROOT_CHILDREN> implements PropertyChangeListener {
-
-        private final RustProject project;
-
-        RustProjectRootNodeChildren(RustProject project) {
-            this.project = project;
-        }
-
-        @Override
-        protected void addNotify() {
-            project.getCargoTOML().addPropertyChangeListener(this);
-            setKeys(ROOT_CHILDREN.values());
-        }
-
-        @Override
-        protected void removeNotify() {
-            project.getCargoTOML().removePropertyChangeListener(this);
-        }
-
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            String name = evt.getPropertyName();
-            // TODO: Listen for "dependencies" and update the dependencies node.
-        }
-
-        @Override
-        protected Node[] createNodes(ROOT_CHILDREN key) {
-            switch (key) {
-                case SRC: 
-                    try {
-                    return new Node[]{new RustProjectSrcNode(project)};
-                } catch (DataObjectNotFoundException ex) {
-                    Exceptions.printStackTrace(ex);
-                    return new Node[0];
-                }
-                case DEPENDENCIES:
-                    // TODO: Add dependencies.
-                    return new Node[0];
-                case IMPORTANT_FILES:
-                    try {
-                    return new Node[]{new RustProjectImportantFilesNode(project)};
-                } catch (Throwable e) {
-                    Exceptions.printStackTrace(e);
-                }
-            }
-            return new Node[0];
-        }
-
-    }
-
     private final RustProject project;
 
     public RustProjectRootNode(RustProject project) {
@@ -107,7 +45,9 @@ public class RustProjectRootNode extends AbstractNode implements PropertyChangeL
     }
 
     private RustProjectRootNode(RustProject project, InstanceContent content) {
-        super(new RustProjectRootNodeChildren(project), new AbstractLookup(content));
+        super(NodeFactorySupport.createCompositeChildren(project, 
+                "Projects/" + RustProjectAPI.RUST_PROJECT_KEY + "/Nodes"), // NOI18N
+                new AbstractLookup(content));
         this.project = project;
         content.add(project);
         this.project.getCargoTOML().addPropertyChangeListener(this);

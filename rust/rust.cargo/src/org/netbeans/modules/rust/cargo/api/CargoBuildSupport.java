@@ -16,22 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.rust.project.api;
-
-import org.netbeans.api.annotations.common.StaticResource;
+package org.netbeans.modules.rust.cargo.api;
 
 /**
- *
+ * CargoBuildSupport is responsible for running different cargo actions,
+ * such as "cargo build", etc.
  * @author antonio
  */
-public class RustProjectAPI {
-
-    /**
-     * Used to register stuff in the "layer.xml" file.
-     * For instance, under "/Projects/RUST_PROJECT_KEY/Customizer", for example.
-     */
-    public static final String RUST_PROJECT_KEY = "org-netbeans-modules-rust-project";
-    @StaticResource
-    public static final String ICON = "org/netbeans/modules/rust/project/resources/rust-logo-2.png";
+public final class CargoBuildSupport {
     
 }

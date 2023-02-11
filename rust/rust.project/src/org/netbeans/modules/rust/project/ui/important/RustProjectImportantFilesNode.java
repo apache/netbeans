@@ -20,7 +20,7 @@ package org.netbeans.modules.rust.project.ui.important;
 
 import java.awt.Image;
 import org.netbeans.modules.rust.project.RustProject;
-import org.netbeans.modules.rust.project.ui.resources.IconFactory;
+import org.netbeans.modules.rust.project.api.RustIconFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
@@ -110,12 +110,12 @@ public class RustProjectImportantFilesNode extends AbstractNode {
 
     public @Override
     Image getIcon(int type) {
-        return IconFactory.getImportantFilesFolderIcon(false);
+        return RustIconFactory.getImportantFilesFolderIcon(false);
     }
 
     public @Override
     Image getOpenedIcon(int type) {
-        return IconFactory.getImportantFilesFolderIcon(true);
+        return RustIconFactory.getImportantFilesFolderIcon(true);
     }
 
 }

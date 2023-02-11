@@ -19,12 +19,7 @@
     under the License.
 
 -->
-<licenseinfo>
-    <fileset>
-        <file>src/org/netbeans/modules/rust/project/templates/RustProjectTemplateProject.zip</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED">
-            Rust project template zip file.
-        </comment>
-    </fileset>
-</licenseinfo>
+<project basedir="." default="netbeans" name="rust/rust.cargo">
+    <description>Builds, tests, and runs the project org.netbeans.modules.rust.cargo</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+</project>

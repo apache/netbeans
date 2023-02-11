@@ -18,11 +18,9 @@
  */
 package org.netbeans.modules.javaee.wildfly.ide.ui;
 
-import java.io.File;
-
-import static java.io.File.separatorChar;
-
 import java.beans.PropertyVetoException;
+import java.io.File;
+import static java.io.File.separatorChar;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -41,6 +39,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_ADMIN_PORT;
+import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_HTTP_PORT;
 import org.openide.filesystems.JarFileSystem;
 
 /**
@@ -240,13 +240,11 @@ public class WildflyPluginUtils {
     }
 
     public static String getHTTPConnectorPort(String configFile) {
-        String defaultPort = "8080"; // NOI18N
-        return defaultPort;
+        return String.valueOf(DEFAULT_HTTP_PORT);
     }
 
      public static String getManagementConnectorPort(String configFile) {
-        String defaultPort = "9990"; // NOI18N
-        return defaultPort;
+        return String.valueOf(DEFAULT_ADMIN_PORT);
     }
 
     /**

@@ -33,6 +33,8 @@ import org.openide.filesystems.FileUtil;
  */
 public final class WildflyPluginProperties {
 
+    public static final int DEFAULT_HTTP_PORT = 8080;
+    public static final int DEFAULT_ADMIN_PORT = 9990;
     public static final String PROPERTY_DISPLAY_NAME ="displayName";//NOI18N
     public static final String PROPERTY_SERVER = "server";//NOI18N
     public static final String PROPERTY_DEPLOY_DIR = "deploy-dir";//NOI18N
@@ -164,7 +166,7 @@ public final class WildflyPluginProperties {
         if(this.installLocation == null || WildflyPluginUtils.WILDFLY_8_0_0.compareTo(serverVersion) > 0){
             return 9999;
         }
-        return 9990;
+        return DEFAULT_ADMIN_PORT;
     }
 
 

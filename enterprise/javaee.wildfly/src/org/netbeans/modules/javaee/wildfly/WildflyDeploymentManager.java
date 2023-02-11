@@ -54,9 +54,8 @@ import org.netbeans.modules.javaee.wildfly.deploy.WildflyProgressObject;
 import org.netbeans.modules.javaee.wildfly.ide.commands.WildflyClient;
 import org.netbeans.modules.javaee.wildfly.ide.commands.WildflyModule;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties;
-
+import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_ADMIN_PORT;
 import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.PROPERTY_ADMIN_PORT;
-
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils.Version;
 import org.netbeans.modules.javaee.wildfly.util.WildFlyProperties;
@@ -70,7 +69,6 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
     private static final Logger LOGGER = Logger.getLogger(WildflyDeploymentManager.class.getName());
 
     private static final int DEBUGGING_PORT = 8787;
-    private static final int CONTROLLER_PORT = 9990;
 
     private final Version version;
     private final boolean isWildfly;
@@ -105,7 +103,7 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
         File serverPath = new File(this.instanceProperties.getProperty(WildflyPluginProperties.PROPERTY_ROOT_DIR));
         version = WildflyPluginUtils.getServerVersion(serverPath);
         isWildfly = WildflyPluginUtils.isWildFly(serverPath);
-        int controllerPort = CONTROLLER_PORT;
+        int controllerPort = DEFAULT_ADMIN_PORT;
         String adminPort = this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT);
         if(adminPort != null) {
             controllerPort = Integer.parseInt(this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT));

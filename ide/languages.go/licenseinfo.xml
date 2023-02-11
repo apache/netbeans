@@ -21,6 +21,7 @@
 -->
 <licenseinfo>
     <fileset>
+        <file>src/org/netbeans/modules/languages/go/GoExample.go</file>
         <file>src/org/netbeans/modules/languages/go/resources/go.png</file>
         <license ref="Apache-2.0-ASF" />
     </fileset>

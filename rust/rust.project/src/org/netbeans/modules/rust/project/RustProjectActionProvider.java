@@ -58,23 +58,25 @@ public final class RustProjectActionProvider implements ActionProvider {
         if (build == null) {
             LOG.log(Level.INFO, String.format("No CargoBuild in this application."));
         } else {
-            CargoBuild.CargoBuildMode modes[] = {};
+            CargoBuild.CargoBuildCommand[] commands = {};
             CargoTOML cargotoml = project.getCargoTOML();
             switch (command) {
                 case COMMAND_BUILD:
-                    modes = new CargoBuild.CargoBuildMode[]{CargoBuild.CargoBuildMode.CARGO_BUILD};
+                    commands = new CargoBuild.CargoBuildCommand[]{CargoBuild.CargoBuildCommand.CARGO_BUILD};
                     break;
                 case COMMAND_CLEAN:
-                    modes = new CargoBuild.CargoBuildMode[]{CargoBuild.CargoBuildMode.CARGO_CLEAN};
+                    commands = new CargoBuild.CargoBuildCommand[]{CargoBuild.CargoBuildCommand.CARGO_CLEAN};
                     break;
                 case COMMAND_REBUILD:
-                    modes = new CargoBuild.CargoBuildMode[]{CargoBuild.CargoBuildMode.CARGO_BUILD, CargoBuild.CargoBuildMode.CARGO_CLEAN};
+                    commands = new CargoBuild.CargoBuildCommand[]{CargoBuild.CargoBuildCommand.CARGO_CLEAN, CargoBuild.CargoBuildCommand.CARGO_BUILD};
                     break;
+                case COMMAND_RUN:
+                    commands = new CargoBuild.CargoBuildCommand[]{CargoBuild.CargoBuildCommand.CARGO_RUN};
                 default:
                     LOG.log(Level.WARNING, String.format("Invoked action %s but cannot find a CargoBuild mode for it", command));
             }
             try {
-                build.build(project, modes);
+                build.build(project, commands);
             } catch (IOException ioe) {
                 throw new IllegalArgumentException(ioe.getMessage(), ioe);
             }

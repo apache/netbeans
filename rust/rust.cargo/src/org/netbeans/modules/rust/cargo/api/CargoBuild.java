@@ -20,6 +20,7 @@ package org.netbeans.modules.rust.cargo.api;
 
 import java.io.IOException;
 import org.netbeans.api.project.Project;
+import org.openide.util.NbBundle;
 
 /**
  * CargoBuildSupport is responsible for running different cargo actions, such as
@@ -29,28 +30,59 @@ import org.netbeans.api.project.Project;
  */
 public interface CargoBuild {
 
-    public enum CargoBuildMode {
-        CARGO_BENCH,
-        CARGO_BUILD,
-        CARGO_BUILD_RELELASE,
-        CARGO_CLEAN,
-        CARGO_DOC,
-        CARGO_FETCH,
-        CARGO_FIX,
-        CARGO_RUN,
-        CARGO_RUSTC,
-        CARGO_RUSTDOC,
-        CARGO_TEST,
-        CARGO_REPORT
+    /**
+     * Available cargo build commands.
+     */
+    @NbBundle.Messages({
+        "CARGO_BENCH=bench",
+        "CARGO_BENCH_DESC=Execute benchmarks",
+        "CARGO_BUILD=build",
+        "CARGO_BUILD_DESC=Builds the package in debug mode",
+        "CARGO_CLEAN=clean",
+        "CARGO_CLEAN_DESC=Cleans the project",
+        "CARGO_DOC=doc",
+        "CARGO_DOC_DESC=Builds package's documentation",
+        "CARGO_BUILD_RELEASE=release",
+        "CARGO_BUILD_RELEASE_DESC=Builds the package in release mode",
+        "CARGO_RUN=run",
+        "CARGO_RUN_DESC=Run the current package"
+    })
+    public enum CargoBuildCommand {
+        CARGO_BENCH(new String[] {"bench"}),
+        CARGO_BUILD(new String[] {"build"}),
+        CARGO_BUILD_RELELASE(new String[]{"build --release"}),
+        CARGO_CLEAN(new String[]{"clean"}),
+        CARGO_DOC(new String[]{"doc"}),
+        CARGO_FETCH(new String[]{"fetch"}),
+        CARGO_FIX(new String[]{"fix"}),
+        CARGO_RUN(new String[]{"run"}),
+        CARGO_RUSTC(new String[]{"rustc"}),
+        CARGO_RUSTDOC(new String[]{"rustdoc"}),
+        CARGO_TEST(new String[]{"test"}),
+        CARGO_REPORT(new String[]{"report"});
+
+        public final String [] arguments;
+
+        CargoBuildCommand(String [] arguments) {
+            this.arguments = arguments;
+        }
+
+        public String getDisplayName() {
+            return NbBundle.getMessage(CargoBuildCommand.class, name());
+        }
+
+        public String getDescription() {
+            return NbBundle.getMessage(CargoBuildCommand.class, name() + "_DESC"); // NOI18N
+        }
     }
 
     /**
      * Builds a Rust project. And opens an Output window to show the
      *
      * @param project The project to build
-     * @param modes The array of build modes, to be executed one after another.
+     * @param commands The array of build commands, to be executed one after another.
      * @throws IOException If a problem happens.
      */
-    public void build(Project project, CargoBuildMode [] modes) throws IOException;
+    public void build(Project project, CargoBuildCommand [] commands) throws IOException;
 
 }

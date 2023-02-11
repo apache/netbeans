@@ -187,11 +187,10 @@ public final class Preview extends Dialog implements Percent.Listener {
     }
 
     private JComponent createNavigatePanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
         // first
-        panel = new JPanel(new GridBagLayout());
+        JPanel panel = new JPanel(new GridBagLayout());
         c.insets = new Insets(TINY_SIZE, TINY_SIZE, TINY_SIZE, TINY_SIZE);
         myFirst = createButton(
             new ButtonAction(icon(Config.class, "first"), i18n("TLT_First")) { // NOI18N

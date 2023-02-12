@@ -646,13 +646,11 @@ public class ParserServletContext implements ServletContext {
 
     @Override
     public Dynamic addServlet(String string, String string1) {
-        System.err.println("** addServlet(string,string)");
         return null;
     }
 
     @Override
     public Dynamic addServlet(String string, Servlet srvlt) {
-        System.err.println("** addServlet(string,srvlt)");
         return null;
     }
 
@@ -663,7 +661,6 @@ public class ParserServletContext implements ServletContext {
     
     @Override
     public Dynamic addJspFile(String servletName, String jspFile) {
-        System.err.println("** addJspFile(servletName,jspFile)");
         return null;
     }
 

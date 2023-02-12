@@ -30,8 +30,6 @@ import org.openide.util.NbBundle;
     "CARGO_BENCH_DESC=Execute benchmarks", // FMT
     "CARGO_BUILD=build", // FMT
     "CARGO_BUILD_DESC=Builds the package in debug mode", // FMT
-    "CARGO_BUILD_RELEASE_DESC=Builds the package in release mode", // FMT
-    "CARGO_BUILD_RELEASE=release", // FMT
     "CARGO_CLEAN=clean", "CARGO_CLEAN_DESC=Cleans the project", // FMT
     "CARGO_DOC_DESC=Builds package's documentation", // FMT
     "CARGO_DOC=doc", // FMT
@@ -41,20 +39,20 @@ import org.openide.util.NbBundle;
     "CARGO_RUN=run", // FMT
 })
 public enum CargoCommand {
+    CARGO_ADD(new String[]{"add"}), // NOI18N
     CARGO_BENCH(new String[]{"bench"}), // NOI18N
     CARGO_BUILD(new String[]{"build"}), // NOI18N
-    CARGO_BUILD_RELELASE(new String[]{"build --release"}), // NOI18N
     CARGO_CLEAN(new String[]{"clean"}), // NOI18N
     CARGO_DOC(new String[]{"doc"}), // NOI18N
     CARGO_FETCH(new String[]{"fetch"}), // NOI18N
     CARGO_FIX(new String[]{"fix"}), // NOI18N
+    CARGO_REMOVE(new String[]{"remove"}),
+    CARGO_REPORT(new String[]{"report"}), // NOI18N
     CARGO_RUN(new String[]{"run"}), // NOI18N
     CARGO_RUSTC(new String[]{"rustc"}), // NOI18N
     CARGO_RUSTDOC(new String[]{"rustdoc"}), // NOI18N
     CARGO_TEST(new String[]{"test"}), // NOI18N
-    CARGO_REPORT(new String[]{"report"}), // NOI18N
-    CARGO_ADD(new String[]{"add"}), // NOI18N
-    CARGO_REMOVE(new String[]{"remove"});
+    ;
     public final String[] arguments;
 
     CargoCommand(String[] arguments) {

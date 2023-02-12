@@ -44,7 +44,6 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JPopupMenu;
 import javax.swing.event.EventListenerList;
-import org.netbeans.modules.rust.cargo.api.RustPackage;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -1370,10 +1369,6 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
         }
     }
 
-    public RustPackage getRustPackage() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     /** Marker interface for all cookies.
     * <P>
     * Most examples are present in {@link org.openide.cookies}.
@@ -1855,3 +1850,4 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
         }
     }
 }
+

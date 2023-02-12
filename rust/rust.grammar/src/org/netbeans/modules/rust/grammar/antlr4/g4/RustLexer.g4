@@ -1,4 +1,22 @@
 /*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+/*
 Copyright (c) 2010 The Rust Project Developers
 Copyright (c) 2020-2022 Student Main
 Copyright (c) 2023 Antonio Vieiro
@@ -18,7 +36,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 */
 
 lexer grammar RustLexer
-   ;
+    ;
 
 options
 {
@@ -26,9 +44,9 @@ options
 }
 
 channels {
-    CHANNEL_COMMENT
-}
-
+CHANNEL_COMMENT
+    }
+    
 @header {
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -48,10 +66,10 @@ channels {
  * specific language governing permissions and limitations
  * under the License.
  */
-}
-
-// https://doc.rust-lang.org/reference/keywords.html strict
-KW_AS: 'as';
+    }
+    
+    // https://doc.rust-lang.org/reference/keywords.html strict
+    KW_AS: 'as';
 KW_BREAK: 'break';
 KW_CONST: 'const';
 KW_CONTINUE: 'continue';
@@ -122,87 +140,40 @@ NON_KEYWORD_IDENTIFIER: XID_Start XID_Continue* | '_' XID_Continue+;
 
 // [\p{L}\p{Nl}\p{Other_ID_Start}-\p{Pattern_Syntax}-\p{Pattern_White_Space}]
 fragment XID_Start
-   : [\p{L}\p{Nl}]
-   | UNICODE_OIDS
-   ;
+    : [\p{L}\p{Nl}]
+    | UNICODE_OIDS
+    ;
 
 // [\p{ID_Start}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Other_ID_Continue}-\p{Pattern_Syntax}-\p{Pattern_White_Space}]
 fragment XID_Continue
-   : XID_Start
-   | [\p{Mn}\p{Mc}\p{Nd}\p{Pc}]
-   | UNICODE_OIDC
-   ;
+    : XID_Start
+    | [\p{Mn}\p{Mc}\p{Nd}\p{Pc}]
+    | UNICODE_OIDC
+    ;
 
 fragment UNICODE_OIDS
-   : '\u1885'..'\u1886'
-   | '\u2118'
-   | '\u212e'
-   | '\u309b'..'\u309c'
-   ;
+    : '\u1885'..'\u1886'
+    | '\u2118'
+    | '\u212e'
+    | '\u309b'..'\u309c'
+    ;
 
 fragment UNICODE_OIDC
-   : '\u00b7'
-   | '\u0387'
-   | '\u1369'..'\u1371'
-   | '\u19da'
-   ;
+    : '\u00b7'
+    | '\u0387'
+    | '\u1369'..'\u1371'
+    | '\u19da'
+    ;
 
 RAW_IDENTIFIER: 'r#' NON_KEYWORD_IDENTIFIER;
 // comments https://doc.rust-lang.org/reference/comments.html
 LINE_COMMENT: ('//' (~[/!] | '//') ~[\r\n]* | '//') -> channel (CHANNEL_COMMENT);
-
-BLOCK_COMMENT
-   :
-   (
-      '/*'
-      (
-         ~[*!]
-         | '**' 
-         | ('*' [ \r\n]* )
-         | BLOCK_COMMENT_OR_DOC
-      )
-      (
-         BLOCK_COMMENT_OR_DOC
-         | ('*' [ \r\n]* )
-         | ~[*]
-      )*? '*/'
-      | '/**/'
-      | '/***/'
-   ) -> channel (CHANNEL_COMMENT)
-   ;
-
+// Original grammar has problems detecting inner blocks (see https://github.com/antlr/grammars-v4/issues/2604)
+// So we change INNER_BLOCK_DOC and BLOCK_COMMENT as below
+INNER_BLOCK_DOC: '/*!' (BLOCK_COMMENT|.)*? '*/' -> channel(CHANNEL_COMMENT);
+BLOCK_COMMENT: '/*' (BLOCK_COMMENT|.)*? '*/' -> channel(CHANNEL_COMMENT);
 INNER_LINE_DOC: '//!' ~[\n\r]* -> channel (CHANNEL_COMMENT); // isolated cr
-
-INNER_BLOCK_DOC
-   : '/*!'
-   (
-      BLOCK_COMMENT_OR_DOC
-      | ~[*]
-   )*? '*/' -> channel (CHANNEL_COMMENT)
-   ;
-
 OUTER_LINE_DOC: '///' (~[/] ~[\n\r]*)? -> channel (CHANNEL_COMMENT); // isolated cr
-
-OUTER_BLOCK_DOC
-   : '/**'
-   (
-      ~[*]
-      | BLOCK_COMMENT_OR_DOC
-   )
-   (
-      BLOCK_COMMENT_OR_DOC
-      | ~[*]
-   )*? '*/' -> channel (CHANNEL_COMMENT)
-   ;
-
-BLOCK_COMMENT_OR_DOC
-   :
-   (
-      BLOCK_COMMENT
-      | INNER_BLOCK_DOC
-      | OUTER_BLOCK_DOC
-   ) -> channel (CHANNEL_COMMENT)
-   ;
 
 SHEBANG: {this.SOF()}? '\ufeff'? '#!' ~[\r\n]* -> channel(CHANNEL_COMMENT);
 
@@ -215,25 +186,25 @@ NEWLINE: ('\r\n' | [\r\n]) -> channel(HIDDEN);
 
 // tokens char and string
 CHAR_LITERAL
-   : '\''
-   (
-      ~['\\\n\r\t]
-      | QUOTE_ESCAPE
-      | ASCII_ESCAPE
-      | UNICODE_ESCAPE
-   ) '\''
-   ;
+    : '\''
+    (
+    ~['\\\n\r\t]
+    | QUOTE_ESCAPE
+    | ASCII_ESCAPE
+    | UNICODE_ESCAPE
+    ) '\''
+    ;
 
 STRING_LITERAL
-   : '"'
-   (
-      ~["]
-      | QUOTE_ESCAPE
-      | ASCII_ESCAPE
-      | UNICODE_ESCAPE
-      | ESC_NEWLINE
-   )* '"'
-   ;
+    : '"'
+    (
+    ~["]
+    | QUOTE_ESCAPE
+    | ASCII_ESCAPE
+    | UNICODE_ESCAPE
+    | ESC_NEWLINE
+    )* '"'
+    ;
 
 RAW_STRING_LITERAL: 'r' RAW_STRING_CONTENT;
 
@@ -252,8 +223,8 @@ fragment BYTE_ESCAPE: '\\x' HEX_DIGIT HEX_DIGIT | COMMON_ESCAPE;
 fragment COMMON_ESCAPE: '\\' [nrt\\0];
 
 fragment UNICODE_ESCAPE
-   : '\\u{' HEX_DIGIT HEX_DIGIT? HEX_DIGIT? HEX_DIGIT? HEX_DIGIT? HEX_DIGIT? '}'
-   ;
+    : '\\u{' HEX_DIGIT HEX_DIGIT? HEX_DIGIT? HEX_DIGIT? HEX_DIGIT? HEX_DIGIT? '}'
+    ;
 
 fragment QUOTE_ESCAPE: '\\' ['"];
 
@@ -262,14 +233,14 @@ fragment ESC_NEWLINE: '\\' '\n';
 // number
 
 INTEGER_LITERAL
-   :
-   (
-      DEC_LITERAL
-      | BIN_LITERAL
-      | OCT_LITERAL
-      | HEX_LITERAL
-   ) INTEGER_SUFFIX?
-   ;
+    :
+    (
+    DEC_LITERAL
+    | BIN_LITERAL
+    | OCT_LITERAL
+    | HEX_LITERAL
+    ) INTEGER_SUFFIX?
+    ;
 
 DEC_LITERAL: DEC_DIGIT (DEC_DIGIT | '_')*;
 
@@ -280,27 +251,27 @@ OCT_LITERAL: '0o' '_'* OCT_DIGIT (OCT_DIGIT | '_')*;
 BIN_LITERAL: '0b' '_'* [01] [01_]*;
 
 FLOAT_LITERAL
-   : {this.floatLiteralPossible()}? (DEC_LITERAL '.' {this.floatDotPossible()}?
-   | DEC_LITERAL
-   (
-      '.' DEC_LITERAL
-   )? FLOAT_EXPONENT? FLOAT_SUFFIX?)
-   ;
+    : {this.floatLiteralPossible()}? (DEC_LITERAL '.' {this.floatDotPossible()}?
+    | DEC_LITERAL
+    (
+    '.' DEC_LITERAL
+    )? FLOAT_EXPONENT? FLOAT_SUFFIX?)
+    ;
 
 fragment INTEGER_SUFFIX
-   : 'u8'
-   | 'u16'
-   | 'u32'
-   | 'u64'
-   | 'u128'
-   | 'usize'
-   | 'i8'
-   | 'i16'
-   | 'i32'
-   | 'i64'
-   | 'i128'
-   | 'isize'
-   ;
+    : 'u8'
+    | 'u16'
+    | 'u32'
+    | 'u64'
+    | 'u128'
+    | 'usize'
+    | 'i8'
+    | 'i16'
+    | 'i32'
+    | 'i64'
+    | 'i128'
+    | 'isize'
+    ;
 
 fragment FLOAT_SUFFIX: 'f32' | 'f64';
 

@@ -34,7 +34,7 @@ public final class RustStructureScanner implements StructureScanner {
     @Override
     public List<? extends StructureItem> scan(ParserResult info) {
         // TODO: Improve
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override

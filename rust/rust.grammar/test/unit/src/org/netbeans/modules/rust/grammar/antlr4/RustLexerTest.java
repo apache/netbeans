@@ -61,7 +61,8 @@ public class RustLexerTest {
         RustLexer lexer = new RustLexer(CharStreams.fromString("/* Comment */ fn main() { println!(\"Hello world!\"); }"));
         for(Token token = lexer.nextToken(); token != null && token.getType() != Token.EOF; token = lexer.nextToken()) {
             RustTokenID tokenID = RustTokenID.from(token);
-            System.out.format("Token: %s (%d) %s%n", token.getText(), token.getType(), tokenID == null ? "NULL": tokenID.name());
+            // Keep for debugging
+            // System.out.format("Token: %s (%d) %s%n", token.getText(), token.getType(), tokenID == null ? "NULL": tokenID.name());
         }
     }
 
@@ -78,9 +79,29 @@ public class RustLexerTest {
             if (tokenID == RustTokenID.BLOCK_COMMENT) {
                 blockCommentSeen = true;
             }
-            System.out.format("Token: %s (%d) %s%n", token.getText(), token.getType(), tokenID == null ? "NULL": tokenID.name());
+            // Keep for debugging
+            // System.out.format("Token: %s (%d) %s%n", token.getText(), token.getType(), tokenID == null ? "NULL": tokenID.name());
         }
         Assert.assertTrue("This test should have visited a BLOCK_COMMENT, but hasn't", blockCommentSeen);
+    }
+
+    /*
+     * Test for documentation comments
+    */
+    @Test
+    public void testShouldDetectInnerBlockDoc() {
+        System.out.println("testShouldParseBlockCommentWithSingleAsterisk");
+        RustLexer lexer = new RustLexer(CharStreams.fromString("/*!\n * Comment */ fn main() { println!(\"Hello world!\"); }"));
+        boolean blockCommentSeen = false;
+        for(Token token = lexer.nextToken(); token != null && token.getType() != Token.EOF; token = lexer.nextToken()) {
+            RustTokenID tokenID = RustTokenID.from(token);
+            if (tokenID == RustTokenID.INNER_BLOCK_DOC) {
+                blockCommentSeen = true;
+            }
+            // Keep for debugging
+            // System.out.format("Token: %s (%d) %s%n", token.getText(), token.getType(), tokenID == null ? "NULL": tokenID.name());
+        }
+        Assert.assertTrue("This test should have visited a INNER_BLOCK_DOC, but hasn't", blockCommentSeen);
     }
 
     @Test
@@ -93,7 +114,8 @@ public class RustLexerTest {
             if (tokenID.category == RustTokenIDCategory.NUMBER) {
                 numberSeen = true;
             }
-            System.out.format("Token: %s (%d) %s%n", token.getText(), token.getType(), tokenID , tokenID.name());
+            // Keep for debugging
+            // System.out.format("Token: %s (%d) %s%n", token.getText(), token.getType(), tokenID , tokenID.name());
         }
         Assert.assertTrue("This test should have visited a token in the RustTokenIDCategory.NUMBER, but hasn't", numberSeen);
     }

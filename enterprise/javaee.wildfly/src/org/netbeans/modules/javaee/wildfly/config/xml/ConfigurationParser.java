@@ -20,8 +20,6 @@ package org.netbeans.modules.javaee.wildfly.config.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,44 +33,23 @@ import org.openide.util.Exceptions;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * A parser for values from a Wildfly configuration file.
  * @author Emmanuel Hugonnet (ehsavoie) <ehsavoie@netbeans.org>
  */
 public class ConfigurationParser {
 
     private static final String LOAD_EXTERNAL_DTD_FEATURE = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
-    private static final Map<String, String> NAMESPACES = new HashMap<String, String>();
-
-    static {
-        NAMESPACES.put("ds", "urn:jboss:domain:datasources:2.0");
-    }
 
     public static final ConfigurationParser INSTANCE = new ConfigurationParser();
 
     public Set<Datasource> listDatasources(FileObject xmlFile) {
-        InputStream data = null;
-        try {
-            data = xmlFile.getInputStream();
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            SAXParser sp = spf.newSAXParser();
-            sp.getXMLReader().setFeature(LOAD_EXTERNAL_DTD_FEATURE, false);
+        try (InputStream data = xmlFile.getInputStream()) {
+            SAXParser sp = getConfiguredParser();
             WildflyDatasourcesHandler handler = new WildflyDatasourcesHandler(sp.getXMLReader());
             sp.parse(data, handler);
             return handler.getDatasources();
-        } catch (SAXException ex) {
+        } catch (SAXException | ParserConfigurationException | IOException ex) {
             Exceptions.printStackTrace(ex);
-        } catch (ParserConfigurationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } finally {
-            if (data != null) {
-                try {
-                    data.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
         }
         return null;
     }
@@ -81,7 +58,7 @@ public class ConfigurationParser {
      * Retrieve the default port offset for the standard socket group from the given XML config file.
      *
      * @param xmlFile The XML config {@link FileObject}.
-     * @return An |@link Optional} containing the parsed default port offset or |@code null}, if none was
+     * @return An {@link Optional} containing the parsed default port offset or {@code null}, if none was
      * defined.
      */
     public Optional<Integer> getStandardSocketsPortOffset(FileObject xmlFile) {

@@ -63,7 +63,7 @@ public class RevisionSetupSupportTest extends AbstractSvnTestCase {
         wc = new File(workDir, getName() + "_wc");
         repoDir = new File(workDir, "repo");
         String repoPath = repoDir.getAbsolutePath();
-        if(repoPath.startsWith("/")) repoPath = repoPath.substring(1, repoPath.length());
+        if(repoPath.startsWith("/")) repoPath = repoPath.substring(1);
         repoUrl = new SVNUrl("file:///" + repoPath);
 
         System.setProperty("netbeans.user", getDataDir() + "/userdir");

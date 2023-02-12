@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumMap;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -63,7 +64,7 @@ public class PageFlowToolbarUtilities {
 
         SCOPE_FACESCONFIG, SCOPE_PROJECT, SCOPE_ALL_FACESCONFIG
     }
-    private static Map<Scope, String> scope2String = new HashMap<Scope, String>();
+    private static Map<Scope, String> scope2String = new EnumMap<>(Scope.class);
     private static Map<String, Scope> string2Scope = new HashMap<String, Scope>();
     private static final String TT_SCOPE = NbBundle.getMessage(PageFlowToolbarUtilities.class, "TT_Scope_DropDown");
     private static final String LBL_SCOPE_FACESCONFIG = NbBundle.getMessage(PageFlowToolbarUtilities.class, "LBL_Scope_FacesConfig");

@@ -680,10 +680,12 @@ final class RendererFactory {
 
         /** OptimizeIt shows about 12Ms overhead calling back to Component.enable(),
          * so overriding */
+        @Override
         public void setEnabled(boolean val) {
             enabled = val;
         }
 
+        @Override
         public void setText(String s) {
             if (s != null) {
                 if (s.length() > 512) {
@@ -699,35 +701,43 @@ final class RendererFactory {
 
         /** OptimizeIt shows about 12Ms overhead calling back to Component.enable(),
          * so overriding */
+        @Override
         public boolean isEnabled() {
             return enabled;
         }
 
         /** Overridden to do nothing */
+        @Override
         protected void firePropertyChange(String name, Object old, Object nue) {
             //do nothing
         }
 
+        @Override
         public void validate() {
             //do nothing
         }
 
+        @Override
         public void invalidate() {
             //do nothing
         }
 
+        @Override
         public void revalidate() {
             //do nothing
         }
 
+        @Override
         public void repaint() {
             //do nothing
         }
 
+        @Override
         public void repaint(long tm, int x, int y, int w, int h) {
             //do nothing
         }
 
+        @Override
         public Dimension getPreferredSize() {
             if (getText().length() > 1024) {
                 //IZ 44152, avoid excessive calculations when debugger
@@ -743,6 +753,7 @@ final class RendererFactory {
             return result;
         }
 
+        @Override
         public void paint(Graphics g) {
             if (editor != null) {
                 setEnabled(PropUtils.checkEnabled(this, editor, env));
@@ -1243,6 +1254,7 @@ final class RendererFactory {
             //do nothing
         }
 
+        @Override
         public Color getForeground() {
             return PropUtils.getErrorColor();
         }

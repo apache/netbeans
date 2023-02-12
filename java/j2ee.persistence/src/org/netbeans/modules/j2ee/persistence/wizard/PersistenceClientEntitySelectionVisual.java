@@ -20,7 +20,6 @@
 package org.netbeans.modules.j2ee.persistence.wizard;
 
 import java.awt.Component;
-import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,20 +34,14 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.j2ee.core.api.support.SourceGroups;
 import org.netbeans.modules.j2ee.core.api.support.java.JavaIdentifiers;
 import org.netbeans.modules.j2ee.persistence.api.EntityClassScope;
-import org.netbeans.modules.j2ee.persistence.api.PersistenceScope;
 import org.netbeans.modules.j2ee.persistence.api.metadata.orm.Entity;
-import org.netbeans.modules.j2ee.persistence.dd.PersistenceMetadata;
-import org.netbeans.modules.j2ee.persistence.dd.PersistenceUtils;
-import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.provider.InvalidPersistenceXmlException;
 import org.netbeans.modules.j2ee.persistence.provider.ProviderUtil;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
-import org.openide.filesystems.FileObject;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -80,13 +73,7 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
     {
         setName(name);
         initComponents();
-        ListSelectionListener selectionListener = new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                updateButtons();
-            }
-        };
+        ListSelectionListener selectionListener = ( (ListSelectionEvent e) -> updateButtons() );
         listAvailable.getSelectionModel().addListSelectionListener(selectionListener);
         listSelected.getSelectionModel().addListSelectionListener(selectionListener);
         disableNoIdSelection = wizard.getProperty(PersistenceClientEntitySelection.DISABLENOIDSELECTION) == Boolean.TRUE;
@@ -104,14 +91,14 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
     }
 
     private Set<String> getSelectedEntities(JList list) {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (Object elem : Util.getSelectedItems(list, true)){
             result.add((String) elem);
         }
         return result;
     }
     private Set<String> getEnabledEntities(JList list) {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (Object elem : Util.getEnabledItems(list)){
             result.add((String) elem);
         }
@@ -457,12 +444,9 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
         EntityClassScope entityClassScope = EntityClassScope.getEntityClassScope(project.getProjectDirectory());
         
         entityClosure = EntityClosure.create(entityClassScope, project);
-        entityClosure.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                changeSupport.fireChange();
-                updateAddAllButton();
-            }
+        entityClosure.addChangeListener( (ChangeEvent e) -> {
+            changeSupport.fireChange();
+            updateAddAllButton();
         });
         entityClosure.setClosureEnabled(cbAddRelated.isSelected());
         listAvailable.setModel(new EntityListModel(entityClosure, true));
@@ -490,7 +474,7 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
         buttonAdd.setEnabled(!selectedItems.isEmpty());
         updateAddAllButton();
         buttonRemove.setEnabled(listSelected.getSelectedValues().length > 0);
-        buttonRemoveAll.setEnabled(entityClosure.getSelectedEntities().size() > 0);
+        buttonRemoveAll.setEnabled(!entityClosure.getSelectedEntities().isEmpty());
     }
 
     private void updateAddAllButton(){
@@ -515,7 +499,7 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
     private class EntityListModel extends AbstractListModel implements ChangeListener {
 
         private EntityClosure entityClosure;
-        private List<String> entities = new ArrayList<String>();
+        private List<String> entities = new ArrayList<>();
         private boolean available;
 
         EntityListModel(EntityClosure entityClosure, boolean available) {
@@ -600,7 +584,9 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-            if(text.length() == 0)text = " ";
+            if(text.length() == 0) {
+                text = " ";
+            }
             label.setEnabled((entityClosure.getAvailableEntities().contains(value) || entityClosure.getWantedEntities().contains(value)) && !disable);
             //setFont(list.getFont());
             label.setText(text);

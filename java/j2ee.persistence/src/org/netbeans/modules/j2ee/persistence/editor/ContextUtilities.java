@@ -27,7 +27,6 @@ import org.netbeans.api.xml.lexer.XMLTokenId;
 import static org.netbeans.api.xml.lexer.XMLTokenId.*;
 import org.netbeans.modules.xml.text.api.dom.SyntaxElement;
 import org.netbeans.modules.xml.text.api.dom.TagElement;
-import org.netbeans.modules.xml.text.api.dom.XMLSyntaxSupport;
 import org.w3c.dom.Node;
 
 /**
@@ -70,8 +69,9 @@ public final class ContextUtilities {
     }
     
     public static Token<XMLTokenId> getAttributeToken(DocumentContext context) {
-        if(context.getCurrentToken() == null )
+        if(context.getCurrentToken() == null ) {
             return null;
+        }
         try {
             return context.<Token<XMLTokenId>>runWithSequence((TokenSequence ts) -> {
                 if(!isValueToken(context.getCurrentToken())) {
@@ -116,18 +116,28 @@ public final class ContextUtilities {
      * Returns the prefix from the element's tag.
      */
     public static String getPrefixFromTag(String tagName) {
-        if(tagName == null) return null;
-        return (tagName.indexOf(":") == -1) ? null : // NOI18N
-            tagName.substring(0, tagName.indexOf(":")); // NOI18N
+        if(tagName == null) {
+            return null;
+        }
+        if(tagName.indexOf(':') == -1) {
+            return null;
+        } else {
+            return tagName.substring(0, tagName.indexOf(':'));
+        }
     }
     
     /**
      * Returns the local name from the element's tag.
      */
     public static String getLocalNameFromTag(String tagName) {
-        if(tagName == null) return null;
-        return (tagName.indexOf(":") == -1) ? tagName : // NOI18N
-            tagName.substring(tagName.indexOf(":")+1, tagName.length()); // NOI18N
+        if(tagName == null) {
+            return null;
+        }
+        if(tagName.indexOf(':') == -1) {
+            return tagName;
+        } else {
+            return tagName.substring(tagName.indexOf(':') + 1);
+        }
     }
     
     /**
@@ -136,7 +146,9 @@ public final class ContextUtilities {
      * Returns null for declaration that contains no prefix.
      */
     public static String getPrefixFromNamespaceDeclaration(String namespace) {
-        if (!namespace.startsWith(XMLConstants.XMLNS_ATTRIBUTE)) return null;
+        if (!namespace.startsWith(XMLConstants.XMLNS_ATTRIBUTE)) {
+            return null;
+        }
         int xmlnsLength = XMLConstants.XMLNS_ATTRIBUTE.length();
         if (namespace.length() == xmlnsLength) {
             return ""; // NOI18N

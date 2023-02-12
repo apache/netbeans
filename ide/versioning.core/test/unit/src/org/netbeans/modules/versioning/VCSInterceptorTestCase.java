@@ -642,7 +642,7 @@ public class VCSInterceptorTestCase extends AbstractFSTestCase {
         if(rootPath != null) {
             path = path.substring(rootPath.length());
             if(path.startsWith("/")) {
-                path = path.substring(1, path.length());
+                path = path.substring(1);
             }
             return path;
         } else {
@@ -652,7 +652,7 @@ public class VCSInterceptorTestCase extends AbstractFSTestCase {
 //        String path = proxy.getPath();
 //        path = path.substring(factory.getRootPath().length());
 //        if(path.startsWith("/")) {
-//            path = path.substring(1, path.length());
+//            path = path.substring(1);
 //        }
 //        return path;
     }
@@ -664,7 +664,7 @@ public class VCSInterceptorTestCase extends AbstractFSTestCase {
             rootPath = rootPath + "/" + workDirPath;
             path = path.substring(rootPath.length());
             if(path.startsWith("/")) {
-                path = path.substring(1, path.length());
+                path = path.substring(1);
             }
             return path;
         } else {

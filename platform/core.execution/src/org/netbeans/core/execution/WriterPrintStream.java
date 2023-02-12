@@ -41,9 +41,11 @@ final class WriterPrintStream extends PrintStream {
     }
 
     /** Empty */
+    @Override
     public void close() {
     }
 
+    @Override
     public void flush() {
         try {
             if (stdOut) {
@@ -77,6 +79,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param      b   The <code>boolean</code> to be printed
      */
+    @Override
     public void print(boolean b) {
 	write(b ? "true" : "false"); // NOI18N
     }
@@ -89,6 +92,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param      c   The <code>char</code> to be printed
      */
+    @Override
     public void print(char c) {
         try {
             if (stdOut) {
@@ -111,6 +115,7 @@ final class WriterPrintStream extends PrintStream {
      * @param      i   The <code>int</code> to be printed
      * @see        java.lang.Integer#toString(int)
      */
+    @Override
     public void print(int i) {
 	write(String.valueOf(i));
     }
@@ -125,6 +130,7 @@ final class WriterPrintStream extends PrintStream {
      * @param      l   The <code>long</code> to be printed
      * @see        java.lang.Long#toString(long)
      */
+    @Override
     public void print(long l) {
 	write(String.valueOf(l));
     }
@@ -139,6 +145,7 @@ final class WriterPrintStream extends PrintStream {
      * @param      f   The <code>float</code> to be printed
      * @see        java.lang.Float#toString(float)
      */
+    @Override
     public void print(float f) {
 	write(String.valueOf(f));
     }
@@ -153,6 +160,7 @@ final class WriterPrintStream extends PrintStream {
      * @param      d   The <code>double</code> to be printed
      * @see        java.lang.Double#toString(double)
      */
+    @Override
     public void print(double d) {
 	write(String.valueOf(d));
     }
@@ -167,6 +175,7 @@ final class WriterPrintStream extends PrintStream {
      * 
      * @throws  NullPointerException  If <code>s</code> is <code>null</code>
      */
+    @Override
     public void print(char s[]) {
         try {
             if (stdOut) {
@@ -188,6 +197,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param      s   The <code>String</code> to be printed
      */
+    @Override
     public void print(String s) {
 	if (s == null) {
 	    s = "null"; // NOI18N
@@ -205,6 +215,7 @@ final class WriterPrintStream extends PrintStream {
      * @param      obj   The <code>Object</code> to be printed
      * @see        java.lang.Object#toString()
      */
+    @Override
     public void print(Object obj) {
 	write(String.valueOf(obj));
     }
@@ -218,6 +229,7 @@ final class WriterPrintStream extends PrintStream {
      * <code>line.separator</code>, and is not necessarily a single newline
      * character (<code>'\n'</code>).
      */
+    @Override
     public void println() {
         print(getNewLine());
     }
@@ -229,6 +241,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param x  The <code>boolean</code> to be printed
      */
+    @Override
     public void println(boolean x) {
         String out = (x ? "true" : "false"); // NOI18N
         write(out.concat(getNewLine()));
@@ -241,6 +254,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param x  The <code>char</code> to be printed.
      */
+    @Override
     public void println(char x) {
         String nline = getNewLine();
         int nlinelen = nline.length();
@@ -267,6 +281,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param x  The <code>int</code> to be printed.
      */
+    @Override
     public void println(int x) {
 	write(String.valueOf(x).concat(getNewLine()));
     }
@@ -278,6 +293,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param x  a The <code>long</code> to be printed.
      */
+    @Override
     public void println(long x) {
 	write(String.valueOf(x).concat(getNewLine()));
     }
@@ -289,6 +305,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param x  The <code>float</code> to be printed.
      */
+    @Override
     public void println(float x) {
 	write(String.valueOf(x).concat(getNewLine()));
     }
@@ -300,6 +317,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param x  The <code>double</code> to be printed.
      */
+    @Override
     public void println(double x) {
 	write(String.valueOf(x).concat(getNewLine()));
     }
@@ -311,6 +329,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param x  an array of chars to print.
      */
+    @Override
     public void println(char x[]) {
         String nline = getNewLine();
         int nlinelen = nline.length();
@@ -338,6 +357,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param x  The <code>String</code> to be printed.
      */
+    @Override
     public void println(String x) {
         if (x == null) {
             x = "null"; // NOI18N
@@ -352,6 +372,7 @@ final class WriterPrintStream extends PrintStream {
      *
      * @param x  The <code>Object</code> to be printed.
      */
+    @Override
     public void println(Object x) {
         if (x == null) {
 	    print("null".concat(getNewLine())); // NOI18N

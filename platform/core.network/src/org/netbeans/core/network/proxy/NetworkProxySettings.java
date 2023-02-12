@@ -174,7 +174,7 @@ public final class NetworkProxySettings {
             return EMPTY_STRING;
         } else {
             if (string.endsWith(SLASH)) {
-                string = string.substring(string.length() - 1, string.length());
+                string = string.substring(string.length() - 1);
             }
             if (string.contains(COLON)) {
                 return string.substring(string.lastIndexOf(COLON) + 1);

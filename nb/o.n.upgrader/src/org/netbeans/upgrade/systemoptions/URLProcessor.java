@@ -33,7 +33,6 @@ class URLProcessor extends PropertyProcessor {
     }
     
     void processPropertyImpl(String propertyName, Object value) {
-        StringBuffer sb = new StringBuffer();       
         if ("mainProjectURL".equals(propertyName)) {//NOI18N
             List l = ((SerParser.ObjectWrapper)value).data;
             try {

@@ -133,7 +133,7 @@ public class JspJsfELPlugin extends ELPlugin {
             
             // method has not parameters and return types are assignable.
             if ( executableElement.getParameters().isEmpty() && 
-                    ( (TypeKind.VOID.equals(elementReturnType.getKind()) && VOID_RETURN_TYPE.equals(attributeReturnType)) || 
+                    ( (TypeKind.VOID == elementReturnType.getKind() && VOID_RETURN_TYPE.equals(attributeReturnType)) ||
                     (types.isAssignable(elementReturnType, attributeReturnTypeElement.asType())) ) ) {
                 return true;
             }
@@ -197,7 +197,7 @@ public class JspJsfELPlugin extends ELPlugin {
         }
 
         // Return types of the element and attribute are void
-        if (TypeKind.VOID.equals(elementReturnType.getKind()) && VOID_RETURN_TYPE.equals(attributeReturnType)) {
+        if (TypeKind.VOID == elementReturnType.getKind() && VOID_RETURN_TYPE.equals(attributeReturnType)) {
             return true;
         }
 

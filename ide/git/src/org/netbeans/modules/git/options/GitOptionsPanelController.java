@@ -238,7 +238,7 @@ final class GitOptionsPanelController extends OptionsPanelController implements 
             sb.append(annotation.substring(0, pos));
             sb.append(variable);
             if (pos < annotation.length()) {
-                sb.append(annotation.substring(pos, annotation.length()));
+                sb.append(annotation.substring(pos));
             }
             panel.txtProjectAnnotation.setText(sb.toString());
             panel.txtProjectAnnotation.requestFocus();

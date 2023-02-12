@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.concurrent.Future;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -518,9 +519,10 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
             }
             ClassTree ct = (ClassTree)ctx.getPath().getLeaf();
             ModifiersTree mt = ct.getModifiers();
-            Set<Modifier> mods = new HashSet<>(mt.getFlags());
+
+            Set<Modifier> mods = EnumSet.of(Modifier.ABSTRACT);
+            mods.addAll(mt.getFlags());
             mods.remove(Modifier.FINAL);
-            mods.add(Modifier.ABSTRACT);
             ModifiersTree newMt = wc.getTreeMaker().Modifiers(mods, mt.getAnnotations());
             wc.rewrite(mt, newMt);
         }

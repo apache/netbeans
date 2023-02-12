@@ -237,6 +237,7 @@ class CustomEditorAction extends AbstractAction {
         final java.awt.Window w = pdm.getDialog();
 
         WindowListener wl = new WindowAdapter() {
+                @Override
                 public void windowClosed(WindowEvent e) {
                     if (pdm.getComponent() instanceof EnhancedCustomPropertyEditor) {
                         if (!pdm.wasCancelled() && !closedOption && pdm.wasOK() && !pdm.wasReset()) {
@@ -258,6 +259,7 @@ class CustomEditorAction extends AbstractAction {
                     //                        customEditing=false;
                 }
 
+                @Override
                 public void windowOpened(WindowEvent e) {
                     invoker.editorOpened();
                     if (curComp != null) {
@@ -265,7 +267,8 @@ class CustomEditorAction extends AbstractAction {
                     }
                 }
 
-                // MCF ISSUE 44366 
+                // MCF ISSUE 44366
+                @Override
                 public void windowClosing(WindowEvent ev) {
                     if (PropUtils.isLoggable(CustomEditorAction.class)) {
                         PropUtils.log(CustomEditorAction.class, "CustomerEditorAction windowClosing event");

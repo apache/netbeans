@@ -859,7 +859,8 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
             delegate.next();
             return new MapEntryImpl(item);
         }
-        
+
+        @Override
         public void remove() {
             delegate.previous();
             Item item = findNext();

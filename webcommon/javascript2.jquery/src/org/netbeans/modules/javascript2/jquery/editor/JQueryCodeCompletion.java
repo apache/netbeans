@@ -577,7 +577,7 @@ public class JQueryCodeCompletion implements CompletionProvider {
     }
 
     private Collection<HtmlTag> getHtmlTags(String prefix) {
-        Collection<HtmlTag> result = Collections.emptyList();
+        Collection<HtmlTag> result;
         HtmlModel htmlModel = HtmlModelFactory.getModel(HtmlVersion.HTML5);
         Collection<HtmlTag> allTags = htmlModel.getAllTags();
         if (prefix.isEmpty()) {

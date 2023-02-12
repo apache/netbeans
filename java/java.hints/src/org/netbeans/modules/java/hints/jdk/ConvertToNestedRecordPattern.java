@@ -82,7 +82,7 @@ public class ConvertToNestedRecordPattern {
             return null;
         }
         TreePath t = ctx.getPath();
-        if (!t.getParentPath().getLeaf().getKind().equals(Tree.Kind.INSTANCE_OF)) {
+        if (t.getParentPath().getLeaf().getKind() != Tree.Kind.INSTANCE_OF) {
             return null;
         }
         Set<String> recordPatternVarSet = new HashSet<>();

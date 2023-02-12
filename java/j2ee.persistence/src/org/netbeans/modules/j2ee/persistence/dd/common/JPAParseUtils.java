@@ -20,6 +20,8 @@
 package org.netbeans.modules.j2ee.persistence.dd.common;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.jar.Attributes;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +42,7 @@ public class JPAParseUtils {
 
     /** Parsing just for detecting the version  SAX parser used
      */
-    public static String getVersion(java.io.InputStream is) throws java.io.IOException, SAXException {
+    public static String getVersion(InputStream is) throws IOException, SAXException {
         return ParseUtils.getVersion(is, new VersionHandler(), DDResolver.getInstance());
     }
 
@@ -58,7 +60,6 @@ public class JPAParseUtils {
                 throw new SAXException(ParseUtils.EXCEPTION_PREFIX+(version==null?Persistence.VERSION_2_1:version));
             }
         }
-
 
         @Override
         public InputSource resolveEntity(String publicId, String systemId) throws IOException, SAXException {
@@ -86,6 +87,7 @@ public class JPAParseUtils {
             return resolver;
         }
 
+        @Override
         public InputSource resolveEntity(String publicId, String systemId) {
             // additional logging for #127276
             if (LOGGER.isLoggable(Level.FINE)) {
@@ -107,19 +109,19 @@ public class JPAParseUtils {
             if (resource==null) {
                 return null;
             }
-            java.net.URL url = this.getClass().getResource(resource);
+            URL url = this.getClass().getResource(resource);
             return new InputSource(url.toString());
         }
     }
 
     public static SAXParseException parse(FileObject fo)
-    throws org.xml.sax.SAXException, java.io.IOException {
+            throws SAXException, IOException {
         // no need to close the stream, will be closed by the parser, see @org.xml.sax.InputSource
         return parse(new InputSource(fo.getInputStream()));
     }
 
     public static SAXParseException parse (InputSource is)
-            throws org.xml.sax.SAXException, java.io.IOException {
+            throws SAXException, IOException {
         return ParseUtils.parseDD(is, DDResolver.getInstance());
     }
 
@@ -131,7 +133,7 @@ public class JPAParseUtils {
      * no exception.
      */
     public static SAXParseException parse (InputSource is, EntityResolver resolver)
-            throws org.xml.sax.SAXException, java.io.IOException {
+            throws SAXException, IOException {
         return ParseUtils.parseDD(is, resolver);
     }
 

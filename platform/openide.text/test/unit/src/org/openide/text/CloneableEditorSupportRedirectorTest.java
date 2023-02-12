@@ -261,6 +261,7 @@ implements CloneableEditorSupport.Env {
     }
     public java.io.OutputStream outputStream() throws java.io.IOException {
         class ContentStream extends java.io.ByteArrayOutputStream {
+            @Override
             public void close () throws java.io.IOException {
                 super.close ();
                 content = new String (toByteArray ());
@@ -282,6 +283,7 @@ implements CloneableEditorSupport.Env {
         if (cannotBeModified != null) {
             final String notify = cannotBeModified;
             IOException e = new IOException () {
+                @Override
                 public String getLocalizedMessage () {
                     return notify;
                 }

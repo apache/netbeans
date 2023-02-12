@@ -161,7 +161,7 @@ public abstract class SearchGroup {
     /**
      * Does search.
      *
-     * @throw RuntimeException USER level annotated runtime exception
+     * @throws RuntimeException USER level annotated runtime exception
      *        on low memory condition (instead of OutOfMemoryError)
      */
     public void search() {

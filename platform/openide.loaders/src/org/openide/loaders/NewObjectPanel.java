@@ -62,6 +62,7 @@ final class NewObjectPanel extends javax.swing.JPanel implements DocumentListene
     }
 
     /** Preffered size */
+    @Override
     public java.awt.Dimension getPreferredSize() {
         return TemplateWizard.PREF_DIM;
     }
@@ -175,6 +176,7 @@ final class NewObjectPanel extends javax.swing.JPanel implements DocumentListene
         changedUpdate (p1);
     }
 
+    @Override
     public void addNotify () {
         super.addNotify ();
         newObjectName.requestFocus ();

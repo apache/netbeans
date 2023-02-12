@@ -60,6 +60,7 @@ public class NbObjectInputStream extends ObjectInputStream {
     /* Uses NetBeans module classloader to load the class.
      * @param v description of the class to load
      */
+    @Override
     protected Class resolveClass(ObjectStreamClass v) throws IOException, ClassNotFoundException {
         ClassLoader cl = getNBClassLoader();
 
@@ -111,6 +112,7 @@ public class NbObjectInputStream extends ObjectInputStream {
      * can provide list of classes that changed name or want to suppress <code>serialVersionUID</code>.
      *
      */
+    @Override
     protected ObjectStreamClass readClassDescriptor() throws IOException, ClassNotFoundException {
         ObjectStreamClass ose = super.readClassDescriptor();
 

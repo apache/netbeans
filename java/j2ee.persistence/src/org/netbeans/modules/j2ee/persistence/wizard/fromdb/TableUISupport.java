@@ -84,13 +84,15 @@ public class TableUISupport {
     }
 
     public static Set<Table> getSelectedTables(JList list, boolean enabledOnly) {
-        Set<Table> result = new HashSet<Table>();
+        Set<Table> result = new HashSet<>();
 
         int[] selected = list.getSelectedIndices();
         for (int i = 0; i < selected.length; i++) {
             Table table = (Table)list.getModel().getElementAt(selected[i]);
             if(enabledOnly){
-                if(!list.getCellRenderer().getListCellRendererComponent(list, table, selected[i], false, false).isEnabled())continue;
+                if(!list.getCellRenderer().getListCellRendererComponent(list, table, selected[i], false, false).isEnabled()) {
+                    continue;
+                }
             }
             result.add(table);
         }
@@ -99,11 +101,13 @@ public class TableUISupport {
     }
 
     public static Set<Table> getEnabledTables(JList list) {
-        Set<Table> result = new HashSet<Table>();
+        Set<Table> result = new HashSet<>();
 
         for (int i = 0; i < list.getModel().getSize(); i++) {
             Table table = (Table)list.getModel().getElementAt(i);
-            if(!list.getCellRenderer().getListCellRendererComponent(list, table, i, false, false).isEnabled())continue;
+            if(!list.getCellRenderer().getListCellRendererComponent(list, table, i, false, false).isEnabled()) {
+                continue;
+            }
             result.add(table);
         }
 
@@ -124,6 +128,7 @@ public class TableUISupport {
 
     private abstract static class TableModel extends AbstractListModel {
 
+        @Override
         public abstract Table getElementAt(int index);
     }
 
@@ -139,14 +144,17 @@ public class TableUISupport {
             refresh();
         }
 
+        @Override
         public Table getElementAt(int index) {
             return displayTables.get(index);
         }
 
+        @Override
         public int getSize() {
             return displayTables != null ? displayTables.size() : 0;
         }
 
+        @Override
         public void stateChanged(ChangeEvent event) {
             refresh();
         }
@@ -172,14 +180,17 @@ public class TableUISupport {
             refresh();
         }
 
+        @Override
         public Table getElementAt(int index) {
             return displayTables.get(index);
         }
 
+        @Override
         public int getSize() {
             return displayTables != null ? displayTables.size() : 0;
         }
 
+        @Override
         public void stateChanged(ChangeEvent event) {
             refresh();
         }
@@ -204,6 +215,7 @@ public class TableUISupport {
             this.filter = filter;
         }
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             DisabledReason disabledReason = null;
             Object displayName = null;
@@ -214,17 +226,18 @@ public class TableUISupport {
                 if (disabledReason!= null) {
                     displayName = NbBundle.getMessage(TableUISupport.class, "LBL_TableNameWithDisabledReason", tableItem.getName(), disabledReason.getDisplayName());
                 } else {
-                    if(tableItem.isTable())
+                    if(tableItem.isTable()) {
                         displayName = tableItem.getName();
-                    else
+                    } else {
                         displayName = tableItem.getName() + NbBundle.getMessage(TableUISupport.class, "LBL_DB_VIEW");
+                    }
                 }
             }
 
             JLabel component = (JLabel)super.getListCellRendererComponent(list, displayName, index, isSelected, cellHasFocus);
             boolean needDisable = (disabledReason instanceof Table.NoPrimaryKeyDisabledReason) || (disabledReason instanceof Table.ExistingNotInSourceDisabledReason) || 
-                    (filter.equals(FilterAvailable.NEW) && (disabledReason instanceof Table.ExistingDisabledReason)) ||
-                    (filter.equals(FilterAvailable.UPDATE) && (disabledReason==null));
+                    (filter == FilterAvailable.NEW && (disabledReason instanceof Table.ExistingDisabledReason)) ||
+                    (filter == FilterAvailable.UPDATE && (disabledReason==null));
             component.setEnabled(!needDisable);
             component.setToolTipText(disabledReason != null ? disabledReason.getDescription() : null);
 
@@ -253,10 +266,11 @@ public class TableUISupport {
                 if (disabledReason!= null) {
                     displayName = NbBundle.getMessage(TableUISupport.class, "LBL_TableNameWithDisabledReason", table.getName(), disabledReason.getDisplayName());
                 } else {
-                    if(((Table)value).isTable())
+                    if(((Table)value).isTable()) {
                         displayName = table.getName();
-                    else
+                    } else {
                         displayName = table.getName() + NbBundle.getMessage(TableUISupport.class, "LBL_DB_VIEW");
+                    }
                 }
 
 
@@ -282,7 +296,7 @@ public class TableUISupport {
         }
 
         private static String getTableTooltip(Table table, TableClosure tableClosure) {
-            List<Table> tables = new ArrayList<Table>();
+            List<Table> tables = new ArrayList<>();
             Set<Table> relatedTables;
             String bundleKey;
 
@@ -299,7 +313,7 @@ public class TableUISupport {
                     tables.add(refTable);
                 }
             }
-            if(tables.size() == 0){ // issue 149542
+            if(tables.isEmpty()){ // issue 149542
                 return null;
             } else {
                 return NbBundle.getMessage(TableUISupport.class, bundleKey, createTableList(tables));
@@ -307,7 +321,7 @@ public class TableUISupport {
         }
 
         private static String createTableList(List<Table> tables) {
-            assert tables.size() > 0;
+            assert !tables.isEmpty();
 
             if (tables.size() == 1) {
                 return tables.iterator().next().getName();
@@ -460,6 +474,7 @@ public class TableUISupport {
             nonErrorForeground = UIManager.getColor("Label.foreground"); // NOI18N
         }
 
+        @Override
         public Component getTableCellRendererComponent(JTable jTable, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             boolean joinTable = false;
             boolean validClass = true;

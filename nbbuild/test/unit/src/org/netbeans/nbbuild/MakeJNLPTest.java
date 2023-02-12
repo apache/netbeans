@@ -1053,7 +1053,7 @@ public class MakeJNLPTest extends TestBase {
         if (prefix == null) {
             prefix = "modules";
         }
-        String ss = prefix.substring(prefix.length()-1, prefix.length());
+        String ss = prefix.substring(prefix.length()-1);
                 
         File dir = new File(this.getWorkDir(), prefix);
         dir.mkdirs();

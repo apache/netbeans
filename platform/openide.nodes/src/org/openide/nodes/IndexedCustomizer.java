@@ -395,6 +395,7 @@ public final class IndexedCustomizer extends JDialog implements Customizer {
         }
     }
 
+    @Override
     public Dimension getPreferredSize() {
         return new Dimension(300, super.getPreferredSize().height);
     }
@@ -457,9 +458,11 @@ public final class IndexedCustomizer extends JDialog implements Customizer {
     }
 
     // I don't change any property...
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
     }
 

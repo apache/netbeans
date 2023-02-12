@@ -95,7 +95,7 @@ public class JPAGenTest extends SourceTestSupport{
         
         EntityMember id = getId("PRODUCT");
         
-        List<EntityMember> fields = new ArrayList<EntityMember>();
+        List<EntityMember> fields = new ArrayList<>();
         fields.add(id);
         fields.add(description);
         
@@ -117,7 +117,7 @@ public class JPAGenTest extends SourceTestSupport{
         SchemaElement schema = getSampleSchema();
         TableProvider tableProvider = new DBSchemaTableProvider(schema, generator);
         
-        Set<String> tables = new HashSet<String>();
+        Set<String> tables = new HashSet<>();
         for (Table each : tableProvider.getTables()){
             if(each.getName().equals("CUSTOMER")){
                 tables.add(each.getName());
@@ -196,7 +196,7 @@ public class JPAGenTest extends SourceTestSupport{
         
         EntityMember id = getId("USER");
         
-        List<EntityMember> fields = new ArrayList<EntityMember>();
+        List<EntityMember> fields = new ArrayList<>();
         fields.add(id);
         fields.add(name);
         
@@ -252,42 +252,52 @@ public class JPAGenTest extends SourceTestSupport{
             this.tableName = tableName;
         }
         
+        @Override
         public boolean isLobType() {
             return lob;
         }
         
+        @Override
         public boolean isPrimaryKey() {
             return primaryKey;
         }
         
+        @Override
         public void setPrimaryKey(boolean isPk, boolean isPkField) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
         
+        @Override
         public boolean supportsFinder() {
             return supportsFinder;
         }
         
+        @Override
         public Integer getLength() {
             return length;
         }
 
+        @Override
         public Integer getPrecision(){
             return precision;
         }
 
+        @Override
         public Integer getScale(){
             return scale;
         }
         
+        @Override
         public boolean isNullable() {
             return nullable;
         }
         
+        @Override
         public String getColumnName() {
             return columnName;
         }
         
+        @Override
         public String getTableName() {
             return tableName;
         }
@@ -315,30 +325,37 @@ public class JPAGenTest extends SourceTestSupport{
             this.rootFolder = rootFolder;
         }
         
+        @Override
         public Set<String> getTableNames() {
             return tableNames;
         }
         
+        @Override
         public FileObject getRootFolder(String tableName) {
             return rootFolder;
         }
         
+        @Override
         public String getPackageName(String tableName) {
             return packageName;
         }
         
+        @Override
         public String getClassName(String tableName) {
             return EntityMember.makeClassName(tableName);
         }
 
+        @Override
         public String getCatalog() {
             return catalogName;
         }
         
+        @Override
         public String getSchema() {
             return schemaName;
         }
 
+        @Override
         public Set<List<String>> getUniqueConstraints(String tableName) {
             return null;
         }

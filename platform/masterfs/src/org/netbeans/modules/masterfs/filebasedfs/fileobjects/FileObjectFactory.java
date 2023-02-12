@@ -220,10 +220,10 @@ public final class FileObjectFactory {
      * @return always true.
      */
     private boolean checkCacheState(boolean expectedExists, File file, Caller caller) {
-        if (!expectedExists && (caller.equals(Caller.GetParent) || caller.equals(Caller.ToFileObject))) {
+        if (!expectedExists && (caller == Caller.GetParent || caller == Caller.ToFileObject)) {
             return true;
         }
-        if (isWarningEnabled() && caller != null && !caller.equals(Caller.GetChildern)) {
+        if (isWarningEnabled() && caller != null && caller != Caller.GetChildern) {
             boolean realExists = file.exists();
             boolean notsame = expectedExists != realExists;
             if (notsame) {

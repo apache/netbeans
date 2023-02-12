@@ -383,7 +383,8 @@ public final class PropertyPanelTest extends NbTestCase {
         
         public Ed () {
         }
-        
+
+        @Override
         public void addPropertyChangeListener (PropertyChangeListener pcl) {
             super.addPropertyChangeListener(pcl);
         }
@@ -398,11 +399,13 @@ public final class PropertyPanelTest extends NbTestCase {
         //editor - and the PropertyPanel cannot be initialized into custom
         //editor mode for a property editor that doesn't actually support
         //custom editors
+        @Override
         public boolean supportsCustomEditor() {
             return true;
         }
         
         //To avoid NPE when propertypanel tries to add the custom editor
+        @Override
         public Component getCustomEditor() {
             JPanel result = new JPanel();
             result.setBackground(java.awt.Color.ORANGE);

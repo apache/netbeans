@@ -19,12 +19,6 @@
 
 package org.netbeans.modules.db.test.jdbcstub;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import org.netbeans.modules.j2ee.persistence.editor.completion.*;
 import org.netbeans.test.stub.api.StubDelegate;
 
 /**

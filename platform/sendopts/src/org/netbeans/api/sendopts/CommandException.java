@@ -70,6 +70,7 @@ public final class CommandException extends Exception {
     /** Localized message describing the problem that is usually printed
      * to the user.
      */
+    @Override
     public String getLocalizedMessage() {
         if (locMsg != null) {
             return locMsg;

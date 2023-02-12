@@ -215,9 +215,7 @@ public final class EntitiesFromDBGenerator {
             helper.buildBeans();
             
         } catch (DBException ex){
-            IOException wrapper = new IOException(ex.getMessage());
-            wrapper.initCause(ex);
-            throw wrapper;
+            throw new IOException(ex);
         }
         
         
@@ -231,7 +229,7 @@ public final class EntitiesFromDBGenerator {
     private TableClosure getTableClosure() throws SQLException, DBException{
         TableProvider tableProvider = new DBSchemaTableProvider(getSchemaElement(), generator, project);
         
-        Set<Table> selectedTables = new HashSet<Table>();
+        Set<Table> selectedTables = new HashSet<>();
         for (Table each : tableProvider.getTables()){
             if (tableNames.contains(each.getName())){
                 selectedTables.add(each);

@@ -54,7 +54,7 @@ public final class RefactoringUtil {
         String expression = text.substring(expressionOffset.getStart(), expressionOffset.getEnd());
         result.append(encodeAngleBrackets(text.substring(0, expressionOffset.getStart())));
         result.append(highlight(expression, nodeOffset));
-        result.append(encodeAngleBrackets(text.substring(expressionOffset.getEnd(), text.length())));
+        result.append(encodeAngleBrackets(text.substring(expressionOffset.getEnd())));
         return result.toString();
     }
     
@@ -68,7 +68,7 @@ public final class RefactoringUtil {
         result.append("<b>");
         result.append(encodeAngleBrackets(text.subSequence(offsetRange.getStart(), offsetRange.getEnd()).toString()));
         result.append("</b>");
-        result.append(text.substring(offsetRange.getEnd(), text.length()));
+        result.append(text.substring(offsetRange.getEnd()));
         return result.toString();
     }
 

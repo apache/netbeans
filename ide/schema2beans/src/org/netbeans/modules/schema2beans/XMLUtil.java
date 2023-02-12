@@ -404,7 +404,7 @@ public class XMLUtil {
             while (pos >= 0) {
                 out.write(text.substring(0, pos));
                 out.write("&#x2d;&#x2d;");
-                text = text.substring(pos+2, text.length());
+                text = text.substring(pos+2);
                 pos = text.indexOf("--");
             }
             out.write(text);
@@ -692,7 +692,7 @@ public class XMLUtil {
         public XPathLocator(String xpathExpr) {
             xpathExpr = xpathExpr.trim();
             if (xpathExpr.startsWith("/"))
-                xpathExpr = xpathExpr.substring(1, xpathExpr.length());
+                xpathExpr = xpathExpr.substring(1);
             this.xpathExpr = xpathExpr;
             xpathParts = xpathExpr.split("/");  // This is a bit too simple.
             partNum = 0;
@@ -714,7 +714,7 @@ public class XMLUtil {
                 desiredElementName = desiredElementName.substring(0, startPos);
                 //System.out.println("subExpr="+subExpr);
                 if (subExpr.startsWith("position()=")) {
-                    desiredPosition = Integer.parseInt(subExpr.substring(11, subExpr.length()));
+                    desiredPosition = Integer.parseInt(subExpr.substring(11));
                 } else {
                     boolean allDigits = subExpr.length() > 0;
                     for (int i = 0; i < subExpr.length(); ++i) {
@@ -731,7 +731,7 @@ public class XMLUtil {
                 }
             } else if (desiredElementName.startsWith("@")) {
                 isAttribute = true;
-                desiredElementName = desiredElementName.substring(1, desiredElementName.length());
+                desiredElementName = desiredElementName.substring(1);
             }
             //System.out.println("desiredElementName="+desiredElementName);
         }

@@ -33,6 +33,7 @@ import org.openide.util.NbBundle;
 public class URLEditor extends PropertyEditorSupport implements org.openide.explorer.propertysheet.editors.XMLPropertyEditor  {
 
     /** sets new value */
+    @Override
     public void setAsText(String s) {
         if ("null".equals(s)) { // NOI18N
             setValue(null);
@@ -54,16 +55,19 @@ public class URLEditor extends PropertyEditorSupport implements org.openide.expl
     }
 
     /** @return the current value as String */
+    @Override
     public String getAsText() {
         URL url = (URL)getValue();
         return url != null ? url.toString() : "null"; // NOI18N
     }
 
+    @Override
     public String getJavaInitializationString () {
         URL url = (URL) getValue ();
         return "new java.net.URL(\""+url.toString ()+"\")"; // NOI18N
     }
 
+    @Override
     public boolean supportsCustomEditor () {
         return false;
     }

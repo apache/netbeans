@@ -180,6 +180,7 @@ public class NbCollections {
             return x;
         }
 
+        @Override
         public void remove() {
             it.remove();
         }
@@ -550,6 +551,7 @@ public class NbCollections {
                     public E next() {
                         return enumeration.nextElement();
                     }
+                    @Override
                     public void remove() {
                         throw new UnsupportedOperationException();
                     }

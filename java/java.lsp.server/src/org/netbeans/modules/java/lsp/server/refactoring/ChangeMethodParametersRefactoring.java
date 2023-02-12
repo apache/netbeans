@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
@@ -255,7 +256,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 ChangeParametersRefactoring refactoring = new ChangeParametersRefactoring(handle);
                 Modifier selectedModifier = ui.getSelectedModifier();
                 if (selectedModifier != null) {
-                    Set<javax.lang.model.element.Modifier> modifiers = new HashSet<>(1);
+                    Set<javax.lang.model.element.Modifier> modifiers = EnumSet.noneOf(javax.lang.model.element.Modifier.class);
                     switch (selectedModifier) {
                         case PRIVATE: modifiers.add(javax.lang.model.element.Modifier.PRIVATE);break;
                         case PACKAGE_PRIVATE: break; /* no modifier */

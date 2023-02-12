@@ -174,7 +174,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
                 }
 
                 if (relativeTo.isEmpty()) {
-                    Collection<String> basePaths = new ArrayList<String>();
+                    Collection<String> basePaths;
                     if (rIndex != null) {
                         basePaths = rIndex.getBasePaths();
                         relativeTo.add(fo.getParent());

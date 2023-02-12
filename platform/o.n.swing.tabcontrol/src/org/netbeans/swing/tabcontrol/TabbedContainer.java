@@ -516,6 +516,7 @@ public class TabbedContainer extends JComponent implements Accessible {
         return true;
     }
 
+    @Override
     public boolean isPaintingOrigin() {
         return true;
     }

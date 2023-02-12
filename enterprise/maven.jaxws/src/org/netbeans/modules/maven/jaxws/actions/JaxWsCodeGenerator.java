@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -961,11 +962,10 @@ public class JaxWsCodeGenerator {
                                         make.Literal(wsdlUrl)))); //NOI18N
                 // create field modifier: private(static) with @WebServiceRef annotation
 //                FileObject targetFo = workingCopy.getFileObject();
-                Set<Modifier> modifiers = new HashSet<Modifier>();
+                Set<Modifier> modifiers = EnumSet.of(Modifier.PRIVATE);
 //                if (Car.getCar(targetFo) != null) {
 //                    modifiers.add(Modifier.STATIC);
 //                }
-                modifiers.add(Modifier.PRIVATE);
                 ModifiersTree methodModifiers = make.Modifiers(
                         modifiers,
                         Collections.<AnnotationTree>singletonList(wsRefAnnotation));

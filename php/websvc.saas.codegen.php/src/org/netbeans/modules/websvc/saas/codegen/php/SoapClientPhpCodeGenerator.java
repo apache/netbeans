@@ -104,7 +104,7 @@ public class SoapClientPhpCodeGenerator extends SaasClientCodeGenerator {
             methodName = infos[0].getOperationName();
         }
         if ( wsdlUrl.startsWith(FILE.substring(0, FILE.length() -1)) && 
-                !wsdlUrl.startsWith(FILE.substring(0, FILE.length())))
+                !wsdlUrl.startsWith(FILE))
         {             
             wsdlUrl = FILE + wsdlUrl.substring( FILE.length()-1);
         }

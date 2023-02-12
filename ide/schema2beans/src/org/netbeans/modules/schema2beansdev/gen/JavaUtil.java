@@ -821,7 +821,7 @@ public class JavaUtil {
         int pos = fullClassName.lastIndexOf('.');
         if (pos == -1)
             return fullClassName;
-        return fullClassName.substring(pos+1, fullClassName.length());
+        return fullClassName.substring(pos+1);
     }
 
     private static final Class charArrayClass = 

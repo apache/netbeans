@@ -336,7 +336,7 @@ public class QueryBuilderSqlTextArea extends JEditorPane
 //                                 keywordString.substring(1, keywordString.length()-1);
 //                     } else if (keywordString.length() > 2 && ( keywordString.startsWith("\"") || keywordString.startsWith("\'") ) ) {
 //                         db_element_wo_quotes =
-//                                 keywordString.substring(1, keywordString.length());
+//                                 keywordString.substring(1);
 //                     } else
 //                         db_element_wo_quotes = keywordString;
 //                     // check if it is schema name
@@ -437,7 +437,7 @@ public class QueryBuilderSqlTextArea extends JEditorPane
 //         } else if ( str.length() > 2 &&
 //                 ( str.startsWith("\"")  ||
 //                 str.startsWith("\'") ) )  {
-//             db_element_wo_quotes = str.substring(1, str.length());
+//             db_element_wo_quotes = str.substring(1);
 //             position = position+1;
 //         } else {
 //             db_element_wo_quotes = str;

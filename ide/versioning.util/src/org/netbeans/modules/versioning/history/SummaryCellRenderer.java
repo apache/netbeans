@@ -787,7 +787,7 @@ class SummaryCellRenderer implements ListCellRenderer {
                     } else {
                         ++idx;
                         sb.append("<font color=\"").append(PATH_COLOR).append("\">").append(path.substring(0, idx)).append("</font>"); //NOI18N
-                        sb.append(path.substring(idx, path.length()));
+                        sb.append(path.substring(idx));
                     }
                 }
                 pathLabel.setText(sb.append("</body></html>").toString()); //NOI18N

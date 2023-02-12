@@ -53,21 +53,21 @@ public enum Status {
      * @return true if the given status represents a failure or an error.
      */
     public static boolean isFailureOrError(Status status) {
-        return FAILED.equals(status) || ERROR.equals(status);
+        return FAILED == status || ERROR == status;
     }
 
     /**
      * @return true if the given status represents a skipped test.
      */
     public static boolean isSkipped(Status status) {
-        return SKIPPED.equals(status);
+        return SKIPPED == status;
     }
 
     /**
      * @return true if the given status represents an aborted test.
      */
     public static boolean isAborted(Status status) {
-        return ABORTED.equals(status);
+        return ABORTED == status;
     }
 
     /**

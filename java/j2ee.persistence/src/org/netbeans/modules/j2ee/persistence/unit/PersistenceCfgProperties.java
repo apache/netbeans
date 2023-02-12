@@ -53,7 +53,7 @@ public class PersistenceCfgProperties {
     private static final String[] EL_TARGET_SERVER = new String[]{"None", "Glassfish", "JBoss", "Oc4j", "SAPNetWeaver_7_1", "SunAS9Server", "WebLogic_10", "WebLogic_12", "WebLogic_9", "WebLogic", "WebSphere_6_1", "WebSphere_7", "WebSphere_EJBEmbeddable", "WebSphere_Liberty", "WebSphere"};//NOI18N
     private static final String[] EL_DDL_GEN_MODE = new String[]{"both", "database", "sql-script"};//NOI18N
     
-    private static final Map<Provider, Map<String, String[]>> possiblePropertyValues = new HashMap<Provider, Map<String, String[]>>();
+    private static final Map<Provider, Map<String, String[]>> possiblePropertyValues = new HashMap<>();
 
     static {
         //general 2.0
@@ -219,7 +219,7 @@ public class PersistenceCfgProperties {
      */
     public static List<String> getKeys(Provider provider){
         //TODO: cache lists?
-        ArrayList<String> ret = new ArrayList<String>();
+        ArrayList<String> ret = new ArrayList<>();
         String ver = provider == null ? null : ProviderUtil.getVersion(provider);
         if(provider == null || (ver!=null && !Persistence.VERSION_1_0.equals(ver))) {
             ret.addAll(possiblePropertyValues.get(null).keySet());
@@ -242,7 +242,7 @@ public class PersistenceCfgProperties {
      * @return 
      */
     public static List<Provider> getProviders(){
-        ArrayList<Provider> ret = new ArrayList<Provider>();
+        ArrayList<Provider> ret = new ArrayList<>();
         ret.add(ProviderUtil.ECLIPSELINK_PROVIDER2_0);
         ret.add(ProviderUtil.HIBERNATE_PROVIDER2_0);
         return ret;

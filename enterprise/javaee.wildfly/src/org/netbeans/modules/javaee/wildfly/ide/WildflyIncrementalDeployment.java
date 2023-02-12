@@ -80,7 +80,7 @@ public class WildflyIncrementalDeployment extends IncrementalDeployment implemen
     public File getDirectoryForNewApplication(Target target, J2eeModule app, ModuleConfiguration configuration) {
         String baseName = app.getUrl();
         if(baseName.indexOf(File.separatorChar) >= 0) {
-            baseName = baseName.substring(baseName.lastIndexOf(File.separatorChar) +1, baseName.length());
+            baseName = baseName.substring(baseName.lastIndexOf(File.separatorChar) +1);
         }
         String extension = getExtension(app.getType());
         try {

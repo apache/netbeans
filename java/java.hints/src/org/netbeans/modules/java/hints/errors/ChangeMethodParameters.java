@@ -165,7 +165,7 @@ public class ChangeMethodParameters implements ErrorRule<Void> {
             List<TreePath> methods = new LinkedList<>();
             for (Tree tree : ((ClassTree) enclosingTypePath.getLeaf()).getMembers()) {
                 if (cancel) return Collections.<Fix>emptyList();
-                if (tree.getKind().equals(Tree.Kind.METHOD)) {
+                if (tree.getKind() == Tree.Kind.METHOD) {
                     MethodTree method = (MethodTree) tree;
                     if (method.getName().contentEquals(methodName)) {
                         methods.add(new TreePath(enclosingTypePath, method));

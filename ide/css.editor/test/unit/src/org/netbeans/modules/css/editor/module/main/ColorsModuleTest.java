@@ -106,8 +106,8 @@ public class ColorsModuleTest extends CssTestBase {
     
     public void testInheritInColor() throws ParseException {
         PropertyDefinition p = Properties.getPropertyDefinition( "color");
-        PRINT_INFO_IN_ASSERT_RESOLVE = true;
-        GrammarResolver.setLogging(GrammarResolver.Log.DEFAULT, true);
+        PRINT_INFO_IN_ASSERT_RESOLVE = false;
+        GrammarResolver.setLogging(GrammarResolver.Log.DEFAULT, false);
         assertResolve(p.getGrammarElement(null), "inherit");
         
 //        assertCssCode("div { color: inherit }");

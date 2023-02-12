@@ -204,6 +204,7 @@ final class FilesSet implements Set<FileObject> {
             }
         }
 
+        @Override
         public void remove() {
             getIteratorDelegate().remove();
         }

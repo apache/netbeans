@@ -3391,7 +3391,7 @@ private void workedFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 idx = comment.indexOf(s);
                 if(idx > 0) {
                     idx += s.length() + 1;
-                    comment = comment.substring(0, idx) + "\n\n" + repro + comment.substring(idx, comment.length()); // NOI18N
+                    comment = comment.substring(0, idx) + "\n\n" + repro + comment.substring(idx); // NOI18N
                 } else {
                     comment = repro + "\n\n" + comment; // NOI18N
                 }               

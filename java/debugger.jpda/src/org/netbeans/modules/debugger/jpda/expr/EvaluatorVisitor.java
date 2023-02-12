@@ -3602,7 +3602,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
         ScriptVariable var = evaluationContext.createScriptLocalVariable(name, type);
         ExpressionTree initializer = arg0.getInitializer();
         if (initializer != null) {
-            if (Tree.Kind.NEW_ARRAY.equals(initializer.getKind())) {
+            if (Tree.Kind.NEW_ARRAY == initializer.getKind()) {
                 try {
                     newArrayType = ArrayTypeWrapper.componentType((ArrayType) type);
                 } catch (ClassNotLoadedException cnlex) {

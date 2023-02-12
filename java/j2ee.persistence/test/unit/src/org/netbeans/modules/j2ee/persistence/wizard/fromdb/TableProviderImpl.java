@@ -34,17 +34,17 @@ import org.netbeans.modules.j2ee.persistence.wizard.fromdb.Table.DisabledReason;
 public class TableProviderImpl implements TableProvider {
 
     private final Set<Table> tables;
-    private final Map<String, Table> name2Table = new HashMap<String, Table>();
+    private final Map<String, Table> name2Table = new HashMap<>();
 
     public TableProviderImpl(String schema, String catalog, Map<String, Set<String>> tablesAndRefs) {
         this(schema, catalog, tablesAndRefs, emptyDisabledReasonMap());
     }
 
     public TableProviderImpl(String catalog, String schema, Map<String, Set<String>> tablesAndRefs, Map<String, DisabledReason> disabledReasons) {
-        Map<String, TableImpl> name2Table = new HashMap<String, TableImpl>();
-        Map<String, Set<Table>> name2Referenced = new HashMap<String, Set<Table>>();
-        Map<String, Set<Table>> name2ReferencedBy = new HashMap<String, Set<Table>>();
-        Map<String, Set<Table>> name2Join = new HashMap<String, Set<Table>>();
+        Map<String, TableImpl> name2Table = new HashMap<>();
+        Map<String, Set<Table>> name2Referenced = new HashMap<>();
+        Map<String, Set<Table>> name2ReferencedBy = new HashMap<>();
+        Map<String, Set<Table>> name2Join = new HashMap<>();
 
         // need to create all the tables first
         for (String tableName : tablesAndRefs.keySet()) {
@@ -74,7 +74,7 @@ public class TableProviderImpl implements TableProvider {
             }
         }
 
-        Set<Table> tmpTables = new HashSet<Table>();
+        Set<Table> tmpTables = new HashSet<>();
         for (TableImpl table : name2Table.values()) {
             String tableName = table.getName();
 
@@ -88,6 +88,7 @@ public class TableProviderImpl implements TableProvider {
         tables = Collections.unmodifiableSet(tmpTables);
     }
 
+    @Override
     public Set<Table> getTables() {
         return tables;
     }
@@ -114,6 +115,7 @@ public class TableProviderImpl implements TableProvider {
             this.referencedTables = referencedTables;
         }
 
+        @Override
         public Set<Table> getReferencedTables() {
             return referencedTables;
         }
@@ -122,6 +124,7 @@ public class TableProviderImpl implements TableProvider {
             this.referencedByTables = referencedByTables;
         }
 
+        @Override
         public Set<Table> getReferencedByTables() {
             return referencedByTables;
         }
@@ -130,6 +133,7 @@ public class TableProviderImpl implements TableProvider {
             this.joinTables = joinTables;
         }
 
+        @Override
         public Set<Table> getJoinTables() {
             return joinTables;
         }

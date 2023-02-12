@@ -435,7 +435,7 @@ public final class VariousUtils {
             if (scalarType.equals(Scalar.Type.STRING)) {
                 String stringValue = scalar.getStringValue().toLowerCase();
                 if (stringValue.equals("false") || stringValue.equals("true")) { //NOI18N
-                    return Type.BOOLEAN;
+                    return Type.BOOL;
                 }
                 if (stringValue.equals(Type.NULL)) {
                     return Type.NULL;
@@ -1968,7 +1968,7 @@ public final class VariousUtils {
                     int indexOfArrayDelim = typeName.indexOf('[');
                     if (indexOfArrayDelim != -1) {
                         typeRawPart = typeName.substring(0, indexOfArrayDelim);
-                        typeArrayPart = typeName.substring(indexOfArrayDelim, typeName.length());
+                        typeArrayPart = typeName.substring(indexOfArrayDelim);
                     }
                     if ("$this".equals(typeName)) { //NOI18N
                         // #239987

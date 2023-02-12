@@ -540,7 +540,7 @@ public abstract class URLMapper {
                     if (++separator != spec.length()) {
                         try {
                             // XXX new URI("substring").getPath() might be better?
-                            entryName = URLDecoder.decode(spec.substring(separator, spec.length()),"UTF-8");
+                            entryName = URLDecoder.decode(spec.substring(separator),"UTF-8");
                         } catch (UnsupportedEncodingException ex) {
                             return;
                         }

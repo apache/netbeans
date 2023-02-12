@@ -179,7 +179,7 @@ public class ModuleDependencies extends Task {
                         majorVersion = -1;
                     } else {
                         codebasename = module.substring (0, slash);
-                        majorVersion = Integer.valueOf(module.substring(slash + 1));
+                        majorVersion = Integer.parseInt(module.substring(slash + 1));
                     }
                     m = new ModuleInfo (input.name, f, codebasename);
                     m.majorVersion = majorVersion;
@@ -1172,11 +1172,11 @@ public class ModuleDependencies extends Task {
                 String major = token.substring (slash + 1);
                 int range = major.indexOf ('-');
                 if (range == -1) {
-                    this.majorVersionFrom = Integer.valueOf(major);
+                    this.majorVersionFrom = Integer.parseInt(major);
                     this.majorVersionTo = majorVersionFrom;
                 } else {
-                    this.majorVersionFrom = Integer.valueOf(major.substring(0, range));
-                    this.majorVersionTo = Integer.valueOf(major.substring(range + 1));
+                    this.majorVersionFrom = Integer.parseInt(major.substring(0, range));
+                    this.majorVersionTo = Integer.parseInt(major.substring(range + 1));
                 }
             }
             this.type = type;

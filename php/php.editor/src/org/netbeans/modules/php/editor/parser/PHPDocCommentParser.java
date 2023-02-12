@@ -150,7 +150,7 @@ public class PHPDocCommentParser {
         if (index == 0) {  // there is only one line comment
             line = removeStarAndTrim(comment);
         } else {
-            line = comment.substring(index, comment.length()).trim();
+            line = comment.substring(index).trim();
         }
         AnnotationParsedLine tagType = findTagOnLine(line);
         if (tagType != null) {  // is defined a tag on the last line
@@ -277,7 +277,7 @@ public class PHPDocCommentParser {
                 docType = new PHPDocTypeNode(startDocNode, startDocNode + stype.length(), stype, isArray);
             } else {
                 String className = stype.substring(0, index);
-                String constantName = stype.substring(index + 2, stype.length());
+                String constantName = stype.substring(index + 2);
                 PHPDocNode classNameNode = new PHPDocNode(startDocNode, startDocNode + className.length(), className);
                 PHPDocNode constantNode = new PHPDocNode(startDocNode + className.length() + 2, startDocNode + stype.length(), constantName);
                 docType = new PHPDocStaticAccessType(startDocNode, startDocNode + stype.length(), stype, classNameNode, constantNode);

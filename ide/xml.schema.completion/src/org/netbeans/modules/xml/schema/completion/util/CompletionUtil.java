@@ -865,7 +865,7 @@ public class CompletionUtil {
                 if(nextToken.id() == XMLTokenId.TAG) {
                     String tagName = nextToken.text().toString();
                     if(name == null && tagName.startsWith("<"))
-                        name = tagName.substring(1, tagName.length());
+                        name = tagName.substring(1);
                     String lastAttrName = null;
                     while(ts.moveNext() ) {
                         Token t = ts.token();

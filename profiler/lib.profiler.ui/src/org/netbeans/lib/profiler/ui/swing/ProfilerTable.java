@@ -236,7 +236,7 @@ public class ProfilerTable extends JTable {
     private Color background(int row, int column) {
         Color background = (row & 0x1) == 0 ? getBackground() : UIUtils.getDarker(getBackground());
 //        if (convertColumnIndexToModel(column) == getSortColumn()) return UIUtils.getDarker(background);
-        if (convertColumnIndexToModel(column) == getSortColumn() && !SortOrder.UNSORTED.equals(_getRowSorter().getSortOrder())) {
+        if (convertColumnIndexToModel(column) == getSortColumn() && SortOrder.UNSORTED != _getRowSorter().getSortOrder()) {
             int r = background.getRed() - 4;
             int g = background.getGreen() - 4;
             int b = background.getBlue() + 6;
@@ -714,7 +714,7 @@ public class ProfilerTable extends JTable {
         if (isSortable()) {
             getRowSorter().addRowSorterListener(new RowSorterListener() {
                 public void sorterChanged(RowSorterEvent e) {
-                    if (RowSorterEvent.Type.SORTED.equals(e.getType()))
+                    if (RowSorterEvent.Type.SORTED == e.getType())
                         updateColumnsPreferredWidth();
                 }
             });

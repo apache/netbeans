@@ -104,7 +104,7 @@ public class JavaElementRefFinder {
         }
         String beforeMatch = escapeAttrValue(classAttrValue.substring(0, matchIndex));
         String match = escapeAttrValue(classAttrValue.substring(matchIndex, matchIndex + matchLength));
-        String afterMatch = escapeAttrValue(classAttrValue.substring(matchIndex + matchLength, classAttrValue.length()));
+        String afterMatch = escapeAttrValue(classAttrValue.substring(matchIndex + matchLength));
         if (beforeMatch != null && match != null && afterMatch != null) {
             builder.append(" class="); // NOI18N
             builder.append(beforeMatch).append("<b>").append(match).append("</b>").append(afterMatch); // NOI18N

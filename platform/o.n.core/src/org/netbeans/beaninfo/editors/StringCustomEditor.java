@@ -177,7 +177,8 @@ public class StringCustomEditor extends javax.swing.JPanel implements PropertyCh
                 prefHeight));
         }
     }
-    
+
+    @Override
     public void addNotify () {
         super.addNotify();
         //force focus to the editable area

@@ -53,6 +53,6 @@ public final class ORMMetadata {
     public void waitScanFinished() {
         // TODO: RETOUCHE
         //NNMDRListener.getDefault().waitScanFinished();
-        return;
+
     }
 }

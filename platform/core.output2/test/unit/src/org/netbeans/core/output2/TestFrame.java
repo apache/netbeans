@@ -77,6 +77,7 @@ import org.openide.windows.OutputListener;
         System.err.println("DONE");
     }
 
+    @Override
     public void setVisible (boolean val) {
        boolean go = val != isVisible();
        super.setVisible(val);

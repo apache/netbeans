@@ -30,7 +30,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
-import org.netbeans.api.project.Sources;
 import org.netbeans.modules.j2ee.core.api.support.SourceGroups;
 import org.netbeans.modules.j2ee.core.api.support.java.JavaIdentifiers;
 import org.netbeans.modules.j2ee.persistence.wizard.Util;
@@ -252,7 +251,7 @@ public class JpaControllerSetupPanelVisual extends javax.swing.JPanel implements
 //            }
         
             String packageName = getPackage();
-            if (packageName.trim().equals("")) { // NOI18N
+            if (packageName.trim().isEmpty()) { // NOI18N
                 wizard.putProperty("WizardPanel_errorMessage", NbBundle.getMessage(JpaControllerSetupPanelVisual.class, "ERR_JavaTargetChooser_CantUseDefaultPackage"));
                 return false;
             }
@@ -345,14 +344,17 @@ public class JpaControllerSetupPanelVisual extends javax.swing.JPanel implements
         packageComboBox.setModel(model);
     }
     
+    @Override
     public void insertUpdate(DocumentEvent e) {
         changeSupport.fireChange();
     }
 
+    @Override
     public void removeUpdate(DocumentEvent e) {
         changeSupport.fireChange();
     }
 
+    @Override
     public void changedUpdate(DocumentEvent e) {
         changeSupport.fireChange();
     }

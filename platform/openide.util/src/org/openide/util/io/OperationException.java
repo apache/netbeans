@@ -49,10 +49,12 @@ public class OperationException extends IOException {
 
     /** Description taken from previous message
     */
+    @Override
     public String getMessage() {
         return ex.getMessage();
     }
 
+    @Override
     public Throwable getCause() {
         return ex;
     }

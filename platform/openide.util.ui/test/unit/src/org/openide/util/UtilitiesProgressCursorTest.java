@@ -57,7 +57,8 @@ public class UtilitiesProgressCursorTest extends NbTestCase {
     /** testing component for setting cursor
      */
     private static class ProgressCursorComp extends JComponent {
-        
+
+        @Override
         public String getName () {
             return "TestProgressCursorComp";
         }

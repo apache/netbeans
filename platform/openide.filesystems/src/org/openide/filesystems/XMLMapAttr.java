@@ -1294,6 +1294,7 @@ final class XMLMapAttr implements Map {
                     return new FOEntry(fo, s);
                 }
 
+                @Override
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }

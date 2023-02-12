@@ -27,7 +27,7 @@ import org.openide.nodes.Node;
 /**
  *
  * @author Michal Mocnak
- * @auther Peter Williams
+ * @author Peter Williams
  */
 public interface UndeployModuleCookie extends Node.Cookie {
     

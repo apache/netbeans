@@ -317,7 +317,7 @@ public class MetaProperty implements org.netbeans.modules.schema2beansdev.metadd
 						// Dup prefix map, so as to not write over previous values, and to make it easy to clear out our entries.
 						namespacePrefixes = new java.util.HashMap(namespacePrefixes);
 					}
-					String attrNSPrefix = attrName.substring(6, attrName.length());
+					String attrNSPrefix = attrName.substring(6);
 					namespacePrefixes.put(attrNSPrefix, attr.getValue());
 				}
 			}

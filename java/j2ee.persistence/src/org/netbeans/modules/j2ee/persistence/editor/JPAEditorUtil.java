@@ -41,7 +41,6 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -168,7 +167,7 @@ public class JPAEditorUtil {
         } else {
             // get containing package
             String packageName = ""; // NOI18N
-            int dotIndex = binaryName.lastIndexOf("."); // NOI18N
+            int dotIndex = binaryName.lastIndexOf('.'); // NOI18N
             if (dotIndex != -1) {
                 packageName = binaryName.substring(0, dotIndex);
             }
@@ -203,20 +202,17 @@ public class JPAEditorUtil {
         final JavaSource js = getJavaSource(doc);
         if (js != null) {
             try {
-                js.runUserActionTask(new Task<CompilationController>() {
-
-                    public void run(CompilationController cc) throws Exception {
-                        boolean opened = false;
-                        TypeElement element = findClassElementByBinaryName(classBinaryName, cc);
-                        if (element != null) {
-                            opened = ElementOpen.open(js.getClasspathInfo(), element);
-                        }
-                        if (!opened) {
-                            String msg = NbBundle.getMessage(JPAEditorUtil.class, "LBL_SourceNotFound", classBinaryName);
-                            StatusDisplayer.getDefault().setStatusText(msg);
-                        }
+                js.runUserActionTask( (CompilationController cc) -> {
+                    boolean opened = false;
+                    TypeElement element = findClassElementByBinaryName(classBinaryName, cc);
+                    if (element != null) {
+                        opened = ElementOpen.open(js.getClasspathInfo(), element);
                     }
-                    }, false);
+                    if (!opened) {
+                        String msg = NbBundle.getMessage(JPAEditorUtil.class, "LBL_SourceNotFound", classBinaryName);
+                        StatusDisplayer.getDefault().setStatusText(msg);
+                    }
+                }, false);
             } catch (IOException ex) {
                 Logger.getLogger("global").log(Level.SEVERE, ex.getMessage(), ex);
             }
@@ -231,8 +227,9 @@ public class JPAEditorUtil {
         // no matching element found
         if (!it.hasNext()) {
             return null;
-        } else
+        } else {
             return (VariableElement)it.next();
+        }
         
     }
 
@@ -244,6 +241,7 @@ public class JPAEditorUtil {
             this.fieldName = fieldName;
         }
 
+        @Override
         public boolean accept(Element e, TypeMirror type) {
             
             if (e.getKind() != ElementKind.FIELD) {
@@ -290,7 +288,7 @@ public class JPAEditorUtil {
             return null;
         }
         List<DatabaseConnection> dbconns = findDatabaseConnections(datasource);
-        if (dbconns.size() > 0) {
+        if (!dbconns.isEmpty()) {
             return dbconns.get(0);
         }
         return null;
@@ -299,7 +297,7 @@ public class JPAEditorUtil {
 
         // try to find a connection specified using the PU properties
         HashMap<String,String> props = ProviderUtil.getConnectionProperties(pu);
-        if (props != null && props.size()>0) {
+        if (props != null && !props.isEmpty()) {
             return props;
         }
 
@@ -343,13 +341,13 @@ public class JPAEditorUtil {
         if (databaseUrl == null || user == null) {
             return Collections.emptyList();
         }
-        List<DatabaseConnection> result = new ArrayList<DatabaseConnection>();
+        List<DatabaseConnection> result = new ArrayList<>();
         for (DatabaseConnection dbconn : ConnectionManager.getDefault().getConnections()) {
             if (databaseUrl.equals(dbconn.getDatabaseURL()) && user.equals(dbconn.getUser())) {
                 result.add(dbconn);
             }
         }
-        if (result.size() > 0) {
+        if (!result.isEmpty()) {
             return Collections.unmodifiableList(result);
         } else {
             return Collections.emptyList();

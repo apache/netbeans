@@ -50,11 +50,13 @@ class SortModeEditor extends PropertyEditorSupport {
     };
 
     /** @return names of the two possible modes */
+    @Override
     public String[] getTags () {
         return modes;
     }
 
     /** @return text for the current value (File or Element mode) */
+    @Override
     public String getAsText () {
         Object obj = getValue ();
         for (int i = 0; i < values.length; i++) {
@@ -68,6 +70,7 @@ class SortModeEditor extends PropertyEditorSupport {
     /** Setter.
     * @param str string equal to one value from modes array
     */
+    @Override
     public void setAsText (String str) {
         for (int i = 0; i < modes.length; i++) {
             if (str.equals (modes[i])) {

@@ -2506,7 +2506,7 @@ public class BaseKit extends DefaultEditorKit {
 //	    p0 = p+1;
 //	  }
 //	}
-//	if (p0 < str.length()) v.add(str.substring(p0, str.length())); else v.add("");
+//	if (p0 < str.length()) v.add(str.substring(p0)); else v.add("");
 //
 //	return (String [])v.toArray(new String [0]);
 //      }

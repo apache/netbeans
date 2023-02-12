@@ -263,7 +263,7 @@ public class GroovyParser extends Parser {
                                 sb.append(doc.substring(0, removeStart));
                                 sb.append(' ');
                                 if (removeEnd < doc.length()) {
-                                    sb.append(doc.substring(removeEnd, doc.length()));
+                                    sb.append(doc.substring(removeEnd));
                                 }
                                 assert sb.length() == doc.length();
                                 context.sanitizedRange = new OffsetRange(removeStart, removeEnd);
@@ -286,7 +286,7 @@ public class GroovyParser extends Parser {
                             sb.append("//");
                             int rest = lineStart + 2;
                             if (rest < doc.length()) {
-                                sb.append(doc.substring(rest, doc.length()));
+                                sb.append(doc.substring(rest));
                             }
                         } else {
                             // A line with just one character - can't replace with a comment
@@ -295,7 +295,7 @@ public class GroovyParser extends Parser {
                             sb.append(" ");
                             int rest = lineStart + 1;
                             if (rest < doc.length()) {
-                                sb.append(doc.substring(rest, doc.length()));
+                                sb.append(doc.substring(rest));
                             }
 
                         }
@@ -320,7 +320,7 @@ public class GroovyParser extends Parser {
                                 sb.append("//");
                                 int rest = lineStart + 2;
                                 if (rest < doc.length()) {
-                                    sb.append(doc.substring(rest, doc.length()));
+                                    sb.append(doc.substring(rest));
                                 }
                             } else {
                                 // A line with just one character - can't replace with a comment
@@ -329,7 +329,7 @@ public class GroovyParser extends Parser {
                                 sb.append(" ");
                                 int rest = lineStart + 1;
                                 if (rest < doc.length()) {
-                                    sb.append(doc.substring(rest, doc.length()));
+                                    sb.append(doc.substring(rest));
                                 }
 
                             }
@@ -401,7 +401,7 @@ public class GroovyParser extends Parser {
                         }
 
                         if (removeEnd < doc.length()) {
-                            sb.append(doc.substring(removeEnd, doc.length()));
+                            sb.append(doc.substring(removeEnd));
                         }
                         assert sb.length() == doc.length();
 

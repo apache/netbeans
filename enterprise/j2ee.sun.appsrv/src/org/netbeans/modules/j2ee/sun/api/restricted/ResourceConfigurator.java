@@ -389,12 +389,12 @@ public class ResourceConfigurator implements ResourceConfiguratorInterface {
         if(vendorName.equals("sybase2")){ //NOI18N
             int index = url.indexOf("Tds:"); //NOI18N
             if(index != -1){
-                workingUrl = url.substring(index + 4, url.length()); //NOI18N
+                workingUrl = url.substring(index + 4); //NOI18N
             } else {
                 return jdbcConnectionPool;
             }
         }else {
-            workingUrl = url.substring(url.indexOf("//") + 2, url.length()); //NOI18N
+            workingUrl = url.substring(url.indexOf("//") + 2); //NOI18N
         }
         PropertyElement servName = jdbcConnectionPool.newPropertyElement();
         servName.setName(WizardConstants.__ServerName);
@@ -652,7 +652,7 @@ public class ResourceConfigurator implements ResourceConfiguratorInterface {
             if(colonIndex != -1) {
                 databaseName = url.substring(index + 1, colonIndex);
             } else {
-                databaseName = url.substring(index + 1, url.length());
+                databaseName = url.substring(index + 1);
             }
         }
         return databaseName;
@@ -662,7 +662,7 @@ public class ResourceConfigurator implements ResourceConfiguratorInterface {
         String connAttr = ""; //NOI18N
         int colonIndex = url.indexOf(";"); //NOI18N
         if(colonIndex != -1) {
-            connAttr = url.substring(colonIndex,  url.length());
+            connAttr = url.substring(colonIndex);
         }
         return connAttr;
     }

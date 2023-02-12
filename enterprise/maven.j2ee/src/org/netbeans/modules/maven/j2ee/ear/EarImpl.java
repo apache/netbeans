@@ -799,7 +799,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
 
                 // Remove '/' prefix if any so that directory is a relative path
                 if (toRet.startsWith("/")) { //NOI18N
-                    toRet = toRet.substring(1, toRet.length());
+                    toRet = toRet.substring(1);
                 }
 
                 if (toRet.length() > 0 && !toRet.endsWith("/")) { //NOI18N

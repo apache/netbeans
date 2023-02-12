@@ -56,6 +56,7 @@ import org.netbeans.modules.javaee.wildfly.ide.commands.WildflyModule;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties;
 import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_ADMIN_PORT;
 import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.PROPERTY_ADMIN_PORT;
+import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.PROPERTY_CONFIG_FILE;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils.Version;
 import org.netbeans.modules.javaee.wildfly.util.WildFlyProperties;
@@ -104,10 +105,13 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
         version = WildflyPluginUtils.getServerVersion(serverPath);
         isWildfly = WildflyPluginUtils.isWildFly(serverPath);
         int controllerPort = DEFAULT_ADMIN_PORT;
+        String configFilePath = instanceProperties.getProperty(PROPERTY_CONFIG_FILE);
+        int portOffset = getPortOffsetOrDefault(configFilePath, WildflyPluginProperties.DEFAULT_PORT_OFFSET);
         String adminPort = this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT);
         if(adminPort != null) {
             controllerPort = Integer.parseInt(this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT));
         }
+        controllerPort += portOffset;
         if (username != null && password != null) {
             this.client = new WildflyClient(instanceProperties, version, getHost(), controllerPort, username, password);
         } else {
@@ -483,4 +487,10 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
         return progress;
     }
 
+    private int getPortOffsetOrDefault(String configFilePath, int defaultOffset) {
+        if (configFilePath != null) {
+            return WildflyPluginUtils.getStandardSocketsDefaultPortOffset(configFilePath);
+        }
+        return defaultOffset;
+    }
 }

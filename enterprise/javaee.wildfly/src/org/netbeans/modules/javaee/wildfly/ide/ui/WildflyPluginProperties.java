@@ -35,6 +35,7 @@ public final class WildflyPluginProperties {
 
     public static final int DEFAULT_HTTP_PORT = 8080;
     public static final int DEFAULT_ADMIN_PORT = 9990;
+    public static final int DEFAULT_PORT_OFFSET = 0;
     public static final String PROPERTY_DISPLAY_NAME ="displayName";//NOI18N
     public static final String PROPERTY_SERVER = "server";//NOI18N
     public static final String PROPERTY_DEPLOY_DIR = "deploy-dir";//NOI18N

@@ -22,12 +22,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
 import org.netbeans.modules.javaee.wildfly.config.xml.ds.WildflyDatasourcesHandler;
+import org.netbeans.modules.javaee.wildfly.config.xml.sockets.WildflySocketBindingGroupHandler;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.xml.sax.SAXException;
@@ -73,5 +75,31 @@ public class ConfigurationParser {
             }
         }
         return null;
+    }
+
+    /**
+     * Retrieve the default port offset for the standard socket group from the given XML config file.
+     *
+     * @param xmlFile The XML config {@link FileObject}.
+     * @return An |@link Optional} containing the parsed default port offset or |@code null}, if none was
+     * defined.
+     */
+    public Optional<Integer> getStandardSocketsPortOffset(FileObject xmlFile) {
+        try (InputStream data = xmlFile.getInputStream()) {
+            SAXParser sp = getConfiguredParser();
+            WildflySocketBindingGroupHandler socketsHandler = new WildflySocketBindingGroupHandler();
+            sp.parse(data, socketsHandler);
+            return Optional.of(socketsHandler.getStandardSocketsPortOffset());
+        } catch (SAXException | ParserConfigurationException | IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return Optional.empty();
+    }
+
+    private SAXParser getConfiguredParser() throws ParserConfigurationException, SAXException {
+        SAXParserFactory spf = SAXParserFactory.newInstance();
+        SAXParser sp = spf.newSAXParser();
+        sp.getXMLReader().setFeature(LOAD_EXTERNAL_DTD_FEATURE, false);
+        return sp;
     }
 }

@@ -200,6 +200,7 @@ public class Constants {
     public static final String HOST_SCOPED_ROLE = "host-scoped-role";// NOI18N
     public static final String HOST_SCOPED_ROLES = "host-scoped-roles";// NOI18N
     public static final String HOST_STATE = "host-state";// NOI18N
+    public static final String MANAGEMENT_HTTP = "management-http";// NOI18N
     public static final String HTTP_UPGRADE_ENABLED = "http-upgrade-enabled";// NOI18N
     public static final String HTTP_INTERFACE = "http-interface";// NOI18N
     public static final String IGNORED = "ignored-by-unaffected-host-controller";// NOI18N

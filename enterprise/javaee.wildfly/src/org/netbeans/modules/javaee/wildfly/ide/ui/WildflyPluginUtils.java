@@ -39,8 +39,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.javaee.wildfly.config.xml.ConfigurationParser;
 import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_ADMIN_PORT;
 import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_HTTP_PORT;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.JarFileSystem;
 
 /**
@@ -245,6 +248,22 @@ public class WildflyPluginUtils {
 
      public static String getManagementConnectorPort(String configFile) {
         return String.valueOf(DEFAULT_ADMIN_PORT);
+    }
+
+     /**
+      * Retrieve the default port offset from the standard sockets group from the config file.
+      * If none was defined, {@link WildflyPluginProperties#DEFAULT_PORT_OFFSET} is returned.
+      * <p>
+      * Once NetBeans lets the user specify an offset themself, this method should be adapted to return
+      * the user offset with precedence.
+      * @param configFile The config file path as string.
+      * @return The offset.
+      */
+    public static int getStandardSocketsDefaultPortOffset(String configFile) {
+        File config = new File(configFile);
+        FileObject configFileObject = FileUtil.toFileObject(config);
+        return ConfigurationParser.INSTANCE.getStandardSocketsPortOffset(configFileObject)
+            .orElse(WildflyPluginProperties.DEFAULT_PORT_OFFSET);
     }
 
     /**

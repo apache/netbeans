@@ -532,12 +532,10 @@ public class UnusableTypesHintError extends HintErrorRule {
 
             if (hasIterable) {
                 for (Expression type : unionType.getTypes()) {
-                    if (type instanceof Identifier) {
-                        if (isArrayType((Identifier) type)) {
+                    if (type instanceof NamespaceName) {
+                        if (isArrayType((NamespaceName) type)) {
                             hasArray = true;
-                        }
-                    } else if (type instanceof NamespaceName) {
-                        if (isTraversableType((NamespaceName) type)) {
+                        } else if (isTraversableType((NamespaceName) type)) {
                             NamespaceName name = (NamespaceName) type;
                             QualifiedName qualifiedName = QualifiedName.create(name);
                             NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(model.getFileScope(), type.getStartOffset());
@@ -577,10 +575,9 @@ public class UnusableTypesHintError extends HintErrorRule {
             hints.add(new IterableRedundantTypeCombination(rule, fileObject, unionType.getStartOffset(), unionType.getEndOffset(), unionType, redundantType));
         }
 
-        private static boolean isArrayType(Identifier identifier) {
-            return !identifier.isKeyword()
-                    && Type.ARRAY.equals(identifier.getName().toLowerCase(Locale.ENGLISH));
-        }
+        private static boolean isArrayType(NamespaceName namespaceName) {
+            return Type.ARRAY.equals(CodeUtils.extractUnqualifiedName(namespaceName));
+        }        
 
         private static boolean isCallableType(Identifier identifier) {
             return !identifier.isKeyword()

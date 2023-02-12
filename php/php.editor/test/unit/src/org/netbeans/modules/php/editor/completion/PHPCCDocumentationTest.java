@@ -275,6 +275,14 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/issueGH5427.php", "$this->test_with_v^ar_tag", false, "");
     }
 
+    public void testIssueGH5375_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5375.php", "$this->test_without_v^ar_tag", false, "");
+    }
+      
+    public void testIssueGH5375_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5375.php", "$this->test_with_v^ar_tag", false, "");
+    }    
+    
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");

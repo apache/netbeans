@@ -2625,10 +2625,9 @@ fully_qualified_class_name:className
     RESULT = className;
 :}
 
-| T_ARRAY:array
+| T_ARRAY:name
 {:
-    Identifier classId = new Identifier(arrayleft, arrayright, "array");
-    RESULT = classId;
+    RESULT = NamespaceName.create(nameleft, nameright, name);
 :}
 
 | T_CALLABLE:callable

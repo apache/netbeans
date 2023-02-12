@@ -38,6 +38,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1145,7 +1146,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         }
         
         public boolean hasToolbarPathChanged() {
-            return (toolbarIconPath == null && origToolbarIconPath != null) || (toolbarIconPath != null && !toolbarIconPath.equals(origToolbarIconPath));
+            return !Objects.equals(toolbarIconPath, origToolbarIconPath);
         }
 
         public String getOrigToolbarIconPath() {

@@ -42,6 +42,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -536,7 +537,7 @@ public class J2SEModularProjectProperties {
                 str = null;
             }
             String old = project.getAntProjectHelper().getLibrariesLocation();
-            if ((old == null && str == null) || (old != null && old.equals(str))) {
+            if (Objects.equals(old, str)) {
                 //ignore, nothing changed..
             } else {
                 project.getAntProjectHelper().setLibrariesLocation(str);

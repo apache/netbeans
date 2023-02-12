@@ -18,6 +18,8 @@
  */
 package org.netbeans.api.search;
 
+import java.util.Objects;
+
 /**
  * Pattern describes the replace conditions
  * ReplacePattern is a wrap class for replace expression.
@@ -75,9 +77,7 @@ public final class ReplacePattern {
      *
      */
     public ReplacePattern changeReplaceExpression(String expression) {
-        if ((expression == null && this.replaceExpression == null)
-                || (expression != null
-                && expression.equals(this.replaceExpression))) {
+        if (Objects.equals(expression, this.replaceExpression)) {
             return this;
         } else {
             return ReplacePattern.create(expression, preserveCase);

@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.Objects;
 
 /**
  * Map implementation that allows to define the class that implements
@@ -105,9 +106,7 @@ public class CompactMap<K,V> implements Map<K,V> {
     public boolean containsValue(Object value) {
         for (int i = table.length - 1; i >= 0 ; i--) {
             for (MapEntry<K,V> e = table[i]; e != null; e = e.nextMapEntry()) {
-                if ((value == null && e.getValue() == null)
-                    || (value != null && value.equals(e.getValue()))
-                ) {
+                if (Objects.equals(value, e.getValue())) {
                     return true;
                 }
             }

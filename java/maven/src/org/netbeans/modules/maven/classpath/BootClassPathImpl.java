@@ -23,6 +23,8 @@ import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+
 import org.apache.maven.artifact.Artifact;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -86,7 +88,7 @@ public final class BootClassPathImpl extends AbstractBootPathImpl {
                 resetCache();
             } else {
                 //Active platform was changed
-                if ( (newVal == null && lastHintValue != null) || (newVal != null && !newVal.equals(lastHintValue))) {
+                if (!Objects.equals(newVal, lastHintValue)) {
                     resetCache ();
                 }
             }

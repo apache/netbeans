@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringTokenizer;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -499,13 +500,13 @@ public class ModifyElementRulesPanel extends javax.swing.JPanel {
                 switch (state) {
                     case 0:
                         //class
-                        if ((strval == null && clzName == null) || (strval != null && strval.equals(clzName))) {
+                        if (Objects.equals(strval, clzName)) {
                             bold = true;
                         }
                         break;
                     case 1:
                         //id
-                        if ((strval == null && idName == null) || (strval != null && strval.equals(idName))) {
+                        if (Objects.equals(strval, idName)) {
                             bold = true;
                         }
                         break;

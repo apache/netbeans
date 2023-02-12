@@ -38,6 +38,8 @@ import org.netbeans.modules.xml.schema.model.SchemaComponent;
 import org.netbeans.modules.xml.schema.model.Attribute.Use;
 import org.netbeans.modules.xml.schema.model.Form;
 
+import java.util.Objects;
+
 /**
  * Base and only implementation of Attribute.
  *
@@ -96,8 +98,7 @@ public final class AttributeImpl extends Attribute {
      */
     public void setName(String name) {        
         String oldName = getName();
-        if( (oldName == null && name == null) ||
-            (oldName != null && oldName.equals(name)) ) {
+        if (Objects.equals(oldName, name)) {
             return;
         }
         this.name = name;
@@ -131,8 +132,7 @@ public final class AttributeImpl extends Attribute {
         }
         
         AXIType oldValue = getType();
-        if( (oldValue == null && value == null) ||
-            (oldValue != null && oldValue.equals(value)) ) {
+        if(Objects.equals(oldValue,  value)) {
             return;
         }
         this.datatype = value;
@@ -181,8 +181,7 @@ public final class AttributeImpl extends Attribute {
      */
     public void setFixed(String value) {        
         String oldValue = getFixed();
-        if( (oldValue == null && value == null) ||
-            (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.fixedValue = value;
@@ -201,8 +200,7 @@ public final class AttributeImpl extends Attribute {
      */
     public void setDefault(String value) {        
         Object oldValue = getDefault();
-        if( (oldValue == null && value == null) ||
-            (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.defaultValue = value;

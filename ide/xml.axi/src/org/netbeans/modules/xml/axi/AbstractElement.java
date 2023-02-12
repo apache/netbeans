@@ -19,6 +19,8 @@
 package org.netbeans.modules.xml.axi;
 
 import java.util.List;
+import java.util.Objects;
+
 import org.netbeans.modules.xml.axi.visitor.AXIVisitor;
 import org.netbeans.modules.xml.schema.model.SchemaComponent;
 
@@ -67,8 +69,7 @@ public abstract class AbstractElement extends AXIContainer {
      */
     public void setMinOccurs(String value) {        
         String oldValue = getMinOccurs();
-        if( (oldValue == null && value == null) ||
-            (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.minOccurs = value;
@@ -87,8 +88,7 @@ public abstract class AbstractElement extends AXIContainer {
      */
     public void setMaxOccurs(String value) {        
         String oldValue = getMaxOccurs();
-        if( (oldValue == null && value == null) ||
-            (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.maxOccurs = value;

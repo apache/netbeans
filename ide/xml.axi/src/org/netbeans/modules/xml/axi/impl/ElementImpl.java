@@ -21,6 +21,8 @@ package org.netbeans.modules.xml.axi.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import org.netbeans.modules.xml.axi.AXIComponent;
 import org.netbeans.modules.xml.axi.AXIModel;
 import org.netbeans.modules.xml.axi.AXIType;
@@ -100,8 +102,7 @@ public final class ElementImpl extends Element {
      */
     public void setBlock(String value) {
         String oldValue = getBlock();
-        if( (oldValue == null && value == null) ||
-                (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.block = value;
@@ -120,8 +121,7 @@ public final class ElementImpl extends Element {
      */
     public void setFinal(String value) {
         String oldValue = getFinal();
-        if( (oldValue == null && value == null) ||
-                (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.finalValue = value;
@@ -140,8 +140,7 @@ public final class ElementImpl extends Element {
      */
     public void setFixed(String value) {
         String oldValue = getFixed();
-        if( (oldValue == null && value == null) ||
-                (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.fixedValue = value;
@@ -160,8 +159,7 @@ public final class ElementImpl extends Element {
      */
     public void setDefault(String value) {
         String oldValue = getDefault();
-        if( (oldValue == null && value == null) ||
-                (oldValue != null && oldValue.equals(value)) ) {
+        if(Objects.equals(oldValue, value)) {
             return;
         }
         this.defaultValue = value;

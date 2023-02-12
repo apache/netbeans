@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 
@@ -231,9 +232,7 @@ public final class AttributesUtilities {
         public synchronized boolean containsAttribute(Object key, Object value) {
             if (attribs.containsKey(key)) {
                 Object attrValue = attribs.get(key);
-                if ((value == null && attrValue == null) || 
-                    (value != null && attrValue != null && value.equals(attrValue))
-                ) {
+                if (Objects.equals(value, attrValue)) {
                     return true;
                 }
             }

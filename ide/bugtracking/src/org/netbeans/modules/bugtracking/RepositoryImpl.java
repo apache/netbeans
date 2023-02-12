@@ -347,7 +347,7 @@ public final class RepositoryImpl<R, Q, I> {
             String key = e.getKey();
             Object value = e.getValue();
             Object oldValue = oldAttributes.get(key);
-            if ((value == null && oldValue == null) || (value != null && value.equals(oldValue))) {
+            if (Objects.equals(value, oldValue)) {
                 equalAttributes.add(key);
             }
         }

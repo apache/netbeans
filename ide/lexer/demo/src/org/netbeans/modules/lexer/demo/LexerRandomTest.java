@@ -22,6 +22,7 @@ package org.netbeans.modules.lexer.demo;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
@@ -299,9 +300,7 @@ public class LexerRandomTest extends DemoTokenUpdater {
 
                             Object state = getState();
                             Object lexerState = lexer.getState();
-                            if (!((state == null && lexerState == null)
-                                    || (state != null && state.equals(lexerState))
-                            )) {
+                            if (!Objects.equals(state, lexerState)) {
                                 throw new IllegalStateException(
                                     "States do not match incremental environment lexer-state=" + state
                                     + ", batch lexer state=" + lexerState);

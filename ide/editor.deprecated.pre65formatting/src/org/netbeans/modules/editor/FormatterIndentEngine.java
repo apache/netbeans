@@ -21,6 +21,7 @@ package org.netbeans.modules.editor;
 
 import java.awt.Toolkit;
 import java.io.*;
+import java.util.Objects;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.editor.BaseKit;
@@ -75,9 +76,7 @@ public abstract class FormatterIndentEngine extends IndentEngine {
 
     public void setValue(String settingName, Object newValue, String propertyName) {
         Object oldValue = getValue(settingName);
-        if ((oldValue == null && newValue == null)
-                || (oldValue != null && oldValue.equals(newValue))
-           ) {
+        if (Objects.equals(oldValue, newValue)) {
             return; // no change
         }
 

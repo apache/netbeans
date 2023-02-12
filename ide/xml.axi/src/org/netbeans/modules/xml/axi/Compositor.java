@@ -19,6 +19,8 @@
 package org.netbeans.modules.xml.axi;
 
 import java.io.IOException;
+import java.util.Objects;
+
 import org.netbeans.modules.xml.axi.impl.AXIModelImpl;
 import org.netbeans.modules.xml.axi.visitor.AXIVisitor;
 import org.netbeans.modules.xml.axi.Compositor.CompositorType;
@@ -127,8 +129,7 @@ public class Compositor extends AXIComponent {
     
     public void setMinOccurs(String value) {        
         String oldValue = getMinOccurs();
-        if( (oldValue == null && value == null) ||
-            (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.minOccurs = value;
@@ -144,8 +145,7 @@ public class Compositor extends AXIComponent {
     
     public void setMaxOccurs(String value) {
         String oldValue = getMaxOccurs();
-        if( (oldValue == null && value == null) ||
-            (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.maxOccurs = value;

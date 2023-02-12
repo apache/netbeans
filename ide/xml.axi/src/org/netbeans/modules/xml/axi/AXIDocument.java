@@ -19,6 +19,7 @@
 package org.netbeans.modules.xml.axi;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.netbeans.modules.xml.axi.impl.AXIModelBuilder;
 import org.netbeans.modules.xml.axi.impl.Util;
@@ -118,8 +119,7 @@ public abstract class AXIDocument extends AXIComponent {
      */
     public void setTargetNamespace(String value) {
         String oldValue = getTargetNamespace();
-        if( (oldValue == null && value == null) ||
-                (oldValue != null && oldValue.equals(value)) ) {
+        if(Objects.equals(oldValue, value)) {
             return;
         }
         this.namespace = value;
@@ -128,8 +128,7 @@ public abstract class AXIDocument extends AXIComponent {
         
     public void setVersion(String value) {
         String oldValue = getVersion();
-        if( (oldValue == null && value == null) ||
-                (oldValue != null && oldValue.equals(value)) ) {
+        if(Objects.equals(oldValue, value)) {
             return;
         }
         this.version = value;
@@ -142,8 +141,7 @@ public abstract class AXIDocument extends AXIComponent {
     
     public void setLanguage(String value) {
         String oldValue = getLanguage();
-        if( (oldValue == null && value == null) ||
-                (oldValue != null && oldValue.equals(value)) ) {
+        if(Objects.equals(oldValue, value)) {
             return;
         }
         this.language = value;
@@ -171,8 +169,7 @@ public abstract class AXIDocument extends AXIComponent {
     
     public void setElementFormDefault(Form value) {
         Form oldValue = getElementFormDefault();
-        if( (oldValue == null && value == null) ||
-                (oldValue != null && oldValue.equals(value)) ) {
+        if(Objects.equals(oldValue, value)) {
             return;
         }
         this.elementFormDefault = value;
@@ -185,8 +182,7 @@ public abstract class AXIDocument extends AXIComponent {
     
     public void setAttributeFormDefault(Form value) {
         Form oldValue = getAttributeFormDefault();
-        if( (oldValue == null && value == null) ||
-                (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.attributeFormDefault = value;

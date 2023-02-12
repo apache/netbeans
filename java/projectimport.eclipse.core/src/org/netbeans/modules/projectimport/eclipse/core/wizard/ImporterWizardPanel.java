@@ -25,6 +25,8 @@ import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 
+import java.util.Objects;
+
 /**
  * Basic wizard panel for Eclipse Wizard importer.
  *
@@ -78,9 +80,7 @@ abstract class ImporterWizardPanel implements WizardDescriptor.Panel<WizardDescr
     }
     
     protected void setErrorMessage(String newError, boolean valid) {
-        boolean changed =
-                (errorMessage == null && newError != null) ||
-                (errorMessage != null && !errorMessage.equals(newError));
+        boolean changed = !Objects.equals(errorMessage, newError);
         if (changed) errorMessage = newError;
         setValid(valid, changed);
     }

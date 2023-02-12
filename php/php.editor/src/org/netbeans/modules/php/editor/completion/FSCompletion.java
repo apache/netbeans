@@ -306,7 +306,7 @@ public class FSCompletion implements CompletionProvider {
         private void doSubstitute(final JTextComponent component, String toAdd, final int backOffset) {
             final BaseDocument doc = (BaseDocument) component.getDocument();
             final int caretOffset = component.getCaretPosition();
-            final String value = getText() + (toAdd != null && (!toAdd.equals("/") || (toAdd.equals("/") && !getText().endsWith(toAdd))) ? toAdd : ""); //NOI18N
+            final String value = getText() + (toAdd != null && (!toAdd.equals("/") || !getText().endsWith(toAdd)) ? toAdd : ""); //NOI18N
             // Update the text
             doc.runAtomic(new Runnable() {
                 @Override

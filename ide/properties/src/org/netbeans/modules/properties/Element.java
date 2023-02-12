@@ -23,6 +23,7 @@ package org.netbeans.modules.properties;
 
 import java.beans.*;
 import java.io.*;
+import java.util.Objects;
 import javax.swing.text.BadLocationException;
 
 import org.openide.nodes.Node;
@@ -590,7 +591,7 @@ public abstract class Element implements Serializable {
          */                        
         public void setComment(String newComment) {
             String oldComment = comment.getValue();
-            if ((oldComment == null && newComment != null) || (oldComment != null && !oldComment.equals(newComment))) {
+            if (!Objects.equals(oldComment, newComment)) {
                 comment.setValue(newComment);
                 getParent().itemChanged(this);
                 this.firePropertyChange(PROP_ITEM_COMMENT, oldComment, newComment);

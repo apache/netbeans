@@ -21,6 +21,8 @@ package org.netbeans.modules.tomcat5.config;
 
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
 
+import java.util.Objects;
+
 /**
  * Tomcat datasource implementation
  *
@@ -85,19 +87,19 @@ public class TomcatDatasource implements Datasource {
             return false;
         }
         TomcatDatasource ds = (TomcatDatasource)obj;
-        if ((jndiName == null && ds.jndiName != null) || (jndiName != null && !jndiName.equals(ds.jndiName))) {
+        if (!Objects.equals(jndiName, ds.jndiName)) {
             return false;
         }
-        if ((url == null && ds.url != null) || (url != null && !url.equals(ds.url))) {
+        if (!Objects.equals(url, ds.url)) {
             return false;
         }
-        if ((username == null && ds.username != null) || (username != null && !username.equals(ds.username))) {
+        if (!Objects.equals(username, ds.username)) {
             return false;
         }
-        if ((password == null && ds.password != null) || (password != null && !password.equals(ds.password))) {
+        if (!Objects.equals(password, ds.password)) {
             return false;
         }
-        if ((driverClassName == null && ds.driverClassName != null) || (driverClassName != null && !driverClassName.equals(ds.driverClassName))) {
+        if (!Objects.equals(driverClassName, ds.driverClassName)) {
             return false;
         }
         return true;

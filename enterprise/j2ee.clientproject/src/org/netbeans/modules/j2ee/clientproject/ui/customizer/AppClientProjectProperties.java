@@ -438,7 +438,7 @@ public final class AppClientProjectProperties {
                 str = null;
             }
             String old = project.getAntProjectHelper().getLibrariesLocation();
-            if ((old == null && str == null) || (old != null && old.equals(str))) {
+            if (Objects.equals(old, str)) {
                 //ignore, nothing changed..
             } else {
                 project.getAntProjectHelper().setLibrariesLocation(str);

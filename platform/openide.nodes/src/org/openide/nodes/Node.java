@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1008,7 +1009,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
         }
 
         // do not fire if the values are the same
-        if ((o != null) && (n != null) && ((o == n) || o.equals(n))) {
+        if (Objects.equals(o, n)) {
             return;
         }
 
@@ -1304,7 +1305,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
     */
     final void fireOwnPropertyChange(String name, Object o, Object n) {
         // do not fire if the values are the same
-        if ((o != null) && (n != null) && ((o == n) || o.equals(n))) {
+        if (Objects.equals(o, n)) {
             return;
         }
 

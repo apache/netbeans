@@ -332,7 +332,7 @@ public abstract class URLMapper {
                     FileObject fo = fs.findResource(res);
                     File file2Fo = (fo != null) ? findFileInRepository(fo) : null;
 
-                    if ((fo != null) && (file2Fo != null) && f.equals(file2Fo)) {
+                    if ((fo != null) && f.equals(file2Fo)) {
                         if (fo.getClass().toString().indexOf("org.netbeans.modules.masterfs.MasterFileObject") != -1) { //NOI18N
                             list.addFirst(fo);
                         } else {

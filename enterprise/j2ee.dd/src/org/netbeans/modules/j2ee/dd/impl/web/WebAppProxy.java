@@ -34,6 +34,7 @@ import java.beans.PropertyChangeListener;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author  mk115033
@@ -73,8 +74,7 @@ public class WebAppProxy implements WebApp {
     }
 
     public void setProxyVersion(java.lang.String value) {
-        if ((version == null && value != null)
-            || (version != null && value != null && !version.equals(value))) {
+        if (!Objects.equals(version, value)) {
             java.beans.PropertyChangeEvent evt =
                 new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version=value;

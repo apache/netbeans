@@ -698,18 +698,17 @@ public final class JFXProjectProperties {
     }
             
     public static boolean isEqual(final String s1, final String s2) {
-        return (s1 == null && s2 == null) ||
-                (s1 != null && s2 != null && s1.equals(s2));
+        return Objects.equals(s1, s2);
     }                                   
 
     public static boolean isEqualIgnoreCase(final String s1, final String s2) {
         return (s1 == null && s2 == null) ||
-                (s1 != null && s2 != null && s1.equalsIgnoreCase(s2));
+                (s1 != null && s1.equalsIgnoreCase(s2));
     }                                   
 
     public static boolean isEqualText(final String s1, final String s2) {
         return ((s1 == null || s1.isEmpty()) && (s2 == null || s2.isEmpty())) ||
-                (s1 != null && s2 != null && s1.equals(s2));
+                (s1 != null && s1.equals(s2));
     }                                   
     
     /**

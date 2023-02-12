@@ -22,6 +22,8 @@ import org.netbeans.modules.xml.axi.visitor.AXIVisitor;
 import org.netbeans.modules.xml.schema.model.SchemaComponent;
 import org.netbeans.modules.xml.schema.model.Any.ProcessContents;
 
+import java.util.Objects;
+
 /**
  * Represents 'any' element in XML Schema.
  *
@@ -96,8 +98,7 @@ public class AnyElement extends AbstractElement {
      */
     public void setTargetNamespace(String value) {
         String oldValue = getTargetNamespace();
-        if( (oldValue == null && value == null) ||
-                (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.namespace = value;

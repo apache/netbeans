@@ -61,6 +61,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.InputMap;
@@ -725,7 +726,7 @@ public class OptionsPanel extends JPanel {
                                 handleNotFound(id, exactCategory, exactTabTitle);
                             }
                         } else {
-			    if ((exactCategory == null && exactTabTitle == null) || (exactCategory != null && exactCategory.equals(id))) {
+			    if (Objects.equals(exactCategory, exactTabTitle)) {
 				setCurrentCategory(categoryModel.getCategory(id), null);
 			    }
 			    matchedKeywords = getAllMatchedKeywords(entry, stWords);

@@ -770,16 +770,16 @@ abstract class AbstractFolder extends FileObject {
                         if (map != null) {
                             foRef = map.remove(child);
 
-                            if (((foRef != null) && (added != null) && (removed != null) && child.equals(removed))) {
+                            if (((foRef != null) && (added != null) && child.equals(removed))) {
                                 // needs cvs checkout
                                 foRef = null;
                             }
 
-                            if ((added != null) && (removed != null) && child.equals(added)) {
+                            if ((removed != null) && child.equals(added)) {
                                 foRef = removedRef;
                             }
 
-                            if (((foRef != null) && (added == null) && (removed != null) && child.equals(removed))) {
+                            if (((foRef != null) && (added == null) && child.equals(removed))) {
                                 // needs cvs checkout
                                 foRef = null;
                             }

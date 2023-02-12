@@ -20,6 +20,8 @@
 package org.netbeans.modules.java.testrunner.ant.utils;
 
 import java.io.File;
+import java.util.Objects;
+
 import junit.framework.*;
 import org.netbeans.modules.java.testrunner.ant.utils.FileSetScanner.AntPattern;
 
@@ -237,8 +239,7 @@ public class FileSetScannerTest extends TestCase {
     }
     
     private static void assertNotEqual(Object a, Object b) {
-        assertTrue((a == null) && (b != null)
-                   || (a != null) && !a.equals(b));
+        assertTrue(!Objects.equals(a, b));
     }
 
 }

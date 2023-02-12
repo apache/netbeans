@@ -24,6 +24,8 @@ import java.beans.*;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import org.openide.ErrorManager;
 
 import org.netbeans.modules.form.editors.*;
@@ -323,8 +325,7 @@ public class RADProperty extends FormProperty {
     
     @Override
     public void setPreCode(String value) {
-        if ((preCode == null && value != null)
-                || (preCode != null && !preCode.equals(value))) {
+        if (!Objects.equals(preCode, value)) {
             Object old = preCode;
             preCode = value;
             if (isChangeFiring() && component.getFormModel() != null)
@@ -335,8 +336,7 @@ public class RADProperty extends FormProperty {
 
     @Override
     public void setPostCode(String value) {
-        if ((postCode == null && value != null)
-                || (postCode != null && !postCode.equals(value))) {
+        if (!Objects.equals(postCode, value)) {
             Object old = postCode;
             postCode = value;
             if (isChangeFiring() && component.getFormModel() != null)

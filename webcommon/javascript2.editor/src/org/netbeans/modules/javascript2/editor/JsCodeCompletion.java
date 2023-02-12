@@ -1204,7 +1204,7 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
                                 for (int i = 0; i < elements.size(); i++) {
                                     JsElement element = elements.get(i);
                                     FileObject fo = element.getFileObject();
-                                    if (!element.isDeclared() || (fo != null && fo.equals(property.getFileObject()))) {
+                                    if (!element.isDeclared() || Objects.equals(fo, property.getFileObject())) {
                                         if (!element.isDeclared() || (element.getOffsetRange() == OffsetRange.NONE && property.getOffsetRange() != OffsetRange.NONE)) {
                                             elements.remove(i);
                                             elements.add(property);

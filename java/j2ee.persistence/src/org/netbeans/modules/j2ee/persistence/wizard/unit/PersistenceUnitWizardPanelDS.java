@@ -79,8 +79,6 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
             checkValidity(); 
         });
         
-        PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
-        comboHelper.connect(providerCombo);
         unitNameTextField.setText(Util.getCandidateName(project));
         unitNameTextField.selectAll();
 

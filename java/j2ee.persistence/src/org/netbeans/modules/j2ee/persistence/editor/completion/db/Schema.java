@@ -107,7 +107,7 @@ public class Schema {
     }
     
     private Set<String> getTableNamesByType(String type) throws SQLException {
-        Set<String> result = new TreeSet();
+        Set<String> result = new TreeSet<>();
 
         try (ResultSet rs = provider.getMetaData().getTables(catalog.getName(), name, "%", new String[] { type })) { // NOI18N
             while (rs.next()) {

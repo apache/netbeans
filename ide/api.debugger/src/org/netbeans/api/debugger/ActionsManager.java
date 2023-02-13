@@ -638,7 +638,7 @@ public final class ActionsManager {
                     }
                     l.destroy ();
                 }
-                lazyListeners = new ArrayList ();
+                lazyListeners = new ArrayList<>();
             }
         }
         synchronized (actionProvidersLock) {

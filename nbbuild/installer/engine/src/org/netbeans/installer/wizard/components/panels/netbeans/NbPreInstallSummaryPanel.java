@@ -682,7 +682,7 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
                   for(String location: locations) {
                     if(new File(location).equals(product.getInstallationLocation())) {
                     final NbiCheckBox checkbox = new NbiCheckBox();
-                    final Pair<Product, NbiCheckBox> pair = new Pair(product, checkbox);
+                    final Pair<Product, NbiCheckBox> pair = new Pair<>(product, checkbox);
                     productCheckboxList.add(pair);
                     checkbox.setText(pair.getFirst().getDisplayName());
                     checkbox.setBorder(new EmptyBorder(0, 0, 0, 0));

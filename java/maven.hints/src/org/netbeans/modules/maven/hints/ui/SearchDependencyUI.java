@@ -363,7 +363,7 @@ public class SearchDependencyUI extends javax.swing.JPanel implements ExplorerMa
         }
 
         private void refreshList() {
-            List<Node> keys = new ArrayList();
+            List<Node> keys = new ArrayList<>();
             for (Node node : myNodes) {
                 keys.add(node);
             }

@@ -667,7 +667,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
 
         public CompletableFuture<LspProjectInfo[]> process() {
-            List<FileObject> files = new ArrayList();
+            List<FileObject> files = new ArrayList<>();
             for (URL u : locations) {
                 FileObject f = URLMapper.findFileObject(u);
                 if (f != null) {
@@ -750,7 +750,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
         
         CompletableFuture<LspProjectInfo[]> finalizeInfos() {
-            List<LspProjectInfo> list = new ArrayList();
+            List<LspProjectInfo> list = new ArrayList<>();
             for (URL u : locations) {
                 FileObject f = URLMapper.findFileObject(u);
                 Project owner = FileOwnerQuery.getOwner(f);

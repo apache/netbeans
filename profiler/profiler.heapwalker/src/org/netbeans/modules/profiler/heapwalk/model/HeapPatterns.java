@@ -44,7 +44,7 @@ final class HeapPatterns {
     private static final Map<String,String> LINKED_LIST_ENTRY_CLASSNAMES;
 
     static {
-        Map<String,String> entryClass = new HashMap();
+        Map<String,String> entryClass = new HashMap<>();
         
         entryClass.put("java.util.LinkedList$Entry","previous, next");    // NOI18N
         entryClass.put("java.util.LinkedList$Node","prev, next");     // NOI18N

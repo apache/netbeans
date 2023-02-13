@@ -409,7 +409,7 @@ public class XDMModel {
         assert ancestors.size() > 0;
         Element root = (Element) (ancestors.size() == 1 ?
             parent : ancestors.get(ancestors.size()-2));
-        List<Node> parentAndAncestors = new ArrayList(ancestors);
+        List<Node> parentAndAncestors = new ArrayList<>(ancestors);
         parentAndAncestors.add(0, parent);
         consolidateAttributePrefix(parentAndAncestors, newNode);
         NamedNodeMap nnm = newNode.getAttributes();

@@ -618,7 +618,7 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
             byte type = buffer[offset++]; 
             if (type == 8) { // ITEM_Unitialized
                 if (uninitializedList == null) {
-                    uninitializedList = new ArrayList();
+                    uninitializedList = new ArrayList<>();
                 }
                 while (uninitializedList.size() < listIndex+1) {
                     uninitializedList.add(null);

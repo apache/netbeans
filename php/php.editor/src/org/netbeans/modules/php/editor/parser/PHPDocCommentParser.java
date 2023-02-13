@@ -349,7 +349,7 @@ public class PHPDocCommentParser {
     }
 
     private List<PHPDocVarTypeTag> findMethodParams(String description, int startOfDescription) {
-        List<PHPDocVarTypeTag> result = new ArrayList();
+        List<PHPDocVarTypeTag> result = new ArrayList<>();
         int position = startOfDescription;
         ParametersExtractor parametersExtractor = ParametersExtractorImpl.create();
         String parameters = parametersExtractor.extract(description);
@@ -439,7 +439,7 @@ public class PHPDocCommentParser {
 
     private static String composeDescription(String[] tokens) {
         assert tokens.length > 0;
-        List<String> tokenList = new ArrayList(Arrays.asList(tokens));
+        List<String> tokenList = new ArrayList<>(Arrays.asList(tokens));
         tokenList.remove(0); // remove annotation name
         return StringUtils.implode(tokenList, " ");
     }

@@ -125,8 +125,8 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
             return Collections.emptyList();
         }
         SourcePositions sourcePositions = info.getTrees().getSourcePositions();
-        List<QuickPickItem> members = new ArrayList();
-        List<QuickPickItem> allMembers = new ArrayList();
+        List<QuickPickItem> members = new ArrayList<>();
+        List<QuickPickItem> allMembers = new ArrayList<>();
         ClassTree sourceTree = (ClassTree) path.getLeaf();
         for (Tree member : sourceTree.getMembers()) {
             TreePath memberTreePath = new TreePath(path, member);

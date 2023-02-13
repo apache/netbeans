@@ -66,7 +66,7 @@ public class PrimitiveTypeArrayEditor extends PropertyEditorSupport
             String tempVal = ""; // NOI18N
             char prevChar = ' '; // NOI18N
             char prevPrevChar = ' '; // NOI18N            
-            ArrayList<String> list = new ArrayList();
+            ArrayList<String> list = new ArrayList<>();
             
             for (int i = 0; i < body.length(); i++) {
                 char actChar = body.charAt(i);

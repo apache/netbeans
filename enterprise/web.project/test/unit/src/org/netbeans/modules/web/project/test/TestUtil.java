@@ -152,7 +152,7 @@ public final class TestUtil extends ProxyLookup {
         System.gc();
     }
     
-    private static final Map<FileObject,Integer> loadCount = new WeakHashMap();
+    private static final Map<FileObject,Integer> loadCount = new WeakHashMap<>();
     
     /**
      * Check how many times {@link ProjectFactory#loadProject} has been called

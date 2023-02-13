@@ -19,7 +19,7 @@ public class Test {
 
         private byte a;
         private Map<String, Set<String>> map1;
-        private Map<String, Set<String>> map2 = new HashMap();
+        private Map<String, Set<String>> map2 = new HashMap<>();
 
         public X() {}
         public X(byte a, Map<String, Set<String>> map1) {}

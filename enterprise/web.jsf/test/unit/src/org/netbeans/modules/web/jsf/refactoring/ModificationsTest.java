@@ -81,7 +81,7 @@ public class ModificationsTest extends NbTestCase {
         File outFile = new File(getWorkDir(), "faces-modification.xml");
         FileWriter fWriter = new FileWriter(outFile);
         modifications.addDifference(fileObject, difference);
-        List<Difference> differences = new LinkedList();
+        List<Difference> differences = new LinkedList<>();
         differences.add(difference);
         modifications.commit(fileObject, differences, fWriter);
         fWriter.close();

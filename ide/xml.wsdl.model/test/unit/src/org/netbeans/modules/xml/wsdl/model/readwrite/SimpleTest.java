@@ -206,7 +206,7 @@ public class SimpleTest extends NbTestCase {
         String prefix = acm.getPeer().getPrefix();
         assertTrue("wsdl prefix is not null or empty: "+prefix, prefix == null || prefix.equals(""));
         assertEquals("read.message.name", "HelloServiceSEI_sayHelloResponse", m.getName());
-        List<Part> parts = new ArrayList(m.getParts());
+        List<Part> parts = new ArrayList<>(m.getParts());
         assertEquals("read.message.part.name", "result", parts.iterator().next().getName());
         assertEquals("string", parts.get(0).getType().get().getName());
         

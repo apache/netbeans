@@ -26,8 +26,11 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
@@ -35,6 +38,7 @@ import org.netbeans.modules.rust.cargo.api.RustPackage;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.tomlj.Toml;
+import org.tomlj.TomlArray;
 import org.tomlj.TomlParseError;
 import org.tomlj.TomlParseResult;
 import org.tomlj.TomlTable;
@@ -107,6 +111,26 @@ public class CargoTOMLParser {
                 cargotoml.setBuildDependencies(buildDependencies);
             }
 
+            // Workspaces https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html
+            TomlArray members = parseResult.getArray("workspace.members");
+            if (members != null) {
+                TreeMap<String, CargoTOML> workspacesByName = new TreeMap<>();
+                FileObject root = cargotoml.getFileObject().getParent();
+                for (int i = 0; i < members.size(); i++) {
+                    String memberName = members.getString(i);
+                    FileObject memberCargoFO = root.getFileObject(memberName);
+                    if (memberCargoFO != null) {
+                        memberCargoFO = memberCargoFO.getFileObject("Cargo.toml"); // NOI18N
+                    }
+                    if (memberCargoFO != null) {
+                        CargoTOML memberCargo = new CargoTOML(memberCargoFO);
+                        workspacesByName.put(memberName, memberCargo);
+                    }
+                }
+                cargotoml.setWorkspace(workspacesByName);
+                LOG.log(Level.FINE, String.format("Workspace: %s", cargotoml.getWorkspace().toString()));
+            }
+
         }
         long end = System.currentTimeMillis();
         LOG.info(String.format("Parsing '%s' took %5.2g ms.", file.getAbsolutePath(), (end - start) / 1000.0)); //NOI18N
@@ -124,9 +148,18 @@ public class CargoTOMLParser {
             if (value instanceof String) {
                 String stringValue = (String) value;
                 packages.add(new RustPackage(cargotoml, key, stringValue));
+            } else if (value instanceof TomlTable) {
+                String dependencyName = key.replaceAll("^dependencies\\.", ""); // NOI18N
+                TomlTable dependencyInfo = (TomlTable) value;
+                String version = dependencyInfo.getString("version"); // NOI18N
+                Boolean optional = dependencyInfo.getBoolean("optional"); // NOI18N
+                RustPackage rp = new RustPackage(cargotoml, dependencyName, version, optional);
+                packages.add(new RustPackage(cargotoml, dependencyName, version));
             } else {
                 // TODO: Add support for github dependencies and registry dependencies https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
-                LOG.warning(String.format("Unrecognized cargo dev-dependency with key '%s', value '%s'", key, value)); // NOI18N
+                LOG.warning(String.format("Unrecognized cargo dev-dependency on file %s with key '%s', value '%s'",
+                        FileUtil.toFile(cargotoml.getFileObject()).getAbsolutePath(),
+                        key, value)); // NOI18N
             }
         }
         Collections.sort(packages, (RustPackage a, RustPackage b) -> {

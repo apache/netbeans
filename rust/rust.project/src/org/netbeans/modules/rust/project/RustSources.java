@@ -18,18 +18,15 @@
  */
 package org.netbeans.modules.rust.project;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
+import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.modules.rust.project.api.RustIconFactory;
+import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
-import org.openide.util.NbBundle;
 
 /**
  * Sources for Rust projects.
@@ -37,22 +34,46 @@ import org.openide.util.NbBundle;
  * @see
  * <a href="https://bits.netbeans.org/dev/javadoc/org-netbeans-modules-projectapi/org/netbeans/api/project/Sources.html">Sources</a>
  */
-public class RustSources implements Sources, SourceGroup {
+public class RustSources implements Sources {
 
     private final RustProject project;
     private final ChangeSupport changeSupport;
-    private final PropertyChangeSupport pcs;
 
     public RustSources(RustProject project) {
         this.project = project;
         this.changeSupport = new ChangeSupport(this);
-        this.pcs = new PropertyChangeSupport(this);
+        // TODO: What happens if "tests" folder is deleted?
+        project.getCargoTOML().addPropertyChangeListener((event)-> {
+            if (CargoTOML.PROP_WORKSPACE.equals(event.getPropertyName())) {
+                changeSupport.fireChange();
+            }
+        });
     }
 
     @Override
     public SourceGroup[] getSourceGroups(String type) {
         if (Sources.TYPE_GENERIC.equals(type)) {
-            return new SourceGroup[]{this};
+            ArrayList<RustSourceGroup> groups = new ArrayList<>();
+            FileObject rootFO = project.getProjectDirectory();
+            // Which "SourceGroups" do we have in Rust projects?
+            // - The "tests" folder, if any.
+            // - The folders for each one of the workspace members.
+            // - The "src" folder.
+            FileObject src = rootFO.getFileObject("src"); // NOI18N
+            if (src != null) {
+                groups.add(new RustSourceGroup(project, src));
+            }
+            FileObject tests = rootFO.getFileObject("tests"); // NOI18N
+            if (tests != null) {
+                groups.add(new RustSourceGroup(project, tests));
+            }
+            for (String memberPath: project.getCargoTOML().getWorkspace().keySet()) {
+                FileObject memberDirectory = rootFO.getFileObject(memberPath);
+                if (memberDirectory != null) {
+                    groups.add(new RustSourceGroup(project, memberDirectory));
+                }
+            }
+            return groups.toArray(new RustSourceGroup[0]);
         }
         return new SourceGroup[0];
     }
@@ -65,45 +86,6 @@ public class RustSources implements Sources, SourceGroup {
     @Override
     public void removeChangeListener(ChangeListener listener) {
         changeSupport.removeChangeListener(listener);
-    }
-
-    @Override
-    public FileObject getRootFolder() {
-        return project.getProjectDirectory().getFileObject("src"); // NOI18N
-    }
-
-    @Override
-    public String getName() {
-        return "src";
-    }
-
-    @NbBundle.Messages(""
-            + "display-name=src"
-            + "")
-    @Override
-    public String getDisplayName() {
-        return NbBundle.getMessage(RustSources.class, "display-name");
-    }
-
-    @Override
-    public Icon getIcon(boolean opened) {
-        return new ImageIcon(RustIconFactory.getSourceFolderIcon(opened));
-    }
-
-    @Override
-    public boolean contains(FileObject file) {
-        FileObject rootFolder = getRootFolder();
-        return FileUtil.isParentOf(rootFolder, file);
-    }
-
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
-    }
-
-    @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        pcs.removePropertyChangeListener(listener);
     }
 
 }

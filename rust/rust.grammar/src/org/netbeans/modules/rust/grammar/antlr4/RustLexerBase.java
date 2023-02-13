@@ -36,9 +36,12 @@
  */
 package org.netbeans.modules.rust.grammar.antlr4;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.Token;
+import org.netbeans.modules.rust.grammar.RustTokenID;
 
 /**
  *
@@ -46,6 +49,8 @@ import org.antlr.v4.runtime.Token;
  * <a href="https://github.com/antlr/grammars-v4/blob/master/rust/Java/RustLexerBase.java">RustLexerBase.java</a>
  */
 public abstract class RustLexerBase extends Lexer {
+
+    private static final Logger LOG = Logger.getLogger(RustLexerBase.class.getName());
 
     public RustLexerBase(CharStream input) {
         super(input);
@@ -56,7 +61,28 @@ public abstract class RustLexerBase extends Lexer {
 
     @Override
     public Token nextToken() {
-        Token next = super.nextToken();
+        Token next = null;
+
+        try {
+            next = super.nextToken();
+        } catch (Throwable e) {
+            StringBuilder message = new StringBuilder();
+            message.append(
+                    String.format("RUSTLEXER: Unexpected exception (%s) in RustLexerBase.nextToken: \"%s\"%n",
+                            e.getClass().getName(),
+                            e.getMessage()));
+            if (this.lt1 != null) {
+                RustTokenID tid = RustTokenID.from(this.lt1);
+                message.append(String.format("RUSTLEXER: ... after token %s at line %d:%d in file %s%n",
+                        tid.name(),
+                        this.lt1.getLine(),
+                        this.lt1.getCharPositionInLine(),
+                        _input.getSourceName()
+                ));
+            }
+            LOG.log(Level.SEVERE, message.toString());
+            throw new IllegalStateException(message.toString());
+        }
 
         if (next.getChannel() == Token.DEFAULT_CHANNEL) {
             // Keep track of the last token on the default channel.

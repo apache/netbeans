@@ -19,7 +19,6 @@
 package org.netbeans.modules.rust.cargo.api.nodes;
 
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
-import org.netbeans.modules.rust.cargo.impl.nodes.RustProjectDependenciesByTypeNode;
 import org.netbeans.modules.rust.cargo.impl.nodes.RustProjectDependenciesNode;
 import org.openide.nodes.Node;
 
@@ -33,10 +32,11 @@ public final class CargoNodes {
     /**
      * Returns a Node that shows the dependencies in a project.
      *
-     * @param project The project.
+     * @param cargotoml the CargoTOML in question.
      * @return The Node containing the dependencies in the given project.
      */
     public static final Node newCargoDependenciesNode(CargoTOML cargotoml) {
         return new RustProjectDependenciesNode(cargotoml);
     }
+
 }

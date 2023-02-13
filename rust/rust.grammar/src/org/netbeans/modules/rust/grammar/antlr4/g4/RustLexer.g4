@@ -195,16 +195,7 @@ CHAR_LITERAL
     ) '\''
     ;
 
-STRING_LITERAL
-    : '"'
-    (
-    ~["]
-    | QUOTE_ESCAPE
-    | ASCII_ESCAPE
-    | UNICODE_ESCAPE
-    | ESC_NEWLINE
-    )* '"'
-    ;
+STRING_LITERAL: '"\\\\"' | '"' ( ~["] | '\\"' )*? '"';
 
 RAW_STRING_LITERAL: 'r' RAW_STRING_CONTENT;
 
@@ -227,8 +218,6 @@ fragment UNICODE_ESCAPE
     ;
 
 fragment QUOTE_ESCAPE: '\\' ['"];
-
-fragment ESC_NEWLINE: '\\' '\n';
 
 // number
 

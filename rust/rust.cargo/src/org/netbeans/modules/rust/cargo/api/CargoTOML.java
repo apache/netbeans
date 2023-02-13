@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.SwingPropertyChangeSupport;
@@ -121,7 +123,7 @@ public final class CargoTOML implements FileChangeListener {
         try {
             reparse();
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Could not reparse 'Cargo.toml' file:" + e.getMessage());
+            LOG.log(Level.WARNING, "Could not reparse 'Cargo.toml' file:{0}", e.getMessage());
         }
     }
 
@@ -388,6 +390,32 @@ public final class CargoTOML implements FileChangeListener {
         List<RustPackage> oldBuildDependencies = this.buildDependencies;
         this.buildDependencies = Collections.unmodifiableList(buildDependencies);
         propertyChangeSupport.firePropertyChange(PROP_BUILDDEPENDENCIES, oldBuildDependencies, buildDependencies);
+    }
+
+    private Map<String, CargoTOML> workspace = new TreeMap<>();
+
+    public static final String PROP_WORKSPACE = "workspace";
+
+    /**
+     * Get the value of workspace
+     *
+     * @return the value of workspace
+     */
+    public Map<String, CargoTOML> getWorkspace() {
+        return workspace;
+    }
+
+    /**
+     * Set the value of workspace
+     *
+     * @param workspace new value of workspace
+     */
+    public void setWorkspace(Map<String, CargoTOML> workspace) {
+        Map<String, CargoTOML> oldWorkspace = this.workspace;
+        TreeMap<String, CargoTOML> newWorkspace = new TreeMap<>();
+        newWorkspace.putAll(workspace);
+        this.workspace = Collections.unmodifiableMap(newWorkspace);
+        propertyChangeSupport.firePropertyChange(PROP_WORKSPACE, oldWorkspace, workspace);
     }
 
 }

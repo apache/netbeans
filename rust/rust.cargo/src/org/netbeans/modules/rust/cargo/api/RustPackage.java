@@ -33,17 +33,27 @@ public final class RustPackage {
     private final String version;
     private final SemVer semver;
     private final String description;
+    private final boolean optional;
 
     public RustPackage(CargoTOML cargotoml, String name, String version) {
-        this(cargotoml, name, version, null);
+        this(cargotoml, name, version, false);
+    }
+
+    public RustPackage(CargoTOML cargotoml, String name, String version, Boolean optional) {
+        this(cargotoml, name, version, optional, null);
     }
 
     public RustPackage(CargoTOML cargotoml, String name, String version, String description) {
+        this(cargotoml, name, version, false, description);
+
+    }
+    public RustPackage(CargoTOML cargotoml, String name, String version, Boolean optional, String description) {
         this.cargotoml = cargotoml;
         this.name = name;
         this.version = version;
         this.semver = new SemVer(version);
         this.description = description;
+        this.optional = optional == null ? false : optional;
     }
 
     public CargoTOML getCargotoml() {
@@ -64,6 +74,10 @@ public final class RustPackage {
 
     public String getDescription() {
         return description;
+    }
+
+    public boolean isOptional() {
+        return optional;
     }
 
     @Override

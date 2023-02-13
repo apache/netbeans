@@ -67,4 +67,10 @@ public final class RustIconFactory {
         return ImageUtilities.mergeImages(base, badge, 8, 8);
     }
 
+    public static Image getWorkspaceFolderIcon(boolean opened) {
+        Image base = getTreeFolderIcon(opened);
+        Image badge = ImageUtilities.loadImage("org/netbeans/modules/rust/project/api/rust-badge.png"); // NOI18N
+        return ImageUtilities.mergeImages(base, badge, 8, 8);
+    }
+
 }

@@ -67,6 +67,7 @@ public class ProviderUtil {
     public static final Provider HIBERNATE_PROVIDER = new HibernateProvider(Persistence.VERSION_1_0);
     public static final Provider HIBERNATE_PROVIDER2_0 = new HibernateProvider(Persistence.VERSION_2_0);
     public static final Provider HIBERNATE_PROVIDER2_1 = new HibernateProvider(Persistence.VERSION_2_1);
+    public static final Provider HIBERNATE_PROVIDER2_2 = new HibernateProvider(Persistence.VERSION_2_2);
     public static final Provider TOPLINK_PROVIDER1_0 = ToplinkProvider.create(Persistence.VERSION_1_0);
     public static final Provider ECLIPSELINK_PROVIDER1_0 = new EclipseLinkProvider(Persistence.VERSION_1_0);
     public static final Provider ECLIPSELINK_PROVIDER2_0 = new EclipseLinkProvider(Persistence.VERSION_2_0);
@@ -74,9 +75,10 @@ public class ProviderUtil {
     public static final Provider ECLIPSELINK_PROVIDER2_2 = new EclipseLinkProvider(Persistence.VERSION_2_2);
     public static final Provider KODO_PROVIDER = new KodoProvider();
     public static final Provider DATANUCLEUS_PROVIDER = new DataNucleusProvider();
+    public static final Provider OPENJPA_PROVIDER1_0 = new OpenJPAProvider(Persistence.VERSION_1_0);
     public static final Provider OPENJPA_PROVIDER = new OpenJPAProvider(Persistence.VERSION_2_0);
     public static final Provider OPENJPA_PROVIDER2_1 = new OpenJPAProvider(Persistence.VERSION_2_1);
-    public static final Provider OPENJPA_PROVIDER1_0 = new OpenJPAProvider(Persistence.VERSION_1_0);
+    public static final Provider OPENJPA_PROVIDER2_2 = new OpenJPAProvider(Persistence.VERSION_2_2);
     public static final Provider DEFAULT_PROVIDER = new DefaultProvider();
     public static final Provider DEFAULT_PROVIDER2_0 = new DefaultProvider(Persistence.VERSION_2_0);
     public static final Provider DEFAULT_PROVIDER2_1 = new DefaultProvider(Persistence.VERSION_2_1);

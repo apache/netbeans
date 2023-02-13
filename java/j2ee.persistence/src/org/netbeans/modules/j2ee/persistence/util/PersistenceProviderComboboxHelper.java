@@ -60,7 +60,7 @@ public final class PersistenceProviderComboboxHelper {
     
     private static final String SEPARATOR = "PersistenceProviderComboboxHelper.SEPARATOR";
     private static final String EMPTY = "PersistenceProviderComboboxHelper.EMPTY";
-    private static final Provider preferredProvider = ProviderUtil.ECLIPSELINK_PROVIDER;
+    private static final Provider preferredProvider = ProviderUtil.ECLIPSELINK_PROVIDER2_2;
 
     private final PersistenceProviderSupplier providerSupplier;
     private final Project project;

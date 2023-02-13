@@ -60,7 +60,8 @@ class JpaSupportImpl implements JpaSupportImplementation {
                 true, 
                 instance.isJpa10(), 
                 instance.isJpa20(), 
-                instance.isJpa21()));
+                instance.isJpa21(),
+                instance.isJpa22()));
         // TomEE PluME has Eclipselink and OpenJPA
         if (instance.isTomEEplume()) {
             providers.add(JpaProviderFactory.createJpaProvider(

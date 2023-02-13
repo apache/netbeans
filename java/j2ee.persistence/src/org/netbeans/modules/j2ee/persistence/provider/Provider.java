@@ -89,14 +89,14 @@ public abstract class Provider {
         LOG.log(Level.INFO, "(89) ==== classRelativePath: {0}", classRelativePath);
         if(ret && version != null)
         {
-            if(Persistence.VERSION_2_2.equals(version)){
+            if (Persistence.VERSION_2_2.equals(version)) {
                 ret &= cp.findResource("javax/persistence/TableGenerators.class") != null;
                 LOG.log(Level.INFO, "(94) ==== Persistence.VERSION_2_2: {0}", Persistence.VERSION_2_2);
-            } else if(Persistence.VERSION_2_1.equals(version)){
+            } else if (Persistence.VERSION_2_1.equals(version)) {
                 ret &= cp.findResource("javax/persistence/criteria/CriteriaUpdate.class") != null;
-            } else if(Persistence.VERSION_2_0.equals(version)){
+            } else if (Persistence.VERSION_2_0.equals(version)) {
                 ret &= cp.findResource("javax/persistence/criteria/JoinType.class") != null;
-            } else if(Persistence.VERSION_1_0.equals(version)){
+            } else if (Persistence.VERSION_1_0.equals(version)) {
                 ret &= cp.findResource("javax/persistence/Entity.class") != null && cp.findResource("javax/persistence/criteria/JoinType.class") == null;
             }
         }

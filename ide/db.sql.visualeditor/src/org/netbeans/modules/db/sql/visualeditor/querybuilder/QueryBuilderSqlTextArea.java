@@ -90,58 +90,6 @@ public class QueryBuilderSqlTextArea extends JEditorPane
 
 //     private DefaultStyledDocument dsDocument   =  (DefaultStyledDocument) getStyledDocument();
 
-    private static ArrayList   keywords        = null;
-    // SQL 92 keywords
-    // http://sqlzoo.net/sql92.html
-    private static final String[] sqlReservedWords           = new String[] {
-        "ABSOLUTE", "ACTION", "ADD", "ALL", "ALLOCATE", "ALTER",         // NOI18N
-        "AND", "ANY", "ARE", "AS", "ASC", "ASSERTION", "AT",             // NOI18N
-        "AUTHORIZATION", "AVG", "BEGIN", "BETWEEN", "BIT",               // NOI18N
-        "BIT_LENGTH", "BOTH", "BY", "CASCADE", "CASCADED", "CASE",       // NOI18N
-        "CAST", "CATALOG", "CHAR", "CHARACTER", "CHAR_LENGTH",           // NOI18N
-        "CHARACTER_LENGTH", "CHECK", "CLOSE", "COALESCE", "COLLATE",     // NOI18N
-        "COLLATION", "COLUMN", "COMMIT", "CONNECT", "CONNECTION",        // NOI18N
-        "CONSTRAINT", "CONSTRAINTS", "CONTINUE", "CONVERT",              // NOI18N
-        "CORRESPONDING", "COUNT", "CREATE", "CROSS", "CURRENT",          // NOI18N
-        "CURRENT_DATE", "CURRENT_TIME", "CURRENT_TIMESTAMP",             // NOI18N
-        "CURRENT_USER", "CURSOR", "DATE", "DAY", "DEALLOCATE", "DEC",    // NOI18N
-        "DECIMAL", "DECLARE", "DEFAULT", "DEFERRABLE", "DEFERRED",       // NOI18N
-        "DELETE", "DESC", "DESCRIBE", "DESCRIPTOR", "DIAGNOSTICS",       // NOI18N
-        "DISCONNECT", "DISTINCT", "DOMAIN", "DOUBLE", "DROP", "ELSE",    // NOI18N
-        "END", "END-EXEC", "ESCAPE", "EXCEPT", "EXCEPTION", "EXEC",      // NOI18N
-        "EXECUTE", "EXISTS", "EXTERNAL", "EXTRACT", "FALSE", "FETCH",    // NOI18N
-        "FIRST", "FLOAT", "FOR", "FOREIGN", "FOUND", "FROM", "FULL",     // NOI18N
-        "GET", "GLOBAL", "GO", "GOTO", "GRANT", "GROUP", "HAVING",       // NOI18N
-        "HOUR", "IDENTITY", "IMMEDIATE", "IN", "INDICATOR",              // NOI18N
-        "INITIALLY", "INNER", "INPUT", "INSENSITIVE", "INSERT", "INT",   // NOI18N
-        "INTEGER", "INTERSECT", "INTERVAL", "INTO", "IS", "ISOLATION",   // NOI18N
-        "JOIN", "KEY", "LANGUAGE", "LAST", "LEADING", "LEFT", "LEVEL",   // NOI18N
-        "LIKE", "LOCAL", "LOWER", "MATCH", "MAX", "MIN", "MINUTE",       // NOI18N
-        "MODULE", "MONTH", "NAMES", "NATIONAL", "NATURAL", "NCHAR",      // NOI18N
-        "NEXT", "NO", "NOT", "NULL", "NULLIF", "NUMERIC",                // NOI18N
-        "OCTET_LENGTH", "OF", "ON", "ONLY", "OPEN", "OPTION", "OR",      // NOI18N
-        "ORDER", "OUTER", "OUTPUT", "OVERLAPS", "PAD", "PARTIAL",        // NOI18N
-        "POSITION", "PRECISION", "PREPARE", "PRESERVE", "PRIMARY",       // NOI18N
-        "PRIOR", "PRIVILEGES", "PROCEDURE", "PUBLIC", "READ", "REAL",    // NOI18N
-        "REFERENCES", "RELATIVE", "RESTRICT", "REVOKE", "RIGHT",         // NOI18N
-        "ROLLBACK", "ROWS", "SCHEMA", "SCROLL", "SECOND", "SECTION",     // NOI18N
-        "SELECT", "SESSION", "SESSION_USER", "SET", "SIZE", "SMALLINT",  // NOI18N
-        "SOME", "SPACE", "SQL", "SQLCODE", "SQLERROR", "SQLSTATE",       // NOI18N
-        "SUBSTRING", "SUM", "SYSTEM_USER", "TABLE", "TEMPORARY",         // NOI18N
-        "THEN", "TIME", "TIMESTAMP", "TIMEZONE_HOUR",                    // NOI18N
-        "TIMEZONE_MINUTE", "TO", "TRAILING", "TRANSACTION",              // NOI18N
-        "TRANSLATE", "TRANSLATION", "TRIM", "TRUE", "UNION", "UNIQUE",   // NOI18N
-        "UNKNOWN", "UPDATE", "UPPER", "USAGE", "USER", "USING", "VALUE", // NOI18N
-        "VALUES", "VARCHAR", "VARYING", "VIEW", "WHEN", "WHENEVER",      // NOI18N
-        "WHERE", "WITH", "WORK", "WRITE", "YEAR", "ZONE"                 // NOI18N
-    };
-    static {
-        keywords = new ArrayList();
-        for (int i=0; i<sqlReservedWords.length; i++) {
-            keywords.add(sqlReservedWords[i]);
-        }
-    }
-    
     // Constructor
     
     public QueryBuilderSqlTextArea(QueryBuilder queryBuilder) {

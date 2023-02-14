@@ -94,7 +94,7 @@ public final class FormPropertyEditorManager {
 
     private static List<Class> getRegisteredEditorClasses(Class propertyType) {
         List<Class> classList = expliciteEditors != null ? expliciteEditors.get(propertyType) : null;
-        return classList != null ? classList : Collections.EMPTY_LIST;
+        return classList != null ? classList : Collections.emptyList();
     }
 
     /**

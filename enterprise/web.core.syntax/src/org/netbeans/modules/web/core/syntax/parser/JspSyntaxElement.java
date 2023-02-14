@@ -178,7 +178,7 @@ public abstract class JspSyntaxElement {
         }
 
         public List<Attribute> attributes() {
-            return attribs == null ? Collections.EMPTY_LIST : attribs;
+            return attribs == null ? Collections.emptyList() : attribs;
         }
 
         public Attribute getAttribute(String name) {

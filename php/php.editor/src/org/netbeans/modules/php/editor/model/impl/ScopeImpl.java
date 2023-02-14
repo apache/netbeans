@@ -96,7 +96,7 @@ abstract class ScopeImpl extends ModelElementImpl implements Scope {
 
     @Override
     public synchronized List<? extends ModelElementImpl> getElements() {
-        return elements == null ? Collections.EMPTY_LIST : new ArrayList<>(elements);
+        return elements == null ? Collections.emptyList() : new ArrayList<>(elements);
     }
 
     synchronized void addElement(ModelElementImpl element) {

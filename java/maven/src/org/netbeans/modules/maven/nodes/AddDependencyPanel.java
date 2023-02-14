@@ -988,7 +988,7 @@ public class AddDependencyPanel extends javax.swing.JPanel {
         List<Node> myNodes;
 
         public ResultsRootChildren() {
-            myNodes = Collections.EMPTY_LIST;
+            myNodes = Collections.emptyList();
         }
 
         private void setNewChildren(List<Node> ch) {

@@ -229,7 +229,7 @@ public class MarkOccurrencesTest extends NbTestCase {
                 for (Method method : methods) {                    
                     if(method.getName().equals("processImpl")) procesImpl = method;
                 }
-                if(procesImpl==null) return Collections.EMPTY_LIST;
+                if(procesImpl==null) return Collections.emptyList();
                 procesImpl.setAccessible(true);
                 Object result = procesImpl.invoke(moh, parameter, node, doc, caretPosition);                
                 return  (List<int[]>) result;
@@ -242,7 +242,7 @@ public class MarkOccurrencesTest extends NbTestCase {
             } catch (SecurityException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         
         public void run(CompilationController parameter) throws Exception {

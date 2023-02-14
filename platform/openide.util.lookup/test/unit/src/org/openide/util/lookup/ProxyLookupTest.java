@@ -314,7 +314,7 @@ implements AbstractLookupBaseHid.Impl {
         }
         
         // Performing template lookup for String object
-        Lookup.Result result = proxy.lookup(new Lookup.Template(String.class, null, null));
+        Lookup.Result result = proxy.lookup(new Lookup.Template<>(String.class, null, null));
         int stringTemplateResultSize = result.allInstances().size();
         assertEquals ("Ensure, there is only one instance of String.class in proxyLookup:", //NOI18N
                 1, stringTemplateResultSize);
@@ -329,11 +329,11 @@ implements AbstractLookupBaseHid.Impl {
         assertEquals ("the old result is updated", 0, result.allInstances().size());
 
         // Instance of String.class should not appear in proxyLookup
-        Lookup.Result r2 = proxy.lookup(new Lookup.Template(String.class, null, null));
+        Lookup.Result r2 = proxy.lookup(new Lookup.Template<>(String.class, null, null));
         assertEquals ("Instance of String.class should not appear in proxyLookup:", //NOI18N
                 0, r2.allInstances().size());
 
-        Lookup.Result r3 = proxy.lookup(new Lookup.Template(Integer.class, null, null));
+        Lookup.Result r3 = proxy.lookup(new Lookup.Template<>(Integer.class, null, null));
         assertEquals ("There is only one instance of Integer.class in proxyLookup:", //NOI18N
                 1, r3.allInstances().size());
     }
@@ -379,9 +379,9 @@ implements AbstractLookupBaseHid.Impl {
         final ProxyLookup lookup = on;
         
         class L implements LookupListener {
-            Lookup.Result integer = lookup.lookup(new Lookup.Template(Integer.class));
-            Lookup.Result number = lookup.lookup(new Lookup.Template(Number.class));
-            Lookup.Result serial = lookup.lookup(new Lookup.Template(Serializable.class));
+            Lookup.Result integer = lookup.lookup(new Lookup.Template<>(Integer.class));
+            Lookup.Result number = lookup.lookup(new Lookup.Template<>(Number.class));
+            Lookup.Result serial = lookup.lookup(new Lookup.Template<>(Serializable.class));
             
             {
                 integer.addLookupListener(this);
@@ -435,12 +435,12 @@ implements AbstractLookupBaseHid.Impl {
         Lookup layer0 = Lookups.singleton("Hello");
         Lookup layer1 = new ProxyLookup(new Lookup[] { layer0 });
         Lookup layer2 = new ProxyLookup(new Lookup[] { layer1 });
-        Lookup.Result result1 = layer1.lookup(new Lookup.Template(String.class));
+        Lookup.Result result1 = layer1.lookup(new Lookup.Template<>(String.class));
 
         assertEquals("One instance", 1, result1.allInstances().size());
 
         // this will create ProxyLookup$R which listens on origResult
-        Lookup.Result result2 = layer2.lookup(new Lookup.Template(String.class));
+        Lookup.Result result2 = layer2.lookup(new Lookup.Template<>(String.class));
         
         // this line is necessary. W/o actually querying the result,
         // it will nether compute it nor attach the listener.

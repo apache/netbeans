@@ -229,7 +229,7 @@ public class AbstractLookupTest extends AbstractLookupBaseHid implements Abstrac
         AbstractLookup al = new AbstractLookup(new AbstractLookup.Content(), inhTree);
         {
 
-            Collection r = al.lookup(new Lookup.Template(Integer.class)).allInstances();
+            Collection r = al.lookup(new Lookup.Template<>(Integer.class)).allInstances();
             assertEquals("None", 0, r.size());
         }
 
@@ -246,7 +246,7 @@ public class AbstractLookupTest extends AbstractLookupBaseHid implements Abstrac
 
         {
 
-            Collection r = newLookup.lookup(new Lookup.Template(Number.class)).allInstances();
+            Collection r = newLookup.lookup(new Lookup.Template<>(Number.class)).allInstances();
             assertEquals("one", 1, r.size());
 /*
             Iterator it = r.iterator();

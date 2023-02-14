@@ -68,7 +68,7 @@ public class PersistentSnippetsSupport  {
     private static final PersistentSnippets EMPTY = new PersistentSnippets() {
         @Override
         public Collection<FileObject> getSavedClasses(String s) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         @Override

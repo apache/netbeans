@@ -134,7 +134,7 @@ public class MatchedPropertiesNode extends AbstractNode {
         for (int i=index; i<toPopulate.size(); i++) {
             MatchedPropertyNode parent = toPopulate.get(i);
             String propertyName = parent.property.getName();
-            List<String> longhands = Collections.EMPTY_LIST;
+            List<String> longhands = Collections.emptyList();
             if (propertyInfos != null) {
                 PropertyInfo info = propertyInfos.get(propertyName);
                 if (info != null) {

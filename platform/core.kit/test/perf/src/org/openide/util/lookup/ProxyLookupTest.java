@@ -100,7 +100,7 @@ public class ProxyLookupTest extends Benchmark {
 
     public void testAllInstances() throws Exception {
         int count = getIterationCount();
-	Lookup.Result result = lookup.lookup(new Lookup.Template(String.class));
+	Lookup.Result result = lookup.lookup(new Lookup.Template<>(String.class));
 
         while( count-- > 0 ) {
             // do the stuff here, 
@@ -110,7 +110,7 @@ public class ProxyLookupTest extends Benchmark {
 
     public void testIterateInstances() throws Exception {
         int count = getIterationCount();
-	Lookup.Result result = lookup.lookup(new Lookup.Template(String.class));
+	Lookup.Result result = lookup.lookup(new Lookup.Template<>(String.class));
 
         while( count-- > 0 ) {
             // do the stuff here, 

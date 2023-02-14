@@ -708,7 +708,7 @@ public final class CollectionUtils {
         public Iterator<E> iterator() {
             return (content.length == 0)
                    ? Collections.<E>emptySet().iterator()
-                   : new ArrayListIterator(content);
+                   : new ArrayListIterator<>(content);
         }
 
         @Override

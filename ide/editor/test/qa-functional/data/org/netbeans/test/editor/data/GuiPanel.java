@@ -42,7 +42,7 @@ public class GuiPanel extends javax.swing.JPanel {
         jComboBox1 = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton1.setText(org.openide.util.NbBundle.getMessage(GuiPanel.class, "GuiPanel.jButton1.text")); // NOI18N
 

@@ -99,7 +99,7 @@ public final class ReplaceConstructorWithBuilderRefactoring extends AbstractRefa
     public @NonNull List<Setter> getSetters() {
         if (setters==null) {
             //never return null;
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return setters;
     }

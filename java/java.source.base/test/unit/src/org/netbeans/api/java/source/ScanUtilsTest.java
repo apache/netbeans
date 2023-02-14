@@ -97,7 +97,7 @@ public class ScanUtilsTest extends NbTestCase {
     }
 
     private ClassPath createCompilePath () {
-        return ClassPathSupport.createClassPath(Collections.EMPTY_LIST);
+        return ClassPathSupport.createClassPath(Collections.emptyList());
     }
 
     private ClassPath createSourcePath () throws IOException {

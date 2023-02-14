@@ -83,7 +83,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
     
     private ProvidedExtensionsImpl lookupImpl(boolean providesCanWrite) {
         Result<BaseAnnotationProvider> result = Lookup.getDefault().
-                       lookup(new Lookup.Template(BaseAnnotationProvider.class));
+                       lookup(new Lookup.Template<>(BaseAnnotationProvider.class));
         for (Item<BaseAnnotationProvider> item : result.allItems()) {
             if (!item.getId().contains(ProvidedExtensionsTest.class.getSimpleName())) {
                 continue;

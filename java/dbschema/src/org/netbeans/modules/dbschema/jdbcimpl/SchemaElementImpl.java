@@ -229,7 +229,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                 if ("Oracle".equals(dmd.getDatabaseProductName()) ) { // NOI18N
                     recycleBinTables = getOracleRecycleBinTables();
                 } else {
-                    recycleBinTables = Collections.EMPTY_LIST;
+                    recycleBinTables = Collections.emptyList();
                 }
 
 //get the list of all tables and views

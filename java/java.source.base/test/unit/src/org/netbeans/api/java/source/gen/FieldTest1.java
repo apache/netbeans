@@ -73,7 +73,7 @@ public class FieldTest1 extends GeneratorTestMDRCompat {
                 public Void visitVariable(VariableTree node, Object p) {
                     super.visitVariable(node, p);
                     if ("modifiersField".contentEquals(node.getName())) {
-                        copy.rewrite(node.getModifiers(), make.Modifiers(Collections.EMPTY_SET));
+                        copy.rewrite(node.getModifiers(), make.Modifiers(Collections.emptySet()));
                     }
                     return null;
                 }

@@ -48,8 +48,8 @@ public final class NbSourceProvider {
 
     private static final Logger LOG = Logger.getLogger(NbSourceProvider.class.getName());
 
-    private final Map<String, String> fqnToURI = Collections.synchronizedMap(new CacheMap());
-    private final Map<String, Source> uriToSource = Collections.synchronizedMap(new CacheMap());
+    private final Map<String, String> fqnToURI = Collections.synchronizedMap(new CacheMap<>());
+    private final Map<String, Source> uriToSource = Collections.synchronizedMap(new CacheMap<>());
     private final DebugAdapterContext context;
     private ClassPath sources = ClassPath.EMPTY;
 

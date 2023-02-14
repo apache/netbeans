@@ -41,7 +41,7 @@ public final class ProvidersRegistry {
      */
     public static final synchronized Iterator getProviderClasses(Class[] filter) {
 
-        Lookup.Template template = new Lookup.Template(CatalogProvider.class);
+        Lookup.Template template = new Lookup.Template<>(CatalogProvider.class);
         Lookup.Result res = Lookup.getDefault().lookup(template);
         Iterator it = res.allInstances().iterator();
         Set set = new LinkedHashSet();

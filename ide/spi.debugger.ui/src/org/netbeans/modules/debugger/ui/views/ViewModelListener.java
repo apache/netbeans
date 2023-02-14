@@ -584,19 +584,19 @@ public class ViewModelListener extends DebuggerManagerAdapter {
             models.add(new ArrayList<Object>(asynchModelFilters));
         }
         synchronized (tableRenderers) {
-            models.add(new ArrayList(tableRenderers));
+            models.add(new ArrayList<>(tableRenderers));
         }
         synchronized (tableRendererFilters) {
-            models.add(new ArrayList(tableRendererFilters));
+            models.add(new ArrayList<>(tableRendererFilters));
         }
         synchronized (tableHTMLModelFilters) {
-            models.add(new ArrayList(tableHTMLModelFilters));
+            models.add(new ArrayList<>(tableHTMLModelFilters));
         }
         synchronized (tablePropertyEditors) {
-            models.add(new ArrayList(tablePropertyEditors));
+            models.add(new ArrayList<>(tablePropertyEditors));
         }
         synchronized (tablePropertyEditorsFilters) {
-            models.add(new ArrayList(tablePropertyEditorsFilters));
+            models.add(new ArrayList<>(tablePropertyEditorsFilters));
         }
         /*if (rp != null) {
             models.add(rp);

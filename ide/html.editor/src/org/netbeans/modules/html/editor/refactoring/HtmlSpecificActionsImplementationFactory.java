@@ -31,7 +31,7 @@ public class HtmlSpecificActionsImplementationFactory {
     }
 
     private static final Lookup.Result<HtmlSpecificActionsImplementationProvider> implementations =
-        Lookup.getDefault().lookup(new Lookup.Template(HtmlSpecificActionsImplementationProvider.class));
+        Lookup.getDefault().lookup(new Lookup.Template<>(HtmlSpecificActionsImplementationProvider.class));
 
     public static boolean canExtractInlineStyle(Lookup lookup) {
         for (HtmlSpecificActionsImplementationProvider rafi: implementations.allInstances()) {

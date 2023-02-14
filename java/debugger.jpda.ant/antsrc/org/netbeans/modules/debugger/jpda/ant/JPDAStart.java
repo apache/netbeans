@@ -749,7 +749,7 @@ public class JPDAStart extends Task implements Runnable {
             if (jp != null) {
                 return jp.getSourceFolders ();
             } else {
-                return ClassPathSupport.createClassPath(java.util.Collections.EMPTY_LIST);
+                return ClassPathSupport.createClassPath(java.util.Collections.emptyList());
             }
         } else {
             return convertToSourcePath (project, bootclasspath, false);

@@ -145,7 +145,7 @@ public class HibernateWebModuleExtender extends WebModuleExtender {
                 Exceptions.printStackTrace(ex);
             }
         }
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     private void showConfigPanelForCustomizer(WebModule webModule) {

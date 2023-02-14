@@ -94,7 +94,7 @@ public class V8ServerCommandsTest {
         Thread st = new Thread() {
             @Override public void run() {
                 try {
-                    sn.runConnectionLoop(Collections.EMPTY_MAP, listener);
+                    sn.runConnectionLoop(Collections.emptyMap(), listener);
                 } catch (IOException ex) {
                     Logger.getLogger(V8ServerConnectionTest.class.getName()).log(Level.SEVERE, null, ex);
                 }

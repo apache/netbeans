@@ -1408,7 +1408,7 @@ public class ElementJavadoc {
         }
 
         if(!errorList.isEmpty() && text==null) {
-            reportError(new ArrayList(errorList), sb);
+            reportError(new ArrayList<>(errorList), sb);
             return;
         }
         String langCommentPattern;

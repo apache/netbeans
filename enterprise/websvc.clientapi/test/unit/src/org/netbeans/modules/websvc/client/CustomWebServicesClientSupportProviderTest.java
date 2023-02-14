@@ -79,7 +79,7 @@ public class CustomWebServicesClientSupportProviderTest extends NbTestCase {
     }
     
     public void testProviders() throws Exception {
-        Lookup.Result res = Lookup.getDefault().lookup(new Lookup.Template(WebServicesClientSupportProvider.class));
+        Lookup.Result res = Lookup.getDefault().lookup(new Lookup.Template<>(WebServicesClientSupportProvider.class));
         assertEquals("there should be 2 instances - one from websvc/clientapi and one from tests", 2, res.allInstances ().size ());
     }
     

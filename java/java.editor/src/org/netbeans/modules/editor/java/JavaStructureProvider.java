@@ -83,7 +83,7 @@ public class JavaStructureProvider implements StructureProvider {
             }
             return result;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     private static final ElementUtilities.ElementAcceptor ALL_ACCEPTOR = new ElementUtilities.ElementAcceptor() {

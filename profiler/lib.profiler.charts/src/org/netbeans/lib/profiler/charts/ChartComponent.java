@@ -385,8 +385,8 @@ public class ChartComponent extends InteractiveCanvasComponent {
 
                 List<ItemSelection> highlightedSelection = sel ? selectionModel.getHighlightedItems() : null;
                 List<ItemSelection> selectedSelection = sel ? selectionModel.getSelectedItems() : null;
-                List<ItemSelection> filteredHighlighted = sel ? new ArrayList() : Collections.EMPTY_LIST;
-                List<ItemSelection> filteredSelected = sel ? new ArrayList() : Collections.EMPTY_LIST;
+                List<ItemSelection> filteredHighlighted = sel ? new ArrayList<>() : Collections.emptyList();
+                List<ItemSelection> filteredSelected = sel ? new ArrayList<>() : Collections.emptyList();
 
                 for (int i = 0; i < itemsCount; i++) {
                     ChartItem item = itemsModel.getItem(i);

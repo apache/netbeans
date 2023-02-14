@@ -636,7 +636,7 @@ public class ProfilerTreeTable extends ProfilerTable {
         
         protected void setSortKeysImpl(List newKeys) {
             sortKeys = newKeys == null ? Collections.emptyList() :
-                       Collections.unmodifiableList(new ArrayList(newKeys));
+                       Collections.unmodifiableList(new ArrayList<>(newKeys));
 //            long start = System.currentTimeMillis();
             model.sort(createComparator(newKeys));
 //            System.err.println(">>> Sorted in " + (System.currentTimeMillis() - start));

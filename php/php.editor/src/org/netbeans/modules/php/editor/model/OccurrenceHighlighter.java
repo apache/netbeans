@@ -35,7 +35,7 @@ public interface OccurrenceHighlighter {
 
         @Override
         public Set<OffsetRange> getRanges() {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
     };
 

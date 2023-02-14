@@ -927,7 +927,7 @@ public class CompletionContextImpl extends CompletionContext {
      * and builds a list for all no namespace models.
      */
     public boolean initModels() {
-        Lookup.Template templ = new Lookup.Template(CompletionModelProvider.class);
+        Lookup.Template templ = new Lookup.Template<>(CompletionModelProvider.class);
         Lookup.Result result = Lookup.getDefault().lookup(templ);
         Collection impls = result.allInstances();
         if(impls == null || impls.size() == 0)

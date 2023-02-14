@@ -55,7 +55,7 @@ public class AnimationLayer implements ActionListener {
     /** All (non-VIP) components that appear in the initial or final layout of the animated container. */
     private Set<Component> components = new HashSet<Component>();
     /** VIP components - components that are painted at the end (in the specified order). */
-    private List<Component> vipComponents = Collections.EMPTY_LIST;
+    private List<Component> vipComponents = Collections.emptyList();
     /** Phase of the animation (between 0 and 1 inclusive). */
     private float phase;
     /** Start time of the animation (in nanoseconds). */

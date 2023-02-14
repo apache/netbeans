@@ -1107,7 +1107,7 @@ public class GlassPane extends JPanel implements GridActionPerformer {
      * if it is {@code null} then the current selection is cleared.
      */
     void setSelection(Component selComp) {
-        setSelection((selComp==null) ? Collections.EMPTY_SET : Collections.singleton(selComp));
+        setSelection((selComp==null) ? Collections.emptySet() : Collections.singleton(selComp));
     }
 
     /**

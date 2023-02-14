@@ -68,7 +68,7 @@ public final class PomCompilerOptionsQueryImpl implements CompilerOptionsQueryIm
     }
 
     private static final class ResultImpl extends Result implements PropertyChangeListener {
-        private static final List<String> EMPTY = Collections.EMPTY_LIST;
+        private static final List<String> EMPTY = Collections.emptyList();
         private static final String ARG_PARAMETERS = "-parameters"; // NOI18N
         private final ChangeSupport cs;
         //@GuardedBy("this")

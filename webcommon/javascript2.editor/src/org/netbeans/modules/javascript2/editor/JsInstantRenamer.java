@@ -56,7 +56,7 @@ public class JsInstantRenamer implements InstantRenamer {
             }
             return sourceRanges;
         } else {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
     }

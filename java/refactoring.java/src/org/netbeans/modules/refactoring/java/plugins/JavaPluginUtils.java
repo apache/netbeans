@@ -398,7 +398,7 @@ public final class JavaPluginUtils {
     //<editor-fold defaultstate="collapsed" desc="TODO: Copy from org.netbeans.modules.java.hints.errors.Utilities">
     public static final String DEFAULT_NAME = "par"; // NOI18N
     public static String makeNameUnique(CompilationInfo info, Scope s, String name) {
-        return makeNameUnique(info, s, name, Collections.EMPTY_LIST, null, null);
+        return makeNameUnique(info, s, name, Collections.emptyList(), null, null);
     }
     
     public static String makeNameUnique(CompilationInfo info, Scope s, String name, List<String> definedIds) {
@@ -406,7 +406,7 @@ public final class JavaPluginUtils {
     }
     
     public static String makeNameUnique(CompilationInfo info, Scope s, String name, String prefix, String suffix) {
-        return makeNameUnique(info, s, name, Collections.EMPTY_LIST, prefix, suffix);
+        return makeNameUnique(info, s, name, Collections.emptyList(), prefix, suffix);
     }
     
     public static String makeNameUnique(CompilationInfo info, Scope s, String name, List<String> definedIds, String prefix, String suffix) {

@@ -244,7 +244,7 @@ public final class FoldRegistry  {
 
         if (holder == null) {
             r = MimeLookup.getLookup(mime).lookup(
-                    new Lookup.Template(
+                    new Lookup.Template<>(
                         FoldTypeProvider.class
                     )
             );
@@ -255,7 +255,7 @@ public final class FoldRegistry  {
             }
             if (parentMime != null) {
                 pr = MimeLookup.getLookup(parentMime).lookup(
-                        new Lookup.Template(
+                        new Lookup.Template<>(
                             FoldTypeProvider.class
                         )
                 );

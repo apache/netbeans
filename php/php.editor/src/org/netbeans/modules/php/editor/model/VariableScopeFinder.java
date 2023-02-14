@@ -220,7 +220,7 @@ public final class VariableScopeFinder {
 
             @Override
             public List<? extends ModelElement> getElements() {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
 
             @Override

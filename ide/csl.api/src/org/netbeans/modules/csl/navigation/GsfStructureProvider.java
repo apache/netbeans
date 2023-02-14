@@ -195,7 +195,7 @@ public class GsfStructureProvider implements StructureProvider {
             return sElements;
         } catch (ParseException ex) {
             LOGGER.log(Level.FINE, null, ex);
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
     

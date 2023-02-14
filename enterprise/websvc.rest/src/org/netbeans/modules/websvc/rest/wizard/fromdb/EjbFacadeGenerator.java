@@ -166,10 +166,10 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                             entityClassVar,classObjectTree,null));
                     members.add(maker.Constructor(
                             genUtils.createModifiers(Modifier.PUBLIC),
-                            Collections.EMPTY_LIST,
+                            Collections.emptyList(),
                             Arrays.asList(new VariableTree[]{genUtils.
                                     createVariable(entityClassVar,classObjectTree)}),
-                            Collections.EMPTY_LIST,
+                            Collections.emptyList(),
                             "{this." + entityClassVar + " = " + entityClassVar + ";}"));    //NOI18N
                     for(GenerationOptions option: methodOptions) {
                         Tree returnType = (option.getReturnType() == null || 
@@ -178,7 +178,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                                                 genUtils.createType(option.getReturnType(), 
                                                         classElement);
                         List<VariableTree> vars = option.getParameterName() == 
-                            null ? Collections.EMPTY_LIST :
+                            null ? Collections.emptyList() :
                                 Arrays.asList(new VariableTree[] {
                                         genUtils.createVariable(
                                                 option.getParameterName(),
@@ -192,9 +192,9 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                                     maker.Modifiers(option.getModifiers()),
                                     option.getMethodName(),
                                     returnType,
-                                    Collections.EMPTY_LIST,
+                                    Collections.emptyList(),
                                     vars,
-                                    (List<ExpressionTree>)Collections.EMPTY_LIST,
+                                    Collections.emptyList(),
                                     (BlockTree)null,
                                  null));
                         } else {
@@ -202,9 +202,9 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                                     maker.Modifiers(option.getModifiers()),
                                     option.getMethodName(),
                                     returnType,
-                                    (List<TypeParameterTree>)Collections.EMPTY_LIST,
+                                    Collections.emptyList(),
                                     vars,
-                                    (List<ExpressionTree>)Collections.EMPTY_LIST,
+                                    Collections.emptyList(),
                                     "{" + option.getCallLines("getEntityManager()", 
                                             entityClassVar, project!=null ? 
                                                     PersistenceUtils.getJPAVersion(project) : 
@@ -217,10 +217,10 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                             maker.Modifiers(EnumSet.of(Modifier.PUBLIC, 
                                     Modifier.ABSTRACT)),
                             classTree.getSimpleName(),
-                            Arrays.asList(maker.TypeParameter(genericsTypeName, 
-                                    Collections.EMPTY_LIST)),
+                            Arrays.asList(maker.TypeParameter(genericsTypeName,
+                                    Collections.emptyList())),
                             null,
-                            Collections.EMPTY_LIST,
+                            Collections.emptyList(),
                             members);
 
                     workingCopy.rewrite(classTree, newClassTree);
@@ -296,9 +296,9 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                 List<Tree> members = new ArrayList<Tree>(classTree.getMembers());
                 MethodTree constructor = maker.Constructor(
                         genUtils.createModifiers(Modifier.PUBLIC),
-                        Collections.EMPTY_LIST,
-                        Collections.EMPTY_LIST,
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        Collections.emptyList(),
                         "{super(" + entitySimpleName + ".class);}");            //NOI18N
                 members.add(constructor);
 
@@ -418,9 +418,9 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                                 modifiersTree,
                                 option.getRestMethod().getMethodName(),
                                 returnType,
-                                Collections.EMPTY_LIST,
+                                Collections.emptyList(),
                                 vars,
-                                (List<ExpressionTree>)Collections.EMPTY_LIST,
+                                Collections.emptyList(),
                                 "{"+option.getBody()+"}", //NOI18N
                                 null)
                             );

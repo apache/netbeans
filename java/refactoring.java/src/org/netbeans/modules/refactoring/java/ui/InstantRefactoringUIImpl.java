@@ -264,7 +264,7 @@ public final class InstantRefactoringUIImpl implements InstantRefactoringUI {
                         if (path[0] != null) {
                             Set<MutablePositionRegion> labelPoints = computeLabelChangePoints(path, info, adjustedCaret, doc);
                             if (labelPoints != null) {
-                                return new InstantRefactoringUIImpl(labelPoints, Collections.EMPTY_SET, labelPoints.iterator().next().getText(doc).toString(), (FileObject) null, TreePathHandle.create(path[0], info));
+                                return new InstantRefactoringUIImpl(labelPoints, Collections.emptySet(), labelPoints.iterator().next().getText(doc).toString(), (FileObject) null, TreePathHandle.create(path[0], info));
                             }
                         }
                         return null;

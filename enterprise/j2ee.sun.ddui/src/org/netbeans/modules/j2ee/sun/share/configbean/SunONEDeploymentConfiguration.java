@@ -321,7 +321,7 @@ extends GlassfishConfiguration implements DeploymentConfiguration {
             datasources = ResourceConfigurator.getResourcesFromFile(resourceDir);
         }
         if(datasources == null) {
-            datasources = Collections.EMPTY_SET;
+            datasources = Collections.emptySet();
         }
         return datasources;
     }
@@ -355,7 +355,7 @@ extends GlassfishConfiguration implements DeploymentConfiguration {
             destinations = rci.getMessageDestinations(resourceDir);
         }
         if(destinations == null) {
-            destinations = Collections.EMPTY_SET;
+            destinations = Collections.emptySet();
         }
         return destinations;
     }

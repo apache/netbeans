@@ -42,7 +42,7 @@ public class JavaDocCompletionTaskTest extends JavadocTestSupport {
         for (JavadocCompletionItem item : list) {
             listStr.add(item.getSortText().toString());
         }
-        List<String> inlineAttr = new ArrayList() {
+        List<String> inlineAttr = new ArrayList<>() {
             {
                 add("highlight");
                 add("replace");
@@ -75,7 +75,7 @@ public class JavaDocCompletionTaskTest extends JavadocTestSupport {
             listStr.add(item.getSortText().toString());
         }
         String value = " = \"<value>\"";
-        List<String> inlineAttr = new ArrayList() {
+        List<String> inlineAttr = new ArrayList<>() {
             {
                 add("substring" + value);
                 add("regex" + value);
@@ -97,7 +97,7 @@ public class JavaDocCompletionTaskTest extends JavadocTestSupport {
             listStr.add(item.getSortText().toString());
         }
         String value = " = \"<value>\"";
-        List<String> inlineAttr = new ArrayList() {
+        List<String> inlineAttr = new ArrayList<>() {
             {
                 add("substring" + value);
                 add("regex" + value);
@@ -119,7 +119,7 @@ public class JavaDocCompletionTaskTest extends JavadocTestSupport {
             listStr.add(item.getSortText().toString());
         }
         String value = " = \"<value>\"";
-        List<String> inlineAttr = new ArrayList() {
+        List<String> inlineAttr = new ArrayList<>() {
             {
                 add("substring" + value);
                 add("regex" + value);
@@ -142,7 +142,7 @@ public class JavaDocCompletionTaskTest extends JavadocTestSupport {
             listStr.add(item.getSortText().toString());
         }
         String value = " = \"<value>\"";
-        List<String> inlineAttr = new ArrayList() {
+        List<String> inlineAttr = new ArrayList<>() {
             {
                 add("region" + value);
             }
@@ -161,7 +161,7 @@ public class JavaDocCompletionTaskTest extends JavadocTestSupport {
             listStr.add(item.getSortText().toString());
         }
         String value = " = \"<value>\"";
-        List<String> inlineAttr = new ArrayList() {
+        List<String> inlineAttr = new ArrayList<>() {
             {
                 add("region" + value);
             }
@@ -179,7 +179,7 @@ public class JavaDocCompletionTaskTest extends JavadocTestSupport {
         for (JavadocCompletionItem item : list) {
             listStr.add(item.getSortText().toString());
         }
-        List<String> inlineAttr = new ArrayList() {
+        List<String> inlineAttr = new ArrayList<>() {
             {
                 add("highlight");
                 add("replace");
@@ -202,7 +202,7 @@ public class JavaDocCompletionTaskTest extends JavadocTestSupport {
             listStr.add(item.getSortText().toString());
         }
         String value = " = \"<value>\"";
-        List<String> inlineAttr = new ArrayList() {
+        List<String> inlineAttr = new ArrayList<>() {
             {
                 add("substring" + value);
                 add("regex" + value);

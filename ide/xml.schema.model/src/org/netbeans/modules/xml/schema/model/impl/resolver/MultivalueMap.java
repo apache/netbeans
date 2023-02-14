@@ -58,7 +58,7 @@ public class MultivalueMap<K, V> {
     public List<V> get(K key) {
         Object values = mContainer.get(key);
         if (values == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         } else if (values instanceof List) {
             return List.class.cast(values);
         } else {

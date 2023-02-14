@@ -40,7 +40,7 @@ public class OpenTagElement extends AttributelessOpenTagElement implements OpenT
 
     @Override
     public Collection<Attribute> attributes() {
-        return attribs == null ? Collections.EMPTY_LIST : attribs;
+        return attribs == null ? Collections.emptyList() : attribs;
     }
 
     @Override

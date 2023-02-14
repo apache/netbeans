@@ -119,7 +119,7 @@ public class JDBCDriverConvertorTest extends TestBase {
     public void testLookup() throws Exception {
         FileObject parent = Util.getDriversFolder();
         createDriverFile11("org_foo_FooDriver.xml", parent);
-        Lookup.Result result = Lookups.forPath(parent.getPath()).lookup(new Lookup.Template(JDBCDriver.class));
+        Lookup.Result result = Lookups.forPath(parent.getPath()).lookup(new Lookup.Template<>(JDBCDriver.class));
         Collection instances = result.allInstances();
         assertEquals(1, instances.size()); 
     }

@@ -200,7 +200,7 @@ final class TimelineChart extends SynchronousXYChart {
             if (row.setHeight(DEF_ROW_HEIGHT, true))
                 resized.add(row);
         updateRowOffsets(0);
-        if (!resized.isEmpty()) notifyRowsResized(new ArrayList(rows));
+        if (!resized.isEmpty()) notifyRowsResized(new ArrayList<>(rows));
         updateChart(); // TODO: update only affected rows!
         currentRowHeight = DEF_ROW_HEIGHT;
     }

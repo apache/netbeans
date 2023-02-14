@@ -66,7 +66,7 @@ public class ImportData {
         private final List<UsedNamespaceName> usedNamespaceNames;
 
         public DataItem(String typeName, List<ItemVariant> variants, ItemVariant defaultVariant) {
-            this(typeName, variants, defaultVariant, Collections.EMPTY_LIST);
+            this(typeName, variants, defaultVariant, Collections.emptyList());
         }
 
         public DataItem(String typeName, List<ItemVariant> variants, ItemVariant defaultVariant, List<UsedNamespaceName> usedNamespaceNames) {

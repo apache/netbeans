@@ -138,7 +138,7 @@ public class NbEditorToolBarTest extends NbTestCase {
         Lookup actionContext = NbEditorToolBar.createActionContext(editor);
         assertNotNull(actionContext.lookup(Bar.class));
         assertNotNull(actionContext.lookup(Node.class));
-        assertEquals(1, actionContext.lookup(new Lookup.Template(Node.class)).allInstances().size());
+        assertEquals(1, actionContext.lookup(new Lookup.Template<>(Node.class)).allInstances().size());
     }
 
     private DataObject createDataObject() throws Exception {

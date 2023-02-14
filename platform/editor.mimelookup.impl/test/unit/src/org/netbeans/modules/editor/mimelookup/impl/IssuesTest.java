@@ -145,12 +145,12 @@ public class IssuesTest extends NbTestCase {
     private void checkLookupTemplate(final MimeLookup lookup, final Class clazz, final int instCount){
         TestUtilities.waitMaxMilisForValue(WAIT_TIME, new TestUtilities.ValueResolver(){
             public Object getValue(){
-                Lookup.Result result = lookup.lookup(new Lookup.Template(clazz));
+                Lookup.Result result = lookup.lookup(new Lookup.Template<>(clazz));
                 boolean bool = result.allInstances().size() == instCount;
                 return Boolean.valueOf(bool);
             }
         }, Boolean.TRUE);
-        Lookup.Result result = lookup.lookup(new Lookup.Template(clazz));
+        Lookup.Result result = lookup.lookup(new Lookup.Template<>(clazz));
         int size = result.allInstances().size();
         boolean bool =  (size == instCount);
         assertTrue("Number of instances doesn't match. Found:"+size+". Should be presented:"+instCount+".", bool);

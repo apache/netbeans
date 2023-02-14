@@ -127,7 +127,7 @@ public class DefaultModelProvider extends CompletionModelProvider {
      * During actual CC from IDE, this will return null.
      */
     private static CatalogModelProvider getCatalogModelProvider() {
-        Lookup.Template templ = new Lookup.Template(CatalogModelProvider.class);
+        Lookup.Template templ = new Lookup.Template<>(CatalogModelProvider.class);
         Lookup.Result result = Lookup.getDefault().lookup(templ);
         Collection impls = result.allInstances();
         if(impls.isEmpty())

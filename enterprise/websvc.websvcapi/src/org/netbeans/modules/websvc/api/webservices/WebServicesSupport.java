@@ -50,7 +50,7 @@ public final class WebServicesSupport {
     
     private WebServicesSupportImpl impl;
     private static final Lookup.Result implementations =
-    Lookup.getDefault().lookup(new Lookup.Template(WebServicesSupportProvider.class));
+    Lookup.getDefault().lookup(new Lookup.Template<>(WebServicesSupportProvider.class));
     
     static  {
         WebServicesSupportAccessor.DEFAULT = new WebServicesSupportAccessor() {

@@ -104,7 +104,7 @@ public class JBDeploymentManager implements DeploymentManager {
      *  running state by Boolean.TRUE, stopped state Boolean.FALSE.
      * WeakHashMap should guarantee erasing of an unregistered server instance bcs instance properties are also removed along with instance.
      */
-    private static final Map<InstanceProperties, Boolean> propertiesToIsRunning = Collections.synchronizedMap(new WeakHashMap());
+    private static final Map<InstanceProperties, Boolean> propertiesToIsRunning = Collections.synchronizedMap(new WeakHashMap<>());
 
     /** Creates a new instance of JBDeploymentManager */
     public JBDeploymentManager(DeploymentFactory df, String realUri,

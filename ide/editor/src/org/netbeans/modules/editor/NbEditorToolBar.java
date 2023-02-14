@@ -672,7 +672,7 @@ import org.openide.util.lookup.ProxyLookup;
 
         Node node = (Node)nodeLookup.lookup(Node.class);
         boolean ancestorLookupContainsNode = ancestorLookup.lookup(
-                new Lookup.Template(Node.class)).allInstances().contains(node);
+                new Lookup.Template<>(Node.class)).allInstances().contains(node);
 
         if (ancestorLookupContainsNode) {
             return new ProxyLookup(new Lookup[] { ancestorLookup, componentLookup });

@@ -67,7 +67,7 @@ public class EvaluatorServiceContextAware extends EvaluatorService implements Co
 
     @Override
     public List<String> getExpressionsHistory() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     /**

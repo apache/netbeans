@@ -489,7 +489,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
          * @param url to specify URL
          */
         public UnixBrowserFormat (String url) {
-            super(new java.util.HashMap ());
+            super(new java.util.HashMap<>());
             java.util.Map map = getMap ();        
             map.put (TAG_URL, url);
         }

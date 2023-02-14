@@ -48,7 +48,7 @@ public class CustomJAXWSClientViewProviderTest extends NbTestCase {
     }
     
     public void testProviders() throws Exception {
-        Lookup.Result res = Lookup.getDefault().lookup(new Lookup.Template(JAXWSClientViewProvider.class));
+        Lookup.Result res = Lookup.getDefault().lookup(new Lookup.Template<>(JAXWSClientViewProvider.class));
         assertEquals("there should be 1 instance - from websvc/clientapi", 1, res.allInstances().size());
     }
     

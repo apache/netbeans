@@ -73,7 +73,7 @@ public abstract class AbstractXMLNavigatorPanel implements NavigatorPanel {
     
     public void panelActivated(Lookup context) {
         getNavigatorUI().showWaitNode();
-        selection = context.lookup(new Lookup.Template(DataObject.class));
+        selection = context.lookup(new Lookup.Template<>(DataObject.class));
         selection.addLookupListener(selectionListener);
         selectionListener.resultChanged(null);
     }

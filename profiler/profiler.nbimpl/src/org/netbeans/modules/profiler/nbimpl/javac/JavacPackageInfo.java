@@ -60,7 +60,7 @@ public class JavacPackageInfo extends SourcePackageInfo {
                 break;
             }
             default: {
-                sScope = Collections.EMPTY_SET;
+                sScope = Collections.emptySet();
             }
         }
         

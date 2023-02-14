@@ -452,7 +452,7 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
         actions.add(new ThinButton(deleteA, Icons.getIcon(ProfilerIcons.RUN_GC)));
         add(actions, BorderLayout.SOUTH);
         
-        updateButtons(Collections.EMPTY_LIST);
+        updateButtons(Collections.emptyList());
     }
     
     private void updateButtons(List<Snapshot> selectedSnapshots) {

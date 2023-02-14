@@ -84,7 +84,7 @@ class ProjectSelector extends LazyComboBox<Lookup.Provider> {
         }
 
         protected Collection<Lookup.Provider> additionalProjects() {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
         
         protected final Lookup.Provider initial() {

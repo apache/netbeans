@@ -156,7 +156,7 @@ public class WLTrustHandler implements WebLogicTrustHandler {
     public static boolean check(final WebLogicConfiguration config) {
         // we use the different thread as this check thread may have
         // the interrupted flag set as a result of normal operation on socket :(
-        Future<Boolean> task = TRUST_CHECK.submit(new Callable() {
+        Future<Boolean> task = TRUST_CHECK.submit(new Callable<>() {
 
             @Override
             public Boolean call() {

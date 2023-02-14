@@ -365,7 +365,7 @@ public class PHPDocCommentParser {
                         PHPDocNode paramNameNode = new PHPDocNode(startOfParamName, startOfParamName + paramName.length(), paramName);
                         List<PHPDocTypeNode> types = token.trim().indexOf(' ') > -1
                                 ? findTypes(token, position, description, startOfDescription)
-                                : Collections.EMPTY_LIST;
+                                : Collections.emptyList();
                         result.add(new PHPDocVarTypeTag(position, startOfParamName + paramName.length(), PHPDocTag.Type.PARAM, token, types, paramNameNode));
                     }
                 }

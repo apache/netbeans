@@ -115,7 +115,7 @@ public abstract class ScriptType extends org.openide.ServiceType {
     * @deprecated Please use {@link org.openide.util.Lookup} instead.
     */
     public static java.util.Enumeration scriptTypes () {
-        return Collections.enumeration(Lookup.getDefault().lookup(new Lookup.Template(ScriptType.class)).allInstances());
+        return Collections.enumeration(Lookup.getDefault().lookup(new Lookup.Template<>(ScriptType.class)).allInstances());
     }
 
     /** 

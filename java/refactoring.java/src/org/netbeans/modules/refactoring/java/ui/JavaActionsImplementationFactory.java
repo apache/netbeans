@@ -30,7 +30,7 @@ public final class JavaActionsImplementationFactory {
     private JavaActionsImplementationFactory(){}
     
     private static final Lookup.Result<JavaActionsImplementationProvider> implementations =
-        Lookup.getDefault().lookup(new Lookup.Template(JavaActionsImplementationProvider.class));
+        Lookup.getDefault().lookup(new Lookup.Template<>(JavaActionsImplementationProvider.class));
 
     public static boolean canChangeParameters(Lookup lookup) {
         for (JavaActionsImplementationProvider rafi: implementations.allInstances()) {

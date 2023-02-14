@@ -99,7 +99,7 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
             List<TypeParameterTree> newTypeParams = new ArrayList<>(source.getTypeParameters().size());
             transformTypeParameters(source, source.getTypeParameters(), make, genUtils, newTypeParams);
 
-            List<Tree> implementsList = wrap ? addInterfaces(source) : Collections.EMPTY_LIST;
+            List<Tree> implementsList = wrap ? addInterfaces(source) : Collections.emptyList();
 
             // add members
             List<Tree> members = new ArrayList<>();
@@ -356,13 +356,13 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
                  *     return this.delegate.hashCode();
                  * }
                  */
-                BlockTree body = make.Block(Collections.singletonList(make.Return(make.MethodInvocation(Collections.EMPTY_LIST, make.MemberSelect(make.Identifier("this.delegate"), "equals"), Collections.singletonList(make.MemberSelect(make.Identifier("o"), DELEGATE))))), false); //NOI18N
+                BlockTree body = make.Block(Collections.singletonList(make.Return(make.MethodInvocation(Collections.emptyList(), make.MemberSelect(make.Identifier("this.delegate"), "equals"), Collections.singletonList(make.MemberSelect(make.Identifier("o"), DELEGATE))))), false); //NOI18N
                 MethodTree method = make.Method(make.Modifiers(EnumSet.of(Modifier.PUBLIC)),
                         "equals" + refactoring.getNewName(), //NOI18N
                         make.PrimitiveType(TypeKind.BOOLEAN),
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         Collections.singletonList(make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "o", newTypeTree, null)), //NOI18N
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         body,
                         null,
                         false);
@@ -388,26 +388,26 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
                         make.If(make.InstanceOf(make.Identifier("o"), newSimpleTypeTree), make.Block(Collections.singletonList(make.ExpressionStatement(
                         make.Assignment(make.Identifier("target"),
                         make.MemberSelect(make.Parenthesized(make.TypeCast(newSimpleTypeTree, make.Identifier("o"))), DELEGATE)))), false), null));
-                statements.add(make.Return(make.MethodInvocation(Collections.EMPTY_LIST, make.Identifier("this.delegate.equals"), Collections.singletonList(make.Identifier("target")))));
+                statements.add(make.Return(make.MethodInvocation(Collections.emptyList(), make.Identifier("this.delegate.equals"), Collections.singletonList(make.Identifier("target")))));
                 BlockTree body = make.Block(statements, false);
                 MethodTree method = make.Method(make.Modifiers(EnumSet.of(Modifier.PUBLIC)),
                         "equals",
                         make.PrimitiveType(TypeKind.BOOLEAN),
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         Collections.singletonList(make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "o", make.Type("Object"), null)),
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         body,
                         null,
                         false);
                 members.add(method);
 
-                body = make.Block(Collections.singletonList(make.Return(make.MethodInvocation(Collections.EMPTY_LIST, make.MemberSelect(make.Identifier("this.delegate"), "hashCode"), Collections.EMPTY_LIST))), false); //NOI18N
+                body = make.Block(Collections.singletonList(make.Return(make.MethodInvocation(Collections.emptyList(), make.MemberSelect(make.Identifier("this.delegate"), "hashCode"), Collections.emptyList()))), false); //NOI18N
                 method = make.Method(make.Modifiers(EnumSet.of(Modifier.PUBLIC)),
                         "hashCode", //NOI18N
                         make.PrimitiveType(TypeKind.INT),
-                        Collections.EMPTY_LIST,
-                        Collections.EMPTY_LIST,
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        Collections.emptyList(),
                         body,
                         null,
                         false);
@@ -484,7 +484,7 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
                 }
                 methodReturnType = ident;
 
-                methodInvocation = make.NewClass(null, Collections.EMPTY_LIST, ident, Collections.singletonList(methodInvocation), null);
+                methodInvocation = make.NewClass(null, Collections.emptyList(), ident, Collections.singletonList(methodInvocation), null);
             }
             statement = make.Return(methodInvocation);
         } else {
@@ -493,7 +493,7 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
         
         List<AnnotationTree> annotations = member.getEnclosingElement().getKind() == ElementKind.INTERFACE?
                     Collections.singletonList(make.Annotation(make.Type("Override"),
-                                          Collections.EMPTY_LIST)):
+                                          Collections.emptyList())):
                     Collections.<AnnotationTree>emptyList();
         ModifiersTree modifiers = make.Modifiers(mods, annotations);
 
@@ -616,9 +616,9 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
             MethodTree newConstr = make.Method(make.Modifiers(modifiers),
                     refactoring.getNewName(),
                     null,
-                    Collections.EMPTY_LIST,
+                    Collections.emptyList(),
                     Collections.singletonList(parameter),
-                    Collections.EMPTY_LIST,
+                    Collections.emptyList(),
                     block,
                     null);
 
@@ -806,9 +806,9 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
 
             Tree newClass;
             if(fromArray) {
-                newClass = make.MethodInvocation(Collections.EMPTY_LIST, make.MemberSelect(ident, "wrap"), Collections.singletonList(node));
+                newClass = make.MethodInvocation(Collections.emptyList(), make.MemberSelect(ident, "wrap"), Collections.singletonList(node));
             } else {
-                newClass = make.NewClass(null, Collections.EMPTY_LIST, ident, Collections.singletonList(node), null);
+                newClass = make.NewClass(null, Collections.emptyList(), ident, Collections.singletonList(node), null);
             }
             rewrite(node, newClass);
         }

@@ -560,7 +560,7 @@ public class NodeLookupTest extends NbTestCase {
             @Override
             public void run() {
                 Lookup.Item item;
-                item = n.getLookup().lookupItem(new Lookup.Template(
+                item = n.getLookup().lookupItem(new Lookup.Template<>(
                         org.openide.cookies.ViewCookie.class));
                 l.assertEvents("Firing of change postponed", -1, 0);
             }

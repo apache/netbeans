@@ -58,7 +58,7 @@ public class ImageNavigatorPanel implements NavigatorPanel {
      * template for finding data in given context. Object used as example,
      * replace with your own data source, for example JavaDataObject etc
      */
-    private static final Lookup.Template MY_DATA = new Lookup.Template(ImageDataObject.class);
+    private static final Lookup.Template MY_DATA = new Lookup.Template<>(ImageDataObject.class);
     /**
      * current context to work on
      */

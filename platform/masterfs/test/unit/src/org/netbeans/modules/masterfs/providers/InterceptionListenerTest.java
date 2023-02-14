@@ -52,7 +52,7 @@ public class InterceptionListenerTest extends NbTestCase  {
 
     private InterceptionListenerImpl lookupImpl() {
         Lookup.Result result = Lookups.metaInfServices(Thread.currentThread().getContextClassLoader()).
-                lookup(new Lookup.Template(BaseAnnotationProvider.class));
+                lookup(new Lookup.Template<>(BaseAnnotationProvider.class));
         Collection all = result.allInstances();
         for (Iterator it = all.iterator(); it.hasNext();) {
             BaseAnnotationProvider ap = (BaseAnnotationProvider) it.next();

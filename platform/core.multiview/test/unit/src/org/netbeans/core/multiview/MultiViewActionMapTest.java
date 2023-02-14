@@ -154,7 +154,7 @@ public class MultiViewActionMapTest extends NbTestCase {
         MultiViewDescription[] descs = new MultiViewDescription[] { desc1, desc2, desc3 };
         TopComponent tc = MultiViewFactory.createMultiView(descs, desc1);
         // WARNING: as anything else the first element's action map is set only after the tc is opened..
-        Lookup.Result result = tc.getLookup().lookup(new Lookup.Template(ActionMap.class));
+        Lookup.Result result = tc.getLookup().lookup(new Lookup.Template<>(ActionMap.class));
         LookListener list = new LookListener();
         list.resetCount();
         result.addLookupListener(list);
@@ -176,7 +176,7 @@ public class MultiViewActionMapTest extends NbTestCase {
     
     public void testSimplifiedActionMapChanges81117() {
         MultiViewTopComponentLookup.InitialProxyLookup lookup = new MultiViewTopComponentLookup.InitialProxyLookup(new ActionMap());
-        Lookup.Result res = lookup.lookup(new Lookup.Template(ActionMap.class));
+        Lookup.Result res = lookup.lookup(new Lookup.Template<>(ActionMap.class));
         LookListener list = new LookListener();
         list.resetCount();
         res.addLookupListener(list);
@@ -187,7 +187,7 @@ public class MultiViewActionMapTest extends NbTestCase {
         assertEquals(1, res.allInstances().size());
         
         MultiViewTopComponentLookup lookup2 = new MultiViewTopComponentLookup(new ActionMap());
-        res = lookup2.lookup(new Lookup.Template(ActionMap.class));
+        res = lookup2.lookup(new Lookup.Template<>(ActionMap.class));
         list = new LookListener();
         list.resetCount();
         res.addLookupListener(list);
@@ -212,7 +212,7 @@ public class MultiViewActionMapTest extends NbTestCase {
         
         MultiViewDescription[] descs = new MultiViewDescription[] { desc1, desc2, desc3 };
         TopComponent tc = MultiViewFactory.createMultiView(descs, desc1);
-        Lookup.Result result = tc.getLookup().lookup(new Lookup.Template(ActionMap.class));
+        Lookup.Result result = tc.getLookup().lookup(new Lookup.Template<>(ActionMap.class));
         LookListener2 list = new LookListener2();
         result.addLookupListener(list);
         result.allInstances().size();

@@ -90,7 +90,7 @@ public class ConsoleMessage {
 
     public List<StackFrame> getStackTrace() {
         if (msg == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         if (!stackTraceLoaded) {
             JSONArray stack = (JSONArray)msg.get("stackTrace");
@@ -117,7 +117,7 @@ public class ConsoleMessage {
      * @return A list of sub-messages.
      */
     public List<ConsoleMessage> getSubMessages() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
     
     

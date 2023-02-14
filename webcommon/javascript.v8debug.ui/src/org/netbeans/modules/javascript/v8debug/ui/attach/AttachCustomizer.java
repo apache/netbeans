@@ -356,7 +356,7 @@ public class AttachCustomizer extends javax.swing.JPanel {
                 cp = new Connector.Properties(cproperties.host, cproperties.port,
                                               Collections.singletonList(cproperties.localPath),
                                               Collections.singletonList(cproperties.serverPath),
-                                              Collections.EMPTY_SET);
+                                              Collections.emptySet());
             }
             try {
                 Connector.connect(cp, null);

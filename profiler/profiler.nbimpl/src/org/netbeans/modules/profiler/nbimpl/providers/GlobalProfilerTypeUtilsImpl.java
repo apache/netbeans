@@ -38,7 +38,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class GlobalProfilerTypeUtilsImpl extends BaseProfilerTypeUtilsImpl {
     @Override
     public Collection<SourceClassInfo> getMainClasses() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
     
     @Override

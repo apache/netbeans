@@ -140,7 +140,7 @@ public final class ClassMethodSelector {
         Dialog d = DialogDisplayer.getDefault().createDialog(dd);
         d.setVisible(true);
         
-        return dd.getValue() == ui.getOKButton() ? ui.selectedClasses() : Collections.EMPTY_LIST;
+        return dd.getValue() == ui.getOKButton() ? ui.selectedClasses() : Collections.emptyList();
     }
     
     public static List<SourceMethodInfo> selectMethods(ProfilerSession session) {
@@ -155,7 +155,7 @@ public final class ClassMethodSelector {
         Dialog d = DialogDisplayer.getDefault().createDialog(dd);
         d.setVisible(true);
         
-        return dd.getValue() == ui.getOKButton() ? ui.selectedMethods() : Collections.EMPTY_LIST;
+        return dd.getValue() == ui.getOKButton() ? ui.selectedMethods() : Collections.emptyList();
     }
     
     

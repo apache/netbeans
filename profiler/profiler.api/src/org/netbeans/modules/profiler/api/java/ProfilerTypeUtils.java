@@ -52,7 +52,7 @@ public final class ProfilerTypeUtils {
     public static Collection<SourceClassInfo> getMainClasses(Lookup.Provider project) {
         ProfilerTypeUtilsProvider p = getProvider(project);
         
-        return p != null ? p.getMainClasses() : Collections.EMPTY_LIST;
+        return p != null ? p.getMainClasses() : Collections.emptyList();
     }
     
     /**
@@ -65,7 +65,7 @@ public final class ProfilerTypeUtils {
     public static Collection<SourcePackageInfo> getPackages(boolean subprojects, SourcePackageInfo.Scope scope, Lookup.Provider project) {
         ProfilerTypeUtilsProvider p = getProvider(project);
         
-        return p != null ? p.getPackages(subprojects, scope) : Collections.EMPTY_LIST;
+        return p != null ? p.getPackages(subprojects, scope) : Collections.emptyList();
     }
     
     /**
@@ -80,6 +80,6 @@ public final class ProfilerTypeUtils {
     public static Collection<SourceClassInfo> findClasses(String pattern, Set<SourcePackageInfo.Scope> scope, Lookup.Provider project) {
         ProfilerTypeUtilsProvider p = getProvider(project);
         
-        return p != null ? p.findClasses(pattern, scope) : Collections.EMPTY_LIST;
+        return p != null ? p.findClasses(pattern, scope) : Collections.emptyList();
     }
 }

@@ -307,7 +307,7 @@ public class JspLexerTest extends CslTestBase {
         BaseDocument doc = getDocument(source);
 
 
-        JspParseData jspParseData = new JspParseData((Map<String, String>) Collections.EMPTY_MAP, true, true, true);
+        JspParseData jspParseData = new JspParseData(Collections.emptyMap(), true, true, true);
 
         InputAttributes inputAttributes = new InputAttributes();
         inputAttributes.setValue(JspTokenId.language(), JspParseData.class, jspParseData, false);

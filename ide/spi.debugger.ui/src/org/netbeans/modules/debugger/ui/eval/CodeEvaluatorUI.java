@@ -243,7 +243,7 @@ public class CodeEvaluatorUI extends TopComponent implements HelpCtx.Provider,
         if (es != null) {
             return es.getExpressionsHistory();
         } else {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 

@@ -213,7 +213,7 @@ public class NbCollectionsTest extends NbTestCase {
         assertEquals("empty set filtered as empty", Collections.emptySet(), NbCollections.checkedSetByFilter(Collections.emptySet(), String.class, false));
         assertEquals("empty set from wholly wrong set", Collections.emptySet(), NbCollections.checkedSetByFilter(Collections.singleton(5), String.class, false));
         // Make sure iterator behaves fully acc. to contract:
-        Set<Integer> s3 = NbCollections.checkedSetByFilter(new HashSet(Collections.singleton(1)), Integer.class, false);
+        Set<Integer> s3 = NbCollections.checkedSetByFilter(new HashSet<>(Collections.singleton(1)), Integer.class, false);
         Iterator<Integer> it3 = s3.iterator();
         assertTrue(it3.hasNext());
         assertTrue(it3.hasNext());

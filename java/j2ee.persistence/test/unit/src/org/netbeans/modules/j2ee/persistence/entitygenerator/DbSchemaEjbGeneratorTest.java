@@ -50,7 +50,7 @@ public class DbSchemaEjbGeneratorTest extends NbTestCase {
          */
         SchemaElement schema = SchemaElementUtil.forName(URLMapper.findFileObject(getClass().getResource("Issue92031.dbschema")));
         DbSchemaEjbGenerator generator = new DbSchemaEjbGenerator(
-                new GeneratedTablesImpl(new HashSet(Arrays.asList("PART1", "PART2"))),
+                new GeneratedTablesImpl(new HashSet<>(Arrays.asList("PART1", "PART2"))),
                 schema);
 
         EntityClass[] beans = generator.getBeans();

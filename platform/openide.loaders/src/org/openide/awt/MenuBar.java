@@ -404,7 +404,7 @@ public class MenuBar extends JMenuBar implements Externalizable {
             
             List<Object> lo = instances;
             if (lo == null) {
-                lo = Collections.EMPTY_LIST;
+                lo = Collections.emptyList();
             }
             boolean modified = false;
             int i = 0, j = 0;

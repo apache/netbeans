@@ -58,7 +58,7 @@ final class TimelineTooltipOverlay extends ChartOverlay implements ActionListene
 
     private TimelineTooltipPainter.Model[] rowModels;
 
-    private Set<Integer> selectedTimestamps = Collections.EMPTY_SET;
+    private Set<Integer> selectedTimestamps = Collections.emptySet();
 
     private Timer timer;
     private int currentStep;

@@ -29,7 +29,7 @@ import org.openide.util.Lookup;
  */
 public class DbMetaDataListenerSupport {
 
-    private static final Lookup.Result listeners = Lookup.getDefault().lookup(new Lookup.Template(DbMetaDataListener.class));
+    private static final Lookup.Result listeners = Lookup.getDefault().lookup(new Lookup.Template<>(DbMetaDataListener.class));
 
     private DbMetaDataListenerSupport() {
     }

@@ -72,7 +72,7 @@ public class CustomWebServicesSupportProviderTest extends NbTestCase {
     }
     
     public void testProviders() throws Exception {
-        Lookup.Result res = Lookup.getDefault().lookup(new Lookup.Template(WebServicesSupportProvider.class));
+        Lookup.Result res = Lookup.getDefault().lookup(new Lookup.Template<>(WebServicesSupportProvider.class));
         assertEquals("there should be 1 instance - the one from tests", 1, res.allInstances ().size ());
     }
     

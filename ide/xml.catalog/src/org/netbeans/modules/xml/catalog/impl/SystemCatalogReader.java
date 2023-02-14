@@ -76,7 +76,7 @@ public class SystemCatalogReader implements EntityResolver, CatalogReader, Seria
                 
         // get instance of system resolver that contains the catalog
 
-        Lookup.Template templ = new Lookup.Template(EntityCatalog.class);
+        Lookup.Template templ = new Lookup.Template<>(EntityCatalog.class);
         Lookup.Result res = Lookup.getDefault().lookup(templ);
 
         Iterator it = res.allInstances().iterator();

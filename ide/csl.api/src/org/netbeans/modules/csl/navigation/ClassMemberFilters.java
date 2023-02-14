@@ -87,7 +87,7 @@ public final class ClassMemberFilters {
         boolean inherited = filters.isSelected(SHOW_INHERITED);
         
         if (original == null || original.isEmpty()) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         List<StructureItem> result = new ArrayList<StructureItem>(original.size());

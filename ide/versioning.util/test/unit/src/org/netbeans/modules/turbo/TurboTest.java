@@ -315,7 +315,7 @@ public class TurboTest extends TestCase {
     public void testWrongProvider() {
         WrongProvider provider = new WrongProvider();
 
-        Lookup.Template t = new Lookup.Template(TurboProvider.class);
+        Lookup.Template t = new Lookup.Template<>(TurboProvider.class);
         Lookup.Result r = env.getLookup().lookup(t);
         content.add(provider);
         assert r.allInstances().size() == 2 : "r=" + r.allInstances();

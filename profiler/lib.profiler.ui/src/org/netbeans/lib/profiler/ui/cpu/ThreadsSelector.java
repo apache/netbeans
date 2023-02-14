@@ -276,7 +276,7 @@ public abstract class ThreadsSelector extends PopupButton {
     
     
     private void fireSelectionChanged() {
-        Collection<Integer> selected = displayAllThreads ? null : new HashSet(selection);
+        Collection<Integer> selected = displayAllThreads ? null : new HashSet<>(selection);
         selectionChanged(selected, mergeSelectedThreads);
     }
     

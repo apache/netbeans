@@ -295,7 +295,7 @@ public class Common extends Object {
                     }
                 } // end for
                 
-                BlockTree bt = make.Block(Collections.EMPTY_LIST, isStatic);
+                BlockTree bt = make.Block(Collections.emptyList(), isStatic);
                 ClassTree modifiedClazz = make.addClassMember(clazz, bt);
                 workingCopy.rewrite(clazz,modifiedClazz);
             }
@@ -517,11 +517,11 @@ public class Common extends Object {
         List<Tree> members = new ArrayList<Tree>();
         members.add(mt);
         members.add(vt);
-        members.add(make.Block(Collections.EMPTY_LIST, false));
+        members.add(make.Block(Collections.emptyList(), false));
         ClassTree innerClass = make.Class(
                 make.Modifiers(modifiers),
                 name,
-                Collections.EMPTY_LIST,
+                Collections.emptyList(),
                 extendsTree,
                 implementsList,
                 members);        

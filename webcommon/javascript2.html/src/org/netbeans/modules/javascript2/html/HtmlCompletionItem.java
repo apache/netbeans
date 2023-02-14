@@ -114,7 +114,7 @@ public class HtmlCompletionItem implements CompletionProposal {
 
     @Override
     public Set<Modifier> getModifiers() {
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     @Override

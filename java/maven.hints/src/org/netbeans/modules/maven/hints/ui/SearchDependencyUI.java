@@ -349,7 +349,7 @@ public class SearchDependencyUI extends javax.swing.JPanel implements ExplorerMa
         List<Node> myNodes;
 
         public ResultsRootChildren() {
-            myNodes = Collections.EMPTY_LIST;
+            myNodes = Collections.emptyList();
         }
 
         private void setNewChildren(List<Node> ch) {

@@ -72,6 +72,6 @@ public class DefaultProfilerArgsProvider implements StartupExtenderImplementatio
                 }
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

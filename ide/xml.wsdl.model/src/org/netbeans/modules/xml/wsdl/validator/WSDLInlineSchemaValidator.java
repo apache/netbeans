@@ -78,8 +78,8 @@ public class WSDLInlineSchemaValidator extends XsdBasedValidator {
     
     @SuppressWarnings("unchecked")
     public static final ValidationResult EMPTY_RESULT = 
-        new ValidationResult( Collections.EMPTY_SET, 
-                Collections.EMPTY_SET);
+        new ValidationResult( Collections.emptySet(),
+                Collections.emptySet());
 
     public String getName() {
        return "WSDLInlineSchemaValidator";//NOI18N

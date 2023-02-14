@@ -274,7 +274,7 @@ public final class LayoutInterval implements LayoutConstants {
      */
     public Iterator<LayoutInterval> getSubIntervals() {
         return subIntervals != null ? subIntervals.iterator() :
-                                      Collections.EMPTY_LIST.iterator();
+                                      Collections.emptyListIterator();
     }
 
     /**

@@ -206,7 +206,7 @@ public class WildFlyProperties {
 
     private List<URL> selectJars(FileObject file) {
         if (file == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         if (file.isData()) {
             if (file.isValid() && FileUtil.isArchiveFile(file)) {
@@ -215,7 +215,7 @@ public class WildFlyProperties {
                     return Collections.singletonList(FileUtil.getArchiveRoot(url));
                 }
             }
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         List<URL> result = new ArrayList<URL>();
         for (FileObject child : file.getChildren()) {

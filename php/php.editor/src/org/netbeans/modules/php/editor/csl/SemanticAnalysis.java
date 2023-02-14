@@ -260,7 +260,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         private Set<TypeElement> getDeprecatedTypes() {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             if (deprecatedTypes == null) {
                 deprecatedTypes = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getTypes(NameKind.empty()));
@@ -270,7 +270,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         private Set<MethodElement> getDeprecatedMethods() {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             if (deprecatedMethods == null) {
                 deprecatedMethods = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getMethods(NameKind.empty()));
@@ -280,7 +280,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         private Set<FunctionElement> getDeprecatedFunctions() {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             if (deprecatedFunctions == null) {
                 deprecatedFunctions = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getFunctions(NameKind.empty()));
@@ -290,7 +290,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         private Set<FieldElement> getDeprecatedFields() {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             if (deprecatedFields == null) {
                 deprecatedFields = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getFields(NameKind.empty()));
@@ -300,7 +300,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         private Set<TypeConstantElement> getDeprecatedConstants() {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             if (deprecatedConstants == null) {
                 deprecatedConstants = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getTypeConstants(NameKind.empty()));
@@ -310,7 +310,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         private Set<EnumCaseElement> getDeprecatedEnumCases() {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             if (deprecatedEnumCases == null) {
                 deprecatedEnumCases = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getEnumCases(NameKind.empty()));
@@ -426,7 +426,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         private Set<ColoringAttributes> createTypeNameColoring(Identifier typeName) {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             Set<ColoringAttributes> result;
             if (isDeprecatedTypeDeclaration(typeName)) {
@@ -523,7 +523,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         private Set<ColoringAttributes> createMethodDeclarationColoring(MethodDeclaration methodDeclaration) {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             boolean isDeprecated = isDeprecatedMethodDeclaration(methodDeclaration.getFunction().getFunctionName());
             Set<ColoringAttributes> coloring = isDeprecated ? DEPRECATED_METHOD_SET : ColoringAttributes.METHOD_SET;
@@ -698,7 +698,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         private Set<ColoringAttributes> createFieldDeclarationColoring(Variable variable, boolean isStatic) {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             boolean isDeprecated = isDeprecatedFieldDeclaration(variable);
             Set<ColoringAttributes> coloring = isDeprecated ? DEPRECATED_FIELD_SET : ColoringAttributes.FIELD_SET;
@@ -849,14 +849,14 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         private Set<ColoringAttributes> createConstantDeclarationColoring(Identifier constantName) {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             return isDeprecatedConstantDeclaration(constantName) ? DEPRECATED_STATIC_FIELD_SET : ColoringAttributes.STATIC_FIELD_SET;
         }
 
         private Set<ColoringAttributes> createEnumCaseDeclarationColoring(Identifier constantName) {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             return isDeprecatedEnumCaseDeclaration(constantName) ? DEPRECATED_STATIC_FIELD_SET : ColoringAttributes.STATIC_FIELD_SET;
         }

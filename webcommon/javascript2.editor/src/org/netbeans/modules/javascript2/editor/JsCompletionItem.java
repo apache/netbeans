@@ -184,7 +184,7 @@ public class JsCompletionItem implements CompletionProposal {
         Set<Modifier> modifiers;
 
         if (getElement() == null || getElement().getModifiers().isEmpty()) {
-            modifiers = Collections.EMPTY_SET;
+            modifiers = Collections.emptySet();
         } else {
             modifiers = EnumSet.noneOf(Modifier.class);
             modifiers.addAll(getElement().getModifiers());
@@ -261,7 +261,7 @@ public class JsCompletionItem implements CompletionProposal {
         private final Map<String, Set<String>> parametersTypes;
         JsFunctionCompletionItem(ElementHandle element, CompletionRequest request, Set<String> resolvedReturnTypes, Map<String, Set<String>> parametersTypes) {
             super(element, request);
-            this.returnTypes = resolvedReturnTypes != null ? resolvedReturnTypes : Collections.EMPTY_SET;
+            this.returnTypes = resolvedReturnTypes != null ? resolvedReturnTypes : Collections.emptySet();
             this.parametersTypes = parametersTypes != null ? parametersTypes : Collections.<String, Set<String>>emptyMap();
         }
 
@@ -642,7 +642,7 @@ public class JsCompletionItem implements CompletionProposal {
 
         JsPropertyCompletionItem(ElementHandle element, CompletionRequest request, Set<String> resolvedTypes) {
             super(element, request);
-            this.resolvedTypes = resolvedTypes != null ? resolvedTypes : Collections.EMPTY_SET;
+            this.resolvedTypes = resolvedTypes != null ? resolvedTypes : Collections.emptySet();
         }
 
         @Override

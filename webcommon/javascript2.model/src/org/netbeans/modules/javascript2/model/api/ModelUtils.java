@@ -1549,7 +1549,7 @@ public class ModelUtils {
             }
             return types;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     public static Collection<Identifier> getDefinedGlobal(final Snapshot snapshot, final int offset) {

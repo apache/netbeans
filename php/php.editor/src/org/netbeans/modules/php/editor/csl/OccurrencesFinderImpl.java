@@ -116,7 +116,7 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
         final TokenHierarchy<?> tokenHierarchy = parseResult.getSnapshot().getTokenHierarchy();
         TokenSequence<PHPTokenId> tokenSequence = tokenHierarchy != null ? LexUtilities.getPHPTokenSequence(tokenHierarchy, offset) : null;
         if (cancelled) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         OffsetRange referenceSpan = tokenSequence != null ? DeclarationFinderImpl.getReferenceSpan(tokenSequence, offset, parseResult.getModel()) : OffsetRange.NONE;
         if (!referenceSpan.equals(OffsetRange.NONE)) {
@@ -136,11 +136,11 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
         Collection<OffsetRange> result = new TreeSet<>();
         OccurencesSupport occurencesSupport = model.getOccurencesSupport(referenceSpan);
         if (cancelled) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         Occurence caretOccurence = occurencesSupport.getOccurence();
         if (cancelled) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         if (caretOccurence != null) {
             final EnumSet<Accuracy> handledAccuracyFlags = EnumSet.<Occurence.Accuracy>of(

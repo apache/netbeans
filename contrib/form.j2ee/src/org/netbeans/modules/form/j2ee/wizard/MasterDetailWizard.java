@@ -718,7 +718,7 @@ public class MasterDetailWizard implements WizardDescriptor.InstantiatingIterato
                         TypeElement joinColumnElement = wc.getElements().getTypeElement("javax.persistence.JoinColumn"); // NOI18N
                         AnnotationTree joinColumnTree = make.Annotation(make.QualIdent(joinColumnElement), parameters);
                         TypeElement manyToOneElement = wc.getElements().getTypeElement("javax.persistence.ManyToOne"); // NOI18N
-                        AnnotationTree manyToOneTree = make.Annotation(make.QualIdent(manyToOneElement), Collections.EMPTY_LIST); // NOI18N
+                        AnnotationTree manyToOneTree = make.Annotation(make.QualIdent(manyToOneElement), Collections.emptyList()); // NOI18N
                         List<AnnotationTree> annotations = new ArrayList<AnnotationTree>(2);
                         annotations.add(joinColumnTree);
                         annotations.add(manyToOneTree);
@@ -731,12 +731,12 @@ public class MasterDetailWizard implements WizardDescriptor.InstantiatingIterato
                         // Add getter
                         ReturnTree returnExp = make.Return(make.Identifier(detailFieldName));
                         MethodTree getMethod = make.Method(
-                            make.Modifiers(Collections.singleton(Modifier.PUBLIC), Collections.EMPTY_LIST),
+                            make.Modifiers(Collections.singleton(Modifier.PUBLIC), Collections.emptyList()),
                             "get" + detailMethodSuffix, // NOI18N
                             make.QualIdent(masterElement),
-                            Collections.EMPTY_LIST,
-                            Collections.EMPTY_LIST,
-                            Collections.EMPTY_LIST,
+                            Collections.emptyList(),
+                            Collections.emptyList(),
+                            Collections.emptyList(),
                             make.Block(Collections.singletonList(returnExp), false),
                             null
                         );
@@ -744,16 +744,16 @@ public class MasterDetailWizard implements WizardDescriptor.InstantiatingIterato
                         wc.rewrite(clazz, modifiedClass);
 
                         // Add setter
-                        ModifiersTree parMods = make.Modifiers(Collections.EMPTY_SET, Collections.EMPTY_LIST);
+                        ModifiersTree parMods = make.Modifiers(Collections.emptySet(), Collections.emptyList());
                         VariableTree par = make.Variable(parMods, detailFieldName, make.QualIdent(masterElement), null);
                         AssignmentTree assignExp = make.Assignment(make.Identifier("this." + detailFieldName), make.Identifier(detailFieldName));
                         MethodTree setMethod = make.Method(
-                            make.Modifiers(Collections.singleton(Modifier.PUBLIC), Collections.EMPTY_LIST),
+                            make.Modifiers(Collections.singleton(Modifier.PUBLIC), Collections.emptyList()),
                             "set" + detailMethodSuffix, // NOI18N
                             make.PrimitiveType(TypeKind.VOID),
-                            Collections.EMPTY_LIST,
+                            Collections.emptyList(),
                             Collections.singletonList(par),
-                            Collections.EMPTY_LIST,
+                            Collections.emptyList(),
                             make.Block(Collections.singletonList(make.ExpressionStatement(assignExp)), false),
                             null
                         );
@@ -851,12 +851,12 @@ public class MasterDetailWizard implements WizardDescriptor.InstantiatingIterato
                     // Add getter
                     ReturnTree returnExp = make.Return(make.Identifier(masterFieldName));
                     MethodTree getMethod = make.Method(
-                        make.Modifiers(Collections.singleton(Modifier.PUBLIC), Collections.EMPTY_LIST),
+                        make.Modifiers(Collections.singleton(Modifier.PUBLIC), Collections.emptyList()),
                         "get" + masterMethodSuffix, // NOI18N
                         collectionTree,
-                        Collections.EMPTY_LIST,
-                        Collections.EMPTY_LIST,
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        Collections.emptyList(),
                         make.Block(Collections.singletonList(returnExp), false),
                         null
                     );
@@ -864,16 +864,16 @@ public class MasterDetailWizard implements WizardDescriptor.InstantiatingIterato
                     wc.rewrite(clazz, modifiedClass);
                     
                     // Add setter
-                    ModifiersTree parMods = make.Modifiers(Collections.EMPTY_SET, Collections.EMPTY_LIST);
+                    ModifiersTree parMods = make.Modifiers(Collections.emptySet(), Collections.emptyList());
                     VariableTree par = make.Variable(parMods, masterFieldName, collectionTree, null);
                     AssignmentTree assignExp = make.Assignment(make.Identifier("this." + masterFieldName), make.Identifier(masterFieldName));
                     MethodTree setMethod = make.Method(
-                        make.Modifiers(Collections.singleton(Modifier.PUBLIC), Collections.EMPTY_LIST),
+                        make.Modifiers(Collections.singleton(Modifier.PUBLIC), Collections.emptyList()),
                         "set" + masterMethodSuffix, // NOI18N
                         make.PrimitiveType(TypeKind.VOID),
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         Collections.singletonList(par),
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         make.Block(Collections.singletonList(make.ExpressionStatement(assignExp)), false),
                         null
                     );

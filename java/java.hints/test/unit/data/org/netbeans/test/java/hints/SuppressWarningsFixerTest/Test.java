@@ -5,10 +5,10 @@ import java.util.List;
 
 public class Test {
     
-    private List<String> l = new ArrayList<>();
+    private List<String> l = new ArrayList();
     
     {
-        l = new ArrayList<>();
+        l = new ArrayList();
     }
     
     private void test1() {

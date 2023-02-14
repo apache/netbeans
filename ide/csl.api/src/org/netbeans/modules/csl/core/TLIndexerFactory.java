@@ -262,7 +262,7 @@ public final class TLIndexerFactory extends EmbeddingIndexerFactory {
                 } 
                 filteredErrors.addAll(lst);
             } else if (filteredErrors == null) {
-                filteredErrors = new ArrayList(gsfParserResult.getDiagnostics());
+                filteredErrors = new ArrayList<>(gsfParserResult.getDiagnostics());
             }
             // must translate diagnostics offsets into file/document offsets.
             boolean errorTooLargeForParser = false; 

@@ -2983,7 +2983,7 @@ class JavaCodeGenerator extends CodeGenerator {
                     return; // no change from last time
                 }
             }
-            toAdd = new ArrayList(listenersInMainClass.length);
+            toAdd = new ArrayList<>(listenersInMainClass.length);
             for (Class cls : listenersInMainClass) {
                 toAdd.add(cls.getCanonicalName());
             }
@@ -2993,7 +2993,7 @@ class JavaCodeGenerator extends CodeGenerator {
 
         Collection<String> toRemove;
         if (listenersInMainClass_lastSet != null) {
-            toRemove = new ArrayList(listenersInMainClass_lastSet.length);
+            toRemove = new ArrayList<>(listenersInMainClass_lastSet.length);
             for (int i=0; i < listenersInMainClass_lastSet.length; i++) {
                 String cls = listenersInMainClass_lastSet[i].getCanonicalName();
                 if (!toAdd.contains(cls)) {

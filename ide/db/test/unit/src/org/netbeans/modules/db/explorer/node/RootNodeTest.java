@@ -113,7 +113,7 @@ public class RootNodeTest extends TestCase {
 
         dc.setDisplayName("C3");
 
-        children = new ArrayList(rootNode.getChildNodesSync());
+        children = new ArrayList<>(rootNode.getChildNodesSync());
 
         assertEquals("B2", children.get(1).getDisplayName());
         assertEquals("C3", children.get(2).getDisplayName());

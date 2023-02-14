@@ -255,7 +255,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
 
     public final List<ItemSelection> getHighlightedItems() {
         return highlightedSelection == null ? Collections.emptyList() :
-                                              new ArrayList(highlightedSelection);
+                                              new ArrayList<>(highlightedSelection);
     }
 
 
@@ -264,7 +264,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
     public final void setSelectedItems(List<ItemSelection> items) {
         if (selectedSelection == null) {
             if (items.isEmpty()) return;
-            selectedSelection = new ArrayList(items);
+            selectedSelection = new ArrayList<>(items);
             fireSelectedItemsChanged(items, items, Collections.emptyList());
         } else {
             List<ItemSelection> addedItems = new ArrayList<>();
@@ -278,21 +278,21 @@ class TimelineSelectionManager implements ChartSelectionModel {
 
             if (addedItems.isEmpty() && removedItems.isEmpty()) return;
 
-            selectedSelection = new ArrayList(items);
+            selectedSelection = new ArrayList<>(items);
             fireSelectedItemsChanged(items, addedItems, removedItems);
         }
     }
 
     public final List<ItemSelection> getSelectedItems() {
         return selectedSelection == null ? Collections.emptyList() :
-                                           new ArrayList(selectedSelection);
+                                           new ArrayList<>(selectedSelection);
     }
 
 
     // --- Selection listeners -------------------------------------------------
 
     public final void addSelectionListener(ChartSelectionListener listener) {
-        if (selectionListeners == null) selectionListeners = new ArrayList();
+        if (selectionListeners == null) selectionListeners = new ArrayList<>();
         selectionListeners.add(listener);
     }
 

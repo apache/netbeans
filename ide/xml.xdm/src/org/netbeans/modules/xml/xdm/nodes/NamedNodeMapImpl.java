@@ -40,7 +40,7 @@ public final class NamedNodeMapImpl implements NamedNodeMap {
     
     /** Read-only empty map. */
     public static final NamedNodeMap EMPTY = 
-            new NamedNodeMapImpl(new ArrayList(0));
+            new NamedNodeMapImpl(new ArrayList<>(0));
     
     /**
      * Creates new NamedNodeMapImpl

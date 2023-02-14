@@ -59,7 +59,7 @@ public class CatchBlockImpl extends DeclarationScopeImpl implements JsFunction {
 
     @Override
     public Collection<? extends JsObject> getParameters() {
-        return new ArrayList(this.parameters);
+        return new ArrayList<>(this.parameters);
     }
 
     @Override

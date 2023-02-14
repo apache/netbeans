@@ -2299,7 +2299,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (l == null) {
                 return null;
             }
-            List<T> res = (List<T>)new ArrayList();
+            List<T> res = (List<T>)new ArrayList<>();
             for (CallHierarchyEntry.Call call : l) {
                 CallHierarchyEntry che = call.getItem();
                 LineDocument lDoc = callEntryDocument(che, lineDoc);

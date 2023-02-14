@@ -344,7 +344,7 @@ externalItem
 
 // 6.14
 genericParams
-   : '<' ((genericParam ',')* genericParam ','? )?'>'
+   : '<' ((genericParam ',')* genericParam ','? )? '>'
    ;
 genericParam
    : outerAttribute*
@@ -449,10 +449,11 @@ expression
    | expression 'as' typeNoBounds                       # TypeCastExpression  // 8.2.4
    | expression ('*' | '/' | '%') expression            # ArithmeticOrLogicalExpression   // 8.2.4
    | expression ('+' | '-') expression                  # ArithmeticOrLogicalExpression   // 8.2.4
-   | expression (shl | shr) expression                  # ArithmeticOrLogicalExpression   // 8.2.4
+//   | expression (shl | shr) expression                  # ArithmeticOrLogicalExpression   // 8.2.4
    | expression '&' expression                          # ArithmeticOrLogicalExpression   // 8.2.4
    | expression '^' expression                          # ArithmeticOrLogicalExpression   // 8.2.4
    | expression '|' expression                          # ArithmeticOrLogicalExpression   // 8.2.4
+   | expression shiftOperator expression                # ArithmeticOrLogicalExpression   // 8.2.4
    | expression comparisonOperator expression           # ComparisonExpression   // 8.2.4
    | expression '&&' expression                         # LazyBooleanExpression  // 8.2.4
    | expression '||' expression                         # LazyBooleanExpression  // 8.2.4
@@ -474,6 +475,10 @@ expression
    | expressionWithBlock                                # ExpressionWithBlock_
    | macroInvocation                                    # MacroInvocationAsExpression
    ;
+
+shiftOperator:
+	'>' '>'
+	| '<' '<';
 
 comparisonOperator
    : '=='

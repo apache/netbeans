@@ -17,11 +17,8 @@
  * under the License.
  */
 
-// The original ANTLR Grammar had problems lexing the following statements, because
-// the "STRING_BLOCK_LITERAL" lexer rule spawned different lines.
-// We've since simplified the lexing of STRING_BLOCK_LITERAL, because we need
-// this for an editor, not for a compiler.
+fn main() {
+    let x = 1 << 1;
+    let y = Vec<Vec<u8>> ();
+}
 
-noparse!(fail_incomplete_escape, "\\");
-noparse!(fail_class_incomplete, "[A-");
-noparse!(fail_class_not_closed, "[A");

@@ -195,7 +195,7 @@ CHAR_LITERAL
     ) '\''
     ;
 
-STRING_LITERAL: '"\\\\"' | '"' ( ~["] | '\\"' )*? '"';
+STRING_LITERAL: '"\\\\"' | '"' ( '\\' '"' | ~["] )*? '"';
 
 RAW_STRING_LITERAL: 'r' RAW_STRING_CONTENT;
 
@@ -287,7 +287,8 @@ AND: '&';
 OR: '|';
 ANDAND: '&&';
 OROR: '||';
-//SHL: '<<'; SHR: '>>'; removed to avoid confusion in type parameter
+// SHL: '<<'; // removed to avoid confusion in type parameter
+// SHR: '>>'; // removed to avoid confusion in type parameter
 PLUSEQ: '+=';
 MINUSEQ: '-=';
 STAREQ: '*=';

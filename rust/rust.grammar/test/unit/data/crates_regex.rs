@@ -17,11 +17,5 @@
  * under the License.
  */
 
-// The original ANTLR Grammar had problems lexing the following statements, because
-// the "STRING_BLOCK_LITERAL" lexer rule spawned different lines.
-// We've since simplified the lexing of STRING_BLOCK_LITERAL, because we need
-// this for an editor, not for a compiler.
-
-noparse!(fail_incomplete_escape, "\\");
-noparse!(fail_class_incomplete, "[A-");
-noparse!(fail_class_not_closed, "[A");
+// libimagutil-0.8.0: "(.*)=(\"(?P<QVALUE>([^\"]*))\"|(?P<VALUE>(.*)))$"
+consistent!(libimagutil_1, "(.*)=(\"(?P<QVALUE>([^\"]*))\"|(?P<VALUE>(.*)))$");

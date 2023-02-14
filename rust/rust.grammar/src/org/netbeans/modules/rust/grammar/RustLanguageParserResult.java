@@ -19,18 +19,16 @@
 package org.netbeans.modules.rust.grammar;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
+import javax.xml.transform.ErrorListener;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.atn.ATNConfigSet;
-import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -61,9 +59,11 @@ public class RustLanguageParserResult extends ParserResult {
 
     public RustLanguageParserResult get() {
         if (!finished) {
+            ANTLRErrorListener errorListener = createErrorListener();
             RustLexer lexer = new RustLexer(CharStreams.fromString(String.valueOf(getSnapshot().getText())));
+            lexer.addErrorListener(errorListener);
             RustParser parser = new RustParser(new CommonTokenStream(lexer));
-            parser.addErrorListener(createErrorListener());
+            parser.addErrorListener(errorListener);
             parser.addParseListener(createFoldListener());
             parser.crate();
             finished = true;
@@ -137,8 +137,100 @@ public class RustLanguageParserResult extends ParserResult {
 //                }
 //            }
             @Override
+            public void exitTraitImpl(RustParser.TraitImplContext ctx) {
+                if (ctx != null
+                        && ctx.LCURLYBRACE() != null
+                        && ctx.LCURLYBRACE().getSymbol() != null
+                        && ctx.RCURLYBRACE() != null
+                        && ctx.RCURLYBRACE().getSymbol() != null) {
+                    addFold(ctx.LCURLYBRACE().getSymbol(), ctx.RCURLYBRACE().getSymbol());
+                }
+            }
+
+            @Override
+            public void exitEnumeration(RustParser.EnumerationContext ctx) {
+                if (ctx != null
+                        && ctx.LCURLYBRACE() != null
+                        && ctx.LCURLYBRACE().getSymbol() != null
+                        && ctx.RCURLYBRACE() != null
+                        && ctx.RCURLYBRACE().getSymbol() != null) {
+                    addFold(ctx.LCURLYBRACE().getSymbol(), ctx.RCURLYBRACE().getSymbol());
+                }
+            }
+
+            @Override
+            public void exitExternBlock(RustParser.ExternBlockContext ctx) {
+                if (ctx != null
+                        && ctx.LCURLYBRACE() != null
+                        && ctx.LCURLYBRACE().getSymbol() != null
+                        && ctx.RCURLYBRACE() != null
+                        && ctx.RCURLYBRACE().getSymbol() != null) {
+                    addFold(ctx.LCURLYBRACE().getSymbol(), ctx.RCURLYBRACE().getSymbol());
+                }
+            }
+
+            @Override
+            public void exitInherentImpl(RustParser.InherentImplContext ctx) {
+                if (ctx != null
+                        && ctx.LCURLYBRACE() != null
+                        && ctx.LCURLYBRACE().getSymbol() != null
+                        && ctx.RCURLYBRACE() != null
+                        && ctx.RCURLYBRACE().getSymbol() != null) {
+                    addFold(ctx.LCURLYBRACE().getSymbol(), ctx.RCURLYBRACE().getSymbol());
+                }
+            }
+
+            @Override
+            public void exitStructExprStruct(RustParser.StructExprStructContext ctx) {
+                if (ctx != null
+                        && ctx.LCURLYBRACE() != null
+                        && ctx.LCURLYBRACE().getSymbol() != null
+                        && ctx.RCURLYBRACE() != null
+                        && ctx.RCURLYBRACE().getSymbol() != null) {
+                    addFold(ctx.LCURLYBRACE().getSymbol(), ctx.RCURLYBRACE().getSymbol());
+                }
+            }
+
+            @Override
             public void exitBlockExpression(RustParser.BlockExpressionContext ctx) {
-                if (ctx.LCURLYBRACE().getSymbol() != null && ctx.RCURLYBRACE().getSymbol() != null) {
+                if (ctx != null
+                        && ctx.LCURLYBRACE() != null
+                        && ctx.LCURLYBRACE().getSymbol() != null
+                        && ctx.RCURLYBRACE() != null
+                        && ctx.RCURLYBRACE().getSymbol() != null) {
+                    addFold(ctx.LCURLYBRACE().getSymbol(), ctx.RCURLYBRACE().getSymbol());
+                }
+            }
+
+            @Override
+            public void exitStructPattern(RustParser.StructPatternContext ctx) {
+                if (ctx != null
+                        && ctx.LCURLYBRACE() != null
+                        && ctx.LCURLYBRACE().getSymbol() != null
+                        && ctx.RCURLYBRACE() != null
+                        && ctx.RCURLYBRACE().getSymbol() != null) {
+                    addFold(ctx.LCURLYBRACE().getSymbol(), ctx.RCURLYBRACE().getSymbol());
+                }
+            }
+
+            @Override
+            public void exitStructStruct(RustParser.StructStructContext ctx) {
+                if (ctx != null
+                        && ctx.LCURLYBRACE() != null
+                        && ctx.LCURLYBRACE().getSymbol() != null
+                        && ctx.RCURLYBRACE() != null
+                        && ctx.RCURLYBRACE().getSymbol() != null) {
+                    addFold(ctx.LCURLYBRACE().getSymbol(), ctx.RCURLYBRACE().getSymbol());
+                }
+            }
+
+            @Override
+            public void exitEnumExprStruct(RustParser.EnumExprStructContext ctx) {
+                if (ctx != null
+                        && ctx.LCURLYBRACE() != null
+                        && ctx.LCURLYBRACE().getSymbol() != null
+                        && ctx.RCURLYBRACE() != null
+                        && ctx.RCURLYBRACE().getSymbol() != null) {
                     addFold(ctx.LCURLYBRACE().getSymbol(), ctx.RCURLYBRACE().getSymbol());
                 }
             }

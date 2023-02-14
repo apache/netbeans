@@ -18,6 +18,16 @@
  */
 package org.netbeans.modules.rust.grammar;
 
+import java.util.BitSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.antlr.v4.runtime.ANTLRErrorListener;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.modules.rust.grammar.antlr4.RustLexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
@@ -28,8 +38,45 @@ import org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge;
  */
 public class RustLanguageLexer extends AbstractAntlrLexerBridge<RustLexer, RustTokenID> {
 
+    private static final Logger LOG = Logger.getLogger(RustLanguageLexer.class.getName());
+
+    private static String formatMessage(String kind, Recognizer<?, ?> recognizer, Object o, int line, int charPositionInLine, String message, RecognitionException ex) {
+        return String.format("%s @%3d:%-3d %s", kind, line, charPositionInLine, message);
+    }
+
+    private static final RustLexer createLexer(CharStream input) {
+        RustLexer lexer = new RustLexer(input);
+        lexer.addErrorListener(new ANTLRErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer, Object o, int line, int charPositionInLine, String message, RecognitionException re) {
+                String errorMessage = formatMessage("RUST: Syntax error: ", recognizer, o, line, charPositionInLine, message, re);
+                LOG.log(Level.SEVERE, errorMessage);
+            }
+
+            @Override
+            public void reportAmbiguity(Parser parser, DFA dfa, int line, int charPositionInLine, boolean bln, BitSet bitset, ATNConfigSet atncs) {
+                String errorMessage = formatMessage("RUST: Ambiguity: ", null, null, line, charPositionInLine, "Ambiguity error", null);
+                LOG.log(Level.WARNING, errorMessage);
+            }
+
+            @Override
+            public void reportAttemptingFullContext(Parser parser, DFA dfa, int line, int charPositionInLine, BitSet bitset, ATNConfigSet atncs) {
+                String errorMessage = formatMessage("RUST: AttemptingFullContext: ", null, null, line, charPositionInLine, "Ambiguity error", null);
+                LOG.log(Level.WARNING, errorMessage);
+            }
+
+            @Override
+            public void reportContextSensitivity(Parser parser, DFA dfa, int line, int charPositionInLine, int line2, ATNConfigSet atncs) {
+                String errorMessage = formatMessage("RUST: ContextSensitivity", null, null, line, charPositionInLine, "Ambiguity error", null);
+                LOG.log(Level.WARNING, errorMessage);
+            }
+
+        });
+        return lexer;
+    }
+
     public RustLanguageLexer(LexerRestartInfo<RustTokenID> info) {
-        super(info, RustLexer::new);
+        super(info, RustLanguageLexer::createLexer);
     }
 
     @Override

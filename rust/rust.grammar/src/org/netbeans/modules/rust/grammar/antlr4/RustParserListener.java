@@ -1170,6 +1170,16 @@ public interface RustParserListener extends ParseTreeListener {
 	 */
 	void exitArrayExpression(RustParser.ArrayExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RustParser#shiftOperator}.
+	 * @param ctx the parse tree
+	 */
+	void enterShiftOperator(RustParser.ShiftOperatorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RustParser#shiftOperator}.
+	 * @param ctx the parse tree
+	 */
+	void exitShiftOperator(RustParser.ShiftOperatorContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RustParser#comparisonOperator}.
 	 * @param ctx the parse tree
 	 */

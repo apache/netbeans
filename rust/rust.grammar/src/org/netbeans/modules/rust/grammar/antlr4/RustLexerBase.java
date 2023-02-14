@@ -63,26 +63,26 @@ public abstract class RustLexerBase extends Lexer {
     public Token nextToken() {
         Token next = null;
 
-        try {
+//        try {
             next = super.nextToken();
-        } catch (Throwable e) {
-            StringBuilder message = new StringBuilder();
-            message.append(
-                    String.format("RUSTLEXER: Unexpected exception (%s) in RustLexerBase.nextToken: \"%s\"%n",
-                            e.getClass().getName(),
-                            e.getMessage()));
-            if (this.lt1 != null) {
-                RustTokenID tid = RustTokenID.from(this.lt1);
-                message.append(String.format("RUSTLEXER: ... after token %s at line %d:%d in file %s%n",
-                        tid.name(),
-                        this.lt1.getLine(),
-                        this.lt1.getCharPositionInLine(),
-                        _input.getSourceName()
-                ));
-            }
-            LOG.log(Level.SEVERE, message.toString());
-            throw new IllegalStateException(message.toString());
-        }
+//        } catch (Throwable e) {
+//            StringBuilder message = new StringBuilder();
+//            message.append(
+//                    String.format("RUSTLEXER: Unexpected exception (%s) in RustLexerBase.nextToken: \"%s\"%n",
+//                            e.getClass().getName(),
+//                            e.getMessage()));
+//            if (this.lt1 != null) {
+//                RustTokenID tid = RustTokenID.from(this.lt1);
+//                message.append(String.format("RUSTLEXER: ... after token %s at line %d:%d in file %s%n",
+//                        tid.name(),
+//                        this.lt1.getLine(),
+//                        this.lt1.getCharPositionInLine(),
+//                        _input.getSourceName()
+//                ));
+//            }
+//            LOG.log(Level.SEVERE, message.toString(), e);
+//            return null;
+//        }
 
         if (next.getChannel() == Token.DEFAULT_CHANNEL) {
             // Keep track of the last token on the default channel.

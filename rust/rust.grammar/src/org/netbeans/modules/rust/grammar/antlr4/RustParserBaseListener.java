@@ -1333,6 +1333,18 @@ public class RustParserBaseListener implements RustParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterShiftOperator(RustParser.ShiftOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitShiftOperator(RustParser.ShiftOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterComparisonOperator(RustParser.ComparisonOperatorContext ctx) { }
 	/**
 	 * {@inheritDoc}

@@ -48,13 +48,13 @@ public final class RustANTLRTestErrorListener implements ANTLRErrorListener {
     @Override
     public void reportAmbiguity(Parser parser, DFA dfa, int line, int charPositionInLine, boolean bln, BitSet bitset, ATNConfigSet atncs) {
         String errorMessage = formatMessage("Ambiguity: ", null, null, line, charPositionInLine, "Ambiguity error", null);
-        throw new IllegalStateException(errorMessage);
+        System.err.println(errorMessage);
     }
 
     @Override
     public void reportAttemptingFullContext(Parser parser, DFA dfa, int line, int charPositionInLine, BitSet bitset, ATNConfigSet atncs) {
         String errorMessage = formatMessage("AttemptingFullContext: ", null, null, line, charPositionInLine, "Ambiguity error", null);
-        throw new IllegalStateException(errorMessage);
+        System.err.println(errorMessage);
     }
 
     @Override

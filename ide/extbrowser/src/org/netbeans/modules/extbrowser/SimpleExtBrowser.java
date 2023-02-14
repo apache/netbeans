@@ -108,7 +108,7 @@ public class SimpleExtBrowser extends ExtWebBrowser {
          * @param library library path
          */
         public BrowserFormat (String url) {
-            super(new HashMap());
+            super(new HashMap<>());
             java.util.Map map = getMap ();
             
             map.put (TAG_URL, url);

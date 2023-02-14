@@ -185,10 +185,10 @@ public class InnerClasses extends org.netbeans.test.java.XRunner {
                         Collections.EMPTY_LIST,
                         extendsTree,
                         implementsList,
-                        Collections.EMPTY_LIST);                
+                        Collections.EMPTY_LIST);
                 innerClass = make.addClassMember(innerClass, mt);
                 innerClass = make.addClassMember(innerClass, vt);
-                innerClass = make.addClassMember(innerClass, make.Block(Collections.EMPTY_LIST, false));                
+                innerClass = make.addClassMember(innerClass, make.Block(Collections.EMPTY_LIST, false));
                 ClassTree modifiedClazz = make.addClassMember(clazz, innerClass);
                 workingCopy.rewrite(clazz, modifiedClazz);
             }

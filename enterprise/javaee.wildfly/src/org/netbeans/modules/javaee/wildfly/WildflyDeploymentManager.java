@@ -84,7 +84,7 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
      * instance.
      */
     private static final Map<InstanceProperties, Boolean> PROPERTIES_TO_IS_RUNNING
-            = Collections.synchronizedMap(new WeakHashMap());
+            = Collections.synchronizedMap(new WeakHashMap<>());
 
     private final DeploymentFactory df;
 

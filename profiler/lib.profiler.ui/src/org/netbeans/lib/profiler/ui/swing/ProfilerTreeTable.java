@@ -949,7 +949,7 @@ public class ProfilerTreeTable extends ProfilerTable {
         
         
         private List filteredChildren(Object parent) {
-            if (cache == null) cache = new HashMap();
+            if (cache == null) cache = new HashMap<>();
             
             TreeNode tParent = (TreeNode)parent;
             TreePathKey parentKey = new TreePathKey(getPathToRoot(tParent));
@@ -1067,7 +1067,7 @@ public class ProfilerTreeTable extends ProfilerTable {
         
         
         private int[] viewToModel(Object parent) {
-            if (viewToModel == null) viewToModel = new HashMap();
+            if (viewToModel == null) viewToModel = new HashMap<>();
             
             TreePathKey parentKey = new TreePathKey(getPathToRoot((TreeNode)parent));
             int[] indexes = viewToModel.get(parentKey);

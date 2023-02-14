@@ -45,7 +45,7 @@ public final class LogReader {
 
     public LogReader(FileObject f) {
         logFile = f;
-        recordList = new TreeMap();
+        recordList = new TreeMap<>();
     }
 
 

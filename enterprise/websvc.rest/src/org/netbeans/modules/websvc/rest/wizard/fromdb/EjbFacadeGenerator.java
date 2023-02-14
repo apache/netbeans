@@ -217,7 +217,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                             maker.Modifiers(EnumSet.of(Modifier.PUBLIC, 
                                     Modifier.ABSTRACT)),
                             classTree.getSimpleName(),
-                            Arrays.asList(maker.TypeParameter(genericsTypeName, 
+                            Arrays.asList(maker.TypeParameter(genericsTypeName,
                                     Collections.EMPTY_LIST)),
                             null,
                             Collections.EMPTY_LIST,

@@ -120,7 +120,7 @@ public class ScanStartedTest extends IndexingTestBase {
         cp1 = ClassPathSupport.createClassPath(src1);
         bcp1 = ClassPathSupport.createClassPath(bin1);
         FooCPP.roots2cps = Collections.unmodifiableMap(
-                new HashMap() {
+                new HashMap<>() {
                     {
                         put(src1, Collections.singletonMap(FOO_SOURCES, cp1));
                         put(bin1, Collections.singletonMap(FOO_BINARY, bcp1));

@@ -46,7 +46,7 @@ public class Catalog {
     
     public synchronized Schema[] getSchemas() throws SQLException {
         if (schemas == null) {
-            schemas = new TreeMap();
+            schemas = new TreeMap<>();
 
             // (if name == null)
             //      assuming the current catalog when the catalog name is null

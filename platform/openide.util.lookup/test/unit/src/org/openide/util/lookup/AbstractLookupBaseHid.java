@@ -1871,7 +1871,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         
         this.ic.addPair(l);
         
-        Collection c = lookup.lookup(new Lookup.Template(String.class)).allInstances();
+        Collection c = lookup.lookup(new Lookup.Template<>(String.class)).allInstances();
         assertTrue("It is empty: " + c, c.isEmpty());
     }
 

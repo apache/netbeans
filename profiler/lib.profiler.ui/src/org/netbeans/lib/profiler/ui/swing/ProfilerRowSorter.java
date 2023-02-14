@@ -160,7 +160,7 @@ class ProfilerRowSorter extends TableRowSorter {
     }
     
     void setDefaultSortOrder(int column, SortOrder sortOrder) {
-        if (defaultSortOrders == null) defaultSortOrders = new HashMap();
+        if (defaultSortOrders == null) defaultSortOrders = new HashMap<>();
         defaultSortOrders.put(column, sortOrder);
     }
     

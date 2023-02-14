@@ -96,7 +96,7 @@ public class SerialDataConvertorTest extends NbTestCase {
          LocalFileSystem lfs = new LocalFileSystem();
          InstanceDataObject i = InstanceDataObject.create (folder, null, lfs, null);
          assertNull(i.getCookie(SaveCookie.class));
-         Lookup.Result<SaveCookie> scr =  i.getLookup().lookup(new Lookup.Template(SaveCookie.class));        
+         Lookup.Result<SaveCookie> scr =  i.getLookup().lookup(new Lookup.Template(SaveCookie.class));
          scr.addLookupListener(ml);
          Collection<? extends SaveCookie>  saveCookies = scr.allInstances();
          assertFalse(saveCookies.contains(lfs));

@@ -63,7 +63,7 @@ public abstract class ProjectsSelector {
     private final Collection<Lookup.Provider> selected;
     
     public ProjectsSelector(Collection<Lookup.Provider> selected) {
-        this.selected = new HashSet(selected);
+        this.selected = new HashSet<>(selected);
     }
     
     

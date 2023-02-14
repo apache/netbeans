@@ -198,7 +198,7 @@ public class BrowserUtils {
         if (paths != null) {
             JTree tree = ttable.getTree();
             HeapWalkerNode root = (HeapWalkerNode)tree.getModel().getRoot();
-            for (TreePath path : paths) ensurePathComputed(root, (TreePath)path, new HashSet());
+            for (TreePath path : paths) ensurePathComputed(root, (TreePath)path, new HashSet<>());
             ttable.setup(paths, selected);
         }
     }

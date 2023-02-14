@@ -363,7 +363,7 @@ public abstract class ActionsProvider {
 
         private static <T> Set<T> createSet(T[] array) {
             if (array != null) {
-                return Collections.unmodifiableSet(new HashSet(Arrays.asList(array)));
+                return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(array)));
             } else {
                 return null;
             }

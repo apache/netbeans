@@ -128,7 +128,7 @@ final class TimelineTooltipOverlay extends ChartOverlay implements ActionListene
             public void indexSelectionChanged() {}
 
             public void timeSelectionChanged(boolean timestampsSelected, boolean justHovering) {
-                selectedTimestamps = new TreeSet(support.getSelectedTimestamps());
+                selectedTimestamps = new TreeSet<>(support.getSelectedTimestamps());
                 tooltipUpdater.run();
             }
         });

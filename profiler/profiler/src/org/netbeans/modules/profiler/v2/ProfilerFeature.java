@@ -225,7 +225,7 @@ public abstract class ProfilerFeature {
         
         
         public final synchronized void addChangeListener(ChangeListener listener) {
-            if (listeners == null) listeners = new HashSet();
+            if (listeners == null) listeners = new HashSet<>();
             listeners.add(listener);
         }
     

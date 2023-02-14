@@ -706,7 +706,7 @@ public class ProfilerTable extends JTable {
     }
     
     private void initScrollableColumns(int[] columns) {
-        scrollableColumns = new HashSet(columns.length);
+        scrollableColumns = new HashSet<>(columns.length);
         for (final int column : columns) scrollableColumns.add(column);
         
         columnWidthsValid = false;

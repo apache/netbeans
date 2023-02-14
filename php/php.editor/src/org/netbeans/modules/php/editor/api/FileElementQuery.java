@@ -307,19 +307,19 @@ public final class FileElementQuery extends AbstractElementQuery implements Elem
     @Override
     public Set<VariableElement> getTopLevelVariables() {
         Map<String, VariableElement> map = varMap.get(null);
-        return map != null ? new HashSet(map.values()) : Collections.emptySet();
+        return map != null ? new HashSet<>(map.values()) : Collections.emptySet();
     }
 
     @Override
     public Set<VariableElement> getMethodVariables(MethodElement method) {
         Map<String, VariableElement> map = varMap.get(method);
-        return map != null ? new HashSet(map.values()) : Collections.emptySet();
+        return map != null ? new HashSet<>(map.values()) : Collections.emptySet();
     }
 
     @Override
     public Set<VariableElement> getFunctionVariables(FunctionElement function) {
         Map<String, VariableElement> map = varMap.get(function);
-        return map != null ? new HashSet(map.values()) : Collections.emptySet();
+        return map != null ? new HashSet<>(map.values()) : Collections.emptySet();
     }
 
     private final class VariableTypeResolver implements TypeResolver {

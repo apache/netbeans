@@ -303,7 +303,7 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
     private Set<Listener> columnListeners;
     
     void addColumnChangeListener(Listener listener) {
-        if (columnListeners == null) columnListeners = new HashSet();
+        if (columnListeners == null) columnListeners = new HashSet<>();
         columnListeners.add(listener);
     }
     

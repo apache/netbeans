@@ -82,7 +82,7 @@ public interface ProfilerTreeTableModel {
         }
         
         public void addListener(Listener listener) {
-            if (listeners == null) listeners = new HashSet();
+            if (listeners == null) listeners = new HashSet<>();
             listeners.add(listener);
         }
         

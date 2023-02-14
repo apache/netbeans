@@ -168,7 +168,7 @@ class TreeObject {
         writeBuffer = b;
         readBuffer.startReading();
         writeBuffer.reset();
-        unique = new HashSet(4000);
+        unique = new HashSet<>(4000);
     }
     
     private void writeLong(long instanceId) throws IOException {

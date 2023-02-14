@@ -89,7 +89,7 @@ public final class SurroundWithHint extends CodeActionsProvider {
     private static final Pattern SNIPPET_HINT_PATTERN = Pattern.compile("([-\\w]++)(?:\\s*=\\s*(\\\"([^\\\"]*)\\\"|[-\\w]++))?");
     private static final String UNCAUGHT_EXCEPTION_CATCH_STATEMENTS = "uncaughtExceptionCatchStatements";
     private static final Set<String> TO_FILTER = Collections.singleton("fcom");
-    private static final Set<String> TO_SHOW = Collections.unmodifiableSet(new HashSet(Arrays.asList("bcom", "dowhile", "iff", "fore", "sy", "trycatch", "whilexp")));
+    private static final Set<String> TO_SHOW = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("bcom", "dowhile", "iff", "fore", "sy", "trycatch", "whilexp")));
 
     @Override
     @NbBundle.Messages({

@@ -77,7 +77,7 @@ public class SecureURLResourceRetriever extends URLResourceRetriever {
             return null;
         URI currURI = new URI(effAddr);
         HashMap<String, InputStream> result = null;
-        if (acceptedCertificates==null) acceptedCertificates = new HashSet();
+        if (acceptedCertificates==null) acceptedCertificates = new HashSet<>();
         InputStream is = getInputStreamOfURL(currURI.toURL(), ProxySelector.getDefault().select(currURI).get(0));
         result = new HashMap<>();
         result.put(effectiveURL.toString(), is);

@@ -31,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @UIType
 public class VersionListCellRenderer extends DefaultListCellRenderer {
 
-    private Map<Integer, TermOfSupport> lts = Collections.EMPTY_MAP;
+    private Map<Integer, TermOfSupport> lts = Collections.emptyMap();
     private int current = -1;
 
     @Override

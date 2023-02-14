@@ -83,7 +83,7 @@ public class ConstructorElem extends org.netbeans.test.java.XRunner {
         FileObject fo = (FileObject) o;
         JavaSource js = JavaSource.forFileObject(fo);    
         Common.removeConstructors(js);
-        Common.addConstructor(js, Collections.EMPTY_MAP);
+        Common.addConstructor(js, Collections.emptyMap());
         Common.addConstructor(js, Common.PARS1);
         Common.addConstructor(js, Common.PARS2);
         Common.addConstructor(js, Common.PARS3);                       

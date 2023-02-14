@@ -57,7 +57,7 @@ public class TreeChecker {
         if (result.size() > 0) {
            return result;
         } else {
-           return Collections.EMPTY_MAP;
+           return Collections.emptyMap();
         }
     }
 }

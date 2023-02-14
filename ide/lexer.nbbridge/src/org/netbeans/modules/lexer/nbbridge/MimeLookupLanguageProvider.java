@@ -57,7 +57,7 @@ public final class MimeLookupLanguageProvider extends LanguageProvider {
         synchronized (LOCK) {
             Lookup.Result result = langLkpResultsMap.get(mimeType);
             if (result == null) {
-                result = lookup.lookup(new Lookup.Template(Language.class));
+                result = lookup.lookup(new Lookup.Template<>(Language.class));
                 result.addLookupListener((LookupEvent evt) -> {
                     firePropertyChange(PROP_LANGUAGE);
                 });
@@ -76,7 +76,7 @@ public final class MimeLookupLanguageProvider extends LanguageProvider {
         synchronized (LOCK) {
             Lookup.Result result = embeddingsLkpResultsMap.get(mimePath);
             if (result == null) {
-                result = lookup.lookup(new Lookup.Template(LanguagesEmbeddingMap.class));
+                result = lookup.lookup(new Lookup.Template<>(LanguagesEmbeddingMap.class));
                 result.addLookupListener((LookupEvent evt) -> {
                     firePropertyChange(PROP_EMBEDDED_LANGUAGE);
                 });

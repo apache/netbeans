@@ -189,7 +189,7 @@ public final class CatalogSettings implements Externalizable {
         IteratorIterator it = new IteratorIterator();                       
         it.add(mountedCatalogs.iterator());
         
-        Lookup.Template template = new Lookup.Template(CatalogReader.class);
+        Lookup.Template template = new Lookup.Template<>(CatalogReader.class);
         Lookup.Result result = getUserCatalogsLookup().lookup(template);
         it.add(result.allInstances().iterator());
         

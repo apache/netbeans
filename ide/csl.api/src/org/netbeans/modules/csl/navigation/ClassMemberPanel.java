@@ -77,7 +77,7 @@ public class ClassMemberPanel implements NavigatorPanel {
         }
         
         //Bugfix BZ#191289 - switching between files doesn't change navigator content
-        selection = context.lookup(new Lookup.Template(DataObject.class));
+        selection = context.lookup(new Lookup.Template<>(DataObject.class));
         selection.addLookupListener(selectionListener);
 
         RP.post( new Runnable () {

@@ -60,7 +60,7 @@ public class ElementFactoryRegistry {
     //TODO listen on changes when we have external extensions
     private void initialize(){
         factories = new Hashtable<QName, ElementFactory>();
-        Lookup.Result results = Lookup.getDefault().lookup(new Lookup.Template(ElementFactory.class));
+        Lookup.Result results = Lookup.getDefault().lookup(new Lookup.Template<>(ElementFactory.class));
         for (Object service : results.allInstances()){
             register((ElementFactory)service);
         }
@@ -70,7 +70,7 @@ public class ElementFactoryRegistry {
         //from comp app project ant task
         if (factories.size() < 1) {
             Lookup lu2 = Lookups.metaInfServices(this.getClass().getClassLoader());
-            Lookup.Result results2 = lu2.lookup(new Lookup.Template(ElementFactory.class));
+            Lookup.Result results2 = lu2.lookup(new Lookup.Template<>(ElementFactory.class));
             for (Object service : results2.allInstances()){
                 register((ElementFactory)service);
             }

@@ -117,7 +117,7 @@ public final class Turbo {
         memory = new Memory(statistics, min, max);
         this.customProviders = customProviders;
         if (customProviders == null && providers == null) {
-            Lookup.Template t = new Lookup.Template(TurboProvider.class);
+            Lookup.Template t = new Lookup.Template<>(TurboProvider.class);
             synchronized(Turbo.class) {
                 if (env == null) env = new Environment();
             }

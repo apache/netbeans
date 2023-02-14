@@ -495,7 +495,7 @@ public class FolderLookupTest extends NbTestCase implements LookupListener {
         DataObject tmp = InstanceDataObject.create (subfolder, null, Hashtable.class);
 
         FolderLookup lkp = new FolderLookup (folder);
-        Lookup.Result res = lkp.getLookup ().lookup (new Lookup.Template(Hashtable.class));
+        Lookup.Result res = lkp.getLookup ().lookup (new Lookup.Template<>(Hashtable.class));
         java.lang.ref.WeakReference ref2 = new java.lang.ref.WeakReference (lkp);
 
         lkp = null;

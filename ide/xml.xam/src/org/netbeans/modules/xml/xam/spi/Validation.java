@@ -125,7 +125,7 @@ public class Validation {
             return;
         }
         ourValidators = new ArrayList<Validator>();
-        Lookup.Result result = Lookup.getDefault().lookup(new Lookup.Template(Validator.class));
+        Lookup.Result result = Lookup.getDefault().lookup(new Lookup.Template<>(Validator.class));
         
         for (Object object : result.allInstances()) {
             ourValidators.add((Validator) object);

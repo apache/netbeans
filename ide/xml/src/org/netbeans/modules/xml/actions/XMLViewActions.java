@@ -52,7 +52,7 @@ final class XMLViewActions extends CollectSystemAction {
         // XXX #48712 heuristics: enable open action only if tree editor installed
         boolean visualEditorInstalled = false;
         Lookup lookup = Lookup.getDefault();
-        Lookup.Template t = new Lookup.Template(ModuleInfo.class);
+        Lookup.Template t = new Lookup.Template<>(ModuleInfo.class);
         Iterator it = lookup.lookup(t).allInstances().iterator();
         while (it.hasNext()) {
             ModuleInfo next = (ModuleInfo) it.next();

@@ -162,9 +162,9 @@ implements AbstractLookupBaseHid.Impl {
         final Lookup lookup = cacheOnTop ? new ProxyLookup(new Lookup[] { on }) : on;
 
         class L implements LookupListener {
-            Lookup.Result integer = lookup.lookup(new Lookup.Template(Integer.class));
-            Lookup.Result number = lookup.lookup(new Lookup.Template(Number.class));
-            Lookup.Result serial = lookup.lookup(new Lookup.Template(Serializable.class));
+            Lookup.Result integer = lookup.lookup(new Lookup.Template<>(Integer.class));
+            Lookup.Result number = lookup.lookup(new Lookup.Template<>(Number.class));
+            Lookup.Result serial = lookup.lookup(new Lookup.Template<>(Serializable.class));
 
             {
                 integer.addLookupListener(this);

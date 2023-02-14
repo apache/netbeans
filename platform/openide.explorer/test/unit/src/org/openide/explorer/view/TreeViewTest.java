@@ -446,7 +446,7 @@ public final class TreeViewTest extends NbTestCase {
         // if the preferred action instanceof ContextAwareAction
         // calls its createContextAwareInstance() method
         Action a = TreeView.takeAction(node.getPreferredAction(), node);
-        int count = ((MyDelegateAction)a).contextLookup.lookup(new Lookup.Template(Node.class)).allInstances().size();
+        int count = ((MyDelegateAction)a).contextLookup.lookup(new Lookup.Template<>(Node.class)).allInstances().size();
         assertEquals("The context lookup created by TreeView.takeAction() should contain the node only once.", 1, count);
     }
 

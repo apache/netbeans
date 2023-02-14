@@ -45,7 +45,7 @@ public class SimpleProxyLookupTest extends NbTestCase {
     }
 
     public void test69810() throws Exception {
-        Lookup.Template t = new Lookup.Template(String.class);
+        Lookup.Template t = new Lookup.Template<>(String.class);
         SimpleProxyLookup spl = new SimpleProxyLookup(new Provider() {
             public Lookup getLookup() {
                 return Lookups.fixed(new Object[] {"test1", "test2"});
@@ -54,7 +54,7 @@ public class SimpleProxyLookupTest extends NbTestCase {
 
         assertGC("", new WeakReference(spl.lookup(t)));
 
-        spl.lookup(new Lookup.Template(Object.class)).allInstances();
+        spl.lookup(new Lookup.Template<>(Object.class)).allInstances();
     }
 
     public void testNumberOfListenersAtTheEnd() throws Exception {

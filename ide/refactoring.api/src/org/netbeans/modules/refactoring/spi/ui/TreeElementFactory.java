@@ -30,7 +30,7 @@ import org.openide.util.Lookup;
 public final class TreeElementFactory {
 
     private static final Lookup.Result<TreeElementFactoryImplementation> implementations =
-        Lookup.getDefault().lookup(new Lookup.Template(TreeElementFactoryImplementation.class));
+        Lookup.getDefault().lookup(new Lookup.Template<>(TreeElementFactoryImplementation.class));
 
     private TreeElementFactory() {}
 

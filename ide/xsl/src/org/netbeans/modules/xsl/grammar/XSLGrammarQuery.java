@@ -798,7 +798,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
      */
     private static XSLCustomizer lookupCustomizerInstance() {
         Lookup.Template lookupTemplate =
-            new Lookup.Template(XSLCustomizer.class);
+            new Lookup.Template<>(XSLCustomizer.class);
 
         Lookup.Item lookupItem = Lookups.forPath(CUSTOMIZER_FOLDER).lookupItem(lookupTemplate);
         if (lookupItem == null) {

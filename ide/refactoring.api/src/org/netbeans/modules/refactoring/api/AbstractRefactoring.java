@@ -115,7 +115,7 @@ public abstract class AbstractRefactoring {
             plugins = new ArrayList();
             // get plugins from the lookup
             filtersDescription = new FiltersDescription();
-            Lookup.Result result = Lookup.getDefault().lookup(new Lookup.Template(RefactoringPluginFactory.class));
+            Lookup.Result result = Lookup.getDefault().lookup(new Lookup.Template<>(RefactoringPluginFactory.class));
             for (Iterator it = result.allInstances().iterator(); it.hasNext();) {
                 RefactoringPluginFactory factory = (RefactoringPluginFactory) it.next();
                 RefactoringPlugin plugin = factory.createInstance(this);
@@ -157,7 +157,7 @@ public abstract class AbstractRefactoring {
         if (gbHandlers == null) {
             gbHandlers = new ArrayList();
             // get plugins from the lookup
-            Lookup.Result result = Lookup.getDefault().lookup(new Lookup.Template(GuardedBlockHandlerFactory.class));
+            Lookup.Result result = Lookup.getDefault().lookup(new Lookup.Template<>(GuardedBlockHandlerFactory.class));
             for (Iterator it = result.allInstances().iterator(); it.hasNext();) {
                 GuardedBlockHandler handler = ((GuardedBlockHandlerFactory) it.next()).createInstance(this);
                 if (handler != null) gbHandlers.add(handler);
@@ -459,7 +459,7 @@ public abstract class AbstractRefactoring {
     }
     
     private ReadOnlyFilesHandler getROHandler() {
-        Lookup.Result result = Lookup.getDefault().lookup(new Lookup.Template(ReadOnlyFilesHandler.class));
+        Lookup.Result result = Lookup.getDefault().lookup(new Lookup.Template<>(ReadOnlyFilesHandler.class));
         List handlers = (List) result.allInstances();
         if (handlers.isEmpty ()) {
             return null;

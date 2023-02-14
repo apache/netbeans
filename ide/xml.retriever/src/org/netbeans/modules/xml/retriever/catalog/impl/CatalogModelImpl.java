@@ -860,7 +860,7 @@ public class CatalogModelImpl implements CatalogModel {
             return null;
         
         try {
-            Lookup.Template templ = new Lookup.Template(CatalogModel.class);
+            Lookup.Template templ = new Lookup.Template<>(CatalogModel.class);
             Lookup.Result res = Lookup.getDefault().lookup(templ);
             Collection impls = res.allInstances();
             for(Object obj : impls){

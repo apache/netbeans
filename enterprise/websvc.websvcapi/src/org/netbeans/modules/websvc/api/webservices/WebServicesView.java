@@ -40,7 +40,7 @@ public final class WebServicesView {
     
     private WebServicesViewImpl impl;
     private static final Lookup.Result implementations =
-        Lookup.getDefault().lookup(new Lookup.Template(WebServicesViewProvider.class));
+        Lookup.getDefault().lookup(new Lookup.Template<>(WebServicesViewProvider.class));
     
     static  {
         WebServicesViewAccessor.DEFAULT = new WebServicesViewAccessor() {

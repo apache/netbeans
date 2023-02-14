@@ -1494,7 +1494,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         
         Lookup serial = (Lookup)reserialize(lookup);
         
-        Lookup.Result r2 = serial.lookup(new Lookup.Template(String.class));
+        Lookup.Result r2 = serial.lookup(new Lookup.Template<>(String.class));
         
         assertEquals ("One item", 1, r2.allItems ().size ());
         Object one = r2.allItems().iterator().next ();
@@ -1714,7 +1714,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         
         Provider p = new Provider(lookups);
         
-        Lookup.Result res = p.query.lookup(new Lookup.Template(ActionMap.class));
+        Lookup.Result res = p.query.lookup(new Lookup.Template<>(ActionMap.class));
         LL ll = new LL();
         res.addLookupListener(ll);
 
@@ -1785,7 +1785,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         ic.add(object);
         
         Listener[] listeners = new Listener[4];
-        Lookup.Result result = lookup.lookup(new Lookup.Template(LookupObject.class));
+        Lookup.Result result = lookup.lookup(new Lookup.Template<>(LookupObject.class));
         for(int i = 0; i < listeners.length; ++i) {
             listeners[i] = new Listener();
             result.addLookupListener(listeners[i]);

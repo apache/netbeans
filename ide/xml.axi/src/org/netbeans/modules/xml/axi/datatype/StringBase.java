@@ -131,7 +131,7 @@ public class StringBase extends Datatype {
      */
     public List<String> getEnumerations() {
         if(enumerations == null)
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         
         return enumerations;
     }

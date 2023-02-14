@@ -235,7 +235,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
         if (highlightedSelection == null) {
             if (items.isEmpty()) return;
             highlightedSelection = new ArrayList(items);
-            fireHighlightedItemsChanged(items, items, Collections.EMPTY_LIST);
+            fireHighlightedItemsChanged(items, items, Collections.emptyList());
         } else {
             List<ItemSelection> addedItems = new ArrayList<>();
             List<ItemSelection> removedItems = new ArrayList<>();
@@ -254,7 +254,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
     }
 
     public final List<ItemSelection> getHighlightedItems() {
-        return highlightedSelection == null ? Collections.EMPTY_LIST :
+        return highlightedSelection == null ? Collections.emptyList() :
                                               new ArrayList(highlightedSelection);
     }
 
@@ -265,7 +265,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
         if (selectedSelection == null) {
             if (items.isEmpty()) return;
             selectedSelection = new ArrayList(items);
-            fireSelectedItemsChanged(items, items, Collections.EMPTY_LIST);
+            fireSelectedItemsChanged(items, items, Collections.emptyList());
         } else {
             List<ItemSelection> addedItems = new ArrayList<>();
             List<ItemSelection> removedItems = new ArrayList<>();
@@ -284,7 +284,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
     }
 
     public final List<ItemSelection> getSelectedItems() {
-        return selectedSelection == null ? Collections.EMPTY_LIST :
+        return selectedSelection == null ? Collections.emptyList() :
                                            new ArrayList(selectedSelection);
     }
 
@@ -334,7 +334,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 if (hoverMode == HOVER_NONE || !inChart) {
-                    setHighlightedItems(Collections.EMPTY_LIST);
+                    setHighlightedItems(Collections.emptyList());
                     return;
                 }
 

@@ -172,7 +172,7 @@ public class DomPanel extends JPanel implements ExplorerManager.Provider {
                         Node node = Visualizer.findNode(hover);
                         highlight = Arrays.asList(node);
                     } else {
-                        highlight = Collections.EMPTY_LIST;
+                        highlight = Collections.emptyList();
                     }
                     RP.post(new Runnable() {
                         @Override

@@ -474,8 +474,8 @@ public class StackTraceSnapshotBuilder {
         int oldMax = oldElements.length - 1;
         int globalMax = Math.max(oldMax, newMax);
         
-        List<StackTraceElement> newElementsList = Collections.EMPTY_LIST;
-        List<StackTraceElement> oldElementsList = Collections.EMPTY_LIST;
+        List<StackTraceElement> newElementsList = Collections.emptyList();
+        List<StackTraceElement> oldElementsList = Collections.emptyList();
         
         for (int iteratorIndex = 0; iteratorIndex <= globalMax; iteratorIndex++) {
             StackTraceElement oldElement = oldMax >= iteratorIndex ? oldElements[oldMax - iteratorIndex] : null;

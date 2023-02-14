@@ -37,7 +37,7 @@ public class IssueFinderUtils {
     public static Collection<IssueFinder> getIssueFinders() {
         List<IssueFinder> ret = new LinkedList<IssueFinder>();
         if(RepositoryRegistry.getInstance().isInitializing()) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         Collection<RepositoryImpl> repos = RepositoryRegistry.getInstance().getKnownRepositories(false);
         for (RepositoryImpl r : repos) {

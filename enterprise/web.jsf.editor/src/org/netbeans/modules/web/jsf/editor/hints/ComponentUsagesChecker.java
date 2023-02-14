@@ -125,7 +125,7 @@ public class ComponentUsagesChecker extends HintsProvider {
                         NbBundle.getMessage(HintsProvider.class, "MSG_UNKNOWN_CC_COMPONENT", lib.getDisplayName(), tagName),
                         snapshot.getSource().getFileObject(),
                         JsfUtils.createOffsetRange(snapshot, docText, node.from(), node.to()),
-                        Collections.EMPTY_LIST, DEFAULT_ERROR_HINT_PRIORITY));
+                        Collections.emptyList(), DEFAULT_ERROR_HINT_PRIORITY));
 
                 //put the hint to the close tag as well
                 CloseTag matchingCloseTag = openTag.matchingCloseTag();
@@ -134,7 +134,7 @@ public class ComponentUsagesChecker extends HintsProvider {
                             NbBundle.getMessage(HintsProvider.class, "MSG_UNKNOWN_CC_COMPONENT", lib.getDisplayName(), tagName),
                             snapshot.getSource().getFileObject(),
                             JsfUtils.createOffsetRange(snapshot, docText, matchingCloseTag.from(), matchingCloseTag.to()),
-                            Collections.EMPTY_LIST, DEFAULT_ERROR_HINT_PRIORITY));
+                            Collections.emptyList(), DEFAULT_ERROR_HINT_PRIORITY));
                 }
 
             } else {
@@ -160,7 +160,7 @@ public class ComponentUsagesChecker extends HintsProvider {
                                         NbBundle.getMessage(HintsProvider.class, "MSG_MISSING_REQUIRED_ATTRIBUTE", attr.getName()),
                                         snapshot.getSource().getFileObject(),
                                         JsfUtils.createOffsetRange(snapshot, docText, node.from(), node.to()),
-                                        Collections.EMPTY_LIST, DEFAULT_ERROR_HINT_PRIORITY);
+                                        Collections.emptyList(), DEFAULT_ERROR_HINT_PRIORITY);
                                 hints.add(hint);
                             }
                         }
@@ -176,7 +176,7 @@ public class ComponentUsagesChecker extends HintsProvider {
                                     NbBundle.getMessage(HintsProvider.class, "MSG_UNKNOWN_ATTRIBUTE", nodeAttr.name(), tag.getName()),
                                     snapshot.getSource().getFileObject(),
                                     JsfUtils.createOffsetRange(snapshot, docText, nodeAttr.from(), nodeAttr.to()),
-                                    Collections.EMPTY_LIST, DEFAULT_ERROR_HINT_PRIORITY);
+                                    Collections.emptyList(), DEFAULT_ERROR_HINT_PRIORITY);
                             hints.add(hint);
                         }
                     }

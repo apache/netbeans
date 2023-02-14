@@ -153,7 +153,7 @@ public class ReplaceConstructorWithFactoryPlugin extends JavaRefactoringPlugin {
                         ident = (ExpressionTree) make.ParameterizedType(ident, typeArguments);
                     }
                     
-                    BlockTree body = make.Block(Collections.singletonList(make.Return(make.NewClass(null, Collections.EMPTY_LIST, ident, arguments, null))), false);
+                    BlockTree body = make.Block(Collections.singletonList(make.Return(make.NewClass(null, Collections.emptyList(), ident, arguments, null))), false);
                     
                     MethodTree factory = make.Method(make.Modifiers(factoryMods), refactoring.getFactoryName(), ident, typeParameters, constructor.getParameters(), Collections.<ExpressionTree>emptyList(), body, null);
                     parameter.rewrite(constrPath.getParentPath().getLeaf(), GeneratorUtilities.get(parameter).insertClassMember(parentTree, factory));

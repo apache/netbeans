@@ -182,7 +182,7 @@ public class InnerClasses extends org.netbeans.test.java.XRunner {
                 ClassTree innerClass = make.Class(
                         make.Modifiers(modifiers),
                         "MyInner",
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         extendsTree,
                         implementsList,
                         Collections.EMPTY_LIST);

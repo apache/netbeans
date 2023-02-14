@@ -115,7 +115,7 @@ public class TplCompletionQueryTest extends CslTestBase {
             assertEquals(exp, real);
         } else if (type == Match.CONTAINS) {
             exp.removeAll(real);
-            assertEquals(exp, Collections.EMPTY_LIST);
+            assertEquals(exp, Collections.emptyList());
         } else if (type == Match.EMPTY) {
             assertEquals(0, real.size());
         } else if (type == Match.NOT_EMPTY) {

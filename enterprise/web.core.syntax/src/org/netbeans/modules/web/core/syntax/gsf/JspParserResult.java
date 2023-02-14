@@ -42,7 +42,7 @@ public class JspParserResult extends ParserResult {
 
     @Override
     public List<? extends Error> getDiagnostics() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override

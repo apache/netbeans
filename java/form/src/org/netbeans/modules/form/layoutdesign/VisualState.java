@@ -969,6 +969,6 @@ public class VisualState implements LayoutConstants {
                 list.add(comp);
             }
         }
-        return list != null ? list : Collections.EMPTY_LIST;
+        return list != null ? list : Collections.emptyList();
     }
 }

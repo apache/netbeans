@@ -74,7 +74,7 @@ public class ScriptsHandlerTest {
     @Test
     public void testGetLocalPath() throws Exception {
         System.out.println("getLocalPath");
-        ScriptsHandler instance = new ScriptsHandler(Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, null);
+        ScriptsHandler instance = new ScriptsHandler(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), null);
         assertEquals("", instance.getLocalPath(""));
         assertEquals("/a/b/c", instance.getLocalPath("/a/b/c"));
         

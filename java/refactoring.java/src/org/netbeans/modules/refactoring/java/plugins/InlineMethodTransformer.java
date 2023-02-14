@@ -675,7 +675,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
                 } else {
                     definedIds.add(varName);
                 }
-                newVars.add(make.Variable(make.Modifiers(element.getModifiers()), (uniqueName == null ? varName != null : !uniqueName.equals(varName))? uniqueName : varName, arraytype, make.NewArray(type, Collections.EMPTY_LIST, arguments)));
+                newVars.add(make.Variable(make.Modifiers(element.getModifiers()), (uniqueName == null ? varName != null : !uniqueName.equals(varName))? uniqueName : varName, arraytype, make.NewArray(type, Collections.emptyList(), arguments)));
             } else {
                 ExpressionTree argument = node.getArguments().get(i);
                 if(!translateQueue.isEmpty() && translateQueue.getLast().containsKey(argument)) {

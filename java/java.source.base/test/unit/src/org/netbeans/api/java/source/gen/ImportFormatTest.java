@@ -232,7 +232,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
                 TreeMaker make = workingCopy.getTreeMaker();
                 CompilationUnitTree unit = make.CompilationUnit(
                         cut.getPackageName(),
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         cut.getTypeDecls(),
                         cut.getSourceFile()
                 );

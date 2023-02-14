@@ -576,16 +576,16 @@ public class XMLCompletionQuery {
         
         SyntaxElement parentEl = text.getParentElement();
         if (parentEl == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         Node parent = parentEl.getNode();
         if (parent == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         String name = parent.getNodeName();
         //if ( Util.THIS.isLoggable() ) Util.THIS.debug("    name=" + name);
         if ( name == null ) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         
         XMLResultItem res = new ElementResultItem(0, prefix + name);

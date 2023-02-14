@@ -821,7 +821,7 @@ public class J2EEUtils {
                                 fireArgs.add(make.Literal(propName));
                                 fireArgs.add(make.Identifier(oldParameterName));
                                 fireArgs.add(make.Identifier(parameterName));
-                                MethodInvocationTree notification = make.MethodInvocation(Collections.EMPTY_LIST, fireMethod, fireArgs);
+                                MethodInvocationTree notification = make.MethodInvocation(Collections.emptyList(), fireMethod, fireArgs);
                                 newBlock = make.addBlockStatement(newBlock, make.ExpressionStatement(notification));
                                 wc.rewrite(block, newBlock);
                             }
@@ -855,20 +855,20 @@ public class J2EEUtils {
                     TreeMaker make = wc.getTreeMaker();
 
                     // addPropertyChange method
-                    ModifiersTree parMods = make.Modifiers(Collections.EMPTY_SET, Collections.EMPTY_LIST);
+                    ModifiersTree parMods = make.Modifiers(Collections.EMPTY_SET, Collections.emptyList());
                     TypeElement changeListenerElement = wc.getElements().getTypeElement("java.beans.PropertyChangeListener"); // NOI18N
                     VariableTree par = make.Variable(parMods, "listener", make.QualIdent(changeListenerElement), null); // NOI18N
                     TypeElement changeSupportElement = wc.getElements().getTypeElement("java.beans.PropertyChangeSupport"); // NOI18N
                     VariableTree changeSupport = make.Variable(parMods, "changeSupport", make.QualIdent(changeSupportElement), null); // NOI18N
                     MemberSelectTree addCall = make.MemberSelect(make.Identifier(changeSupport.getName()), "addPropertyChangeListener"); // NOI18N
-                    MethodInvocationTree addInvocation = make.MethodInvocation(Collections.EMPTY_LIST, addCall, Collections.singletonList(make.Identifier(par.getName())));
+                    MethodInvocationTree addInvocation = make.MethodInvocation(Collections.emptyList(), addCall, Collections.singletonList(make.Identifier(par.getName())));
                     MethodTree addMethod = make.Method(
-                        make.Modifiers(Modifier.PUBLIC, Collections.EMPTY_LIST),
+                        make.Modifiers(Modifier.PUBLIC, Collections.emptyList()),
                         "addPropertyChangeListener", // NOI18N
                         make.PrimitiveType(TypeKind.VOID),
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         Collections.singletonList(par),
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         make.Block(Collections.singletonList(make.ExpressionStatement(addInvocation)), false),
                         null
                     );
@@ -900,20 +900,20 @@ public class J2EEUtils {
                     TreeMaker make = wc.getTreeMaker();
 
                     // removePropertyChange method
-                    ModifiersTree parMods = make.Modifiers(Collections.EMPTY_SET, Collections.EMPTY_LIST);
+                    ModifiersTree parMods = make.Modifiers(Collections.EMPTY_SET, Collections.emptyList());
                     TypeElement changeListenerElement = wc.getElements().getTypeElement("java.beans.PropertyChangeListener"); // NOI18N
                     VariableTree par = make.Variable(parMods, "listener", make.QualIdent(changeListenerElement), null); // NOI18N
                     TypeElement changeSupportElement = wc.getElements().getTypeElement("java.beans.PropertyChangeSupport"); // NOI18N
                     VariableTree changeSupport = make.Variable(parMods, "changeSupport", make.QualIdent(changeSupportElement), null); // NOI18N
                     MemberSelectTree removeCall = make.MemberSelect(make.Identifier(changeSupport.getName()), "removePropertyChangeListener"); // NOI18N
-                    MethodInvocationTree removeInvocation = make.MethodInvocation(Collections.EMPTY_LIST, removeCall, Collections.singletonList(make.Identifier(par.getName())));
+                    MethodInvocationTree removeInvocation = make.MethodInvocation(Collections.emptyList(), removeCall, Collections.singletonList(make.Identifier(par.getName())));
                     MethodTree removeMethod = make.Method(
-                        make.Modifiers(Modifier.PUBLIC, Collections.EMPTY_LIST),
+                        make.Modifiers(Modifier.PUBLIC, Collections.emptyList()),
                         "removePropertyChangeListener", // NOI18N
                         make.PrimitiveType(TypeKind.VOID),
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         Collections.singletonList(par),
-                        Collections.EMPTY_LIST,
+                        Collections.emptyList(),
                         make.Block(Collections.singletonList(make.ExpressionStatement(removeInvocation)), false),
                         null
                     );

@@ -135,7 +135,7 @@ public final class RepositoryManager {
     
     private Collection<Repository> toRepositories(Collection<RepositoryImpl> impls) {
         if(impls == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         Collection<Repository> ret = new ArrayList<Repository>(impls.size());
         for (RepositoryImpl repoImpl : impls) {

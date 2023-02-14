@@ -335,6 +335,6 @@ public final class ExternalPackages {
             return pkgis;
         }
         
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

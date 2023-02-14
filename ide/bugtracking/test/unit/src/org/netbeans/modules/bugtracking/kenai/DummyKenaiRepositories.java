@@ -33,7 +33,7 @@ public class DummyKenaiRepositories extends TeamRepositories {
 
     @Override
     public Collection<RepositoryImpl> getRepositories(boolean includeIDEProjects, boolean onlyDashboardOpenProjects) {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
 }

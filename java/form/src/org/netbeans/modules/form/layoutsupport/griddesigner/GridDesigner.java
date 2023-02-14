@@ -282,7 +282,7 @@ public class GridDesigner extends JPanel {
     }
 
     public void cleanup() {
-        setSelectedNodes(Collections.EMPTY_LIST);
+        setSelectedNodes(Collections.emptyList());
         removeFormModelListener();
     }
 

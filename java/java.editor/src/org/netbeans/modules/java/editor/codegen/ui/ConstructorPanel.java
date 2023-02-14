@@ -94,7 +94,7 @@ public class ConstructorPanel extends JPanel {
 
     public List<ElementHandle<? extends Element>> getInheritedConstructors() {
         if (constructorSelector == null)
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         return constructorSelector.getSelectedElements();
     }
     

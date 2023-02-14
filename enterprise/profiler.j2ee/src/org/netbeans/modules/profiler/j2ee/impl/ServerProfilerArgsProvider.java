@@ -49,7 +49,7 @@ public class ServerProfilerArgsProvider implements StartupExtenderImplementation
                 }
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
 }

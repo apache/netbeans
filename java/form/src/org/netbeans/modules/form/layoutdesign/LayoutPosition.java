@@ -819,7 +819,7 @@ public class LayoutPosition implements LayoutConstants {
         if (s != null && s.componentNeighbors != null) {
             return s.componentNeighbors;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     private static int getBaseAlignment(OriginalPosition orig) {

@@ -207,7 +207,7 @@ public class JavaWsdlMapper {
     @SuppressWarnings("unchecked")
     public static List<String> getOperationFaults(FileObject implClass, final String operationName) {
         if ((implClass == null) || (operationName == null)) {
-             return Collections.EMPTY_LIST;
+             return Collections.emptyList();
         }
                 
         final List<String> faults = new ArrayList<String>();

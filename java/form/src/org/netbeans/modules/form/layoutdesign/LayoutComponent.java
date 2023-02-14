@@ -217,7 +217,7 @@ public final class LayoutComponent implements LayoutConstants {
 
     public List<LayoutComponent> getSubcomponents() {
         return subComponents != null && subComponents.size() > 0 ?
-               Collections.unmodifiableList(subComponents) : Collections.EMPTY_LIST;
+               Collections.unmodifiableList(subComponents) : Collections.emptyList();
     }
 
     int getSubComponentCount() {

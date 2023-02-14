@@ -288,7 +288,7 @@ public class ReplaceConstructorWithBuilderPlugin extends JavaRefactoringPlugin {
                         ident = (ExpressionTree) make.ParameterizedType(ident, typeArguments);
                     }
                     
-                    BlockTree body = make.Block(Collections.singletonList(make.Return(make.NewClass(null, Collections.EMPTY_LIST, ident, arguments, null))), false);
+                    BlockTree body = make.Block(Collections.singletonList(make.Return(make.NewClass(null, Collections.emptyList(), ident, arguments, null))), false);
 
                     members.add(make.Method(
                             make.Modifiers(EnumSet.of(Modifier.PUBLIC)),
@@ -305,7 +305,7 @@ public class ReplaceConstructorWithBuilderPlugin extends JavaRefactoringPlugin {
                     ClassTree builder = make.Class(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName,
                             typeParameters,
                             null,
-                            Collections.EMPTY_LIST,
+                            Collections.emptyList(),
                             members);
                     FileObject root = ClassPath.getClassPath(constr.getFileObject(), ClassPath.SOURCE).findOwnerRoot(constr.getFileObject());
                     CompilationUnitTree builderUnit = make.CompilationUnit(root, refactoring.getBuilderName().replace('.', '/') + ".java", Collections.EMPTY_LIST, Collections.singletonList(builder));
@@ -346,7 +346,7 @@ public class ReplaceConstructorWithBuilderPlugin extends JavaRefactoringPlugin {
                         }
                         ident = (ExpressionTree) make.ParameterizedType(ident, arguments);
                     }
-                    ExpressionTree expression = make.NewClass(null, Collections.EMPTY_LIST, ident, Collections.EMPTY_LIST, null);
+                    ExpressionTree expression = make.NewClass(null, Collections.emptyList(), ident, Collections.emptyList(), null);
                     
                     Map<String, TreePath> variables = occurrence.getVariables();
                     Map<String, Collection<? extends TreePath>> multiVariables = occurrence.getMultiVariables();

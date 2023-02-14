@@ -829,7 +829,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
                     }
                     ModifiersTree modifiers = methodTree.getModifiers();
                     if(deprecate) {
-                        AnnotationTree annotation = make.Annotation(make.Identifier("Deprecated"), Collections.EMPTY_LIST); //NOI18N
+                        AnnotationTree annotation = make.Annotation(make.Identifier("Deprecated"), Collections.emptyList()); //NOI18N
                         modifiers = make.addModifiersAnnotation(modifiers, annotation);
                     }
                     MethodTree method = make.Method(modifiers, methodTree.getName(), methodTree.getReturnType(), methodTree.getTypeParameters(), methodTree.getParameters(), methodTree.getThrows(), make.Block(Collections.singletonList(statement), false), (ExpressionTree) methodTree.getDefaultValue());

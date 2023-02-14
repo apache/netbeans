@@ -65,7 +65,7 @@ public final class Connector {
          * @param port The port number
          */
         public Properties(@NullAllowed String hostName, int port) {
-            this(hostName, port, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_SET);
+            this(hostName, port, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         }
         
         /**

@@ -64,7 +64,7 @@ public class TestJavaPlatformProviderImpl implements JavaPlatformProvider {
     }
 
     private static final class DefaultPlatform extends JavaPlatform {
-        private static ClassPath EMPTY = ClassPathSupport.createClassPath(Collections.EMPTY_LIST);
+        private static ClassPath EMPTY = ClassPathSupport.createClassPath(Collections.emptyList());
 
         public String getDisplayName() {
             return "default";

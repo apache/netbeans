@@ -277,7 +277,7 @@ public class IconEditor extends PropertyEditorSupport
                     .findAllResources(currentPackage);
             }
         } else {
-            folders = Collections.EMPTY_LIST;
+            folders = Collections.emptyList();
         }
         return folders;
     }

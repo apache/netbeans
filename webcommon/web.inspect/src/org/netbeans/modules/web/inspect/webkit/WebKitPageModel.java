@@ -72,11 +72,11 @@ public class WebKitPageModel extends PageModel {
     /** Nodes of the document (maps ID of the node to the node itself).*/
     private final Map<Integer,DOMNode> nodes = Collections.synchronizedMap(new HashMap<Integer,DOMNode>());
     /** Selected nodes. */
-    private List<? extends org.openide.nodes.Node> selectedNodes = Collections.EMPTY_LIST;
+    private List<? extends org.openide.nodes.Node> selectedNodes = Collections.emptyList();
     /** Highlighted nodes. */
-    private List<? extends org.openide.nodes.Node> highlightedNodes = Collections.EMPTY_LIST;
+    private List<? extends org.openide.nodes.Node> highlightedNodes = Collections.emptyList();
     /** Nodes matching the selected rule. */
-    private List<? extends org.openide.nodes.Node> nodesMatchingSelectedRule = Collections.EMPTY_LIST;
+    private List<? extends org.openide.nodes.Node> nodesMatchingSelectedRule = Collections.emptyList();
     /** Selector of the selected rule. */
     private String selectedSelector;
     /** Selector of the highlighted rule. */
@@ -373,8 +373,8 @@ public class WebKitPageModel extends PageModel {
                     contentDocumentMap.clear();
                     remoteObjectMap.clear();
                     pseudoClassMap.clear();
-                    selectedNodes = Collections.EMPTY_LIST;
-                    highlightedNodes = Collections.EMPTY_LIST;
+                    selectedNodes = Collections.emptyList();
+                    highlightedNodes = Collections.emptyList();
                     RP.post(new Runnable() {
                         @Override
                         public void run() {
@@ -402,12 +402,12 @@ public class WebKitPageModel extends PageModel {
                     DOMNode n = getNode(node.getNodeId());
                     final List<? extends org.openide.nodes.Node> selection;
                     if (n == null) {
-                        selection = Collections.EMPTY_LIST;
+                        selection = Collections.emptyList();
                     } else {
                         if ("set".equals(attrValue)) { // NOI18N
                             selection = Collections.singletonList(n);
                         } else if ("clear".equals(attrValue)) { // NOI18N
-                            selection = Collections.EMPTY_LIST;
+                            selection = Collections.emptyList();
                         } else {
                             List<org.openide.nodes.Node> newSelection = new ArrayList<org.openide.nodes.Node>();
                             newSelection.addAll(selectedNodes);
@@ -771,7 +771,7 @@ public class WebKitPageModel extends PageModel {
      * @return nodes matching the specified selector.
      */
     List<DOMNode> matchingNodes(String selector) {
-        List<DOMNode> domNodes = Collections.EMPTY_LIST;
+        List<DOMNode> domNodes = Collections.emptyList();
         if (selector != null) {
             selector = selector.replace(":hover", "." + CSSUtils.HOVER_CLASS); // NOI18N
             DOM dom = webKit.getDOM();
@@ -803,7 +803,7 @@ public class WebKitPageModel extends PageModel {
         firePropertyChange(PROP_SELECTION_MODE, !selectionMode, selectionMode);
         // Reset highlighted nodes
         if (!selectionMode) {
-            setHighlightedNodesImpl(Collections.EMPTY_LIST);
+            setHighlightedNodesImpl(Collections.emptyList());
         }
     }
 
@@ -1046,13 +1046,13 @@ public class WebKitPageModel extends PageModel {
                 updateSelection();
                 updateSelectedRule(getNodesMatchingSelectedRule());
             } else {
-                updateSelection(Collections.EMPTY_LIST);
-                updateSelectedRule(Collections.EMPTY_LIST);
+                updateSelection(Collections.emptyList());
+                updateSelectedRule(Collections.emptyList());
             }
             if (shouldSynchronizeHighlight()) {
                 updateHighlight();
             } else {
-                updateHighlight(Collections.EMPTY_LIST);
+                updateHighlight(Collections.emptyList());
             }
         }
 

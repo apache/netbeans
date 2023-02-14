@@ -524,7 +524,7 @@ public class ClassesListController extends AbstractController {
             HashSet subclasses = new HashSet();
 
             SourceClassInfo sci = ProfilerTypeUtils.resolveClass(className, project);
-            Collection<SourceClassInfo> impls = sci != null ? sci.getSubclasses() : Collections.EMPTY_LIST;
+            Collection<SourceClassInfo> impls = sci != null ? sci.getSubclasses() : Collections.emptyList();
 
             for (SourceClassInfo ci : impls) {
                 JavaClass jClass = heap.getJavaClassByName(ci.getQualifiedName());

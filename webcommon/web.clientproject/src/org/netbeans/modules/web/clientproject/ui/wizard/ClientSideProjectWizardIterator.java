@@ -207,7 +207,7 @@ public final class ClientSideProjectWizardIterator implements WizardDescriptor.P
         if (withExtenders) {
             extenders = Lookup.getDefault().lookupAll(ClientProjectExtender.class);
         } else {
-            extenders = Collections.EMPTY_LIST;
+            extenders = Collections.emptyList();
         }
         panels = wizard.createPanels();
 

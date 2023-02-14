@@ -192,7 +192,7 @@ public final class JDBCStubUtil {
     }
     
     public static ResultSet emptyResultSet() {
-        return createResultSet(Collections.EMPTY_LIST);
+        return createResultSet(Collections.emptyList());
     }
     
     private static List writeableSingletonList(Object value) {

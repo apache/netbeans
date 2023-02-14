@@ -125,7 +125,7 @@ public class DoctreeTest extends GeneratorTestBase {
                         ParamTree param = make.Param(false, make.DocIdentifier("test"), new LinkedList<DocTree>());
                         DocCommentTree newDoc = make.DocComment(
                                 Collections.singletonList(make.Text("Test method")),
-                                Collections.EMPTY_LIST,
+                                Collections.emptyList(),
                                 Collections.singletonList(param));
                         wc.rewrite(mt, null, newDoc);
                         return super.visitMethod(mt, p);
@@ -190,14 +190,14 @@ public class DoctreeTest extends GeneratorTestBase {
                             ParamTree param = make.Param(false, make.DocIdentifier("test"), new LinkedList<DocTree>());
                             DocCommentTree newDoc = make.DocComment(
                                     Collections.singletonList(make.Text("Test method")),
-                                    Collections.EMPTY_LIST,
+                                    Collections.emptyList(),
                                     Collections.singletonList(param));
                             wc.rewrite(mt, null, newDoc);
                         } else {
                             ParamTree param = make.Param(false, make.DocIdentifier("message"), new LinkedList<DocTree>());
                             DocCommentTree newDoc = make.DocComment(
                                     Collections.singletonList(make.Text("")),
-                                    Collections.EMPTY_LIST,
+                                    Collections.emptyList(),
                                     Collections.singletonList(param));
                             wc.rewrite(mt, null, newDoc);
                         }
@@ -787,7 +787,7 @@ public class DoctreeTest extends GeneratorTestBase {
                         tags.add(make.UnknownBlockTag("H", text));
                         tags.add(make.Version(text));
                         
-                        DocCommentTree newDoc = make.DocComment(firstSentence, Collections.EMPTY_LIST, tags);
+                        DocCommentTree newDoc = make.DocComment(firstSentence, Collections.emptyList(), tags);
                         wc.rewrite(mt, docTree, newDoc);
                         return super.visitMethod(mt, p);
                     }

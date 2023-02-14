@@ -353,7 +353,7 @@ class LayoutOperations implements LayoutConstants {
         if (group.getParent() != null && !LayoutInterval.canResize(group)) {
             int groupSize = group.getCurrentSpace().size(dimension);
             if (groupSize <= 0) {
-                return Collections.EMPTY_LIST; // unknown current size
+                return Collections.emptyList(); // unknown current size
             }
             LayoutInterval oneResizing = null;
             boolean span = false;
@@ -363,7 +363,7 @@ class LayoutOperations implements LayoutConstants {
                     if (oneResizing == null) {
                         oneResizing = li;
                     } else {
-                        return Collections.EMPTY_LIST; // more than one is not redundant
+                        return Collections.emptyList(); // more than one is not redundant
                     }
                 } else if (!span && !li.isEmptySpace()
                            && li.getCurrentSpace().size(dimension) == groupSize) {
@@ -379,7 +379,7 @@ class LayoutOperations implements LayoutConstants {
                 return l;
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     /**

@@ -725,7 +725,7 @@ public class MethodTypeParametersTest extends GeneratorTestMDRCompat {
                 BlockTree init = (BlockTree) clazz.getMembers().get(2);
                 ExpressionStatementTree est = (ExpressionStatementTree) init.getStatements().get(0);
                 MethodInvocationTree mit = (MethodInvocationTree) est.getExpression();
-                MethodInvocationTree methodInvocation = make.MethodInvocation(Collections.EMPTY_LIST, mit.getMethodSelect(), mit.getArguments());
+                MethodInvocationTree methodInvocation = make.MethodInvocation(Collections.emptyList(), mit.getMethodSelect(), mit.getArguments());
 
                 workingCopy.rewrite(mit, methodInvocation);
             }
@@ -805,7 +805,7 @@ public class MethodTypeParametersTest extends GeneratorTestMDRCompat {
                 MethodTree init = (MethodTree) clazz.getMembers().get(2);
                 ExpressionStatementTree est = (ExpressionStatementTree) init.getBody().getStatements().get(0);
                 MethodInvocationTree mit = (MethodInvocationTree) est.getExpression();
-                MethodInvocationTree methodInvocation = make.MethodInvocation(Collections.EMPTY_LIST, mit.getMethodSelect(), mit.getArguments());
+                MethodInvocationTree methodInvocation = make.MethodInvocation(Collections.emptyList(), mit.getMethodSelect(), mit.getArguments());
 
                 workingCopy.rewrite(mit, methodInvocation);
             }

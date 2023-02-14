@@ -710,7 +710,7 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
                 List<DocTree> tags = new LinkedList<DocTree>();
                 // @TypeParam
                 for (TypeParameterTree typeParameterTree : current.getTypeParameters()) {
-                    tags.add(make.Param(true, make.DocIdentifier(typeParameterTree.getName()), Collections.EMPTY_LIST));
+                    tags.add(make.Param(true, make.DocIdentifier(typeParameterTree.getName()), Collections.emptyList()));
                 }
                 // @Param
                 for (VariableTree variableTree : newParameters) {
@@ -743,9 +743,9 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
                 }
                 // @Throw
                 for (ExpressionTree expressionTree : current.getThrows()) {
-                    tags.add(make.Throws(make.Reference(expressionTree, null, null), Collections.EMPTY_LIST));
+                    tags.add(make.Throws(make.Reference(expressionTree, null, null), Collections.emptyList()));
                 }
-                DocCommentTree newDoc = make.DocComment(Collections.EMPTY_LIST, Collections.EMPTY_LIST, tags);
+                DocCommentTree newDoc = make.DocComment(Collections.emptyList(), Collections.emptyList(), tags);
                 rewrite(synthConstructor? nju : tree, null, newDoc);
             }
             rewrite(tree, make.asReplacementOf(nju, tree));

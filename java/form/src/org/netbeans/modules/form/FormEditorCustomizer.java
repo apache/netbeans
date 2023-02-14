@@ -279,7 +279,7 @@ public final class FormEditorCustomizer extends JPanel implements  ActionListene
         if (FormUtils.getPresetValue("OPTIONS_"+key+"_HIDDEN", false)) { // NOI18N
             for (Component comp : components) {
                 if (brandedInvisibleComponents == null) {
-                    brandedInvisibleComponents = new HashSet();
+                    brandedInvisibleComponents = new HashSet<>();
                 }
                 brandedInvisibleComponents.add(comp);
             }

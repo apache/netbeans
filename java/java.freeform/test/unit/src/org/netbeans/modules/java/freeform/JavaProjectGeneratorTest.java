@@ -694,7 +694,7 @@ public class JavaProjectGeneratorTest extends NbTestCase {
         
         // check that all data are correctly persisted
         
-        List<JavaCompilationUnit> units = new ArrayList();
+        List<JavaCompilationUnit> units = new ArrayList<>();
         JavaProjectGenerator.JavaCompilationUnit cu = new JavaProjectGenerator.JavaCompilationUnit();
         cu.packageRoots = new ArrayList();
         cu.packageRoots.add("pkgroot1");
@@ -769,7 +769,7 @@ public class JavaProjectGeneratorTest extends NbTestCase {
             
         // test updating
             
-        units = new ArrayList();
+        units = new ArrayList<>();
         cu = new JavaProjectGenerator.JavaCompilationUnit();
         cu.packageRoots = new ArrayList();
         cu.packageRoots.add("foo-package-root");
@@ -805,7 +805,7 @@ public class JavaProjectGeneratorTest extends NbTestCase {
         assertNotNull("Project was not created", p);
         assertEquals("Project folder is incorrect", base, p.getProjectDirectory());
         // Start with a /1-friendly data set.
-        List<JavaProjectGenerator.JavaCompilationUnit> units = new ArrayList();
+        List<JavaProjectGenerator.JavaCompilationUnit> units = new ArrayList<>();
         JavaProjectGenerator.JavaCompilationUnit cu = new JavaProjectGenerator.JavaCompilationUnit();
         cu.packageRoots = new ArrayList();
         cu.packageRoots.add("pkgroot1");
@@ -825,7 +825,7 @@ public class JavaProjectGeneratorTest extends NbTestCase {
             new String[] {"pkgroot1"});
         ProjectManager.getDefault().saveAllProjects();
         // Now check that setting isTests = true on that element forces a /2 save.
-        units = new ArrayList();
+        units = new ArrayList<>();
         cu = new JavaProjectGenerator.JavaCompilationUnit();
         cu.packageRoots = new ArrayList();
         cu.packageRoots.add("pkgroot1");
@@ -848,7 +848,7 @@ public class JavaProjectGeneratorTest extends NbTestCase {
         ProjectManager.getDefault().saveAllProjects();
         // Now try fresh save of /2-requiring data (using javadoc).
         assertTrue("removed /2 data", aux.removeConfigurationFragment(JavaProjectNature.EL_JAVA, JavaProjectNature.NS_JAVA_2, true));
-        units = new ArrayList();
+        units = new ArrayList<>();
         cu = new JavaProjectGenerator.JavaCompilationUnit();
         cu.packageRoots = new ArrayList();
         cu.packageRoots.add("pkgroot1");

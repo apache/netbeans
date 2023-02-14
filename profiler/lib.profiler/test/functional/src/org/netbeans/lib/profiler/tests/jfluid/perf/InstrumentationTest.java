@@ -53,7 +53,7 @@ import java.util.jar.JarFile;
 public class InstrumentationTest extends CommonProfilerTestCase implements NbPerformanceTest {
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    ArrayList<NbPerformanceTest.PerformanceData> data = new ArrayList();
+    ArrayList<NbPerformanceTest.PerformanceData> data = new ArrayList<>();
     ProfilerEngineSettings settings;
     String[] classNames;
     byte[][] classesBytes;
@@ -168,8 +168,8 @@ public class InstrumentationTest extends CommonProfilerTestCase implements NbPer
     }
 
     protected void setClasses(String jarPath) throws Exception {
-        ArrayList<String> names = new ArrayList(16);
-        ArrayList<byte[]> bytes = new ArrayList(16);
+        ArrayList<String> names = new ArrayList<>(16);
+        ArrayList<byte[]> bytes = new ArrayList<>(16);
         JarFile file = new JarFile(jarPath);
         Enumeration<JarEntry> entries = file.entries();
         ByteArrayOutputStream bos = new ByteArrayOutputStream(1024);
@@ -202,7 +202,7 @@ public class InstrumentationTest extends CommonProfilerTestCase implements NbPer
 
     protected void setRootMethods(String jarFile) throws Exception {
         JarFile file = new JarFile(jarFile);
-        HashSet<String> list = new HashSet(8);
+        HashSet<String> list = new HashSet<>(8);
 
         for (Enumeration<JarEntry> entries = file.entries(); entries.hasMoreElements();) {
             JarEntry entry = entries.nextElement();

@@ -44,7 +44,7 @@ public class TableSourceTest extends NbTestCase {
 
         assertSame(source, TableSource.get(project));
 
-        Reference<Project> projectRef = new WeakReference(project);
+        Reference<Project> projectRef = new WeakReference<>(project);
         project = null;
         assertGC("Should be possible to GC project", projectRef);
     }

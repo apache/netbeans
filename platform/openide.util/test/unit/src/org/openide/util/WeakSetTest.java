@@ -273,7 +273,7 @@ public class WeakSetTest extends NbTestCase {
         set.remove(arr[0]);
         assertFalse(second.equals(set));
         String s = "GCing " + arr[0];
-        Reference<Object> r = new WeakReference(arr[0]);
+        Reference<Object> r = new WeakReference<>(arr[0]);
         arr[0] = null;
         NbTestCase.assertGC(s, r);
         assertEquals(second, set);

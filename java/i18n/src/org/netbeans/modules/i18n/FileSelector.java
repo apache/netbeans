@@ -131,7 +131,7 @@ public class FileSelector extends JPanel implements PropertyChangeListener, Expl
         }
         String packageName = cp.getResourceName(fo.getParent());
         Node root = manager.getRootContext();
-        List<String> path = new ArrayList();
+        List<String> path = new ArrayList<>();
         for (FileObject fo2 : cp.getRoots()) {
             if (FileUtil.isParentOf(fo2, fo)) {
                 path.add(fo2.getName());

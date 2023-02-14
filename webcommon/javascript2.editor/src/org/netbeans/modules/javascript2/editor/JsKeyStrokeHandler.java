@@ -81,7 +81,7 @@ class JsKeyStrokeHandler implements KeystrokeHandler {
 
     @Override
     public List<OffsetRange> findLogicalRanges(final ParserResult info, final int caretOffset) {
-        final Set<OffsetRange> ranges = new LinkedHashSet();
+        final Set<OffsetRange> ranges = new LinkedHashSet<>();
         if (info instanceof JsParserResult) {
             final JsParserResult jsParserResult = (JsParserResult) info;
             FunctionNode root = jsParserResult.getRoot();
@@ -233,7 +233,7 @@ class JsKeyStrokeHandler implements KeystrokeHandler {
             }
         }
 
-        final ArrayList<OffsetRange> retval = new ArrayList(ranges);
+        final ArrayList<OffsetRange> retval = new ArrayList<>(ranges);
         Collections.reverse(retval);
         return retval;
     }

@@ -53,7 +53,7 @@ import org.openide.util.Exceptions;
       * @return collection of FileObjects
       */
      @NonNull Collection<? extends FileObject> getModifiedFiles() {
-         ArrayList<FileObject> result = new ArrayList();
+         ArrayList<FileObject> result = new ArrayList<>();
          for (ModificationResult modification:results) {
              result.addAll(modification.getModifiedFileObjects());
          }

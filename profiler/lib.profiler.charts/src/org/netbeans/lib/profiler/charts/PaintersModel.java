@@ -76,7 +76,7 @@ public interface PaintersModel {
 
 
         public Default() {
-            painters = new HashMap();
+            painters = new HashMap<>();
         }
 
         public Default(ChartItem[] items, ItemPainter[] painters) {

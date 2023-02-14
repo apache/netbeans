@@ -158,7 +158,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                     List<GenerationOptions> methodOptions = 
                         getAbstractFacadeMethodOptions(entityNames, 
                                 genericsTypeName, "entity"); //NOI18N
-                    List<Tree> members = new ArrayList();
+                    List<Tree> members = new ArrayList<>();
                     String entityClassVar = "entityClass";                                              //NOI18N
                     Tree classObjectTree = genUtils.createType("java.lang.Class<" + 
                             genericsTypeName + ">", classElement);     //NOI18N

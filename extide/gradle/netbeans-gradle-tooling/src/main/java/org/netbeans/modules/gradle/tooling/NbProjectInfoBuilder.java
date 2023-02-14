@@ -1298,10 +1298,10 @@ class NbProjectInfoBuilder {
     }
     
     private void detectDependencies(NbProjectInfoModel model) {
-        Set<ComponentIdentifier> ids = new HashSet();
-        Map<String, File> projects = new HashMap();
-        Map<String, String> unresolvedProblems = new HashMap();
-        Map<String, Set<File>> resolvedJvmArtifacts = new HashMap();
+        Set<ComponentIdentifier> ids = new HashSet<>();
+        Map<String, File> projects = new HashMap<>();
+        Map<String, String> unresolvedProblems = new HashMap<>();
+        Map<String, Set<File>> resolvedJvmArtifacts = new HashMap<>();
         Set<Configuration> visibleConfigurations = configurationsToSave();
         Map<String, String> projectIds = new HashMap<>();
 

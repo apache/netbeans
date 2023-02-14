@@ -321,7 +321,7 @@ public final class FileUtils {
     
     public static Set<File> getRecursiveFileSet(
             final File file) throws IOException {
-        Set<File> fileSet = new HashSet();
+        Set<File> fileSet = new HashSet<>();
 
         if (file != null && exists(file)) {
             computeRecursiveFileSet(file,fileSet);

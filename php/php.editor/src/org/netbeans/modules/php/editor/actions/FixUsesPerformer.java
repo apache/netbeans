@@ -511,8 +511,8 @@ public class FixUsesPerformer {
     //~ inner classes
     private static class CheckVisitor extends DefaultVisitor {
 
-        private List<DeclareStatement> declareStatements = new ArrayList();
-        private List<NamespaceDeclaration> globalNamespaceDeclarations = new ArrayList();
+        private List<DeclareStatement> declareStatements = new ArrayList<>();
+        private List<NamespaceDeclaration> globalNamespaceDeclarations = new ArrayList<>();
 
         public List<DeclareStatement> getDeclareStatements() {
             return Collections.unmodifiableList(declareStatements);

@@ -285,7 +285,7 @@ public final class J2eePlatform implements Lookup.Provider {
     }
     
     private List<File> getClasspath(LibraryImplementation[] libraries) {
-        List<File> classpath = new ArrayList();
+        List<File> classpath = new ArrayList<>();
         for (int i = 0; i < libraries.length; i++) {
             List classpathList = libraries[i].getContent(J2eeLibraryTypeProvider.VOLUME_TYPE_CLASSPATH);
             for (Iterator iter = classpathList.iterator(); iter.hasNext();) {

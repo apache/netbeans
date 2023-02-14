@@ -264,8 +264,8 @@ public class MemberAdditionTest extends NbTestCase {
                 Set<Modifier> mods = EnumSet.of(Modifier.PUBLIC);
                 
                 //create body:
-                List<StatementTree> statements = new ArrayList();
-                List<VariableTree> arguments = new ArrayList();
+                List<StatementTree> statements = new ArrayList<>();
+                List<VariableTree> arguments = new ArrayList<>();
                 
                 for (VariableElement ve : fields) {
                     AssignmentTree a = make.Assignment(make.MemberSelect(make.Identifier("this"), ve.getSimpleName()), make.Identifier(ve.getSimpleName()));

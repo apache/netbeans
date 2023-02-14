@@ -104,7 +104,7 @@ public final class SnapshotResultsWindow extends ProfilerTopComponent {
         void registerSnapshotResultsWindow(SnapshotResultsWindow w) {
             assert SwingUtilities.isEventDispatchThread();
             if (registeredWindows == null) {
-                registeredWindows = new ArrayList();
+                registeredWindows = new ArrayList<>();
             }
             registeredWindows.add(w);
         }

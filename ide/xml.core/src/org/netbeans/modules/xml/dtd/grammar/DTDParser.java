@@ -132,10 +132,10 @@ public class DTDParser {
             models = new HashMap();
             notations = new TreeSet<>();
             entities  = new TreeSet<>();
-            anys = new HashSet();
+            anys = new HashSet<>();
             enums = new HashMap();
             attrDefaults = new HashMap();
-            emptyElements = new HashSet();
+            emptyElements = new HashSet<>();
             dtd = new DTDGrammar(elements, models, attrs, attrDefaults, enums, entities, notations, emptyElements);
         }
         
@@ -243,7 +243,7 @@ public class DTDParser {
     private class EntityResolverWrapper implements EntityResolver {
         
         private EntityResolver resolver;
-        private ArrayList<String> resolvedSystemIds = new ArrayList(3);
+        private ArrayList<String> resolvedSystemIds = new ArrayList<>(3);
         
         public EntityResolverWrapper(EntityResolver resolver) {
             this.resolver = resolver;

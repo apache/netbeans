@@ -133,7 +133,7 @@ public class KeywordMatchGenerator {
 
     /** Parse the keywords from a string */
     private void parseKeywords(String s) {
-        ArrayList keyList = new ArrayList();
+        ArrayList<String> keyList = new ArrayList<>();
         StringTokenizer strTok = new StringTokenizer(s);
 
         try {

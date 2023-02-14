@@ -383,7 +383,7 @@ public class UseSuperTypeRefactoringPlugin extends JavaRefactoringPlugin {
             TypeMirror supTypeErasure = types.erasure(superTypeElement.asType());
             DeclaredType varType = (DeclaredType) varElement.asType();
             TypeMirror theType = null;
-            List<TypeMirror> supertypes = new LinkedList(types.directSupertypes(varType));
+            List<TypeMirror> supertypes = new LinkedList<>(types.directSupertypes(varType));
             while(!supertypes.isEmpty()) {
                 TypeMirror supertype = supertypes.remove(0);
                 if(types.isSameType(types.erasure(supertype), supTypeErasure)) {

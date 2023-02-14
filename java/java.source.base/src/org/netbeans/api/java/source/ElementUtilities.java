@@ -313,8 +313,8 @@ public final class ElementUtilities {
         Elements elements = JavacElements.instance(ctx);
         Types types = JavacTypes.instance(ctx);
         TypeElement cls;
-        Deque<Scope>  outerScopes = new ArrayDeque();
-        Deque<Map>  visibleEls = new ArrayDeque();
+        Deque<Scope>  outerScopes = new ArrayDeque<>();
+        Deque<Map>  visibleEls = new ArrayDeque<>();
         Element current = null;
         
         while (scope != null) {

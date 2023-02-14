@@ -104,10 +104,10 @@ public final class SampledCPUSnapshot {
     }
 
     public List<Integer> getIntervals(int startIndex, int endIndex,PrestimeCPUCCTNode node) throws IOException {
-        List<Integer> intervals = new ArrayList();
+        List<Integer> intervals = new ArrayList<>();
         SamplesInputStream stream = seek(startIndex);
         CCTNode n = node;
-        List<String[]> stack = new ArrayList();
+        List<String[]> stack = new ArrayList<>();
         final String NATIVE_ID = "[native]"; // NOI18N 
         boolean match = false;
         do {

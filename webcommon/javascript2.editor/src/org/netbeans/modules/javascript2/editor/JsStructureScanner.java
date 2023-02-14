@@ -479,7 +479,7 @@ public class JsStructureScanner implements StructureScanner {
             Set<Modifier> modifiers;
 
             if (modelElement.getModifiers().isEmpty()) {
-                modifiers = Collections.EMPTY_SET;
+                modifiers = Collections.emptySet();
             } else {
                 modifiers = EnumSet.noneOf(Modifier.class);
                 modifiers.addAll(modelElement.getModifiers());

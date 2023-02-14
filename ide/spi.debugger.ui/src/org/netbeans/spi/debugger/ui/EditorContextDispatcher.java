@@ -279,7 +279,7 @@ public final class EditorContextDispatcher {
     public Set<String> getMIMETypesOnCurrentLine() {
         Line line = getCurrentLine();
         if (line == null) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
         return getMIMETypesOnLine(line);
     }

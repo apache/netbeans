@@ -48,17 +48,17 @@ public interface AbstractJavaProfilerSource {
 
         @Override
         public Set<SourceClassInfo> getClasses(FileObject fo) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         @Override
         public Set<SourceClassInfo> getMainClasses(FileObject fo) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         @Override
         public Set<SourceMethodInfo> getConstructors(FileObject fo) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         @Override

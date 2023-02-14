@@ -61,7 +61,7 @@ class CssIdCompletionItem implements CompletionProposal {
         Set<Modifier> modifiers;
 
         if (getElement() == null || getElement().getModifiers().isEmpty()) {
-            modifiers = Collections.EMPTY_SET;
+            modifiers = Collections.emptySet();
         } else {
             modifiers = EnumSet.noneOf(Modifier.class);
             modifiers.addAll(getElement().getModifiers());

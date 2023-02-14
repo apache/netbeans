@@ -189,7 +189,7 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
     
     private void jtfTemplateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfTemplateKeyReleased
         //validateTemplate(new File(jtfTemplate.getText()));
-        templateData = Collections.EMPTY_SET;
+        templateData = Collections.emptySet();
         fireChangeEvent();
     }//GEN-LAST:event_jtfTemplateKeyReleased
 
@@ -226,7 +226,7 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
             } else {
                 jtfTemplate.setText(path);
             }
-            templateData = Collections.EMPTY_SET;
+            templateData = Collections.emptySet();
         }
         fireChangeEvent();
     }//GEN-LAST:event_jbBrowseActionPerformed
@@ -456,7 +456,7 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
         return is;
     }
 
-    Collection<String> templateData = Collections.EMPTY_SET;
+    Collection<String> templateData = Collections.emptySet();
     
     public Collection<String> getTemplateData(){
         return templateData;

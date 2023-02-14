@@ -103,7 +103,7 @@ final class IndexabilityQuery {
                     .collect(Collectors.toSet());
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Failed to parse IndexabilityQuery state from '" + input + "'", ex);
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
     }
 

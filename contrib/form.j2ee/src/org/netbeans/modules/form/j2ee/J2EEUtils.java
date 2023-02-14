@@ -812,7 +812,7 @@ public class J2EEUtils {
                                 String parameterName = parameter.getName().toString();
                                 String oldParameterName = "old" + Character.toUpperCase(parameterName.charAt(0)) + parameterName.substring(1); // NOI18N
                                 Tree parameterTree = parameter.getType();
-                                VariableTree oldParameter = make.Variable(make.Modifiers(Collections.EMPTY_SET), oldParameterName, parameterTree, persistentVariable);
+                                VariableTree oldParameter = make.Variable(make.Modifiers(Collections.emptySet()), oldParameterName, parameterTree, persistentVariable);
                                 BlockTree newBlock = make.insertBlockStatement(block, 0, oldParameter);
 
                                 // changeSupport.firePropertyChange("<propertyName>", old<PropertyName>, <propertyName>);
@@ -855,7 +855,7 @@ public class J2EEUtils {
                     TreeMaker make = wc.getTreeMaker();
 
                     // addPropertyChange method
-                    ModifiersTree parMods = make.Modifiers(Collections.EMPTY_SET, Collections.emptyList());
+                    ModifiersTree parMods = make.Modifiers(Collections.emptySet(), Collections.emptyList());
                     TypeElement changeListenerElement = wc.getElements().getTypeElement("java.beans.PropertyChangeListener"); // NOI18N
                     VariableTree par = make.Variable(parMods, "listener", make.QualIdent(changeListenerElement), null); // NOI18N
                     TypeElement changeSupportElement = wc.getElements().getTypeElement("java.beans.PropertyChangeSupport"); // NOI18N
@@ -900,7 +900,7 @@ public class J2EEUtils {
                     TreeMaker make = wc.getTreeMaker();
 
                     // removePropertyChange method
-                    ModifiersTree parMods = make.Modifiers(Collections.EMPTY_SET, Collections.emptyList());
+                    ModifiersTree parMods = make.Modifiers(Collections.emptySet(), Collections.emptyList());
                     TypeElement changeListenerElement = wc.getElements().getTypeElement("java.beans.PropertyChangeListener"); // NOI18N
                     VariableTree par = make.Variable(parMods, "listener", make.QualIdent(changeListenerElement), null); // NOI18N
                     TypeElement changeSupportElement = wc.getElements().getTypeElement("java.beans.PropertyChangeSupport"); // NOI18N

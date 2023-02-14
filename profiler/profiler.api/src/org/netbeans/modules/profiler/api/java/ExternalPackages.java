@@ -191,7 +191,7 @@ public final class ExternalPackages {
 
         @Override
         public Set<SourceClassInfo> getSubclasses() {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         @Override
@@ -216,22 +216,22 @@ public final class ExternalPackages {
 
         @Override
         public Set<SourceMethodInfo> getMethods(boolean all) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         @Override
         public Set<SourceClassInfo> getSubclasses() {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         @Override
         public Set<SourceClassInfo> getInnerClases() {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         @Override
         public Set<SourceMethodInfo> getConstructors() {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         @Override
@@ -241,7 +241,7 @@ public final class ExternalPackages {
 
         @Override
         public Set<SourceClassInfo> getInterfaces() {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
     }
     

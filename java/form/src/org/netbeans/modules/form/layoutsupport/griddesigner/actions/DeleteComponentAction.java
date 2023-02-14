@@ -60,7 +60,7 @@ public class DeleteComponentAction extends AbstractGridAction {
         for (Component component : context.getSelectedComponents()) {
             gridManager.removeComponent(component);
         }
-        context.setSelectedComponents(Collections.EMPTY_SET);
+        context.setSelectedComponents(Collections.emptySet());
 
         GridUtils.addPaddingComponents(gridManager, columns, rows);
         GridUtils.revalidateGrid(gridManager);

@@ -225,7 +225,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
                     List<StatementTree> nueStatements = new LinkedList<>();
                     ExpressionTree reference = make.Identifier(name);
                     Element clazz = parameter.getTrees().getElement(pathToClass);
-                    ModifiersTree constrMods = (clazz == null || clazz.getKind() != ElementKind.ENUM) ? make.Modifiers(EnumSet.of(Modifier.PUBLIC)) : make.Modifiers(Collections.EMPTY_SET);
+                    ModifiersTree constrMods = (clazz == null || clazz.getKind() != ElementKind.ENUM) ? make.Modifiers(EnumSet.of(Modifier.PUBLIC)) : make.Modifiers(Collections.emptySet());
                     nueStatements.add(make.ExpressionStatement(make.Assignment(reference, expression)));
                     BlockTree nueBlock = make.Block(nueStatements, false);
                     MethodTree nueConstr = make.Method(constrMods, "<init>", null, Collections.<TypeParameterTree>emptyList(), Collections.<VariableTree>emptyList(), Collections.<ExpressionTree>emptyList(), nueBlock, null); //NOI18N

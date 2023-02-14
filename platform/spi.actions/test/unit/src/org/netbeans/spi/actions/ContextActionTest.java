@@ -114,7 +114,7 @@ public class ContextActionTest extends NbTestCase {
     }
 
     void clearContent() {
-        content.set(Collections.EMPTY_SET, null);
+        content.set(Collections.emptySet(), null);
     }
 
     public void testEnablement() {

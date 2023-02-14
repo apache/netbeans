@@ -84,7 +84,7 @@ public class JspUtils {
                 jspSnapshot.getText(),
                 true,
                 JspTokenId.language(),
-                Collections.EMPTY_SET,
+                Collections.emptySet(),
                 inputAttributes);
 
         return th;

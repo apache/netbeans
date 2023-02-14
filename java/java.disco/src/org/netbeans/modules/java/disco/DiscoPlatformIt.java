@@ -145,14 +145,14 @@ public final class DiscoPlatformIt implements WizardDescriptor.InstantiatingIter
             if (!f.isDirectory()) {
                 //open the file manager for the parent folder
                 Desktop.getDesktop().open(f.getParentFile());
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
 
             String name = state.selection.getJavaPlatformDisplayName();
             return Collections.singleton(J2SEPlatformUtils.register(new File(downloadedFolder), name));
         } else {
             //TODO: notifcation?
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
     }
     

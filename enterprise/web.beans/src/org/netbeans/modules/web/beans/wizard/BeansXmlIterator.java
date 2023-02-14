@@ -99,7 +99,7 @@ public class BeansXmlIterator implements TemplateWizard.Iterator {
             return Collections.singleton(DataObject.find(fo));
         } 
         else {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
     }
 

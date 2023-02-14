@@ -941,7 +941,7 @@ public class WebKitPageModel extends PageModel {
         int nodeId = node.getNodeId();
         Set<CSS.PseudoClass> pseudoClassSet = pseudoClassMap.get(nodeId);
         if (pseudoClassSet == null) {
-            pseudoClassSet = Collections.EMPTY_SET;
+            pseudoClassSet = Collections.emptySet();
         }
         CSS.PseudoClass[] pseudoClasses = new CSS.PseudoClass[pseudoClassSet.size()];
         int i=0;

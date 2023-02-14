@@ -160,7 +160,7 @@ public class JavaProfilerSourceImpl implements AbstractJavaProfilerSource {
         
         Project p = FileOwnerQuery.getOwner(fo);
         if (p == null) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
         
         ClasspathInfo cpInfo = ClasspathInfoFactory.infoFor(p);

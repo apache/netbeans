@@ -164,7 +164,7 @@ public class IncludeResolver {
         //
         Schema mySchema = sModel.getSchema();
         if (mySchema == null) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
         //
         // If the current model has empty target namespace, then it can be included anywhere
@@ -172,7 +172,7 @@ public class IncludeResolver {
         // to models with the same target namespace.
         String myTargetNs = mySchema.getTargetNamespace();
         if (myTargetNs != null && !Util.equal(soughtNs, myTargetNs)) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
         //
         // The graph is lazy initialized in session and can be reused during
@@ -182,7 +182,7 @@ public class IncludeResolver {
         //
         // Now there is forward and back inclusion graphs.
         if (graph.isEmpty()) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
         //
         // Look for the roots of inclusion.

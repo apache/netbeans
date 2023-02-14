@@ -187,7 +187,7 @@ public class LazyOperationDescriptionStep implements WizardDescriptor.Panel<Wiza
             public void taskFinished (Task task) {
                 task.removeTaskListener (this);
                 if (!hasUpdates) {
-                    installModel = Collections.EMPTY_SET;
+                    installModel = Collections.emptySet();
                     new InstallUnitWizardModel(null, null).modifyOptionsForDoClose(wd);
                     canClose = true;
                     LazyUnit.storeLazyUnits(operationType, installModel);

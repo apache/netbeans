@@ -99,7 +99,7 @@ public class JavacClassInfo extends SourceClassInfo {
                 LOG.log(Level.WARNING, null, e);
             }
         }
-        return rslt[0] != null ? rslt[0] : Collections.EMPTY_SET;
+        return rslt[0] != null ? rslt[0] : Collections.emptySet();
     }
 
     @Override

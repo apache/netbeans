@@ -744,7 +744,7 @@ public class MasterDetailWizard implements WizardDescriptor.InstantiatingIterato
                         wc.rewrite(clazz, modifiedClass);
 
                         // Add setter
-                        ModifiersTree parMods = make.Modifiers(Collections.EMPTY_SET, Collections.emptyList());
+                        ModifiersTree parMods = make.Modifiers(Collections.emptySet(), Collections.emptyList());
                         VariableTree par = make.Variable(parMods, detailFieldName, make.QualIdent(masterElement), null);
                         AssignmentTree assignExp = make.Assignment(make.Identifier("this." + detailFieldName), make.Identifier(detailFieldName));
                         MethodTree setMethod = make.Method(
@@ -864,7 +864,7 @@ public class MasterDetailWizard implements WizardDescriptor.InstantiatingIterato
                     wc.rewrite(clazz, modifiedClass);
                     
                     // Add setter
-                    ModifiersTree parMods = make.Modifiers(Collections.EMPTY_SET, Collections.emptyList());
+                    ModifiersTree parMods = make.Modifiers(Collections.emptySet(), Collections.emptyList());
                     VariableTree par = make.Variable(parMods, masterFieldName, collectionTree, null);
                     AssignmentTree assignExp = make.Assignment(make.Identifier("this." + masterFieldName), make.Identifier(masterFieldName));
                     MethodTree setMethod = make.Method(

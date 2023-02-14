@@ -907,7 +907,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
     }
     
     private static Set<FileObject> locations(Collection<Lookup.Provider> projects) {
-        if (projects == null || projects.isEmpty()) return Collections.EMPTY_SET;
+        if (projects == null || projects.isEmpty()) return Collections.emptySet();
         Set<FileObject> locations = new HashSet<>();
         for (Lookup.Provider project : projects)
             locations.add(ProjectUtilities.getProjectDirectory(project));

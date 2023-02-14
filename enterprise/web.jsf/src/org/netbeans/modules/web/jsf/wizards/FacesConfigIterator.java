@@ -97,7 +97,7 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
         if (fo != null) {
             return Collections.singleton(DataObject.find(fo));
         } else {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
     }
 

@@ -107,9 +107,9 @@ public final class ThreadsHistoryAction extends AbstractAction {
         DVThread currentThread = debugger != null ? debugger.getCurrentThread() : null;
         // collect all deadlocked threads
         Set<Deadlock> deadlocks = debugger != null ? debugger.getDeadlocks()
-                : Collections.EMPTY_SET;
+                : Collections.emptySet();
         if (deadlocks == null) {
-            deadlocks = Collections.EMPTY_SET;
+            deadlocks = Collections.emptySet();
         }
         Set<DVThread> deadlockedThreads = new HashSet<DVThread>();
         for (Deadlock deadlock : deadlocks) {

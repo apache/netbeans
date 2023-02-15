@@ -412,17 +412,17 @@ public class CallEjbGenerator {
             if (j2eeAppProject != null && !j2eeAppProject.equals(ejbProject)){
                 moduleFullName = ProjectUtils.getInformation(j2eeAppProject).getName() + "/" + moduleFullName;
             }
-            body = MessageFormat.format(JNDI_LOOKUP_GLOBAL, new Object[] {moduleFullName, ejbName, componentName});
+            body = MessageFormat.format(JNDI_LOOKUP_GLOBAL, moduleFullName, ejbName, componentName);
         } else if (isSimplified && isTargetJavaSE){
-            body = MessageFormat.format(JNDI_LOOKUP_EJB3_JAVASE, new Object[] {ejbReference.getEjbClass(), componentName});
+            body = MessageFormat.format(JNDI_LOOKUP_EJB3_JAVASE, ejbReference.getEjbClass(), componentName);
         } else if (isSimplified) {
-            body = MessageFormat.format(JNDI_LOOKUP_EJB3, new Object[] {ejbReferenceName, componentName});
+            body = MessageFormat.format(JNDI_LOOKUP_EJB3, ejbReferenceName, componentName);
         } else if (isTargetJavaSE){
-            body = MessageFormat.format(JNDI_LOOKUP_REMOTE_JAVASE, new Object[] {homeName, homeName, sessionCreate});
+            body = MessageFormat.format(JNDI_LOOKUP_REMOTE_JAVASE, homeName, homeName, sessionCreate);
         } else if (!isLocal) {
-            body = MessageFormat.format(JNDI_LOOKUP_REMOTE, new Object[] {ejbReferenceName, homeName, sessionCreate});
+            body = MessageFormat.format(JNDI_LOOKUP_REMOTE, ejbReferenceName, homeName, sessionCreate);
         } else {
-            body = MessageFormat.format(JNDI_LOOKUP_LOCAL, new Object[] {ejbReferenceName, homeName, sessionCreate});
+            body = MessageFormat.format(JNDI_LOOKUP_LOCAL, ejbReferenceName, homeName, sessionCreate);
         }
         String returnType = isSimplified ? componentName : homeName;
         exceptions.add(NamingException.class.getName());
@@ -527,7 +527,7 @@ public class CallEjbGenerator {
                 String capitalLetters = extractAllCapitalLetters(exceptionName);
                 catchBody.append(capitalLetters);
                 catchBody.append(") {\n"); //NOI18N
-                catchBody.append(MessageFormat.format(LOG_STATEMENT, new Object[] {capitalLetters}));
+                catchBody.append(MessageFormat.format(LOG_STATEMENT, capitalLetters));
                 catchBody.append("throw new RuntimeException("+capitalLetters+");\n");
                 catchBody.append('}');
                 body = catchBody.toString();

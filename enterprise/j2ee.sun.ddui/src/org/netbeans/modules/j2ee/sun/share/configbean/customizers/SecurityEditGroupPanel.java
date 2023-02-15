@@ -144,7 +144,7 @@ public class SecurityEditGroupPanel extends JPanel {
          */
         if(newGroupName != null && !newGroupName.equals(getOriginalGroupName()) && 
                 groupModel.contains(newGroupName)) {
-            errors.add(MessageFormat.format(customizerBundle.getString("ERR_GroupExists"), new Object [] { newGroupName })); // NOI18N
+            errors.add(MessageFormat.format(customizerBundle.getString("ERR_GroupExists"), newGroupName)); // NOI18N
         }
 
         return errors;

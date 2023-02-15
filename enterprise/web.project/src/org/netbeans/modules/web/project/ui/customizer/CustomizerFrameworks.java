@@ -283,7 +283,7 @@ public class CustomizerFrameworks extends javax.swing.JPanel implements HelpCtx.
 	    if (framework.getName().equals(frameworkName)) {
                 WebModuleExtender extender = extenders.get(framework);
 		if (extender != null) {
-		    String message = MessageFormat.format(NbBundle.getMessage(CustomizerFrameworks.class, "LBL_FrameworkConfiguration"), new Object[] {frameworkName}); //NOI18N
+		    String message = MessageFormat.format(NbBundle.getMessage(CustomizerFrameworks.class, "LBL_FrameworkConfiguration"), frameworkName); //NOI18N
 		    jLabelConfig.setText(message);
 		    jPanelConfig.removeAll();
 

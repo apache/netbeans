@@ -100,7 +100,7 @@ public abstract class ResourceWizardPanel implements WizardDescriptor.Finishable
     }
     
     public void setErrorMessage(String msg, String value){
-        String message = MessageFormat.format(msg, new Object[] {value});
+        String message = MessageFormat.format(msg, value);
         setErrorMsg(message);
     }
     

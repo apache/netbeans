@@ -660,9 +660,8 @@ public class ServerStatus implements Closeable {
         private void handleIOException(final IOException ioe,
                 final String host, final int port, final String message) {
             final String METHOD = "handleIOException";
-            String logMsg = MessageFormat.format(message, new Object[] {
-                server.getName(), host, Integer.toString(port),
-                ioe.getMessage()});
+            String logMsg = MessageFormat.format(message, server.getName(), host, Integer.toString(port),
+                    ioe.getMessage());
             if (tmStart >= 0 && LOGGER.isLoggable(Level.FINE)) {
                 long tm = System.currentTimeMillis() - tmStart;
                 LOGGER.log(Level.FINE, METHOD, "messageTm",

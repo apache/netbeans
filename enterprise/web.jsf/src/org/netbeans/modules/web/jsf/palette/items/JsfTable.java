@@ -117,28 +117,28 @@ public final class JsfTable extends EntityClass implements ActiveEditorDrop, Pal
                                         String pkMethodName = pkMethod.getSimpleName().toString();
                                         String pkPropTitle = pkMethodName.substring(3);
                                         String pkPropName = propName + "." + JpaControllerUtil.getPropNameFromMethod(pkMethodName);
-                                        stringBuffer.append(MessageFormat.format(ITEM [1], new Object [] {pkPropTitle, null, pkPropName, tableVarName}));
+                                        stringBuffer.append(MessageFormat.format(ITEM [1], pkPropTitle, null, pkPropName, tableVarName));
                                     }
                                 }
                             }
                             else {
-                                stringBuffer.append(MessageFormat.format(ITEM [1], new Object [] {name, variable, propName, tableVarName}));
+                                stringBuffer.append(MessageFormat.format(ITEM [1], name, variable, propName, tableVarName));
                             }
                         }
                     } else if (controller.getTypes().isSameType(dateTypeMirror, method.getReturnType())) {
                         //param 3 - temporal, param 4 - date/time format
                         String temporal = EntityClass.getTemporal(method, fieldAccess);
                         if (temporal == null) {
-                            stringBuffer.append(MessageFormat.format(ITEM [formType], new Object [] {name, variable, propName, tableVarName}));
+                            stringBuffer.append(MessageFormat.format(ITEM [formType], name, variable, propName, tableVarName));
                         } else {
                             stringBuffer.append(MessageFormat.format(ITEM [2], new Object [] {name, variable, propName, temporal, EntityClass.getDateTimeFormat(temporal), tableVarName}));
                         }
                     } else if (isRelationship == JpaControllerUtil.REL_NONE || isRelationship == JpaControllerUtil.REL_TO_ONE) {
-                        stringBuffer.append(MessageFormat.format(ITEM [formType], new Object [] {name, variable, propName, tableVarName}));
+                        stringBuffer.append(MessageFormat.format(ITEM [formType], name, variable, propName, tableVarName));
                     }
                 }
             }
         }
-        stringBuffer.append(MessageFormat.format(commands, new Object [] {tableVarName}));
+        stringBuffer.append(MessageFormat.format(commands, tableVarName));
     }
 }

@@ -286,7 +286,7 @@ public class ResourceUtils implements WizardConstants{
                 }
             }//Returned value is null for JMS.
         }catch(Exception ex){
-            String errorMsg = MessageFormat.format(bundle.getString("Err_ResourceUpdate"), new Object[]{resourceName}); //NOI18N
+            String errorMsg = MessageFormat.format(bundle.getString("Err_ResourceUpdate"), resourceName); //NOI18N
             LOGGER.log(Level.SEVERE, errorMsg, ex);
         }
         return isResUpdated;

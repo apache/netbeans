@@ -338,7 +338,7 @@ public class MessageSecurityEntryPanel extends JPanel implements GenericTableDia
 
         if(!Utils.notEmpty(methodName)) {
             String msgPattern = webserviceBundle.getString("ERR_MethodNameRequired"); // NOI18N
-			errorList.add(MessageFormat.format(msgPattern, new Object [] { methodAsOperation ? 1 : 0} ));
+			errorList.add(MessageFormat.format(msgPattern, methodAsOperation ? 1 : 0));
         } else if(!"*".equals(methodName)) {
             if(methodAsOperation) {
                 // validate methodName as just an operation name.

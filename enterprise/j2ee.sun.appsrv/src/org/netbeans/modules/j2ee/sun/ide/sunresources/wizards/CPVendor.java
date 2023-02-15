@@ -151,7 +151,7 @@ public class CPVendor implements WizardDescriptor.Panel, ChangeListener {
     }
 
     public void setErrorMessage(String msg, String value){
-        String message = MessageFormat.format(msg, new Object[] {value});
+        String message = MessageFormat.format(msg, value);
         setErrorMsg(message);
     }
 

@@ -225,7 +225,7 @@ public class SecurityAddGroupPanel extends JPanel implements ListSelectionListen
          *    the entire list.
          */
         if(newGroupName != null && groupModel.contains(newGroupName)) {
-            errors.add(MessageFormat.format(customizerBundle.getString("ERR_GroupExists"), new Object [] { newGroupName })); // NOI18N
+            errors.add(MessageFormat.format(customizerBundle.getString("ERR_GroupExists"), newGroupName)); // NOI18N
         }
 
         return errors;

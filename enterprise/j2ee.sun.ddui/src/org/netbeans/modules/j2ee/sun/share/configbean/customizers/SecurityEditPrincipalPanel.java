@@ -206,7 +206,7 @@ public class SecurityEditPrincipalPanel extends JPanel {
          */
         if(newPrincipalName != null && !newPrincipalName.equals(getOriginalPrincipalName()) && 
                 principalModel.contains(new PrincipalNameMapping(newPrincipalName))) {
-            errors.add(MessageFormat.format(customizerBundle.getString("ERR_PrincipalExists"), new Object [] { newPrincipalName })); // NOI18N
+            errors.add(MessageFormat.format(customizerBundle.getString("ERR_PrincipalExists"), newPrincipalName)); // NOI18N
         }
 
         /** Class name:

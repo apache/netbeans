@@ -279,7 +279,7 @@ public class SecurityAddPrincipalPanel extends JPanel implements ListSelectionLi
          *    the entire list.
          */
         if(newPrincipalName != null && principalModel.contains(new PrincipalNameMapping(newPrincipalName))) {
-            errors.add(MessageFormat.format(customizerBundle.getString("ERR_PrincipalExists"), new Object [] { newPrincipalName })); // NOI18N
+            errors.add(MessageFormat.format(customizerBundle.getString("ERR_PrincipalExists"), newPrincipalName)); // NOI18N
         }
 
         /** Class name:

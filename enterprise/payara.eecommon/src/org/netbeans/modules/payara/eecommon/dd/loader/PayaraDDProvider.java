@@ -538,7 +538,7 @@ public final class PayaraDDProvider {
             return new org.netbeans.modules.j2ee.sun.dd.impl.web.model_2_3_0.SunWebApp(parse.getDocument(), Common.NO_DEFAULT_VALUES);
         } else {
             throw new DDException(
-                    MessageFormat.format(ResourceBundle.getBundle("org/netbeans/modules/j2ee/sun/dd/api/Bundle").getString("MSG_UnknownWebXml"), new Object[]{version}));
+                    MessageFormat.format(ResourceBundle.getBundle("org/netbeans/modules/j2ee/sun/dd/api/Bundle").getString("MSG_UnknownWebXml"), version));
         }
 
     }

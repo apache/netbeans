@@ -385,7 +385,7 @@ public class PanelSupportedFrameworksVisual extends JPanel implements HelpCtx.Pr
     
     private void setConfigPanel(WebFrameworkProvider framework, FrameworkModelItem item) {
         if (extenders.get(framework) != null) {
-            String message = MessageFormat.format(NbBundle.getMessage(PanelSupportedFrameworksVisual.class, "LBL_NWP2_ConfigureFramework"), new Object[] {framework.getName()}); //NOI18N
+            String message = MessageFormat.format(NbBundle.getMessage(PanelSupportedFrameworksVisual.class, "LBL_NWP2_ConfigureFramework"), framework.getName()); //NOI18N
             jLabelConfig.setText(message);
 //            jLabelConfig.setEnabled(item.isSelected().booleanValue());
             

@@ -52,7 +52,7 @@ public class VersionNotSupportedException extends java.lang.Exception {
      * @param version specific version of Servlet Spec. e.g."2.4"
      */
     public VersionNotSupportedException(String version) {
-        super(MessageFormat.format(exceptionMsg, new Object [] { version } ));
+        super(MessageFormat.format(exceptionMsg, version));
         this.version=version;
     }
     

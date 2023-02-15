@@ -149,7 +149,7 @@ final class ProjectImportLocationPanel extends JPanel implements HelpCtx.Provide
         File f = new File (sourceLocationPath);
         if (!f.isDirectory() || !f.canRead()) {
 	    String format = NbBundle.getMessage(ProjectImportLocationPanel.class, "MSG_IllegalSources"); //NOI18N
-	    wizardDescriptor.putProperty( WizardDescriptor.PROP_ERROR_MESSAGE, MessageFormat.format(format, new Object[] {sourceLocationPath})); //NOI18N
+	    wizardDescriptor.putProperty( WizardDescriptor.PROP_ERROR_MESSAGE, MessageFormat.format(format, sourceLocationPath)); //NOI18N
             return false;
         }
 
@@ -217,7 +217,7 @@ final class ProjectImportLocationPanel extends JPanel implements HelpCtx.Provide
                 }
                 if (file != null) {
                     String format = NbBundle.getMessage (ProjectImportLocationPanel.class,"MSG_ProjectFolderInvalid");
-                    wizardDescriptor.putProperty( WizardDescriptor.PROP_ERROR_MESSAGE, MessageFormat.format(format, new Object[] {file}));  //NOI18N
+                    wizardDescriptor.putProperty( WizardDescriptor.PROP_ERROR_MESSAGE, MessageFormat.format(format, file));  //NOI18N
                     return false;
                 }
             }
@@ -573,7 +573,7 @@ private void browseLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
     }
     
     private String validFreeProjectName (final File parentFolder, final String formater, final int index) {
-        String name = MessageFormat.format (formater, new Object[]{index});                
+        String name = MessageFormat.format (formater, index);
         File file = new File (parentFolder, name);
         return file.exists() ? null : name;
     }

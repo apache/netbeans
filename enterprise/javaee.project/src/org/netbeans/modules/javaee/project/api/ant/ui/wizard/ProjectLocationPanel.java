@@ -418,7 +418,7 @@ private void sharableProjectActionPerformed(java.awt.event.ActionEvent evt) {//G
     // Private methods ---------------------------------------------------------
     
     private String validFreeProjectName (final File parentFolder, final String formater, final int index) {
-        String name = MessageFormat.format (formater, new Object[]{index});                
+        String name = MessageFormat.format (formater, index);
         File file = new File (parentFolder, name);
         return file.exists() ? null : name;
     }
@@ -497,7 +497,7 @@ private void sharableProjectActionPerformed(java.awt.event.ActionEvent evt) {//G
     }
 
     public static String getProjectName(String formatter, int index) {
-        return MessageFormat.format(formatter, new Object[] {String.valueOf(index)});
+        return MessageFormat.format(formatter, String.valueOf(index));
     }
 
     private static int getValidProjectNameIndex(String formatter, int currentIndex, File projectLocation) {

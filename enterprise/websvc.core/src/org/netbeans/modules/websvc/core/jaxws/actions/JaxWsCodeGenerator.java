@@ -903,7 +903,7 @@ public class JaxWsCodeGenerator  {
 
     private static String getDispatchInvocationMethod(WsdlPort port, WsdlOperation operation) {
         StringBuffer invoke = new StringBuffer("");
-        invoke.append(MessageFormat.format(QNAME, new Object[]{port.getNamespaceURI(), port.getName()}));
+        invoke.append(MessageFormat.format(QNAME, port.getNamespaceURI(), port.getName()));
         invoke.append("\n");
         invoke.append("String req = ");
         invoke.append("\"");

@@ -1152,7 +1152,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         // XXX what are legal chars for var names? bash manual says only:
         // "The braces are required when PARAMETER [...] is followed by a
         // character that is not to be interpreted as part of its name."
-        Pattern p = Pattern.compile("(^|[^\\\\])\\$([a-zA-Z_0-9.]+)");
+        Pattern p = Pattern.compile("(^|[^\\\\])\\$([\\w.]+)");
         Matcher m;
         while ((m = p.matcher(text)).find()) {
             // Have an env var to subst...

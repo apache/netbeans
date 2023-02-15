@@ -301,7 +301,7 @@ public abstract class Group {
     }
 
     protected static String sanitizeNameAndUniquifyForId(String name) {
-        String sanitizedId = name.replaceAll("[^a-zA-Z0-9_.-]+", "_");
+        String sanitizedId = name.replaceAll("[^\\w.-]+", "_");
         Set<String> existing;
         try {
             existing = new HashSet<String>(Arrays.asList(NODE.childrenNames()));

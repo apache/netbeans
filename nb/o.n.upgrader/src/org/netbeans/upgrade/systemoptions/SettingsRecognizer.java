@@ -300,7 +300,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
                     if (null != inst) {
                         // instance already exists -> reset it to defaults
                         try {
-                            Method method = SharedClassObject.class.getDeclaredMethod("reset", new Class[0]); // NOI18N
+                            Method method = SharedClassObject.class.getDeclaredMethod("reset"); // NOI18N
                             method.setAccessible(true);
                             method.invoke(inst, new Object[0]);
                         } catch (Exception e) {

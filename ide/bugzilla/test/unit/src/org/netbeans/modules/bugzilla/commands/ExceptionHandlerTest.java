@@ -74,7 +74,7 @@ public class ExceptionHandlerTest extends NbTestCase implements TestConstants {
         System.setProperty("netbeans.user", getWorkDir().getAbsolutePath());
         
         // reset
-        Method m = MylynSupport.class.getDeclaredMethod("reset", new Class[0]);
+        Method m = MylynSupport.class.getDeclaredMethod("reset");
         m.setAccessible(true);
         m.invoke(MylynSupport.class);
                 

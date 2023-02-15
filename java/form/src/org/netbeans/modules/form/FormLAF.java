@@ -491,7 +491,7 @@ public class FormLAF {
     private static Object changeLAFStatesLAF(Object laf) {
         Object value = null;
         try {
-            java.lang.reflect.Method method = UIManager.class.getDeclaredMethod("getLAFState", new Class[0]); // NOI18N
+            java.lang.reflect.Method method = UIManager.class.getDeclaredMethod("getLAFState"); // NOI18N
             method.setAccessible(true);
             Object lafState = method.invoke(null, new Object[0]);
             Field field = lafState.getClass().getDeclaredField("lookAndFeel"); // NOI18N

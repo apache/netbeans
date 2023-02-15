@@ -61,9 +61,9 @@ public class RemoteFXService {
         
         try {
             Class platformClz = Class.forName("javafx.application.Platform");
-            runLater = platformClz.getMethod("runLater", new Class[]{Runnable.class});
+            runLater = platformClz.getMethod("runLater", Runnable.class);
             runLater.setAccessible(true);
-            isFxThread = platformClz.getMethod("isFxApplicationThread", new Class[0]);
+            isFxThread = platformClz.getMethod("isFxApplicationThread");
             isFxThread.setAccessible(true);
         } catch (ClassNotFoundException e) {
         } catch (NoSuchMethodException e) {

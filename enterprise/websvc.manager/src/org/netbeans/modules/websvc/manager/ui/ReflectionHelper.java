@@ -333,7 +333,7 @@ public class ReflectionHelper {
                 }
 
                 try {
-                    Method m = annotation.getClass().getMethod("propOrder", new Class[0]); // NOI18N
+                    Method m = annotation.getClass().getMethod("propOrder"); // NOI18N
                     String[] props = (String[]) m.invoke(annotation, null);
 
                     for (int i = 0; props != null && i < props.length; i++) {
@@ -367,10 +367,10 @@ public class ReflectionHelper {
                 name[i] = Character.toUpperCase(name[i]);
                 String propCaps = new String(name);
                 try {
-                    method = typeClass.getMethod("get" + propCaps, new Class[0]); // NOI18N
+                    method = typeClass.getMethod("get" + propCaps); // NOI18N
                 } catch (NoSuchMethodException ex) {
                     try {
-                        method = typeClass.getMethod("is" + propCaps, new Class[0]); // NOI18N
+                        method = typeClass.getMethod("is" + propCaps); // NOI18N
                     } catch (NoSuchMethodException nsme) {
                     }
                 }
@@ -409,7 +409,7 @@ public class ReflectionHelper {
 
     public static Object getJAXBElementValue(Object jaxBElement) throws WebServiceReflectionException {
         try {
-            Method m = jaxBElement.getClass().getMethod("getValue", new Class[0]); // NOI18N
+            Method m = jaxBElement.getClass().getMethod("getValue"); // NOI18N
             return m.invoke(jaxBElement);
         } catch (Exception ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
@@ -418,10 +418,10 @@ public class ReflectionHelper {
 
     public static String getQNameLocalPart(Object jaxBElement) throws WebServiceReflectionException {
         try {
-            Method getName = jaxBElement.getClass().getMethod("getName", new Class[0]); // NOI18N
+            Method getName = jaxBElement.getClass().getMethod("getName"); // NOI18N
             Object qName = getName.invoke(jaxBElement);
 
-            Method getLocalPart = qName.getClass().getMethod("getLocalPart", new Class[0]); // NOI18N
+            Method getLocalPart = qName.getClass().getMethod("getLocalPart"); // NOI18N
             return (String) getLocalPart.invoke(qName);
         } catch (Exception ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
@@ -430,7 +430,7 @@ public class ReflectionHelper {
 
     public static void setJAXBElementValue(Object jaxBElement, Object value) throws WebServiceReflectionException {
         try {
-            Method m = jaxBElement.getClass().getMethod("setValue", new Class[]{Object.class}); // NOI18N
+            Method m = jaxBElement.getClass().getMethod("setValue", Object.class); // NOI18N
             m.invoke(jaxBElement, value);
         } catch (Exception ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
@@ -540,10 +540,10 @@ public class ReflectionHelper {
                 name[i] = Character.toUpperCase(name[i]);
                 String propCaps = new String(name);
                 try {
-                    method = typeClass.getMethod("get" + propCaps, new Class[0]); // NOI18N
+                    method = typeClass.getMethod("get" + propCaps); // NOI18N
                 } catch (NoSuchMethodException ex) {
                     try {
-                        method = typeClass.getMethod("is" + propCaps, new Class[0]); // NOI18N
+                        method = typeClass.getMethod("is" + propCaps); // NOI18N
                     } catch (NoSuchMethodException nsme) {
                     }
                 }

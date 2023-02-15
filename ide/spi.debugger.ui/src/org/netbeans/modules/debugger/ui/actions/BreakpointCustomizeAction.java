@@ -136,7 +136,7 @@ public class BreakpointCustomizeAction extends SystemAction implements ContextAw
                 }
             } else {
                 try {
-                    java.lang.reflect.Constructor c = biClass.getConstructor(new Class[0]);
+                    java.lang.reflect.Constructor c = biClass.getConstructor();
                     c.setAccessible(true);
                     return (BeanInfo) c.newInstance(new Object[0]);
                 } catch (Exception ex) {

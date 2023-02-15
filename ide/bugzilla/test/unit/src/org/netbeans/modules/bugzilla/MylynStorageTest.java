@@ -101,7 +101,7 @@ public class MylynStorageTest extends NbTestCase {
         BugtrackingUtil.getBugtrackingConnectors(); // ensure conector
         
         // reset
-        Method m = MylynSupport.class.getDeclaredMethod("reset", new Class[0]);
+        Method m = MylynSupport.class.getDeclaredMethod("reset");
         m.setAccessible(true);
         m.invoke(MylynSupport.class);
                 

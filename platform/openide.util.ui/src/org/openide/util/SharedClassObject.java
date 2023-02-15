@@ -618,7 +618,7 @@ public abstract class SharedClassObject extends Object implements Externalizable
 
     static SharedClassObject createInstancePrivileged(Class<? extends SharedClassObject> clazz)
     throws Exception {
-        java.lang.reflect.Constructor<? extends SharedClassObject> c = clazz.getDeclaredConstructor(new Class[0]);
+        java.lang.reflect.Constructor<? extends SharedClassObject> c = clazz.getDeclaredConstructor();
         c.setAccessible(true);
 
         String name = clazz.getName();

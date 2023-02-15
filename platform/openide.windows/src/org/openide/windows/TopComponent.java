@@ -1830,7 +1830,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
 
                 // instantiate class event if it has protected or private
                 // default constructor
-                java.lang.reflect.Constructor con = tcClass.getDeclaredConstructor(new Class[0]);
+                java.lang.reflect.Constructor con = tcClass.getDeclaredConstructor();
                 con.setAccessible(true);
 
                 try {

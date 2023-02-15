@@ -1076,7 +1076,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
             if (constrConstructor == null) {
                 try {
                     constrConstructor =
-                        GridBagConstraints.class.getConstructor(new Class[0]);
+                        GridBagConstraints.class.getConstructor();
                 }
                 catch (NoSuchMethodException ex) { // should not happen
                     ex.printStackTrace();

@@ -315,8 +315,8 @@ public class JavaBeansUtil {
      * @param in the source of the XML.
      */
 	public static Object readBean(Class cls, java.io.InputStream in) throws javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException, java.beans.IntrospectionException, java.lang.NoSuchMethodException, java.lang.InstantiationException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException {
-        Constructor construct = cls.getConstructor(new Class[0]);
-        Object newValue = construct.newInstance(new Object[0]);
+        Constructor construct = cls.getConstructor();
+        Object newValue = construct.newInstance();
         readBean(newValue, in);
         return newValue;
     }
@@ -365,8 +365,8 @@ public class JavaBeansUtil {
      * @param document the source of the XML.
      */
     public static Object readBean(Class cls, org.w3c.dom.Document document) throws java.beans.IntrospectionException, java.lang.NoSuchMethodException, java.lang.InstantiationException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException {
-        Constructor construct = cls.getConstructor(new Class[0]);
-        Object newValue = construct.newInstance(new Object[0]);
+        Constructor construct = cls.getConstructor();
+        Object newValue = construct.newInstance();
         readBean(newValue, document);
         return newValue;
     }
@@ -455,7 +455,7 @@ public class JavaBeansUtil {
                     propertyTypeOnce = propertyType.getComponentType();
                 try {
                     //System.out.println("It's a Java Bean type");
-                    Constructor construct = propertyTypeOnce.getConstructor(new Class[0]);
+                    Constructor construct = propertyTypeOnce.getConstructor();
                     newValue = construct.newInstance(new Object[0]);
                     readBean(newValue, childNode);
                 } catch (java.lang.NoSuchMethodException e) {
@@ -604,7 +604,7 @@ public class JavaBeansUtil {
                             destValue = Array.newInstance(propertyTypeOnce, size);
                         }
                         for (int index = 0; index < size; ++index) {
-                            Constructor construct = propertyTypeOnce.getConstructor(new Class[0]);
+                            Constructor construct = propertyTypeOnce.getConstructor();
                             Object srcValueOnce;
                             Object destValueOnce = construct.newInstance(new Object[0]);
                             if (propertyType.isArray()) {
@@ -962,7 +962,7 @@ public class JavaBeansUtil {
         
         Object obj = null;
         try {
-            Constructor construct = cls.getConstructor(new Class[0]);
+            Constructor construct = cls.getConstructor();
             obj = construct.newInstance(new Object[0]);
         } catch (java.lang.NoSuchMethodException e) {
             e.printStackTrace();

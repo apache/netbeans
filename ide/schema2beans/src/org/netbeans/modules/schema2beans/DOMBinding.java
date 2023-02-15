@@ -519,12 +519,10 @@ public class DOMBinding {
             String clsName = cls.getName();
             if (clsName.equals("javax.xml.namespace.QName")) {
                 try {
-                    Method prefixMethod = cls.getDeclaredMethod("getPrefix",
-                                                                new Class[0]);
+                    Method prefixMethod = cls.getDeclaredMethod("getPrefix");
                     String prefix = (String) prefixMethod.invoke(value,
                                                                  new Object[0]);
-                    Method localPartMethod = cls.getDeclaredMethod("getLocalPart",
-                                                                   new Class[0]);
+                    Method localPartMethod = cls.getDeclaredMethod("getLocalPart");
                     String localPart = (String) localPartMethod.invoke(value,
                                                                        new Object[0]);
                     if ("".equals(prefix))
@@ -622,18 +620,15 @@ public class DOMBinding {
                     String clsName = cls.getName();
                     if (clsName.equals("javax.xml.namespace.QName")) {
                         try {
-                        Method prefixMethod = cls.getDeclaredMethod("getPrefix",
-                                                                new Class[0]);
+                        Method prefixMethod = cls.getDeclaredMethod("getPrefix");
                         String prefix = (String) prefixMethod.invoke(value,
                                                                  new Object[0]);
-                        Method nsMethod = cls.getDeclaredMethod("getNamespaceURI",
-                                                                new Class[0]);
+                        Method nsMethod = cls.getDeclaredMethod("getNamespaceURI");
                         String ns = (String) nsMethod.invoke(value,
                                                              new Object[0]);
                         String declaredNS = "";
                         if ("".equals(prefix)) {
-                            Method localPartMethod = cls.getDeclaredMethod("getLocalPart",
-                                                                   new Class[0]);
+                            Method localPartMethod = cls.getDeclaredMethod("getLocalPart");
                             String localPart = (String) localPartMethod.invoke(value,
                                                                        new Object[0]);
                             Constructor c = cls.getDeclaredConstructor(String.class, String.class, String.class);

@@ -277,7 +277,7 @@ public class LafPanel extends javax.swing.JPanel {
         try {
             Class klz = cl.loadClass( COLOR_MODEL_CLASS_NAME );
             Object colorModel = klz.newInstance();
-            Method m = klz.getDeclaredMethod( "getCurrentProfile", new Class[0] ); //NOI18N
+            Method m = klz.getDeclaredMethod( "getCurrentProfile"); //NOI18N
             Object res = m.invoke( colorModel, new Object[0] );
             return res != null && !preferredProfile.equals( res );
         } catch( Exception ex ) {

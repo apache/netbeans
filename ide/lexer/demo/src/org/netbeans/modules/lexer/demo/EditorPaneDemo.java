@@ -159,7 +159,7 @@ public class EditorPaneDemo extends DemoTokenUpdater {
 
             Class langCls = Class.forName (args[0]);
 
-            java.lang.reflect.Method m = langCls.getDeclaredMethod("get", new Class[0]);
+            java.lang.reflect.Method m = langCls.getDeclaredMethod("get");
             Language language = (Language)m.invoke (null, new Object[0]);
 
             String content = null;

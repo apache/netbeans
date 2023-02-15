@@ -1235,8 +1235,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
             // create GridBagConstraints constructor expression
             if (gridBagConstrConstructor == null)
                 gridBagConstrConstructor =
-                    java.awt.GridBagConstraints.class.getConstructor(
-                                                          new Class[0]);
+                    java.awt.GridBagConstraints.class.getConstructor();
 
             CodeExpression constrExp = codeStructure.createExpression(
                     gridBagConstrConstructor, CodeStructure.EMPTY_PARAMS);

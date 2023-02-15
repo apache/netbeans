@@ -70,7 +70,7 @@ public class AntBasedProjectFactorySingletonTest extends NbTestCase {
         AntBasedProjectType type1 = AntBasedTestUtil.testAntBasedProjectType();
         AntBasedProjectType type2 = AntBasedTestUtil.testAntBasedProjectType();
         MockLookup.setInstances(type1, type2);
-        Method getAntBasedProjectTypeMethod = AntProjectHelper.class.getDeclaredMethod("getType", new Class[0]);
+        Method getAntBasedProjectTypeMethod = AntProjectHelper.class.getDeclaredMethod("getType");
         getAntBasedProjectTypeMethod.setAccessible(true);
         Project p = ProjectManager.getDefault().findProject(projdir);
         AntProjectHelper helper = p.getLookup().lookup(AntProjectHelper.class);

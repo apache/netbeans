@@ -92,10 +92,10 @@ public class ManagerUtil {
                 name[i] = Character.toUpperCase(name[i]);
                 propCaps = new String(name);
                 try {
-                    method = typeClass.getMethod("get" + propCaps, new Class[0]); // NOI18N
+                    method = typeClass.getMethod("get" + propCaps); // NOI18N
                 } catch (NoSuchMethodException ex) {
                     try {
-                        method = typeClass.getMethod("is" + propCaps, new Class[0]); // NOI18N
+                        method = typeClass.getMethod("is" + propCaps); // NOI18N
                     } catch (NoSuchMethodException nsme) {
                         continue;
                     }

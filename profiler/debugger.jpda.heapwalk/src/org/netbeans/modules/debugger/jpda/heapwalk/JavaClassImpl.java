@@ -213,7 +213,7 @@ public class JavaClassImpl implements JavaClass {
     public List<JavaClass> getSubClasses() {
         if (classType != null) {
             try {
-                java.lang.reflect.Method getSubClassesMethod = classType.getClass().getMethod("getSubClasses", new Class[0]);
+                java.lang.reflect.Method getSubClassesMethod = classType.getClass().getMethod("getSubClasses");
                 List<JPDAClassType> subclasses = (List<JPDAClassType>) getSubClassesMethod.invoke(classType, new Object[0]);
                 if (subclasses.size() > 0) {
                     long[] counts = heap.getDebugger().getInstanceCounts(subclasses);

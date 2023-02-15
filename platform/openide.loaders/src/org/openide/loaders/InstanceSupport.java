@@ -281,7 +281,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
             }
             Constructor c;
             try {
-                c = clazz.getConstructor (new Class [0]);
+                c = clazz.getConstructor ();
             } catch (NoSuchMethodException e) {
                 bean = Boolean.FALSE;
                 return false;

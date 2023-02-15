@@ -275,7 +275,7 @@ final class BeanCodeManager
 
             CodeExpressionOrigin origin = null;
             try { // use empty constructor
-                Constructor ctor = beanClass.getConstructor(new Class[0]);
+                Constructor ctor = beanClass.getConstructor();
                 origin = CodeStructure.createOrigin(ctor, new CodeExpression[0]);
             }
             catch (NoSuchMethodException ex) {

@@ -72,7 +72,7 @@ public class IssueTest extends NbTestCase implements TestConstants {
         super.setUp();
         
         // reset
-        Method m = MylynSupport.class.getDeclaredMethod("reset", new Class[0]);
+        Method m = MylynSupport.class.getDeclaredMethod("reset");
         m.setAccessible(true);
         m.invoke(MylynSupport.class);
                 

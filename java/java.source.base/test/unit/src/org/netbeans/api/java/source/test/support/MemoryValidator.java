@@ -95,7 +95,7 @@ public class MemoryValidator extends NbTestCase {
                 
                 try {
                     Class poolClass = Class.forName("org.openide.loaders.DataObjectPool");
-                    Method getPOOL = poolClass.getDeclaredMethod("getPOOL", new Class[0]);
+                    Method getPOOL = poolClass.getDeclaredMethod("getPOOL");
                     getPOOL.setAccessible(true);
                     Object pool = getPOOL.invoke(null, new Object[0]);
                     Field m = poolClass.getDeclaredField("map");

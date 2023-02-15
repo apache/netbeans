@@ -90,7 +90,7 @@ public final class Utils {
         try {
             Class x11Class = Class.forName("sun.swing.SwingUtilities2"); // NOI18N
             Method isDisplayLocalMethod = x11Class.getMethod(
-                      "isLocalDisplay", new Class[0]); // NOI18N
+                      "isLocalDisplay"); // NOI18N
             return (Boolean)isDisplayLocalMethod.invoke(null, (Object[])null);
         } catch (Throwable t) {
             return true;

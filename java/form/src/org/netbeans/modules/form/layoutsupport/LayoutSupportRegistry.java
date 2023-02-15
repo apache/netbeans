@@ -146,7 +146,7 @@ public class LayoutSupportRegistry {
             return false;
         }
         try {
-            if (layoutClass.getConstructor(new Class[0]) != null) {
+            if (layoutClass.getConstructor() != null) {
                 return true; // has a public constructor without parameters
             }
         } catch (NoSuchMethodException ex) {

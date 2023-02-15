@@ -1027,11 +1027,11 @@ public class WebBrowserImpl extends WebBrowser implements BrowserCallback, Enhan
             return;
         }
         try {
-            getZoomMethod = WebView.class.getDeclaredMethod( "getZoom", new Class[0] );
+            getZoomMethod = WebView.class.getDeclaredMethod( "getZoom");
             setZoomMethod = WebView.class.getDeclaredMethod( "setZoom", double.class );
         } catch( Exception e ) {
             try {
-                getZoomMethod = WebView.class.getDeclaredMethod( "impl_getScale", new Class[0] );
+                getZoomMethod = WebView.class.getDeclaredMethod( "impl_getScale");
                 setZoomMethod = WebView.class.getDeclaredMethod( "impl_setScale", double.class );
             } catch( Exception e2 ) {
                 Logger.getLogger( WebBrowserImpl.class.getName() ).log( Level.WARNING, "Cannot initialize browser zoom.", e2 );

@@ -53,7 +53,7 @@ public class Install extends ModuleInstall {
     private boolean installAdapter(String className) {
         try {
             adapter = Class.forName(className);
-            Method m = adapter.getDeclaredMethod("install", new Class[0] ); // NOI18N
+            Method m = adapter.getDeclaredMethod("install"); // NOI18N
             m.invoke(adapter, new Object[0]);
             return true;
         }catch (NoClassDefFoundError e) {
@@ -71,7 +71,7 @@ public class Install extends ModuleInstall {
          }
         if (Utilities.isMac() && adapter != null) {
             try {
-                Method m = adapter.getDeclaredMethod("uninstall", new Class[0] );   // NOI18N
+                Method m = adapter.getDeclaredMethod("uninstall");   // NOI18N
                 m.invoke(adapter, new Object[0]);
             } catch (NoClassDefFoundError e) {
             } catch (Exception e) {

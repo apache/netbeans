@@ -113,7 +113,7 @@ final class CoverageReportTopComponent extends TopComponent {
             // JDK6 only...
             //JTable.setFillsViewportHeight(true);
             // Try with reflection:
-            Method method = JTable.class.getMethod("setFillsViewportHeight", new Class[0]); // NOI18N
+            Method method = JTable.class.getMethod("setFillsViewportHeight"); // NOI18N
             if (method != null) {
                 method.invoke(null, new Object[0]);
             }

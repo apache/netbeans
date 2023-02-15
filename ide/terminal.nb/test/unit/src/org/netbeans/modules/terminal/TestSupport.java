@@ -265,7 +265,7 @@ public class TestSupport extends NbTestCase {
                 Field f = ioContainer.getClass().getDeclaredField("provider");
                 f.setAccessible(true);
                 IOContainer.Provider prov = (IOContainer.Provider) f.get(ioContainer);
-                Method m = prov.getClass().getDeclaredMethod("impl", new Class[0]);
+                Method m = prov.getClass().getDeclaredMethod("impl");
                 m.setAccessible(true);
                 comp = (JComponent) m.invoke(prov);
             } catch (InvocationTargetException ex) {

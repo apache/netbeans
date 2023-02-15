@@ -205,7 +205,7 @@ public abstract class RefactoringGlobalAction extends NodeAction {
 
         private boolean isMethodOverridden(NodeAction d, String name) {
             try {
-                Method m = d.getClass().getMethod(name, new Class[0]);
+                Method m = d.getClass().getMethod(name);
 
                 return m.getDeclaringClass() != CallableSystemAction.class;
             } catch (java.lang.NoSuchMethodException ex) {

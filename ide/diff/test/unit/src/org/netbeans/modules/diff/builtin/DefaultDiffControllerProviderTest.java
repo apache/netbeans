@@ -137,7 +137,7 @@ public class DefaultDiffControllerProviderTest extends NbTestCase {
     public void testTextualDiffContent () throws Exception {
         File diffFile = new File(getDataDir(), "enhancedview/diff");
         String goldenText = getFileContents(diffFile);
-        goldenText = MessageFormat.format(goldenText, new Object[] {"a/", "b/"});
+        goldenText = MessageFormat.format(goldenText, "a/", "b/");
 
         final JTabbedPane tabbedPane = findTabbedPane(enhanced.getJComponent());
         JPanel p = (JPanel) tabbedPane.getComponentAt(1);

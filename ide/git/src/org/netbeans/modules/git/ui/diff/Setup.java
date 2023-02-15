@@ -77,7 +77,7 @@ public final class Setup extends AbstractDiffSetup {
                 break;
             case INDEX_VS_WORKING_TREE:
                 firstRevision = GitUtils.INDEX;
-                firstTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_IndexRevision"), new Object[]{firstRevision}); // NOI18N
+                firstTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_IndexRevision"), firstRevision); // NOI18N
                 break;
             default:
                 throw new IllegalArgumentException("Unknown diff type: " + mode); // NOI18N

@@ -198,7 +198,7 @@ public final class Bookmark {
         public String getShortDescription () {
             String fmt = NbBundle.getBundle (Bookmark.class).getString ("Bookmark_Tooltip"); // NOI18N
             int lineIndex = getLineNumber ();
-            return MessageFormat.format (fmt, new Object[] {Integer.valueOf(lineIndex + 1)});
+            return MessageFormat.format (fmt, Integer.valueOf(lineIndex + 1));
         }
 
         @Override

@@ -679,9 +679,9 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
                             popupMenu.setVisible(false);
                             prevRev = prevRev.substring(0, 7);
                             String format = loc.getString("CTL_MenuItem_ShowAnnotationsPrevious.revision"); // NOI18N
-                            previousAnnotationsMenu.setText(MessageFormat.format(format, new Object [] { prevRev })); //NOI18N
+                            previousAnnotationsMenu.setText(MessageFormat.format(format, prevRev)); //NOI18N
                             format = loc.getString("CTL_MenuItem_DiffToPrevious.revision"); // NOI18N
-                            diffMenu.setText(MessageFormat.format(format, new Object [] { prevRev })); //NOI18N
+                            diffMenu.setText(MessageFormat.format(format, prevRev)); //NOI18N
                             checkoutPrevItem.setText(NbBundle.getMessage(AnnotationBar.class, 
                                     "CTL_MenuItem_CheckoutPrevious.revision", new Object [] { prevRev })); //NOI18N
                             popupMenu.setVisible(true);
@@ -695,7 +695,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
             diffMenu.setText(MessageFormat.format(format, previousRevision)); //NOI18N
             diffMenu.setVisible(originalFile != null);
             format = loc.getString("CTL_MenuItem_Checkout"); // NOI18N
-            checkoutMenu.setText(MessageFormat.format(format, new Object [] { revisionPerLine.getRevision().substring(0, 7) }));
+            checkoutMenu.setText(MessageFormat.format(format, revisionPerLine.getRevision().substring(0, 7)));
             checkoutMenu.setVisible(true);
             separator.setVisible(true);
             annotationsForSelectedItem.setVisible(originalFile != null && revisionPerLine != null && !revisionPerLine.getRevision().equals(annotatedRevision));

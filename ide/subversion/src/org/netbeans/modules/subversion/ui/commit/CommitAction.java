@@ -602,7 +602,7 @@ public class CommitAction extends ContextAction {
                 errorLabel = ""; // NOI18N
             } else {
                 dd.setTitle(MessageFormat.format(loc.getString("CTL_CommitDialog_Title_Branch"), new Object [] { contentTitle, stickyTag }));
-                String msg = MessageFormat.format(loc.getString("MSG_CommitForm_InfoBranch"), new Object [] { stickyTag });
+                String msg = MessageFormat.format(loc.getString("MSG_CommitForm_InfoBranch"), stickyTag);
                 errorLabel = "<html><font color=\"" + INFO_COLOR + "\">" + msg + "</font></html>"; // NOI18N
             }
         } else {

@@ -205,7 +205,7 @@ public class EncodingUtilTest extends TestCase {
         String enc = null;
         
         for (int i = 0; i<JAVA_ENCODINGS.length; i++) {
-            char xml[] = MessageFormat.format(fmt, new Object[] {JAVA_ENCODINGS[i]}).toCharArray();
+            char xml[] = MessageFormat.format(fmt, JAVA_ENCODINGS[i]).toCharArray();
             
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             try {                

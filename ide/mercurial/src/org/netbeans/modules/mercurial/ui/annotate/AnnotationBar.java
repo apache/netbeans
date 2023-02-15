@@ -680,12 +680,12 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
                 }
                 String format = loc.getString("CTL_MenuItem_DiffToRevision"); // NOI18N
                 String previousRevisionNumber = previousRevision == null ? null : previousRevision.getRevisionNumber();
-                diffMenu.setText(MessageFormat.format(format, new Object [] { revisionPerLine, previousRevisionNumber == null ? loc.getString("LBL_PreviousRevision") : previousRevisionNumber})); //NOI18N
+                diffMenu.setText(MessageFormat.format(format, revisionPerLine, previousRevisionNumber == null ? loc.getString("LBL_PreviousRevision") : previousRevisionNumber)); //NOI18N
                 diffMenu.setVisible(originalFile != null);
                 rollbackMenu.setVisible(true);
                 separator.setVisible(true);
                 format = loc.getString("CTL_MenuItem_ShowAnnotationsPrevious"); // NOI18N
-                previousAnnotationsMenu.setText(MessageFormat.format(format, new Object [] { previousRevisionNumber == null ? loc.getString("LBL_PreviousRevision") : previousRevisionNumber})); //NOI18N
+                previousAnnotationsMenu.setText(MessageFormat.format(format, previousRevisionNumber == null ? loc.getString("LBL_PreviousRevision") : previousRevisionNumber)); //NOI18N
                 previousAnnotationsMenu.setVisible(originalFile != null);
                 previousAnnotationsMenu.setEnabled(!"-1".equals(previousRevisionNumber)); //NOI18N
                 annotationsForSelectedItem.setVisible(originalFile != null && revisionPerLine != null && !revisionPerLine.equals(annotatedRevision));

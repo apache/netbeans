@@ -168,7 +168,7 @@ public class HtmlPrintContainer implements PrintContainer {
         String styleId = this.styles.getStyleId (font, foreColor, backColor);
         boolHolder[0]&= (styleId!=null);
         if (boolHolder[0]) {
-            buffer.append(MessageFormat.format(T_BLOCK_S,new Object[]{styleId}));
+            buffer.append(MessageFormat.format(T_BLOCK_S, styleId));
         }
         buffer.append (text);
         if (boolHolder[0]) {
@@ -188,9 +188,9 @@ public class HtmlPrintContainer implements PrintContainer {
         result.append (EOL);
         result.append (T_HEAD_S);
         result.append (EOL);
-        result.append (MessageFormat.format (T_TITLE, new Object[] {this.shortFileName}));
+        result.append (MessageFormat.format (T_TITLE, this.shortFileName));
         result.append (EOL);
-        result.append (MessageFormat.format (T_CHARSET, new Object[] {this.charset}));
+        result.append (MessageFormat.format (T_CHARSET, this.charset));
         result.append (EOL);
         result.append (T_STYLE_S);
         result.append (EOL);
@@ -211,7 +211,7 @@ public class HtmlPrintContainer implements PrintContainer {
         result.append (EOL);
         result.append (T_BODY_S); //NOI18N
         result.append (EOL);
-        result.append (MessageFormat.format (T_NAME_TABLE, new Object[] {this.fileName}));
+        result.append (MessageFormat.format (T_NAME_TABLE, this.fileName));
         result.append (EOL);
         result.append (T_PRE_S);
         result.append (EOL);

@@ -604,7 +604,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
             String previousRevision;
             if ((previousRevision = getPreviousRevision(revisionPerLine)) != null) {
                 String format = loc.getString("CTL_MenuItem_DiffToRevision");
-                diffMenu.setText(MessageFormat.format(format, new Object [] { revisionPerLine, getPreviousRevision(revisionPerLine) }));
+                diffMenu.setText(MessageFormat.format(format, revisionPerLine, getPreviousRevision(revisionPerLine)));
                 diffMenu.setVisible(true);
                 previousAnnotationsMenu.setText(loc.getString("CTL_MenuItem_ShowAnnotationsPrevious")); //NOI18N
                 previousAnnotationsMenu.setVisible(file != null);

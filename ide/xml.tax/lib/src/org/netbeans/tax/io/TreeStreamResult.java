@@ -371,7 +371,7 @@ public class TreeStreamResult implements TreeOutputResult {
          */
         public void writeCDATASection (TreeCDATASection cdataSection) throws TreeException {
             String cdataData = cdataSection.getData ();
-            String cdataString = MessageFormat.format ("<![CDATA[{0}]]>", new Object [] { cdataData }); // NOI18N
+            String cdataString = MessageFormat.format ("<![CDATA[{0}]]>", cdataData); // NOI18N
             write (cdataString);
         }
         
@@ -379,7 +379,7 @@ public class TreeStreamResult implements TreeOutputResult {
          */
         public void writeCharacterReference (TreeCharacterReference characterReference) throws TreeException {
             String refName = characterReference.getName ();
-            String refString = MessageFormat.format ("&{0};", new Object [] { refName }); // NOI18N
+            String refString = MessageFormat.format ("&{0};", refName); // NOI18N
             write (refString);
         }
         
@@ -387,7 +387,7 @@ public class TreeStreamResult implements TreeOutputResult {
          */
         public void writeComment (TreeComment comment) throws TreeException {
             String comName = comment.getData ();
-            String comString = MessageFormat.format ("<!--{0}-->", new Object [] { comName }); // NOI18N
+            String comString = MessageFormat.format ("<!--{0}-->", comName); // NOI18N
             write (comString);
         }
         
@@ -571,7 +571,7 @@ public class TreeStreamResult implements TreeOutputResult {
                 writeObjectList (element);
                 
                 //                  startIndent();
-                String endElemString = MessageFormat.format ("</{0}>", new Object [] { elemName }); // NOI18N
+                String endElemString = MessageFormat.format ("</{0}>", elemName); // NOI18N
                 write (endElemString);
             }
         }
@@ -594,7 +594,7 @@ public class TreeStreamResult implements TreeOutputResult {
                     " NDATA " + entityDecl.getNotationName (); // NOI18N
                     break;
             }
-            String entString = MessageFormat.format ("<!ENTITY {0}{1} {2}>", new Object [] { entParam, entName, entType }); // NOI18N
+            String entString = MessageFormat.format ("<!ENTITY {0}{1} {2}>", entParam, entName, entType); // NOI18N
             write (entString);
         }
         
@@ -603,7 +603,7 @@ public class TreeStreamResult implements TreeOutputResult {
         public void writeGeneralEntityReference (TreeGeneralEntityReference generalEntityReference) throws TreeException {
             String refName = generalEntityReference.getName ();
             String refString = MessageFormat.format
-            ("&{0};", new Object [] { refName }); // NOI18N
+            ("&{0};", refName); // NOI18N
             write (refString);
         }
         
@@ -634,7 +634,7 @@ public class TreeStreamResult implements TreeOutputResult {
             String piTarget = processingInstruction.getTarget ();
             String piData = processingInstruction.getData ();
             String piString = MessageFormat.format
-            ("<?{0} {1}?>", new Object [] { piTarget, piData }); // NOI18N
+            ("<?{0} {1}?>", piTarget, piData); // NOI18N
             write (piString);
         }
         

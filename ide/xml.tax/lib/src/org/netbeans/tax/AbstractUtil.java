@@ -108,7 +108,7 @@ public abstract class AbstractUtil {
      * @return localized value.
      */
     public final String getString (String key, Object param) {
-        return MessageFormat.format (getBundle().getString (key), new Object[] {param});
+        return MessageFormat.format (getBundle().getString (key), param);
     }
     
     /** Get localized character. Usually used on mnemonic.

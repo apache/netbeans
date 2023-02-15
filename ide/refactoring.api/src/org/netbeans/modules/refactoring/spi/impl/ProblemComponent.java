@@ -192,7 +192,7 @@ public class ProblemComponent extends javax.swing.JPanel {
         RefactoringUI ui;
         
         public CallbackAction(RefactoringUI ui) {
-            super(MessageFormat.format(NbBundle.getMessage(ProblemComponent.class, "LBL_Rerun"), new Object[]{ui.getName()}));
+            super(MessageFormat.format(NbBundle.getMessage(ProblemComponent.class, "LBL_Rerun"), ui.getName()));
             this.ui = ui;
         }
         

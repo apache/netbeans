@@ -57,10 +57,10 @@ public final class DbUtilities {
             }
             formattedException.delete(index, formattedException.length());
             formattedException.append('.');
-            return MessageFormat.format(format, new Object[] { message, formattedException });
+            return MessageFormat.format(format, message, formattedException);
         } else {
             String format = NbBundle.getMessage (DbUtilities.class, "ERR_UnableTo_NoDetail"); // NOI18N
-            return MessageFormat.format(format, new Object[] { message });
+            return MessageFormat.format(format, message);
         }
     }
 

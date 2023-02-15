@@ -130,10 +130,10 @@ public final class Setup extends AbstractDiffSetup {
                 } else if (match(status, FileInformation.STATUS_VERSIONED_DELETEDLOCALLY
                 | FileInformation.STATUS_VERSIONED_REMOVEDLOCALLY)) {
                     firstRevision = REVISION_BASE;
-                    firstTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_BaseRevision"), new Object [] { firstRevision });
+                    firstTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_BaseRevision"), firstRevision);
                 } else {
                     firstRevision = REVISION_BASE;
-                    firstTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_BaseRevision"), new Object [] { firstRevision });
+                    firstTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_BaseRevision"), firstRevision);
                 }
 
                 break;
@@ -154,7 +154,7 @@ public final class Setup extends AbstractDiffSetup {
                     firstTitle = loc.getString("MSG_DiffPanel_RemoteDeleted");
                 } else {
                     firstRevision = REVISION_HEAD;
-                    firstTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_RemoteModified"), new Object [] { firstRevision });
+                    firstTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_RemoteModified"), firstRevision);
                 }
                 break;
 
@@ -173,7 +173,7 @@ public final class Setup extends AbstractDiffSetup {
 
                 if (match(status, FileInformation.STATUS_VERSIONED_CONFLICT)) {
                     secondRevision = REVISION_CURRENT;
-                    secondTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_LocalConflict"), new Object [] { secondRevision });
+                    secondTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_LocalConflict"), secondRevision);
                 } else if (match(status, FileInformation.STATUS_NOTVERSIONED_NEWLOCALLY
                 | FileInformation.STATUS_VERSIONED_ADDEDLOCALLY)) {
                     secondRevision = REVISION_CURRENT;
@@ -187,7 +187,7 @@ public final class Setup extends AbstractDiffSetup {
                     secondTitle = loc.getString("MSG_DiffPanel_LocalDeleted");
                 } else {
                     secondRevision = REVISION_CURRENT;
-                    secondTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_LocalModified"), new Object [] { secondRevision });
+                    secondTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_LocalModified"), secondRevision);
                 }
                 break;
 
@@ -207,7 +207,7 @@ public final class Setup extends AbstractDiffSetup {
                     secondTitle = loc.getString("MSG_DiffPanel_RemoteDeleted");
                 } else {
                     secondRevision = REVISION_HEAD;
-                    secondTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_RemoteModified"), new Object [] { secondRevision });
+                    secondTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_RemoteModified"), secondRevision);
                 }            
                 break;
 
@@ -290,7 +290,7 @@ public final class Setup extends AbstractDiffSetup {
                     headTitle = loc.getString("MSG_DiffPanel_RemoteDeleted");
                 } else if (status.getRepositoryTextStatus().equals(SVNStatusKind.MODIFIED)) {
                     firstRevision = REVISION_HEAD;
-                    headTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_RemoteModified"), new Object [] { firstRevision });
+                    headTitle = MessageFormat.format(loc.getString("MSG_DiffPanel_RemoteModified"), firstRevision);
                 } else {
                     firstRevision = REVISION_HEAD;
                     headTitle = REVISION_HEAD.toString();

@@ -163,11 +163,11 @@ abstract class MoveTreeCommand extends GitCommand {
             String relPathToSource = Utils.getRelativePath(workTree, source);
             String relPathToTarget = Utils.getRelativePath(workTree, target);
             if (relPathToSource.startsWith(relPathToTarget + "/")) { //NOI18N
-                monitor.preparationsFailed(MessageFormat.format(Utils.getBundle(MoveTreeCommand.class).getString("MSG_Error_SourceFolderUnderTarget"), new Object[] { relPathToSource, relPathToTarget } )); //NOI18N
-                throw new GitException(MessageFormat.format(Utils.getBundle(MoveTreeCommand.class).getString("MSG_Error_SourceFolderUnderTarget"), new Object[] { relPathToSource, relPathToTarget } )); //NOI18N
+                monitor.preparationsFailed(MessageFormat.format(Utils.getBundle(MoveTreeCommand.class).getString("MSG_Error_SourceFolderUnderTarget"), relPathToSource, relPathToTarget)); //NOI18N
+                throw new GitException(MessageFormat.format(Utils.getBundle(MoveTreeCommand.class).getString("MSG_Error_SourceFolderUnderTarget"), relPathToSource, relPathToTarget)); //NOI18N
             } else if (relPathToTarget.startsWith(relPathToSource + "/")) { //NOI18N
-                monitor.preparationsFailed(MessageFormat.format(Utils.getBundle(MoveTreeCommand.class).getString("MSG_Error_TargetFolderUnderSource"), new Object[] { relPathToTarget, relPathToSource } )); //NOI18N
-                throw new GitException(MessageFormat.format(Utils.getBundle(MoveTreeCommand.class).getString("MSG_Error_TargetFolderUnderSource"), new Object[] { relPathToTarget, relPathToSource } )); //NOI18N
+                monitor.preparationsFailed(MessageFormat.format(Utils.getBundle(MoveTreeCommand.class).getString("MSG_Error_TargetFolderUnderSource"), relPathToTarget, relPathToSource)); //NOI18N
+                throw new GitException(MessageFormat.format(Utils.getBundle(MoveTreeCommand.class).getString("MSG_Error_TargetFolderUnderSource"), relPathToTarget, relPathToSource)); //NOI18N
             }
         }
         return retval;

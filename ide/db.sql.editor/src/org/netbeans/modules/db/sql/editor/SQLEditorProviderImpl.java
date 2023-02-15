@@ -67,7 +67,7 @@ public class SQLEditorProviderImpl implements SQLEditorProvider {
         int i = 1;
         for (;;) {
             String nameFmt = NbBundle.getMessage(SQLEditorProviderImpl.class, "LBL_SQLCommandFileName");
-            String name = MessageFormat.format(nameFmt, new Object[] { Integer.valueOf(i) });
+            String name = MessageFormat.format(nameFmt, Integer.valueOf(i));
             try {
                 sqlFo = tmpFo.createData(name);
             } catch (IOException e) {

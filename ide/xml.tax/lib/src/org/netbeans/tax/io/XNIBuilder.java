@@ -102,10 +102,8 @@ public final class XNIBuilder implements TreeBuilder {
          */
         if (buildClass == TreeDTD.class) {
             
-            String src = MessageFormat.format (DTD_WRAPPER, new Object[] {
-                DTDEntityResolver.DTD_ID,
-                inputSource.getSystemId ()
-            });
+            String src = MessageFormat.format (DTD_WRAPPER, DTDEntityResolver.DTD_ID,
+                    inputSource.getSystemId ());
             
             builderSource = new InputSource (inputSource.getSystemId ());
             builderSource.setCharacterStream (new StringReader (src));

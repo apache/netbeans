@@ -39,7 +39,7 @@ class OpenJPAProvider extends Provider{
 
     @Override
     public String getDisplayName() {
-        return NbBundle.getMessage(KodoProvider.class, "LBL_OpenJPA") + (getVersion()!=null ? " (JPA "+getVersion()+")" : ""); //NOI18N
+        return NbBundle.getMessage(OpenJPAProvider.class, "LBL_OpenJPA") + (getVersion()!=null ? " (JPA "+getVersion()+")" : ""); //NOI18N
     }
     
     @Override
@@ -69,17 +69,26 @@ class OpenJPAProvider extends Provider{
     
     @Override
     public String getTableGenerationPropertyName() {
-        return (getVersion()!=null && Persistence.VERSION_2_1.equals(getVersion())) ? super.getTableGenerationPropertyName() : "openjpa.jdbc.SynchronizeMappings";//NOI18N
+        return getVersion() != null && 
+                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
+                ? super.getTableGenerationPropertyName() 
+                : "openjpa.jdbc.SynchronizeMappings";//NOI18N
     }
 
     @Override
     public String getTableGenerationDropCreateValue() {
-        return (getVersion()!=null && Persistence.VERSION_2_1.equals(getVersion())) ? super.getTableGenerationDropCreateValue() : "buildSchema(SchemaAction='add,deleteTableContents',ForeignKeys=true)";//NOI18N
+        return getVersion() != null && 
+                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
+                ? super.getTableGenerationDropCreateValue()
+                : "buildSchema(SchemaAction='add,deleteTableContents',ForeignKeys=true)";//NOI18N
     }
 
     @Override
     public String getTableGenerationCreateValue() {
-        return (getVersion()!=null && Persistence.VERSION_2_1.equals(getVersion())) ? super.getTableGenerationCreateValue() : "buildSchema(ForeignKeys=true)";//NOI18N
+        return getVersion() != null && 
+                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
+                ? super.getTableGenerationCreateValue()
+                : "buildSchema(ForeignKeys=true)";//NOI18N
     }
 
     @Override

@@ -169,7 +169,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.0+
+     * default implementation is valid for jpa 2.0+
      * @return names of the property representing JDBC URL, map version-property name
      */
     public String getJdbcUrl() {
@@ -177,7 +177,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.0+
+     * default implementation is valid for jpa 2.0+
      * @return name of the property representing JDBC driver.
      */
     public String getJdbcDriver() {
@@ -185,7 +185,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.0+
+     * default implementation is valid for jpa 2.0+
      * @return name of the property representing JDBC user name.
      */
     public String getJdbcUsername() {
@@ -193,7 +193,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.0+
+     * default implementation is valid for jpa 2.0+
      * @return name of the property representing JDBC password.
      */
     public String getJdbcPassword() {
@@ -215,7 +215,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.1+
+     * default implementation is valid for jpa 2.1+
      * @return name of the property representing table generation strategy in database
      */
     public String getTableGenerationPropertyName() {
@@ -223,7 +223,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.1+
+     * default implementation is valid for jpa 2.1+
      * @return value of the property that represents <tt>create tables</tt> strategy.
      */
     public String getTableGenerationCreateValue(){
@@ -231,7 +231,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.1+
+     * default implementation is valid for jpa 2.1+
      * @return value of the property that represents <tt>create and drop tables</tt> strategy.
      */
     public String getTableGenerationDropCreateValue(){

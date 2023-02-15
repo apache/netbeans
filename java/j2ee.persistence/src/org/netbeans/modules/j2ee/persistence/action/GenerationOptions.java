@@ -158,13 +158,12 @@ public final class GenerationOptions {
     }
 
     public String getCallLines(String emName, String ecName, String version){
-        return operation == null ? null : MessageFormat.format(operation.getBody(version), new Object[] {
-            emName,
-            getParameterName(),
-            getParameterType(),
-            getReturnType(),
-            getQueryAttribute(),
-            ecName});
+        return operation == null ? null : MessageFormat.format(operation.getBody(version), emName,
+                getParameterName(),
+                getParameterType(),
+                getReturnType(),
+                getQueryAttribute(),
+                ecName);
     }
 
     public void setMethodName(String methodName) {

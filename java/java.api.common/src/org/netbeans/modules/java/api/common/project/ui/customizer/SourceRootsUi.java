@@ -603,9 +603,7 @@ out:        for( int i = 0; i < files.length; i++ ) {
                     if (p!=null) {
                         ProjectInformation pi = ProjectUtils.getInformation(p);
                         String projectName = pi.getDisplayName();
-                        message = MessageFormat.format (NbBundle.getMessage(SourceRootsUi.class,"TXT_RootOwnedByProject"), new Object[] {
-                            message,
-                            projectName});
+                        message = MessageFormat.format (NbBundle.getMessage(SourceRootsUi.class,"TXT_RootOwnedByProject"), message, projectName);
                     }
                 }
                 return super.getListCellRendererComponent(list, message, index, isSelected, cellHasFocus);

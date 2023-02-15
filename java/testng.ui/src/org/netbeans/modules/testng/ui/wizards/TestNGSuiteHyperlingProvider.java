@@ -263,7 +263,7 @@ public class TestNGSuiteHyperlingProvider implements HyperlinkProvider {
                 } else {
                     String key = "goto_source_source_not_found"; //NOI18N
                     String msg = NbBundle.getMessage(TestNGSuiteHyperlingProvider.class, key);
-                    StatusDisplayer.getDefault().setStatusText(MessageFormat.format(msg, new Object[]{file}));
+                    StatusDisplayer.getDefault().setStatusText(MessageFormat.format(msg, file));
                 }
                 break;
             case JAVA_SOURCE:
@@ -291,7 +291,7 @@ public class TestNGSuiteHyperlingProvider implements HyperlinkProvider {
                                 if (!ElementOpen.open(cp, element)) {
                                     String key = "goto_source_source_not_found"; //NOI18N
                                     String msg = NbBundle.getMessage(TestNGSuiteHyperlingProvider.class, key);
-                                    StatusDisplayer.getDefault().setStatusText(MessageFormat.format(msg, new Object[]{file}));
+                                    StatusDisplayer.getDefault().setStatusText(MessageFormat.format(msg, file));
                                 }
                             }
                         }

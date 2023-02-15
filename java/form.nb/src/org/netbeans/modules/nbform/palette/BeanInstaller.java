@@ -120,7 +120,7 @@ public final class BeanInstaller {
             }
             sb.delete(sb.length()-2, sb.length());
             String messageFormat = PaletteUtils.getBundleString("MSG_cannotInstallBeans"); // NOI18N
-            String message = MessageFormat.format(messageFormat, new Object[] {sb.toString()});
+            String message = MessageFormat.format(messageFormat, sb.toString());
             NotifyDescriptor nd = new NotifyDescriptor.Message(message);
             DialogDisplayer.getDefault().notify(nd);
             if (beans.isEmpty()) return;

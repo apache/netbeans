@@ -164,7 +164,7 @@ class PanelProjectLocationExtSrc extends SettingsPanel {
             File file;
             do {
                 index++;                            
-                projName = MessageFormat.format (formater, new Object[]{new Integer (index)});                
+                projName = MessageFormat.format (formater, index);
                 file = new File (projLoc, projName);                
             } while (file.exists());                                
             settings.putProperty (NewJ2SEProjectWizardIterator.PROP_NAME_INDEX, new Integer(index));                        
@@ -264,7 +264,7 @@ class PanelProjectLocationExtSrc extends SettingsPanel {
                 }                
                 if (file != null) {
                     String format = NbBundle.getMessage (PanelSourceFolders.class,"MSG_ProjectFolderInvalid");
-                    return MessageFormat.format(format, new Object[] {file});
+                    return MessageFormat.format(format, file);
                 }
             }
         }

@@ -82,7 +82,7 @@ public class ScanUtilsTest extends NbTestCase {
 
             PrintWriter out = new PrintWriter (new FileWriter (data));
             try {
-                out.println(MessageFormat.format(TEST_FILE_CONTENT, new Object[] {className, otherClassName}));
+                out.println(MessageFormat.format(TEST_FILE_CONTENT, className, otherClassName));
             } finally {
                 out.close ();
             }

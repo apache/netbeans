@@ -159,10 +159,7 @@ public class ClassPathListCellRenderer extends DefaultListCellRenderer {
                     String projectName;
                     ProjectInformation pi = ProjectUtils.getInformation(p);
                     projectName = pi.getDisplayName();
-                    return MessageFormat.format(NbBundle.getMessage(ClassPathListCellRenderer.class,"MSG_ProjectArtifactFormat"), new Object[] {
-                        projectName,
-                                item.getArtifactURI().toString()
-                    });
+                    return MessageFormat.format(NbBundle.getMessage(ClassPathListCellRenderer.class,"MSG_ProjectArtifactFormat"), projectName, item.getArtifactURI().toString());
                 }
            case ClassPathSupport.Item.TYPE_JAR:
                 if ( item.isBroken() ) {

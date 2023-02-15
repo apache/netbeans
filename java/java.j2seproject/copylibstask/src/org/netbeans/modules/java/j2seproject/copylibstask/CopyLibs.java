@@ -178,7 +178,7 @@ public class CopyLibs extends Jar {
             }
             try (PrintWriter out = new PrintWriter (new FileWriter (readme))) {
                 final String content = bundle.getString("TXT_README_FILE_CONTENT");
-                out.println (MessageFormat.format(content,new Object[] {destFile.getName()}));
+                out.println (MessageFormat.format(content, destFile.getName()));
             }
         } catch (IOException ioe) {
             this.log("Cannot generate readme file.",Project.MSG_VERBOSE);

@@ -82,7 +82,7 @@ public class CompilationInfoTest extends NbTestCase {
 
             PrintWriter out = new PrintWriter(new FileWriter(data));
             try {
-                out.println(MessageFormat.format(TEST_FILE_CONTENT, new Object[]{className}));
+                out.println(MessageFormat.format(TEST_FILE_CONTENT, className));
             } finally {
                 out.close();
             }

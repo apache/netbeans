@@ -84,7 +84,7 @@ public class WebPagesNode extends Node {
 	if (!this.containsChild(displayName) ) return null;
 	Node node = null;
 	try {
-	    Constructor constructor = clazz.getConstructor(new Class[] {Node.class, String.class});
+	    Constructor constructor = clazz.getConstructor(Node.class, String.class);
 	    node = (Node) constructor.newInstance(new Object[] {this, displayName});
 	} catch (Exception ex) {
 	    throw new RuntimeException("Cannot instantiate " + clazz, ex);

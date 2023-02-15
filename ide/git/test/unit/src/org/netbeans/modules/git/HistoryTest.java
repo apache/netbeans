@@ -48,9 +48,7 @@ public class HistoryTest extends AbstractGitTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        MockServices.setServices(new Class[] {
-            VersioningAnnotationProvider.class,
-            GitVCS.class});
+        MockServices.setServices(VersioningAnnotationProvider.class, GitVCS.class);
     }
 
     public void testOriginalFile () throws Exception {

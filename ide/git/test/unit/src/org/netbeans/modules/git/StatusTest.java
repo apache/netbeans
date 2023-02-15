@@ -73,9 +73,7 @@ public class StatusTest extends AbstractGitTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        MockServices.setServices(new Class[] {
-            VersioningAnnotationProvider.class,
-            GitVCS.class});
+        MockServices.setServices(VersioningAnnotationProvider.class, GitVCS.class);
         Git.STATUS_LOG.setLevel(Level.ALL);
         setAutomaticRefreshEnabled(true);
     }

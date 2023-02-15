@@ -60,7 +60,7 @@ public class SvnFileSystemTest extends FileSystemFactoryHid {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        MockServices.setServices(new Class[] {FileBasedURLMapper.class});
+        MockServices.setServices(FileBasedURLMapper.class);
     }
     
     @Override

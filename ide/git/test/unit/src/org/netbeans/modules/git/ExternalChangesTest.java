@@ -58,9 +58,7 @@ public class ExternalChangesTest extends AbstractGitTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        MockServices.setServices(new Class[] {
-            VersioningAnnotationProvider.class,
-            GitVCS.class});
+        MockServices.setServices(VersioningAnnotationProvider.class, GitVCS.class);
         
         System.setProperty("versioning.git.handleExternalEvents", "true");
         // create

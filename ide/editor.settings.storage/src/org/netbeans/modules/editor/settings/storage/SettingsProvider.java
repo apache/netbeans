@@ -104,10 +104,8 @@ public final class SettingsProvider implements MimeDataProvider {
                         new MyLookup(realMimePath, profile),
                         Lookups.exclude(
                             MimeLookup.getLookup(realMimePath),
-                            new Class [] {
-                                FontColorSettings.class,
-                                KeyBindingSettings.class
-                            })
+                                FontColorSettings.class, KeyBindingSettings.class
+                            )
                     });
                 } else {
                     lookup = new MyLookup(mimePath, null);

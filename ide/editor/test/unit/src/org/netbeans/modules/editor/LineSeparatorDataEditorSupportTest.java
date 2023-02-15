@@ -50,7 +50,7 @@ public class LineSeparatorDataEditorSupportTest extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        MockServices.setServices(new Class[]{MockMimeLookup.class});
+        MockServices.setServices(MockMimeLookup.class);
         textMimePath = MimePath.parse("text/plain");
         MockMimeLookup.setInstances(textMimePath, new NbEditorKit(), NbPreferences.forModule(getClass()));
     }

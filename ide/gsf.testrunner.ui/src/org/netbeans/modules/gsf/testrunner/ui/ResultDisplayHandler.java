@@ -418,7 +418,7 @@ public final class ResultDisplayHandler {
 
         if (method == null) {
             try {
-                method = ResultPanelTree.class.getDeclaredMethod(methodName, new Class[]{paramType});
+                method = ResultPanelTree.class.getDeclaredMethod(methodName, paramType);
             } catch (Exception ex) {
                 method = null;
                 ErrorManager.getDefault().notify(ErrorManager.ERROR, ex);

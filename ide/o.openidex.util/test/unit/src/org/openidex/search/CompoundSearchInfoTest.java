@@ -41,7 +41,7 @@ public class CompoundSearchInfoTest extends NbTestCase {
     }
     
     public void setUp() {
-        MockServices.setServices(new Class[] {DummyDataLoader.class});
+        MockServices.setServices(DummyDataLoader.class);
     }
 
     public void testNullArgument() {

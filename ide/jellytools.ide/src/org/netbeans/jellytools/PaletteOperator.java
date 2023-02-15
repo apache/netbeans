@@ -93,7 +93,7 @@ public class PaletteOperator extends TopComponentOperator {
                 try {
                     // call method org.netbeans.modules.palette.DefaultItem#getDisplayName
                     Object item = oper.getModel().getElementAt(index);
-                    Method getDisplayNameMethod = item.getClass().getMethod("getDisplayName", new Class[] {}); // NOI18N
+                    Method getDisplayNameMethod = item.getClass().getMethod("getDisplayName"); // NOI18N
                     getDisplayNameMethod.setAccessible(true);
                     String indexDisplayName = (String)getDisplayNameMethod.invoke(item, new Object[] {});
                     return oper.getComparator().equals(indexDisplayName, displayName);

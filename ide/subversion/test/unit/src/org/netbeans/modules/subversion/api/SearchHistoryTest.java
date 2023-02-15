@@ -55,8 +55,7 @@ public class SearchHistoryTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         clearWorkDir();
-        MockServices.setServices(new Class[] {
-            SubversionVCS.class});
+        MockServices.setServices(SubversionVCS.class);
         dataRootDir = getWorkDir();
         wc = new File(dataRootDir, getName() + "_wc");
         repoDir = new File(dataRootDir, "repo");

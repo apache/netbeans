@@ -131,10 +131,8 @@ public class EditorOperatorTest extends JellyTestCase {
         try {
             String className = "org.netbeans.editor.Utilities";
             Class<?> clazz = Class.forName(className);
-            Method setStatusTextMethod = clazz.getDeclaredMethod("setStatusText", new Class[]{
-                        JTextComponent.class,
-                        String.class
-                    });
+            Method setStatusTextMethod = clazz.getDeclaredMethod("setStatusText", JTextComponent.class,
+                    String.class);
             setStatusTextMethod.invoke(null, new Object[]{
                         (JTextComponent) eo.txtEditorPane().getSource(),
                         expected

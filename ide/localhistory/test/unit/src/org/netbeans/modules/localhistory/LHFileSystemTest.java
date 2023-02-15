@@ -53,7 +53,7 @@ public class LHFileSystemTest extends FileSystemFactoryHid {
 
         f.mkdirs();
         System.setProperty("netbeans.user", f.getAbsolutePath());
-        MockServices.setServices(new Class[] {FileBasedURLMapper.class});
+        MockServices.setServices(FileBasedURLMapper.class);
 
         // ensure test files are handled by LH
         System.setProperty("netbeans.localhistory.historypath", System.getProperty("work.dir"));

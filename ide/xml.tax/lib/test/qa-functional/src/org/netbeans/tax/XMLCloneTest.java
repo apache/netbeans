@@ -286,7 +286,7 @@ public class XMLCloneTest extends XTest {
     
     private FieldChecker newCheckerInstace(Class clazz, Field field, Object node, Object clone) {
         try {
-            Constructor constructor = clazz.getDeclaredConstructor(new Class[] {XMLCloneTest.class, Field.class, Object.class, Object.class});
+            Constructor constructor = clazz.getDeclaredConstructor(XMLCloneTest.class, Field.class, Object.class, Object.class);
             return  (FieldChecker) constructor.newInstance(new Object[] {this, field, node, clone});
         } catch (Exception e) {
             e.printStackTrace(dbg);

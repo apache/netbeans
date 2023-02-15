@@ -136,7 +136,7 @@ final class CoverageReportTopComponent extends TopComponent {
         //table.setAutoCreateRowSorter(true);
         try {
             // Try with reflection:
-            Method method = JTable.class.getMethod("setAutoCreateRowSorter", new Class[]{Boolean.TYPE}); // NOI18N
+            Method method = JTable.class.getMethod("setAutoCreateRowSorter", Boolean.TYPE); // NOI18N
             if (method != null) {
                 method.invoke(table, Boolean.TRUE);
             }
@@ -285,7 +285,7 @@ final class CoverageReportTopComponent extends TopComponent {
                     // JDK6 only...
                     // Try with reflection:
                     //row = table.convertRowIndexToModel(row);
-                    Method method = JTable.class.getMethod("convertRowIndexToModel", new Class[]{Integer.TYPE}); // NOI18N
+                    Method method = JTable.class.getMethod("convertRowIndexToModel", Integer.TYPE); // NOI18N
                     if (method != null) {
                         row = (Integer) method.invoke(table, Integer.valueOf(row));
                     }

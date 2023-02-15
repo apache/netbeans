@@ -81,9 +81,8 @@ public class InteceptorTest extends NbTestCase {
                 && !"svnkit".equals(System.getProperty("svnClientAdapterFactory", null))) {
             System.setProperty("svnClientAdapterFactory", "svnkit");
         }
-        MockServices.setServices(new Class[] {
-            VersioningAnnotationProvider.class,
-            SubversionVCS.class});
+        MockServices.setServices(VersioningAnnotationProvider.class,
+                SubversionVCS.class);
         System.setProperty("data.root.dir", getDataDir().getAbsolutePath()) ;
         dataRootDir = new File(System.getProperty("data.root.dir")); 
         FileUtil.refreshFor(dataRootDir);

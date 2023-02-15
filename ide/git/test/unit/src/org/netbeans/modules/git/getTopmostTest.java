@@ -219,8 +219,7 @@ public class getTopmostTest extends NbTestCase {
     }
 
     public void testExcludeUserDir () throws Exception {
-        MockServices.setServices(new Class[] {
-            GitVCS.class});
+        MockServices.setServices(GitVCS.class);
         
         Field f = Utils.class.getDeclaredField("unversionedFolders");
         f.setAccessible(true);

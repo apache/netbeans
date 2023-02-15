@@ -50,8 +50,7 @@ public class HgCommandTest extends AbstractHgTestCase {
     @Override
     protected void setUp () throws Exception {
         super.setUp();
-        MockServices.setServices(new Class[] {
-            MercurialVCS.class});
+        MockServices.setServices(MercurialVCS.class);
     }
     
     public void testNumericTagname () throws Exception {

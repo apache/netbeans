@@ -264,7 +264,7 @@ public class BlacklistedClassesHandlerSingleton extends Handler implements Black
                 ClassLoader parentClassLoader = ClassLoader.getSystemClassLoader();
                 if (myClassLoader != parentClassLoader) {
                     Class otherClassInstance = parentClassLoader.loadClass(BlacklistedClassesHandlerSingleton.class.getName());
-                    Method getInstanceMethod = otherClassInstance.getDeclaredMethod("getInstance", new Class[] { });
+                    Method getInstanceMethod = otherClassInstance.getDeclaredMethod("getInstance");
                     Object otherAbsoluteSingleton = getInstanceMethod.invoke(null, new Object[] { } );
                     instance = (BlacklistedClassesHandler) Proxy.newProxyInstance(myClassLoader,
                                                          new Class[] { BlacklistedClassesHandler.class },

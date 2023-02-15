@@ -142,7 +142,7 @@ public class AnnotationsTest extends BaseDocumentUnitTestCase {
     }
 
     private Annotations.LineAnnotations getLineAnnotations(int lineIndex) throws Exception {
-        Method getLineAnnotations = Annotations.class.getDeclaredMethod("getLineAnnotations", new Class[] { Integer.TYPE });
+        Method getLineAnnotations = Annotations.class.getDeclaredMethod("getLineAnnotations", Integer.TYPE);
         getLineAnnotations.setAccessible(true);
         Annotations.LineAnnotations lineAnnotations = (Annotations.LineAnnotations)
             getLineAnnotations.invoke(getAnnotations(), new Object[] { new Integer(lineIndex) });

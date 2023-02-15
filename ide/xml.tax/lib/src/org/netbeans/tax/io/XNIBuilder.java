@@ -1571,7 +1571,7 @@ DOCTYPE_LOOP:
         
         private void setReadOnly (TreeObject treeObject, boolean value) {
             try {
-                Method setReadOnlyMethod = TreeObject.class.getDeclaredMethod ("setReadOnly", new Class[] { Boolean.TYPE }); // NOI18N
+                Method setReadOnlyMethod = TreeObject.class.getDeclaredMethod ("setReadOnly", Boolean.TYPE); // NOI18N
                 setReadOnlyMethod.setAccessible (true);
                 setReadOnlyMethod.invoke (treeObject, new Object[] { value == true ? Boolean.TRUE : Boolean.FALSE});
             } catch (NoSuchMethodException exc) {

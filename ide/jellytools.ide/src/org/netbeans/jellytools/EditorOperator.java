@@ -617,7 +617,7 @@ public class EditorOperator extends TopComponentOperator {
                 ArrayList<Object> result = new ArrayList<Object>();
                 try {
                     Class annotationsClass = Class.forName("org.netbeans.editor.Annotations");
-                    Method getLineAnnotationsMethod = annotationsClass.getDeclaredMethod("getLineAnnotations", new Class[]{int.class});
+                    Method getLineAnnotationsMethod = annotationsClass.getDeclaredMethod("getLineAnnotations", int.class);
                     getLineAnnotationsMethod.setAccessible(true);
                     Object lineAnnotations = getLineAnnotationsMethod.invoke(getAnnotationsInstance(), new Object[]{Integer.valueOf(lineNumber - 1)});
                     if (lineAnnotations != null) {

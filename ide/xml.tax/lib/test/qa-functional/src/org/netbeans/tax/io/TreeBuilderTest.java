@@ -101,7 +101,7 @@ public class TreeBuilderTest extends XTest {
             };
             
             Class klass = myl.loadClass("org.netbeans.tax.io.XNIBuilder");
-            Constructor cons = klass.getConstructor(new Class[] {Class.class, InputSource.class, EntityResolver.class, TreeStreamBuilderErrorHandler.class});
+            Constructor cons = klass.getConstructor(Class.class, InputSource.class, EntityResolver.class, TreeStreamBuilderErrorHandler.class);
             TreeBuilder builder = (TreeBuilder) cons.newInstance(new Object[] {clazz, in, EntityCatalog.getDefault(), errHandler});
             TreeDocumentRoot document = (TreeDocumentRoot) builder.buildDocument();
             

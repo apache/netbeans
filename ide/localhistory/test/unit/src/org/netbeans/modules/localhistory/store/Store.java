@@ -91,7 +91,7 @@ public class Store {
         
     private static Object getGetterValue(Object obj, String methodName) {
         try {
-            Method m = obj.getClass().getDeclaredMethod(methodName, new Class[]{});
+            Method m = obj.getClass().getDeclaredMethod(methodName);
             m.setAccessible(true);        
             return m.invoke(obj, new Object[] {});        
         } catch (Exception e) {
@@ -125,7 +125,7 @@ public class Store {
         private Object storeDataFile;
         public DataStoreEntry(File dataFile) throws Exception {
             super(DATA);            
-            Method readStoreData = getStorage().getClass().getDeclaredMethod("readStoreData", new Class[] {File.class, boolean.class});
+            Method readStoreData = getStorage().getClass().getDeclaredMethod("readStoreData", File.class, boolean.class);
             readStoreData.setAccessible(true);            
             storeDataFile = readStoreData.invoke(getStorage(), new Object[]{dataFile, false});                                           
         }
@@ -280,7 +280,7 @@ public class Store {
         private ArrayList<HistoryEntry> historyList;
         public HistoryStoreEntry(File historyFile) throws Exception {
             super(HISTORY);            
-            Method readStoreData = getStorage().getClass().getDeclaredMethod("readHistory", new Class[] {File.class});
+            Method readStoreData = getStorage().getClass().getDeclaredMethod("readHistory", File.class);
             readStoreData.setAccessible(true);            
             List l = (List) readStoreData.invoke(getStorage(), new Object[]{historyFile});                                       
             historyList = new ArrayList<HistoryEntry>(l.size());

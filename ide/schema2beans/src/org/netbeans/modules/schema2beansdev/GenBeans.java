@@ -876,7 +876,7 @@ public class GenBeans {
                     config.messageOut.println(Common.getMessage("MSG_Compiling"));
                 try {
                     Class javacClass = Class.forName("com.sun.tools.javac.Main");
-                    java.lang.reflect.Method compileMethod = javacClass.getDeclaredMethod("compile", new Class[] {String[].class, PrintWriter.class});
+                    java.lang.reflect.Method compileMethod = javacClass.getDeclaredMethod("compile", String[].class, PrintWriter.class);
                     // com.sun.tools.javac.Main.compile(javacArgs, pw);
                     PrintWriter pw = new PrintWriter(config.messageOut, true);
                     Object result = compileMethod.invoke(null,

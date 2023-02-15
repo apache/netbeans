@@ -50,11 +50,11 @@ public class ProcessesImpl implements ProcessesImplementation {
         Method descendants = null;
         Method destroy = null;
         try {
-            toHandle = Process.class.getDeclaredMethod("toHandle", new Class[]{}); // NOI18N
+            toHandle = Process.class.getDeclaredMethod("toHandle"); // NOI18N
             if (toHandle != null) {
                 Class processHandle = Class.forName("java.lang.ProcessHandle"); // NOI18N
-                descendants = processHandle.getDeclaredMethod("descendants", new Class[]{}); // NOI18N
-                destroy = processHandle.getDeclaredMethod("destroy", new Class[]{}); // NOI18N
+                descendants = processHandle.getDeclaredMethod("descendants"); // NOI18N
+                destroy = processHandle.getDeclaredMethod("destroy"); // NOI18N
             }
         } catch (NoClassDefFoundError | Exception ex) {
             LOGGER.log(Level.WARNING, null, ex);

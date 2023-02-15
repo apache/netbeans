@@ -34,7 +34,7 @@ public class Util {
 
     public static <T extends Enum> T parse(Class<T> type, String s) {
         try {
-            Method m = type.getMethod("values", new Class[] {});
+            Method m = type.getMethod("values");
             T[] values = (T[]) (m.invoke(null, new Object[0]));
             for (T value : values) {
                 if (value.toString().equals(s)) {

@@ -136,7 +136,7 @@ public class CharRangesDump {
         public CharacterMethodAcceptor(String methodName) {
             try {
                 characterClassMethod = Character.class.getDeclaredMethod(
-                        methodName, new Class[] { int.class });
+                        methodName, int.class);
             } catch (Exception e) {
                 throw new IllegalArgumentException(e);
             }

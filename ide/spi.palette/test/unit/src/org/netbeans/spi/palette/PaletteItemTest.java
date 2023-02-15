@@ -65,7 +65,7 @@ public class PaletteItemTest extends NbTestCase {
     }
     
     protected void setUp() throws Exception {
-        MockServices.setServices(new Class[] {RepositoryImpl.class});
+        MockServices.setServices(RepositoryImpl.class);
         itemsFolder = createItemsFolder();
         assertNotNull(itemsFolder);
     }

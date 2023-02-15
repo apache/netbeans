@@ -31,7 +31,7 @@ public class Utils {
     }
 
     /*package*/ static void setUp() throws Exception {
-        MockServices.setServices(new Class[] {HtmlLoader.class});
+        MockServices.setServices(HtmlLoader.class);
     }
 
 }

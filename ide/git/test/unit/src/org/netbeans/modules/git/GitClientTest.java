@@ -65,8 +65,7 @@ public class GitClientTest extends AbstractGitTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        MockServices.setServices(new Class[] {
-            GitVCS.class});
+        MockServices.setServices(GitVCS.class);
         IndexingBridge bridge = IndexingBridge.getInstance();
         Field f = IndexingBridge.class.getDeclaredField("LOG");
         f.setAccessible(true);

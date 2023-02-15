@@ -44,8 +44,7 @@ public class CommitDialogTest extends AbstractGitTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        MockServices.setServices(new Class[] {
-            GitVCS.class});
+        MockServices.setServices(GitVCS.class);
     }
 
     public void testPrefilledPanel() throws Exception {

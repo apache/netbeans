@@ -106,12 +106,10 @@ public class WrapperTest extends NbTestCase {
         
         
         Class builderClass = loader.loadClass("org.netbeans.tax.io.XNIBuilder");
-        Constructor builderConstructor = builderClass.getConstructor(new Class[] {
-            Class.class, 
-            InputSource.class, 
-            EntityResolver.class, 
-            TreeStreamBuilderErrorHandler.class
-        });
+        Constructor builderConstructor = builderClass.getConstructor(Class.class,
+                InputSource.class,
+                EntityResolver.class,
+                TreeStreamBuilderErrorHandler.class);
         TreeBuilder builder = (TreeBuilder) builderConstructor.newInstance(new Object[] {
             TreeDocument.class,
             in,

@@ -53,8 +53,7 @@ public class ApiTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {          
         super.setUp();
-        MockServices.setServices(new Class[] {
-            SubversionVCS.class});
+        MockServices.setServices(SubversionVCS.class);
         workDir = new File(getWorkDir(), "wc");
 
         File dataRootDir = new File(getWorkDirPath()); ;

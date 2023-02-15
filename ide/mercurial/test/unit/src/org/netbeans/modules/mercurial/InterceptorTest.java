@@ -55,9 +55,7 @@ public class InterceptorTest extends AbstractHgTestCase {
     protected void setUp() throws Exception {
         System.setProperty("netbeans.user", new File(getWorkDir().getParentFile(), "userdir").getAbsolutePath());
         super.setUp();
-        MockServices.setServices(new Class[] {
-            VersioningAnnotationProvider.class,
-            MercurialVCS.class});
+        MockServices.setServices(VersioningAnnotationProvider.class, MercurialVCS.class);
         // create
         FileObject fo = FileUtil.toFileObject(getWorkTreeDir());
     }

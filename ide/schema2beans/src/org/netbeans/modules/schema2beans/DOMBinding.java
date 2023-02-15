@@ -430,9 +430,7 @@ public class DOMBinding {
                                                                     prefix);
                     }
                     Constructor c =
-                        cls.getDeclaredConstructor(new Class[] {String.class,
-                                                                String.class,
-                                                                String.class});
+                        cls.getDeclaredConstructor(String.class, String.class, String.class);
                     return c.newInstance(new Object[] {ns, localPart, prefix});
                 }
                 return JavaBeansUtil.convertValue(cls, ret.trim());
@@ -638,7 +636,7 @@ public class DOMBinding {
                                                                    new Class[0]);
                             String localPart = (String) localPartMethod.invoke(value,
                                                                        new Object[0]);
-                            Constructor c = cls.getDeclaredConstructor(new Class[] {String.class, String.class, String.class});
+                            Constructor c = cls.getDeclaredConstructor(String.class, String.class, String.class);
                             prefix = prop.getDtdName()+"_ns__";
                             value = c.newInstance(new Object[] {ns, localPart,
                                                                 prefix});

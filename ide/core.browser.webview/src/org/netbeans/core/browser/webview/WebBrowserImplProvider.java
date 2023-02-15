@@ -67,7 +67,7 @@ public class WebBrowserImplProvider {
             if (cl != null) {
                  //return new WebBrowserImpl();
                 Class impl = cl.loadClass("org.netbeans.core.browser.webview.ext.WebBrowserImpl");
-                Constructor c = impl.getConstructor(new Class[] {});
+                Constructor c = impl.getConstructor();
                 return (WebBrowser)c.newInstance(new Object[] {});
             }
         } catch (Throwable ex) {

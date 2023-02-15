@@ -465,7 +465,7 @@ public class EncodedReaderFactory {
             Class<?> c = systemClassLoader.
                     loadClass("org.netbeans.modules.java.Util"); // NOI18N
             org_netbeans_modules_java_Util_getFileEncoding =
-                c.getMethod("getFileEncoding", new Class[] {FileObject.class});
+                c.getMethod("getFileEncoding", FileObject.class);
         } catch (Exception e) {
             // Ignore
         }

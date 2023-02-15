@@ -111,7 +111,7 @@ public class BaseCaretTest extends NbTestCase {
         Method m = null;
         
         try {
-            m = Component.class.getDeclaredMethod("processEvent", new Class[] { AWTEvent.class });
+            m = Component.class.getDeclaredMethod("processEvent", AWTEvent.class);
             m.setAccessible(true);
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);

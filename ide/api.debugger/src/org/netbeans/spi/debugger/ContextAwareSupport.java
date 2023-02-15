@@ -79,12 +79,12 @@ public final class ContextAwareSupport {
                 Method m = null;
                 if (context != null) {
                     try {
-                        m = cls.getDeclaredMethod(method, new Class[] { ContextProvider.class });
+                        m = cls.getDeclaredMethod(method, ContextProvider.class);
                     } catch (NoSuchMethodException nsmex) {}
                 }
                 if (m == null) {
                     try {
-                        m = cls.getDeclaredMethod(method, new Class[] { });
+                        m = cls.getDeclaredMethod(method);
                     } catch (NoSuchMethodException nsmex) {}
                 }
                 if (m != null) {

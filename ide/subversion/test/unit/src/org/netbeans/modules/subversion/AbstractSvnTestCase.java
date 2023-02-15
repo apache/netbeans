@@ -85,8 +85,7 @@ public abstract class AbstractSvnTestCase extends NbTestCase {
     @Override
     protected void setUp() throws Exception {          
         super.setUp();      
-        MockServices.setServices(new Class[] {
-            SubversionVCS.class});
+        MockServices.setServices(SubversionVCS.class);
         repoUrl = new SVNUrl(TestUtilities.formatFileURL(new File(repoPath)));
 
         System.setProperty("netbeans.user", System.getProperty("work.dir") + "/cache");

@@ -138,7 +138,7 @@ public class TreeStreamSource implements TreeInputSource {
         }                        
         
         try {
-            java.lang.reflect.Constructor impl_const = impl_c.getConstructor (new Class[] { Class.class, InputSource.class, EntityResolver.class, TreeStreamBuilderErrorHandler.class });
+            java.lang.reflect.Constructor impl_const = impl_c.getConstructor (Class.class, InputSource.class, EntityResolver.class, TreeStreamBuilderErrorHandler.class);
             return (TreeBuilder) impl_const.newInstance (new Object[] { buildClass, inputSource, getSystemEntityResolver(), errorHolder });
 //            return (TreeBuilder) impl_c.newInstance();
 	} catch (java.lang.reflect.InvocationTargetException ex) {

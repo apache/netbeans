@@ -210,8 +210,7 @@ public class getTopmostTest extends NbTestCase {
     }
 
     public void testExcludeUserDir () throws Exception {
-        MockServices.setServices(new Class[] {
-            MercurialVCS.class});
+        MockServices.setServices(MercurialVCS.class);
 
         Field f = Utils.class.getDeclaredField("unversionedFolders");
         f.setAccessible(true);

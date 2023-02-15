@@ -80,9 +80,9 @@ public class OptionsPanelBeanInfo extends SimpleBeanInfo {
         MethodDescriptor[] methods = new MethodDescriptor[2];
     
         try {
-            methods[METHOD_initComponents0] = new MethodDescriptor(org.netbeans.modules.websvc.customization.jaxwssettings.panel.OptionsPanel.class.getMethod("initComponents", new Class[] {})); // NOI18N
+            methods[METHOD_initComponents0] = new MethodDescriptor(org.netbeans.modules.websvc.customization.jaxwssettings.panel.OptionsPanel.class.getMethod("initComponents")); // NOI18N
             methods[METHOD_initComponents0].setDisplayName ( "" );
-            methods[METHOD_updateButtons1] = new MethodDescriptor(org.netbeans.modules.websvc.customization.jaxwssettings.panel.OptionsPanel.class.getMethod("updateButtons", new Class[] {})); // NOI18N
+            methods[METHOD_updateButtons1] = new MethodDescriptor(org.netbeans.modules.websvc.customization.jaxwssettings.panel.OptionsPanel.class.getMethod("updateButtons")); // NOI18N
             methods[METHOD_updateButtons1].setDisplayName ( "" );
         }
         catch( Exception e) {}//GEN-HEADEREND:Methods

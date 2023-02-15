@@ -63,7 +63,7 @@ public class WildflyManagementAPI {
 
     static void closeClient(WildflyDeploymentFactory.WildFlyClassLoader cl, Object client) throws ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException {
-        Method method = client.getClass().getMethod("close", new Class[]{});
+        Method method = client.getClass().getMethod("close");
         method.invoke(client, (Object[]) null);
     }
 

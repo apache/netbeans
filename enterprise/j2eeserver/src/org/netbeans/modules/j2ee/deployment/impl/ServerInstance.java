@@ -1710,7 +1710,7 @@ public class ServerInstance implements Node.Cookie, Comparable {
         JPDADebugger jpda = getDebugger();
         if (jpda != null) {
             try {
-                java.lang.reflect.Method fixBreakpointsMethod = jpda.getClass().getMethod("fixBreakpoints", new Class[] {});
+                java.lang.reflect.Method fixBreakpointsMethod = jpda.getClass().getMethod("fixBreakpoints");
                 fixBreakpointsMethod.invoke(jpda, new Object[] {});
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);

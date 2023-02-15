@@ -1288,7 +1288,7 @@ public abstract class AbstractLayoutSupport implements LayoutSupportDelegate
             try {
                 simpleAddMethod = Container.class.getMethod(
                                       "add", // NOI18N
-                                      new Class[] { Component.class });
+                        Component.class);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();
@@ -1308,8 +1308,8 @@ public abstract class AbstractLayoutSupport implements LayoutSupportDelegate
             try {
                 addWithConstraintsMethod = Container.class.getMethod(
                                                "add", // NOI18N
-                                               new Class[] { Component.class,
-                                                             Object.class });
+                        Component.class,
+                        Object.class);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();
@@ -1329,7 +1329,7 @@ public abstract class AbstractLayoutSupport implements LayoutSupportDelegate
             try {
                 setLayoutMethod = Container.class.getMethod(
                                     "setLayout", // NOI18N
-                                    new Class[] { LayoutManager.class });
+                        LayoutManager.class);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();

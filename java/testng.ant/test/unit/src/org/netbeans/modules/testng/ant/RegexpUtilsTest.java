@@ -48,7 +48,7 @@ public class RegexpUtilsTest extends TestCase {
 
         methodSpecialTrim = RegexpUtils.class.getDeclaredMethod(
                                     "specialTrim",
-                                    new Class[] {String.class});
+                String.class);
         methodSpecialTrim.setAccessible(true);
     }
 

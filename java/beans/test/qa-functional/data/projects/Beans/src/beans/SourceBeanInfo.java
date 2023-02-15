@@ -85,7 +85,7 @@ public class SourceBeanInfo extends SimpleBeanInfo {
         MethodDescriptor[] methods = new MethodDescriptor[1];
     
         try {
-            methods[METHOD_method0] = new MethodDescriptor(beans.Source.class.getMethod("method", new Class[] {})); // NOI18N
+            methods[METHOD_method0] = new MethodDescriptor(beans.Source.class.getMethod("method")); // NOI18N
             methods[METHOD_method0].setDisplayName ( "" );
         }
         catch( Exception e) {}//GEN-HEADEREND:Methods

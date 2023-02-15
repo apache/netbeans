@@ -1289,8 +1289,8 @@ public class GandalfPersistenceManager extends PersistenceManager {
 
             if (insetsConstructor == null)
                 insetsConstructor = java.awt.Insets.class.getConstructor(
-                    new Class[] { Integer.TYPE, Integer.TYPE,
-                                  Integer.TYPE, Integer.TYPE });
+                        Integer.TYPE, Integer.TYPE,
+                        Integer.TYPE, Integer.TYPE);
 
             CodeStructure.createStatement(
                           constrExp,
@@ -1356,10 +1356,10 @@ public class GandalfPersistenceManager extends PersistenceManager {
                 if (addTabMethod1 == null)
                     addTabMethod1 = javax.swing.JTabbedPane.class.getMethod(
                                     "addTab", // NOI18N
-                                    new Class[] { String.class,
-                                                  javax.swing.Icon.class,
-                                                  java.awt.Component.class,
-                                                  String.class });
+                            String.class,
+                            javax.swing.Icon.class,
+                            java.awt.Component.class,
+                            String.class);
                 CodeStructure.createStatement(
                     contCodeExp,
                     addTabMethod1,
@@ -1376,9 +1376,9 @@ public class GandalfPersistenceManager extends PersistenceManager {
                 if (addTabMethod2 == null)
                     addTabMethod2 = javax.swing.JTabbedPane.class.getMethod(
                                     "addTab", // NOI18N
-                                    new Class[] { String.class,
-                                                  javax.swing.Icon.class,
-                                                  java.awt.Component.class });
+                            String.class,
+                            javax.swing.Icon.class,
+                            java.awt.Component.class);
                 CodeStructure.createStatement(
                     contCodeExp,
                     addTabMethod2,
@@ -1393,8 +1393,8 @@ public class GandalfPersistenceManager extends PersistenceManager {
                 if (addTabMethod3 == null)
                     addTabMethod3 = javax.swing.JTabbedPane.class.getMethod(
                                     "addTab", // NOI18N
-                                    new Class[] { String.class,
-                                                  java.awt.Component.class });
+                            String.class,
+                            java.awt.Component.class);
                 CodeStructure.createStatement(
                     contCodeExp,
                     addTabMethod3,
@@ -1419,7 +1419,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
                         setTopComponentMethod =
                             javax.swing.JSplitPane.class.getMethod(
                                     "setTopComponent", // NOI18N
-                                    new Class[] { java.awt.Component.class });
+                                    java.awt.Component.class);
                     addMethod = setTopComponentMethod;
                 }
                 else if ("bottom".equals(position)) { // NOI18N
@@ -1427,7 +1427,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
                         setBottomComponentMethod =
                             javax.swing.JSplitPane.class.getMethod(
                                     "setBottomComponent", // NOI18N
-                                    new Class[] { java.awt.Component.class });
+                                    java.awt.Component.class);
                     addMethod = setBottomComponentMethod;
                 }
                 else if ("left".equals(position)) { // NOI18N
@@ -1435,7 +1435,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
                         setLeftComponentMethod =
                             javax.swing.JSplitPane.class.getMethod(
                                     "setLeftComponent", // NOI18N
-                                    new Class[] { java.awt.Component.class });
+                                    java.awt.Component.class);
                     addMethod = setLeftComponentMethod;
                 }
                 else if ("right".equals(position)) { // NOI18N
@@ -1494,8 +1494,8 @@ public class GandalfPersistenceManager extends PersistenceManager {
             if (setBoundsMethod == null)
                 setBoundsMethod = java.awt.Component.class.getMethod(
                                     "setBounds", // NOI18N
-                                    new Class[] { Integer.TYPE, Integer.TYPE,
-                                                  Integer.TYPE, Integer.TYPE });
+                        Integer.TYPE, Integer.TYPE,
+                        Integer.TYPE, Integer.TYPE);
             CodeStructure.createStatement(
                             compExp, setBoundsMethod, boundsParams);
 
@@ -1550,8 +1550,8 @@ public class GandalfPersistenceManager extends PersistenceManager {
                 if (setBoundsMethod == null)
                     setBoundsMethod = java.awt.Component.class.getMethod(
                                       "setBounds", // NOI18N
-                                      new Class[] { Integer.TYPE, Integer.TYPE,
-                                                    Integer.TYPE, Integer.TYPE });
+                            Integer.TYPE, Integer.TYPE,
+                            Integer.TYPE, Integer.TYPE);
                 CodeStructure.createStatement(
                     compExp, setBoundsMethod, boundsParams);
 
@@ -1565,8 +1565,8 @@ public class GandalfPersistenceManager extends PersistenceManager {
                     absoluteConstraintsConstructor =
                         org.netbeans.lib.awtextra.AbsoluteConstraints.class
                                                       .getConstructor(
-                            new Class[] { Integer.TYPE, Integer.TYPE,
-                                          Integer.TYPE, Integer.TYPE });
+                                                              Integer.TYPE, Integer.TYPE,
+                                                              Integer.TYPE, Integer.TYPE);
 
                 // create add method statement
                 CodeStructure.createStatement(
@@ -1602,7 +1602,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
                     setViewportViewMethod =
                             javax.swing.JScrollPane.class.getMethod(
                                     "setViewportView", // NOI18N
-                                    new Class[] { java.awt.Component.class });
+                                    java.awt.Component.class);
                 }
                 catch (NoSuchMethodException ex) { // should not happen
                     ex.printStackTrace();
@@ -1628,7 +1628,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
             try {
                 simpleAddMethod = java.awt.Container.class.getMethod(
                                       "add", // NOI18N
-                                      new Class[] { java.awt.Component.class });
+                        java.awt.Component.class);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();
@@ -1642,8 +1642,8 @@ public class GandalfPersistenceManager extends PersistenceManager {
             try {
                 addWithConstrMethod = java.awt.Container.class.getMethod(
                                       "add", // NOI18N
-                                      new Class[] { java.awt.Component.class,
-                                                    Object.class });
+                        java.awt.Component.class,
+                        Object.class);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();
@@ -1657,7 +1657,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
             try {
                 setLayoutMethod = java.awt.Container.class.getMethod(
                             "setLayout", // NOI18N
-                            new Class[] { java.awt.LayoutManager.class });
+                        java.awt.LayoutManager.class);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();

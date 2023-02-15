@@ -373,7 +373,7 @@ public class ClipboardHandler {
             try {
                 java.lang.reflect.Method method = delegate.getClass().getDeclaredMethod(
                     "createTransferable", // NOI18N
-                    new Class[] {javax.swing.JComponent.class});
+                        JComponent.class);
                 method.setAccessible(true);
 
                 return (Transferable)method.invoke(delegate, new Object[] {c});
@@ -397,7 +397,7 @@ public class ClipboardHandler {
             try {
                 java.lang.reflect.Method method = delegate.getClass().getDeclaredMethod(
                     "exportDone",  // NOI18N
-                    new Class[] {javax.swing.JComponent.class, Transferable.class, int.class});
+                        JComponent.class, Transferable.class, int.class);
                 method.setAccessible(true);
                 method.invoke(delegate, new Object[] {source, data, action});
             } catch (NoSuchMethodException ex) {

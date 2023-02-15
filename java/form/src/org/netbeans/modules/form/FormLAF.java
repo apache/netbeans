@@ -208,10 +208,10 @@ public class FormLAF {
             Logger.getLogger(FormLAF.class.getName()).log(Level.INFO, ex.getMessage(), ex);
         }
 
-        java.lang.reflect.Method method = UIManager.class.getDeclaredMethod("getLAFState", new Class[0]); // NOI18N
+        java.lang.reflect.Method method = UIManager.class.getDeclaredMethod("getLAFState"); // NOI18N
         method.setAccessible(true);
         Object lafState = method.invoke(null, new Object[0]);
-        method = lafState.getClass().getDeclaredMethod("setLookAndFeelDefaults", new Class[] {UIDefaults.class}); // NOI18N
+        method = lafState.getClass().getDeclaredMethod("setLookAndFeelDefaults", UIDefaults.class); // NOI18N
         method.setAccessible(true);
 
         UIDefaults ide = UIManager.getLookAndFeelDefaults();
@@ -372,7 +372,7 @@ public class FormLAF {
         // We cannot invoke what.entrySet() because it was overriden
         // in MultiUIDefaults in JDK 6 Update 10
         try {
-            java.lang.reflect.Method method = Hashtable.class.getDeclaredMethod("getIterator", new Class[] {int.class}); // NOI18N
+            java.lang.reflect.Method method = Hashtable.class.getDeclaredMethod("getIterator", int.class); // NOI18N
             method.setAccessible(true);
             Object i = method.invoke(what, new Object[] {2/*Hashtable.ENTRIES*/});
             if (i instanceof Iterator) {

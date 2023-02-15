@@ -67,12 +67,12 @@ public final class ReflectionTextComponentUpdater extends TextComponentUpdater {
         super(field, label);
         this.model = model;
         this.defaults = defaults;
-        modelgetter = model.getClass().getMethod(getter, new Class[0]);
+        modelgetter = model.getClass().getMethod(getter);
         if (setter != null) { 
-        modelsetter = model.getClass().getMethod(setter, new Class[] {String.class});
+        modelsetter = model.getClass().getMethod(setter, String.class);
         }
         if (defaults != null) {
-            defgetter = defaults.getClass().getMethod(getter, new Class[0]);
+            defgetter = defaults.getClass().getMethod(getter);
         }
     }
     

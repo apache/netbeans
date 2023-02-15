@@ -149,24 +149,24 @@ public class RemoteAWTServiceListener implements InvocationHandler {
         try {
             Method getStackTrace;
             try {
-                getStackTrace = Thread.class.getMethod("getStackTrace", new Class[] {});
+                getStackTrace = Thread.class.getMethod("getStackTrace");
             } catch (Exception ex) {
                 // JDK 5 methods not available
                 // new Exception().getStackTrace(); JDK 1.4 call
-                getStackTrace = Exception.class.getMethod("getStackTrace", new Class[] {});
+                getStackTrace = Exception.class.getMethod("getStackTrace");
             }
             Object[] stackTraceElements = (Object[]) getStackTrace.invoke(t, new Object[] {});
             int n = stackTraceElements.length;
             int s = Math.min(STACK_OFFSET, n);
             String[] elements = new String[n - s];
             for (int i = s; i < n; i++) {
-                Method getClassName = stackTraceElements[i].getClass().getMethod("getClassName", new Class[] {});
+                Method getClassName = stackTraceElements[i].getClass().getMethod("getClassName");
                 String className = (String) getClassName.invoke(stackTraceElements[i], new Object[] {});
-                Method getMethodName = stackTraceElements[i].getClass().getMethod("getMethodName", new Class[] {});
+                Method getMethodName = stackTraceElements[i].getClass().getMethod("getMethodName");
                 String methodName = (String) getMethodName.invoke(stackTraceElements[i], new Object[] {});
-                Method getFileName = stackTraceElements[i].getClass().getMethod("getFileName", new Class[] {});
+                Method getFileName = stackTraceElements[i].getClass().getMethod("getFileName");
                 String fileName = (String) getFileName.invoke(stackTraceElements[i], new Object[] {});
-                Method getLineNumber = stackTraceElements[i].getClass().getMethod("getLineNumber", new Class[] {});
+                Method getLineNumber = stackTraceElements[i].getClass().getMethod("getLineNumber");
                 Integer lineNumber = (Integer) getLineNumber.invoke(stackTraceElements[i], new Object[] {});
                 elements[i - s] = className + "." + methodName + "(" + fileName + ":" + lineNumber + ")";
             }

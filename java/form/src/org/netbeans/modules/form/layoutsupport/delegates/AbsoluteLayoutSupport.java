@@ -436,8 +436,8 @@ public class AbsoluteLayoutSupport extends AbstractLayoutSupport {
         if (constrConstructor == null) {
             try {
                 constrConstructor = AbsoluteConstraints.class.getConstructor(
-                                    new Class[] { Integer.TYPE, Integer.TYPE,
-                                                  Integer.TYPE, Integer.TYPE });
+                        Integer.TYPE, Integer.TYPE,
+                        Integer.TYPE, Integer.TYPE);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();

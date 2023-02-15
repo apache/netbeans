@@ -296,10 +296,7 @@ public class NonVisualTray extends JPanel implements ExplorerManager.Provider {
          */
         @Override
         public Action[] getActions(boolean context) {
-            java.util.List forbiddenActions = Arrays.asList(new Class[] {
-                MoveUpAction.class,
-                MoveDownAction.class
-            });
+            java.util.List forbiddenActions = Arrays.asList(MoveUpAction.class, MoveDownAction.class);
             Action[] actions = getOriginal().getActions(context);
             java.util.List<Action> actionList = new ArrayList<Action>(Arrays.asList(actions));
             for (int i=0; i<actions.length; i++) {

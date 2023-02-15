@@ -39,7 +39,7 @@ public class SourcesView extends TopComponent implements org.openide.util.HelpCt
     public Object readResolve() throws ObjectStreamException {
         try {
             Class c = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.debugger.ui.views.View"); // NOI18N
-            Method m = c.getDeclaredMethod("getSourcesView", new Class[] {}); // NOI18N
+            Method m = c.getDeclaredMethod("getSourcesView"); // NOI18N
             Object tc = m.invoke(null, new Object[] {});
             return tc;
         } catch (Exception ex) {

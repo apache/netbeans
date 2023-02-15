@@ -242,8 +242,8 @@ public class NullLayoutSupport extends AbsoluteLayoutSupport {
             try {
                 setBoundsMethod = Component.class.getMethod(
                                     "setBounds", // NOI18N
-                                    new Class[] { Integer.TYPE, Integer.TYPE,
-                                                  Integer.TYPE, Integer.TYPE });
+                        Integer.TYPE, Integer.TYPE,
+                        Integer.TYPE, Integer.TYPE);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();

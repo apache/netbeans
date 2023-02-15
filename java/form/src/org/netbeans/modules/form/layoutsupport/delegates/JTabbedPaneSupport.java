@@ -363,8 +363,8 @@ public class JTabbedPaneSupport extends AbstractLayoutSupport {
             try {
                 addTabMethod1 = JTabbedPane.class.getMethod(
                                 "addTab", // NOI18N
-                                new Class[] { String.class, Icon.class,
-                                      Component.class, String.class });
+                        String.class, Icon.class,
+                        Component.class, String.class);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();
@@ -379,8 +379,7 @@ public class JTabbedPaneSupport extends AbstractLayoutSupport {
             try {
                 addTabMethod2 = JTabbedPane.class.getMethod(
                                 "addTab", // NOI18N
-                                new Class[] { String.class, Icon.class,
-                                              Component.class });
+                        String.class, Icon.class, Component.class);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();
@@ -395,7 +394,7 @@ public class JTabbedPaneSupport extends AbstractLayoutSupport {
             try {
                 addTabMethod3 = JTabbedPane.class.getMethod(
                                 "addTab", // NOI18N
-                                new Class[] { String.class, Component.class });
+                        String.class, Component.class);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();

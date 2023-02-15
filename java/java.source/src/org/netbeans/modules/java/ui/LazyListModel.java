@@ -243,8 +243,7 @@ implements ListModel, Runnable, javax.swing.event.ListDataListener {
                     if (m == null) {
                         m = org.openide.nodes.Children.Keys.class.getDeclaredMethod (
                             "updateMyAssumptions", // NOI18N
-                            new Class[] { Runnable.class }
-                        ); 
+                                Runnable.class);
                         m.setAccessible (true);
                     }
                     m.invoke (ch, new Object[] { run });

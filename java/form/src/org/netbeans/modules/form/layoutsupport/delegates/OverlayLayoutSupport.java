@@ -110,8 +110,7 @@ public class OverlayLayoutSupport extends AbstractLayoutSupport {
     private static Constructor getOverlayLayoutConstructor() {
         if (overlayLayoutConstructor == null) {
             try {
-                overlayLayoutConstructor = OverlayLayout.class.getConstructor(
-                                           new Class[] { Container.class });
+                overlayLayoutConstructor = OverlayLayout.class.getConstructor(Container.class);
             } catch (NoSuchMethodException ex) { // should not happen
                 Exceptions.printStackTrace(ex);
             }

@@ -278,7 +278,7 @@ public class SourcePath {
      */
     public String[] getProjectSourceRoots() {
         try {
-            java.lang.reflect.Method getProjectSourceRootsMethod = getContext().getClass().getMethod("getProjectSourceRoots", new Class[] {}); // NOI18N
+            java.lang.reflect.Method getProjectSourceRootsMethod = getContext().getClass().getMethod("getProjectSourceRoots"); // NOI18N
             String[] projectSourceRoots = (String[]) getProjectSourceRootsMethod.invoke(getContext(), new Object[] {});
             return projectSourceRoots;
         } catch (Exception ex) {
@@ -440,13 +440,13 @@ public class SourcePath {
             String[] projectSourceRoots2;
             //System.err.println("\nCompoundContextProvider["+toString()+"].getProjectSourceRoots()...\n");
             try {
-                java.lang.reflect.Method getProjectSourceRootsMethod = cp1.getClass().getMethod("getProjectSourceRoots", new Class[] {}); // NOI18N
+                java.lang.reflect.Method getProjectSourceRootsMethod = cp1.getClass().getMethod("getProjectSourceRoots"); // NOI18N
                 projectSourceRoots1 = (String[]) getProjectSourceRootsMethod.invoke(cp1, new Object[] {});
             } catch (Exception ex) {
                 projectSourceRoots1 = new String[0];
             }
             try {
-                java.lang.reflect.Method getProjectSourceRootsMethod = cp2.getClass().getMethod("getProjectSourceRoots", new Class[] {}); // NOI18N
+                java.lang.reflect.Method getProjectSourceRootsMethod = cp2.getClass().getMethod("getProjectSourceRoots"); // NOI18N
                 projectSourceRoots2 = (String[]) getProjectSourceRootsMethod.invoke(cp2, new Object[] {});
             } catch (Exception ex) {
                 projectSourceRoots2 = new String[0];

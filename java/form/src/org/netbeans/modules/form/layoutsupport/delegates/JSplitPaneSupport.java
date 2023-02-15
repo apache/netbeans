@@ -462,8 +462,7 @@ public class JSplitPaneSupport extends AbstractLayoutSupport {
 
     private static Method getAddMethod(String name) {
         try {
-            return JSplitPane.class.getMethod(name,
-                                              new Class[] { Component.class });
+            return JSplitPane.class.getMethod(name, Component.class);
         }
         catch (NoSuchMethodException ex) { // should not happen
             ex.printStackTrace();

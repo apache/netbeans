@@ -60,7 +60,7 @@ public class JPDAAppReloaded extends Task {
             return ;
         }
         try {
-            Method fixBreakpointsMethod = debugger.getClass().getMethod("fixBreakpoints", new Class[] {});
+            Method fixBreakpointsMethod = debugger.getClass().getMethod("fixBreakpoints");
             fixBreakpointsMethod.invoke(debugger, new Object[] {});
         } catch (Exception ex) {
             throw new BuildException(ex);

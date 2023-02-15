@@ -399,7 +399,7 @@ public class BoxLayoutSupport extends AbstractLayoutSupport {
         if (boxLayoutConstructor == null) {
             try {
                 boxLayoutConstructor = BoxLayout.class.getConstructor(
-                                new Class[] { Container.class, Integer.TYPE });
+                        Container.class, Integer.TYPE);
             }
             catch (NoSuchMethodException ex) { // should not happen
                 ex.printStackTrace();

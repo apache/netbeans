@@ -166,7 +166,7 @@ public final class BenchmarkSuite implements Test {
     private Collection createTestsForClass(Class klass) throws Exception {
         ArrayList list = new ArrayList(50);
         Method[] methods = klass.getMethods();
-        Constructor constructor = klass.getConstructor(new Class[] { String.class });
+        Constructor constructor = klass.getConstructor(String.class);
         
         for (int i = 0; i < methods.length; i++) {
             String method = methods[i].getName();
@@ -268,7 +268,7 @@ public final class BenchmarkSuite implements Test {
         private static boolean staticTest(Class klass) throws NoSuchMethodException {
             int mod = klass.getModifiers();
             return (Benchmark.class.isAssignableFrom(klass) && Modifier.isPublic(mod) &&
-                    !Modifier.isAbstract(mod) && (klass.getConstructor(new Class[] { String.class }) != null)
+                    !Modifier.isAbstract(mod) && (klass.getConstructor(String.class) != null)
             );
         }
     }

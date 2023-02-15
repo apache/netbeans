@@ -79,7 +79,7 @@ public class RunnableMethod extends Benchmark {
         int workload = ((Integer)getArgument()).intValue();
         
         while( count-- > 0 ) {
-            Method mtd = getClass().getDeclaredMethod( "workerMethod", new Class[] { Integer.TYPE } );
+            Method mtd = getClass().getDeclaredMethod( "workerMethod", Integer.TYPE);
             mtd.setAccessible(true);
             new MethodRunner( mtd, this, new Object[] { new Integer(workload) } ).run();
         }
@@ -92,7 +92,7 @@ public class RunnableMethod extends Benchmark {
     public void testUsingMethodRunnerWithCachedMethod() throws Exception {
         int count = getIterationCount();
         int workload = ((Integer)getArgument()).intValue();
-        Method mtd = getClass().getDeclaredMethod( "workerMethod", new Class[] { Integer.TYPE } );
+        Method mtd = getClass().getDeclaredMethod( "workerMethod", Integer.TYPE);
         mtd.setAccessible(true);
         
         while( count-- > 0 ) {
@@ -107,7 +107,7 @@ public class RunnableMethod extends Benchmark {
     public void testUsingMethodRunnerWithCachedParams() throws Exception {
         int count = getIterationCount();
         int workload = ((Integer)getArgument()).intValue();
-        Method mtd = getClass().getDeclaredMethod( "workerMethod", new Class[] { Integer.TYPE } );
+        Method mtd = getClass().getDeclaredMethod( "workerMethod", Integer.TYPE);
         mtd.setAccessible(true);
         Object[] params = new Object[] { new Integer(workload) };
         
@@ -123,7 +123,7 @@ public class RunnableMethod extends Benchmark {
     public void testUsingCachedMethodRunner() throws Exception {
         int count = getIterationCount();
         int workload = ((Integer)getArgument()).intValue();
-        Method mtd = getClass().getDeclaredMethod( "workerMethod", new Class[] { Integer.TYPE } );
+        Method mtd = getClass().getDeclaredMethod( "workerMethod", Integer.TYPE);
         mtd.setAccessible(true);
         Object[] params = new Object[] { new Integer(workload) };
         MethodRunner mr = new MethodRunner( mtd, this, params );

@@ -107,7 +107,7 @@ public final class XMLPropertiesConvertor extends Convertor implements PropertyC
         try {
             java.lang.reflect.Method method = inst.getClass().getMethod(
                 "addPropertyChangeListener", // NOI18N
-                new Class[] {PropertyChangeListener.class});
+                    PropertyChangeListener.class);
             method.invoke(inst, new Object[] {this});
             this.saver = s;
 //System.out.println("XMLPropertiesConvertor.registerPropertyListener...ok " + inst);
@@ -131,7 +131,7 @@ public final class XMLPropertiesConvertor extends Convertor implements PropertyC
         try {
             java.lang.reflect.Method method = inst.getClass().getMethod(
                 "removePropertyChangeListener", // NOI18N
-                new Class[] {PropertyChangeListener.class});
+                    PropertyChangeListener.class);
             method.invoke(inst, new Object[] {this});
             this.saver = null;
 //System.out.println("XMLPropertiesConvertor.unregisterPropertyListener...ok " + inst);
@@ -224,7 +224,7 @@ public final class XMLPropertiesConvertor extends Convertor implements PropertyC
     private Object readSetting(java.io.Reader input, Object inst) throws IOException {
         try {
             java.lang.reflect.Method m = inst.getClass().getDeclaredMethod(
-                "readProperties", new Class[] {Properties.class}); // NOI18N
+                "readProperties", Properties.class); // NOI18N
             m.setAccessible(true);
             XMLPropertiesConvertor.Reader r = new XMLPropertiesConvertor.Reader();
             r.parse(input);
@@ -267,7 +267,7 @@ public final class XMLPropertiesConvertor extends Convertor implements PropertyC
     private static Properties getProperties (Object inst) throws IOException {
         try {
             java.lang.reflect.Method m = inst.getClass().getDeclaredMethod(
-                "writeProperties", new Class[] {Properties.class}); // NOI18N
+                "writeProperties", Properties.class); // NOI18N
             m.setAccessible(true);
             Properties prop = new Properties();
             m.invoke(inst, new Object[] {prop});

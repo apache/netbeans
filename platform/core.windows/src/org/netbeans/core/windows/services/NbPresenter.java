@@ -1046,7 +1046,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             // to generic component (and we succeed only if it has the addActionListener method)
             java.lang.reflect.Method m = null;
             try {
-                m = comp.getClass().getMethod(add ? "addActionListener" : "removeActionListener", new Class[] { ActionListener.class });// NOI18N
+                m = comp.getClass().getMethod(add ? "addActionListener" : "removeActionListener", ActionListener.class);// NOI18N
                 try {
                     m.setAccessible (true);
                 } catch (SecurityException se) {
@@ -1490,7 +1490,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             try {
                 markers = DefaultKeyboardFocusManager.class.getDeclaredField("typeAheadMarkers"); // NOI18N
                 markers.setAccessible(true);
-                dequeue = DefaultKeyboardFocusManager.class.getDeclaredMethod("dequeueKeyEvents", new Class[] { Long.TYPE, java.awt.Component.class });
+                dequeue = DefaultKeyboardFocusManager.class.getDeclaredMethod("dequeueKeyEvents", Long.TYPE, Component.class);
                 dequeue.setAccessible(true);
             } catch (Throwable ex) {
                 LOG.log(Level.WARNING, "Not activating workaround for #50423", ex); // NOI18N

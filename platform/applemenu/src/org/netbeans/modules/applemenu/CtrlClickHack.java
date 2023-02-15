@@ -91,7 +91,7 @@ public class CtrlClickHack implements AWTEventListener {
         try {
             Field f1 = InputEvent.class.getDeclaredField("modifiers");
             Field f2 = MouseEvent.class.getDeclaredField("button");
-            Method m = MouseEvent.class.getDeclaredMethod("setNewModifiers", new Class[] {});
+            Method m = MouseEvent.class.getDeclaredMethod("setNewModifiers");
             f1.setAccessible(true);
             f1.setInt(evt, InputEvent.BUTTON3_MASK);
             f2.setAccessible(true);

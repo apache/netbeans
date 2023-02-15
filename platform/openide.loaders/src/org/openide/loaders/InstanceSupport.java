@@ -239,9 +239,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     @Deprecated
     public boolean isExecutable () {
         try {
-            Method main = instanceClass ().getDeclaredMethod ("main", new Class[] { // NOI18N
-                              String[].class
-                          });
+            Method main = instanceClass ().getDeclaredMethod ("main", String[].class); // NOI18N
 
             int m = main.getModifiers ();
             return Modifier.isPublic (m) && Modifier.isStatic (m) && Void.TYPE.equals (

@@ -670,7 +670,7 @@ final class XMLSettingsSupport {
             try {
                 Object instance;
                 try {
-                    Method method = clazz.getDeclaredMethod(targetMethod, new Class[]{FileObject.class});
+                    Method method = clazz.getDeclaredMethod(targetMethod, FileObject.class);
                     method.setAccessible(true);
                     instance = method.invoke(null, source);
                 } catch (NoSuchMethodException ex) {

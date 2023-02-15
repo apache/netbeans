@@ -303,7 +303,7 @@ final class ShortcutAndMenuKeyEventProcessor implements KeyEventDispatcher, KeyE
         try {
             Method m = JComponent.class.getDeclaredMethod(
                 "processKeyBindingsForAllComponents", // NOI18N
-                new Class[] { KeyEvent.class, Container.class, Boolean.TYPE });
+                    KeyEvent.class, Container.class, Boolean.TYPE);
             if (m == null)
                 return false;
 

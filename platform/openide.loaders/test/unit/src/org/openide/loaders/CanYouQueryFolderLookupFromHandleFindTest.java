@@ -116,7 +116,7 @@ public class CanYouQueryFolderLookupFromHandleFindTest extends NbTestCase {
     }
     
     protected void setUp() {
-        MockServices.setServices(new Class[] {Pool.class, ErrManager.class});
+        MockServices.setServices(Pool.class, ErrManager.class);
     }
     
     public void testTheDeadlock() throws Exception {

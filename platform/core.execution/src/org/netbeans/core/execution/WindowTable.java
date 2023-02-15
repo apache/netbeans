@@ -97,7 +97,7 @@ final class WindowTable extends HashMap<Window,TaskThreadGroup> {
         
         try {
             Class swUtil = Class.forName("javax.swing.SwingUtilities"); // NOI18N
-            java.lang.reflect.Method getter = swUtil.getDeclaredMethod("getSharedOwnerFrame", new Class[] {}); // NOI18N
+            java.lang.reflect.Method getter = swUtil.getDeclaredMethod("getSharedOwnerFrame"); // NOI18N
             getter.setAccessible(true);
             
             shOwnerFrame = (java.awt.Frame) getter.invoke(null, new Object[] {});

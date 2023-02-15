@@ -46,7 +46,7 @@ public class SaveActionTest extends NbTestCase {
     }
     
     protected void setUp() throws Exception {
-        MockServices.setServices(new Class[] {MyStatusDisplayer.class});
+        MockServices.setServices(MyStatusDisplayer.class);
         assertNotNull("MyDisplayer is used", Lookup.getDefault().lookup(MyStatusDisplayer.class));
     }
     

@@ -846,7 +846,7 @@ public abstract class WeakListener implements java.util.EventListener {
         private static Method getEquals() {
             if (equalsMth == null) {
                 try {
-                    equalsMth = Object.class.getMethod("equals", new Class[] { Object.class }); // NOI18N
+                    equalsMth = Object.class.getMethod("equals", Object.class); // NOI18N
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 }

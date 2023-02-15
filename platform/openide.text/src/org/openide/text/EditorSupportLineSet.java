@@ -268,7 +268,7 @@ final class EditorSupportLineSet extends DocumentLine.Set {
             try {
                 m = CloneableOpenSupportRedirector.class.getDeclaredMethod(
                         "findRedirect", // NOI18N
-                        new Class[]{CloneableOpenSupport.class});
+                        CloneableOpenSupport.class);
                 m.setAccessible(true);
             } catch (NoSuchMethodException ex) {
             } catch (SecurityException ex) {

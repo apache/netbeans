@@ -61,7 +61,7 @@ public class SwingBrowser implements HtmlBrowser.Factory, java.io.Serializable {
     public HtmlBrowser.Impl createHtmlBrowserImpl() {
         try {
             Class<?> clz = Class.forName ("org.openide.awt.SwingBrowserImpl"); // NOI18N
-            Constructor con = clz.getDeclaredConstructor (new Class [] {});
+            Constructor con = clz.getDeclaredConstructor ();
             con.setAccessible (true);
             return (HtmlBrowser.Impl)con.newInstance (new Object [] {});
         }

@@ -204,10 +204,9 @@ public final class FileEntityResolver extends EntityCatalog implements Environme
         synchronized (FileEntityResolver.class) {
             if (method == null) {
                 try {
-                    java.lang.reflect.Method m = XMLDataObject.class.getDeclaredMethod ("createInfoLookup", new Class[] { // NOI18N
-                        XMLDataObject.class,
-                        XMLDataObject.Info.class
-                    });
+                    java.lang.reflect.Method m = XMLDataObject.class.getDeclaredMethod ("createInfoLookup", // NOI18N
+                            XMLDataObject.class,
+                            XMLDataObject.Info.class);
                     m.setAccessible (true);
                     method = m;
                 } catch (Exception ex) {

@@ -885,7 +885,7 @@ implements EditorCookie.Observable, OpenCookie, CloseCookie, PrintCookie {
         private static final org.openide.nodes.CookieSet getCookieSet (MultiDataObject obj) {
             try {
                 if (getCookieSetMethod == null) {
-                    getCookieSetMethod = MultiDataObject.class.getDeclaredMethod ("getCookieSet", new Class[] { }); // NOI18N
+                    getCookieSetMethod = MultiDataObject.class.getDeclaredMethod ("getCookieSet"); // NOI18N
                     getCookieSetMethod.setAccessible (true);
                 }
                 return (org.openide.nodes.CookieSet) getCookieSetMethod.invoke (obj, new Object[] { });

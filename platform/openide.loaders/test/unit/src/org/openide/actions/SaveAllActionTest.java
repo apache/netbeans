@@ -40,7 +40,7 @@ public class SaveAllActionTest extends NbTestCase {
 
 
     protected void setUp () {
-        MockServices.setServices(new Class[] {Life.class});
+        MockServices.setServices(Life.class);
         Life.max = 0;
         Life.cnt = 0;
         Life.executed = 0;

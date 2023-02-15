@@ -116,7 +116,7 @@ class WrapperInplaceEditor extends JPanel implements InplaceEditor, ActionListen
      * if so, adds this WrapperInplaceEditor as an action listener */
     private boolean tryAddActionListener(Component comp) {
         try {
-            Method m = comp.getClass().getMethod("addActionListener", new Class[] { ActionListener.class }); //NOI18N
+            Method m = comp.getClass().getMethod("addActionListener", ActionListener.class); //NOI18N
 
             if (m != null) {
                 m.invoke(comp, this);
@@ -134,7 +134,7 @@ class WrapperInplaceEditor extends JPanel implements InplaceEditor, ActionListen
      * action listener on the component in question */
     private boolean tryRemoveActionListener(Component comp) {
         try {
-            Method m = comp.getClass().getMethod("removeActionListener", new Class[] { ActionListener.class }); //NOI18N
+            Method m = comp.getClass().getMethod("removeActionListener", ActionListener.class); //NOI18N
 
             if (m != null) {
                 m.invoke(comp, this);

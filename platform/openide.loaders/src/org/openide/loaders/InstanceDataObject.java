@@ -1622,7 +1622,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
         try {
             Method method = convertor.getClass().getMethod(
                 "write", // NOI18N
-                new Class[] {Writer.class, Object.class});
+                    Writer.class, Object.class);
             method.setAccessible(true);
             method.invoke(convertor, new Object[] {w, inst});
         } catch (NoSuchMethodException ex) {

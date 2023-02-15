@@ -40,7 +40,7 @@ import org.openide.util.Lookup;
  */
 public abstract class LoggingTestCaseHid extends NbTestCase {
     static {
-        MockServices.setServices(new Class[] {ErrManager.class});
+        MockServices.setServices(ErrManager.class);
     }
 
     protected LoggingTestCaseHid (String name) {

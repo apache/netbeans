@@ -73,9 +73,9 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
     private void initLocationFolder () {
         PropertyDescriptor pd = null;
         try {
-            Method getterMethod = this.getClass ().getDeclaredMethod("getLocationFolder", new Class[] {}); // NOI18N
+            Method getterMethod = this.getClass ().getDeclaredMethod("getLocationFolder"); // NOI18N
             getterMethod.setAccessible (true);
-            Method setterMethod = this.getClass ().getDeclaredMethod("setLocationFolder", new Class[] {File.class}); // NOI18N
+            Method setterMethod = this.getClass ().getDeclaredMethod("setLocationFolder", File.class); // NOI18N
             setterMethod.setAccessible (true);
             pd = new PropertyDescriptor (PROP_LOCATION_FOLDER, getterMethod, setterMethod);
             pd.setValue("directories", true); // NOI18N

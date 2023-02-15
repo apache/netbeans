@@ -96,7 +96,7 @@ implements ContextGlobalProvider, Lookup.Provider, java.beans.PropertyChangeList
             
             Lookup[] arr = {
                 map == null ? Lookup.EMPTY : Lookups.singleton (map),
-                Lookups.exclude (g.getLookup (), new Class[] { javax.swing.ActionMap.class }),
+                Lookups.exclude (g.getLookup (), ActionMap.class),
             };
             
             Lookup originalLkp = g.getLookup();

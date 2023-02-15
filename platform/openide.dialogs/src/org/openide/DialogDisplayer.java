@@ -524,7 +524,7 @@ public abstract class DialogDisplayer {
                     java.lang.reflect.Method m;
 
                     try {
-                        m = comp.getClass().getMethod("addActionListener", new Class[] { ActionListener.class }); // NOI18N
+                        m = comp.getClass().getMethod("addActionListener", ActionListener.class); // NOI18N
 
                         try {
                             m.setAccessible(true);

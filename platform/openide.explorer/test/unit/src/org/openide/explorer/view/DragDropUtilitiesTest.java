@@ -43,7 +43,7 @@ public class DragDropUtilitiesTest extends NbTestCase {
     }
     
     protected void setUp() throws Exception {
-        MockServices.setServices(new Class[] {MyClipboard.class});
+        MockServices.setServices(MyClipboard.class);
         last = null;
     }
     

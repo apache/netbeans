@@ -70,7 +70,7 @@ implements PropertyChangeListener {
     protected void setUp () throws Exception {
         clearWorkDir();
 
-        MockServices.setServices(new Class[] {ErrManager.class, Pool.class});
+        MockServices.setServices(ErrManager.class, Pool.class);
         
         if (previous != null) {
             previous.waitFinished ();

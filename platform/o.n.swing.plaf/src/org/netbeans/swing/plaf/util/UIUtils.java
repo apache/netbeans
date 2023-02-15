@@ -87,7 +87,7 @@ public final class UIUtils {
     private static void checkOpenide() {
         try {
             utilsClass = Class.forName("org.openide.util.ImageUtilities"); //NOI18N
-            utilsMethod = utilsClass.getDeclaredMethod ( "loadImage", new Class[] {String.class}); //NOI18N
+            utilsMethod = utilsClass.getDeclaredMethod ( "loadImage", String.class); //NOI18N
             openideAvailable = Boolean.TRUE;
         } catch (Exception e) {
             openideAvailable = Boolean.FALSE;

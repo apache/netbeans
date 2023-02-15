@@ -666,7 +666,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
                 try {
                     Method method = inst.getClass().getMethod(
                         "addPropertyChangeListener", // NOI18N
-                        new Class[] {PropertyChangeListener.class});
+                            PropertyChangeListener.class);
                     method.invoke(inst, new Object[] {this});
                 } catch (NoSuchMethodException ex) {
                     // just changes done through gui will be saved
@@ -692,7 +692,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
             try {
                 Method method = inst.getClass().getMethod(
                     "removePropertyChangeListener", // NOI18N
-                    new Class[] {PropertyChangeListener.class});
+                        PropertyChangeListener.class);
                 method.invoke(inst, new Object[] {this});
             } catch (NoSuchMethodException ex) {
                 // just changes done through gui will be saved

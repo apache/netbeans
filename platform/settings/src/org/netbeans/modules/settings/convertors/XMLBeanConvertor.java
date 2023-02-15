@@ -114,7 +114,7 @@ public final class XMLBeanConvertor extends Convertor implements PropertyChangeL
         try {
             java.lang.reflect.Method method = inst.getClass().getMethod(
                 "addPropertyChangeListener", // NOI18N
-                new Class[] {PropertyChangeListener.class});
+                    PropertyChangeListener.class);
             method.invoke(inst, new Object[] {this});
             this.saver = s;
         } catch (NoSuchMethodException ex) {
@@ -137,7 +137,7 @@ public final class XMLBeanConvertor extends Convertor implements PropertyChangeL
         try {
             java.lang.reflect.Method method = inst.getClass().getMethod(
                 "removePropertyChangeListener", // NOI18N
-                new Class[] {PropertyChangeListener.class});
+                    PropertyChangeListener.class);
             method.invoke(inst, new Object[] {this});
             this.saver = null;
         } catch (NoSuchMethodException ex) {

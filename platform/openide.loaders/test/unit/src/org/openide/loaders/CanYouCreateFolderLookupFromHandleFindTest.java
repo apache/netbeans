@@ -42,7 +42,7 @@ public class CanYouCreateFolderLookupFromHandleFindTest extends NbTestCase {
     }
     
     protected void setUp() {
-        MockServices.setServices(new Class[] {Pool.class});
+        MockServices.setServices(Pool.class);
     }
     
     public void testCreateAndImmediatelyQueryTheLookup() throws Exception {

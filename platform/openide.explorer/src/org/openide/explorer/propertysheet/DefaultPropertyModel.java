@@ -110,8 +110,8 @@ public @Deprecated class DefaultPropertyModel extends Object implements ExProper
                 // bugfix #16703 addPropertyChangeListener(String, PropertyChangeListener) is looked first
                 // is not then addPropertyChangeListener(PropertyChangeListener) is looked
                 Method addList = bean.getClass().getMethod(
-                        "addPropertyChangeListener", new Class[] { String.class, PropertyChangeListener.class }
-                    ); // NOI18N
+                        "addPropertyChangeListener",
+                        String.class, PropertyChangeListener.class); // NOI18N
 
                 addList.invoke(
                     bean, new Object[] { propertyName, org.openide.util.WeakListeners.propertyChange(this, bean) }
@@ -119,8 +119,8 @@ public @Deprecated class DefaultPropertyModel extends Object implements ExProper
             } catch (NoSuchMethodException nsme) {
                 try {
                     Method addList = bean.getClass().getMethod(
-                            "addPropertyChangeListener", new Class[] { PropertyChangeListener.class }
-                        ); // NOI18N
+                            "addPropertyChangeListener",
+                            PropertyChangeListener.class); // NOI18N
 
                     addList.invoke(bean, new Object[] { org.openide.util.WeakListeners.propertyChange(this, bean) });
                 } catch (NoSuchMethodException nosme) {

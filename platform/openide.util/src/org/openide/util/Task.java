@@ -305,7 +305,7 @@ public class Task extends Object implements Runnable {
             }
 
             try {
-                java.lang.reflect.Method method = getClass().getMethod("waitFinished", new Class[] { Long.TYPE }); // NOI18N
+                java.lang.reflect.Method method = getClass().getMethod("waitFinished", Long.TYPE); // NOI18N
                 does = Boolean.valueOf(method.getDeclaringClass() != Task.class);
                 m.put(getClass(), does);
 

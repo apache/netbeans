@@ -924,7 +924,7 @@ public class ExtTestCase extends NbTestCase {
         if (queue == null) {
             queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
         }
-        Method m = EventQueue.class.getDeclaredMethod("dispatchEvent", new Class[] {AWTEvent.class});
+        Method m = EventQueue.class.getDeclaredMethod("dispatchEvent", AWTEvent.class);
         m.setAccessible(true);
         if (evt.getSource() instanceof JTextField) {
             foo = System.currentTimeMillis();

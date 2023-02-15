@@ -32,7 +32,7 @@ import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 class HibernateProvider extends Provider{
     
     protected HibernateProvider(String version){
-        super("org.hibernate.ejb.HibernatePersistence", version);
+        super("org.hibernate.jpa.HibernatePersistenceProvider", version);
     }
 
     protected HibernateProvider(){
@@ -66,17 +66,26 @@ class HibernateProvider extends Provider{
     
     @Override
     public String getTableGenerationPropertyName() {
-        return (getVersion()!=null && Persistence.VERSION_2_1.equals(getVersion())) ? super.getTableGenerationPropertyName() : "hibernate.hbm2ddl.auto";
+        return getVersion() != null && 
+                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
+                ? super.getTableGenerationPropertyName()
+                : "hibernate.hbm2ddl.auto";
     }
     
     @Override
     public String getTableGenerationDropCreateValue() {
-        return (getVersion()!=null && Persistence.VERSION_2_1.equals(getVersion())) ? super.getTableGenerationDropCreateValue() : "create-drop";
+        return getVersion() != null && 
+                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
+                ? super.getTableGenerationDropCreateValue()
+                : "create-drop";
     }
     
     @Override
     public String getTableGenerationCreateValue() {
-        return (getVersion()!=null && Persistence.VERSION_2_1.equals(getVersion())) ? super.getTableGenerationCreateValue() : "update";
+        return getVersion() != null && 
+                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
+                ? super.getTableGenerationCreateValue()
+                : "update";
     }
 
     @Override

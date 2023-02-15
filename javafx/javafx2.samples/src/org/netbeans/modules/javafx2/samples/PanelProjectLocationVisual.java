@@ -226,7 +226,7 @@ public class PanelProjectLocationVisual extends JPanel implements DocumentListen
     // End of variables declaration//GEN-END:variables
         
     private String validFreeProjectName(final File parentFolder, final String formater, final int index) {
-        String name = MessageFormat.format(formater, new Object[] {new Integer (index)});                
+        String name = MessageFormat.format(formater, index);
         File file = new File(parentFolder, name);
         return file.exists() ? null : name;
     }

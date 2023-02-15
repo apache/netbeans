@@ -250,7 +250,7 @@ public class PanelProjectLocationExtSrc extends SettingsPanel {
                 }
                 if (file != null) {
                     String format = NbBundle.getMessage(PanelSourceFolders.class, "MSG_ProjectFolderInvalid"); // NOI18N
-                    return MessageFormat.format(format, new Object[]{file});
+                    return MessageFormat.format(format, file);
                 }
             }
         }

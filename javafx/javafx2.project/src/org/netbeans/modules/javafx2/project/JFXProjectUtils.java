@@ -1088,7 +1088,7 @@ public final class JFXProjectUtils {
                                     out.println(underline);
                                     out.println(header);
                                     out.println(underline);
-                                    out.println (MessageFormat.format(content, new Object[] {backupName + ".xml"})); //NOI18N
+                                    out.println (MessageFormat.format(content, backupName + ".xml")); //NOI18N
                                 } finally {
                                     if(out != null) {
                                         out.close ();

@@ -346,7 +346,7 @@ public class ProjectProblemsProviders {
 
         //Check for libbraries with broken classpath content
         Set<String> usedLibraries = new HashSet<String>();
-        Pattern libPattern = Pattern.compile("\\$\\{(libs\\.[-._a-zA-Z0-9]+\\.classpath)\\}"); //NOI18N
+        Pattern libPattern = Pattern.compile("\\$\\{(libs\\.[-.\\w]+\\.classpath)\\}"); //NOI18N
         for (String p : ps) {
             String propertyValue = ep.getProperty(p);
             if (propertyValue != null) {

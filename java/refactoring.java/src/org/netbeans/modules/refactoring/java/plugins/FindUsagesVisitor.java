@@ -109,7 +109,7 @@ public class FindUsagesVisitor extends ErrorAwareTreePathScanner<Tree, Element> 
 
                 if (t.id() == JavaTokenId.BLOCK_COMMENT || t.id() == JavaTokenId.LINE_COMMENT || t.id() == JavaTokenId.JAVADOC_COMMENT) {
                     Scanner tokenizer = new Scanner(t.text().toString());
-                    tokenizer.useDelimiter("[^a-zA-Z0-9_]"); //NOI18N
+                    tokenizer.useDelimiter("\\W"); //NOI18N
                     while (tokenizer.hasNext()) {
                         String current = tokenizer.next();
                         if (current.equals(originalName)) {

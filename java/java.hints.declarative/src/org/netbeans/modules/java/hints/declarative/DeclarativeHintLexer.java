@@ -270,7 +270,7 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
     }
 
     private static final Pattern DISPLAY_NAME_RE = Pattern.compile("'[^']*':");
-    private static final Pattern VARIABLE_RE = Pattern.compile("\\$[A-Za-z0-9_$]+");
+    private static final Pattern VARIABLE_RE = Pattern.compile("\\$[\\w$]+");
 
     private static final Map<String, DeclarativeHintTokenId> TOKENS;
     private static final Map<String, DeclarativeHintTokenId> BLOCK_TOKEN_START;

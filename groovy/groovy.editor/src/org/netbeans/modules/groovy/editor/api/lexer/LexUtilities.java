@@ -131,7 +131,7 @@ public final class LexUtilities {
                     Class c = Class.forName("org.netbeans.modules.groovy.editor.test.GroovyTestBase");
                     if (c != null) {
                         @SuppressWarnings("unchecked")
-                        Method m = c.getMethod("getDocumentFor", new Class[] {FileObject.class});
+                        Method m = c.getMethod("getDocumentFor", FileObject.class);
                         return (BaseDocument) m.invoke(null, (Object[]) new FileObject[] {fileObject});
                     }
                 } catch (Exception ex) {

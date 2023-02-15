@@ -174,7 +174,7 @@ public final class Model {
             resolveWindowProperties = !resolveWithObjects;
             long end = System.currentTimeMillis();
             if(LOGGER.isLoggable(Level.FINE)) {
-                LOGGER.fine(MessageFormat.format("Building model took {0}ms. Resolving types took {1}ms. Extending model took {2}", new Object[]{(end - start), (startCallingME - startResolve), (end - startCallingME)}));
+                LOGGER.fine(MessageFormat.format("Building model took {0}ms. Resolving types took {1}ms. Extending model took {2}", (end - start), (startCallingME - startResolve), (end - startCallingME)));
             }
         } else if (resolveWithObjects) {
             //long start = System.currentTimeMillis();

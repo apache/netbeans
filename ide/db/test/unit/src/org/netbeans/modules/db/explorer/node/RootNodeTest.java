@@ -105,7 +105,7 @@ public class RootNodeTest extends TestCase {
         assertEquals("B2",
                 children.get(2).getDisplayName());
 
-        Method m = conn.getClass().getDeclaredMethod("getDelegate", new Class<?>[]{});
+        Method m = conn.getClass().getDeclaredMethod("getDelegate");
         m.setAccessible(true);
 
         org.netbeans.modules.db.explorer.DatabaseConnection dc =

@@ -63,7 +63,7 @@ public class RecurrentSuiteFactory {
                         FileObject fo = (FileObject) fileObjs.nextElement();
                         if (filter.accept(fo)) {
                             String testName = projects[i].getName() + "_" + FileUtil.getRelativePath(prjDir, fo).replaceAll("[/.]", "_");
-                            Constructor cnstr = clazz.getDeclaredConstructor(new Class[]{String.class, FileObject.class});
+                            Constructor cnstr = clazz.getDeclaredConstructor(String.class, FileObject.class);
                             NbTestCase test = (NbTestCase) cnstr.newInstance(new Object[]{testName, fo});
                             suite.addTest(test);
                         }

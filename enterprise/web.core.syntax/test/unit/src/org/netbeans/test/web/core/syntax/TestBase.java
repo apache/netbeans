@@ -47,7 +47,7 @@ import org.openide.util.Exceptions;
 public class TestBase extends CslTestBase {
 
     static {
-        MockServices.setServices(new Class[] {RepositoryImpl.class});
+        MockServices.setServices(RepositoryImpl.class);
     }
 
     private static final String PROP_MIME_TYPE = "mimeType"; //NOI18N

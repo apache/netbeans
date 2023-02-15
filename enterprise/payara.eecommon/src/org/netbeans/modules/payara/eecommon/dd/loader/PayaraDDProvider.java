@@ -479,7 +479,7 @@ public final class PayaraDDProvider {
                     graphRoot.graphManager().setDoctype(vInfo.getPublicId(), vInfo.getSystemId());
 
                     Class proxyClass = vInfo.getProxyClass();
-                    Constructor proxyConstructor = proxyClass.getConstructor(new Class[]{rootType, String.class});
+                    Constructor proxyConstructor = proxyClass.getConstructor(rootType, String.class);
                     result = (RootInterface) proxyConstructor.newInstance(new Object[]{graphRoot, version});
                 } catch (IllegalArgumentException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException ex) {
                     // These five exceptions will be caught and logged either in StorageBeanFactory static

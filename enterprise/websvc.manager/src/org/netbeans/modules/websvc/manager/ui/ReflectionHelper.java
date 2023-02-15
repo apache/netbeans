@@ -193,10 +193,10 @@ public class ReflectionHelper {
             Class<?> qNameClass = Class.forName(QName.class.getName(), true, loader);
             Class<?> jaxBClass = Class.forName(JAXBElement.class.getName(), true, loader);
 
-            Constructor qNameConstr = qNameClass.getConstructor(new Class[]{String.class});
+            Constructor qNameConstr = qNameClass.getConstructor(String.class);
             Object qName = qNameConstr.newInstance(localPart);
 
-            Constructor jaxBConstr = jaxBClass.getConstructor(new Class[]{qNameClass, Class.class, Object.class});
+            Constructor jaxBConstr = jaxBClass.getConstructor(qNameClass, Class.class, Object.class);
             return jaxBConstr.newInstance(qName, declaredClass, value);
         } catch (ClassNotFoundException cnfe) {
             throw new WebServiceReflectionException("ClassNotFoundException", cnfe);

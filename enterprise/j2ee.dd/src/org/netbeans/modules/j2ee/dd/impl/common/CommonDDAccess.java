@@ -115,12 +115,12 @@ public class CommonDDAccess {
             Class ch = Class.forName(apiPrefix + beanName); //NOI18N
             Method setter=null;
             try {
-                setter = p.getMethod("set" + beanName, new Class[]{ch}); //NOI18N
+                setter = p.getMethod("set" + beanName, ch); //NOI18N
                 setter.invoke(parent, new Object[]{child});
             } catch (NoSuchMethodException ex) {
             }
             if (setter==null) {
-                setter = p.getMethod("add" + getNameForMethod(parent, beanName), new Class[]{ch}); //NOI18N
+                setter = p.getMethod("add" + getNameForMethod(parent, beanName), ch); //NOI18N
                 setter.invoke(parent, new Object[]{child});
             }
 	} catch (Exception e) {

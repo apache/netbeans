@@ -47,7 +47,7 @@ public class NbValidator {
     
     private static void initReflection() {
         try {
-            validateXmlViewM = Validator.class.getDeclaredMethod("validateXmlView", new Class[] {PageData.class, Compiler.class}); // NOI18N
+            validateXmlViewM = Validator.class.getDeclaredMethod("validateXmlView", PageData.class, Compiler.class); // NOI18N
             validateXmlViewM.setAccessible(true);
             bufF = PageDataImpl.class.getDeclaredField("buf"); // NOI18N
             bufF.setAccessible(true);

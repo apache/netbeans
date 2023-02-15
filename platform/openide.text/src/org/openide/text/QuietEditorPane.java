@@ -450,7 +450,7 @@ final class QuietEditorPane extends JEditorPane {
             try {
                 java.lang.reflect.Method method = delegator.getClass().getDeclaredMethod(
                     "createTransferable", // NOI18N
-                    new Class<?>[] {javax.swing.JComponent.class});
+                        JComponent.class);
                 method.setAccessible(true);
                 return (Transferable)method.invoke(delegator, new Object[] {comp});
             } catch (NoSuchMethodException ex) {

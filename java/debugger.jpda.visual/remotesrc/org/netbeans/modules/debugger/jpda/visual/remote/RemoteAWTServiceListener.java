@@ -56,7 +56,7 @@ public class RemoteAWTServiceListener implements InvocationHandler {
         String addName = "add"+listenerClass.getSimpleName();
         Method addListenerMethod;
         try {
-            addListenerMethod = c.getClass().getMethod(addName, new Class[] { listenerClass });
+            addListenerMethod = c.getClass().getMethod(addName, listenerClass);
         } catch (NoSuchMethodException ex) {
             return null;
         } catch (SecurityException ex) {

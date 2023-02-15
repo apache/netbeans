@@ -233,10 +233,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
             getter == null) ? null : findAccessibleClass(instance.getClass()).getMethod(getter),
                 (
             // find the setter (valueType)
-            setter == null) ? null : findAccessibleClass(instance.getClass()).getMethod(
-                    setter, new Class<?>[] { valueType }
-                )
-            );
+            setter == null) ? null : findAccessibleClass(instance.getClass()).getMethod(setter, valueType));
         }
 
         // [PENDING] should use Beans API in case there is overriding BeanInfo  --jglick

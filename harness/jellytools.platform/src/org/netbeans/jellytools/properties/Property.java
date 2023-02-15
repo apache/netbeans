@@ -407,7 +407,7 @@ public class Property {
             public void run() {
                 try {
                     Class<?> clazz = Class.forName("org.openide.explorer.propertysheet.PropUtils");
-                    Method getPropertyEditorMethod = clazz.getDeclaredMethod("getPropertyEditor", new Class[]{Node.Property.class});
+                    Method getPropertyEditorMethod = clazz.getDeclaredMethod("getPropertyEditor", Node.Property.class);
                     getPropertyEditorMethod.setAccessible(true);
                     atomicReference.set((PropertyEditor) getPropertyEditorMethod.invoke(null, new Object[]{property}));
                 } catch (Exception e) {

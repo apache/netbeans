@@ -93,7 +93,7 @@ public class WildflyManagementAPI {
         Class paClazz = cl.loadClass("org.jboss.as.controller.PathAddress"); // NOI18N
         Class peClazz = cl.loadClass("org.jboss.as.controller.PathElement"); // NOI18N
 
-        Method peFactory = peClazz.getDeclaredMethod("pathElement", new Class[]{String.class, String.class});
+        Method peFactory = peClazz.getDeclaredMethod("pathElement", String.class, String.class);
         Object array = Array.newInstance(peClazz, elements.size());
         int i = 0;
         for (Map.Entry<Object, Object> entry : elements.entrySet()) {
@@ -113,7 +113,7 @@ public class WildflyManagementAPI {
             throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
-        Method method = clazz.getDeclaredMethod("createOperation", new Class[]{String.class, modelClazz});
+        Method method = clazz.getDeclaredMethod("createOperation", String.class, modelClazz);
         return method.invoke(null, name, modelNode);
     }
 
@@ -122,7 +122,7 @@ public class WildflyManagementAPI {
             throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Class clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
-        Method method = clazz.getDeclaredMethod("createReadResourceOperation", new Class[]{modelClazz, boolean.class});
+        Method method = clazz.getDeclaredMethod("createReadResourceOperation", modelClazz, boolean.class);
         Object op =  method.invoke(null, modelNode, recursive);
         setModelNodeChild(cl, getModelNodeChild(cl, op, INCLUDE_RUNTIME), runtime);
         return op;
@@ -133,7 +133,7 @@ public class WildflyManagementAPI {
             NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
-        Method method = clazz.getDeclaredMethod("createRemoveOperation", new Class[]{modelClazz});
+        Method method = clazz.getDeclaredMethod("createRemoveOperation", modelClazz);
         return method.invoke(null, modelNode);
     }
 
@@ -151,7 +151,7 @@ public class WildflyManagementAPI {
             NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
-        Method method = clazz.getDeclaredMethod("readResult", new Class[]{modelClazz});
+        Method method = clazz.getDeclaredMethod("readResult", modelClazz);
         return method.invoke(null, modelNode);
     }
 

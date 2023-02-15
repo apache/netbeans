@@ -67,17 +67,17 @@ public class ParserControllerProxy {
     public static void initMethodsAndFields() {
         try {
             // getJarFile method
-            getJarFileM = ParserController.class.getDeclaredMethod("getJarFile", new Class[] {URL.class}); // NOI18N
+            getJarFileM = ParserController.class.getDeclaredMethod("getJarFile", URL.class); // NOI18N
             getJarFileM.setAccessible(true);
             // resolveFileName method
-            resolveFileNameM = ParserController.class.getDeclaredMethod("resolveFileName", new Class[] {String.class}); // NOI18N
+            resolveFileNameM = ParserController.class.getDeclaredMethod("resolveFileName", String.class); // NOI18N
             resolveFileNameM.setAccessible(true);
             // getJspConfigPageEncoding method
-            getJspConfigPageEncodingM = ParserController.class.getDeclaredMethod("getJspConfigPageEncoding", new Class[] {String.class}); // NOI18N
+            getJspConfigPageEncodingM = ParserController.class.getDeclaredMethod("getJspConfigPageEncoding", String.class); // NOI18N
             getJspConfigPageEncodingM.setAccessible(true);
             // determineSyntaxAndEncoding method
-            determineSyntaxAndEncodingM = ParserController.class.getDeclaredMethod("determineSyntaxAndEncoding", new Class[]  // NOI18N
-                {String.class, JarFile.class, String.class});
+            determineSyntaxAndEncodingM = ParserController.class.getDeclaredMethod("determineSyntaxAndEncoding", // NOI18N
+                    String.class, JarFile.class, String.class);
             determineSyntaxAndEncodingM.setAccessible(true);
             // isXML field
             isXmlF = ParserController.class.getDeclaredField("isXml"); // NOI18N

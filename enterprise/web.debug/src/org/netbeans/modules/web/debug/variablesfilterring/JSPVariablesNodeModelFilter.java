@@ -200,7 +200,7 @@ public class JSPVariablesNodeModelFilter implements ExtendedNodeModelFilter {
         try {
             java.lang.reflect.Method toStringMethod =
                     v.getClass().getMethod("getToStringValue",  // NOI18N
-                                           new Class[] { Integer.TYPE });
+                            Integer.TYPE);
             toStringMethod.setAccessible(true);
             toString = (String) toStringMethod.invoke(v, TO_STRING_LENGTH_LIMIT);
         } catch (Exception ex) {

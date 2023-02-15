@@ -1443,7 +1443,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
                         setRightComponentMethod =
                             javax.swing.JSplitPane.class.getMethod(
                                     "setRightComponent", // NOI18N
-                                    new Class[] { java.awt.Component.class });
+                                    java.awt.Component.class);
                     addMethod = setRightComponentMethod;
                 }
                 else return false;

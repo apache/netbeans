@@ -101,7 +101,7 @@ final class PlatformNode extends AbstractNode implements ChangeListener {
             if (platformId == null) {
                 name = NbBundle.getMessage(PlatformNode.class,"TXT_BrokenPlatform");
             } else {
-                name = MessageFormat.format(NbBundle.getMessage(PlatformNode.class,"FMT_BrokenPlatform"), new Object[] {platformId});
+                name = MessageFormat.format(NbBundle.getMessage(PlatformNode.class,"FMT_BrokenPlatform"), platformId);
             }
         }
         return name;

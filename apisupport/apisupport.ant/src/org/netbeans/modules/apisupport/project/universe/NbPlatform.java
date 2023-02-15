@@ -899,7 +899,7 @@ public final class NbPlatform implements SourceRootsProvider, JavadocRootsProvid
                 }
             }
         }
-        return MessageFormat.format(currVer, new Object[] {implVers});
+        return MessageFormat.format(currVer, implVers);
     }
     private static String findCurrVer(JarFile jar, String infix) throws IOException {
         // first try to find the Bundle for 5.0+ (after openide split)

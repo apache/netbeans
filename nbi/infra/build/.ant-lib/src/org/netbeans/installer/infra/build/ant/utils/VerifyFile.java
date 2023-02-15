@@ -98,7 +98,7 @@ public class VerifyFile {
             final String className = 
                     name.substring(0, name.length() - 6).replace('/', '.'); // NOMAGI
             if (className.matches(
-                    "([a-zA-Z][a-zA-Z0-9_]+\\.)+[a-zA-Z][a-zA-Z0-9_]+")) { // NOI18N
+                    "([a-zA-Z]\\w+\\.)+[a-zA-Z]\\w+")) { // NOI18N
                 return className;
             } else {
                 return null;

@@ -39,7 +39,7 @@ public class JsEmbeddingProviderTest extends JsEmbeddingTestBase {
     public JsEmbeddingProviderTest(String testName) {
         super(testName);
         MockLookup.init();
-        MockServices.setServices(new Class[] {FileBasedURLMapper.class});
+        MockServices.setServices(FileBasedURLMapper.class);
         MockLookup.setInstances(
                 new SimpleFileOwnerQueryImplementation(),
                 new TestLanguageProvider());

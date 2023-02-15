@@ -50,7 +50,7 @@ public abstract class TplTestBase extends CslTestBase {
     @Override
     protected void setUp() throws Exception {
         MockLookup.init();
-        MockServices.setServices(new Class[] {FileBasedURLMapper.class});
+        MockServices.setServices(FileBasedURLMapper.class);
         MockLookup.setInstances(
                 new SimpleFileOwnerQueryImplementation(),
                 new TestLanguageProvider());

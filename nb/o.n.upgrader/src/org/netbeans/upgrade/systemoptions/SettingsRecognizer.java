@@ -370,7 +370,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
         try {
             Object instance;
             try {
-                Method method = clazz.getMethod(targetMethod, new Class[]{FileObject.class});
+                Method method = clazz.getMethod(targetMethod, FileObject.class);
                 method.setAccessible(true);
                 instance = method.invoke(null, source);
             } catch (NoSuchMethodException ex) {

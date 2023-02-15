@@ -204,7 +204,7 @@ public class Utils {
      */
     public static String getUrlString(DataObject dob) {
         try {
-            Method m = dob.getClass().getDeclaredMethod( "getURLString", new Class[] {} ); //NOI18N
+            Method m = dob.getClass().getDeclaredMethod( "getURLString"); //NOI18N
             m.setAccessible( true );
             Object res = m.invoke( dob );
             if( null != res ) {

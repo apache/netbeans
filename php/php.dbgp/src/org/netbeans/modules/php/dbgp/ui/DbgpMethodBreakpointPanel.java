@@ -61,7 +61,7 @@ public class DbgpMethodBreakpointPanel extends JPanel implements Controller {
          *  TODO : check methods name that debugger engine is accepted
          *  and set filtering here for this strings.
          *  Usual method names should be regegxp
-         *  [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
+         *  [a-zA-Z_\x7f-\xff][\\w\x7f-\xff]*
          *  by PHP spec.
          *  But there can be also Class member method names. I don't know
          *  how debugger engine accept such methods ( if it distinguish

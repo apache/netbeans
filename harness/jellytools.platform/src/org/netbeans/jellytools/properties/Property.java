@@ -361,7 +361,7 @@ public class Property {
         // or IconPanel(supplies property marking).
         try {
             Class<?> clazz = Class.forName("org.openide.explorer.propertysheet.RendererPropertyDisplayer");
-            Method findInnermostRendererMethod = clazz.getDeclaredMethod("findInnermostRenderer", new Class[] {JComponent.class});
+            Method findInnermostRendererMethod = clazz.getDeclaredMethod("findInnermostRenderer", JComponent.class);
             findInnermostRendererMethod.setAccessible(true);
             comp = (Component)findInnermostRendererMethod.invoke(null, new Object[] {comp});
         } catch (Exception e) {

@@ -395,7 +395,7 @@ public class JellyTestCase extends NbTestCase {
             for (int i = 0; i < newProjects.size(); i++) {
                 Array.set(projectsArray, i, newProjects.get(i));
             }
-            Method openMethod = openProjectsClass.getMethod("open", new Class[]{projectsArray.getClass(), Boolean.TYPE});
+            Method openMethod = openProjectsClass.getMethod("open", projectsArray.getClass(), Boolean.TYPE);
             openMethod.invoke(openProjectsInstance, projectsArray, false);
             openedProjects.addAll(newProjects);
 
@@ -448,7 +448,7 @@ public class JellyTestCase extends NbTestCase {
             for (int i = 0; i < projects.length; i++) {
                 Array.set(projectsArray, i, projects[i]);
             }
-            Method closeMethod = openProjectsClass.getMethod("close", new Class[]{projectsArray.getClass()});
+            Method closeMethod = openProjectsClass.getMethod("close", projectsArray.getClass());
             closeMethod.invoke(openProjectsInstance, projectsArray);
             //OpenProjects.getDefault().close((Project[]) openedProjects.toArray(new Project[0]));
         } catch (IllegalAccessException ex) {

@@ -270,7 +270,7 @@ public class OutputTabOperator extends JComponentOperator {
                 Document document = documentForTab(getSource());
                 try {
                     if (getOutputDocumentClass().isInstance(document)) {
-                        Method getTextMethod = getOutputDocumentClass().getDeclaredMethod("getText", new Class[]{int.class, int.class});
+                        Method getTextMethod = getOutputDocumentClass().getDeclaredMethod("getText", int.class, int.class);
                         getTextMethod.setAccessible(true);
                         return getTextMethod.invoke(document, new Object[]{Integer.valueOf(0), Integer.valueOf(length)}).toString();
                     }
@@ -390,17 +390,17 @@ public class OutputTabOperator extends JComponentOperator {
                 try {
                     if (getOutputDocumentClass().isInstance(document)) {
                         Class<?> clazz = getOutputDocumentClass();
-                        Method getLineStartMethod = clazz.getDeclaredMethod("getLineStart", new Class[]{int.class});
+                        Method getLineStartMethod = clazz.getDeclaredMethod("getLineStart", int.class);
                         getLineStartMethod.setAccessible(true);
                         Integer lineStart = (Integer) getLineStartMethod.invoke(document, new Object[]{Integer.valueOf(line)});
-                        Method getLineEndMethod = clazz.getDeclaredMethod("getLineEnd", new Class[]{int.class});
+                        Method getLineEndMethod = clazz.getDeclaredMethod("getLineEnd", int.class);
                         getLineEndMethod.setAccessible(true);
                         Integer lineEnd = (Integer) getLineEndMethod.invoke(document, new Object[]{Integer.valueOf(line)});
                         if (lineStart.intValue() == lineEnd.intValue()) {
                             // line is empty
                             return "";
                         }
-                        Method getTextMethod = clazz.getDeclaredMethod("getText", new Class[]{int.class, int.class});
+                        Method getTextMethod = clazz.getDeclaredMethod("getText", int.class, int.class);
                         getTextMethod.setAccessible(true);
                         return getTextMethod.invoke(document, new Object[]{lineStart, Integer.valueOf(lineEnd.intValue() - lineStart.intValue())}).toString();
                     }

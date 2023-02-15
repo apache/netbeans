@@ -1707,7 +1707,7 @@ public class ETable extends JTable {
     public JMenuItem getQuickFilterEqualsItem(final int column, Object value,
             String columnName, String text, boolean equals) {
         
-        String s = MessageFormat.format(text, new Object[] { columnName, value});
+        String s = MessageFormat.format(text, columnName, value);
         JMenuItem res = new JMenuItem(s);
         int modelColumn = convertColumnIndexToModel(column);
         res.addActionListener(new EqualsQuickFilter(modelColumn, value, equals));
@@ -1769,7 +1769,7 @@ public class ETable extends JTable {
             final int column, Object value, String columnName, 
             String text, boolean greater, boolean equalsCounts) {
         
-        String s = MessageFormat.format(text, new Object[] { columnName, value});
+        String s = MessageFormat.format(text, columnName, value);
         JMenuItem res = new JMenuItem(s);
         int modelColumn = convertColumnIndexToModel(column);
         res.addActionListener(new CompareQuickFilter(modelColumn, value, greater, equalsCounts));

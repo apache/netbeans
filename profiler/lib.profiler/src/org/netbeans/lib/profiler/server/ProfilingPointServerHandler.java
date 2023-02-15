@@ -65,7 +65,7 @@ public class ProfilingPointServerHandler {
 
         for (int i = 0; i < handlerClassNames.length; i++) {
             try {
-                Method method = Class.forName(handlerClassNames[i]).getMethod("getInstance", new Class[] { String.class }); //NOI18N
+                Method method = Class.forName(handlerClassNames[i]).getMethod("getInstance", String.class); //NOI18N
                 handlers[i] = (ProfilingPointServerHandler) method.invoke(null, new Object[] { handlersInfo[i] });
             } catch (Exception e) {
                 e.printStackTrace(System.err);

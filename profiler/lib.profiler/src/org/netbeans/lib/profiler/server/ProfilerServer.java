@@ -1680,8 +1680,8 @@ public class ProfilerServer extends Thread implements CommonConstants {
         // try Lookup.getDefault().lookup(ClassLoader.class)
         try {
             Class lookupClz = Thread.currentThread().getContextClassLoader().loadClass("org.openide.util.Lookup"); // NOI18N
-            Method instMethod = lookupClz.getMethod("getDefault", new Class[0]); // NOI18N
-            Method lookupMethod = lookupClz.getMethod("lookup", new Class[]{Class.class}); // NOI18N
+            Method instMethod = lookupClz.getMethod("getDefault"); // NOI18N
+            Method lookupMethod = lookupClz.getMethod("lookup", Class.class); // NOI18N
 
             Object instance = instMethod.invoke(lookupClz, new Object[0]);
             if (instance != null) {
@@ -1690,7 +1690,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
                     // try to call Ide.quit in JDeveloper
                     try {
                         Class oracleIde = clInstance.loadClass("oracle.ide.Ide"); // NOI18N
-                        Method ideQuitMethod = oracleIde.getMethod("quit", new Class[0]); // NOI18N
+                        Method ideQuitMethod = oracleIde.getMethod("quit"); // NOI18N
                         ideQuitMethod.invoke(oracleIde, new Object[0]);
                         return;
                     } catch (Exception ex) {
@@ -1698,8 +1698,8 @@ public class ProfilerServer extends Thread implements CommonConstants {
                     }
                     // try to call LifecycleManager in NetBeans
                     Class lcmInstanceClz = clInstance.loadClass("org.openide.LifecycleManager"); // NOI18N
-                    Method lcmInstMethod = lcmInstanceClz.getMethod("getDefault", new Class[0]); // NOI18N
-                    Method lcmExitMethod = lcmInstanceClz.getMethod("exit", new Class[0]); // NOI18N
+                    Method lcmInstMethod = lcmInstanceClz.getMethod("getDefault"); // NOI18N
+                    Method lcmExitMethod = lcmInstanceClz.getMethod("exit"); // NOI18N
                     Object lcmInstance = lcmInstMethod.invoke(lcmInstanceClz, new Object[0]);
                     lcmExitMethod.invoke(lcmInstance, new Object[0]);
                     return;

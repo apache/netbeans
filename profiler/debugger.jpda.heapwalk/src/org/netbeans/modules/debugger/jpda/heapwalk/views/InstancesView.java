@@ -224,7 +224,7 @@ public class InstancesView extends TopComponent {
             // Verify whether really all threads are stopped
             try {
                 java.lang.reflect.Method allThreadsMethod =
-                        d.getClass().getMethod("getAllThreads", new Class[] {});
+                        d.getClass().getMethod("getAllThreads");
                 List<JPDAThread> threads = (List<JPDAThread>) allThreadsMethod.invoke(d, new Object[]{});
                 for (JPDAThread t : threads) {
                     if (!t.isSuspended()) {

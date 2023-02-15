@@ -88,7 +88,7 @@ public abstract class GraphPanel extends JPanel {
     // --- Messages support ----------------------------------------------------
 
     protected String getMaxValueString(String origString) {
-        return MessageFormat.format(MAX_VALUE_STRING, new Object[] { origString });
+        return MessageFormat.format(MAX_VALUE_STRING, origString);
     }
 
 

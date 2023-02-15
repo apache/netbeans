@@ -1296,7 +1296,7 @@ public class ProfilerInterface implements CommonConstants {
                 java.io.StringWriter sw = new java.io.StringWriter();
                 java.io.PrintWriter pw = new java.io.PrintWriter(sw);
                 t.printStackTrace(pw);
-                throw new Exception(MessageFormat.format(UNEXPECTED_EXCEPTION_MSG, new Object[] { t, sw.toString() }));
+                throw new Exception(MessageFormat.format(UNEXPECTED_EXCEPTION_MSG, t, sw.toString()));
             }
         } finally {
             instrumentMethodGroupCallThread = null;            

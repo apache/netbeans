@@ -465,30 +465,30 @@ public class TargetAppRunner implements CommonConstants {
         double timeInInjectedCode = CPUCCTContainer.getTimeInInjectedCodeForDisplayedThread();
         double totalRunTime = wholeGraphGrossTimeAbs + r.totalHotswappingTime + r.clientInstrTime + r.clientDataProcTime;
 
-        s.append(MessageFormat.format(INSTR_METHODS_COUNT_MSG, new Object[] { "" + r.nTotalInstrMethods })); // NOI18N
+        s.append(MessageFormat.format(INSTR_METHODS_COUNT_MSG, "" + r.nTotalInstrMethods)); // NOI18N
         s.append("\n"); // NOI18N
         s.append(MessageFormat.format(CLASSLOAD_FIRSTINV_COUNT_MSG,
-                                      new Object[] { "" + r.nClassLoads, "" + r.nFirstMethodInvocations })); // NOI18N
+                "" + r.nClassLoads, "" + r.nFirstMethodInvocations)); // NOI18N
         s.append("\n"); // NOI18N
-        s.append(MessageFormat.format(NON_EMPTY_IMG_COUNT_MSG, new Object[] { "" + r.nNonEmptyInstrMethodGroupResponses })); // NOI18N
+        s.append(MessageFormat.format(NON_EMPTY_IMG_COUNT_MSG, "" + r.nNonEmptyInstrMethodGroupResponses)); // NOI18N
         s.append("\n"); // NOI18N
-        s.append(MessageFormat.format(EMPTY_IMG_COUNT_MSG, new Object[] { "" + r.nEmptyInstrMethodGroupResponses })); // NOI18N
+        s.append(MessageFormat.format(EMPTY_IMG_COUNT_MSG, "" + r.nEmptyInstrMethodGroupResponses)); // NOI18N
         s.append("\n"); // NOI18N
-        s.append(MessageFormat.format(SINGLE_IMG_COUNT_MSG, new Object[] { "" + r.nSingleMethodInstrMethodGroupResponses })); // NOI18N
+        s.append(MessageFormat.format(SINGLE_IMG_COUNT_MSG, "" + r.nSingleMethodInstrMethodGroupResponses)); // NOI18N
         s.append("\n"); // NOI18N
 
         if (r.nNonEmptyInstrMethodGroupResponses > 0) {
-            s.append(MessageFormat.format(AVG_METHOD_TIME_MSG, new Object[] { nf.format(r.averageHotswappingTime) }));
+            s.append(MessageFormat.format(AVG_METHOD_TIME_MSG, nf.format(r.averageHotswappingTime)));
             s.append("\n"); // NOI18N
-            s.append(MessageFormat.format(MIN_METHOD_TIME_MSG, new Object[] { nf.format(r.minHotswappingTime) }));
+            s.append(MessageFormat.format(MIN_METHOD_TIME_MSG, nf.format(r.minHotswappingTime)));
             s.append("\n"); // NOI18N
-            s.append(MessageFormat.format(MAX_METHOD_TIME_MSG, new Object[] { nf.format(r.maxHotswappingTime) }));
+            s.append(MessageFormat.format(MAX_METHOD_TIME_MSG, nf.format(r.maxHotswappingTime)));
             s.append("\n"); // NOI18N
         }
 
         s.append("\n"); // NOI18N
 
-        s.append(MessageFormat.format(TOTAL_RUN_TIME_MSG, new Object[] { nf.format(totalRunTime) }));
+        s.append(MessageFormat.format(TOTAL_RUN_TIME_MSG, nf.format(totalRunTime)));
         s.append("\n"); // NOI18N
 
         if (totalRunTime == 0.0) {
@@ -496,25 +496,19 @@ public class TargetAppRunner implements CommonConstants {
         }
 
         s.append(MessageFormat.format(INJ_INSTR_TIME_MSG,
-                                      new Object[] {
-                                          nf.format(timeInInjectedCode), nf.format(timeInInjectedCode / totalRunTime * 100)
-                                      }));
+                nf.format(timeInInjectedCode), nf.format(timeInInjectedCode / totalRunTime * 100)));
         s.append("\n"); // NOI18N
         s.append(MessageFormat.format(TOTAL_INSTR_HOTSWAP_TIME_MSG,
-                                      new Object[] {
-                                          nf.format(r.totalHotswappingTime),
-                                          nf.format(r.totalHotswappingTime / totalRunTime * 100)
-                                      }));
+                nf.format(r.totalHotswappingTime),
+                nf.format(r.totalHotswappingTime / totalRunTime * 100)));
         s.append("\n"); // NOI18N
         s.append(MessageFormat.format(BYTECODE_COMM_TIME_MSG,
-                                      new Object[] { nf.format(r.clientInstrTime), nf.format(r.clientInstrTime / totalRunTime * 100) }));
+                nf.format(r.clientInstrTime), nf.format(r.clientInstrTime / totalRunTime * 100)));
         s.append("\n"); // NOI18N
         s.append(MessageFormat.format(CLIENT_BYTECODE_TIME_MSG, new Object[] { "" + profilerClient.getInstrProcessingTime() })); // NOI18N
         s.append("\n"); // NOI18N
         s.append(MessageFormat.format(CLIENT_DISK_PROCESS_MSG,
-                                      new Object[] {
-                                          nf.format(r.clientDataProcTime), nf.format(r.clientDataProcTime / totalRunTime * 100)
-                                      }));
+                nf.format(r.clientDataProcTime), nf.format(r.clientDataProcTime / totalRunTime * 100)));
         s.append("\n"); // NOI18N
                         // no idea what is this supposed to do; put it back if someone has a clue
                         //    EventBufferProcessor eb = profilerClient.getCPUCallGraphBuilder();
@@ -524,7 +518,7 @@ public class TargetAppRunner implements CommonConstants {
                         //    long dataProcessingTime = (eb != null) ? EventBufferProcessor.getDataProcessingTime() : 0;
 
         long dataProcessingTime = EventBufferProcessor.getDataProcessingTime();
-        s.append(MessageFormat.format(CLIENT_RESULTS_PROCESS_MSG, new Object[] { "" + dataProcessingTime })); // NOI18N
+        s.append(MessageFormat.format(CLIENT_RESULTS_PROCESS_MSG, "" + dataProcessingTime)); // NOI18N
         s.append("\n"); // NOI18N
         s.append("\n"); // NOI18N
 
@@ -545,7 +539,7 @@ public class TargetAppRunner implements CommonConstants {
         double m4 = (((double) status.methodEntryExitCallTime[4]) * 1000000) / cntsInSec; // Ditto
 
         s.append(MessageFormat.format(CALIBRATION_RESULTS_MSG,
-                                      new Object[] { nf.format(m0), nf.format(m1), nf.format(m2), nf.format(m4) }));
+                nf.format(m0), nf.format(m1), nf.format(m2), nf.format(m4)));
     }
 
     private boolean connectToStartedVMAndStartTA(boolean calibrationOnlyRun) {
@@ -592,7 +586,7 @@ public class TargetAppRunner implements CommonConstants {
 
             return false;
         } catch (ClientUtils.TargetAppFailedToStart e2) {
-            appStatusHandler.displayError(MessageFormat.format(FAILED_START_APP_CAUSE_MSG, new Object[] { e2.getOrigCause() }));
+            appStatusHandler.displayError(MessageFormat.format(FAILED_START_APP_CAUSE_MSG, e2.getOrigCause()));
 
             return false;
         }
@@ -816,7 +810,7 @@ public class TargetAppRunner implements CommonConstants {
                 sb.append(cmdArray[i]).append('\n'); // NOI18N
             }
 
-            appStatusHandler.displayError(MessageFormat.format(ERROR_STARTING_JVM_MSG, new Object[] { sb, ex }));
+            appStatusHandler.displayError(MessageFormat.format(ERROR_STARTING_JVM_MSG, sb, ex));
 
             return false;
         }

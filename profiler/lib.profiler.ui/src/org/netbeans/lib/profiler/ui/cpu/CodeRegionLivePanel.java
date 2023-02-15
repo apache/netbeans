@@ -175,13 +175,13 @@ public class CodeRegionLivePanel extends JPanel implements LiveResultsPanel {
             StringUtils.mcsTimeToString((max * 1000000) / timerCountsInSecond) // maximum
                                                        }));
 
-            resultText.append(MessageFormat.format(TOTAL_INVOCATIONS_MSG, new Object[] { "" + results[0] })); // NOI18N
+            resultText.append(MessageFormat.format(TOTAL_INVOCATIONS_MSG, "" + results[0])); // NOI18N
             resultText.append(", "); // NOI18N
 
             if (results[0] <= nRes) {
                 resultText.append(ALL_REMEMBERED_MSG);
             } else {
-                resultText.append(MessageFormat.format(LAST_REMEMBERED_MSG, new Object[] { "" + nRes })); // NOI18N
+                resultText.append(MessageFormat.format(LAST_REMEMBERED_MSG, "" + nRes)); // NOI18N
             }
 
             resultText.append("<br>"); // NOI18N
@@ -189,7 +189,7 @@ public class CodeRegionLivePanel extends JPanel implements LiveResultsPanel {
             resultText.append("<br><br><hr><br>"); // NOI18N
             resultText.append(individualTimes);
             resultText.append("<br><hr><br>"); // NOI18N
-            resultText.append(MessageFormat.format(INVOCATIONS_LISTED_MSG, new Object[] { "" + nRes })); // NOI18N
+            resultText.append(MessageFormat.format(INVOCATIONS_LISTED_MSG, "" + nRes)); // NOI18N
             resultText.append(", "); // NOI18N
             resultText.append(summaryOfTimes);
         }

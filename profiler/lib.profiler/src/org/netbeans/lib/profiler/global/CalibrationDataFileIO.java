@@ -85,13 +85,13 @@ public class CalibrationDataFileIO {
         File savedDataFile = new File(fn);
 
         if (!savedDataFile.exists()) {
-            errorMessage = MessageFormat.format(CALIBRATION_FILE_NOT_EXIST_MSG, new Object[] { savedDataFile.toString() });
+            errorMessage = MessageFormat.format(CALIBRATION_FILE_NOT_EXIST_MSG, savedDataFile.toString());
 
             return 1;
         }
 
         if (!savedDataFile.canRead()) {
-            errorMessage = MessageFormat.format(CALIBRATION_FILE_NOT_READABLE_MSG, new Object[] { savedDataFile.toString() });
+            errorMessage = MessageFormat.format(CALIBRATION_FILE_NOT_READABLE_MSG, savedDataFile.toString());
 
             return -1;
         }

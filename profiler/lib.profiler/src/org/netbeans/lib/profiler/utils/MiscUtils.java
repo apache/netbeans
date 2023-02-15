@@ -464,16 +464,16 @@ public class MiscUtils implements CommonConstants {
         if (file.exists()) {
             if (isDir) {
                 if (!file.isDirectory()) {
-                    throw new IOException(MessageFormat.format(NOT_DIRECTORY_MSG, new Object[] { file }));
+                    throw new IOException(MessageFormat.format(NOT_DIRECTORY_MSG, file));
                 }
             } else {
                 if (!file.isFile()) {
-                    throw new IOException(MessageFormat.format(NOT_FILE_MSG, new Object[] { file }));
+                    throw new IOException(MessageFormat.format(NOT_FILE_MSG, file));
                 }
             }
 
             if (!file.canRead()) {
-                throw new IOException(MessageFormat.format(FILE_NOT_READABLE_MSG, new Object[] { file }));
+                throw new IOException(MessageFormat.format(FILE_NOT_READABLE_MSG, file));
             }
 
             return file;

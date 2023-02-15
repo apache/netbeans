@@ -269,7 +269,7 @@ public class ReverseCallGraphPanel extends SnapshotCPUResultsPanel implements Sc
     }
 
     public String getShortTitle() {
-        return MessageFormat.format(PANEL_TITLE_SHORT, new Object[] { getSelectedMethodNameShort() });
+        return MessageFormat.format(PANEL_TITLE_SHORT, getSelectedMethodNameShort());
     }
 
     // NOTE: this method only sets sortingColumn and sortOrder, it doesn't refresh UI!
@@ -291,7 +291,7 @@ public class ReverseCallGraphPanel extends SnapshotCPUResultsPanel implements Sc
     }
 
     public String getTitle() {
-        return MessageFormat.format(PANEL_TITLE, new Object[] { getSelectedMethodName() });
+        return MessageFormat.format(PANEL_TITLE, getSelectedMethodName());
     }
 
     public boolean findFirst() {

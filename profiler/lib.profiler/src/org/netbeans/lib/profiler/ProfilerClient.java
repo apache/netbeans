@@ -1435,7 +1435,7 @@ public class ProfilerClient implements CommonConstants {
             String msg = resp.getErrorMessage();
 
             if (getStoredData) {
-                msg = MessageFormat.format(CORRUPTED_TARGET_CALIBRATION_DATA_MSG, new Object[] { msg });
+                msg = MessageFormat.format(CORRUPTED_TARGET_CALIBRATION_DATA_MSG, msg);
             }
 
             appStatusHandler.displayError(msg);
@@ -1513,7 +1513,7 @@ public class ProfilerClient implements CommonConstants {
         String jdkVersionString = resp.getJDKVersionString();
 
         if (!MiscUtils.isSupportedRunningJVMVersion(jdkVersionString)) {
-            String message = MessageFormat.format(UNSUPPORTED_JVM_MSG, new Object[] { jdkVersionString });
+            String message = MessageFormat.format(UNSUPPORTED_JVM_MSG, jdkVersionString);
             appStatusHandler.displayErrorAndWaitForConfirm(message);
 
             try {
@@ -1890,7 +1890,7 @@ public class ProfilerClient implements CommonConstants {
                                   throws ClientUtils.TargetAppOrVMTerminated {
         checkForTargetVMAlive();
         // For now, assume that the server went away. TODO [misha] - can it happen for any other reason?
-        appStatusHandler.displayError(MessageFormat.format(TARGET_JVM_ERROR_MSG, new Object[] { ex.getMessage() }));
+        appStatusHandler.displayError(MessageFormat.format(TARGET_JVM_ERROR_MSG, ex.getMessage()));
         closeConnection();
         throw new ClientUtils.TargetAppOrVMTerminated(ClientUtils.TargetAppOrVMTerminated.VM);
     }
@@ -1947,7 +1947,7 @@ public class ProfilerClient implements CommonConstants {
                     imgr = new InstrumentMethodGroupResponse(null);
 
                     if (getCurrentInstrType() == INSTR_CODE_REGION) {
-                        appStatusHandler.displayError(MessageFormat.format(CLASS_NOT_FOUND_MSG, new Object[] { ex.getMessage() }));
+                        appStatusHandler.displayError(MessageFormat.format(CLASS_NOT_FOUND_MSG, ex.getMessage()));
                     } else {
                         MiscUtils.printErrorMessage("problem in instrumentMethodGroupFromRoot: " + ex); // NOI18N
                     }

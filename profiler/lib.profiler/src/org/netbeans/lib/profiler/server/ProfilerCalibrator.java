@@ -181,8 +181,8 @@ class ProfilerCalibrator extends ProfilerRuntime {
         }
 
         cntInSecond = Timers.getNoOfCountsInSecond();
-        printResults(MessageFormat.format(TIMER_COUNTS_MSG, new Object[] { "" + cntInSecond })); // NOI18N
-        printResults(MessageFormat.format(TIMER_VALUE_MSG, new Object[] { "" + Timers.getCurrentTimeInCounts() })); // NOI18N
+        printResults(MessageFormat.format(TIMER_COUNTS_MSG, "" + cntInSecond)); // NOI18N
+        printResults(MessageFormat.format(TIMER_VALUE_MSG, "" + Timers.getCurrentTimeInCounts())); // NOI18N
 
         if (status != null) {
             status.timerCountsInSecond = new long[2];
@@ -299,7 +299,7 @@ class ProfilerCalibrator extends ProfilerRuntime {
             if (printResults && ((i % 5) == 0)) {
                 double timeInCounts = (double) time / (noOfInnerIterations * 2);
                 double timePerMethodInMCS = (((double) time * 1000000) / cntInSecond / (noOfInnerIterations * 2));
-                printResults(MessageFormat.format(TIME_COUNTS_MCS_MSG, new Object[] { "" + timeInCounts, "" + timePerMethodInMCS })); // NOI18N
+                printResults(MessageFormat.format(TIME_COUNTS_MCS_MSG, "" + timeInCounts, "" + timePerMethodInMCS)); // NOI18N
             }
         }
     }
@@ -328,7 +328,7 @@ class ProfilerCalibrator extends ProfilerRuntime {
                 break;
         }
 
-        printResults("\n" + MessageFormat.format(TIME_SUCCESS_PAIRS_MSG, new Object[] { "" + absolute, "" + threadCPU })); // NOI18N
+        printResults("\n" + MessageFormat.format(TIME_SUCCESS_PAIRS_MSG, "" + absolute, "" + threadCPU)); // NOI18N
 
         ProfilerRuntimeCPU.setTimerTypes(absolute, threadCPU);
 
@@ -388,7 +388,7 @@ class ProfilerCalibrator extends ProfilerRuntime {
                 }
 
                 if (printResults && ((i % 5) == 0)) {
-                    printResults(MessageFormat.format(TIME_COUNTS_MCS_MSG, new Object[] { "" + timeInCounts, "" + timeInMCS })); // NOI18N
+                    printResults(MessageFormat.format(TIME_COUNTS_MCS_MSG, "" + timeInCounts, "" + timeInMCS)); // NOI18N
                 }
             }
 
@@ -456,8 +456,8 @@ class ProfilerCalibrator extends ProfilerRuntime {
 
         double innerTimeInMCS = ((innerTimeInCounts * 1000000) / cntInSecond);
         double outerTimeInMCS = ((outerTimeInCounts * 1000000) / cntInSecond);
-        printResults(MessageFormat.format(INNER_TIME_MCS_MSG, new Object[] { "" + innerTimeInMCS })); // NOI18N
-        printResults(MessageFormat.format(OUTER_TIME_MCS_MSG, new Object[] { "" + outerTimeInMCS })); // NOI18N
+        printResults(MessageFormat.format(INNER_TIME_MCS_MSG, "" + innerTimeInMCS)); // NOI18N
+        printResults(MessageFormat.format(OUTER_TIME_MCS_MSG, "" + outerTimeInMCS)); // NOI18N
     }
 
     private static void measureSampledMethodEntryExitCalls() {
@@ -501,7 +501,7 @@ class ProfilerCalibrator extends ProfilerRuntime {
             }
 
             if (printResults && ((i % 5) == 0)) {
-                System.out.println(MessageFormat.format(TIME_COUNTS_MCS_MSG, new Object[] { "" + timeInCounts, "" + timeInMCS })); // NOI18N
+                System.out.println(MessageFormat.format(TIME_COUNTS_MCS_MSG, "" + timeInCounts, "" + timeInMCS)); // NOI18N
             }
         }
 
@@ -534,7 +534,7 @@ class ProfilerCalibrator extends ProfilerRuntime {
             if (printResults && ((i % 5) == 0)) {
                 double timeInCounts = (double) time / (noOfInnerIterations + 2);
                 double timePerMethodInMCS = (((double) time * 1000000) / cntInSecond / (noOfInnerIterations + 2));
-                printResults(MessageFormat.format(TIME_COUNTS_MCS_MSG, new Object[] { "" + timeInCounts, "" + timePerMethodInMCS })); // NOI18N
+                printResults(MessageFormat.format(TIME_COUNTS_MCS_MSG, "" + timeInCounts, "" + timePerMethodInMCS)); // NOI18N
             }
         }
     }

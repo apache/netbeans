@@ -104,7 +104,7 @@ public final class CodeRegionResultsSnapshot extends ResultsSnapshot {
     }
 
     public String toString() {
-        return MessageFormat.format(CODE_FRAGMENT_MSG, new Object[] { super.toString() });
+        return MessageFormat.format(CODE_FRAGMENT_MSG, super.toString());
     }
 
     public void writeToStream(DataOutputStream out) throws IOException {

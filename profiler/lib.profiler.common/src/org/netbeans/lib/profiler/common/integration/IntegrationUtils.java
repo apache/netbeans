@@ -416,11 +416,11 @@ public class IntegrationUtils {
     }
 
     public static String getManualRemoteStep1(String targetOS, String targetJVM) {
-        return MessageFormat.format(MANUAL_REMOTE_STEP1_MESSAGE, new Object[] { "JDK 5.0/6.0/7.0/8.0", targetOS, HTML_REMOTE_STRING }); //NOI18N
+        return MessageFormat.format(MANUAL_REMOTE_STEP1_MESSAGE, "JDK 5.0/6.0/7.0/8.0", targetOS, HTML_REMOTE_STRING); //NOI18N
     }
 
     public static String getManualRemoteStep2(String targetOS, String targetJVM) {
-        return MessageFormat.format(MANUAL_REMOTE_STEP2_MESSAGE, new Object[] { getRemoteCalibrateCommandString(targetOS, targetJVM) }); //NOI18N
+        return MessageFormat.format(MANUAL_REMOTE_STEP2_MESSAGE, getRemoteCalibrateCommandString(targetOS, targetJVM)); //NOI18N
     }
 
     // Returns getLibsDir()/deployed/jdk<15>/<OS> appropriate for current / selected OS
@@ -593,7 +593,7 @@ public class IntegrationUtils {
     }
 
     public static String getRemoteAbsolutePathHint() {
-        return MessageFormat.format(REMOTE_ABSOLUTE_PATH_HINT, new Object[] { HTML_REMOTE_STRING });
+        return MessageFormat.format(REMOTE_ABSOLUTE_PATH_HINT, HTML_REMOTE_STRING);
     }
 
     // Returns calibration batch filename
@@ -664,7 +664,7 @@ public class IntegrationUtils {
         File target = new File(source.getAbsolutePath() + FILE_BACKUP_EXTENSION);
 
         if (!source.exists()) {
-            ProfilerLogger.severe(MessageFormat.format(BACKUP_FILE_NOT_FOUND_MESSAGE, new Object[] { source.getAbsolutePath() })); //NOI18N
+            ProfilerLogger.severe(MessageFormat.format(BACKUP_FILE_NOT_FOUND_MESSAGE, source.getAbsolutePath())); //NOI18N
 
             return false;
         }
@@ -672,7 +672,7 @@ public class IntegrationUtils {
         if (target.exists()) {
             if (!target.delete()) {
                 ProfilerLogger.severe(MessageFormat.format(BACKUP_CANNOT_DELETE_FILE_MESSAGE,
-                                                           new Object[] { target.getAbsolutePath() })); //NOI18N
+                        target.getAbsolutePath())); //NOI18N
 
                 return false;
             }
@@ -714,7 +714,7 @@ public class IntegrationUtils {
 
     public static boolean copyFile(File sourceFile, File targetFile) {
         if (!sourceFile.exists()) {
-            ProfilerLogger.severe(MessageFormat.format(COPY_FILE_NOT_FOUND_MESSAGE, new Object[] { sourceFile.getAbsolutePath() })); //NOI18N
+            ProfilerLogger.severe(MessageFormat.format(COPY_FILE_NOT_FOUND_MESSAGE, sourceFile.getAbsolutePath())); //NOI18N
 
             return false;
         }
@@ -722,7 +722,7 @@ public class IntegrationUtils {
         if (targetFile.exists()) {
             if (!targetFile.delete()) {
                 ProfilerLogger.severe(MessageFormat.format(COPY_CANNOT_DELETE_FILE_MESSAGE,
-                                                           new Object[] { targetFile.getAbsolutePath() })); //NOI18N
+                        targetFile.getAbsolutePath())); //NOI18N
 
                 return false;
             }

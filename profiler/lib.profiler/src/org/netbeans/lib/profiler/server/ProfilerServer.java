@@ -999,7 +999,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
         // can not access a member of class Test with modifiers "public static"". Thus we have to run the below preemptive check. Hope this is not
         // a problem for the majority of our users...
         if (!Modifier.isPublic(targetMainClass.getModifiers())) {
-            startupException = new IllegalAccessException(MessageFormat.format(MAIN_CLASS_NOT_PUBLIC_MSG, new Object[] { targetMainClass }));
+            startupException = new IllegalAccessException(MessageFormat.format(MAIN_CLASS_NOT_PUBLIC_MSG, targetMainClass));
             System.err.println(startupException);
 
             return;
@@ -1021,7 +1021,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
         int mod = targetMainMethod.getModifiers();
 
         if (!(Modifier.isPublic(mod) && Modifier.isStatic(mod)) || Modifier.isAbstract(mod) || Modifier.isInterface(mod)) {
-            startupException = new IllegalAccessException(MessageFormat.format(INCORRECT_MAIN_MODIFIERS_MSG, new Object[] { targetMainClass }));
+            startupException = new IllegalAccessException(MessageFormat.format(INCORRECT_MAIN_MODIFIERS_MSG, targetMainClass));
             System.err.println(startupException);
 
             return;
@@ -1055,11 +1055,11 @@ public class ProfilerServer extends Thread implements CommonConstants {
             }
         } catch (Throwable ex) {
             ProfilerInterface.disableProfilerHooks();
-            internalError(MessageFormat.format(UNEXPECTED_EXCEPTION_MSG, new Object[] { ex }), false);
+            internalError(MessageFormat.format(UNEXPECTED_EXCEPTION_MSG, ex), false);
             ex.printStackTrace(System.err);
         } finally {
             int elapsedTime = (int) (((Timers.getCurrentTimeInCounts() - startTime) * 1000) / Timers.getNoOfCountsInSecond());
-            System.out.println(MessageFormat.format(ELAPSED_TIME_MSG, new Object[] { "" + elapsedTime })); // NOI18N
+            System.out.println(MessageFormat.format(ELAPSED_TIME_MSG, "" + elapsedTime)); // NOI18N
         }
     }
 
@@ -1097,7 +1097,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
                 try {
                     agentId = Integer.parseInt(id);
                 } catch (NumberFormatException e) {
-                    System.err.println(MessageFormat.format(INCORRECT_AGENT_ID_MSG, new Object[] { id }));
+                    System.err.println(MessageFormat.format(INCORRECT_AGENT_ID_MSG, id));
                                                                                                            // ignore, the agentId will be generated randomly
                 }
             }
@@ -1267,7 +1267,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
             System.err.println(CONNECTION_TIMEOUT_MSG);
             connectionFailed = true;
         } catch (IOException ex) {
-            System.err.println(MessageFormat.format(CONNECTION_EXCEPTION_MSG, new Object[] { ex }));
+            System.err.println(MessageFormat.format(CONNECTION_EXCEPTION_MSG, ex));
             if (ex instanceof BindException) System.err.println(CONNECTION_EXCEPTION_BIND_MSG);
             connectionFailed = true;
         } finally {
@@ -1298,7 +1298,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
 
             bos.close();
         } catch (IOException e) {
-            System.err.println(MessageFormat.format(AGENT_ERROR_MSG, new Object[] { e.getMessage() }));
+            System.err.println(MessageFormat.format(AGENT_ERROR_MSG, e.getMessage()));
         } finally {
             if (bos != null) {
                 try {
@@ -1714,7 +1714,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
     }
 
     private void handleIOExceptionOnSend(IOException ex) {
-        System.err.println(MessageFormat.format(RESPONSE_EXCEPTION_MSG, new Object[] { ex }));
+        System.err.println(MessageFormat.format(RESPONSE_EXCEPTION_MSG, ex));
         ex.printStackTrace(System.err);
         closeConnection();
     }
@@ -1756,7 +1756,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
                 }
             } catch (IOException ex) {
                 if (connectionOpen && !detachCommandReceived) { // It is not an asynchronous connection shutdown
-                    System.err.println(MessageFormat.format(COMMAND_EXCEPTION_MSG, new Object[] { ex }));
+                    System.err.println(MessageFormat.format(COMMAND_EXCEPTION_MSG, ex));
                 }
 
                 break;
@@ -1770,7 +1770,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
         try {
             getInfoFile(serverPort).delete();
         } catch (IOException e) {
-            System.err.println(MessageFormat.format(AGENT_ERROR_MSG, new Object[] { e.getMessage() }));
+            System.err.println(MessageFormat.format(AGENT_ERROR_MSG, e.getMessage()));
         }
     }
 

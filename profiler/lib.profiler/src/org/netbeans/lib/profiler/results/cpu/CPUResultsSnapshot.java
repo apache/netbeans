@@ -627,7 +627,7 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
     }
 
     public String toString() {
-        return MessageFormat.format(CPU_MSG, new Object[] { super.toString() });
+        return MessageFormat.format(CPU_MSG, super.toString());
     }
 
     //---- Serialization support

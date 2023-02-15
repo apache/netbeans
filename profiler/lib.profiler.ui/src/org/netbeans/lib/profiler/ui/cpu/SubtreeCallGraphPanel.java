@@ -268,7 +268,7 @@ public class SubtreeCallGraphPanel extends SnapshotCPUResultsPanel implements Sc
     }
 
     public String getShortTitle() {
-        return MessageFormat.format(PANEL_TITLE_SHORT, new Object[] { getSelectedThreadName(), getSelectedMethodNameShort() });
+        return MessageFormat.format(PANEL_TITLE_SHORT, getSelectedThreadName(), getSelectedMethodNameShort());
     }
 
     // NOTE: this method only sets sortingColumn and sortOrder, it doesn't refresh UI!
@@ -290,7 +290,7 @@ public class SubtreeCallGraphPanel extends SnapshotCPUResultsPanel implements Sc
     }
 
     public String getTitle() {
-        return MessageFormat.format(PANEL_TITLE, new Object[] { getSelectedThreadName(), getSelectedMethodName() });
+        return MessageFormat.format(PANEL_TITLE, getSelectedThreadName(), getSelectedMethodName());
     }
 
     public boolean findFirst() {

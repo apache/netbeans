@@ -144,7 +144,7 @@ public class BuildNumberGlassFish extends Task {
      */
     private static final Pattern PATTERN = Pattern.compile(
             "sjsas-9_1_02-([a-z0-9]+)-bin-" + // NOI18N
-            "b(([0-9]+)[a-z]?)-linux-([A-Za-z0-9_]+)\\.bin"); // NOI18N
+            "b(([0-9]+)[a-z]?)-linux-(\\w+)\\.bin"); // NOI18N
     private static final Pattern PATTERN_V3 = Pattern.compile(            
             "glassfish-([0-9]+[\\.0-9]+)-b(([0-9]+)[a-z]?)\\.zip"); // NOI18N
     

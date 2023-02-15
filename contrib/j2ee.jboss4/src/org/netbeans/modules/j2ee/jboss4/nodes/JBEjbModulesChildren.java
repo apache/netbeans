@@ -93,7 +93,7 @@ public class JBEjbModulesChildren extends JBAsyncChildren implements Refreshable
                         searchPattern = new ObjectName("jboss.j2ee:service=EjbModule,*"); // NOI18N
                     }
 
-                    Method method = connection.getClass().getMethod("queryMBeans", new Class[]{ObjectName.class, QueryExp.class});
+                    Method method = connection.getClass().getMethod("queryMBeans", ObjectName.class, QueryExp.class);
                     method = Util.fixJava4071957(method);
                     Set managedObj = (Set) method.invoke(connection, new Object[]{searchPattern, null}); // NOI18N
 
@@ -121,7 +121,7 @@ public class JBEjbModulesChildren extends JBAsyncChildren implements Refreshable
                 @Override
                 public Void action(MBeanServerConnection connection, JBoss5ProfileServiceProxy profileService) throws Exception {
                     ObjectName searchPattern = new ObjectName("jboss.j2ee:service=EJB3,*"); // NOI18N
-                    Method method = connection.getClass().getMethod("queryMBeans", new Class[] {ObjectName.class, QueryExp.class});
+                    Method method = connection.getClass().getMethod("queryMBeans", ObjectName.class, QueryExp.class);
                     method = Util.fixJava4071957(method);
                     Set managedObj = (Set) method.invoke(connection, new Object[] {searchPattern, null}); // NOI18N
 

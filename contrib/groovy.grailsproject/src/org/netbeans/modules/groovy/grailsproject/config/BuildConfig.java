@@ -297,7 +297,7 @@ public final class BuildConfig {
     public synchronized List<File> getCompileDependencies() {
         try {
             if (buildSettingsInstance != null) {
-                Method getCompileDependenciesMethod = buildSettingsInstance.getClass().getMethod("getCompileDependencies", new Class[] {}); // NOI18N
+                Method getCompileDependenciesMethod = buildSettingsInstance.getClass().getMethod("getCompileDependencies"); // NOI18N
                 return (List<File>) getCompileDependenciesMethod.invoke(buildSettingsInstance, new Object[] {});
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
@@ -315,8 +315,7 @@ public final class BuildConfig {
         assert Thread.holdsLock(this);
         try {
             if (buildSettingsInstance != null) {
-                Method getProjectPluginsDirMethod = buildSettingsInstance.getClass().getMethod("getProjectPluginsDir", // NOI18N
-                        new Class[] {});
+                Method getProjectPluginsDirMethod = buildSettingsInstance.getClass().getMethod("getProjectPluginsDir"); // NOI18N
                 Object value = getProjectPluginsDirMethod.invoke(buildSettingsInstance, new Object[] {});
 
                 if (value instanceof File) {
@@ -363,8 +362,7 @@ public final class BuildConfig {
         assert Thread.holdsLock(this);
         try {
             if (buildSettingsInstance != null) {
-                Method getGlobalPluginsDirMethod = buildSettingsInstance.getClass().getMethod("getGlobalPluginsDir", // NOI18N
-                        new Class[] {});
+                Method getGlobalPluginsDirMethod = buildSettingsInstance.getClass().getMethod("getGlobalPluginsDir"); // NOI18N
                 Object value = getGlobalPluginsDirMethod.invoke(buildSettingsInstance, new Object[] {});
 
                 if (value instanceof File) {
@@ -410,11 +408,10 @@ public final class BuildConfig {
         assert Thread.holdsLock(this);
         try {
             if (buildSettingsInstance != null) {
-                Method getConfigMethod = buildSettingsInstance.getClass().getMethod("getConfig", // NOI18N
-                        new Class[] {});
+                Method getConfigMethod = buildSettingsInstance.getClass().getMethod("getConfig"); // NOI18N
                 Object configValue = getConfigMethod.invoke(buildSettingsInstance, new Object[] {});
 
-                Method toPropertiesMethod = configValue.getClass().getMethod("toProperties", new Class[] {}); // NOI18N
+                Method toPropertiesMethod = configValue.getClass().getMethod("toProperties"); // NOI18N
                 Object converted = toPropertiesMethod .invoke(configValue, new Object[] {});
 
                 if (converted instanceof Properties) {
@@ -462,10 +459,10 @@ public final class BuildConfig {
             Constructor contructor = clazz.getConstructor(File.class, File.class);
             Object instance = contructor.newInstance(platform.getGrailsHome(), projectRoot);
 
-            Method setRootLoaderMethod = clazz.getMethod("setRootLoader", new Class[] {URLClassLoader.class}); // NOI18N
+            Method setRootLoaderMethod = clazz.getMethod("setRootLoader", URLClassLoader.class); // NOI18N
             setRootLoaderMethod.invoke(instance, new Object[] {urlLoader});
 
-            Method loadConfigMethod = clazz.getMethod("loadConfig", new Class[] {}); // NOI18N
+            Method loadConfigMethod = clazz.getMethod("loadConfig"); // NOI18N
             loadConfigMethod.invoke(instance, new Object[] {});
 
             return instance;

@@ -81,7 +81,7 @@ public class JBServletsChildren extends Children.Keys {
                         @Override
                         public Void action(MBeanServerConnection connection, JBoss5ProfileServiceProxy profileService) throws Exception {
                             ObjectName searchPattern = new ObjectName("jboss.management.local:WebModule="+name+",j2eeType=Servlet,*");
-                            Method method = connection.getClass().getMethod("queryMBeans", new Class[] {ObjectName.class, QueryExp.class});
+                            Method method = connection.getClass().getMethod("queryMBeans", ObjectName.class, QueryExp.class);
                             method = Util.fixJava4071957(method);
                             Set managedObj = (Set) method.invoke(connection, new Object[] {searchPattern, null});
 

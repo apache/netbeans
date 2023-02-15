@@ -394,7 +394,7 @@ public class WLDeploymentManager implements DeploymentManager2 {
             Class helperClazz = Class.forName("weblogic.deploy.api.tools.SessionHelper", // NOI18N
                     false, Thread.currentThread().getContextClassLoader());
             Method m = helperClazz.getDeclaredMethod("getDeploymentManager", // NOI18N
-                    new Class[]{String.class, String.class, String.class, String.class, String.class});
+                    String.class, String.class, String.class, String.class, String.class);
             boolean secured = getCommonConfiguration().isSecured();
             Object o = m.invoke(null, new Object[]{secured ? "t3s" : "t3", host, port, username, password});
             if (DeploymentManager.class.isAssignableFrom(o.getClass())) {

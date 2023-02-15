@@ -70,7 +70,7 @@ public class JBEarModulesChildren extends Children.Keys {
                         public Void action(MBeanServerConnection connection, JBoss5ProfileServiceProxy profileService) throws Exception {
                             // Query to the jboss4 server
                             ObjectName searchPattern = new ObjectName("jboss.management.local:J2EEApplication="+j2eeAppName+",*");
-                            Method method = connection.getClass().getMethod("queryMBeans", new Class[] {ObjectName.class, QueryExp.class});
+                            Method method = connection.getClass().getMethod("queryMBeans", ObjectName.class, QueryExp.class);
                             method = Util.fixJava4071957(method);
                             Set managedObj = (Set) method.invoke(connection, new Object[] {searchPattern, null});
 

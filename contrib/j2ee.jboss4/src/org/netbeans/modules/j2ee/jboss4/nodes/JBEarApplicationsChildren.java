@@ -89,7 +89,7 @@ public class JBEarApplicationsChildren extends JBAsyncChildren implements Refres
                             propertyName = "url"; // NOI18N
                         }
 
-                        Method method = connection.getClass().getMethod("queryMBeans", new Class[] {ObjectName.class, QueryExp.class});
+                        Method method = connection.getClass().getMethod("queryMBeans", ObjectName.class, QueryExp.class);
                         method = Util.fixJava4071957(method);
                         Set managedObj = (Set) method.invoke(connection, new Object[] {searchPattern, null});
 

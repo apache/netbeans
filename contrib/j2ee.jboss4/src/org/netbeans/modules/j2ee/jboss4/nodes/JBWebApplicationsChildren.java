@@ -99,7 +99,7 @@ public class JBWebApplicationsChildren extends JBAsyncChildren implements Refres
                             searchPattern = new ObjectName("jboss.web:j2eeType=WebModule,J2EEApplication=none,*"); // NOI18N
                         }
 
-                        Method method = connection.getClass().getMethod("queryMBeans", new Class[]  {ObjectName.class, QueryExp.class});
+                        Method method = connection.getClass().getMethod("queryMBeans", ObjectName.class, QueryExp.class);
                         method = Util.fixJava4071957(method);
                         Set managedObj = (Set) method.invoke(connection, new Object[]  {searchPattern, null});
 

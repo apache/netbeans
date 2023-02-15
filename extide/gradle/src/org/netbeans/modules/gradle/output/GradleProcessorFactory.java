@@ -70,7 +70,7 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
     static final class URLOutputProcessor implements OutputProcessor {
 
-        private static final Pattern URL_PATTERN = Pattern.compile("(((https?|ftp|file)://|file:/)[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])");
+        private static final Pattern URL_PATTERN = Pattern.compile("(((https?|ftp|file)://|file:/)[-\\w+&@#/%?=~|!:,.;]*[-\\w+&@#/%=~|])");
 
         @Override
         public boolean processLine(OutputDisplayer out, String line) {

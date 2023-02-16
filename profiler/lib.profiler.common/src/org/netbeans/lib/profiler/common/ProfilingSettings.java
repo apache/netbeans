@@ -104,10 +104,10 @@ public class ProfilingSettings {
 
     // CPU Profiling: Code Fragment
     private ClientUtils.SourceCodeSelection fragmentSelection = null;
-    private List instrumentationMarkerMethods = new ArrayList();
+    private List<ClientUtils.SourceCodeSelection> instrumentationMarkerMethods = new ArrayList<>();
 
     // CPU Profiling: Part of Application
-    private List instrumentationRootMethods = new ArrayList();
+    private List<ClientUtils.SourceCodeSelection> instrumentationRootMethods = new ArrayList<>();
 
     // CPU instrumentation filter related settings
     private GenericFilter instrumentationFilter = new GenericFilter();
@@ -334,17 +334,17 @@ public class ProfilingSettings {
     }
 
     public ClientUtils.SourceCodeSelection[] getInstrumentationMarkerMethods() {
-        return (ClientUtils.SourceCodeSelection[]) instrumentationMarkerMethods.toArray(new ClientUtils.SourceCodeSelection[0]);
+        return instrumentationMarkerMethods.toArray(new ClientUtils.SourceCodeSelection[0]);
     }
 
     public ClientUtils.SourceCodeSelection[] getInstrumentationMethods() {
-        Set methods = new HashSet();
+        Set<ClientUtils.SourceCodeSelection> methods = new HashSet<>();
         // Keep the order:
         // 1. Root methods; 2. Marker methods
         methods.addAll(instrumentationRootMethods);
         methods.addAll(instrumentationMarkerMethods);
 
-        return (ClientUtils.SourceCodeSelection[]) methods.toArray(new ClientUtils.SourceCodeSelection[0]);
+        return methods.toArray(new ClientUtils.SourceCodeSelection[0]);
     }
 
     public void setInstrumentationRootMethods(final ClientUtils.SourceCodeSelection[] roots) {
@@ -360,7 +360,7 @@ public class ProfilingSettings {
     }
 
     public ClientUtils.SourceCodeSelection[] getInstrumentationRootMethods() {
-        return (ClientUtils.SourceCodeSelection[]) instrumentationRootMethods.toArray(new ClientUtils.SourceCodeSelection[0]);
+        return instrumentationRootMethods.toArray(new ClientUtils.SourceCodeSelection[0]);
     }
     
     public void setSamplingFrequency(int samplingFrequency) {
@@ -898,14 +898,14 @@ public class ProfilingSettings {
 
         for (int i = 0; i < instrumentationRootMethods.size(); i++) {
             props.put(prefix + PROP_INSTRUMENTATION_ROOT_METHODS_PREFIX + i,
-                      ClientUtils.selectionToString((ClientUtils.SourceCodeSelection) instrumentationRootMethods.get(i)));
+                      ClientUtils.selectionToString(instrumentationRootMethods.get(i)));
         }
 
         props.put(prefix + PROP_INSTRUMENTATION_MARKER_METHODS_SIZE, Integer.toString(instrumentationMarkerMethods.size()));
 
         for (int i = 0; i < instrumentationMarkerMethods.size(); i++) {
             props.put(prefix + PROP_INSTRUMENTATION_MARKER_METHODS_PREFIX + i,
-                      ClientUtils.selectionToString((ClientUtils.SourceCodeSelection) instrumentationMarkerMethods.get(i)));
+                      ClientUtils.selectionToString(instrumentationMarkerMethods.get(i)));
         }
 
         // CPU Profiling: Code Fragment

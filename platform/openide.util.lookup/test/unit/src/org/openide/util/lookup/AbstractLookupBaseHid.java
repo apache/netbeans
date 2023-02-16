@@ -1833,9 +1833,8 @@ public class AbstractLookupBaseHid extends NbTestCase {
     
     private interface LookupObject {}
     private class ImplementationObject implements LookupObject {}
-    private class NullObject implements LookupObject {}
-    
-    
+
+
     public void testReturnSomethingElseThenYouClaimYouWillReturn() {
         class Liar extends AbstractLookup.Pair {
             public Object obj;

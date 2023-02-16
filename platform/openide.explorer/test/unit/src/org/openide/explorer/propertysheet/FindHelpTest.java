@@ -200,33 +200,8 @@ public class FindHelpTest extends ExtTestCase {
             return s;
         }
     }
-    
-    private static final class WithTabsSetHelpNode extends AbstractNode {
-        public WithTabsSetHelpNode() {
-            super(Children.LEAF);
-        }
-        public HelpCtx getHelpCtx() {
-            return new HelpCtx("node-help");
-        }
-        protected Sheet createSheet() {
-            Sheet s = super.createSheet();
-            Sheet.Set ss = Sheet.createPropertiesSet();
-            ss.put(new WithoutHelpProperty("prop1"));
-            ss.put(new WithoutHelpProperty("prop2"));
-            ss.put(new WithoutHelpProperty("prop3"));
-            ss.setValue("tabName", "Tab 1");
-            ss.setValue("helpID", "set-help-id");
-            s.put(ss);
-            ss = Sheet.createExpertSet();
-            ss.put(new WithoutHelpProperty("prop4"));
-            ss.put(new WithoutHelpProperty("prop5"));
-            ss.setValue("tabName", "Tab 2");
-            s.put(ss);
-            return s;
-        }
-    }
-    
-    
+
+
     private static final class WithHelpProperty extends PropertySupport.ReadOnly {
         public WithHelpProperty(String name, String helpID) {
             super(name, String.class, name, name);

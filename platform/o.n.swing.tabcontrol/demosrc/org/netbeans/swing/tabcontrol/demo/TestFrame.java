@@ -413,41 +413,41 @@ public class TestFrame extends javax.swing.JFrame {
     }
 
 
-    private static class MyRepaintManager extends RepaintManager {
-        private RepaintManager r;
-
-        public MyRepaintManager(RepaintManager r) {
-            this.r = r;
-        }
-
-        @Override
-        public synchronized void addInvalidComponent(
-                JComponent invalidComponent) {
-            System.err.println("AddInvalidComponent " + invalidComponent);
-            super.addInvalidComponent(invalidComponent);
-        }
-
-        @Override
-        public synchronized void addDirtyRegion(JComponent c, int x, int y,
-                                                int w, int h) {
-            System.err.println("addDirtyRegion " + x + "," + y + "," + w + ","
-                               + h
-                               + " c=" + c);
-            super.addDirtyRegion(c, x, y, w, h);
-//            Thread.dumpStack();
-        }
-
-        @Override
-        public void markCompletelyDirty(JComponent aComponent) {
-            System.err.println("MarkCompletelyDirty " + aComponent);
-            super.markCompletelyDirty(aComponent);
-        }
-
-        @Override
-        public void markCompletelyClean(JComponent aComponent) {
-            super.markCompletelyClean(aComponent);
-        }
-    }
+//    private static class MyRepaintManager extends RepaintManager {
+//        private RepaintManager r;
+//
+//        public MyRepaintManager(RepaintManager r) {
+//            this.r = r;
+//        }
+//
+//        @Override
+//        public synchronized void addInvalidComponent(
+//                JComponent invalidComponent) {
+//            System.err.println("AddInvalidComponent " + invalidComponent);
+//            super.addInvalidComponent(invalidComponent);
+//        }
+//
+//        @Override
+//        public synchronized void addDirtyRegion(JComponent c, int x, int y,
+//                                                int w, int h) {
+//            System.err.println("addDirtyRegion " + x + "," + y + "," + w + ","
+//                               + h
+//                               + " c=" + c);
+//            super.addDirtyRegion(c, x, y, w, h);
+////            Thread.dumpStack();
+//        }
+//
+//        @Override
+//        public void markCompletelyDirty(JComponent aComponent) {
+//            System.err.println("MarkCompletelyDirty " + aComponent);
+//            super.markCompletelyDirty(aComponent);
+//        }
+//
+//        @Override
+//        public void markCompletelyClean(JComponent aComponent) {
+//            super.markCompletelyClean(aComponent);
+//        }
+//    }
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

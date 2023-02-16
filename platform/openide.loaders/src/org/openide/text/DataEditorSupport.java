@@ -1085,16 +1085,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
                 }
             }, 0);
         }
-        
-        private class SaveAsCapableImpl implements SaveAsCapable {
-            public void saveAs(FileObject folder, String fileName) throws IOException {
-                CloneableOpenSupport cos = Env.super.findCloneableOpenSupport();
-                if (cos instanceof DataEditorSupport) {
-                    ((DataEditorSupport)cos).saveAs( folder, fileName );
-                }
-            }
-        }
-        
+
         private static void notifyBigFileLoaded() {
             if (!sentBigFileInfo) {
                 ERR.info("UIHANDLER_TOO_BIG_FILE_LOADED");

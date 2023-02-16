@@ -1049,16 +1049,6 @@ public class OptionsPanel extends JPanel {
             setCurrentCategory (category, null);
         }
     }
-        
-    private class SelectCurrentAction extends AbstractAction {
-        public void actionPerformed(ActionEvent e) {
-            CategoryModel.Category highlightedB = categoryModel.getCategory(categoryModel.getHighlitedCategoryID());
-            if (highlightedB != null) {
-                setCurrentCategory(highlightedB, null);
-            }
-        }
-    }
-    
     private class SearchAction extends AbstractAction {
         @Override
         public void actionPerformed (ActionEvent e) {

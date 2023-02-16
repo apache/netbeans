@@ -268,20 +268,20 @@ public class CompoundFolderChildrenTest extends NbTestCase {
         return null;
     }
     
-    private static class L implements PropertyChangeListener {
-        public int changeEventsCnt = 0;
-        public PropertyChangeEvent lastEvent = null;
-        
-        public void propertyChange(PropertyChangeEvent evt) {
-            changeEventsCnt++;
-            lastEvent = evt;
-        }
-        
-        public void reset() {
-            changeEventsCnt = 0;
-            lastEvent = null;
-        }
-    } // End of L class
+//    private static class L implements PropertyChangeListener {
+//        public int changeEventsCnt = 0;
+//        public PropertyChangeEvent lastEvent = null;
+//
+//        public void propertyChange(PropertyChangeEvent evt) {
+//            changeEventsCnt++;
+//            lastEvent = evt;
+//        }
+//
+//        public void reset() {
+//            changeEventsCnt = 0;
+//            lastEvent = null;
+//        }
+//    } // End of L class
 
     /* TBD whether any of the following, originally from FolderChildrenTest, are still applicable:
     public void testSimple() throws Exception {

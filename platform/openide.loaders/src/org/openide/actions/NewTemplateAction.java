@@ -867,14 +867,7 @@ public class NewTemplateAction extends NodeAction {
     // delegate action
     // bugfix 36573, NewTemplateAction provides context aware action
     private static final Node[] EMPTY_NODE_ARRAY = new Node[0];
-    
-    private class NodeLookupListener implements LookupListener {
-        
-        public void resultChanged (org.openide.util.LookupEvent ev) {
-            updateAction ();
-        }
-    }
-    
+
     private void updateAction () {}
     
     private static final synchronized Node[] getNodesFromLookup (Lookup lookup) {

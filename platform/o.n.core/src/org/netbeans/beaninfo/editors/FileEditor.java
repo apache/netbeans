@@ -427,34 +427,6 @@ public class FileEditor extends PropertyEditorSupport implements ExPropertyEdito
         chooser.getActionMap().put("close", close);
     }
 
-    private static class ButtonHider implements PropertyChangeListener {
-        public void propertyChange (PropertyChangeEvent pce) {
-            if (JFileChooser.CONTROL_BUTTONS_ARE_SHOWN_CHANGED_PROPERTY.equals(pce.getPropertyName())) {
-                JFileChooser jfc = (JFileChooser) pce.getSource();
-                try {
-                    hideShowButtons(jfc, Boolean.TRUE.equals(pce.getNewValue()));
-                } catch (Exception e) {
-                    Logger.getLogger(FileEditor.class.getName()).log(Level.WARNING, null, e);
-                }
-            }
-        }
-        
-        private void hideShowButtons (Container cont, boolean val) {
-            if (cont instanceof JComboBox || cont instanceof JScrollBar) {
-                return;
-            }
-            Component[] c = cont.getComponents();
-            for (int i=0; i < c.length; i++) {
-                if (c[i] instanceof Container) {
-                    hideShowButtons ((Container) c[i], val);
-                }
-                if (c[i] instanceof AbstractButton) {
-                    c[i].setVisible(val);
-                }
-            }
-        }
-    }
-    
     /** Wraps java.io.FileFilter to javax.swing.filechooser.FileFilter. */
     static class DelegatingFileFilter extends javax.swing.filechooser.FileFilter {
         private java.io.FileFilter filter;

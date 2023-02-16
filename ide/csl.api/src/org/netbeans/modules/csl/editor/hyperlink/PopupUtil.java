@@ -240,17 +240,17 @@ public final class PopupUtil  {
         
     }
     
-    private static class MyFocusListener implements FocusListener {
-        
-        public void focusLost(java.awt.event.FocusEvent e) {
-            System.out.println( e );
-        }
-
-        public void focusGained(java.awt.event.FocusEvent e) {
-            System.out.println( e );
-        }
-                        
-    }
+//    private static class MyFocusListener implements FocusListener {
+//
+//        public void focusLost(java.awt.event.FocusEvent e) {
+//            System.out.println( e );
+//        }
+//
+//        public void focusGained(java.awt.event.FocusEvent e) {
+//            System.out.println( e );
+//        }
+//
+//    }
     
     private static class CloseAction extends AbstractAction {
         

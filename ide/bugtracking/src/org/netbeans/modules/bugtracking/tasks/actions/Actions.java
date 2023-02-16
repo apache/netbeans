@@ -523,22 +523,22 @@ public class Actions {
         }
     }
 
-    private static class NotificationTaskAction extends TaskAction {
-
-        public NotificationTaskAction(TaskNode... taskNode) {
-            super(NbBundle.getMessage(Actions.class, "CTL_Notification"), taskNode); //NOI18N
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            new DummyAction().actionPerformed(e);
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return false;
-        }
-    }
+//    private static class NotificationTaskAction extends TaskAction {
+//
+//        public NotificationTaskAction(TaskNode... taskNode) {
+//            super(NbBundle.getMessage(Actions.class, "CTL_Notification"), taskNode); //NOI18N
+//        }
+//
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            new DummyAction().actionPerformed(e);
+//        }
+//
+//        @Override
+//        public boolean isEnabled() {
+//            return false;
+//        }
+//    }
 
     public static class ActivateTaskAction extends TaskAction {
 
@@ -620,22 +620,22 @@ public class Actions {
         }
     }
 
-    private static class NotificationCategoryAction extends CategoryAction {
-
-        public NotificationCategoryAction(CategoryNode... categoryNodes) {
-            super(NbBundle.getMessage(Actions.class, "CTL_Notification"), categoryNodes); //NOI18N
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            new DummyAction().actionPerformed(e);
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return false;
-        }
-    }
+//    private static class NotificationCategoryAction extends CategoryAction {
+//
+//        public NotificationCategoryAction(CategoryNode... categoryNodes) {
+//            super(NbBundle.getMessage(Actions.class, "CTL_Notification"), categoryNodes); //NOI18N
+//        }
+//
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            new DummyAction().actionPerformed(e);
+//        }
+//
+//        @Override
+//        public boolean isEnabled() {
+//            return false;
+//        }
+//    }
 
     private static class RenameCategoryAction extends CategoryAction {
 

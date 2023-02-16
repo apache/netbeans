@@ -862,25 +862,5 @@ public abstract class AbstractLogicalViewProvider implements LogicalViewProvider
     private boolean hasBrokenServerLibrary() {
         return BrokenServerLibrarySupport.isBroken(project);
     }
-            
-    private static class OpenManagersWeakListener extends WeakReference<PropertyChangeListener> implements Runnable, PropertyChangeListener {
 
-        public OpenManagersWeakListener(final PropertyChangeListener listener) {
-            super(listener, Utilities.activeReferenceQueue());
-        }
-
-        @Override
-        public void run() {
-            LibraryManager.removeOpenManagersPropertyChangeListener(this);
-        }
-
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            final PropertyChangeListener listener = get();
-            if (listener != null) {
-                listener.propertyChange(evt);
-            }
-        }
-
-    }
 }

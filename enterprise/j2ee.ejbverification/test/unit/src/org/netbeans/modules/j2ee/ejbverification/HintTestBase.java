@@ -659,44 +659,6 @@ public class HintTestBase {
 
         return bootClassPath;
     }
-    
-    private class TestProxyClassPathProvider implements ClassPathProvider {
-
-        public ClassPath findClassPath(FileObject file, String type) {
-            try {
-            if (ClassPath.BOOT == type) {
-                // XXX simpler to use JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries()
-                return ClassPathSupport.createClassPath(getBootClassPath().toArray(new URL[0]));
-            }
-
-            if (ClassPath.SOURCE == type) {
-                return sourcePath;
-            }
-
-            if (ClassPath.COMPILE == type) {
-                return compileClassPath;
-            }
-
-            if (ClassPath.EXECUTE == type) {
-                return ClassPathSupport.createClassPath(new FileObject[] {
-                    buildRoot
-                });
-            }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-    }
-
-    private class TestSourceLevelQueryImplementation implements SourceLevelQueryImplementation {
-
-        public String getSourceLevel(FileObject javaFile) {
-            return sourceLevel;
-        }
-
-    }
 
 
     private static class DeadlockTask implements Task<CompilationController> {

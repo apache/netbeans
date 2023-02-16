@@ -278,26 +278,6 @@ public class ProjectTestBase extends CssTestBase {
 
     }
 
-    private static class MergedClassPathProvider implements ClassPathProvider {
-
-        private Map<FileObject, ProjectInfo> projects;
-
-        public MergedClassPathProvider(Map<FileObject, ProjectInfo> projects) {
-            this.projects = projects;
-        }
-
-        @Override
-        public ClassPath findClassPath(FileObject file, String type) {
-            for (FileObject fo : projects.keySet()) {
-                if (FileUtil.isParentOf(fo, file)) {
-                    return projects.get(fo).getCpp().findClassPath(file, type);
-                }
-            }
-            return null;
-        }
-
-    }
-
     private static class TestMultiProjectFactory implements ProjectFactory {
 
         private Map<FileObject, ProjectInfo> projects;

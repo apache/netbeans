@@ -2026,26 +2026,26 @@ public class QueryBuilderGraphFrame extends JPanel
     
     // GraphLib class for handling selection
     
-    private class ObjectSelectProvider implements SelectProvider {
-        
-        public boolean isAimingAllowed(Widget widget, Point localLocation, boolean invertSelection) {
-            return false;
-        }
-        
-        public boolean isSelectionAllowed(Widget widget, Point localLocation, boolean invertSelection) {
-            return true;
-        }
-        
-        public void select(Widget widget, Point localLocation, boolean invertSelection) {
-
-            Object object = _scene.findObject(widget);
-            if (object instanceof AbstractNode) {
-		AbstractNode an = (AbstractNode)object;
-		_queryBuilder.setActivatedNodes(new Node[] { an });
-                _scene.userSelectionSuggested(Collections.singleton(object), invertSelection);
-	    }
-        }
-    }
+//    private class ObjectSelectProvider implements SelectProvider {
+//
+//        public boolean isAimingAllowed(Widget widget, Point localLocation, boolean invertSelection) {
+//            return false;
+//        }
+//
+//        public boolean isSelectionAllowed(Widget widget, Point localLocation, boolean invertSelection) {
+//            return true;
+//        }
+//
+//        public void select(Widget widget, Point localLocation, boolean invertSelection) {
+//
+//            Object object = _scene.findObject(widget);
+//            if (object instanceof AbstractNode) {
+//		AbstractNode an = (AbstractNode)object;
+//		_queryBuilder.setActivatedNodes(new Node[] { an });
+//                _scene.userSelectionSuggested(Collections.singleton(object), invertSelection);
+//	    }
+//        }
+//    }
     
 
     // Utility class for timing

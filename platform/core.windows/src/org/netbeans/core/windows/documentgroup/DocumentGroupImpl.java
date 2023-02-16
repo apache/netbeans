@@ -87,12 +87,4 @@ public final class DocumentGroupImpl implements Comparable<DocumentGroupImpl> {
         return true;
     }
 
-    private static class WaitPane extends JPanel {
-        public WaitPane() {
-            setOpaque(false);
-        }
-
-
-
-    }
 }

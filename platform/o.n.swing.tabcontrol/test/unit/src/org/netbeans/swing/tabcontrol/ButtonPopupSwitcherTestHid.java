@@ -133,21 +133,8 @@ public class ButtonPopupSwitcherTestHid extends TestCase {
             return 16;
         }
     }
-    
-    /**
-     * Activatable tester class.
-     */
-    private static class DummyActivatable implements SwitcherTableItem.Activatable {
-        String dummyName;
-        private DummyActivatable(String name) {
-            this.dummyName = name;
-        }
-        public void activate() {
-            System.out.println("MK> Activating \"" + dummyName + "\"....");
-        }
-    }
 
-    
+
     private void sleep() {
         sleep(12000);
     }

@@ -124,40 +124,40 @@ import org.openide.windows.OutputListener;
         }
     }
     private static Action ac = null;
-    private class StopAction extends AbstractAction {
-        public StopAction (String name) {
-            putValue(NAME, name);
-            putValue (Action.SMALL_ICON, new StopIcon());
-            ac = this;
-        }
-        
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            stopped = true;
-            System.err.println("Stop action performed");
-        }
-    }
+//    private class StopAction extends AbstractAction {
+//        public StopAction (String name) {
+//            putValue(NAME, name);
+//            putValue (Action.SMALL_ICON, new StopIcon());
+//            ac = this;
+//        }
+//
+//        public void actionPerformed(java.awt.event.ActionEvent e) {
+//            stopped = true;
+//            System.err.println("Stop action performed");
+//        }
+//    }
     
     private static boolean stopped = false;
     
-    private class StopIcon implements Icon {
-        
-        public int getIconHeight() {
-            return 16;
-        }
-        
-        public int getIconWidth() {
-            return 16;
-        }
-        
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            g.setColor (Color.ORANGE);
-            g.fillRect ( x+2, x+2, 12, 12);
-            g.setColor (Color.BLACK);
-            g.drawRect ( x+2, x+2, 12, 12);
-            
-        }
-        
-    }
+//    private class StopIcon implements Icon {
+//
+//        public int getIconHeight() {
+//            return 16;
+//        }
+//
+//        public int getIconWidth() {
+//            return 16;
+//        }
+//
+//        public void paintIcon(Component c, Graphics g, int x, int y) {
+//            g.setColor (Color.ORANGE);
+//            g.fillRect ( x+2, x+2, 12, 12);
+//            g.setColor (Color.BLACK);
+//            g.drawRect ( x+2, x+2, 12, 12);
+//
+//        }
+//
+//    }
 
 
     public class L implements OutputListener {

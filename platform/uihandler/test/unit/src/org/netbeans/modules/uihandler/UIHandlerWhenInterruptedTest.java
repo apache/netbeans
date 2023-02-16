@@ -72,9 +72,5 @@ public class UIHandlerWhenInterruptedTest extends NbTestCase {
         }
         
     }
-    
-    private static final class MyAction extends AbstractAction {
-        public void actionPerformed(ActionEvent e) {
-        }
-    }
+
 }

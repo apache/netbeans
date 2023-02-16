@@ -690,35 +690,6 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
         return tabDisplayer.isShowCloseButton();
     }
 
-    /**
-     * Scroll pane-like border, good general border around windows. Used if no
-     * border is provided via UIDefaults.
-     */
-    private static final class DefaultWindowBorder implements Border {
-        private static final Insets insets = new Insets(1, 1, 2, 2);
-
-        public void paintBorder(Component c, Graphics g, int x, int y, int w,
-                                int h) {
-            g.translate(x, y);
-
-            g.setColor(UIManager.getColor("controlShadow")); //NOI18N
-            g.drawRect(0, 0, w - 2, h - 2);
-            g.setColor(UIManager.getColor("controlHighlight")); //NOI18N
-            g.drawLine(w - 1, 1, w - 1, h - 1);
-            g.drawLine(1, h - 1, w - 1, h - 1);
-
-            g.translate(-x, -y);
-        }
-
-        public Insets getBorderInsets(Component c) {
-            return insets;
-        }
-
-        public boolean isBorderOpaque() {
-            return true;
-        }
-    } // end of DefaultWindowBorder
-
     protected class ContainerPropertyChangeListener implements PropertyChangeListener {
         
         public void propertyChange(PropertyChangeEvent evt) {

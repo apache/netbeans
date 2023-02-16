@@ -271,26 +271,7 @@ public class MultiDataObjectContinuousTest extends NbTestCase {
             firePropertyChange("afterMove", null, null);
         }
     }
-    
-    private static final class FE extends FileEntry {
-        public FE(MultiDataObject mo, FileObject fo) {
-            super(mo, fo);
-        }
 
-        @Override
-        public FileObject move(FileObject f, String suffix) throws IOException {
-            FileObject retValue;
-            retValue = super.move(f, suffix);
-            
-            SimpleLoader l = (SimpleLoader)getDataObject().getLoader();
-            l.afterMove(f, retValue);
-            
-            return retValue;
-        }
-        
-        
-    }
-    
     public static final class SimpleObject extends MultiDataObject {
         public SimpleObject(SimpleLoader l, FileObject fo) throws DataObjectExistsException {
             super(fo, l);

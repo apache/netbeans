@@ -1054,43 +1054,4 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
         }
     }
 
-    private static class RegistrationHandler extends DefaultHandler {
-
-        private static final String VERSION_TAG = "product_version";    // NOI18N
-
-        @Override
-        public void startElement(final String uri, final String localName, final String qName,
-            Attributes attributes) throws SAXException
-        {
-            super.startElement(uri, localName, qName, attributes);
-            if (VERSION_TAG.equals( localName )|| VERSION_TAG.equals( qName )){
-                versionTag = true;
-            }
-        }
-
-        @Override
-        public void endElement(final String uri, final String localName, final String qName)
-                throws SAXException
-        {
-            super.endElement(uri, localName, qName);
-            if (VERSION_TAG.equals( localName )|| VERSION_TAG.equals( qName )){
-                versionTag = false;
-            }
-        }
-
-        @Override
-        public void characters(final char[] ch, final int start, final int length) throws SAXException {
-            super.characters(ch, start, length);
-            if ( versionTag ){
-                version.append(ch, start, length);
-            }
-        }
-
-        String getVersion() {
-            return version.toString();
-        }
-
-        private boolean versionTag;
-        private final StringBuilder version = new StringBuilder();
-    }
 }

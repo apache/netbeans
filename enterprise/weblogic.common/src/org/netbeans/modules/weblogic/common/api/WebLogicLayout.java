@@ -398,30 +398,4 @@ public final class WebLogicLayout {
             return super.getResources(name);
         }
     }
-    private static class ServerDescriptor {
-
-        private final String host;
-
-        private final String port;
-
-        private final String name;
-
-        public ServerDescriptor(String host, String port, String name) {
-            this.host = host;
-            this.port = port;
-            this.name = name;
-        }
-
-        public String getHost() {
-            return host;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getPort() {
-            return port;
-        }
-    }
 }

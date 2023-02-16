@@ -360,19 +360,7 @@ public class JSFEditorUtilities {
         }
         return null;
     }
-    
-    private static class CreateXMLPane implements Runnable{
-        JEditorPane ep;
 
-        public void run (){
-            ep = new JEditorPane("text/xml", "");
-        }
-
-        public JEditorPane getPane (){
-            return ep;
-        }
-    }
-    
     /** This method returns a BaseDocument for the configuration file. If the configuration
      *  file is not opened, then the document is not created yet and this method push to load 
      *  the document to the memory. 

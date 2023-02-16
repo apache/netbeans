@@ -322,43 +322,7 @@ class SplashUISupport {
                 this.color = color;
             }
         }
-        
-        private static class Editor extends JLabel implements ComboBoxEditor {
-            
-            private Object value;
-            
-            Editor() {
-                //setOpaque (false);
-            }
-            
-            public Component getEditorComponent() {
-                return this;
-            }
-            
-            public void setItem(Object anObject) {
-                value = anObject;
-                if (value instanceof String) {
-                    setText(NbBundle.getMessage(SplashUISupport.class, "SplashUISupport_color_default"));
-                    super.setForeground(SystemColor.textText);
-                    super.setBackground(SystemColor.text);
-                } else {
-                    setText("");
-                    super.setBackground((Color) value);
-                }
-            }
-            
-            public Object getItem() {
-                return value;
-            }
-            
-            public void setBackground(Color c) {}
-            public void setForeground(Color c) {}
-            
-            public void selectAll() {}
-            public void addActionListener(ActionListener l) {}
-            public void removeActionListener(ActionListener l) {}
-        }
-        
+
         private class Renderer extends JComponent implements
                 ListCellRenderer, ComboBoxEditor {
             

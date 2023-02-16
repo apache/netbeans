@@ -502,25 +502,5 @@ public class CordovaPerformer implements BuildPerformer {
         }
         return false;
     }
-    
-    private class CompoundTask extends Task {
-
-        private final Task task1;
-        private final Task task2;
-
-        public CompoundTask(Task task1, Task task2) {
-            this.task1 = task1;
-            this.task2 = task2;
-        }
-        @Override
-        public void waitFinished() {
-            if (task1!=null) {
-                task1.waitFinished();
-            }
-            if (task2!=null) {
-                task2.waitFinished();
-            }
-        }
-    }
 
 }

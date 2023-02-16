@@ -519,24 +519,6 @@ public class BrowserRunPanel extends JPanel implements DocumentListener, ItemLis
 
     //~ Inner classes
 
-    private static final class ConfigRenderer implements ListCellRenderer {
-
-        private final ListCellRenderer original;
-
-        public ConfigRenderer(ListCellRenderer original) {
-            this.original = original;
-        }
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            if (value instanceof ProjectConfiguration) {
-                value = ((ProjectConfiguration) value).getDisplayName();
-            }
-            return original.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        }
-
-    }
-
     private static final class ServerRenderer implements ListCellRenderer {
 
         private final ListCellRenderer original;

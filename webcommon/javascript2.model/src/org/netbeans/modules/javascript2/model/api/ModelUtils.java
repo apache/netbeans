@@ -433,10 +433,6 @@ public class ModelUtils {
         return null;
     }
 
-    private enum State {
-        INIT
-    }
-
     public static Collection<TypeUsage> resolveSemiTypeOfExpression(ModelBuilder builder, Node expression) {
         Collection<TypeUsage> result = new HashSet<>();
         SemiTypeResolverVisitor visitor = new SemiTypeResolverVisitor();

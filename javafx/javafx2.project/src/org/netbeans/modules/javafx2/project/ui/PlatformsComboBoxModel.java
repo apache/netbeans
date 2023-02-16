@@ -68,7 +68,7 @@ public class PlatformsComboBoxModel implements ComboBoxModel {
         delegate.removeListDataListener(l);
     }
     
-    private List getData() {
+    private List<Object> getData() {
         List<Object> data = new ArrayList<Object>();
         int origSize = delegate.getSize();
         for (int i = 0; i < origSize; i++) {

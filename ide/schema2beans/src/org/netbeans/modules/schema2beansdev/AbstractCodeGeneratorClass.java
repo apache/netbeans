@@ -501,12 +501,12 @@ public abstract class AbstractCodeGeneratorClass {
 
     JavaWriter jw;
 
-    private Map mutableTypes = new HashMap();
-    private Map needToCallClone = new HashMap();
+    private Map<String, Boolean> mutableTypes = new HashMap<>();
+    private Map<String, Boolean> needToCallClone = new HashMap<>();
 
     protected boolean isMutableType(Property prop) {
         String type = prop.getType();
-        Boolean mutable = (Boolean) mutableTypes.get(type);
+        Boolean mutable = mutableTypes.get(type);
         if (mutable == null) {
             if (prop.isBean)
                 mutable = Boolean.TRUE;
@@ -521,7 +521,7 @@ public abstract class AbstractCodeGeneratorClass {
 
     protected boolean isCloneCallNeededOnType(Property prop) {
         String type = prop.getType();
-        Boolean callClone = (Boolean) needToCallClone.get(type);
+        Boolean callClone = needToCallClone.get(type);
         if (callClone == null) {
             if (prop.isBean || !isMutableType(prop))
                 callClone = Boolean.FALSE;

@@ -45,7 +45,7 @@ public class WLTargetModuleID implements WebTargetModuleID {
 
     private String contextUrl;
 
-    private List children = new ArrayList();
+    private List<WLTargetModuleID> children = new ArrayList<>();
 
     private TargetModuleID  parent;
 

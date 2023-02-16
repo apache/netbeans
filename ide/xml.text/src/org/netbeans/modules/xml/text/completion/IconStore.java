@@ -51,7 +51,7 @@ final class IconStore extends Object {
 
     /** HashMap{@link java.util.HashMap } that acts as a store for the icons.
      */    
-    private static HashMap iconsMap = new HashMap();
+    private static HashMap<String, ImageIcon> iconsMap = new HashMap<>();
     
     /** Main method to retrieve the ImageIcon{@link javax.swing.ImageIcon}
      * @param name Name of the icon to retrieve. In most instances would be one of the variables of
@@ -64,10 +64,10 @@ final class IconStore extends Object {
         name = SPACER_16;
       
         if(iconsMap.containsKey(name))
-            return (ImageIcon)iconsMap.get(name);
+            return iconsMap.get(name);
         else{
             iconsMap.put(name, new ImageIcon(IconStore.class.getResource(name + ICON_SUFFIX)));
-            return (ImageIcon)iconsMap.get(name);
+            return iconsMap.get(name);
         }
     }
 }

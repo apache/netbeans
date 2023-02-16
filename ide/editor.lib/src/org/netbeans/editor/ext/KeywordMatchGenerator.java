@@ -67,9 +67,9 @@ public class KeywordMatchGenerator {
     private int maxKwdLen;
 
     /** Options */
-    private HashMap options = new HashMap();
+    private HashMap<String, String> options = new HashMap<>();
 
-    private HashMap kwdConstants = new HashMap();
+    private HashMap<String, String> kwdConstants = new HashMap<>();
 
     /** Provide indentation (default 2 spaces) */
     private String indent(int cnt) {
@@ -124,7 +124,7 @@ public class KeywordMatchGenerator {
     }
 
     protected String getKwdConstant(String kwd) {
-        return (String)kwdConstants.get(kwd);
+        return kwdConstants.get(kwd);
     }
 
     protected boolean upperCaseKeyConstants() {

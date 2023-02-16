@@ -48,7 +48,7 @@ import org.openide.util.NbBundle;
 public class ShortcutTextField extends JTextField {
 
     private Popup popup;
-    JList list  = new JList();
+    JList<String> list  = new JList<>();
     JScrollPane pane = new JScrollPane();
 
     public ShortcutTextField(String text) {
@@ -91,7 +91,7 @@ public class ShortcutTextField extends JTextField {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                int selectedIndex = ((JList) e.getSource()).getSelectedIndex();
+                int selectedIndex = ((JList<?>) e.getSource()).getSelectedIndex();
                 confirm(selectedIndex);
             }
         });

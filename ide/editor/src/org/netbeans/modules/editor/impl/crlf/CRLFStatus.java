@@ -103,8 +103,8 @@ public class CRLFStatus {
                     return;
                 }
 
-                final JList l = new JList();
-                DefaultListModel model = new DefaultListModel();
+                final JList<String> l = new JList<>();
+                DefaultListModel<String> model = new DefaultListModel<>();
 
                 for (String k : LINE_ENDINGS_DN.keySet()) {
                     model.addElement(k);

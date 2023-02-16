@@ -61,7 +61,7 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
     /** Jsp file, for which is the ErrorAnnotation */
     private FileObject jspFo;
     
-    private List annotations;
+    private List<LineSetAnnotation> annotations;
     
     /** Creates a new instance of ErrorAnnotation */
     public ErrorAnnotationImpl(FileObject jspFo) {

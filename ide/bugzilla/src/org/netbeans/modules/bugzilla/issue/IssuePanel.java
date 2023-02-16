@@ -1661,8 +1661,8 @@ public class IssuePanel extends javax.swing.JPanel {
                         }
                         break;
                     case MultipleSelection:
-                        JList list = new JList();
-                        DefaultComboBoxModel model = new DefaultComboBoxModel(cField.getOptions().toArray());
+                        JList<String> list = new JList<>();
+                        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(cField.getOptions().toArray(new String[0]));
                         list.setModel(model);
                         if (model.getSize()<list.getVisibleRowCount()) {
                             list.setVisibleRowCount(model.getSize());

@@ -40,7 +40,7 @@ public class TestCaseDataFactory {
     public static String DB_SQLDEL="dbdel.sql";
     public static String DB_JARS="jar";
     public static String[] FILES={DB_SQLCREATE,DB_PROP,DB_SQLDEL,DB_SQLSELECT,DB_DATA};
-    private List list=new ArrayList();
+    private List<TestCaseContext> list=new ArrayList<>();
     private static  TestCaseDataFactory factory;
     
     public static TestCaseDataFactory  getTestCaseFactory() throws Exception{

@@ -180,8 +180,8 @@ public class RevisionListPanel extends javax.swing.JPanel implements ActionListe
         private Color selectionForeground;
 
         public RevisionRenderer () {
-            selectionBackground = new JList().getSelectionBackground();
-            selectionForeground = new JList().getSelectionForeground();
+            selectionBackground = new JList<>().getSelectionBackground();
+            selectionForeground = new JList<>().getSelectionForeground();
 
             selectedStyle = addStyle("selected", null); // NOI18N
             StyleConstants.setForeground(selectedStyle, selectionForeground); // NOI18N

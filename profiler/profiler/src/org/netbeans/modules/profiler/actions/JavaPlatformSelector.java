@@ -52,14 +52,14 @@ import org.openide.util.HelpCtx;
 public final class JavaPlatformSelector extends JPanel implements ListSelectionListener, HelpCtx.Provider {
     //~ Inner Classes ------------------------------------------------------------------------------------------------------------
 
-    public static class JPListModel extends AbstractListModel {
+    public static class JPListModel extends AbstractListModel<JavaPlatform> {
         //~ Instance fields ------------------------------------------------------------------------------------------------------
 
         private java.util.List<JavaPlatform> platforms;
 
         //~ Constructors ---------------------------------------------------------------------------------------------------------
 
-        private JPListModel(java.util.List platforms) {
+        private JPListModel(java.util.List<JavaPlatform> platforms) {
             this.platforms = platforms;
         }
 
@@ -84,14 +84,14 @@ public final class JavaPlatformSelector extends JPanel implements ListSelectionL
     private JLabel noteLabel;
     private JButton okButton = new JButton(Bundle.JavaPlatformSelector_OkButtonName());
     private JCheckBox alwaysCheckBox;
-    private JList list;
+    private JList<JavaPlatform> list;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
     private JavaPlatformSelector() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
-        list = new JList();
+        list = new JList<>();
         list.setVisibleRowCount(6);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.addListSelectionListener(this);
@@ -161,7 +161,7 @@ public final class JavaPlatformSelector extends JPanel implements ListSelectionL
     }
 
     public JavaPlatform selectPlatformToUse() {
-        java.util.List platforms = JavaPlatform.getPlatforms();
+        java.util.List<JavaPlatform> platforms = JavaPlatform.getPlatforms();
 
         if (platforms.size() == 0) {
             ProfilerDialogs.displayError(Bundle.JavaPlatformSelector_NoSupportedPlatformMsg());

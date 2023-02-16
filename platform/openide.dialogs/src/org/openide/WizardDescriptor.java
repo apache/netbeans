@@ -3194,7 +3194,7 @@ public class WizardDescriptor extends DialogDescriptor {
 
             if (css.getStyleSheets() == null) {
                 StyleSheet css2 = new StyleSheet();
-                Font f = new JList().getFont();
+                Font f = new JList<>().getFont();
                 int size = f.getSize();
                 try {
                     css2.addRule(new StringBuffer("body { font-size: ").append(size) // NOI18N

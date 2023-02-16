@@ -91,9 +91,9 @@ class SummaryCellRenderer implements ListCellRenderer {
     private final Map<String, VCSKenaiAccessor.KenaiUser> kenaiUsersMap;
     private final VCSHyperlinkSupport linkerSupport;
 
-    private Color selectionBackgroundColor = new JList().getSelectionBackground();
+    private Color selectionBackgroundColor = new JList<>().getSelectionBackground();
     private Color selectionBackground = selectionBackgroundColor;
-    private Color selectionForeground = new JList().getSelectionForeground();
+    private Color selectionForeground = new JList<>().getSelectionForeground();
     private static final Color LINK_COLOR = UIManager.getColor("nb.html.link.foreground"); //NOI18N
 
     private ActionRenderer ar = new ActionRenderer();
@@ -254,7 +254,7 @@ class SummaryCellRenderer implements ListCellRenderer {
         private Collection<SearchHighlight> lastHighlights;
 
         public RevisionRenderer() {
-            selectionForeground = new JList().getSelectionForeground();
+            selectionForeground = new JList<>().getSelectionForeground();
             expandButton = new LinkButton(ICON_COLLAPSED);
             expandButton.setBorder(BorderFactory.createEmptyBorder());
 

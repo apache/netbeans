@@ -45,7 +45,7 @@ public class ProcedureArgument implements Argument {
     private String format;
 
     /** Additional properties */
-    private Map addprops;
+    private Map<String, Object> addprops;
 
     public static String getArgumentTypeName(int type)
     {
@@ -92,7 +92,7 @@ public class ProcedureArgument implements Argument {
     /** Sets general property */
     public void setProperty(String pname, Object pval)
     {
-        if (addprops == null) addprops = new HashMap();
+        if (addprops == null) addprops = new HashMap<>();
         addprops.put(pname, pval);
     }
 

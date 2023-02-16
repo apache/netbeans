@@ -646,10 +646,10 @@ public class RegistriesManagerImpl implements RegistriesManager {
         }
         
         final List <Pair <List<String>, String>> bundles = new LinkedList<Pair<List<String>, String>> ();
-        for(Object key : props.keySet()) {
-             Object value = props.get(key);
-             List <String> list = StringUtils.asList(value.toString());
-             bundles.add(new Pair(list,  key.toString()));
+
+        for (Map.Entry<Object, Object> entry : props.entrySet()) {
+            List<String> list = StringUtils.asList(entry.getValue().toString());
+            bundles.add(new Pair(list, entry.getKey().toString()));
         }
         
         final Map<String, String> notes = new HashMap<String, String>();

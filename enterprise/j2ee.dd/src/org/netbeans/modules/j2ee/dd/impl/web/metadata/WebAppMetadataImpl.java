@@ -229,9 +229,9 @@ public class WebAppMetadataImpl implements WebAppMetadata {
                                                 rootsSet);
                                         intersection.retainAll(oldRoots);
                                         oldRoots.removeAll(rootsSet);
-                                        for (FileObject fileObject : oldRoots) {
-                                            myRootToFragment.remove( fileObject );
-                                        }
+
+                                        myRootToFragment.keySet().removeAll(oldRoots);
+
                                         rootsSet.removeAll(intersection);
                                         for (FileObject fileObject : rootsSet)
                                         {

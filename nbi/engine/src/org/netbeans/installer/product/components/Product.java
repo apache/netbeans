@@ -1107,11 +1107,11 @@ public final class Product extends RegistryNode implements StatusInterface {
                     getInstallationLocation(),
                     "THIRDPARTYLICENSES-" + uid + ".txt");
             
-            for (String title: thirdPartyLicenses.keySet()) {
+            for (Map.Entry<String, Text> entry : thirdPartyLicenses.entrySet()) {
                 FileUtils.appendFile(file,
-                        "%% The following software may be included in this product: " + title + ";\n" +
+                        "%% The following software may be included in this product: " + entry.getKey() + ";\n" +
                         "Use of any of this software is governed by the terms of the license below:\n\n");
-                FileUtils.appendFile(file, thirdPartyLicenses.get(title).getText() + "\n\n");
+                FileUtils.appendFile(file, entry.getValue().getText() + "\n\n");
             }
             
             installedFiles.add(file);

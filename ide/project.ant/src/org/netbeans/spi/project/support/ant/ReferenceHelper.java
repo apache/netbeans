@@ -1346,7 +1346,7 @@ public final class ReferenceHelper {
         EditableProperties priv = h.getProperties(AntProjectHelper.PRIVATE_PROPERTIES_PATH);
         
         File projectDir = FileUtil.toFile(h.getProjectDirectory());
-        
+
         List<String> pubRemove = new ArrayList<String>();
         List<String> privRemove = new ArrayList<String>();
         Map<String,String> pubAdd = new HashMap<String,String>();
@@ -1429,13 +1429,8 @@ public final class ReferenceHelper {
             }
         }
         
-        for (String s : pubRemove) {
-            pub.remove(s);
-        }
-        
-        for (String s : privRemove) {
-            priv.remove(s);
-        }
+        pub.keySet().removeAll(pubRemove);
+        priv.keySet().removeAll(privRemove);
         
         pub.putAll(pubAdd);
         priv.putAll(privAdd);

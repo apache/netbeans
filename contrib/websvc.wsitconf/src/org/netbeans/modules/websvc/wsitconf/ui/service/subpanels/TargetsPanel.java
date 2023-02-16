@@ -236,9 +236,7 @@ public class TargetsPanel extends javax.swing.JPanel {
         for (int i=0; i<rows.length; i++) {            
             rowsToRemove.add(getTargetsModel().get(rows[i]));
         }
-        for (Object o : rowsToRemove) {
-            getTargetsModel().remove(o);
-        }
+        getTargetsModel().removeAll(rowsToRemove);
         saveTargetsModel();
     }//GEN-LAST:event_removeButtonActionPerformed
     

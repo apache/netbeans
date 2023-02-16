@@ -925,7 +925,7 @@ public class ContextActionTest extends NbTestCase {
         }
 
         public Object assertFired(String key) {
-            assertTrue(fired.keySet().contains(key));
+            assertTrue(fired.containsKey(key));
             return fired.remove(key);
         }
 

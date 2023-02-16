@@ -158,7 +158,9 @@ public class ShorterPaths extends Task {
                     // copy extra unit.test.properties
                     Map<String,Object> properties = getProject().getProperties();
                     StringBuffer outProp = new StringBuffer();
-                    for (String name : properties.keySet()) {
+                    for (Map.Entry<String, Object> it : properties.entrySet()) {
+                        String name = it.getKey();
+
                         if (name.matches("test-(unit|qa-functional)-sys-prop\\..+")) {
                             if (name.equals("test-unit-sys-prop.xtest.data")) {
                                 // ignore overring xtest.data.dir, data.zip placed to standard location
@@ -166,14 +168,14 @@ public class ShorterPaths extends Task {
                             }
                             //
                             outProp.setLength(0);
-                            for (String path : tokenizePath(properties.get(name).toString())) {
+                            for (String path : tokenizePath(it.getValue().toString())) {
                                 replacePath(path, outProp);
                             }
                             pw.println(name.replaceFirst("^test-(unit|qa-functional)-sys-prop\\.", "test-sys-prop.") + "=" + outProp);
                         } else if (name.startsWith("test.config")) {
-                            pw.println(name + "=" + properties.get(name));
+                            pw.println(name + "=" + it.getValue());
                         } else if ("requires.nb.javac".equals(name)) {
-                            pw.println(name + "=" + properties.get(name));
+                            pw.println(name + "=" + it.getValue());
                         }
                     }
                     pw.println("extra.test.libs=" + externalLibBuf.toString());

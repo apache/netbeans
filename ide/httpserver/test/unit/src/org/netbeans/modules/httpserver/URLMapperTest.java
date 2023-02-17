@@ -76,6 +76,10 @@ public class URLMapperTest extends NbTestCase {
     
     public void testEmptyFileURLMapping() throws Exception {
         FileObject fo = getTestFSRoot().getFileObject("org/netbeans/test/httpserver/empty");
+        // git does not support empty directories
+        if(fo == null) {
+            fo = FileUtil.createFolder(getTestFSRoot(), "org/netbeans/test/httpserver/empty");
+        }
         
         URLMapper mapper = getMapper();
         URL url = mapper.getURL(fo,  URLMapper.NETWORK);

@@ -30,8 +30,8 @@
                 <subpackages>javax.servlet</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/servlet-2.2.jar</runtime-relative-path>
-                <binary-origin>external/servlet-2.2.jar</binary-origin>
+                <runtime-relative-path>ext/jakarta.servlet-api-4.0.4.jar</runtime-relative-path>
+                <binary-origin>external/jakarta.servlet-api-4.0.4.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

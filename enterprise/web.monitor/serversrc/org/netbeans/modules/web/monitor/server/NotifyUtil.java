@@ -24,10 +24,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 
 import java.util.Enumeration;
 import java.util.ResourceBundle;
@@ -117,28 +119,40 @@ class NotifyUtil  {
     }
 		
     void sendRecord(MonitorData monData, String queryStr) {
-	
-	if(debug) log("NotifyUtil::notifyServer");  //NOI18N
+        try {
+            if (debug) {
+                log("NotifyUtil::notifyServer");  //NOI18N
+            }
 
-	if(ideServer != null) { 
-	    String urlStr = ideServer.concat(queryStr);
-	    if(debug) log("NotifyUtil: url is " + urlStr);  //NOI18N
-	    sendRecord(urlStr, monData); 
-	} 
+            if (ideServer != null) {
+                String urlStr = ideServer.concat(URLEncoder.encode(queryStr, "UTF-8")); //NOI18N
+                if (debug) {
+                    log("NotifyUtil: url is " + urlStr);  //NOI18N
+                }
+                sendRecord(urlStr, monData);
+            }
 
-	if(otherIDEs.isEmpty()) return; 
+            if (otherIDEs.isEmpty()) {
+                return;
+            }
 
-	Enumeration ides = otherIDEs.elements();
-	while(ides.hasMoreElements()) {
+            Enumeration ides = otherIDEs.elements();
+            while (ides.hasMoreElements()) {
 
-	    String base = (String)ides.nextElement();
+                String base = (String) ides.nextElement();
+                String urlStr = base.concat(URLEncoder.encode(queryStr, "UTF-8")); //NOI18N
 
-	    if(debug) 
-		log("NotifyUtil: url is " + base.concat(queryStr)); //NOI18N
-	    if(!sendRecord(base.concat(queryStr), monData))
-		otherIDEs.remove(base); 
-	}
-	return; 
+                if (debug) {
+                    log("NotifyUtil: url is " + urlStr); //NOI18N
+                }
+                if (!sendRecord(urlStr, monData)) {
+                    otherIDEs.remove(base);
+                }
+            }
+            return;
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex); // If UTF-8 is not supported we are screwed
+        }
     }
     
     private boolean sendRecord(String urlS, MonitorData monData) { 
@@ -177,17 +191,17 @@ class NotifyUtil  {
 
 	// This is the default case - the server port was already known
 
-	StringBuffer uriBuf = new StringBuffer(replayServlet); //NOI18N
-	uriBuf.append("?status=");  //NOI18N
-	uriBuf.append(status);
-	uriBuf.append("&id=");  //NOI18N
-	uriBuf.append(id);
 
 	URL url = null;
-	try { 
+	try {
+            StringBuilder uriBuf = new StringBuilder(replayServlet); //NOI18N
+            uriBuf.append("?status=");  //NOI18N
+            uriBuf.append(URLEncoder.encode(status, "UTF-8")); //NOI18N
+            uriBuf.append("&id=");  //NOI18N
+            uriBuf.append(URLEncoder.encode(id, "UTF-8")); //NOI18N
 	    url = new URL("http", host, port, uriBuf.toString()); //NOI18N
 	}
-	catch(MalformedURLException mux) {
+	catch(MalformedURLException | UnsupportedEncodingException mux) {
 	    // This should not happen
 	}
 
@@ -236,7 +250,7 @@ class NotifyUtil  {
 	    try {
 		if(debug) log("\tOpening connection");  //NOI18N
 		conn = url.openConnection();
-		conn.setRequestProperty("\tContent-type","text/xml");  //NOI18N
+		conn.setRequestProperty("Content-type","text/xml");  //NOI18N
 		conn.setDoOutput(true);
                 try {
                     out = new PrintWriter(conn.getOutputStream());

@@ -127,3 +127,6 @@ enterprise/jakartaee10.platform/external/generated-jakarta.jakartaee-api-10.0.0-
 
 # Jakarta Servlet API is used by both servletjspapi and websvc.restlib
 enterprise/servletjspapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websvc.restlib/external/jakarta.servlet-api-4.0.4.jar
+
+# The enterprise usage is for library - it is better to keep the two separate
+ide/servletapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websvc.restlib/external/jakarta.servlet-api-4.0.4.jar

@@ -756,8 +756,8 @@ public class AbstractLookup extends Lookup implements Serializable {
         /** Collects all affected results R that were modified in the
          * given transaction.
          *
-         * @param modified place to add results R to
          * @param transaction the transaction indentification
+         * @param modifiedResults place to add results R to
          */
         public void endTransaction(Transaction transaction, Set<R> modifiedResults);
 

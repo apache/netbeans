@@ -175,7 +175,7 @@ public class PrimitiveTypeArrayEditor extends PropertyEditorSupport
         String[] parts;
         String trimText = text.trim();
         
-        if ((trimText.length() == 0) || trimText.toLowerCase().equals(NULL_STR)) {
+        if ((trimText.length() == 0) || trimText.equalsIgnoreCase(NULL_STR)) {
             return null;
         }
 

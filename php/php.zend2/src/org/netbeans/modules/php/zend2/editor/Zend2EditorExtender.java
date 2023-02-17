@@ -199,7 +199,7 @@ public class Zend2EditorExtender extends EditorExtender {
 
         @Override
         public void visit(MethodDeclaration node) {
-            if (CodeUtils.extractMethodName(node).toLowerCase().equalsIgnoreCase(action)) {
+            if (CodeUtils.extractMethodName(node).equalsIgnoreCase(action)) {
                 actionDeclarations.add(node);
             }
         }

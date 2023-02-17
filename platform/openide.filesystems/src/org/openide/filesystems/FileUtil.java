@@ -1372,7 +1372,7 @@ public final class FileUtil extends Object {
     @Deprecated
     public static String getMIMEType(String ext) {
         assert false : "FileUtil.getMIMEType(String extension) is deprecated. Please, use FileUtil.getMIMEType(FileObject).";  //NOI18N
-        if (ext.toLowerCase().equals("xml")) {  //NOI18N
+        if (ext.equalsIgnoreCase("xml")) {  //NOI18N
             return "text/xml"; // NOI18N
         }
         return null;

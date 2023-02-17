@@ -44,10 +44,8 @@ import org.openide.util.io.NbObjectInputStream;
 class AfterRestartExceptions implements Runnable {
     
     private static final Set<String> scheduledThrowableClasses = new HashSet<>(
-            Arrays.asList(new String[] {
-                OutOfMemoryError.class.getName(),
-                "org.netbeans.modules.deadlock.detector.Detector$DeadlockDetectedException",
-            }));
+            Arrays.asList(OutOfMemoryError.class.getName(),
+                    "org.netbeans.modules.deadlock.detector.Detector$DeadlockDetectedException"));
     private static final Object IOLock = new Object();
     private static volatile Set<LogRecord> afterRestartRecords;
     

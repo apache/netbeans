@@ -161,7 +161,7 @@ public class MobileConfigurationsProvider implements ProjectConfigurationProvide
 
 //    @Override
     public List<String> getNewConfigurationTypes() {
-        return Arrays.asList(new String[]{PlatformManager.ANDROID_TYPE, PlatformManager.IOS_TYPE});
+        return Arrays.asList(PlatformManager.ANDROID_TYPE, PlatformManager.IOS_TYPE);
     }
 
 //    @Override

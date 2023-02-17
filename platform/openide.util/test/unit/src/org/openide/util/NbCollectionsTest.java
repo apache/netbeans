@@ -175,7 +175,7 @@ public class NbCollectionsTest extends NbTestCase {
         s.add(2);
         Set<String> s2 = NbCollections.checkedSetByFilter(s, String.class, false);
         assertEquals(3, s2.size());
-        assertEquals(new HashSet(Arrays.asList(new String[] {"hello", "there", "goodbye"})), s2);
+        assertEquals(new HashSet(Arrays.asList("hello", "there", "goodbye")), s2);
         assertTrue(s2.contains("hello"));
         assertFalse(s2.contains("nowhere"));
         try {
@@ -189,7 +189,7 @@ public class NbCollectionsTest extends NbTestCase {
             }
         }
         assertEquals(2, s2.size());
-        assertEquals(new HashSet(Arrays.asList(new String[] {"there", "goodbye"})), s2);
+        assertEquals(new HashSet(Arrays.asList("there", "goodbye")), s2);
         assertEquals(4, s.size());
         it = s2.iterator();
         while (it.hasNext()) {

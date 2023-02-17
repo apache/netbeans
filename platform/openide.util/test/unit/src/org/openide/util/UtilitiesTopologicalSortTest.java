@@ -289,11 +289,11 @@ public class UtilitiesTopologicalSortTest extends NbTestCase {
      }    
 
     public void testErrorReporting () throws Exception {
-        Collection c = Arrays.asList(new String[] {"a", "b", "c", "d", "e", "f"});
+        Collection c = Arrays.asList("a", "b", "c", "d", "e", "f");
         Map m = new HashMap ();
-        m.put ("a", Arrays.asList (new String[] { "a" })); 
-        m.put ("b", Arrays.asList (new String[] { "c" })); 
-        m.put ("c", Arrays.asList (new String[] { "b" })); 
+        m.put ("a", Arrays.asList ("a"));
+        m.put ("b", Arrays.asList ("c"));
+        m.put ("c", Arrays.asList ("b"));
         
         try {
             BaseUtilities.topologicalSort(c, m);

@@ -138,26 +138,20 @@ public class SimpleLanguageTest extends TestCase {
         );
                 
         LexerTestUtilities.assertCollectionsEqual(language.tokenCategories(TestTokenId.IDENTIFIER),
-                Arrays.asList(new String[] {
-                    "test-category",
-                })
+                Arrays.asList("test-category")
         
         );
 
         LexerTestUtilities.assertCollectionsEqual(language.tokenCategories(TestTokenId.PLUS),
-                Arrays.asList(new String[] {
-                    "test-category",
-                    "operator",
-                })
+                Arrays.asList("test-category",
+                        "operator")
         
         );
 
         LexerTestUtilities.assertCollectionsEqual(language.tokenCategories(TestTokenId.BLOCK_COMMENT_INCOMPLETE),
-                Arrays.asList(new String[] {
-                    "error",
-                    "incomplete",
-                    "comment",
-                })
+                Arrays.asList("error",
+                        "incomplete",
+                        "comment")
         
         );
 

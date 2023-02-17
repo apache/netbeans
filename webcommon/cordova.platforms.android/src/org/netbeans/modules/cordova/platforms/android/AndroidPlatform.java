@@ -135,8 +135,7 @@ public class AndroidPlatform implements MobilePlatform {
         return Target.parse(avdString);
     }
     
-    private final HashSet<String> targets = new HashSet<String>(Arrays.asList(new String[]{
-            "android-14", //NOI18N
+    private final HashSet<String> targets = new HashSet<String>(Arrays.asList("android-14", //NOI18N
             "android-15", //NOI18N
             "android-16", //NOI18N
             "android-17", //NOI18N
@@ -144,7 +143,7 @@ public class AndroidPlatform implements MobilePlatform {
             "android-19", //NOI18N
             "android-20", //NOI18N
             "android-21", //NOI18N
-            "android-22"})); //NOI18N
+            "android-22")); //NOI18N
     
     
     @Override

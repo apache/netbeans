@@ -208,7 +208,7 @@ public class V8SuspendAndChangeTest extends AbstractTestBase {
         ChangeLive.ChangeLog changeLog = chlrb.getChangeLog();
         assertEquals(0, changeLog.getBreakpointsUpdate().length);
         assertEquals(3, changeLog.getNamesLinkedToOldScript().length);
-        Set<String> linkedToOldScript = new HashSet<>(Arrays.asList(new String[]{ "changingFunction", "summa" }));
+        Set<String> linkedToOldScript = new HashSet<>(Arrays.asList("changingFunction", "summa"));
         for (String name : changeLog.getNamesLinkedToOldScript()) {
             linkedToOldScript.remove(name);
         }

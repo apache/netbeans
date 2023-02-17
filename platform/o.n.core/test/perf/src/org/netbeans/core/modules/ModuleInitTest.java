@@ -480,18 +480,16 @@ public class ModuleInitTest extends Benchmark {
     private String cp = refinecp(System.getProperty("java.class.path"));
     
     private void runNB(File homedir, File userdir, boolean log, Map params) throws IOException {
-        List cmd = new ArrayList(Arrays.asList(new String[] {
-            "java",
-            "-Xms24m",
-            "-Xmx96m",
-            "-Dnetbeans.security.nocheck=true",
-            "-Dnetbeans.home=" + homedir.getAbsolutePath(),
-            "-Dnetbeans.user=" + userdir.getAbsolutePath(),
-            "-Dnetbeans.modules.quiet=true",
-            "-Dlog=" + log,
-            "-classpath",
-            cp,
-        }));
+        List cmd = new ArrayList(Arrays.asList("java",
+                "-Xms24m",
+                "-Xmx96m",
+                "-Dnetbeans.security.nocheck=true",
+                "-Dnetbeans.home=" + homedir.getAbsolutePath(),
+                "-Dnetbeans.user=" + userdir.getAbsolutePath(),
+                "-Dnetbeans.modules.quiet=true",
+                "-Dlog=" + log,
+                "-classpath",
+                cp));
         Iterator it = params.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry e = (Map.Entry)it.next();

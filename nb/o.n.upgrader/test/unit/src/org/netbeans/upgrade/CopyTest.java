@@ -199,8 +199,7 @@ public final class CopyTest extends org.netbeans.junit.NbTestCase {
         String testPath = allPath[0];
         ArrayList<String> fileList = new ArrayList<String>();
         fileList.addAll(Arrays.asList(allPath));
-        fileList.addAll(Arrays.asList(new java.lang.String[]{ 
-        "path/Yes.txt", "path/No.txt", "path/Existing.txt"}));
+        fileList.addAll(Arrays.asList("path/Yes.txt", "path/No.txt", "path/Existing.txt"));
         
         FileSystem fs = createLocalFileSystem(fileList.toArray(new String[fileList.size()]));
 

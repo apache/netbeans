@@ -182,22 +182,20 @@ public final class KitsTrackerImpl extends KitsTracker {
     private boolean needsReloading = true;
     private boolean mimeType2kitClassLoaded = false;
 
-    private static final Set<String> WELL_KNOWN_PARENTS = new HashSet<String>(Arrays.asList(new String [] {
-        "java.lang.Object", //NOI18N
-        "javax.swing.text.EditorKit", //NOI18N
-        "javax.swing.text.DefaultEditorKit", //NOI18N
-        "org.netbeans.editor.BaseKit", //NOI18N
-        "org.netbeans.editor.ext.ExtKit", //NOI18N
-        "org.netbeans.modules.editor.NbEditorKit", //NOI18N
-        // common superclass of some XML related kits
-        "org.netbeans.modules.xml.text.syntax.UniKit", //NOI18N
-    }));
+    private static final Set<String> WELL_KNOWN_PARENTS = new HashSet<String>(Arrays.asList("java.lang.Object", //NOI18N
+            "javax.swing.text.EditorKit", //NOI18N
+            "javax.swing.text.DefaultEditorKit", //NOI18N
+            "org.netbeans.editor.BaseKit", //NOI18N
+            "org.netbeans.editor.ext.ExtKit", //NOI18N
+            "org.netbeans.modules.editor.NbEditorKit", //NOI18N
+            // common superclass of some XML related kits
+            "org.netbeans.modules.xml.text.syntax.UniKit" //NOI18N
+    ));
 
-    private static final Set<String> DYNAMIC_LANGUAGES = new HashSet<String>(Arrays.asList(new String [] {
-        // Schliemann and GSF kits are provided on the fly by the frameworks' MimeDataProvider
-        "org.netbeans.modules.languages.dataobject.LanguagesEditorKit", //NOI18N
-        "org.netbeans.modules.gsf.GsfEditorKitFactory$GsfEditorKit", //NOI18N
-    }));
+    private static final Set<String> DYNAMIC_LANGUAGES = new HashSet<String>(Arrays.asList(// Schliemann and GSF kits are provided on the fly by the frameworks' MimeDataProvider
+            "org.netbeans.modules.languages.dataobject.LanguagesEditorKit", //NOI18N
+            "org.netbeans.modules.gsf.GsfEditorKitFactory$GsfEditorKit" //NOI18N
+    ));
 
     private final ThreadLocal<Stack<String>> contexts = new ThreadLocal<Stack<String>>();
     

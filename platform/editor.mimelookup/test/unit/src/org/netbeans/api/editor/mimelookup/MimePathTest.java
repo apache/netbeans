@@ -120,12 +120,10 @@ public class MimePathTest extends NbTestCase {
         MimePath mimePath = MimePath.parse("text/x-jsp/text/x-java/text/x-javadoc");
         List paths = mimePath.getInheritedPaths(null, null);
         checkPaths(
-            Arrays.asList(new String [] {
-                "text/x-jsp/text/x-java/text/x-javadoc",
-                "text/x-java/text/x-javadoc",
-                "text/x-javadoc",
-                ""
-            }),
+            Arrays.asList("text/x-jsp/text/x-java/text/x-javadoc",
+                    "text/x-java/text/x-javadoc",
+                    "text/x-javadoc",
+                    ""),
             paths
         );
     }
@@ -149,13 +147,11 @@ public class MimePathTest extends NbTestCase {
         MimePath mimePath = MimePath.parse("text/x-ant+xml/text/x-ant+xml");
         List paths = mimePath.getInheritedPaths(null, null);
         checkPaths(
-            Arrays.asList(new String [] {
-                "text/x-ant+xml/text/x-ant+xml",
-                "text/xml/text/x-ant+xml",
-                "text/x-ant+xml",
-                "text/xml",
-                ""
-            }),
+            Arrays.asList("text/x-ant+xml/text/x-ant+xml",
+                    "text/xml/text/x-ant+xml",
+                    "text/x-ant+xml",
+                    "text/xml",
+                    ""),
             paths
         );
     }
@@ -180,12 +176,10 @@ public class MimePathTest extends NbTestCase {
         MimePath mimePath = MimePath.parse("text/x-jsp/text/x-java/text/x-javadoc");
         List paths = mimePath.getInheritedPaths("PrefixFolder", "SuffixFolder");
         checkPaths(
-            Arrays.asList(new String [] {
-                "PrefixFolder/text/x-jsp/text/x-java/text/x-javadoc/SuffixFolder",
-                "PrefixFolder/text/x-java/text/x-javadoc/SuffixFolder",
-                "PrefixFolder/text/x-javadoc/SuffixFolder",
-                "PrefixFolder/SuffixFolder"
-            }), 
+            Arrays.asList("PrefixFolder/text/x-jsp/text/x-java/text/x-javadoc/SuffixFolder",
+                    "PrefixFolder/text/x-java/text/x-javadoc/SuffixFolder",
+                    "PrefixFolder/text/x-javadoc/SuffixFolder",
+                    "PrefixFolder/SuffixFolder"),
             paths
         );
     }

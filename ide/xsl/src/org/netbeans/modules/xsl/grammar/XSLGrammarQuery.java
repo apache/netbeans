@@ -141,10 +141,10 @@ public final class XSLGrammarQuery implements GrammarQuery{
             ////////////////////////////////////////////////
             // Initialize common sets
 
-            Set<String> charInstructions = new TreeSet<>(Arrays.asList(new String[]{"apply-templates", // NOI18N
-            "call-template","apply-imports","for-each","value-of", // NOI18N
-            "copy-of","number","choose","if","text","copy", // NOI18N
-            "variable","message","fallback"})); // NOI18N
+            Set<String> charInstructions = new TreeSet<>(Arrays.asList("apply-templates", // NOI18N
+                    "call-template","apply-imports","for-each","value-of", // NOI18N
+                    "copy-of","number","choose","if","text","copy", // NOI18N
+                    "variable","message","fallback")); // NOI18N
 
             Set<String> instructions = new TreeSet<>(charInstructions);
             instructions.addAll(Arrays.asList(new String[]{"processing-instruction", // NOI18N

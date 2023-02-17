@@ -434,8 +434,8 @@ public class ChildrenSupportTest extends NbTestCase {
         assertTrue (added1.mkdirs());
         assertTrue (added2.mkdirs());
 
-        List added = Arrays.asList(new String[] {"added1", "added2"});
-        List removed = Arrays.asList(new String[] {"removed1", "removed2"});
+        List added = Arrays.asList("added1", "added2");
+        List removed = Arrays.asList("removed1", "removed2");
 
         Map changes = refresh(fpi, fpiName);
         Iterator it = changes.entrySet().iterator();

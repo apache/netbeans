@@ -59,50 +59,49 @@ public class CSSUtils {
         "-o-" // NOI18N
     };
 
-    private static final List<String> inheritedProperties = Arrays.asList(new String[] {
-        "azimuth", // NOI18N
-        "border-collapse", // NOI18N
-        "border-spacing", // NOI18N
-        "caption-side", // NOI18N
-        "color", // NOI18N
-        "cursor", // NOI18N
-        "direction", // NOI18N
-        "elevation", // NOI18N
-        "empty-cells", // NOI18N
-        "font-family", // NOI18N
-        "font-size", // NOI18N
-        "font-style", // NOI18N
-        "font-variant", // NOI18N
-        "font-weight", // NOI18N
-        "font", // NOI18N
-        "letter-spacing", // NOI18N
-        "line-height", // NOI18N
-        "list-style-image", // NOI18N
-        "list-style-position", // NOI18N
-        "list-style-type", // NOI18N
-        "list-style", // NOI18N
-        "orphans", // NOI18N
-        "pitch-range", // NOI18N
-        "pitch", // NOI18N
-        "quotes", // NOI18N
-        "richness", // NOI18N
-        "speak-header", // NOI18N
-        "speak-numeral", // NOI18N
-        "speak-punctuation", // NOI18N
-        "speak", // NOI18N
-        "speech-rate", // NOI18N
-        "stress", // NOI18N
-        "text-align", // NOI18N
-        "text-indent", // NOI18N
-        "text-transform", // NOI18N
-        "text-shadow", // NOI18N
-        "visibility", // NOI18N
-        "voice-family", // NOI18N
-        "volume", // NOI18N
-        "white-space", // NOI18N
-        "widows", // NOI18N
-        "word-spacing" // NOI18N
-    });
+    private static final List<String> inheritedProperties = Arrays.asList("azimuth", // NOI18N
+            "border-collapse", // NOI18N
+            "border-spacing", // NOI18N
+            "caption-side", // NOI18N
+            "color", // NOI18N
+            "cursor", // NOI18N
+            "direction", // NOI18N
+            "elevation", // NOI18N
+            "empty-cells", // NOI18N
+            "font-family", // NOI18N
+            "font-size", // NOI18N
+            "font-style", // NOI18N
+            "font-variant", // NOI18N
+            "font-weight", // NOI18N
+            "font", // NOI18N
+            "letter-spacing", // NOI18N
+            "line-height", // NOI18N
+            "list-style-image", // NOI18N
+            "list-style-position", // NOI18N
+            "list-style-type", // NOI18N
+            "list-style", // NOI18N
+            "orphans", // NOI18N
+            "pitch-range", // NOI18N
+            "pitch", // NOI18N
+            "quotes", // NOI18N
+            "richness", // NOI18N
+            "speak-header", // NOI18N
+            "speak-numeral", // NOI18N
+            "speak-punctuation", // NOI18N
+            "speak", // NOI18N
+            "speech-rate", // NOI18N
+            "stress", // NOI18N
+            "text-align", // NOI18N
+            "text-indent", // NOI18N
+            "text-transform", // NOI18N
+            "text-shadow", // NOI18N
+            "visibility", // NOI18N
+            "voice-family", // NOI18N
+            "volume", // NOI18N
+            "white-space", // NOI18N
+            "widows", // NOI18N
+            "word-spacing" // NOI18N
+    );
     /** Name of the class that is used to simulate hovering. */
     public static final String HOVER_CLASS = "-netbeans-hover"; // NOI18N
 

@@ -101,7 +101,7 @@ public class GenLanguageTest extends TestCase {
         
         // Check token categories
         Set cats = language.tokenCategories();
-        Collection testCats = Arrays.asList(new String[] { "operator", "test-category", "whitespace", "error", "comment", "keyword" });
+        Collection testCats = Arrays.asList("operator", "test-category", "whitespace", "error", "comment", "keyword");
         LexerTestUtilities.assertCollectionsEqual("Invalid token categories",
                 cats, testCats);
         
@@ -148,19 +148,15 @@ public class GenLanguageTest extends TestCase {
         List<String> testIdCats
             = language.tokenCategories(TestGenLanguage.IDENTIFIER_ID);
         LexerTestUtilities.assertCollectionsEqual(
-                Arrays.asList(new String[] {
-                    "test-category",
-                }),
+                Arrays.asList("test-category"),
                 testIdCats
         );
 
         List<String> testIdCats2
             = language.tokenCategories(TestGenLanguage.PLUS_ID);
         LexerTestUtilities.assertCollectionsEqual(
-                Arrays.asList(new String[] {
-                    "test-category",
-                    "operator",
-                }),
+                Arrays.asList("test-category",
+                        "operator"),
                 testIdCats2
         );
 

@@ -39,7 +39,7 @@ public class ComputeOffAWT {
         AtomicBoolean cancel = new AtomicBoolean();
         Compute<T> c = new Compute(cancel, source, phase, w);
 
-        ProgressUtils.runOffEventDispatchThread(c, featureName, cancel, false);
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(c, featureName, cancel, false);
 
         return c.result;
     }

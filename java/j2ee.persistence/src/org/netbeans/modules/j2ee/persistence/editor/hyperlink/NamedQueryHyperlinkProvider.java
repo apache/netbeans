@@ -83,7 +83,7 @@ public class NamedQueryHyperlinkProvider implements HyperlinkProviderExt {
     @Override
     public void performClickAction(final Document doc, final int offset, HyperlinkType type) {
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread( 
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(
                 () -> goToNQ(doc, offset), 
                 NbBundle.getMessage(NamedQueryHyperlinkProvider.class, "LBL_GoToNamedQuery"), 
                 cancel, 

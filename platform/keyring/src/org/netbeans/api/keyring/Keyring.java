@@ -113,7 +113,7 @@ public class Keyring {
                         return result.get(SAFE_DELAY, TimeUnit.MILLISECONDS);
                     } catch (TimeoutException ex) {
                         // show progress dialog
-                        return ProgressUtils.showProgressDialogAndRun(
+                        return org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(
                                 new ProgressRunnable<char[]>(result), Bundle.MSG_KeyringAccess(), false);
                     }
                 }

@@ -96,7 +96,7 @@ public final class ElementOpen {
         final AtomicBoolean cancel = new AtomicBoolean();
         if (SwingUtilities.isEventDispatchThread() && !JavaSourceAccessor.holdsParserLock()) {
             final Object[] openInfo = new Object[3];
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public void run() {
                         Object[] info = getOpenInfo(cpInfo, el, names, cancel);
                         if (info != null) {
@@ -166,7 +166,7 @@ public final class ElementOpen {
         final AtomicBoolean cancel = new AtomicBoolean();
         if (SwingUtilities.isEventDispatchThread() && !JavaSourceAccessor.holdsParserLock()) {
             final Object[] openInfo = new Object[3];
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public void run() {
                         Object[] info = !isClassFile(toSearch) ? getOpenInfo (toSearch, toOpen, cancel) : null;
                         if (info != null) {
@@ -247,7 +247,7 @@ public final class ElementOpen {
         final AtomicBoolean cancel = new AtomicBoolean();
         if (SwingUtilities.isEventDispatchThread() && !JavaSourceAccessor.holdsParserLock()) {
             final boolean[] result = new boolean[1];
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public void run() {
                         result[0] = open(toSearch, toOpen, cancel);
                     }

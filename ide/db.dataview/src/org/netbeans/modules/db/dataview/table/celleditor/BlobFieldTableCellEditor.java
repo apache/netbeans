@@ -266,7 +266,7 @@ public class BlobFieldTableCellEditor extends AbstractCellEditor
         Throwable t;
         // Only show dialog, if the filesize is large enougth and has a use for the user
         if (size == null || size > (1024 * 1024)) {
-            t = ProgressUtils.showProgressDialogAndRun(ft, title, false);
+            t = org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(ft, title, false);
         } else {
             t = ft.run(null);
         }

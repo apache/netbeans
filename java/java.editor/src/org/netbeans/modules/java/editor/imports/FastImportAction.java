@@ -127,7 +127,7 @@ public class FastImportAction extends BaseAction {
                 }
             };
 
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 public void run() {
                     try {

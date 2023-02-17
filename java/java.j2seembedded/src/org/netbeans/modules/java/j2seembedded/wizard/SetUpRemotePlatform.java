@@ -464,7 +464,7 @@ public class SetUpRemotePlatform extends javax.swing.JPanel {
                         new File(keyFilePath.getText()),
                         String.valueOf(passphrase.getPassword()));
             }
-            ProgressUtils.showProgressDialogAndRun(
+            org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(
                     new ProgressRunnable<Void>() {
                 @Override
                 public Void run(ProgressHandle handle) {

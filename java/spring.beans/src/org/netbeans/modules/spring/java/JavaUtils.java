@@ -318,11 +318,11 @@ public final class JavaUtils {
                 ScanDialog.runWhenScanFinished(new Runnable() {
                     @Override
                     public void run() {
-                        ProgressUtils.runOffEventDispatchThread(classFinder, Bundle.JavaUtils_title_class_searching(), cancel, false);
+                        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(classFinder, Bundle.JavaUtils_title_class_searching(), cancel, false);
                     }
                 }, Bundle.JavaUtils_title_class_searching());
             } else {
-                ProgressUtils.runOffEventDispatchThread(classFinder, Bundle.JavaUtils_title_class_searching(), cancel, false);
+                org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(classFinder, Bundle.JavaUtils_title_class_searching(), cancel, false);
             }
         }
     }

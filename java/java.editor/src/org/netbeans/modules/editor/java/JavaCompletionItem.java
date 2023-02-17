@@ -1075,7 +1075,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         protected CharSequence substituteText(final JTextComponent c, final int offset, final int length, final CharSequence text, final CharSequence toAdd) {
             final StringBuilder template = new StringBuilder();
             final AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -1728,7 +1728,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             final String[] prefix = {""}; //NOI18N
             if (findPrefix.get()) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -1759,7 +1759,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             CharSequence cs = super.substituteText(c, offset, length, prefix[0] + text, toAdd);
             if (autoImportEnclosingType) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -2105,7 +2105,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             }
             if (autoImportEnclosingType) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -3042,7 +3042,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             final BaseDocument doc = (BaseDocument)c.getDocument();
             final StringBuilder sb = new StringBuilder();
             final AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -3536,7 +3536,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             final StringBuilder template = new StringBuilder();
             final AtomicBoolean cancel = new AtomicBoolean();
             final CharSequence finalToAdd = toAdd;
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -4527,7 +4527,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         final int offset = c.getSelectionEnd();
         final Source s = Source.create(c.getDocument());
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 try {

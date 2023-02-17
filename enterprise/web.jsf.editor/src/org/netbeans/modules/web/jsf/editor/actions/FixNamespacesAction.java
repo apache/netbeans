@@ -111,7 +111,7 @@ public class FixNamespacesAction extends BaseAction {
                 }
             };
 
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {

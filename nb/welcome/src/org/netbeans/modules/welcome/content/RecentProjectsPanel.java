@@ -221,7 +221,7 @@ public class RecentProjectsPanel extends JPanel implements Constants, Runnable {
                     }
                 }
             };
-            ProgressUtils.runOffEventDispatchThread( r, BundleSupport.getLabel("OPEN_RECENT_PROJECT"), new AtomicBoolean(false), false );
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread( r, BundleSupport.getLabel("OPEN_RECENT_PROJECT"), new AtomicBoolean(false), false );
         }
     }
 }

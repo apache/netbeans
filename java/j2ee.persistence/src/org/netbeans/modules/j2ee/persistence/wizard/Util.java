@@ -691,7 +691,7 @@ public class Util {
     public static void addLibraryToProject(Project project, Library library, String classpathType) {
         if(SwingUtilities.isEventDispatchThread()){
             AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread( new AddLibrary(project, library, classpathType), 
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread( new AddLibrary(project, library, classpathType),
                    NbBundle.getMessage(Util.class, 
                  "TTL_ExtendProjectClasspath"), cancel, false );  // NOI18N
         } else {

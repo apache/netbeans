@@ -691,7 +691,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
                             }
                         }
                         final ProgressRunnable<Void> task = new Task();
-                        ProgressUtils.showProgressDialogAndRun(task, Bundle.TXT_JavadocSearch(file.getAbsolutePath()), false);
+                        org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(task, Bundle.TXT_JavadocSearch(file.getAbsolutePath()), false);
                     }
                     if (!result.isEmpty()) {
                         return result.stream()

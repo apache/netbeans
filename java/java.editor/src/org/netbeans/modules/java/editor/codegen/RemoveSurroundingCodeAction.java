@@ -138,7 +138,7 @@ public class RemoveSurroundingCodeAction extends BaseAction implements LookupLis
         final JavaSource js = JavaSource.forDocument(doc);
         if (js != null) {
             final AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {

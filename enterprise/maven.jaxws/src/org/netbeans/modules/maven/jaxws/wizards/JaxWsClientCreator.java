@@ -188,7 +188,7 @@ public class JaxWsClientCreator implements ClientCreator {
             }
         };
         AtomicBoolean isCancelled = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(runnable, NbBundle.getMessage(
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(runnable, NbBundle.getMessage(
                 JaxWsClientCreator.class, "LBL_RetrieveWSDL"), isCancelled, false);    // NOI18N
         
         if ( isCancelled.get() ){

@@ -144,7 +144,7 @@ public class JavaFixAllImports {
         if (javaSource == null) {
             StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(JavaFixAllImports.class, "MSG_CannotFixImports"));
         } else {
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 public void run() {
                     try {

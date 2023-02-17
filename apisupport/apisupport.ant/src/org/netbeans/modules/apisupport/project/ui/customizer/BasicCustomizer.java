@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JDialog;
-import org.netbeans.api.progress.ProgressUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
@@ -110,7 +109,7 @@ public abstract class BasicCustomizer implements CustomizerProvider {
         } else {
             final String category = (preselectedCategory != null) ? preselectedCategory : lastSelectedCategory;
             final AtomicReference<Lookup> context = new AtomicReference<Lookup>();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override public void run() {
                     context.set(new ProxyLookup(prepareData(), Lookups.fixed(new SubCategoryProvider(category, preselectedSubCategory))));
                 }

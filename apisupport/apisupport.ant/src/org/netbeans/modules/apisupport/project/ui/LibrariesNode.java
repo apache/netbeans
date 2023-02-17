@@ -557,7 +557,7 @@ final class LibrariesNode extends AbstractNode {
             }
             if(dependencies.size() > 0)
             {
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public @Override void run() {
                         ProjectXMLManager pxm = new ProjectXMLManager(project);
                         try {
@@ -613,7 +613,7 @@ final class LibrariesNode extends AbstractNode {
                 if (descriptor.getValue().equals(DialogDescriptor.OK_OPTION)) {
                     final ModuleDependency editedDep = editPanel.getEditedDependency();
                     final AtomicBoolean cancel = new AtomicBoolean();
-                    ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                    org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                         public @Override void run() {
                             try {
                                 SortedSet<ModuleDependency> deps = new TreeSet<ModuleDependency>(pxm.getDirectDependencies());

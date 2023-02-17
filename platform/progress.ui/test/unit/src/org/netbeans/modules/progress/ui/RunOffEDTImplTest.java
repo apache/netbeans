@@ -141,7 +141,7 @@ public class RunOffEDTImplTest extends NbTestCase {
             }
         }
         R r = new R();
-        Future<String> f = ProgressUtils.showProgressDialogAndRunLater(r, ProgressHandleFactory.createHandle("Something"), true);
+        Future<String> f = org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(r, ProgressHandleFactory.createHandle("Something"), true);
         assertNotNull (f);
         assertEquals ("Done", f.get());
         countDown.await();
@@ -166,7 +166,7 @@ public class RunOffEDTImplTest extends NbTestCase {
     }
 
     public void testShowProgressDialogAndRun_3args_1() {
-        assertEquals ("Done", ProgressUtils.showProgressDialogAndRun(new CB(), "Doing Stuff", true));
+        assertEquals ("Done", BaseProgressUtils.showProgressDialogAndRun(new CB(), "Doing Stuff", true));
     }
 
     public void testShowProgressDialogAndRun_3args_2() throws InterruptedException {
@@ -184,7 +184,7 @@ public class RunOffEDTImplTest extends NbTestCase {
                 try {
                     wm.waitForGlassPane();
                     if (testGlassPane) {
-                        glassPaneFound.set(jf.getGlassPane() instanceof RunOffEDTImpl.TranslucentMask);
+                        glassPaneFound.set(jf.getGlassPane() instanceof org.netbeans.modules.progress.ui.RunOffEDTImpl.TranslucentMask);
                     }
                     hasRun = true;
                 } finally {
@@ -193,7 +193,7 @@ public class RunOffEDTImplTest extends NbTestCase {
             }
         }
         R r = new R();
-        ProgressUtils.showProgressDialogAndRun(r, "Something");
+        BaseProgressUtils.showProgressDialogAndRun(r, "Something");
         countDown.await();
         assertTrue (r.hasRun);
         assertTrue ("Glass pane not set", !testGlassPane || glassPaneFound.get());

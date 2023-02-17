@@ -146,7 +146,7 @@ public class AndroidActionProvider implements ActionProvider {
                 return;
             }
         } else if (COMMAND_RUN.equals(command) || COMMAND_RUN_SINGLE.equals(command)) {
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     String checkDevices = checkDevices(p);                    

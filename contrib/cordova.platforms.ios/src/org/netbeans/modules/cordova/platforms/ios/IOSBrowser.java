@@ -137,7 +137,7 @@ public class IOSBrowser extends HtmlBrowser.Impl implements EnhancedBrowser {
             return;
         }
         try {
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     if (kind == Kind.IOS_DEVICE_DEFAULT) {

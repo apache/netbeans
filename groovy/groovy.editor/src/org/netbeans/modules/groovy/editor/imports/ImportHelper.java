@@ -125,7 +125,7 @@ public final class ImportHelper {
 
         if (!singleCandidates.isEmpty()) {
             Collections.sort(singleCandidates);
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 @Override
                 public void run() {

@@ -238,7 +238,7 @@ public class ClassPathUtils {
             });
         } else {
             String msg = getBundleString("MSG_UpdatingClassPath"); // NOI18N
-            Object retVal = ProgressUtils.showProgressDialogAndRun(new ProgressRunnable<Object>() {
+            Object retVal = org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(new ProgressRunnable<Object>() {
                 @Override
                 public Object run(ProgressHandle handle) {
                     try {

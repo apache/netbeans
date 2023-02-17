@@ -422,7 +422,7 @@ public class JspHyperlinkProvider implements HyperlinkProvider {
                                 }
                             });
 
-                    ProgressUtils.runOffEventDispatchThread(compute,
+                    org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(compute,
                             NbBundle.getMessage(JspHyperlinkProvider.class, "MSG_goto-source"),
                             cancel,
                             false);

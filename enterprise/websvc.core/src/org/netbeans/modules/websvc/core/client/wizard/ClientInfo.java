@@ -576,7 +576,7 @@ private void saasBrowse(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saasB
                 }
                     
             };
-            ProgressUtils.showProgressDialogAndRun( runnable, 
+            org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun( runnable,
                     NbBundle.getMessage(ClientInfo.class, "TXT_SaasWait")); // NOI18N
             
         }

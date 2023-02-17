@@ -129,7 +129,7 @@ final class RemoveClassPathRootAction extends NodeAction {
                 removables.forEach(Removable::afterRemove);
             }
         };
-        ProgressUtils.runOffEventDispatchThread(
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(
                 action,
                 NbBundle.getMessage(RemoveClassPathRootAction.class, "TXT_RemovingClassPathRoots"),
                 cancel,

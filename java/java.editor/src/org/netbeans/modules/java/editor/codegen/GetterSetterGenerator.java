@@ -255,8 +255,8 @@ public class GetterSetterGenerator implements CodeGenerator {
                     createGetterSetterLists(parameter, variables, handles, getters, setters, codestyle);
                 }
             }, true);
-            
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 @Override
                 public void run() {

@@ -113,7 +113,7 @@ public final class ELHyperlinkProvider implements HyperlinkProviderExt {
     @Override
     public void performClickAction(final Document doc, final int offset, HyperlinkType type) {
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 performGoTo(doc, offset, cancel);

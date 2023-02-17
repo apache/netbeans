@@ -84,7 +84,7 @@ public final class NbPlatformCustomizer extends JPanel {
     })
     public static Object showCustomizer() {
         final AtomicBoolean canceled = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() { // #207451
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() { // #207451
             @Override public void run() {
                 HarnessUpgrader.checkForUpgrade();
             }

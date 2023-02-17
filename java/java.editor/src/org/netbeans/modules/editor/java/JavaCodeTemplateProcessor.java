@@ -1102,7 +1102,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
             final FileObject fo = NbEditorUtilities.getFileObject(doc);
             if (fo != null) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {

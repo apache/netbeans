@@ -100,7 +100,7 @@ public abstract class GitAction extends NodeAction {
                 }
             }
         };
-        ProgressUtils.runOffEventDispatchThread(run, Bundle.MSG_GitAction_savingFiles_progress(), canceled, false);
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(run, Bundle.MSG_GitAction_savingFiles_progress(), canceled, false);
     }
 
     protected abstract void performContextAction(Node[] nodes);

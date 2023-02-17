@@ -54,7 +54,7 @@ public class IOSBrowserActionProvider implements ActionProvider {
     @Override
     public void invokeAction(final String command, final Lookup context) throws IllegalArgumentException {
         try {
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     WebKitDebuggingSupport.getDefault().stopDebugging(true);

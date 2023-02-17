@@ -1826,7 +1826,7 @@ public class ActionFactory {
 
                 try {
                 final AtomicBoolean canceled = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                    org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public void run() {
                         if (canceled.get()) return;
                         final Reformat formatter = indentOnly ? null : Reformat.get(doc);

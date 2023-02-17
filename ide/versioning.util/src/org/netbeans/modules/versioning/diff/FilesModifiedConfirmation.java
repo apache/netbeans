@@ -292,7 +292,7 @@ public class FilesModifiedConfirmation {
         final SaveCookie saveCookie = listModel.getElementAt(index);
 
         final AtomicReference<String> errMsg = new AtomicReference<String>();
-        ProgressUtils.showProgressDialogAndRun(new Runnable() {
+        org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
             @Override
             public void run () {
                 try {

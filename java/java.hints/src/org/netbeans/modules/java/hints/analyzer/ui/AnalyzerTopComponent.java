@@ -255,7 +255,7 @@ private void fixButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     applyingFixes = true;
 
     try {
-        ProgressUtils.showProgressDialogAndRun(new FixWorker(fixes), NbBundle.getMessage(AnalyzerTopComponent.class, "CAP_ApplyingFixes"), false);
+        org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(new FixWorker(fixes), NbBundle.getMessage(AnalyzerTopComponent.class, "CAP_ApplyingFixes"), false);
     } finally {
         applyingFixes = false;
         stateChanged(null);

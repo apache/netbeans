@@ -523,7 +523,7 @@ public class JaxWsCodeGenerator  {
                 doInsertMethod(document, pos, operationNode);
             }
         };
-        ProgressUtils.showProgressDialogAndRun(runnable, 
+        org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(runnable,
                 NbBundle.getMessage(JaxWsCodeGenerator.class, 
                 "MSG_GenerateMethod", operation.getName()));              // NOI18N
     }

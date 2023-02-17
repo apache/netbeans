@@ -79,8 +79,8 @@ public final class GoToImplementation extends BaseAction {
         final Document doc = c.getDocument();
         final int caretPos = c.getCaretPosition();
         final AtomicBoolean cancel = new AtomicBoolean();
-        
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 goToImpl(c, doc, caretPos, cancel);

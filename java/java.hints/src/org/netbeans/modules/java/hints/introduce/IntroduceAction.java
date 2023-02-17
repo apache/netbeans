@@ -114,8 +114,8 @@ public final class IntroduceAction extends HintAction {
         final AtomicBoolean cancel = new AtomicBoolean();
         final String[] errorMessage = new String[1];
         final boolean proposeCandidates = span[0] == span[1] && type != IntroduceKind.CREATE_METHOD;
-        
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
             public void run() {
                 try {

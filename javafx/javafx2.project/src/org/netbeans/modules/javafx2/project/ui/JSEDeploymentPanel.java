@@ -231,7 +231,7 @@ public class JSEDeploymentPanel extends javax.swing.JPanel {
                      CustomizerProvider3 canceller = project.getLookup().lookup(CustomizerProvider3.class);
                      if(canceller != null) {
                          canceller.cancelCustomizer();
-                         ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                         org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                              @Override
                              public void run() {
                                  try {

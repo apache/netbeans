@@ -210,7 +210,7 @@ public class Utils {
             if ( SwingUtilities.isEventDispatchThread() ){
                 final FileObject[] testFO = new FileObject[1];
                 AtomicBoolean cancel = new AtomicBoolean(false);
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                     @Override
                     public void run() {
@@ -275,7 +275,7 @@ public class Utils {
                 if ( SwingUtilities.isEventDispatchThread() ){
                     final Properties props[] = new Properties[1];
                     AtomicBoolean cancel = new AtomicBoolean(false);
-                    ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                    org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                         @Override
                         public void run() {
@@ -327,7 +327,7 @@ public class Utils {
                     if ( SwingUtilities.isEventDispatchThread() ){
                         final FileObject[] testFO = new FileObject[1];
                         AtomicBoolean cancel = new AtomicBoolean(false);
-                        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                             @Override
                             public void run() {

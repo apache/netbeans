@@ -226,7 +226,7 @@ public class OrganizeMembers {
             final Source source = Source.create(doc);
             if (source != null) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {

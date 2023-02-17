@@ -160,7 +160,7 @@ public class TestNGSuiteHyperlingProvider implements HyperlinkProvider {
 
     public void performClickAction(final Document doc, final int offset) {
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
             public void run() {
                 performGoTo(doc, offset, file, method, targetType, cancel);

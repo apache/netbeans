@@ -66,7 +66,7 @@ public class NbGenerateCodeAction extends BaseAction {
     public void actionPerformed(ActionEvent evt, final JTextComponent target) {
         final Task task = new Task(getFullMimePath(target.getDocument(), target.getCaretPosition()));
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 if (cancel != null && cancel.get())

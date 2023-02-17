@@ -1046,7 +1046,7 @@ public final class WebProjectProperties {
                 @Override
                 public void run() {
                     // it mostly results into lenghty opperation, show progress dialog
-                    ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                    org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                         @Override
                         public void run() {
                             // include newly added extenders into webmodule
@@ -1091,7 +1091,7 @@ public final class WebProjectProperties {
                         Exceptions.printStackTrace(ex);
                     } catch (TimeoutException ex) {
                         // End of the 300ms period, continue in processing but display progress dialog
-                        ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                        org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                             @Override
                             public void run() {
                                 try {

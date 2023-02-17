@@ -188,7 +188,7 @@ public class CordovaCustomizerPanel extends javax.swing.JPanel implements Action
         createConfigsLabel.setVisible(false);
         mobilePlatformsSetup.setVisible(true);
         jTabbedPane1.setVisible(true);
-        ProgressUtils.showProgressDialogAndRun(new Runnable() {
+        org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
 
             @Override
             public void run() {

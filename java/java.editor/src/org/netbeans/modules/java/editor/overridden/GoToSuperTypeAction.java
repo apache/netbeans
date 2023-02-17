@@ -73,8 +73,8 @@ public class GoToSuperTypeAction extends BaseAction {
         
         final int caretPos = target.getCaretPosition();
         final AtomicBoolean cancel = new AtomicBoolean();
-        
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 goToImpl(target, js, caretPos, cancel);

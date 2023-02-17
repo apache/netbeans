@@ -305,7 +305,7 @@ public final class FolderList extends javax.swing.JPanel {
                 }
             };
             final ScanTask task = new ScanTask();
-            ProgressUtils.showProgressDialogAndRun(task, NbBundle.getMessage(FolderList.class, "TXT_SearchingSourceRoots"), false);
+            org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(task, NbBundle.getMessage(FolderList.class, "TXT_SearchingSourceRoots"), false);
             final List<File> toAdd = toAddRef.get();
             final List<File> related = new LinkedList<File>();
             if (relatedFolderList != null && relatedFolderFilter != null && toAdd != null) {

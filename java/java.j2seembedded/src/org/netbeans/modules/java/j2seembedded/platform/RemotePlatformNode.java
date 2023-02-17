@@ -559,7 +559,7 @@ final class RemotePlatformNode extends AbstractNode {
         test.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                         @Override
                         public void run() {
                             try {

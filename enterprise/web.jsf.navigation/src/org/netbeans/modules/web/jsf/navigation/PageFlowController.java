@@ -119,7 +119,7 @@ public class PageFlowController {
             // with the page flow editor, and this is probably not the best place for this code.
             // but in any case this should be a pretty safe fix).
             AtomicBoolean canceled = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 @Override
                 public void run() {

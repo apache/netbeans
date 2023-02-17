@@ -288,7 +288,7 @@ public class MasterDetailWizard implements WizardDescriptor.InstantiatingIterato
         final IOException[] ex = new IOException[1];
         String msgKey = (delegateIterator==null) ? "MSG_DBAppCreate" : "MSG_MasterDetailCreate"; // NOI18N
         String msg = NbBundle.getMessage(MasterDetailWizard.class, msgKey);
-        Set set = ProgressUtils.showProgressDialogAndRun(new ProgressRunnable<Set>() {
+        Set set = org.netbeans.api.progress.BaseProgressUtils.showProgressDialogAndRun(new ProgressRunnable<Set>() {
             @Override
             public Set run(ProgressHandle handle) {
                 Set innerSet = null;

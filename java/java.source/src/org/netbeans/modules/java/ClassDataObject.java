@@ -79,7 +79,7 @@ public final class ClassDataObject extends MultiDataObject {
         @Override
         public void open() {
             final AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(() -> {
+            org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(() -> {
                     try {
                         FileObject fo = getPrimaryFile();
                         FileObject binaryRoot = null;

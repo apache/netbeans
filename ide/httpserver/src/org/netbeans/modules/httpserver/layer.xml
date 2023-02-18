@@ -19,10 +19,23 @@
     under the License.
 
 -->
-<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.0//EN" "http://www.netbeans.org/dtds/filesystem-1_0.dtd">
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 
 <filesystem>
 
     <folder name="HTTPServer_DUMMY"/>
 
+    <folder name="UI">
+        <folder name="Runtime">
+            <!-- Manually registered, so that the singleton of the node can be used via #getInstance -->
+            <file name="org-netbeans-modules-httpserver-ServerControlNode.instance">
+                <attr methodvalue="org.netbeans.modules.httpserver.ServerControlNode.getInstance" name="instanceCreate"/>
+                <attr name="iconResource" stringvalue="org/netbeans/modules/httpserver/httpserver.png"/>
+                <attr name="name" stringvalue="nbhttpserver"/>
+                <attr bundlevalue="org.netbeans.modules.httpserver.Bundle#LBL_NBWebserver" name="displayName"/>
+                <attr bundlevalue="org.netbeans.modules.httpserver.Bundle#TIP_NBWebserver" name="shortDescription"/>
+                <attr intvalue="4000" name="position"/>
+            </file>
+        </folder>
+    </folder>
 </filesystem>

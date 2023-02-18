@@ -134,6 +134,7 @@ public final class HttpServerSettings {
         synchronized (httpLock ()) {
             currentRetries = 0;
             running = true;
+            ServerControlNode.getInstance().updateNodeState();
             httpLock ().notifyAll();
         }
     }
@@ -144,6 +145,7 @@ public final class HttpServerSettings {
      */
     void runFailure(Throwable t) {
         running = false;
+        ServerControlNode.getInstance().updateNodeState();
         if (t instanceof IncompatibleClassChangeError) {
             // likely there is a wrong servlet API version on CLASSPATH
             DialogDisplayer.getDefault ().notify(new NotifyDescriptor.Message(
@@ -205,6 +207,7 @@ public final class HttpServerSettings {
             }
             else {
                 HttpServerSettings.running = false;
+                ServerControlNode.getInstance().updateNodeState();
                 HttpServerModule.stopHTTPServer();
             }
         }

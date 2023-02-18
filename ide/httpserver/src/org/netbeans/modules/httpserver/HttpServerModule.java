@@ -110,13 +110,6 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
                         tomcat.start();
                         httpserverSettings().runSuccess();
                         reloader.activate();
-                        if (httpserverSettings().isStartStopMessages()) {
-                            LOG.log(
-                                    Level.INFO,
-                                    "Internal HTTP server running on port {0,number,####}", // NOI18N
-                                    httpserverSettings().getPort()
-                            );
-                        }
                     } catch (Exception e) {
                         if(tomcat != null) {
                             try {

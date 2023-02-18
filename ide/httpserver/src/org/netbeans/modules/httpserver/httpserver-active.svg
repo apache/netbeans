@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+    Original image: https://openclipart.org/detail/250133/icon-internet-globe-grey
+    Original author: Jeremiah Ross https://openclipart.org/artist/mrjeremiahross
+-->
+
+<svg
+   viewBox="0 0 16 16"
+   height="16"
+   width="16"
+   xml:space="preserve"
+   version="1.1"
+   id="svg4244"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="internet-active.svg"
+   inkscape:export-filename="/home/matthias/src/netbeans/ide/httpserver/src/org/netbeans/modules/httpserver/internet-active.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"><sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2490"
+     inkscape:window-height="1376"
+     id="namedview18"
+     showgrid="false"
+     inkscape:zoom="25"
+     inkscape:cx="-2.48"
+     inkscape:cy="8.28"
+     inkscape:window-x="70"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g4256"
+     inkscape:pagecheckerboard="0" /><metadata
+     id="metadata4250"><rdf:RDF><cc:Work
+         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
+     id="defs4248" /><g
+     transform="matrix(1.25,0,0,-1.25,0,14.17475)"
+     id="g4252"><g
+       style="stroke:#58928a;stroke-opacity:1"
+       transform="rotate(11.736243,5.6699937,5.6697707)"
+       id="g4254"><g
+         id="g938"
+         transform="matrix(1.1413304,0,0,1.1413304,-0.186604,-1.7384722)"><g
+           style="stroke:#58928a;stroke-opacity:1"
+           id="g4256"><g
+             style="stroke:#a1c535;stroke-opacity:1"
+             transform="translate(0.563,5.6699)"
+             id="g4262"><path
+               id="path4264"
+               style="fill:none;stroke:#a1c535;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+               d="m 0,0 c 0,2.82 2.287,5.107 5.107,5.107 2.82,0 5.107,-2.287 5.107,-5.107 0,-2.82 -2.287,-5.107 -5.107,-5.107 C 2.287,-5.107 0,-2.82 0,0 Z" /></g><g
+             style="stroke:#a1c535;stroke-opacity:1"
+             transform="translate(8.4111,5.6704)"
+             id="g4266"><path
+               id="path4268"
+               style="fill:none;stroke:#a1c535;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+               d="m 0,0 c 0,2.819 -1.259,5.106 -2.811,5.106 -1.552,0 -2.811,-2.287 -2.811,-5.106 0,-2.823 1.259,-5.108 2.811,-5.108 C -1.259,-5.108 0,-2.823 0,0 Z" /></g><g
+             style="stroke:#a1c535;stroke-opacity:1"
+             transform="translate(5.6699,10.647)"
+             id="g4270"><path
+               id="path4272"
+               style="fill:none;stroke:#a1c535;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+               d="M 0,0 V -9.855" /></g><g
+             style="stroke:#a1c535;stroke-opacity:1"
+             transform="translate(0.563,5.6699)"
+             id="g4274"><path
+               id="path4276"
+               style="fill:none;stroke:#a1c535;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+               d="M 0,0 H 10.214" /></g></g></g></g></g></svg>

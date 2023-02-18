@@ -22,6 +22,7 @@ package org.netbeans.editor;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import javax.swing.JComponent;
 import javax.swing.text.AttributeSet;
@@ -610,27 +611,17 @@ public final class Coloring implements java.io.Serializable {
     public @Override boolean equals(Object o) {
         if (o instanceof Coloring) {
             Coloring c = (Coloring)o;
-            return ((font == null && c.font == null) || (font != null && font.equals(c.font)))
+            return Objects.equals(font, c.font)
                    && (fontMode == c.fontMode)
-                   && ((foreColor == null && c.foreColor == null)
-                       || (foreColor != null && foreColor.equals(c.foreColor)))
-                   && ((backColor == null && c.backColor == null)
-                       || (backColor != null && backColor.equals(c.backColor)))
-                   && ((underlineColor == null && c.underlineColor == null)
-                       || (underlineColor != null && underlineColor.equals(c.underlineColor)))
-                   && ((waveUnderlineColor == null && c.waveUnderlineColor == null)
-                       || (waveUnderlineColor != null && waveUnderlineColor.equals(c.waveUnderlineColor)))
-                   && ((strikeThroughColor == null && c.strikeThroughColor == null)
-                       || (strikeThroughColor != null && strikeThroughColor.equals(c.strikeThroughColor)))
-                   && ((topBorderLineColor == null && c.topBorderLineColor == null)
-                       || (topBorderLineColor != null && topBorderLineColor.equals(c.topBorderLineColor)))
-                   && ((rightBorderLineColor == null && c.rightBorderLineColor == null)
-                       || (rightBorderLineColor != null && rightBorderLineColor.equals(c.rightBorderLineColor)))
-                   && ((bottomBorderLineColor == null && c.bottomBorderLineColor == null)
-                       || (bottomBorderLineColor != null && bottomBorderLineColor.equals(c.bottomBorderLineColor)))
-                   && ((leftBorderLineColor == null && c.leftBorderLineColor == null)
-                       || (leftBorderLineColor != null && leftBorderLineColor.equals(c.leftBorderLineColor)))
-           ;
+                   && Objects.equals(foreColor, c.foreColor)
+                   && Objects.equals(backColor, c.backColor)
+                   && Objects.equals(underlineColor, c.underlineColor)
+                   && Objects.equals(waveUnderlineColor, c.waveUnderlineColor)
+                   && Objects.equals(strikeThroughColor, c.strikeThroughColor)
+                   && Objects.equals(topBorderLineColor, c.topBorderLineColor)
+                   && Objects.equals(rightBorderLineColor, c.rightBorderLineColor)
+                   && Objects.equals(bottomBorderLineColor, c.bottomBorderLineColor)
+                   && Objects.equals(leftBorderLineColor, c.leftBorderLineColor);
         }
         return false;
     }
@@ -664,10 +655,7 @@ public final class Coloring implements java.io.Serializable {
     * the rest of the coloring unchanged.
     */
     public static Coloring changeFont(Coloring c, Font newFont, int newFontMode) {
-        if ((newFont == null && c.font == null)
-                || (newFont != null && newFont.equals(c.font)
-                    && c.fontMode == newFontMode)
-           ) {
+        if (Objects.equals(newFont, c.font) && c.fontMode == newFontMode) {
             return c;
         }
 
@@ -679,9 +667,7 @@ public final class Coloring implements java.io.Serializable {
     * and leaving the rest of the coloring unchanged.
     */
     public static Coloring changeForeColor(Coloring c, Color newForeColor) {
-        if ((newForeColor == null && c.foreColor == null)
-                || (newForeColor != null && newForeColor.equals(c.foreColor))
-           ) {
+        if (Objects.equals(newForeColor, c.foreColor)) {
             return c;
         }
 
@@ -693,9 +679,7 @@ public final class Coloring implements java.io.Serializable {
     * and leaving the rest of the coloring unchanged.
     */
     public static Coloring changeBackColor(Coloring c, Color newBackColor) {
-        if ((newBackColor == null && c.backColor == null)
-                || (newBackColor != null && newBackColor.equals(c.backColor))
-           ) {
+        if (Objects.equals(newBackColor, c.backColor)) {
             return c;
         }
 

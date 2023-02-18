@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -447,7 +448,7 @@ public final class EjbJarProjectProperties {
                 str = null;
             }
             String old = project.getAntProjectHelper().getLibrariesLocation();
-            if ((old == null && str == null) || (old != null && old.equals(str))) {
+            if (Objects.equals(old, str)) {
                 //ignore, nothing changed..
             } else {
                 project.getAntProjectHelper().setLibrariesLocation(str);

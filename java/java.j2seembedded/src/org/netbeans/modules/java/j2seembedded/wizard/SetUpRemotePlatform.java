@@ -148,7 +148,7 @@ public class SetUpRemotePlatform extends javax.swing.JPanel {
             String usernameText = username.getText();
             if (!usernameText.isEmpty()) {
                 String workdirText = workingDir.getText();
-                if (workdirText.isEmpty() || (currentDefaultWorkDir != null && workdirText.equals(currentDefaultWorkDir))) {
+                if (workdirText.isEmpty() || workdirText.equals(currentDefaultWorkDir)) {
                     String updatedDefaultworkDir = "/home/" + usernameText + "/NetBeansProjects/"; //NOI18N
                     workingDir.setText(updatedDefaultworkDir);
                     currentDefaultWorkDir = updatedDefaultworkDir;

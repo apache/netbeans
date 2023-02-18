@@ -20,6 +20,7 @@ package org.netbeans.spi.project.ui;
 
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -274,8 +275,8 @@ public interface ProjectProblemsProvider {
             }
             final  ProjectProblem otherProblem = (ProjectProblem) other;
             return displayName.equals(otherProblem.displayName) &&
-                description.equals(otherProblem.description) &&
-                (resolver != null ? resolver.equals(otherProblem.resolver) : otherProblem.resolver == null);
+                   description.equals(otherProblem.description) &&
+                   Objects.equals(resolver, otherProblem.resolver);
         }
 
         /**

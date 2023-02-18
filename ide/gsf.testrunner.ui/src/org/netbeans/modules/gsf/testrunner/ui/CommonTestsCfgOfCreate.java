@@ -1020,7 +1020,7 @@ public class CommonTestsCfgOfCreate extends SelfResizingPanel implements ChangeL
             if (testCreatorConfiguration != null) {
                 boolean isTestNG = !getTestingFrameworkSuffix().isEmpty();
                 boolean isSelenium = isIntegrationTests()
-                        || (selectedTestingFramework != null && selectedTestingFramework.equals(TestCreatorProvider.FRAMEWORK_SELENIUM));
+                        || Objects.equals(selectedTestingFramework, TestCreatorProvider.FRAMEWORK_SELENIUM);
                 Pair<String, String> testClassNames = testCreatorConfiguration.getSourceAndTestClassNames(fileObj, isTestNG, isSelenium);
                 className = testClassNames.first();
                 prefilledName = testClassNames.second();

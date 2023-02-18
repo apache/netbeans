@@ -34,6 +34,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.OutputStream;
+import java.util.Objects;
 
 import org.w3c.dom.Element;
 
@@ -77,7 +78,7 @@ public class EjbJarProxy implements EjbJar {
     }
 
     public void setProxyVersion(java.lang.String value) {
-        if ((version == null && value != null) || (version != null && !version.equals(value))) {
+        if (!Objects.equals(version, value)) {
             java.beans.PropertyChangeEvent evt =
                     new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version = value;

@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;

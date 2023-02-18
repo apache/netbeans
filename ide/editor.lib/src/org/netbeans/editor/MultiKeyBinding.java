@@ -21,6 +21,7 @@ package org.netbeans.editor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import javax.swing.text.JTextComponent;
 import javax.swing.KeyStroke;
 
@@ -86,20 +87,15 @@ public class MultiKeyBinding extends JTextComponent.KeyBinding
             // Action names match, now compare action keys
             if (keys == null) {
                 if (kb.keys == null) {
-                    return (key == null && kb.key == null)
-                           || (key != null && key.equals(kb.key));
+                    return Objects.equals(key, kb.key);
                 } else {
-                    return (kb.keys.length == 1
-                            && ((key == null && kb.keys[0] == null)
-                                || (key != null && key.equals(kb.keys[0]))));
+                    return kb.keys.length == 1 && Objects.equals(key, kb.keys[0]);
                 }
             } else { // keys != null
                 if (kb.keys != null) {
                     return Arrays.equals(keys, kb.keys);
                 } else { // kb.keys == null
-                    return (keys.length == 1
-                            && ((kb.key == null && keys[0] == null)
-                                || (kb.key != null && kb.key.equals(keys[0]))));
+                    return keys.length == 1 && Objects.equals(kb.key, keys[0]);
                 }
             }
         }

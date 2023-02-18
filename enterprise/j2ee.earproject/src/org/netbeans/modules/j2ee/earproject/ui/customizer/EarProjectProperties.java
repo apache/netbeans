@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -322,7 +323,7 @@ public final class EarProjectProperties {
                 str = null;
             }
             String old = project.getAntProjectHelper().getLibrariesLocation();
-            if ((old == null && str == null) || (old != null && old.equals(str))) {
+            if (Objects.equals(old, str)) {
                 //ignore, nothing changed..
             } else {
                 project.getAntProjectHelper().setLibrariesLocation(str);

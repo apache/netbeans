@@ -875,9 +875,7 @@ public class CompletionContextImpl extends CompletionContext {
             XMLConstants.XMLNS_ATTRIBUTE) :
             declaredNamespaces.get(XMLConstants.XMLNS_ATTRIBUTE+":"+prevPrefix);
         
-        return (thisNS == null && prevNS == null) ||
-               (thisNS != null && thisNS.equals(prevNS)) ||
-               (prevNS != null && prevNS.equals(thisNS));
+        return Objects.equals(thisNS, prevNS);
     }
                         
     /**

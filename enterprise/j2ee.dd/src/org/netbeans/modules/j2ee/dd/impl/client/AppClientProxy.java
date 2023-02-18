@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,7 +80,7 @@ public class AppClientProxy implements AppClient {
     }
     
     public void setProxyVersion(java.lang.String value) {
-        if ((version == null && value != null) || (version != null && !version.equals(value))) {
+        if (!Objects.equals(version, value)) {
             java.beans.PropertyChangeEvent evt =
                     new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version=value;

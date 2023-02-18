@@ -29,6 +29,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultButtonModel;
 import javax.swing.Icon;
@@ -196,7 +197,7 @@ class DocumentSwitcherTable extends SwitcherTable {
         int numOfOtherTabs = 0;
         for ( TabData tab : tabs ) {  
             ProjectProxy projectForTab = projectSupport.getProjectForTab( tab );
-            if (( project == null && projectForTab == null ) || ( projectForTab != null && projectForTab.equals( project ))) {
+            if (Objects.equals(project, projectForTab)) {
                 Component tabComponent = tab.getComponent();
                 if (tabComponent instanceof TopComponent) {
                     TopComponent curTC = (TopComponent) tabComponent;

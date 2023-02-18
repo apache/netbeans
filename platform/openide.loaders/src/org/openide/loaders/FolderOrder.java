@@ -199,8 +199,7 @@ final class FolderOrder extends Object implements Comparator<Object> {
     private void read () {
         Object o = folder.getAttribute (DataFolder.EA_ORDER);
         
-        if ((previous == null && o == null) ||
-            (previous != null && previous.equals (o))) {
+        if (Objects.equals(previous,o)) {
             // no change in order
             return;
         }

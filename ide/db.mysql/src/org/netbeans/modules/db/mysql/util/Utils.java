@@ -24,6 +24,7 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -175,8 +176,7 @@ public class Utils {
      * null
      */
     public static boolean stringEquals(String str1, String str2) {
-        return  (str1 == null && str2 == null) ||
-                (str2 != null && str1 != null && str1.equals(str2));
+        return Objects.equals(str1, str2);
     }
     
     public static ResourceBundle getBundle() {

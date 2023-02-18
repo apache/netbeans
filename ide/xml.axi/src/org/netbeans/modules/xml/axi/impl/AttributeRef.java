@@ -37,6 +37,8 @@ import org.netbeans.modules.xml.schema.model.SchemaComponent;
 import org.netbeans.modules.xml.schema.model.Attribute.Use;
 import org.netbeans.modules.xml.schema.model.Form;
 
+import java.util.Objects;
+
 /**
  * Represents an Attribute reference. For an Attribute reference
  * name, type and form must be absent, that is, calls on name, type
@@ -171,8 +173,7 @@ public class AttributeRef extends Attribute {
      */
     public void setFixed(String value) {        
         String oldValue = getFixed();
-        if( (oldValue == null && value == null) ||
-            (oldValue != null && oldValue.equals(value)) ) {
+        if(Objects.equals(oldValue, value)) {
             return;
         }
         this.fixedValue = value;
@@ -191,8 +192,7 @@ public class AttributeRef extends Attribute {
      */
     public void setDefault(String value) {
         String oldValue = getDefault();
-        if( (oldValue == null && value == null) ||
-            (oldValue != null && oldValue.equals(value)) ) {
+        if(Objects.equals(oldValue, value)) {
             return;
         }
         this.defaultValue = value;
@@ -211,8 +211,7 @@ public class AttributeRef extends Attribute {
      */
     public void setUse(Use value) {
         Use oldValue = getUse();
-        if( (oldValue == null && value == null) ||
-            (oldValue != null && oldValue.equals(value)) ) {
+        if (Objects.equals(oldValue, value)) {
             return;
         }
         this.use = value;

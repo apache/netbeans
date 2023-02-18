@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.*;
@@ -667,7 +668,7 @@ public abstract class FileSystem implements Serializable {
             return;
         }
 
-        if ((o != null) && (n != null) && o.equals(n)) {
+        if (Objects.equals(o, o)) {
             return;
         }
 

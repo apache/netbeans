@@ -20,6 +20,7 @@ package org.netbeans.modules.editor.lib2.view;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Objects;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
 import org.junit.Test;
@@ -193,8 +194,7 @@ public class ViewPaintHighlightsTest {
             AttributeSet attrs = (AttributeSet) args[i++];
             boolean next = hs.moveNext();
             assert next : "Expecting hs.moveNext(): <" + startOffset + "," + endOffset + "> attrs=" + attrs;
-            boolean attrsOk = (attrs == null && hs.getAttributes() == null) ||
-                    (attrs != null && attrs.equals(hs.getAttributes()));
+            boolean attrsOk = Objects.equals(attrs, hs.getAttributes());
             assert attrsOk : "Expecting " + attrs + " but found " + hs.getAttributes();
             assert (startOffset == hs.getStartOffset() && endOffset == hs.getEndOffset()) :
                     "Expecting <" + startOffset + "," + endOffset + "> but found " +

@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.Objects;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -2252,8 +2253,7 @@ public final class SimpleTestStepLocation implements WizardDescriptor.Panel<Wiza
     /**
      */
     private static boolean checkObjChanged(Object oldObj, Object newObj) {
-        return ((oldObj != null) || (newObj != null))
-               && ((oldObj == null) || !oldObj.equals(newObj));
+        return !Objects.equals(oldObj, newObj);
     }
     
     /* *

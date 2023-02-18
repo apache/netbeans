@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -269,9 +270,7 @@ public final class EditorFindSupport {
     */
     public void putFindProperty(String name, Object newValue) {
         Object oldValue = getFindProperty(name);
-        if ((oldValue == null && newValue == null)
-                || (oldValue != null && oldValue.equals(newValue))
-           ) {
+        if (Objects.equals(oldValue, newValue)) {
             return;
         }
         if (newValue != null) {

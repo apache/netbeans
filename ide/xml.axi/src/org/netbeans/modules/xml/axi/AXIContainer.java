@@ -19,6 +19,8 @@
 package org.netbeans.modules.xml.axi;
 
 import java.util.List;
+import java.util.Objects;
+
 import org.netbeans.modules.xml.axi.ContentModel.ContentModelType;
 import org.netbeans.modules.xml.schema.model.SchemaComponent;
 import org.openide.util.NbBundle;
@@ -82,8 +84,7 @@ public abstract class AXIContainer extends AXIComponent {
      */
     public void setName(String name) {
         String oldName = getName();
-        if( (oldName == null && name == null) ||
-                (oldName != null && oldName.equals(name)) ) {
+        if(Objects.equals(oldName, name)) {
             return;
         }
         

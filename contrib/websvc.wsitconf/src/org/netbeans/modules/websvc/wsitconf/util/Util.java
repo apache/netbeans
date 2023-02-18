@@ -296,9 +296,7 @@ public class Util {
     }
     
     public static boolean isEqual(Object a, Object b) {
-        if ((a == null) && (b == null)) return true;
-        if ((a != null) && (b != null)) return a.equals(b);
-        return false;
+        return Objects.equals(a, b);
     }
 
     private static boolean isOperationInList(String operName, Collection<BindingOperation> operations) {

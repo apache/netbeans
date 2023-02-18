@@ -21,6 +21,8 @@ package org.netbeans.modules.javaee.project.api;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -96,8 +98,7 @@ public abstract class WhiteListUpdater {
 
     public void checkWhiteLists() {
         String newWhiteList = getServerWhiteList();
-        if ((newWhiteList == null && lastWhiteList == null) ||
-            (newWhiteList != null && lastWhiteList != null && newWhiteList.equals(lastWhiteList))) {
+        if (Objects.equals(newWhiteList, lastWhiteList)) {
             return;
         }
         updateWhitelist(lastWhiteList, newWhiteList);

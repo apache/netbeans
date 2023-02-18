@@ -25,6 +25,8 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion;
 import org.netbeans.modules.j2ee.sun.dd.api.CommonDDBean;
 import org.netbeans.modules.j2ee.sun.dd.api.DDException;
@@ -586,7 +588,7 @@ public class SunWebAppProxy implements SunWebApp, RootInterfaceImpl {
     }  
     
     public void setProxyVersion(java.lang.String value) {
-        if ((version==null && value!=null) || (version != null && !version.equals(value))) {
+        if (!Objects.equals(version, value)) {
             PropertyChangeEvent evt = new PropertyChangeEvent(
                     this, PROPERTY_VERSION, version, value); 
             version=value;

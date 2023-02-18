@@ -402,7 +402,7 @@ public class WebProjectUtils {
             String servletName = getElementContent((Element) servletsList.item(i), "servlet-name"); // NOI18N
             String className = getElementContent((Element) servletsList.item(i), "servlet-class"); // NOI18N
 
-            if ((servletName != null) && (className != null) && servletClassName.equals(className)) {
+            if ((servletName != null) && servletClassName.equals(className)) {
                 NodeList servletMappingsList = getServletMappings(deploymentDescriptorDocument);
 
                 for (int j = 0; j < servletMappingsList.getLength(); j++) {

@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -287,8 +288,7 @@ public class TargetMappingPanel extends JPanel implements ActionListener, HelpCt
     }
     
     private void checkAntScript(JComboBox combo, String antScript, String targetScript) {
-        if ((antScript == null && targetScript == null) ||
-            (antScript != null && antScript.equals(targetScript))) {
+        if (Objects.equals(antScript, targetScript)) {
             combo.setEnabled(true);
         } else {
             combo.setEnabled(false);
@@ -701,8 +701,7 @@ public class TargetMappingPanel extends JPanel implements ActionListener, HelpCt
                 if (ct.targets != null && ct.targets.size() > 1) {
                     return false;
                 }
-                if ((antScript == null && ct.script == null) ||
-                        (antScript != null && antScript.equals(ct.script))) {
+                if (Objects.equals(antScript, ct.script)) {
                     return true;
                 } else {
                     return false;

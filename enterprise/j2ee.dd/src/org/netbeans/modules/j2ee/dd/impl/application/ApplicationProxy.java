@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import org.netbeans.modules.j2ee.dd.api.application.Application;
 
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
 
 /**
  * @author  Nitya Doraisamy
@@ -66,9 +67,8 @@ public class ApplicationProxy implements Application {
     }
     
     public void setProxyVersion(java.lang.String value) {
-        if ((version==null && value!=null) || (version != null && !version.equals(value))) {
-            java.beans.PropertyChangeEvent evt = 
-                new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
+        if (!Objects.equals(version, value)) {
+            java.beans.PropertyChangeEvent evt = new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version=value;
             for (int i=0;i<listeners.size();i++) {
                 listeners.get(i).propertyChange(evt);

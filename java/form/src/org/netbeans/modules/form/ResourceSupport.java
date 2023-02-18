@@ -35,6 +35,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import javax.lang.model.SourceVersion;
 import javax.swing.JEditorPane;
@@ -1756,7 +1757,7 @@ public class ResourceSupport {
             @Override
             public void setValue(String value) {
                 String oldValue = getI18nBundleName();
-                if ((oldValue == null && value == null) || (oldValue != null && oldValue.equals(value))) {
+                if (Objects.equals(oldValue, value)) {
                     return;
                 }
                 String resourceName = getValidBundleName(value);

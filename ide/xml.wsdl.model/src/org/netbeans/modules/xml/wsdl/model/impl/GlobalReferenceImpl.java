@@ -29,6 +29,8 @@ import org.netbeans.modules.xml.xam.dom.AbstractNamedComponentReference;
 import org.netbeans.modules.xml.xam.dom.NamedComponentReference;
 import org.netbeans.modules.xml.xam.locator.CatalogModelException;
 
+import java.util.Objects;
+
 /**
  *
  * @author Nam Nguyen
@@ -67,8 +69,7 @@ public class GlobalReferenceImpl<T extends ReferenceableWSDLComponent>
             WSDLModel model = wparent.getWSDLModel();
             T target = null;
             String targetNamespace = model.getDefinitions().getTargetNamespace();
-            if ((namespace == null && targetNamespace == null) ||
-                (namespace != null && namespace.equals(targetNamespace))) {
+            if (Objects.equals(namespace, targetNamespace)) {
                 target = new FindReferencedVisitor<T>(model.getDefinitions()).find(localName, getType());
             }
             if (target == null) {

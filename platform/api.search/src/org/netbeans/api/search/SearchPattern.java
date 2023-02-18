@@ -20,6 +20,8 @@ package org.netbeans.api.search;
 
 import org.openide.util.NbBundle;
 
+import java.util.Objects;
+
 /**
  * Pattern describes the search conditions
  *
@@ -227,9 +229,7 @@ public final class SearchPattern {
      *
      */
     public SearchPattern changeSearchExpression(String expression) {
-        if ((expression == null && this.searchExpression == null)
-                || (expression != null
-                && expression.equals(this.searchExpression))) {
+        if (Objects.equals(expression, this.searchExpression)) {
             return this;
         } else {
             return SearchPattern.create(expression, wholeWords,

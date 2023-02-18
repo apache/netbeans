@@ -19,6 +19,7 @@
 
 package org.netbeans.lib.lexer;
 
+import java.util.Objects;
 import java.util.Set;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
@@ -436,8 +437,7 @@ public final class LexerUtilsConstants {
     }
     
     public static boolean statesEqual(Object state1, Object state2) {
-        return (state1 == null && state2 == null)
-            || (state1 != null && state1.equals(state2));
+        return Objects.equals(state1, state2);
     }
     
     public static String idToString(TokenId id) {

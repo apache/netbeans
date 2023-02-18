@@ -128,8 +128,7 @@ public abstract class NbAction implements ContextAwareAction {
         Object old = pairs.put(key, value);
         boolean fire = (old == null) != (value == null);
         if (fire) {
-            fire = (value != null && !value.equals(old)) ||
-                    (old != null && old.equals(value));
+            fire = value != null;
             if (fire) {
                 supp.firePropertyChange(key, old, value);
             }

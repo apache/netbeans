@@ -44,6 +44,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -1097,8 +1098,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
         }
     }
     private boolean isServerInstanceChanged() {
-        if ((serverInstanceID==null && currentServerInstanceID !=null) ||
-                (serverInstanceID != null &&  !serverInstanceID.equals(currentServerInstanceID))) {
+        if (!Objects.equals(serverInstanceID, currentServerInstanceID)) {
             currentServerInstanceID = serverInstanceID;
             return true;
         }

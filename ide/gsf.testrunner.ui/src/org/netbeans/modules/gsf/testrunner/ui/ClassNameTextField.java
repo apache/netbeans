@@ -29,6 +29,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
+import java.util.Objects;
 
 /**
  * Text-field that validates whether its text is a valid class name (may be
@@ -126,8 +127,7 @@ public final class ClassNameTextField extends JTextField {
     /**
      */
     public void setDefaultText(String defaultText) {
-        if ((defaultText == null) && (this.defaultText == null)
-             || (defaultText != null) && defaultText.equals(this.defaultText)) {
+        if (Objects.equals(defaultText, this.defaultText)) {
             return;
         }
         

@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -535,7 +536,7 @@ public class J2SEProjectProperties {
                 str = null;
             }
             String old = project.getAntProjectHelper().getLibrariesLocation();
-            if ((old == null && str == null) || (old != null && old.equals(str))) {
+            if (Objects.equals(old, str)) {
                 //ignore, nothing changed..
             } else {
                 project.getAntProjectHelper().setLibrariesLocation(str);

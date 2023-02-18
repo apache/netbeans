@@ -328,7 +328,7 @@ public class BinaryUsagesTest extends NbTestCase {
                     String res = fileName.substring(rootName.length()).replace(File.separatorChar, '/');
                     FileObject fo = fs.findResource(res);
                     File file2Fo = (fo != null) ? findFileInRepository(fo) : null;
-                    if ((fo != null) && (file2Fo != null) && f.equals(file2Fo)) {
+                    if ((fo != null) && f.equals(file2Fo)) {
                         list.add(fo);
                     }
                 }

@@ -4001,8 +4001,7 @@ class JavaCodeGenerator extends CodeGenerator {
         
         private void serializeComponentsRecursively(RADComponent comp) {
             Object value = comp.getAuxValue(AUX_CODE_GENERATION);
-            if (comp.hasHiddenState()
-                    || (value != null && VALUE_SERIALIZE.equals(value))) {
+            if (comp.hasHiddenState() || VALUE_SERIALIZE.equals(value)) {
                 String serializeTo =(String)comp.getAuxValue(AUX_SERIALIZE_TO);
                 if (serializeTo != null) {
                     try {

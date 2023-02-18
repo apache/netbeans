@@ -21,6 +21,8 @@ package org.netbeans.modules.form.editors;
 
 import java.beans.*;
 import java.io.IOException;
+import java.util.Objects;
+
 import org.netbeans.modules.form.NamedPropertyEditor;
 import org.openide.explorer.propertysheet.editors.XMLPropertyEditor;
 import org.w3c.dom.Document;
@@ -105,7 +107,7 @@ public class EnumEditor extends PropertyEditorSupport
         int n = enumerationValues.length / 3;
         for (int i=0; i < n; i++) {
             Object eVal = enumerationValues[i*3 + 1];
-            if ((eVal == null && value == null) || (eVal != null && eVal.equals(value)))
+            if (Objects.equals(eVal, value))
                 return enumerationValues[i*3].toString();
         }
         if (unknownToString && value != null) {
@@ -123,7 +125,7 @@ public class EnumEditor extends PropertyEditorSupport
         int n = enumerationValues.length / 3;
         for (int i=0; i < n; i++) {
             Object eVal = enumerationValues[i*3 + 1];
-            if ((eVal == null && value == null) || (eVal != null && eVal.equals(value))) {
+            if (Objects.equals(eVal, value)) {
                 initString = (String) enumerationValues[i*3 + 2];
                 break;
             }

@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -149,6 +150,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private static final RequestProcessor UPDATE_INDEX_RP = new RequestProcessor(RunUtils.class.getName(), 5);
 
     private static final String ICON_MAVEN_PROJECT = "org/netbeans/modules/maven/resources/Maven2Icon.gif"; // NOI18N
+
     /**
      * Execute maven build in NetBeans execution engine.
      * Most callers should rather use {@link #run} as this variant does no (non-late-bound) prerequisite checks.
@@ -855,6 +857,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         return version != null && version.startsWith("2");
     }
 
+    private boolean isMavenDaemon() {
+        File mvnHome = EmbedderFactory.getEffectiveMavenHome();
+        return MavenSettings.isMavenDaemon(Paths.get(mvnHome.getPath()));
+    }
+
     private void injectEventSpy(final BeanRunConfig clonedConfig) {
         //TEMP 
         String mavenPath = clonedConfig.getProperties().get(CosChecker.MAVENEXTCLASSPATH);
@@ -878,16 +885,48 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     }
 
     private boolean isMultiThreaded(BeanRunConfig clonedConfig) {
-        String list = MavenSettings.getDefault().getDefaultOptions();
-        for (String s : clonedConfig.getGoals()) {
-            list = list + " " + s;
-        }
+
+        List<String> params = new ArrayList<>();
+        params.addAll(Arrays.asList(MavenSettings.getDefault().getDefaultOptions().split(" ")));
+        params.addAll(clonedConfig.getGoals());
         if (clonedConfig.getPreExecution() != null) {
-            for (String s : clonedConfig.getPreExecution().getGoals()) {
-                list = list + " " + s;
+            params.addAll(clonedConfig.getPreExecution().getGoals());
+        }
+
+        return isMavenDaemon() ? isMultiThreadedMvnd(params)
+                               : isMultiThreadedMaven(params);
+    }
+
+    // mvnd is MT by default
+    static boolean isMultiThreadedMvnd(List<String> params) {
+        for (int i = 0; i < params.size(); i++) {
+            String p = params.get(i);
+            if (p.equals("-1") || p.equals("--serial") || p.equals("-Dmvnd.serial")) { // "behave like standard maven" mode
+                return false;
+            }
+            if (i + 1 < params.size() && (p.equals("-T") || p.equals("--threads"))) {
+                if (params.get(i+1).equals("1")) {
+                    return false;
+                }
+            }
+            try {
+                if (p.startsWith("-Dmvnd.threads=") && Integer.parseInt(p.substring(15)) == 1)  {
+                    return false;
+                }
+            } catch (NumberFormatException ignored) {} 
+        }
+        return true;
+    }
+
+    // mvn is ST by default
+    static boolean isMultiThreadedMaven(List<String> params) {
+        for (int i = 0; i < params.size() - 1; i++) {
+            String p = params.get(i);
+            if ((p.equals("-T") || p.equals("--threads")) && !params.get(i+1).equals("1")) {
+                return true;
             }
         }
-        return list.contains("-T") || list.contains("--threads");
+        return false;
     }
 
     private File guessBestMaven(RunConfig clonedConfig, InputOutput ioput) {

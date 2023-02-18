@@ -75,7 +75,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }
@@ -109,7 +109,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }
@@ -144,7 +144,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }
@@ -178,7 +178,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }
@@ -214,7 +214,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }
@@ -250,7 +250,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }

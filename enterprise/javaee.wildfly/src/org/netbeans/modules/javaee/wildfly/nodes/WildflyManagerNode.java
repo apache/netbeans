@@ -171,7 +171,8 @@ public class WildflyManagerNode extends AbstractNode implements Node.Cookie {
                 NbBundle.getMessage(WildflyManagerNode.class, "LBL_PORT"), NbBundle.getMessage(WildflyManagerNode.class, "HINT_PORT")) {
             @Override
                     public Object getValue() {
-                        return new Integer(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT));
+                        return Integer.valueOf(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT))
+                                + Integer.valueOf(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET));
                     }
                 };
         properties.put(property);
@@ -200,7 +201,9 @@ public class WildflyManagerNode extends AbstractNode implements Node.Cookie {
         InstanceProperties ip = InstanceProperties.getInstanceProperties(getDeploymentManager().getUrl());
         String host = ip.getProperty(WildflyPluginProperties.PROPERTY_HOST);
         String port = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
-        return HTTP_HEADER + host + ":" + port + "/"; // NOI18N
+        String portOffset = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET);
+        String httpPort = String.valueOf(Integer.parseInt(port) + Integer.parseInt(portOffset));
+        return HTTP_HEADER + host + ":" + httpPort + "/"; // NOI18N
     }
 
     public final WildflyDeploymentManager getDeploymentManager() {

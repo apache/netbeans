@@ -41,6 +41,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_ADMIN_PORT;
 import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_HTTP_PORT;
+import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_PORT_OFFSET;
 import org.openide.filesystems.JarFileSystem;
 
 /**
@@ -245,6 +246,10 @@ public class WildflyPluginUtils {
 
      public static String getManagementConnectorPort(String configFile) {
         return String.valueOf(DEFAULT_ADMIN_PORT);
+    }
+
+    public static String getPortOffset(String configFile) {
+        return String.valueOf(DEFAULT_PORT_OFFSET);
     }
 
     /**

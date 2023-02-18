@@ -72,7 +72,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.callback.CallbackHandler;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
-import org.netbeans.modules.j2ee.deployment.common.api.MessageDestination;
 import org.netbeans.modules.j2ee.deployment.common.api.MessageDestination.Type;
 import org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.DeploymentContext;
@@ -165,6 +164,7 @@ public class WildflyClient {
 
     private final String serverAddress;
     private final int serverPort;
+    private final String httpPort;
     private final CallbackHandler handler;
     private final InstanceProperties ip;
     private Object client;
@@ -224,6 +224,7 @@ public class WildflyClient {
         this.serverPort = serverPort;
         this.ip = ip;
         this.version = version;
+        this.httpPort = resolveHttpPort(this.ip);
         handler = new Authentication().getCallbackHandler();
     }
 
@@ -233,7 +234,15 @@ public class WildflyClient {
         this.serverPort = serverPort;
         this.ip = ip;
         this.version = version;
+        this.httpPort = resolveHttpPort(this.ip);
         handler = new Authentication(login, password.toCharArray()).getCallbackHandler();
+    }
+
+    private String resolveHttpPort(InstanceProperties ip) {
+        String httpPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
+        String portOffset = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET);
+        return String.valueOf(
+                Integer.parseInt(httpPort) + Integer.parseInt(portOffset));
     }
 
     // ModelControllerClient
@@ -357,7 +366,6 @@ public class WildflyClient {
             Object readDeployments = createReadResourceOperation(cl, deploymentAddressModelNode, true, true);
             // ModelNode
             Object response = executeOnModelNode(cl, readDeployments);
-            String httpPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
             if (isSuccessfulOutcome(cl, response)) {
                 // ModelNode
                 Object result = readResult(cl, response);
@@ -391,7 +399,6 @@ public class WildflyClient {
             Object readDeployments = createReadResourceOperation(cl, deploymentAddressModelNode, true, true);
             // ModelNode
             Object response = executeOnModelNode(cl, readDeployments);
-            String httpPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
             if (isSuccessfulOutcome(cl, response)) {
                 // ModelNode
                 Object result = readResult(cl, response);
@@ -426,7 +433,6 @@ public class WildflyClient {
             Object readDeployments = createReadResourceOperation(cl, deploymentAddressModelNode, true, true);
             // ModelNode
             Object response = executeOnModelNode(cl, readDeployments);
-            String httpPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
             if (isSuccessfulOutcome(cl, response)) {
                 // ModelNode
                 Object result = readResult(cl, response);
@@ -968,7 +974,7 @@ public class WildflyClient {
             // ModelNode
             Object response = executeOnModelNode(cl, readJaxrsResources);
             if (isSuccessfulOutcome(cl, response)) {
-                String serverUrl = "http://" + serverAddress + ':' + ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
+                String serverUrl = "http://" + serverAddress + ':' + httpPort;
                 // List<ModelNode>
                 Object result = readResult(cl, response);
                 if (modelNodeIsDefined(cl, result)) {
@@ -1053,7 +1059,6 @@ public class WildflyClient {
             Object readDeployments = createReadResourceOperation(cl, deploymentAddressModelNode, true, true);
             Object response = executeOnModelNode(cl, readDeployments);
             if (isSuccessfulOutcome(cl, response)) {
-                String httpPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
                 Object result = readResult(cl, response);
                 List subDeployments = modelNodeAsList(cl, getModelNodeChild(cl, result, "subdeployment"));
                 for (Object subDeployment : subDeployments) {

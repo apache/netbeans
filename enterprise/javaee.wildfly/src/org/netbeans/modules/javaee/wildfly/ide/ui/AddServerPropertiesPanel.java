@@ -52,6 +52,7 @@ public class AddServerPropertiesPanel implements WizardDescriptor.Panel, ChangeL
         String host = panel.getHost();
         String port = panel.getPort();
         String adminPort = panel.getManagementPort();
+        String portOffset = panel.getPortOffset();
 
         if(panel.isLocalServer()){
             // wrong domain path
@@ -122,6 +123,13 @@ public class AddServerPropertiesPanel implements WizardDescriptor.Panel, ChangeL
                 return false;
             }
 
+            try{
+                Integer.valueOf(portOffset);
+            } catch(NumberFormatException e) {
+                wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
+                        NbBundle.getMessage(AddServerPropertiesPanel.class, "MSG_InvalidPortOffset"));  //NOI18N
+                return false;
+            }
 
         } else { //remote
             if (host.length() < 1){
@@ -142,6 +150,7 @@ public class AddServerPropertiesPanel implements WizardDescriptor.Panel, ChangeL
         instantiatingIterator.setHost(host);
         instantiatingIterator.setPort(port);
         instantiatingIterator.setAdminPort(adminPort);
+        instantiatingIterator.setPortOffset(portOffset);
         instantiatingIterator.setServer(panel.getDomain());
         instantiatingIterator.setServerPath(panel.getDomainPath());
         instantiatingIterator.setDeployDir(WildflyPluginUtils.getDeployDir( panel.getDomainPath()));

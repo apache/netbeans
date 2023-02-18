@@ -229,6 +229,7 @@ class WildflyStartRunnable implements Runnable {
             } catch (NumberFormatException ex) {
             }
         }
+        javaOptsBuilder.append(" -Djboss.socket.binding.port-offset=").append(dm.getPortOffset());
         for (StartupExtender args : StartupExtender.getExtenders(
                 Lookups.singleton(CommonServerBridge.getCommonInstance(ip.getProperty("url"))), getMode(startServer.getMode()))) {
             for (String singleArg : args.getArguments()) {
@@ -266,7 +267,7 @@ class WildflyStartRunnable implements Runnable {
 
     private boolean checkPorts(final InstanceProperties ip) {
         try {
-            String strHTTPConnectorPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
+            String strHTTPConnectorPort = String.valueOf(Integer.parseInt(ip.getProperty(WildflyPluginProperties.PROPERTY_ADMIN_PORT)) + dm.getPortOffset());
             int httpConnectorPort = Integer.parseInt(strHTTPConnectorPort);
             if (httpConnectorPort <= 0) {
                 // server will complain hopefully

@@ -56,6 +56,7 @@ import org.netbeans.modules.javaee.wildfly.ide.commands.WildflyModule;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties;
 import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.DEFAULT_ADMIN_PORT;
 import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.PROPERTY_ADMIN_PORT;
+import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties.PROPERTY_PORT_OFFSET;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils.Version;
 import org.netbeans.modules.javaee.wildfly.util.WildFlyProperties;
@@ -90,6 +91,8 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
 
     private final InstanceProperties instanceProperties;
 
+    private final int portOffset;
+
     /**
      * <i>GuardedBy("this")</i>
      */
@@ -105,9 +108,12 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
         isWildfly = WildflyPluginUtils.isWildFly(serverPath);
         int controllerPort = DEFAULT_ADMIN_PORT;
         String adminPort = this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT);
+        String portOffsetString = this.instanceProperties.getProperty(PROPERTY_PORT_OFFSET);
+        portOffset = Integer.parseInt(portOffsetString);
         if(adminPort != null) {
-            controllerPort = Integer.parseInt(this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT));
+            controllerPort = Integer.parseInt(adminPort);
         }
+        controllerPort += portOffset;
         if (username != null && password != null) {
             this.client = new WildflyClient(instanceProperties, version, getHost(), controllerPort, username, password);
         } else {
@@ -361,10 +367,14 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
         return host;
     }
 
+    public int getPortOffset() {
+        return portOffset;
+    }
+
     public int getPort() {
         String port = InstanceProperties.getInstanceProperties(realUri).
                 getProperty(WildflyPluginProperties.PROPERTY_PORT);
-        return Integer.parseInt(port);
+        return Integer.parseInt(port) + portOffset;
     }
 
     public Version getServerVersion() {

@@ -34,13 +34,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.catalina.Container;
 import org.apache.catalina.Context;
-import org.apache.catalina.Host;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.StandardRoot;
-import org.apache.coyote.AbstractProtocol;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
 import org.apache.tomcat.util.threads.TaskQueue;
@@ -50,7 +48,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
-import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
 import static java.util.Arrays.asList;
@@ -61,8 +58,12 @@ import static java.util.Arrays.asList;
 * @author Petr Jiricka
 */
 public class HttpServerModule extends ModuleInstall implements Externalizable {
-
     private static final Logger LOG = Logger.getLogger(HttpServerModule.class.getName());
+
+    // Names for Filter/Servlet Mapping
+    private static final String SERVLET_MAPPER = "ServletMapper";   // NOI18N
+    private static final String WRAPPER_SERVLET = "WrapperServlet"; // NOI18N
+    private static final String ACCESS_FILTER = "AccessFilter";     // NOI18N
 
     /** listener that reloads context when systemClassLoader changes */
     private static ContextReloader reloader;
@@ -88,12 +89,12 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
                 return;
             inSetRunning = true;
             try {
-                if ((tomcat != null) && (!httpserverSettings().running)) {
+                if ((tomcat != null) && (!HttpServerSettings.running)) {
                     // another thread is trying to start the server, wait for a while and then stop it if it's still bad
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {}
-                    if ((tomcat != null) && (!httpserverSettings().running)) {
+                    if ((tomcat != null) && (!HttpServerSettings.running)) {
                         try {
                             tomcat.stop();
                             tomcat.destroy();
@@ -110,7 +111,11 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
                         httpserverSettings().runSuccess();
                         reloader.activate();
                         if (httpserverSettings().isStartStopMessages()) {
-                            System.out.println(NbBundle.getMessage(HttpServerModule.class, "CTL_ServerStarted", new Object[] {Integer.valueOf(httpserverSettings().getPort())}));
+                            LOG.log(
+                                    Level.INFO,
+                                    "Internal HTTP server running on port {0,number,####}", // NOI18N
+                                    httpserverSettings().getPort()
+                            );
                         }
                     } catch (Exception e) {
                         if(tomcat != null) {
@@ -135,12 +140,13 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
         }
     }
 
+    @Override
     public void uninstalled () {
         stopHTTPServer();
     }
     
     /** stops the HTTP server */
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings("deprecation")  // NOI18N
     static void stopHTTPServer() {
         if (inSetRunning)
             return;
@@ -159,12 +165,11 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
                         tomcat.stop();
                         tomcat.destroy();
                     }
-                    catch (Exception e) {
+                    catch (LifecycleException | RuntimeException e) {
                     }
                     tomcat = null;
                     if (httpserverSettings().isStartStopMessages()) {
-                        System.out.println(NbBundle.getBundle(HttpServerModule.class).
-                                getString("CTL_ServerStopped"));
+                        LOG.log(Level.INFO, "Internal HTTP server stopped"); // NOI18N
                     }
                 }
             }
@@ -230,19 +235,19 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
 
         FilterDef filterDef = new FilterDef();
         filterDef.setFilter(new AccessFilter());
-        filterDef.setFilterName("AccessFilter");
+        filterDef.setFilterName(ACCESS_FILTER);
         FilterMap filterMap = new FilterMap();
         filterMap.addURLPattern("/*");
-        filterMap.setFilterName("AccessFilter");
+        filterMap.setFilterName(ACCESS_FILTER);
         ctx.addFilterDef(filterDef);
         ctx.addFilterMap(filterMap);
 
         Wrapper sw = ctx.createWrapper();
-        sw.setServletClass("org.netbeans.modules.httpserver.WrapperServlet");
-        sw.setName("WrapperServlet");
+        sw.setServlet(new WrapperServlet());
+        sw.setName(WRAPPER_SERVLET);
         ctx.addChild(sw);
 
-        ctx.addServletMappingDecoded(httpserverSettings().getWrapperBaseURL() + "*", "WrapperServlet");
+        ctx.addServletMappingDecoded(httpserverSettings().getWrapperBaseURL() + "*", WRAPPER_SERVLET);
 
         // Originally the Apache Tomcat InvokerServlet took care of invoking
         // servlet. This servlet was removed from Tomcat. As a replacement
@@ -267,10 +272,10 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
                 }
             }
         });
-        sw.setName("ServletMapper");
+        sw.setName(SERVLET_MAPPER);
         ctx.addChild(sw);
 
-        ctx.addServletMappingDecoded("/servlet/*", "ServletMapper");
+        ctx.addServletMappingDecoded("/servlet/*", SERVLET_MAPPER);
     }
 
     private static String classFromPath(HttpServletRequest request) {
@@ -301,14 +306,11 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
      */
     private static class ContextReloader implements LookupListener, Runnable {
 
-        private Tomcat tc;
-
-        private Context ctx;
+        private final Context ctx;
 
         private Lookup.Result<ClassLoader> res;
 
         public ContextReloader(Tomcat tc, Context ctx) {
-            this.tc = tc;
             this.ctx = ctx;
         }
 

@@ -22,7 +22,6 @@ package org.netbeans.modules.httpserver;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.URLDecoder;
@@ -41,15 +40,16 @@ import org.openide.util.Exceptions;
  */
 @org.openide.util.lookup.ServiceProvider(service=org.openide.filesystems.URLMapper.class)
 public class HttpServerURLMapper extends URLMapper {
-    
+
     /** Creates a new instance of HttpServerURLMapper */
     public HttpServerURLMapper() {
     }
-    
+
     /** Get an array of FileObjects for this url
      * @param url to wanted FileObjects
      * @return a suitable array of FileObjects, or null
      */
+    @Override
     public FileObject[] getFileObjects(URL url) {
         String path = url.getPath();
 
@@ -58,7 +58,7 @@ public class HttpServerURLMapper extends URLMapper {
         if (path == null || !path.startsWith(wrapper))
             return null;
         path = path.substring(wrapper.length());
-        
+
         // resource name
         if (path.startsWith ("/")) path = path.substring (1); // NOI18N
         if (path.length() == 0) {
@@ -71,7 +71,8 @@ public class HttpServerURLMapper extends URLMapper {
         }
         return URLMapper.findFileObjects(u);
     }
-    
+
+    @SuppressWarnings("ThrowableResultIgnored")
     private URL decodeURL(String path) {
         StringTokenizer slashTok = new StringTokenizer(path, "/", true); // NOI18N
         StringBuffer newPath = new StringBuffer();
@@ -88,7 +89,7 @@ public class HttpServerURLMapper extends URLMapper {
                 }
             }
         }
-        
+
         try {
             return new URL(newPath.toString());
         } catch (MalformedURLException ex) {
@@ -97,23 +98,26 @@ public class HttpServerURLMapper extends URLMapper {
             return null;
         }
     }
-    
-    /** Get a good URL for this file object which works according to type:
+
+    /**
+     * Get a good URL for this file object which works according to type:
      * -inside this VM
      * - inside this machine
-     * - from networked machines 
+     * - from networked machines
+     *
      * @return a suitable URL, or null
-     */            
+     */
+    @Override
     public URL getURL(FileObject fileObject, int type) {
-        
+
         // only do external and network URLs
         if (type != URLMapper.NETWORK)
             return null;
-        
+
         // fileObject must not be null
         if (fileObject == null)
             return null;
-        
+
         // It should be OK to call URLMapper here because we call
         // it with different then NETWORK type.
         URL u = URLMapper.findURL(fileObject, URLMapper.EXTERNAL);
@@ -138,11 +142,11 @@ public class HttpServerURLMapper extends URLMapper {
             return null;
         }
     }
-    
+
     private String encodeURL(URL u) {
         String orig = u.toExternalForm();
         StringTokenizer slashTok = new StringTokenizer(orig, "/", true); // NOI18N
-        StringBuffer path = new StringBuffer();
+        StringBuilder path = new StringBuilder();
         while (slashTok.hasMoreTokens()) {
             String tok = slashTok.nextToken();
             if (tok.startsWith("/")) { // NOI18N
@@ -158,7 +162,7 @@ public class HttpServerURLMapper extends URLMapper {
         }
         return path.toString();
     }
-    
+
     /** Returns string for localhost */
     private static String getLocalHost() {
         try {
@@ -168,11 +172,11 @@ public class HttpServerURLMapper extends URLMapper {
         }
     }
 
-    /** 
+    /**
      * Obtains settings of this module
      */
     static HttpServerSettings httpserverSettings () {
         return HttpServerSettings.getDefault();
     }
-    
+
 }

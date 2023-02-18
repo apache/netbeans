@@ -21,8 +21,6 @@ package org.netbeans.modules.httpserver;
 
 import java.io.InputStream;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -57,14 +55,15 @@ public class WrapperServlet extends HttpServlet {
         processRequest(req, resp);
     }
 
-    /** Processes the request for both HTTP GET and POST methods
+    /**
+     * Processes the request for both HTTP GET and POST methods
+     *
      * @param request servlet request
      * @param response servlet response
      */
+    @SuppressWarnings("NestedAssignment")
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, java.io.IOException {
-        // output your page here
-        //String path = request.getPathInfo ();
         ServletOutputStream out = response.getOutputStream ();
         try {
             FileObject file = URLMapper.findFileObject(getRequestURL(request));
@@ -83,16 +82,16 @@ public class WrapperServlet extends HttpServlet {
             }
             response.setContentType(type);
             // PENDING: copy all info - headers, length, encoding, ...
-            
-            InputStream in = conn.getInputStream ();
-            byte [] buff = new byte [256];
-            int len;
 
-            while ((len = in.read (buff)) != -1) {
-                out.write (buff, 0, len);
-                out.flush();
+            try (InputStream in = conn.getInputStream ()) {
+                byte [] buff = new byte [256];
+                int len;
+
+                while ((len = in.read (buff)) != -1) {
+                    out.write (buff, 0, len);
+                    out.flush();
+                }
             }
-            in.close ();
 
         }
         catch (MalformedURLException | IllegalArgumentException ex) {
@@ -108,9 +107,6 @@ public class WrapperServlet extends HttpServlet {
                 response.sendError (HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
             catch (IOException ex2) {}
-        }
-        finally {
-            try { out.close(); } catch (Exception ex) {}
         }
     }
 

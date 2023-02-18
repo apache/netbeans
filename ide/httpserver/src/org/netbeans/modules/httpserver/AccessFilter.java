@@ -21,6 +21,7 @@ package org.netbeans.modules.httpserver;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.ServerException;
 import java.util.Set;
 import javax.servlet.*;
@@ -76,7 +77,7 @@ public class AccessFilter implements Filter {
         try {
             String address = request.getRemoteAddr().trim();
             if (settings.allowAccess(InetAddress.getByName(address), pathI)) return true;
-        } catch (Exception ex) {
+        } catch (UnknownHostException | RuntimeException ex) {
             Exceptions.printStackTrace(ex);
             return false;
         }

@@ -178,123 +178,123 @@ final class AntTargetNode extends AbstractNode implements ChangeListener {
         return sheet;
     }
     
-    /**
-     * Node displaying the sequence of all called targets when executing.
-     */
-    private final class BuildSequenceProperty extends PropertySupport.ReadOnly<String> {
-        
-        /** Creates new BuildSequenceProperty.
-         */
-        public BuildSequenceProperty() {
-            super ("buildSequence", // NOI18N
-                   String.class,
-                   NbBundle.getMessage (AntTargetNode.class, "PROP_target_sequence"),
-                   NbBundle.getMessage (AntTargetNode.class, "HINT_target_sequence")
-                  );
-        }
-
-        /** Computes the dependencies of all called targets and returns an ordered
-         * sequence String.
-         * @param target the target that gets executed
-         * /
-        protected String computeTargetDependencies(org.w3c.dom.Element target) {
-            if (target == null) {
-                return "";
-            }
-            
-            // get ProjectElement
-            Element proj = (Element) target.getParentNode ();
-            if (proj == null) {
-                // just return current target name
-                return target.getAttribute ("name"); // NOI18N
-            } else {
-                // List with all called targets. the last called target is the first
-                // in the list
-                List callingList = new LinkedList(); 
-                // add this target.
-                callingList = addTarget (callingList, target, 0, proj);
-                if (callingList != null) {
-                    return getReverseString (callingList);
-                } else {
-                    return NbBundle.getMessage (AntProjectNode.class, "MSG_target_sequence_illegaldepends");
-                }
-            }
-        }
-
-        /** Adds a target to the List. Calls depends-on targets recursively.
-         * @param runningList List containing the ordered targets.
-         * @param target the target that should be added
-         * @param pos position where this target should be inserted
-         * @projectElement the Element of the Ant project.
-         *
-         * @return list with all targets or null if a target was not found.
-         * /
-        protected List addTarget(List runningList, Element target, int pos, Element projectElement) {
-            String targetName = target.getAttribute ("name"); // NOI18N
-            if (targetName == null) return runningList;
-            
-            // search target, skip it if found
-            Iterator it = runningList.iterator();
-            while (it.hasNext()) {
-                if (targetName.equals (it.next())) {
-                    return runningList;
-                }
-            }
-            //add target at the given position...
-            runningList.add(pos, targetName);
-            
-            // check dependenciesList
-            String dependsString = target.getAttribute ("depends"); // NOI18N
-            if (dependsString == null) return runningList;
-            
-            // add each target of the dependencies List
-            StringTokenizer st = new StringTokenizer(dependsString, ", "); // NOI18N
-            while (st.hasMoreTokens() && runningList != null) {
-                Element dependsTarget = getTargetElement(st.nextToken(), projectElement);
-                if (dependsTarget != null) {
-                    runningList = addTarget(runningList, dependsTarget, (pos + 1), projectElement);
-                } else {
-                    // target is missing, we return null to indicate that something is wrong
-                    return null;
-                }
-            }
-            
-            return runningList;
-        }
-        
-        /** Returns the Element of a target given by its name. * /
-        protected Element getTargetElement(String targetName, Element projectElement) {
-            NodeList nl = projectElement.getChildNodes();
-            for (int i = 0; i < nl.getLength (); i++) {
-                if (nl.item (i) instanceof Element) {
-                    Element el = (Element) nl.item (i);
-                    if (el.getTagName().equals("target") && el.getAttribute("name").equals(targetName)) { // NOI18N
-                        return el;
-                    }
-                }
-            }
-            return null;
-        }
- 
-        /** Returns a String of all Elements in the List in reverse order. * /
-        protected String getReverseString (List l) {
-            StringBuffer sb = new StringBuffer ();
-            for (int x= (l.size() - 1); x > -1; x--) {
-                sb.append (l.get(x));
-                if (x > 0) sb.append (", "); // NOI18N
-            }
-            return sb.toString ();
-        }
-        
-        /** Returns the value of this property. */
-        @Override
-        public String getValue () {
-            /*XXX
-            return computeTargetDependencies(getTarget());
-             */
-            return "XXX BuildSequenceProperty currently unimplemented";
-        }
-    }
+//    /**
+//     * Node displaying the sequence of all called targets when executing.
+//     */
+//    private final class BuildSequenceProperty extends PropertySupport.ReadOnly<String> {
+//
+//        /** Creates new BuildSequenceProperty.
+//         */
+//        public BuildSequenceProperty() {
+//            super ("buildSequence", // NOI18N
+//                   String.class,
+//                   NbBundle.getMessage (AntTargetNode.class, "PROP_target_sequence"),
+//                   NbBundle.getMessage (AntTargetNode.class, "HINT_target_sequence")
+//                  );
+//        }
+//
+//        /** Computes the dependencies of all called targets and returns an ordered
+//         * sequence String.
+//         * @param target the target that gets executed
+//         * /
+//        protected String computeTargetDependencies(org.w3c.dom.Element target) {
+//            if (target == null) {
+//                return "";
+//            }
+//
+//            // get ProjectElement
+//            Element proj = (Element) target.getParentNode ();
+//            if (proj == null) {
+//                // just return current target name
+//                return target.getAttribute ("name"); // NOI18N
+//            } else {
+//                // List with all called targets. the last called target is the first
+//                // in the list
+//                List callingList = new LinkedList();
+//                // add this target.
+//                callingList = addTarget (callingList, target, 0, proj);
+//                if (callingList != null) {
+//                    return getReverseString (callingList);
+//                } else {
+//                    return NbBundle.getMessage (AntProjectNode.class, "MSG_target_sequence_illegaldepends");
+//                }
+//            }
+//        }
+//
+//        /** Adds a target to the List. Calls depends-on targets recursively.
+//         * @param runningList List containing the ordered targets.
+//         * @param target the target that should be added
+//         * @param pos position where this target should be inserted
+//         * @projectElement the Element of the Ant project.
+//         *
+//         * @return list with all targets or null if a target was not found.
+//         * /
+//        protected List addTarget(List runningList, Element target, int pos, Element projectElement) {
+//            String targetName = target.getAttribute ("name"); // NOI18N
+//            if (targetName == null) return runningList;
+//
+//            // search target, skip it if found
+//            Iterator it = runningList.iterator();
+//            while (it.hasNext()) {
+//                if (targetName.equals (it.next())) {
+//                    return runningList;
+//                }
+//            }
+//            //add target at the given position...
+//            runningList.add(pos, targetName);
+//
+//            // check dependenciesList
+//            String dependsString = target.getAttribute ("depends"); // NOI18N
+//            if (dependsString == null) return runningList;
+//
+//            // add each target of the dependencies List
+//            StringTokenizer st = new StringTokenizer(dependsString, ", "); // NOI18N
+//            while (st.hasMoreTokens() && runningList != null) {
+//                Element dependsTarget = getTargetElement(st.nextToken(), projectElement);
+//                if (dependsTarget != null) {
+//                    runningList = addTarget(runningList, dependsTarget, (pos + 1), projectElement);
+//                } else {
+//                    // target is missing, we return null to indicate that something is wrong
+//                    return null;
+//                }
+//            }
+//
+//            return runningList;
+//        }
+//
+//        /** Returns the Element of a target given by its name. * /
+//        protected Element getTargetElement(String targetName, Element projectElement) {
+//            NodeList nl = projectElement.getChildNodes();
+//            for (int i = 0; i < nl.getLength (); i++) {
+//                if (nl.item (i) instanceof Element) {
+//                    Element el = (Element) nl.item (i);
+//                    if (el.getTagName().equals("target") && el.getAttribute("name").equals(targetName)) { // NOI18N
+//                        return el;
+//                    }
+//                }
+//            }
+//            return null;
+//        }
+//
+//        /** Returns a String of all Elements in the List in reverse order. * /
+//        protected String getReverseString (List l) {
+//            StringBuffer sb = new StringBuffer ();
+//            for (int x= (l.size() - 1); x > -1; x--) {
+//                sb.append (l.get(x));
+//                if (x > 0) sb.append (", "); // NOI18N
+//            }
+//            return sb.toString ();
+//        }
+//
+//        /** Returns the value of this property. */
+//        @Override
+//        public String getValue () {
+//            /*XXX
+//            return computeTargetDependencies(getTarget());
+//             */
+//            return "XXX BuildSequenceProperty currently unimplemented";
+//        }
+//    }
     
     private static final class TargetOpenCookie implements OpenCookie {
         

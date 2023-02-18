@@ -177,105 +177,105 @@ public class QTCTestHidden extends NbTestCase {
         return f.get(o);
     }
 
-    private static class MyRepository extends TestRepository {
-        List<TestQuery> queries = new ArrayList<TestQuery>();
-        MyQuery newquery;
-        private static int c = 0;
-        private final int i;
-        private final RepositoryInfo info;
-        public MyRepository() {
-            this.newquery = new MyQuery();
-            this.i = c++;
-            String name = "repoid" + i;
-            info = new RepositoryInfo(name, name, "http://repo", name, name, null, null, null, null);
-        }
+//    private static class MyRepository extends TestRepository {
+//        List<TestQuery> queries = new ArrayList<TestQuery>();
+//        MyQuery newquery;
+//        private static int c = 0;
+//        private final int i;
+//        private final RepositoryInfo info;
+//        public MyRepository() {
+//            this.newquery = new MyQuery();
+//            this.i = c++;
+//            String name = "repoid" + i;
+//            info = new RepositoryInfo(name, name, "http://repo", name, name, null, null, null, null);
+//        }
+//
+//        @Override
+//        public RepositoryInfo getInfo() {
+//            return info;
+//        }
+//
+//        @Override
+//        public Image getIcon() {
+//            return null;
+//        }
+//
+//        @Override
+//        public TestQuery createQuery() {
+//            return newquery;
+//        }
+//
+//        @Override
+//        public Collection<TestQuery> getQueries() {
+//            return queries;
+//        }
+//
+//    }
 
-        @Override
-        public RepositoryInfo getInfo() {
-            return info;
-        }
-
-        @Override
-        public Image getIcon() {
-            return null;
-        }
-
-        @Override
-        public TestQuery createQuery() {
-            return newquery;
-        }
-
-        @Override
-        public Collection<TestQuery> getQueries() {
-            return queries;
-        }
-
-    }
-
-    private static class MyQuery extends TestQuery {
-        private static int c = 0;
-        private final int i;
-
-        private final QueryController controler = new QueryController() {
-            private final JPanel panel = new JPanel();
-            
-            @Override
-            public JComponent getComponent(QueryMode mode) {
-                return panel;
-            }
-            @Override
-            public HelpCtx getHelpCtx() {
-                return null;
-            }
-
-            @Override
-            public boolean providesMode(QueryMode mode) {
-                return true;
-            }
-
-            @Override public void opened() { }
-            @Override public void closed() { }
-            @Override
-            public boolean saveChanges(String name) {
-                return true;
-            }
-            @Override
-            public boolean discardUnsavedChanges() {
-                return true;
-            }
-            @Override public void addPropertyChangeListener(PropertyChangeListener l) { }
-            @Override public void removePropertyChangeListener(PropertyChangeListener l) { }
-            @Override
-            public boolean isChanged() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }    
-        };
-        private boolean saved;
-
-        public MyQuery() {
-            i = c++;
-        }
-
-        @Override
-        public String getDisplayName() {
-            return "query"+i;
-        }
-        @Override
-        public String getTooltip() {
-            return "query"+i;
-        }
-        @Override
-        public QueryController getController() {
-            return controler;
-        }
-        public void setSaved(boolean saved) {
-            this.saved = saved;
-        }
-        @Override
-        public boolean isSaved() {
-            return saved;
-        }
-    }
+//    private static class MyQuery extends TestQuery {
+//        private static int c = 0;
+//        private final int i;
+//
+//        private final QueryController controler = new QueryController() {
+//            private final JPanel panel = new JPanel();
+//
+//            @Override
+//            public JComponent getComponent(QueryMode mode) {
+//                return panel;
+//            }
+//            @Override
+//            public HelpCtx getHelpCtx() {
+//                return null;
+//            }
+//
+//            @Override
+//            public boolean providesMode(QueryMode mode) {
+//                return true;
+//            }
+//
+//            @Override public void opened() { }
+//            @Override public void closed() { }
+//            @Override
+//            public boolean saveChanges(String name) {
+//                return true;
+//            }
+//            @Override
+//            public boolean discardUnsavedChanges() {
+//                return true;
+//            }
+//            @Override public void addPropertyChangeListener(PropertyChangeListener l) { }
+//            @Override public void removePropertyChangeListener(PropertyChangeListener l) { }
+//            @Override
+//            public boolean isChanged() {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//        };
+//        private boolean saved;
+//
+//        public MyQuery() {
+//            i = c++;
+//        }
+//
+//        @Override
+//        public String getDisplayName() {
+//            return "query"+i;
+//        }
+//        @Override
+//        public String getTooltip() {
+//            return "query"+i;
+//        }
+//        @Override
+//        public QueryController getController() {
+//            return controler;
+//        }
+//        public void setSaved(boolean saved) {
+//            this.saved = saved;
+//        }
+//        @Override
+//        public boolean isSaved() {
+//            return saved;
+//        }
+//    }
     
     @BugtrackingConnector.Registration (
         id=MyConnector.ID,

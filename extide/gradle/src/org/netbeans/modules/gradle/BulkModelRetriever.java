@@ -102,30 +102,4 @@ public class BulkModelRetriever {
         
     }
 
-    private static class BulkModelAction implements BuildAction<List<ModelResult>> {
-
-        List<ModelTask> modelTasks = new LinkedList<>();
-
-        public void addTask(Class modelType, Class parameterType, Action parameterInitializer) {
-            ModelTask task = new ModelTask(modelType, parameterType, parameterInitializer);
-            modelTasks.add(task);
-        }
-
-        @Override
-        public List<ModelResult> execute(BuildController bc) {
-            List<ModelResult> results = new LinkedList<>();
-            for (ModelTask modelTask : modelTasks) {
-                if (modelTask.parameterType != null) {
-                    try {
-                        Model m = (Model)bc.getModel(modelTask.modelType, modelTask.parameterType, modelTask.getParameterInitializer());
-                        results.add(new ModelResult(modelTask.getId(), m));
-                    } catch (Throwable th) {
-                        results.add(new ModelResult(modelTask.getId(), th));
-                    }
-                }
-            }
-            return results;
-        }
-
-    }
 }

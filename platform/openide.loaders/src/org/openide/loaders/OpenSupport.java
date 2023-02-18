@@ -390,40 +390,40 @@ public abstract class OpenSupport extends CloneableOpenSupport {
         }
     } // End of class FileSystemNameListener.
 
-    /** Only for backward compatibility of settings
-    */
-    private static final class Listener extends CloneableTopComponent.Ref {
-        /** generated Serialized Version UID */
-        static final long serialVersionUID = -1934890789745432531L;
-        /** entry to serialize */
-        private MultiDataObject.Entry entry;
-        
-        Listener() {}
-
-        public Object readResolve () {
-            DataObject obj = entry.getDataObject ();
-            OpenSupport os = null;
-            OpenCookie oc = obj.getCookie(OpenCookie.class);
-            if (oc instanceof OpenSupport) {
-                os = (OpenSupport) oc;
-            } else {
-                EditCookie edc = obj.getCookie(EditCookie.class);
-                if (edc instanceof OpenSupport) {
-                    os = (OpenSupport) edc;
-                } else {
-                    EditorCookie ec = obj.getCookie(EditorCookie.class);
-                    if (ec instanceof OpenSupport) {
-                        os = (OpenSupport) ec;
-                    }
-                }
-            }
-            if (os == null) {
-                // problem! no replace!?
-                return this;
-            }
-            // use the editor support's CloneableTopComponent.Ref
-            return os.allEditors ();
-        }
-    }
+//    /** Only for backward compatibility of settings
+//    */
+//    private static final class Listener extends CloneableTopComponent.Ref {
+//        /** generated Serialized Version UID */
+//        static final long serialVersionUID = -1934890789745432531L;
+//        /** entry to serialize */
+//        private MultiDataObject.Entry entry;
+//
+//        Listener() {}
+//
+//        public Object readResolve () {
+//            DataObject obj = entry.getDataObject ();
+//            OpenSupport os = null;
+//            OpenCookie oc = obj.getCookie(OpenCookie.class);
+//            if (oc instanceof OpenSupport) {
+//                os = (OpenSupport) oc;
+//            } else {
+//                EditCookie edc = obj.getCookie(EditCookie.class);
+//                if (edc instanceof OpenSupport) {
+//                    os = (OpenSupport) edc;
+//                } else {
+//                    EditorCookie ec = obj.getCookie(EditorCookie.class);
+//                    if (ec instanceof OpenSupport) {
+//                        os = (OpenSupport) ec;
+//                    }
+//                }
+//            }
+//            if (os == null) {
+//                // problem! no replace!?
+//                return this;
+//            }
+//            // use the editor support's CloneableTopComponent.Ref
+//            return os.allEditors ();
+//        }
+//    }
 }
 

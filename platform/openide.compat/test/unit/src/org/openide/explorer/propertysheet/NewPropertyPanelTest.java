@@ -611,33 +611,6 @@ public class NewPropertyPanelTest extends NbTestCase {
             lostCount++;
         }
     }
-    
-    private class CL implements ChangeListener {
-        
-        private ChangeEvent e;
-        public void assertEvent(String msg) {
-            sleep(); //give the event time to happen
-            assertNotNull (msg, e);
-            e = null;
-        }
-        
-        public void assertNoEvent(String msg) {
-            sleep();
-            assertNull (e);
-            e = null;
-        }
-        
-        public void stateChanged(ChangeEvent e) {
-            this.e = e;
-        }
-        
-    }
-    
-    private static class TestGCVal extends Object {
-        public String toString() {
-            return "TestGCVal";
-        }
-    }
 
     private static class WaitWindow extends WindowAdapter {
         boolean shown=false;

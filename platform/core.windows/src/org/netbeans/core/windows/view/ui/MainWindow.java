@@ -858,21 +858,7 @@ public final class MainWindow {
        return frame;
    }
 
-   private static class HeavyWeightPopupFactory extends PopupFactory {
-
-       @Override
-       public Popup getPopup(Component owner, Component contents, int x, int y) throws IllegalArgumentException {
-           return new HeavyWeightPopup(owner, contents, x, y);
-       }
-   }
-
-   private static class HeavyWeightPopup extends Popup {
-       public HeavyWeightPopup(Component owner, Component contents, int x, int y) {
-           super( owner, contents, x, y);
-       }
-   }
-
-   private static boolean isShowCustomBackground() {
+    private static boolean isShowCustomBackground() {
        return UIManager.getBoolean("NbMainWindow.showCustomBackground"); //NOI18N
    }
 

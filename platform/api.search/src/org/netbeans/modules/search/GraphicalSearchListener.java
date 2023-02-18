@@ -289,25 +289,6 @@ class GraphicalSearchListener extends SearchListener {
         return iconBase + icon;
     }
 
-    private class FileObjectEventNode extends EventNode {
-
-        private FileObject fileObject;
-
-        public FileObjectEventNode(EventType type, String message,
-                FileObject fileObject) {
-            super(type, message);
-            this.fileObject = fileObject;
-        }
-
-        @Override
-        public PropertySet[] createPropertySets() {
-            PropertySet[] propertySets;
-            propertySets = new PropertySet[1];
-            propertySets[0] = new FileObjectPropertySet(fileObject);
-            return propertySets;
-        }
-    }
-
     private class PathEventNode extends EventNode {
 
         private String path;

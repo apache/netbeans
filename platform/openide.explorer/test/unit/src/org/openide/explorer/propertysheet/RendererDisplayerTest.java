@@ -198,60 +198,7 @@ public class RendererDisplayerTest extends NbTestCase {
         CheckboxInplaceEditor cb = (CheckboxInplaceEditor) innermost;
         assertEquals("If using labels, checkbox text should be the property display name", cb.getText(), boolRen.getProperty().getDisplayName());
     }
-    
-    private class FL implements FocusListener {
-        private FocusEvent gainedEvent=null;
-        private FocusEvent lostEvent=null;
-        private int gainedCount=0;
-        private int lostCount=0;
-        public void assertGained() {
-            assertNotNull("No focus gained received after clicking on an editable renderer", gainedEvent);
-            assertTrue("Received wrong number of focus gained events for a single click on a renderer " +  gainedCount, gainedCount == 1);
-        }
-        
-        public void assertLost() {
-            assertNotNull("No focus lost event received after clicking away from a focused, editable renderer", lostEvent);
-            assertTrue("Received wrong number of focus lost events for a single click away from a focused renderer" + lostCount, lostCount == 1);
-        }
-        
-        public void focusGained(FocusEvent e) {
-            gainedEvent = e;
-            gainedCount++;
-        }
-        
-        public void focusLost(FocusEvent e) {
-            lostEvent = e;
-            lostCount++;
-        }
-    }
-    
-    private class CL implements ChangeListener {
-        
-        private ChangeEvent e;
-        public void assertEvent(String msg) {
-            sleep(); //give the event time to happen
-            assertNotNull(msg, e);
-            e = null;
-        }
-        
-        public void assertNoEvent(String msg) {
-            sleep();
-            assertNull(e);
-            e = null;
-        }
-        
-        public void stateChanged(ChangeEvent e) {
-            this.e = e;
-        }
-        
-    }
-    
-    private static class TestGCVal extends Object {
-        public String toString() {
-            return "TestGCVal";
-        }
-    }
-    
+
     private static class WaitWindow extends WindowAdapter {
         boolean shown=false;
         public WaitWindow(JFrame f) {

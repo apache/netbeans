@@ -106,20 +106,6 @@ public class DataObjectInvalidationOneFileTest extends LoggingTestCaseHid {
         assertEquals("After getting folder node children, a data object is not successfully created >1 time", 1, SlowDataObject.createCount);
     }
 
-    private static final class ExpectingListener implements PropertyChangeListener {
-        private final Set changes = new HashSet(); // Set<String>
-        public synchronized void propertyChange(PropertyChangeEvent ev) {
-            changes.add(ev.getPropertyName());
-            //System.err.println("got: " + ev.getSource() + " " + ev.getPropertyName() + " " + ev.getOldValue() + " " + ev.getNewValue());//XXX
-            notifyAll();
-        }
-        public synchronized boolean gotSomething(String prop) throws InterruptedException {
-            if (changes.contains(prop)) return true;
-            wait(3000);
-            return changes.contains(prop);
-        }
-    }
-    
     public static final class SlowDataLoader extends UniFileLoader {
         public static int createCount = 0;
         private static Logger ERR = Logger.getLogger("SlowDataLoader");

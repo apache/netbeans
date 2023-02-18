@@ -286,16 +286,7 @@ public class ContextTreeViewModelTest extends NbTestCase {
         }
          */
     }
-    
-    private static class Panel extends JPanel
-            implements ExplorerManager.Provider {
-        private ExplorerManager em = new ExplorerManager();
-        
-        public ExplorerManager getExplorerManager() {
-            return em;
-        }
-    }
-    
+
     private class Listener implements TreeModelListener {
         private int cnt;
         private int[] indexes;

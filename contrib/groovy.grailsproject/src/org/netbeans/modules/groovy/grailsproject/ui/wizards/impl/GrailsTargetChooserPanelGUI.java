@@ -474,20 +474,4 @@ public class GrailsTargetChooserPanelGUI extends javax.swing.JPanel implements A
     
     // Private innerclasses ----------------------------------------------------
 
-    /**
-     * Displays a {@link SourceGroup} in {@link #rootComboBox}.
-     */
-    private static final class GroupListCellRenderer extends DefaultListCellRenderer/*<SourceGroup>*/ {
-        
-        public GroupListCellRenderer() {}
-        
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            SourceGroup g = (SourceGroup) value;
-            super.getListCellRendererComponent(list, g.getDisplayName(), index, isSelected, cellHasFocus);
-            setIcon(g.getIcon(false));
-            return this;
-        }
-        
-    }
-    
 }

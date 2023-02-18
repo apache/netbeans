@@ -264,47 +264,4 @@ public class UndoRedoWrappingExampleTest extends NbTestCase implements Cloneable
         }
     } // end of CES
 
-    private static final class FakeEdit implements javax.swing.undo.UndoableEdit {
-        public boolean addEdit(javax.swing.undo.UndoableEdit anEdit) {
-            return false;
-        }
-
-        public boolean canRedo() {
-            return true;
-        }
-
-        public boolean canUndo() {
-            return true;
-        }
-
-        public void die() {
-        }
-
-        public java.lang.String getPresentationName() {
-            return "";
-        }
-
-        public java.lang.String getRedoPresentationName() {
-            return "";
-        }
-
-        public java.lang.String getUndoPresentationName() {
-            return "";
-        }
-
-        public boolean isSignificant() {
-            return false;
-        }
-
-        public void redo() throws javax.swing.undo.CannotRedoException {
-        }
-
-        public boolean replaceEdit(javax.swing.undo.UndoableEdit anEdit) {
-            return true;
-        }
-
-        public void undo() throws javax.swing.undo.CannotUndoException {
-        }
-        
-    } // end of UndoableEdit
 }

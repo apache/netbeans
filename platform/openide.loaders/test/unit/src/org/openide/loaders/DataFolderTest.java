@@ -601,14 +601,14 @@ public class DataFolderTest extends LoggingTestCaseHid {
         return buf.toString();
     }
     
-    private static class MFS extends MultiFileSystem {
-        public MFS (FileSystem [] fs) {
-            super (fs);
-        }
-        public void set (FileSystem [] fs) {
-            setDelegates (fs);
-        }
-    }
+//    private static class MFS extends MultiFileSystem {
+//        public MFS (FileSystem [] fs) {
+//            super (fs);
+//        }
+//        public void set (FileSystem [] fs) {
+//            setDelegates (fs);
+//        }
+//    }
 
     private void assertChildrenArrays (
         String msg, DataObject orig[], DataObject reverted[], boolean same

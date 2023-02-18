@@ -287,20 +287,20 @@ public class RunOffEDTTest extends NbTestCase {
     }
      */
 
-    private static class SR implements Runnable {
-
-        long sleepTime;
-
-        public SR(long sleepTime) {
-            this.sleepTime = sleepTime;
-        }
-
-        public void run() {
-            try {
-                Thread.sleep(sleepTime);
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-    };
+//    private static class SR implements Runnable {
+//
+//        long sleepTime;
+//
+//        public SR(long sleepTime) {
+//            this.sleepTime = sleepTime;
+//        }
+//
+//        public void run() {
+//            try {
+//                Thread.sleep(sleepTime);
+//            } catch (InterruptedException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//        }
+//    };
 }

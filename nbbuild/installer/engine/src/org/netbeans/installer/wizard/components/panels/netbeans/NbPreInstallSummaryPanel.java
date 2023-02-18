@@ -636,12 +636,11 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
                         }
                     }
                 
-                    for (File root: spaceMap.keySet()) {
+                    for (Map.Entry<File, Long> it: spaceMap.entrySet()) {
                         try {
-                            final long availableSpace =
-                                    SystemUtils.getFreeSpace(root);
-                            final long requiredSpace =
-                                    spaceMap.get(root) + REQUIRED_SPACE_ADDITION;
+                            File root = it.getKey();
+                            final long availableSpace = SystemUtils.getFreeSpace(root);
+                            final long requiredSpace = it.getValue() + REQUIRED_SPACE_ADDITION;
                             
                             if (availableSpace < requiredSpace) {
                                 return StringUtils.format(
@@ -682,7 +681,7 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
                   for(String location: locations) {
                     if(new File(location).equals(product.getInstallationLocation())) {
                     final NbiCheckBox checkbox = new NbiCheckBox();
-                    final Pair<Product, NbiCheckBox> pair = new Pair(product, checkbox);
+                    final Pair<Product, NbiCheckBox> pair = new Pair<>(product, checkbox);
                     productCheckboxList.add(pair);
                     checkbox.setText(pair.getFirst().getDisplayName());
                     checkbox.setBorder(new EmptyBorder(0, 0, 0, 0));

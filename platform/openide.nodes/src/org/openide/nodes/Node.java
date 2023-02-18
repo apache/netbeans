@@ -1133,7 +1133,8 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
     
     /** Fires that some indexes has been removed.
      *
-     * @param indices removed indicies, 
+     * @param added
+     * @param idxs removed indicies
      */
     final void fireSubNodesChangeIdx(boolean added, int[] idxs, Children.Entry sourceEntry, List<Node> current, List<Node> previous) {
         Set<NodeListener> dormant = Collections.emptySet();

@@ -151,9 +151,11 @@ public class SpringConfigModelController {
         }
         writeAccess = true;
         try {
-            for (File currentFile : file2Controller.keySet()) {
+            for (Map.Entry<File, SpringConfigFileModelController> it : file2Controller.entrySet()) {
+                File currentFile = it.getKey();
+
                 Map<File, SpringBeanSource> beanSources = computeSpringBeanSources(currentFile);
-                SpringConfigFileModelController controller = file2Controller.get(currentFile);
+                SpringConfigFileModelController controller = it.getValue();
                 LockedDocument lockedDoc = controller.getLockedDocument();
                 if (lockedDoc != null) {
                     lockedDoc.lock();

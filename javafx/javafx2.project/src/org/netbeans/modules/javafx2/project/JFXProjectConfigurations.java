@@ -514,9 +514,7 @@ public class JFXProjectConfigurations {
         Map<String,String/*|null*/> configMap = getConfig(config);
         if(configMap != null) {
             configMap.remove(prop);
-            for(String name : groups.getBoundedProperties(prop)) {
-                configMap.remove(name);
-            }
+            configMap.keySet().removeAll(groups.getBoundedProperties(prop));
         }
     }
 
@@ -2639,9 +2637,9 @@ public class JFXProjectConfigurations {
                     privateUpdated = true;
                 }
             }
-            for(Map<String, String> toErase : toEraseList) {
-                reduce.remove(toErase);
-            }
+
+            reduce.removeAll(toEraseList);
+
             // delete those nonprivate prop properties not present in reduce
             cleanEntryPropertiesNotListed(reduce, projectProperties);
             // and log usage of the remaining private entry properties

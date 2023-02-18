@@ -1380,13 +1380,14 @@ outer:  do {
         private AtomicBoolean cancelled;
 
         /** @param run runnable to start
-        * @param delay amount of millis to wait
-        * @param priority the priorty of the task
         */
         Task(Runnable run) {
             super(run);
         }
 
+        /** @param run runnable to start
+         * @param priority the priorty of the task
+         */
         Task(Runnable run, int priority) {
             super(run);
 

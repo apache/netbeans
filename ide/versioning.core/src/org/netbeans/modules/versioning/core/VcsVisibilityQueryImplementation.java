@@ -113,7 +113,7 @@ public class VcsVisibilityQueryImplementation implements VisibilityQueryImplemen
         boolean visible;
         synchronized (cache) {
             cache.clearOldValues();
-            visible = !cache.keySet().contains(file); // get cached value
+            visible = !cache.containsKey(file); // get cached value
         }
         boolean refresh;
         synchronized (refreshedFiles) {

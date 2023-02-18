@@ -33,7 +33,7 @@ import org.netbeans.test.stub.api.StubDelegate;
 public class ResultSetImpl extends StubDelegate {
     
     private List<Object> columns;
-    private Map<String, Iterator> names2iterators = new HashMap();
+    private Map<String, Iterator> names2iterators = new HashMap<>();
     private Map<String, Object> names2values; // current row values
 
     public ResultSetImpl(List columns) {
@@ -51,7 +51,7 @@ public class ResultSetImpl extends StubDelegate {
         if (names2values != null) {
             names2values.clear();
         } else {
-            names2values = new HashMap();
+            names2values = new HashMap<>();
         }
         
         Iterator it = names2iterators.entrySet().iterator();

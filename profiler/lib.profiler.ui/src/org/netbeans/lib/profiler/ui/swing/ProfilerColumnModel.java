@@ -143,7 +143,7 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
     private int minColumnWidth = 20;
     private int defaultColumnWidth = 60;
     private Map<Integer, Integer> defaultColumnWidths;
-    private Map<Integer, Integer> hiddenColumnWidths = new HashMap();
+    private Map<Integer, Integer> hiddenColumnWidths = new HashMap<>();
     
     void setDefaultColumnWidth(int width) {
         defaultColumnWidth = width;

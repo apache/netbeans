@@ -176,7 +176,7 @@ public abstract class DBTestBase extends TestBase {
                 // DatabaseNodeInfo.printChildren("tables", tables);
 
                 for (Node table : tables) {
-                    if (tablename.toLowerCase().equals(table.getDisplayName().toLowerCase())) {
+                    if (tablename.equalsIgnoreCase(table.getDisplayName())) {
                         return (TableNode)table;
                     }
                 }
@@ -189,7 +189,7 @@ public abstract class DBTestBase extends TestBase {
                         // DatabaseNodeInfo.printChildren("tables", tables);
 
                         for (Node table : tables) {
-                            if (tablename.toLowerCase().equals(table.getDisplayName().toLowerCase())) {
+                            if (tablename.equalsIgnoreCase(table.getDisplayName())) {
                                 return (TableNode)table;
                             }
                         }
@@ -224,7 +224,7 @@ public abstract class DBTestBase extends TestBase {
                 // DatabaseNodeInfo.printChildren("tables", tables);
 
                 for (Node view : views) {
-                    if (viewname.toLowerCase().equals(view.getDisplayName().toLowerCase())) {
+                    if (viewname.equalsIgnoreCase(view.getDisplayName())) {
                         return (ViewNode)view;
                     }
                 }
@@ -237,7 +237,7 @@ public abstract class DBTestBase extends TestBase {
                         // DatabaseNodeInfo.printChildren("tables", tables);
 
                         for (Node view : views) {
-                            if (viewname.toLowerCase().equals(view.getDisplayName().toLowerCase())) {
+                            if (viewname.equalsIgnoreCase(view.getDisplayName())) {
                                 return (ViewNode)view;
                             }
                         }

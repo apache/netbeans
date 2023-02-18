@@ -73,7 +73,7 @@ public class LocalHistoryProvider implements VCSHistoryProvider, VersioningListe
         for (VCSFileProxy f : files) {
             StoreEntry[] ses = LocalHistory.getInstance().getLocalHistoryStore().getStoreEntries(f);
             for(StoreEntry se : ses) {
-                if(!storeEntries.keySet().contains(se.getTimestamp())) { 
+                if(!storeEntries.containsKey(se.getTimestamp())) {
                     HistoryEntry e = 
                         new HistoryEntry(
                             files, 

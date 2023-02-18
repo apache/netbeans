@@ -152,7 +152,7 @@ public @interface TemplateRegistration {
      * With this attribute one can specify the preferred technologies
      * to use in this wizard as well.
      * 
-     * @return list of preferred technology ids
+     * @return Strings array of preferred technology ids
      * @since 1.4
      */
     String[] techIds() default {};

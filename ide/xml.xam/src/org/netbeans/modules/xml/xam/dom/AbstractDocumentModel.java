@@ -366,7 +366,7 @@ public abstract class AbstractDocumentModel<T extends DocumentComponent<T>>
     }
     
     protected void firePropertyChangedEvents(SyncUnit unit, Element oldElement) {
-        Set<String> propertyNames = new HashSet(unit.getRemovedAttributes().keySet());
+        Set<String> propertyNames = new HashSet<>(unit.getRemovedAttributes().keySet());
         propertyNames.addAll(unit.getAddedAttributes().keySet());
         for (String name : propertyNames) {
             Attr oldAttr = unit.getRemovedAttributes().get(name);

@@ -1027,7 +1027,7 @@ public class MakeNBM extends Task {
         Element el = doc.createElement("manifest");
         List<String> attrNames = new ArrayList<>(attr.size());
         for(Object key: attr.keySet()) {
-            attrNames.add(((Attributes.Name)key).toString());
+            attrNames.add(key.toString());
         }
         Collections.sort(attrNames);
         for(String name: attrNames) {

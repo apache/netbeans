@@ -85,7 +85,7 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         
         unitNameTextField.getDocument().addDocumentListener(new ValidationListener());
         errorMessage.setForeground(Color.RED);
-                updateWarning();
+        updateWarning();
     }
     
     

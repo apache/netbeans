@@ -39,7 +39,7 @@ public final class DropdownButton extends JToggleButton {
     public static final String KEY_CLASS = "KEY_CLASS"; // NOI18N
     public static final String KEY_BOOLVALUE = "KEY_BOOLVALUE"; // NOI18N
 
-    private final List<Action> actions = new ArrayList();
+    private final List<Action> actions = new ArrayList<>();
 
     
     public DropdownButton(Icon icon) {

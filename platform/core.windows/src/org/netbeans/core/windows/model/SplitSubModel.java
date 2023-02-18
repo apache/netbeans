@@ -973,7 +973,7 @@ class SplitSubModel {
         }
         
         public void setChildSplitWeight(Node child, double weight) {
-            if(child == null || !child2splitWeight.keySet().contains(child)) {
+            if(child == null || !child2splitWeight.containsKey(child)) {
                 return;
             }
             

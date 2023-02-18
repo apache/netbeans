@@ -47,7 +47,7 @@ import org.openide.util.Exceptions;
 public class UndoableWrapper implements UndoableEditWrapper {
 
     private AtomicBoolean active = new AtomicBoolean();
-    private Map<BaseDocument, UndoableEditDelegate> docToFirst = new HashMap();
+    private Map<BaseDocument, UndoableEditDelegate> docToFirst = new HashMap<>();
     private RefactoringSession session;
 
     public UndoableWrapper() {

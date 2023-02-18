@@ -66,7 +66,7 @@ public class MetroSchemaCatalog implements CatalogReader, CatalogDescriptor2, En
 
     private synchronized Map<String, String> getLocalSchemaDefs() {
         if (localSchemaDefs == null) {
-            localSchemaDefs = new HashMap();
+            localSchemaDefs = new HashMap<>();
             localSchemaDefs.putAll(getSchemaLocations(true));
         }
         return localSchemaDefs;

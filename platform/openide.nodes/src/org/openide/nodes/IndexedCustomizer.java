@@ -124,7 +124,7 @@ public final class IndexedCustomizer extends JDialog implements Customizer {
      * Might not actually be used as a JDialog, however its GUI
      * layout and logic will be used.
      * Cf. #9323.
-     * @param c a container on which to draw the GUI
+     * @param p a container on which to draw the GUI
      * @param closeButton if true, add a Close button and other dialog logic, else no
      */
     IndexedCustomizer(Container p, boolean closeButton) {

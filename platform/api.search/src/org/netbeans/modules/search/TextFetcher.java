@@ -127,7 +127,7 @@ final class TextFetcher implements Runnable {
      * cancelled and a new request will be scheduled).
      * 
      * @param  item  item to be shown
-     * @param  receiver  displayer that will actually show the item in the UI
+     * @param  textDisplayer displayer that will actually show the item in the UI
      * @return  {@code true} if the previous item has not been shown yet
      *          and we are about to show the same file, just at a possible
      *          different location;

@@ -61,7 +61,7 @@ public class RequireJSCodeCompletionTest extends JsCodeCompletionBase {
         FileObject folder = getTestFile("TestProject1");
         Project tp = new TestProjectSupport.TestProject(folder, null);
 
-        Map<String, String> mappings = new HashMap();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("utils", "js/folder1/api/utils.js");
         mappings.put("api", "js/folder1/api");
         mappings.put("lib/api", "js/folder1/api");

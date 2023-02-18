@@ -87,10 +87,8 @@ public final class ResourceUtils {
         if(arguments.length == 0) {
             return map;
         } else {
-            Map <Locale, String> result = new HashMap<Locale, String>();
-            for(Locale locale : map.keySet()) {
-                result.put(locale, format(map.get(locale), arguments));
-            }
+            Map <Locale, String> result = new HashMap<>();
+            map.forEach((locale, name) -> result.put(locale, format(name, arguments)));
             return result;
         }
     }

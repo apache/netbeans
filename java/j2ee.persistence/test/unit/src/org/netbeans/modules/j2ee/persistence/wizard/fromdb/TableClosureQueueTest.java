@@ -33,9 +33,9 @@ import org.netbeans.modules.j2ee.persistence.wizard.fromdb.TableClosure.Queue;
 public class TableClosureQueueTest extends TestCase {
 
     public void testInitialElements() {
-        Set<String> initial = new HashSet(Arrays.asList("a", "b"));
+        Set<String> initial = new HashSet<>(Arrays.asList("a", "b"));
         Queue<String> queue = new Queue<>(initial);
-        Set<String> dequeued = new HashSet();
+        Set<String> dequeued = new HashSet<>();
         while (!queue.isEmpty()) {
             dequeued.add(queue.poll());
         }

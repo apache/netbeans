@@ -35,7 +35,7 @@ public final class NodeReorderEvent extends NodeEvent {
     private final List<Node> currSnapshot;    
 
     /** Package private constructor to allow construction only
-    * @param node the node that has changed
+    * @param n the node that has changed
     * @param newIndices new indexes of the nodes
     */
     NodeReorderEvent(Node n, int[] newIndices) {

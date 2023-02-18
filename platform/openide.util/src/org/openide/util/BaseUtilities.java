@@ -1396,7 +1396,6 @@ widthcheck:  {
     }
 
     /** Loads all resources that contain renaming information.
-     * @param l classloader to load packages from
      */
     private static void checkMapping() {
         // test if we run in test mode
@@ -1530,7 +1529,8 @@ widthcheck:  {
 
     /**
      * Load single translation file.
-     * @param resource URL identifiing transaction table
+     * @param re interface for communication between Utilities.translate and regular expression impl.
+     * @param reader source of data
      * @param results will be filled with String[2]
      */
     private static void loadTranslationFile(RE re, BufferedReader reader, Set<String[]> results)

@@ -87,7 +87,7 @@ class DataNucleusProvider extends Provider{
 
     @Override
     public Map getDefaultVendorSpecificProperties() {
-        Hashtable<String,String> properties = new Hashtable();
+        Hashtable<String,String> properties = new Hashtable<>();
         properties.put("datanucleus.NontransactionalRead", "true"); //NOI18N
         properties.put("datanucleus.NontransactionalWrite", "true"); //NOI18N
         properties.put("datanucleus.ConnectionURL", "appengine"); //NOI18N

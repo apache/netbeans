@@ -3852,7 +3852,7 @@ class LayoutFeeder implements LayoutConstants {
                         }
                         if (gaps[LEADING] != null && gaps[TRAILING] != null) {
                             if (unifyGaps == null) {
-                                unifyGaps = new ArrayList();
+                                unifyGaps = new ArrayList<>();
                             }
                             unifyGaps.add(gaps);
                         }

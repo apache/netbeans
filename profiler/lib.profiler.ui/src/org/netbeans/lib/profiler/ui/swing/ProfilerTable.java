@@ -509,8 +509,8 @@ public class ProfilerTable extends JTable {
     private Object[] selectValues(Object[] values, int column, boolean scrollToVisible) {
         if (values == null || values.length == 0) return null;
         
-        Set<Object> toSelect = new HashSet(Arrays.asList(values));
-        List<Object> selected = new ArrayList(toSelect.size());
+        Set<Object> toSelect = new HashSet<>(Arrays.asList(values));
+        List<Object> selected = new ArrayList<>(toSelect.size());
         
         internal = true;
         try {

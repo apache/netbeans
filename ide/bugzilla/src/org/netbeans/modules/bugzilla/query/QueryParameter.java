@@ -345,7 +345,7 @@ public abstract class QueryParameter {
                 // need case sensitive compare
                 for(int j = 0; j < model.getSize(); j++) {
                     ParameterValue pv = (ParameterValue) model.getElementAt(j);
-                    if(pv.getValue().toLowerCase().equals(values[i].getValue().toLowerCase())) {
+                    if(pv.getValue().equalsIgnoreCase(values[i].getValue())) {
                         selectionList.add(j);
                         break;
                     }

@@ -425,7 +425,7 @@ public final class OCIManager {
             }
             if (profile == getActiveProfile()) {
                 OCIProfile def = forConfig(defaultConfigPath, profName);
-                if (profiles.values().contains(def) || profiles.isEmpty()) {
+                if (profiles.containsValue(def) || profiles.isEmpty()) {
                     resetToProfile = def;
                 } else {
                     resetToProfile = profiles.values().iterator().next();

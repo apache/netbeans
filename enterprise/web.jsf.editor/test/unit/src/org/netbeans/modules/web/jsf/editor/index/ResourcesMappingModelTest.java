@@ -37,7 +37,7 @@ public class ResourcesMappingModelTest extends NbTestCase {
     @Test
     public void testParseResourceFromString() throws Exception {
         String resString = "stylesheet@test.css:;script@file.js:jsLib";
-        List<ResourcesMappingModel.Resource> resources = new ArrayList(ResourcesMappingModel.parseResourcesFromString(resString));
+        List<ResourcesMappingModel.Resource> resources = new ArrayList<>(ResourcesMappingModel.parseResourcesFromString(resString));
         assertEquals(2, resources.size());
 
         ResourcesMappingModel.Resource res1 = resources.get(0);

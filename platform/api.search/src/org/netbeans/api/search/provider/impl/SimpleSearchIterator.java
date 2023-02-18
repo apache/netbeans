@@ -178,12 +178,10 @@ public class SimpleSearchIterator extends AbstractFileObjectIterator {
      * <code>the method returns
      * <code>null</code> and no further filters are checked. If a filter returns
      * <code>TRAVERSE_ALL_SUBFOLDERS</code>, the filter is removed from the base
-     * as it needs not be applied on the folder's children. The remaining list
-     * of filters is returned as a result.
+     * as it needs not be applied on the folder's children.
      *
      * @param folder folder to compute children filters for
-     * @return list of filters to be applied on the folder's children; or
-     * <code>null</code> if the folder should not be traversed
+     * @return True if directory can be searched, false if it cannot.
      */
     private boolean checkFolderFilters(final FileObject folder) {
         assert folder.isFolder();

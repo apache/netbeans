@@ -312,7 +312,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
         TreePath enclosingClassPath = JavaRefactoringUtils.findEnclosingClass(workingCopy, currentPath, true, true, true, true, true);
         Element enclosingElement = workingCopy.getTrees().getElement(enclosingClassPath);
 
-        final LinkedList<ExpressionTree> arguments = new LinkedList(node.getArguments());
+        final LinkedList<ExpressionTree> arguments = new LinkedList<>(node.getArguments());
         ExpressionTree newMethodSelect;
 
         if (el.getModifiers().contains(Modifier.STATIC)) {

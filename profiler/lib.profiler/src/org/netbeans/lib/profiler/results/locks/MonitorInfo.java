@@ -38,9 +38,9 @@ class MonitorInfo {
 
     MonitorInfo(int id) {
         monitorId = id;
-        waitThreads = new HashMap();
-        ownerThreads = new HashMap();
-        openThreads = new HashMap();
+        waitThreads = new HashMap<>();
+        ownerThreads = new HashMap<>();
+        openThreads = new HashMap<>();
         className = "*unknown*"; // NOI18N
     }
     
@@ -145,14 +145,14 @@ class MonitorInfo {
 
         ThreadDetail(ThreadInfo ti) {
             threadInfo = ti;
-            threads = new HashMap();
+            threads = new HashMap<>();
         }
 
         ThreadDetail(ThreadDetail d) {
             threadInfo = d.threadInfo;
             count = d.count;
             waitTime = d.waitTime;
-            threads = new HashMap();
+            threads = new HashMap<>();
             for (ThreadDetail td : d.threads.values()) {
                 threads.put(td.threadInfo, new ThreadDetail(td));
             }

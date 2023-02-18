@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Map;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -943,9 +944,9 @@ public class Registry implements PropertyContainer {
             if (propertiesElement != null) {
                 final NbiProperties map =
                         XMLUtils.parseNbiProperties(propertiesElement);
-                for (Object name: map.keySet()) {
-                    if (!properties.containsKey(name)) {
-                        properties.put(name, map.get(name));
+                for (Map.Entry<Object, Object> entry : map.entrySet()) {
+                    if (!properties.containsKey(entry.getKey())) {
+                        properties.put(entry.getKey(), entry.getValue());
                     }
                 }
             }

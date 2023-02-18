@@ -144,7 +144,7 @@ public class PayaraSettings {
         String showProperty
                 = System.getProperty("org.netbeans.core.WindowSystem.show");
         return showProperty == null
-                || !showProperty.toLowerCase().equals("false");
+                || !showProperty.equalsIgnoreCase("false");
     }
 
 }

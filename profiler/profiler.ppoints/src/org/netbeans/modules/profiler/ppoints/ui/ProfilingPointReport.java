@@ -48,7 +48,7 @@ public abstract class ProfilingPointReport extends ProfilerTopComponent {
     private static final ProfilingSettings REF_CPU_INSTR =
             ProfilingSettingsPresets.createCPUPreset(ProfilingSettings.PROFILE_CPU_ENTIRE);
     
-    private static final Set<ProfilingPointReport> openReports = new HashSet();
+    private static final Set<ProfilingPointReport> openReports = new HashSet<>();
     private static boolean profilingRunning;
     private static ProfilingSettings currentSettings;
     

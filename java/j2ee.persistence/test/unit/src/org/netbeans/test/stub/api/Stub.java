@@ -70,7 +70,7 @@ public final class Stub {
     
     private static final class DefaultStubImplementation implements StubImplementation {
     
-        private static final Map<Object, StubDelegate> STUB_TO_DELEGATE = new WeakHashMap();
+        private static final Map<Object, StubDelegate> STUB_TO_DELEGATE = new WeakHashMap<>();
         
         @Override
         public Object create(Class[] intfs) {

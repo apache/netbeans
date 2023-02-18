@@ -50,7 +50,7 @@ public class RequireJsDeclarationFinderTest extends JsTestBase {
         lookupAll.add(new TestProjectSupport.FileOwnerQueryImpl(testProject));
         MockLookup.setInstances(lookupAll.toArray());
         
-        Map<String, String> mappings = new HashMap();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("utils", "js/folder1/api/utils.js");
         mappings.put("api", "js/folder1/api");
         mappings.put("lib/api", "js/folder1/api");

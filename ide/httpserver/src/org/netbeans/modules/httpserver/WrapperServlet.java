@@ -42,26 +42,27 @@ import javax.servlet.ServletOutputStream;
  *
  * @author Radim Kubacki
  */
-public class WrapperServlet extends NbBaseServlet {
+public class WrapperServlet extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger(WrapperServlet.class.getName());
     private static final long serialVersionUID = 8009602136746998361L;
-    
-    /** Creates new WrapperServlet */
-    public WrapperServlet () {
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        processRequest(req, resp);
     }
-    
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        processRequest(req, resp);
+    }
+
     /** Processes the request for both HTTP GET and POST methods
      * @param request servlet request
      * @param response servlet response
      */
-    protected void processRequest (HttpServletRequest request, HttpServletResponse response) 
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, java.io.IOException {
-        if (!checkAccess(request)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN,
-                               NbBundle.getMessage(WrapperServlet.class, "MSG_HTTP_FORBIDDEN"));
-            return;
-        }
         // output your page here
         //String path = request.getPathInfo ();
         ServletOutputStream out = response.getOutputStream ();

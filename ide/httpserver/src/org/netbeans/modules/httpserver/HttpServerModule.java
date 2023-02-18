@@ -228,6 +228,15 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
             ctx.removeFilterDef(fd);
         }
 
+        FilterDef filterDef = new FilterDef();
+        filterDef.setFilter(new AccessFilter());
+        filterDef.setFilterName("AccessFilter");
+        FilterMap filterMap = new FilterMap();
+        filterMap.addURLPattern("/*");
+        filterMap.setFilterName("AccessFilter");
+        ctx.addFilterDef(filterDef);
+        ctx.addFilterMap(filterMap);
+
         Wrapper sw = ctx.createWrapper();
         sw.setServletClass("org.netbeans.modules.httpserver.WrapperServlet");
         sw.setName("WrapperServlet");

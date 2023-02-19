@@ -97,9 +97,11 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
     static {
         for (GlassFishVersion version : GlassFishVersion.values()) {
             jpaSupport[version.ordinal()] = new JpaSupportVector(
-                    true, version.ordinal() >= GlassFishVersion.GF_3.ordinal(),
-                    version.ordinal() >= GlassFishVersion.GF_4.ordinal(),
-                    version.ordinal() >= GlassFishVersion.GF_5.ordinal());
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6) && GlassFishVersion.ge(version, GlassFishVersion.GF_3),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6) && GlassFishVersion.ge(version, GlassFishVersion.GF_4),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6) && GlassFishVersion.ge(version, GlassFishVersion.GF_5)
+            );
         }
     }
 

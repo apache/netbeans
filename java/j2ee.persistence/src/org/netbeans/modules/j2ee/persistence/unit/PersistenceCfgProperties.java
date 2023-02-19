@@ -37,9 +37,11 @@ public class PersistenceCfgProperties {
 
     // String[] for selecting one of the values
     private static final String[] TRUE_FALSE = new String[]{"true", "false"}; // NOI18N
+    private static final String[] RESOURCE_TYPE = new String[]{"RESOURCE_LOCAL", "JTA"}; // NOI18N
     private static final String[] SCHEMA_GEN_DB_OPTIONS = new String[]{"none", "create", "drop-and-create", "drop", "create-or-extend-tables"};
     private static final String[] SCHEMA_GEN_SCRIPTS_OPTIONS = new String[]{"none", "create", "drop-and-create", "drop"};
     private static final String[] SCHEMA_GEN_SOURCE_TYPES = new String[]{"metadata", "script", "metadata-then-script", "script-then-metadata"};
+    private static final String[] SHARED_CACHE_MODE = new String[]{"ALL", "NONE", "ENABLE_SELECTIVE", "DISABLE_SELECTIVE", "UNSPECIFIED"};
     //eclipselink
     private static final String[] EL_CACHE_TYPES = new String[]{"DEFAULT", "Full", "Weak", "Soft", "SoftWeak", "HardWeak", "NONE"};//NOI18N
     private static final String[] EL_FLUSH_CLEAR_CACHE = new String[]{"DEFAULT", "Drop", "DropInvalidate", "Merge"};//NOI18N
@@ -54,7 +56,6 @@ public class PersistenceCfgProperties {
     private static final String[] EL_TARGET_SERVER = new String[]{"DEFAULT", "Glassfish", "JBoss", "None", "OC4J", "SAPNetWeaver_7_1", "SunAS9", "WebLogic", "WebLogic_9", "WebLogic_10", "WebLogic_12", "WebSphere", "WebSphere_6_1", "WebSphere_7", "WebSphere_EJBEmbeddable", "WebSphere_Liberty"};//NOI18N
     private static final String[] EL_DDL_GEN_MODE = new String[]{"both", "database", "sql-script"};//NOI18N
     //eclipselink 2.2
-    private static final String[] EL_SHARED_CACHE_MODE = new String[]{"ALL", "NONE", "ENABLE_SELECTIVE", "DISABLE_SELECTIVE", "UNSPECIFIED"};
     private static final Map<Provider, Map<String, String[]>> possiblePropertyValues = new HashMap<>();
     //hibernate 5.6 (JPA 2.2) dialects
     private static final String[] HIBERNATE_DIALECTS = new String[]{"org.hibernate.dialect.AbstractHANADialect", "org.hibernate.dialect.Cache71Dialect", "org.hibernate.dialect.CockroachDB192Dialect", "org.hibernate.dialect.CockroachDB201Dialect", "org.hibernate.dialect.CUBRIDDialect", "org.hibernate.dialect.DataDirectOracle9Dialect", "org.hibernate.dialect.DB2390Dialect", 
@@ -67,7 +68,12 @@ public class PersistenceCfgProperties {
             "org.hibernate.dialect.PostgreSQL92Dialect", "org.hibernate.dialect.PostgreSQL93Dialect", "org.hibernate.dialect.PostgreSQL94Dialect", "org.hibernate.dialect.PostgreSQL95Dialect", "org.hibernate.dialect.PostgreSQL9Dialect", "org.hibernate.dialect.ProgressDialect", "org.hibernate.dialect.RDMSOS2200Dialect", "org.hibernate.dialect.SAPDBDialect", 
             "org.hibernate.dialect.SQLServer2005Dialect", "org.hibernate.dialect.SQLServer2008Dialect", "org.hibernate.dialect.SQLServer2012Dialect", "org.hibernate.dialect.SQLServer2016Dialect", "org.hibernate.dialect.SQLServerDialect", "org.hibernate.dialect.Sybase11Dialect", "org.hibernate.dialect.SybaseAnywhereDialect", "org.hibernate.dialect.SybaseASE157Dialect", 
             "org.hibernate.dialect.SybaseASE15Dialect", "org.hibernate.dialect.SybaseDialect", "org.hibernate.dialect.Teradata14Dialect", "org.hibernate.dialect.TeradataDialect", "org.hibernate.dialect.TimesTenDialect"};//NOI18N
-
+    //DataNucleus
+    private static final String[] DN_CONN_POOLING = new String[]{"None", "DBCP2", "C3P0", "BoneCP", "HikariCP", "Tomcat"};//NOI18N
+    private static final String[] DN_VALIDATION_MODE = new String[]{"auto", "callback", "none"};//NOI18N
+    private static final String[] DN_TRX_ATTR = new String[]{"NEW", "EXISTING"};//NOI18N
+    private static final String[] DN_TRX_ISO = new String[]{"read-uncommitted", "read-committed", "repeatable-read", "serializable"};//NOI18N
+    
     static {
         //general 2.0
         possiblePropertyValues.put(null, new HashMap<String, String[]>());//it's for default
@@ -148,10 +154,10 @@ public class PersistenceCfgProperties {
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.CANONICAL_MODEL_PREFIX, null);//NOI18N
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.CANONICAL_MODEL_SUFFIX, null);//NOI18N
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.CANONICAL_MODEL_SUB_PACKAGE, null);//NOI18N
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getJdbcUrl(),null);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getJdbcDriver(),null);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getJdbcPassword(),null);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getJdbcUsername(),null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getJdbcUrl(), null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getJdbcDriver(), null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getJdbcPassword(), null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getJdbcUsername(), null);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getTableGenerationPropertyName()
                 ,new String[] {ProviderUtil.ECLIPSELINK_PROVIDER2_0.getTableGenerationCreateValue(),ProviderUtil.ECLIPSELINK_PROVIDER2_0.getTableGenerationDropCreateValue(), PersistenceUnitProperties.CREATE_OR_EXTEND, PersistenceUnitProperties.SCHEMA_GENERATION_DROP_ACTION, PersistenceUnitProperties.SCHEMA_GENERATION_NONE_ACTION });
         //ECLIPSELINK 2.1 (initially just copy of 2.0)
@@ -171,7 +177,7 @@ public class PersistenceCfgProperties {
         //ECLIPSELINK 2.2 (initially just copy of 2.0)
         possiblePropertyValues.put(ProviderUtil.ECLIPSELINK_PROVIDER2_2, new HashMap<String, String[]>());
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_2).putAll(possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0));
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_2).put(PersistenceUnitProperties.SHARED_CACHE_MODE, EL_SHARED_CACHE_MODE);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_2).put(PersistenceUnitProperties.SHARED_CACHE_MODE, SHARED_CACHE_MODE);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_2).put(PersistenceUnitProperties.WEAVING_MAPPEDSUPERCLASS, TRUE_FALSE);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_2).put(ProviderUtil.ECLIPSELINK_PROVIDER2_2.getTableGenerationPropertyName(),possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).get(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getTableGenerationPropertyName()));
         //hibernate //TODO? reuse hibernate module?
@@ -190,10 +196,10 @@ public class PersistenceCfgProperties {
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put("hibernate.ejb.use_class_enhancer",  null);//NOI18N
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put("hibernate.ejb.discard_pc_on_close",  null);//NOI18N
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put("hibernate.ejb.resource_scanner",     null);//NOI18N
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put(ProviderUtil.HIBERNATE_PROVIDER2_0.getJdbcUrl(),null);
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put(ProviderUtil.HIBERNATE_PROVIDER2_0.getJdbcDriver(),null);
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put(ProviderUtil.HIBERNATE_PROVIDER2_0.getJdbcPassword(),null);
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put(ProviderUtil.HIBERNATE_PROVIDER2_0.getJdbcUsername(),null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put(ProviderUtil.HIBERNATE_PROVIDER2_0.getJdbcUrl(), null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put(ProviderUtil.HIBERNATE_PROVIDER2_0.getJdbcDriver(), null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put(ProviderUtil.HIBERNATE_PROVIDER2_0.getJdbcPassword(), null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put(ProviderUtil.HIBERNATE_PROVIDER2_0.getJdbcUsername(), null);
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put(ProviderUtil.HIBERNATE_PROVIDER2_0.getTableGenerationPropertyName()
                 ,new String[] {ProviderUtil.HIBERNATE_PROVIDER2_0.getTableGenerationCreateValue(),ProviderUtil.HIBERNATE_PROVIDER2_0.getTableGenerationDropCreateValue(), "validate", "update" });//NOI18N
         //HIBERNATE 2.1 (initially just copy of 2.0)
@@ -204,43 +210,243 @@ public class PersistenceCfgProperties {
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_2).putAll(possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0));
         //hibernate jpa 1.0
         possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER1_0, new HashMap<String, String[]>());
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcUrl(),null);
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcDriver(),null);
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcPassword(),null);
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcUsername(),null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcUrl(), null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcDriver(), null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcPassword(), null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcUsername(), null);
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getTableGenerationPropertyName()
                 ,new String[] {ProviderUtil.HIBERNATE_PROVIDER1_0.getTableGenerationCreateValue(),ProviderUtil.HIBERNATE_PROVIDER1_0.getTableGenerationDropCreateValue(), "validate", "update"  });
         //eclipselink jpa 1.0
         possiblePropertyValues.put(ProviderUtil.ECLIPSELINK_PROVIDER1_0, new HashMap<String, String[]>());
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER1_0).put(ProviderUtil.ECLIPSELINK_PROVIDER1_0.getJdbcUrl(),null);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER1_0).put(ProviderUtil.ECLIPSELINK_PROVIDER1_0.getJdbcDriver(),null);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER1_0).put(ProviderUtil.ECLIPSELINK_PROVIDER1_0.getJdbcPassword(),null);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER1_0).put(ProviderUtil.ECLIPSELINK_PROVIDER1_0.getJdbcUsername(),null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER1_0).put(ProviderUtil.ECLIPSELINK_PROVIDER1_0.getJdbcUrl(), null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER1_0).put(ProviderUtil.ECLIPSELINK_PROVIDER1_0.getJdbcDriver(), null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER1_0).put(ProviderUtil.ECLIPSELINK_PROVIDER1_0.getJdbcPassword(), null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER1_0).put(ProviderUtil.ECLIPSELINK_PROVIDER1_0.getJdbcUsername(), null);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER1_0).put(ProviderUtil.ECLIPSELINK_PROVIDER1_0.getTableGenerationPropertyName()
                 ,new String[] {ProviderUtil.ECLIPSELINK_PROVIDER1_0.getTableGenerationCreateValue(),ProviderUtil.ECLIPSELINK_PROVIDER1_0.getTableGenerationDropCreateValue(), PersistenceUnitProperties.NONE });
         //openjpa 1.0
         possiblePropertyValues.put(ProviderUtil.OPENJPA_PROVIDER1_0, new HashMap<String, String[]>());
-        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcUrl(),null);
-        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcDriver(),null);
-        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcPassword(),null);
-        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcUsername(),null);
+        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcUrl(), null);
+        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcDriver(), null);
+        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcPassword(), null);
+        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcUsername(), null);
         possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getTableGenerationPropertyName()
                 ,new String[] {ProviderUtil.OPENJPA_PROVIDER1_0.getTableGenerationCreateValue(),ProviderUtil.OPENJPA_PROVIDER1_0.getTableGenerationDropCreateValue() });
-        //datanucleus
+        //DataNucleus Datastore Properties
         possiblePropertyValues.put(ProviderUtil.DATANUCLEUS_PROVIDER, new HashMap<String, String[]>());
-        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionDriverName",null);
-        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionURL",null);
-        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionUserName",null);
-        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionPassword",null);
-        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.connectionPoolingType",null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionURL", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionUserName", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionPassword", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionDriverName", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionFactory", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionFactory2", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionFactoryName", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionFactory2Name", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionPasswordDecrypter", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.connectionPoolingType", DN_CONN_POOLING);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.connectionPoolingType.nontx", DN_CONN_POOLING);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.connection.nontx.releaseAfterUse", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.connection.singleConnectionPerExecutionContext", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.connection.resourceType", RESOURCE_TYPE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.connection.resourceType2", RESOURCE_TYPE);
+        //DataNucleus Persistence Properties
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.IgnoreCache", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.Multithreaded", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.Optimistic", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.RetainValues", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.RestoreValues", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.mapping.Catalog", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.mapping.Schema", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.tenantId", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.tenantProvider", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.CurrentUser", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.CurrentUserProvider", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.DetachAllOnCommit", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.detachAllOnRollback", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.CopyOnAttach", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.allowAttachOfTransient", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.attachSameDatastore", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.detachAsWrapped", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.DetachOnClose", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.detachmentFields", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.maxFetchDepth", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.detachedState", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ServerTimeZoneID", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.PersistenceUnitLoadClasses", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.persistenceXmlFilename", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.datastoreReadTimeout", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.datastoreWriteTimeout", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.singletonEMFForName", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.jmxType", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.type.wrapper.basis", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.type.treatJavaUtilDateAsMutable", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.deletionPolicy", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.identityStringTranslatorType", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.identityKeyTranslatorType", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.datastoreIdentityType", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.executionContext.maxIdle", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.executionContext.reaperThread", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.executionContext.closeActiveTxAction", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.stateManager.className", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.manageRelationships", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.manageRelationshipsChecks", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.persistenceByReachabilityAtCommit", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.classLoaderResolverName", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.primaryClassLoader", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.plugin.pluginRegistryClassName", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.plugin.pluginRegistryBundleCheck", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.plugin.allowUserBundles", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.plugin.validatePlugins", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.findObject.validateWhenCached", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.findObject.typeConversion", TRUE_FALSE);
+        //DataNucleus Schema Properties
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.autoCreateAll", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.autoCreateDatabase", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.autoCreateTables", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.autoCreateColumns", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.autoCreateConstraints", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.autoCreateWarnOnError", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.validateAll", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.validateTables", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.validateColumns", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.validateConstraints", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.readOnlyDatastore", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.readOnlyDatastoreAction", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.generateDatabase.mode", SCHEMA_GEN_SCRIPTS_OPTIONS);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.generateScripts.mode", SCHEMA_GEN_SCRIPTS_OPTIONS);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.generateScripts.create", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.generateScripts.drop", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.generateDatabase.createScript", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.generateDatabase.dropScript", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.schema.loadScript", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.identifierFactory", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.identifier.namingFactory", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.identifier.case", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.identifier.wordSeparator", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.identifier.tablePrefix", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.identifier.tableSuffix", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.store.allowReferencesWithNoImplementations", TRUE_FALSE);
+        //DataNucleus Transaction Properties
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.transaction.type", RESOURCE_TYPE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.transaction.isolation", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.transaction.jta.transactionManagerLocator", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.transaction.jta.transactionManagerJNDI", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.transaction.nontx.read", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.transaction.nontx.write", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.transaction.nontx.atomic", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.SerializeRead", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.flush.auto.objectLimit", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.flush.mode", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.flush.optimised", TRUE_FALSE);
+        // DataNucleus Cache Properties
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.collections", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.collections.lazy", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level1.type", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.type", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.mode", SHARED_CACHE_MODE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.storeMode", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.retrieveMode", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.updateMode", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.cacheName", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.maxSize", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.clearAtClose", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.batchSize", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.expiryMillis", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.readThrough", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.writeThrough", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.storeByValue", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.level2.statisticsEnabled", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.queryCompilation.type", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.queryCompilation.cacheName", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.queryCompilationDatastore.type", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.queryCompilationDatastore.cacheName", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.queryResults.type", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.queryResults.cacheName", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.queryResults.clearAtClose", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.queryResults.maxSize", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cache.queryResults.expiryMillis", null);
+        //DataNucleus Bean Validation Properties
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.validation.mode", DN_VALIDATION_MODE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.validation.group.pre-persist", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.validation.group.pre-update", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.validation.group.pre-remove", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.validation.factory", null);
+        //DataNucleus Value Generation Properties
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.valuegeneration.transactionAttribute", DN_TRX_ATTR);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.valuegeneration.transactionIsolation", DN_TRX_ISO);
+        //DataNucleus Metadata Properties
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.alwaysDetachable", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.listener.object", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.ignoreMetaDataForMissingClasses", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.xml.validate", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.xml.namespaceAware", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.allowXML", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.allowAnnotations", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.allowLoadAtRuntime", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.defaultNullable", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.scanner", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.useDiscriminatorForSingleTable", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.metadata.javaxValidationShortcuts", TRUE_FALSE);
+        //DataNucleus Query Properties
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.query.flushBeforeExecution", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.query.jpql.allowRange", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.query.checkUnusedParameters", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.query.sql.syntaxChecks", TRUE_FALSE);
+        //DataNucleus Datastore-Specific Properties
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.datastoreAdapterClassName", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.useLegacyNativeValueStrategy", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.statementBatchLimit", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.checkExistTablesOrViews", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.useDefaultSqlType", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.initializeColumnInfo", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.classAdditionMaxRetries", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.constraintCreateMode", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.uniqueConstraints.mapInverse", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.discriminatorPerSubclassTable", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.stringDefaultLength", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.stringLengthExceededAction", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.useColumnDefaultWhenNull", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.persistEmptyStringAsNull", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.query.fetchDirection", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.query.resultSetType", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.query.resultSetConcurrency", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.query.multivaluedFetch", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.oracle.nlsSortOrder", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.mysql.engineType", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.mysql.collation", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.mysql.characterSet", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.informix.useSerialForIdentity", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.dynamicSchemaUpdates", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.omitDatabaseMetaDataGetColumns", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.sqlTableNamingStrategy", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.tableColumnOrder", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.allowColumnReuse", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.statementLogging", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.autoFetchUnloadedBasicFields", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.rdbms.autoFetchUnloadedFKs", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cloud.storage.bucket", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.hbase.relationUsesPersistableId", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.hbase.enforceUniquenessInApplication", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cassandra.enforceUniquenessInApplication", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cassandra.compression", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cassandra.metrics", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cassandra.ssl", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cassandra.socket.readTimeoutMillis", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cassandra.socket.connectTimeoutMillis", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cassandra.loadBalancingPolicy", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.cassandra.loadBalancingPolicy.tokenAwareLocalDC", null);
+        //DataNucleus EMF Properties
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.jpa.addClassTransformer", TRUE_FALSE);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.jpa.persistenceContextType", null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.jpa.txnMarkForRollbackOnException", TRUE_FALSE);
         possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put(ProviderUtil.DATANUCLEUS_PROVIDER.getTableGenerationPropertyName()
                 ,new String[] {ProviderUtil.DATANUCLEUS_PROVIDER.getTableGenerationCreateValue(),ProviderUtil.DATANUCLEUS_PROVIDER.getTableGenerationDropCreateValue() });
         //toplink 1.0
         possiblePropertyValues.put(ProviderUtil.TOPLINK_PROVIDER1_0, new HashMap<String, String[]>());
-        possiblePropertyValues.get(ProviderUtil.TOPLINK_PROVIDER1_0).put(ProviderUtil.TOPLINK_PROVIDER1_0.getJdbcUrl(),null);
-        possiblePropertyValues.get(ProviderUtil.TOPLINK_PROVIDER1_0).put(ProviderUtil.TOPLINK_PROVIDER1_0.getJdbcDriver(),null);
-        possiblePropertyValues.get(ProviderUtil.TOPLINK_PROVIDER1_0).put(ProviderUtil.TOPLINK_PROVIDER1_0.getJdbcPassword(),null);
-        possiblePropertyValues.get(ProviderUtil.TOPLINK_PROVIDER1_0).put(ProviderUtil.TOPLINK_PROVIDER1_0.getJdbcUsername(),null);
+        possiblePropertyValues.get(ProviderUtil.TOPLINK_PROVIDER1_0).put(ProviderUtil.TOPLINK_PROVIDER1_0.getJdbcUrl(), null);
+        possiblePropertyValues.get(ProviderUtil.TOPLINK_PROVIDER1_0).put(ProviderUtil.TOPLINK_PROVIDER1_0.getJdbcDriver(), null);
+        possiblePropertyValues.get(ProviderUtil.TOPLINK_PROVIDER1_0).put(ProviderUtil.TOPLINK_PROVIDER1_0.getJdbcPassword(), null);
+        possiblePropertyValues.get(ProviderUtil.TOPLINK_PROVIDER1_0).put(ProviderUtil.TOPLINK_PROVIDER1_0.getJdbcUsername(), null);
         possiblePropertyValues.get(ProviderUtil.TOPLINK_PROVIDER1_0).put(ProviderUtil.TOPLINK_PROVIDER1_0.getTableGenerationPropertyName()
                 ,new String[] {ProviderUtil.TOPLINK_PROVIDER1_0.getTableGenerationCreateValue(),ProviderUtil.TOPLINK_PROVIDER1_0.getTableGenerationDropCreateValue() });
     }

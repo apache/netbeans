@@ -26,8 +26,8 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
  * <p/>
  * @author Tomas Kraus
  */
+@Deprecated
 public class JpaSupport {
-
     ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
     ////////////////////////////////////////////////////////////////////////////

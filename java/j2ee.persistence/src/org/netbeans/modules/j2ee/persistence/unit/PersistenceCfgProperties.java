@@ -37,24 +37,36 @@ public class PersistenceCfgProperties {
 
     // String[] for selecting one of the values
     private static final String[] TRUE_FALSE = new String[]{"true", "false"}; // NOI18N
-    private static final String[] SCHEMA_GEN_OPTIONS = new String[]{"none", "create", "drop-and-create", "drop"};
+    private static final String[] SCHEMA_GEN_DB_OPTIONS = new String[]{"none", "create", "drop-and-create", "drop", "create-or-extend-tables"};
+    private static final String[] SCHEMA_GEN_SCRIPTS_OPTIONS = new String[]{"none", "create", "drop-and-create", "drop"};
     private static final String[] SCHEMA_GEN_SOURCE_TYPES = new String[]{"metadata", "script", "metadata-then-script", "script-then-metadata"};
     //eclipselink
-    private static final String[] EL_CACHE_TYPES = new String[]{"Full", "Weak", "Soft", "SoftWeak", "HardWeak", "NONE"};//NOI18N
-    private static final String[] EL_FLUSH_CLEAR_CACHE = new String[]{"Drop", "DropInvalidate", "Merge"};//NOI18N
-    private static final String[] EL_WEAWING = new String[] {"true", "false", "static"};//NOI18N
-    private static final String[] EL_PROFILER = new String[]{"PerformanceProfiler", "QueryMonitor", "NoProfiler"};//NOI18N
+    private static final String[] EL_CACHE_TYPES = new String[]{"DEFAULT", "Full", "Weak", "Soft", "SoftWeak", "HardWeak", "NONE"};//NOI18N
+    private static final String[] EL_FLUSH_CLEAR_CACHE = new String[]{"DEFAULT", "Drop", "DropInvalidate", "Merge"};//NOI18N
+    private static final String[] EL_WEAVING = new String[] {"true", "false", "static"};//NOI18N
+    private static final String[] EL_PROFILER = new String[]{"NoProfiler", "PerformanceMonitor", "PerformanceProfiler", "QueryMonitor", "DMSProfiler"};//NOI18N
     private static final String[] EL_CONTEXT_REFMODE = new String[]{"HARD", "WEAK", "FORCE_WEAK"};//NOI18N
     private static final String[] EL_BATCHWRITER = new String[]{"JDBC", "Buffered", "Oracle-JDBC", "None"};//NOI18N
     private static final String[] EL_EXCLUSIVE_CON_MODE = new String[]{"Transactional", "Isolated", "Always"};//NOI18N
-    private static final String[] EL_LOGGER = new String[]{"DefaultLogger", "JavaLogger", "ServerLogger"};//NOI18N
+    private static final String[] EL_LOGGER = new String[]{"DEFAULT", "DefaultLogger", "JavaLogger", "ServerLogger"};//NOI18N
     private static final String[] EL_LOGGER_LEVEL = new String[]{"OFF", "SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST", "ALL"};//NOI18N
-    private static final String[] EL_TARGET_DATABASE = new String[]{"Access", "Attunity", "Auto", "Cloudscape", "Database", "DB2Mainframe", "DB2", "DB2Z", "DBase", "Derby", "Firebird", "H2", "HANA", "HSQL", "Informix11", "Informix", "JavaDB", "MaxDB", "MySQL", "Oracle10", "Oracle11", "Oracle12", "Oracle18", "Oracle19", "Oracle8", "Oracle9", "Oracle", "Pervasive", "PointBase", "PostgreSQL", "SQLAnywhere", "SQLServer", "Sybase", "Symfoware", "TimesTen7", "TimesTen"};//NOI18N
-    private static final String[] EL_TARGET_SERVER = new String[]{"None", "Glassfish", "JBoss", "Oc4j", "SAPNetWeaver_7_1", "SunAS9Server", "WebLogic_10", "WebLogic_12", "WebLogic_9", "WebLogic", "WebSphere_6_1", "WebSphere_7", "WebSphere_EJBEmbeddable", "WebSphere_Liberty", "WebSphere"};//NOI18N
+    private static final String[] EL_TARGET_DATABASE = new String[]{"Attunity", "Auto", "Cloudscape", "Database", "DB2", "DB2Mainframe", "DBase", "DEFAULT", "Derby", "HANA", "HSQL", "Informix", "Informix11", "JavaDB", "MaxDB", "MySQL", "MySQL4", "Oracle", "Oracle8", "Oracle9", "Oracle10", "Oracle11", "PointBase", "PostgreSQL", "SQLAnywhere", "SQLServer", "Sybase", "Symfoware", "TimesTen"};//NOI18N
+    private static final String[] EL_TARGET_SERVER = new String[]{"DEFAULT", "Glassfish", "JBoss", "None", "OC4J", "SAPNetWeaver_7_1", "SunAS9", "WebLogic", "WebLogic_9", "WebLogic_10", "WebLogic_12", "WebSphere", "WebSphere_6_1", "WebSphere_7", "WebSphere_EJBEmbeddable", "WebSphere_Liberty"};//NOI18N
     private static final String[] EL_DDL_GEN_MODE = new String[]{"both", "database", "sql-script"};//NOI18N
     //eclipselink 2.2
     private static final String[] EL_SHARED_CACHE_MODE = new String[]{"ALL", "NONE", "ENABLE_SELECTIVE", "DISABLE_SELECTIVE", "UNSPECIFIED"};
     private static final Map<Provider, Map<String, String[]>> possiblePropertyValues = new HashMap<>();
+    //hibernate 5.6 (JPA 2.2) dialects
+    private static final String[] HIBERNATE_DIALECTS = new String[]{"org.hibernate.dialect.AbstractHANADialect", "org.hibernate.dialect.Cache71Dialect", "org.hibernate.dialect.CockroachDB192Dialect", "org.hibernate.dialect.CockroachDB201Dialect", "org.hibernate.dialect.CUBRIDDialect", "org.hibernate.dialect.DataDirectOracle9Dialect", "org.hibernate.dialect.DB2390Dialect", 
+            "org.hibernate.dialect.DB2390V8Dialect", "org.hibernate.dialect.DB2400Dialect", "org.hibernate.dialect.DB2400V7R3Dialect", "org.hibernate.dialect.DB297Dialect", "org.hibernate.dialect.DB2Dialect", "org.hibernate.dialect.DerbyDialect", "org.hibernate.dialect.DerbyTenFiveDialect", "org.hibernate.dialect.DerbyTenSevenDialect", "org.hibernate.dialect.DerbyTenSixDialect", 
+            "org.hibernate.dialect.FirebirdDialect", "org.hibernate.dialect.FrontBaseDialect", "org.hibernate.dialect.H2Dialect", "org.hibernate.dialect.HANACloudColumnStoreDialect", "org.hibernate.dialect.HANAColumnStoreDialect", "org.hibernate.dialect.HANARowStoreDialect", "org.hibernate.dialect.HSQLDialect", "org.hibernate.dialect.Informix10Dialect", "org.hibernate.dialect.InformixDialect", 
+            "org.hibernate.dialect.Ingres10Dialect", "org.hibernate.dialect.Ingres9Dialect", "org.hibernate.dialect.IngresDialect", "org.hibernate.dialect.InnoDBStorageEngine", "org.hibernate.dialect.InterbaseDialect", "org.hibernate.dialect.JDataStoreDialect", "org.hibernate.dialect.MariaDB102Dialect", "org.hibernate.dialect.MariaDB103Dialect", "org.hibernate.dialect.MariaDB106Dialect", 
+            "org.hibernate.dialect.MariaDB10Dialect", "org.hibernate.dialect.MariaDB53Dialect", "org.hibernate.dialect.MariaDBDialect", "org.hibernate.dialect.MckoiDialect", "org.hibernate.dialect.MimerSQLDialect", "org.hibernate.dialect.MyISAMStorageEngine", "org.hibernate.dialect.MySQL55Dialect", "org.hibernate.dialect.MySQL57Dialect", "org.hibernate.dialect.MySQL57InnoDBDialect", 
+            "org.hibernate.dialect.MySQL5Dialect", "org.hibernate.dialect.MySQL5InnoDBDialect", "org.hibernate.dialect.MySQL8Dialect", "org.hibernate.dialect.MySQLDialect", "org.hibernate.dialect.MySQLInnoDBDialect", "org.hibernate.dialect.MySQLMyISAMDialect", "org.hibernate.dialect.Oracle10gDialect", "org.hibernate.dialect.Oracle12cDialect", "org.hibernate.dialect.Oracle8iDialect", 
+            "org.hibernate.dialect.Oracle9Dialect", "org.hibernate.dialect.Oracle9iDialect", "org.hibernate.dialect.OracleDialect", "org.hibernate.dialect.PointbaseDialect", "org.hibernate.dialect.PostgresPlusDialect", "org.hibernate.dialect.PostgreSQL10Dialect", "org.hibernate.dialect.PostgreSQL81Dialect", "org.hibernate.dialect.PostgreSQL82Dialect", "org.hibernate.dialect.PostgreSQL91Dialect", 
+            "org.hibernate.dialect.PostgreSQL92Dialect", "org.hibernate.dialect.PostgreSQL93Dialect", "org.hibernate.dialect.PostgreSQL94Dialect", "org.hibernate.dialect.PostgreSQL95Dialect", "org.hibernate.dialect.PostgreSQL9Dialect", "org.hibernate.dialect.ProgressDialect", "org.hibernate.dialect.RDMSOS2200Dialect", "org.hibernate.dialect.SAPDBDialect", 
+            "org.hibernate.dialect.SQLServer2005Dialect", "org.hibernate.dialect.SQLServer2008Dialect", "org.hibernate.dialect.SQLServer2012Dialect", "org.hibernate.dialect.SQLServer2016Dialect", "org.hibernate.dialect.SQLServerDialect", "org.hibernate.dialect.Sybase11Dialect", "org.hibernate.dialect.SybaseAnywhereDialect", "org.hibernate.dialect.SybaseASE157Dialect", 
+            "org.hibernate.dialect.SybaseASE15Dialect", "org.hibernate.dialect.SybaseDialect", "org.hibernate.dialect.Teradata14Dialect", "org.hibernate.dialect.TeradataDialect", "org.hibernate.dialect.TimesTenDialect"};//NOI18N
 
     static {
         //general 2.0
@@ -70,12 +82,19 @@ public class PersistenceCfgProperties {
 //        possiblePropertyValues.get(null).put(PersistenceUnitProperties.JDBC_USER, null);
 //        possiblePropertyValues.get(null).put(PersistenceUnitProperties.JDBC_PASSWORD, null);
         //2.1 but in the same area as 2.0 for now
-        possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_DATABASE_ACTION, SCHEMA_GEN_OPTIONS);
-        possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_SCRIPTS_ACTION, SCHEMA_GEN_OPTIONS);
+        possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_DATABASE_ACTION, SCHEMA_GEN_DB_OPTIONS);
+        possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_SCRIPTS_ACTION, SCHEMA_GEN_SCRIPTS_OPTIONS);
         possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_CREATE_SOURCE, SCHEMA_GEN_SOURCE_TYPES);
         possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_DROP_SOURCE, SCHEMA_GEN_SOURCE_TYPES);
+        possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_CREATE_DATABASE_SCHEMAS, TRUE_FALSE);
         possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_SCRIPTS_CREATE_TARGET, null);
         possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_SCRIPTS_DROP_TARGET, null);
+        possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_DATABASE_PRODUCT_NAME, null);
+        possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_DATABASE_MAJOR_VERSION, null);
+        possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_DATABASE_MINOR_VERSION, null);
+        possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_CREATE_SCRIPT_SOURCE, null);
+        possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_DROP_SCRIPT_SOURCE, null);
+        possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_CONNECTION, null);
         possiblePropertyValues.get(null).put(PersistenceUnitProperties.SCHEMA_GENERATION_SQL_LOAD_SCRIPT_SOURCE, null);
         //eclipselink 2.0
         possiblePropertyValues.put(ProviderUtil.ECLIPSELINK_PROVIDER2_0, new HashMap<String, String[]>());
@@ -86,7 +105,7 @@ public class PersistenceCfgProperties {
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.FLUSH_CLEAR_CACHE, EL_FLUSH_CLEAR_CACHE);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.THROW_EXCEPTIONS, TRUE_FALSE);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.EXCEPTION_HANDLER_CLASS, null);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.WEAVING, EL_WEAWING);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.WEAVING, EL_WEAVING);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.WEAVING_LAZY, TRUE_FALSE);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.WEAVING_CHANGE_TRACKING, TRUE_FALSE);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.WEAVING_FETCHGROUPS, TRUE_FALSE);
@@ -105,11 +124,6 @@ public class PersistenceCfgProperties {
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.CACHE_STATEMENTS_SIZE, null);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.EXCLUSIVE_CONNECTION_IS_LAZY, TRUE_FALSE);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.EXCLUSIVE_CONNECTION_MODE, EL_EXCLUSIVE_CON_MODE);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.JDBC_READ_CONNECTIONS_MAX, null);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.JDBC_READ_CONNECTIONS_MIN, null);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.JDBC_READ_CONNECTIONS_SHARED, TRUE_FALSE);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.JDBC_WRITE_CONNECTIONS_MAX, null);
-        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.JDBC_WRITE_CONNECTIONS_MIN, null);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.LOGGING_LOGGER, EL_LOGGER);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.LOGGING_LEVEL, EL_LOGGER_LEVEL);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).put(PersistenceUnitProperties.LOGGING_TIMESTAMP, TRUE_FALSE);
@@ -143,6 +157,16 @@ public class PersistenceCfgProperties {
         //ECLIPSELINK 2.1 (initially just copy of 2.0)
         possiblePropertyValues.put(ProviderUtil.ECLIPSELINK_PROVIDER2_1, new HashMap<String, String[]>());
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).putAll(possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0));
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).put(PersistenceUnitProperties.CONNECTION_POOL_SEQUENCE + PersistenceUnitProperties.CONNECTION_POOL_MAX, null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).put(PersistenceUnitProperties.CONNECTION_POOL_SEQUENCE + PersistenceUnitProperties.CONNECTION_POOL_MIN, null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).put(PersistenceUnitProperties.CONNECTION_POOL_SEQUENCE + PersistenceUnitProperties.CONNECTION_POOL_INITIAL, null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).put(PersistenceUnitProperties.CONNECTION_POOL_SEQUENCE + PersistenceUnitProperties.CONNECTION_POOL_NON_JTA_DATA_SOURCE, null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).put(PersistenceUnitProperties.CONNECTION_POOL_SEQUENCE + PersistenceUnitProperties.CONNECTION_POOL_JTA_DATA_SOURCE, null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).put(PersistenceUnitProperties.CONNECTION_POOL_SEQUENCE + PersistenceUnitProperties.CONNECTION_POOL_WAIT, null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).put(PersistenceUnitProperties.CONNECTION_POOL_SEQUENCE + PersistenceUnitProperties.CONNECTION_POOL_URL, null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).put(PersistenceUnitProperties.CONNECTION_POOL_SEQUENCE + PersistenceUnitProperties.CONNECTION_POOL_USER, null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).put(PersistenceUnitProperties.CONNECTION_POOL_SEQUENCE + PersistenceUnitProperties.CONNECTION_POOL_PASSWORD, null);
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).put(PersistenceUnitProperties.CONNECTION_POOL_READ + PersistenceUnitProperties.CONNECTION_POOL_SHARED, TRUE_FALSE);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).put(ProviderUtil.ECLIPSELINK_PROVIDER2_1.getTableGenerationPropertyName(),possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).get(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getTableGenerationPropertyName()));
         //ECLIPSELINK 2.2 (initially just copy of 2.0)
         possiblePropertyValues.put(ProviderUtil.ECLIPSELINK_PROVIDER2_2, new HashMap<String, String[]>());
@@ -153,7 +177,7 @@ public class PersistenceCfgProperties {
         //hibernate //TODO? reuse hibernate module?
         possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER2_0, new HashMap<String, String[]>());
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put(ProviderUtil.HIBERNATE_PROVIDER2_0.getTableGenerationPropertyName(), null);
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put("hibernate.dialect",  null);//NOI18N
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put("hibernate.dialect",  HIBERNATE_DIALECTS);//NOI18N
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put("hibernate.show_sql",  null);//NOI18N
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put("hibernate.format_sql",  null);//NOI18N
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0).put("hibernate.transaction.manager_lookup_class",  null);//NOI18N
@@ -175,14 +199,17 @@ public class PersistenceCfgProperties {
         //HIBERNATE 2.1 (initially just copy of 2.0)
         possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER2_1, new HashMap<String, String[]>());
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_1).putAll(possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0));
+        //HIBERNATE 2.2 (initially just copy of 2.0)
+        possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER2_2, new HashMap<String, String[]>());
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_2).putAll(possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0));
         //hibernate jpa 1.0
-        possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER, new HashMap<String, String[]>());
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER).put(ProviderUtil.HIBERNATE_PROVIDER.getJdbcUrl(),null);
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER).put(ProviderUtil.HIBERNATE_PROVIDER.getJdbcDriver(),null);
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER).put(ProviderUtil.HIBERNATE_PROVIDER.getJdbcPassword(),null);
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER).put(ProviderUtil.HIBERNATE_PROVIDER.getJdbcUsername(),null);
-        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER).put(ProviderUtil.HIBERNATE_PROVIDER.getTableGenerationPropertyName()
-                ,new String[] {ProviderUtil.HIBERNATE_PROVIDER.getTableGenerationCreateValue(),ProviderUtil.HIBERNATE_PROVIDER.getTableGenerationDropCreateValue(), "validate", "update"  });
+        possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER1_0, new HashMap<String, String[]>());
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcUrl(),null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcDriver(),null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcPassword(),null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getJdbcUsername(),null);
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER1_0).put(ProviderUtil.HIBERNATE_PROVIDER1_0.getTableGenerationPropertyName()
+                ,new String[] {ProviderUtil.HIBERNATE_PROVIDER1_0.getTableGenerationCreateValue(),ProviderUtil.HIBERNATE_PROVIDER1_0.getTableGenerationDropCreateValue(), "validate", "update"  });
         //eclipselink jpa 1.0
         possiblePropertyValues.put(ProviderUtil.ECLIPSELINK_PROVIDER1_0, new HashMap<String, String[]>());
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER1_0).put(ProviderUtil.ECLIPSELINK_PROVIDER1_0.getJdbcUrl(),null);
@@ -192,13 +219,22 @@ public class PersistenceCfgProperties {
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER1_0).put(ProviderUtil.ECLIPSELINK_PROVIDER1_0.getTableGenerationPropertyName()
                 ,new String[] {ProviderUtil.ECLIPSELINK_PROVIDER1_0.getTableGenerationCreateValue(),ProviderUtil.ECLIPSELINK_PROVIDER1_0.getTableGenerationDropCreateValue(), PersistenceUnitProperties.NONE });
         //openjpa 1.0
-        possiblePropertyValues.put(ProviderUtil.OPENJPA_PROVIDER, new HashMap<String, String[]>());
-        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER).put(ProviderUtil.OPENJPA_PROVIDER.getJdbcUrl(),null);
-        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER).put(ProviderUtil.OPENJPA_PROVIDER.getJdbcDriver(),null);
-        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER).put(ProviderUtil.OPENJPA_PROVIDER.getJdbcPassword(),null);
-        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER).put(ProviderUtil.OPENJPA_PROVIDER.getJdbcUsername(),null);
-        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER).put(ProviderUtil.OPENJPA_PROVIDER.getTableGenerationPropertyName()
-                ,new String[] {ProviderUtil.OPENJPA_PROVIDER.getTableGenerationCreateValue(),ProviderUtil.OPENJPA_PROVIDER.getTableGenerationDropCreateValue() });
+        possiblePropertyValues.put(ProviderUtil.OPENJPA_PROVIDER1_0, new HashMap<String, String[]>());
+        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcUrl(),null);
+        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcDriver(),null);
+        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcPassword(),null);
+        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getJdbcUsername(),null);
+        possiblePropertyValues.get(ProviderUtil.OPENJPA_PROVIDER1_0).put(ProviderUtil.OPENJPA_PROVIDER1_0.getTableGenerationPropertyName()
+                ,new String[] {ProviderUtil.OPENJPA_PROVIDER1_0.getTableGenerationCreateValue(),ProviderUtil.OPENJPA_PROVIDER1_0.getTableGenerationDropCreateValue() });
+        //datanucleus
+        possiblePropertyValues.put(ProviderUtil.DATANUCLEUS_PROVIDER, new HashMap<String, String[]>());
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionDriverName",null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionURL",null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionUserName",null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.ConnectionPassword",null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put("datanucleus.connectionPoolingType",null);
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER).put(ProviderUtil.DATANUCLEUS_PROVIDER.getTableGenerationPropertyName()
+                ,new String[] {ProviderUtil.DATANUCLEUS_PROVIDER.getTableGenerationCreateValue(),ProviderUtil.DATANUCLEUS_PROVIDER.getTableGenerationDropCreateValue() });
         //toplink 1.0
         possiblePropertyValues.put(ProviderUtil.TOPLINK_PROVIDER1_0, new HashMap<String, String[]>());
         possiblePropertyValues.get(ProviderUtil.TOPLINK_PROVIDER1_0).put(ProviderUtil.TOPLINK_PROVIDER1_0.getJdbcUrl(),null);
@@ -251,7 +287,9 @@ public class PersistenceCfgProperties {
     public static List<Provider> getProviders(){
         ArrayList<Provider> ret = new ArrayList<>();
         ret.add(ProviderUtil.ECLIPSELINK_PROVIDER2_2);
-        ret.add(ProviderUtil.HIBERNATE_PROVIDER2_0);
+        ret.add(ProviderUtil.HIBERNATE_PROVIDER2_2);
+        ret.add(ProviderUtil.DATANUCLEUS_PROVIDER);
+        ret.add(ProviderUtil.OPENJPA_PROVIDER2_2);
         return ret;
     }
     

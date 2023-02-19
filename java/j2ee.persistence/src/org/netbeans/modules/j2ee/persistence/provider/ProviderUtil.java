@@ -64,7 +64,7 @@ import java.util.logging.Logger;
 public class ProviderUtil {
 
     // known providers
-    public static final Provider HIBERNATE_PROVIDER = new HibernateProvider(Persistence.VERSION_1_0);
+    public static final Provider HIBERNATE_PROVIDER1_0 = new HibernateProvider(Persistence.VERSION_1_0);
     public static final Provider HIBERNATE_PROVIDER2_0 = new HibernateProvider(Persistence.VERSION_2_0);
     public static final Provider HIBERNATE_PROVIDER2_1 = new HibernateProvider(Persistence.VERSION_2_1);
     public static final Provider HIBERNATE_PROVIDER2_2 = new HibernateProvider(Persistence.VERSION_2_2);
@@ -76,7 +76,7 @@ public class ProviderUtil {
     public static final Provider KODO_PROVIDER = new KodoProvider();
     public static final Provider DATANUCLEUS_PROVIDER = new DataNucleusProvider();
     public static final Provider OPENJPA_PROVIDER1_0 = new OpenJPAProvider(Persistence.VERSION_1_0);
-    public static final Provider OPENJPA_PROVIDER = new OpenJPAProvider(Persistence.VERSION_2_0);
+    public static final Provider OPENJPA_PROVIDER2_0 = new OpenJPAProvider(Persistence.VERSION_2_0);
     public static final Provider OPENJPA_PROVIDER2_1 = new OpenJPAProvider(Persistence.VERSION_2_1);
     public static final Provider OPENJPA_PROVIDER2_2 = new OpenJPAProvider(Persistence.VERSION_2_2);
     public static final Provider DEFAULT_PROVIDER = new DefaultProvider();
@@ -992,9 +992,9 @@ public class ProviderUtil {
         return new Provider[]{
                     ECLIPSELINK_PROVIDER1_0, ECLIPSELINK_PROVIDER2_0, ECLIPSELINK_PROVIDER2_1, ECLIPSELINK_PROVIDER2_2,
                     TOPLINK_PROVIDER1_0, 
-                    HIBERNATE_PROVIDER2_1, HIBERNATE_PROVIDER2_0, HIBERNATE_PROVIDER,
+                    HIBERNATE_PROVIDER1_0, HIBERNATE_PROVIDER2_0, HIBERNATE_PROVIDER2_1, HIBERNATE_PROVIDER2_2,
                     KODO_PROVIDER, DATANUCLEUS_PROVIDER, 
-                    OPENJPA_PROVIDER, OPENJPA_PROVIDER1_0, OPENJPA_PROVIDER2_1,
+                    OPENJPA_PROVIDER1_0, OPENJPA_PROVIDER2_0, OPENJPA_PROVIDER2_1, OPENJPA_PROVIDER2_2,
                     TOPLINK_PROVIDER_55_COMPATIBLE};
     }
 

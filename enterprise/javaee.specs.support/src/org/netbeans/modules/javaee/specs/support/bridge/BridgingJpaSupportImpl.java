@@ -79,14 +79,17 @@ public class BridgingJpaSupportImpl implements JpaSupportImplementation {
     
     private static Map<Provider, String> getPossibleContainerProviders() {
         Map<Provider, String> candidates = new HashMap<Provider, String>();
-        candidates.put(ProviderUtil.HIBERNATE_PROVIDER, "hibernatePersistenceProviderIsDefault1.0"); // NOI18N
+        candidates.put(ProviderUtil.HIBERNATE_PROVIDER1_0, "hibernatePersistenceProviderIsDefault1.0"); // NOI18N
         candidates.put(ProviderUtil.HIBERNATE_PROVIDER2_0, "hibernatePersistenceProviderIsDefault2.0"); // NOI18N
         candidates.put(ProviderUtil.HIBERNATE_PROVIDER2_1, "hibernatePersistenceProviderIsDefault2.1"); // NOI18N
+        candidates.put(ProviderUtil.HIBERNATE_PROVIDER2_2, "hibernatePersistenceProviderIsDefault2.2"); // NOI18N
         candidates.put(ProviderUtil.TOPLINK_PROVIDER1_0, "toplinkPersistenceProviderIsDefault"); // NOI18N
         candidates.put(ProviderUtil.KODO_PROVIDER, "kodoPersistenceProviderIsDefault"); // NOI18N
         candidates.put(ProviderUtil.DATANUCLEUS_PROVIDER, "dataNucleusPersistenceProviderIsDefault"); // NOI18N
-        candidates.put(ProviderUtil.OPENJPA_PROVIDER, "openJpaPersistenceProviderIsDefault2.0"); // NOI18N
         candidates.put(ProviderUtil.OPENJPA_PROVIDER1_0, "openJpaPersistenceProviderIsDefault1.0"); // NOI18N
+        candidates.put(ProviderUtil.OPENJPA_PROVIDER2_0, "openJpaPersistenceProviderIsDefault2.0"); // NOI18N
+        candidates.put(ProviderUtil.OPENJPA_PROVIDER2_1, "openJpaPersistenceProviderIsDefault2.1"); // NOI18N
+        candidates.put(ProviderUtil.OPENJPA_PROVIDER2_2, "openJpaPersistenceProviderIsDefault2.2"); // NOI18N
         candidates.put(ProviderUtil.ECLIPSELINK_PROVIDER1_0, "eclipseLinkPersistenceProviderIsDefault1.0"); // NOI18N
         candidates.put(ProviderUtil.ECLIPSELINK_PROVIDER2_0, "eclipseLinkPersistenceProviderIsDefault2.0"); // NOI18N
         candidates.put(ProviderUtil.ECLIPSELINK_PROVIDER2_1, "eclipseLinkPersistenceProviderIsDefault2.1"); // NOI18N

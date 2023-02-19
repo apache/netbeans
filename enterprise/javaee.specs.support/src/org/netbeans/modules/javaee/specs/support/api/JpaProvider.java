@@ -57,7 +57,7 @@ public final class JpaProvider {
 
     public boolean isJpa22Supported() {
         return impl.isJpa22Supported();
-    }
+    } 
 
     public boolean isDefault() {
         return impl.isDefault();

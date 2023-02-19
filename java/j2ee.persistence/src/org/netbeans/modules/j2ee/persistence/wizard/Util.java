@@ -231,7 +231,11 @@ public class Util {
         int defIndex = 0;
         if(providers.size()>1){//if it's possible to select preferred jpa2.0 provider, we'll select instead of jpa1.0 default one
             String defProviderVersion = ProviderUtil.getVersion((Provider) providers.get(0));
-            boolean specialCase = (Util.isJPAVersionSupported(project, Persistence.VERSION_2_0) || Util.isJPAVersionSupported(project, Persistence.VERSION_2_1) || Util.isJPAVersionSupported(project, Persistence.VERSION_2_2)) && (defProviderVersion == null || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 2.2 is supported by default (or first) is jpa1.0 or undefined version provider
+            boolean specialCase = (Util.isJPAVersionSupported(project, Persistence.VERSION_2_0) 
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_2_1) 
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_2_2)) 
+                    && (defProviderVersion == null 
+                    || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 2.2 is supported by default (or first) is jpa1.0 or undefined version provider
             if(specialCase){
                 for (int i = 1; i<providers.size() ; i++){
                     if(ProviderUtil.ECLIPSELINK_PROVIDER2_2.equals(providers.get(i))){//eclipselink jpa2.2 is preferred provider
@@ -712,7 +716,9 @@ public class Util {
     public static void addPersistenceUnitToProject(Project project) {
         if(PersistenceUtils.getJPAVersion(project) == null){
             Library lib;
-            if(isJPAVersionSupported(project, Persistence.VERSION_2_2) || isJPAVersionSupported(project, Persistence.VERSION_2_1) || isJPAVersionSupported(project, Persistence.VERSION_2_0)) {
+            if(isJPAVersionSupported(project, Persistence.VERSION_2_2) 
+                    || isJPAVersionSupported(project, Persistence.VERSION_2_1) 
+                    || isJPAVersionSupported(project, Persistence.VERSION_2_0)) {
                 lib = LibraryManager.getDefault().getLibrary("jpa20-persistence");
 
             } else {

@@ -171,7 +171,11 @@ public final class PersistenceProviderComboboxHelper {
         int selectIndex = 0;
         if(providers.getSize()>1 && providers.getElementAt(0) instanceof Provider){
             String defProviderVersion = ProviderUtil.getVersion((Provider) providers.getElementAt(0));
-            boolean specialCase = (Util.isJPAVersionSupported(project, Persistence.VERSION_2_0) || Util.isJPAVersionSupported(project, Persistence.VERSION_2_1) || Util.isJPAVersionSupported(project, Persistence.VERSION_2_2)) && (defProviderVersion == null || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 2.2 is supported by default (or first) is jpa1.0 or undefined version provider
+            boolean specialCase = (Util.isJPAVersionSupported(project, Persistence.VERSION_2_0) 
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_2_1) 
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_2_2)) 
+                    && (defProviderVersion == null 
+                    || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 2.2 is supported by default (or first) is jpa1.0 or undefined version provider
             if(specialCase){
                 for (int i = 1; i<providers.getSize() ; i++){
                     if(preferredProvider.equals(providers.getElementAt(i))){

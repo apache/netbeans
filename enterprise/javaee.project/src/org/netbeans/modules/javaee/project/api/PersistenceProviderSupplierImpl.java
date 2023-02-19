@@ -121,7 +121,9 @@ public final class PersistenceProviderSupplierImpl implements PersistenceProvide
             }
             if (!found){
                 String version = ProviderUtil.getVersion(each);
-                if(lessEE7 || version == null || version.equals(Persistence.VERSION_2_1) || version.equals(Persistence.VERSION_2_2)) {//we know gf4 do not support old providers, #233726, todo, we need to get supported from gf plugin instead
+                if(lessEE7 || version == null 
+                        || version.equals(Persistence.VERSION_2_1) 
+                        || version.equals(Persistence.VERSION_2_2)) {//we know gf4 do not support old providers, #233726, todo, we need to get supported from gf plugin instead
                     providers.add(each);
                 }
             }

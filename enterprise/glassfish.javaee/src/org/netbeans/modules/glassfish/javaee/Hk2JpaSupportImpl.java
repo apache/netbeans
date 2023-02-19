@@ -167,12 +167,15 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
                 // Unknown version is as the worst known case.
                 JpaSupportVector instanceJpaSupport
                         = jpaSupport[instance.getVersion() != null
-                        ? instance.getVersion().ordinal()
-                        : GlassFishVersion.GF_1.ordinal()];
+                            ? instance.getVersion().ordinal()
+                            : GlassFishVersion.GF_1.ordinal()];
                         defaultProvider = JpaProviderFactory.createJpaProvider(
-                            JPA_PROVIDER, true, instanceJpaSupport._1_0,
-                            instanceJpaSupport._2_0, instanceJpaSupport._2_1,
-                            instanceJpaSupport._2_2);
+                                JPA_PROVIDER,
+                                true,
+                                instanceJpaSupport._1_0,
+                                instanceJpaSupport._2_0,
+                                instanceJpaSupport._2_1,
+                                instanceJpaSupport._2_2);
             }
         }
         return defaultProvider;

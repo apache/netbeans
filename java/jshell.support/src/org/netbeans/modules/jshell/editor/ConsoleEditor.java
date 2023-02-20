@@ -78,6 +78,10 @@ public class ConsoleEditor extends CloneableEditor {
     private CL cl;
     private Lookup lookup;
 
+    public ConsoleEditor() {
+        this.lookup = Lookup.EMPTY;
+    }
+
     public ConsoleEditor(CloneableEditorSupport support, Lookup lookup) {
         super(support);
         this.lookup = lookup;

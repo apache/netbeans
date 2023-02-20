@@ -355,7 +355,7 @@ public final class MavenProjectCache {
         "LBL_Incomplete_Project_Desc=Partially loaded Maven project; try building it."
     })
     public static MavenProject getFallbackProject(File projectFile) throws AssertionError {
-        LOG.log(Level.INFO, "Creating fallback project for " + projectFile, new Throwable());
+        LOG.log(Level.FINE, "Creating fallback project for " + projectFile, new Throwable());
         MavenProject newproject = new MavenProject();
         newproject.setGroupId("error");
         newproject.setArtifactId("error");

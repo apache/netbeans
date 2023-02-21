@@ -430,18 +430,15 @@ public class UnusableTypesHintError extends HintErrorRule {
                 }
                 if (checkedTypes.contains(name)) {
                     createDuplicateTypeError(type, typeName);
-                    return;
                 } else if (checkedTypes.contains(Type.BOOL)) {
                     // bool|false bool|true
                     if (Type.FALSE.equals(name) || Type.TRUE.equals(name)) {
                         createDuplicateTypeError(type, typeName);
-                        return;
                     }
                 } else if (checkedTypes.contains(Type.FALSE) || checkedTypes.contains(Type.TRUE)) {
                     // false|bool true|bool
                     if (Type.BOOL.equals(name)) {
                         createDuplicateTypeError(type, typeName);
-                        return;
                     }
                 }
                 checkedTypes.add(name);

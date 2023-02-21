@@ -421,7 +421,7 @@ public final class ElementOpen {
                             @Override
                             public void attachmentFailed() {
                                 try {
-                                    FileObject generated = CodeGenerator.generateCode(cpInfo, el);
+                                    FileObject generated = CodeGenerator.generateCode(cpInfo, el, new boolean[1]);
                                     future.complete(generated != null ? getOpenInfo(generated, el, cancel) : null);
                                 } catch (Throwable t) {
                                     future.completeExceptionally(t);
@@ -436,7 +436,7 @@ public final class ElementOpen {
             }
         }
         // try to generate source from class file
-        FileObject generated = CodeGenerator.generateCode(cpInfo, el);
+        FileObject generated = CodeGenerator.generateCode(cpInfo, el, new boolean[1]);
         return CompletableFuture.completedFuture(generated != null ? getOpenInfo(generated, el, cancel) : null);
     }
 

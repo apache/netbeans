@@ -153,6 +153,7 @@ public final class LspInternalHandle extends InternalHandle {
         boolean determinate = getTotalUnits() > 0;
         start.setCancellable(isAllowCancel());
         start.setTitle(getDisplayName());
+        start.setMessage(e.getMessage());
         if (determinate) {
             double percent = e.getPercentageDone();
             if (percent != -1) {

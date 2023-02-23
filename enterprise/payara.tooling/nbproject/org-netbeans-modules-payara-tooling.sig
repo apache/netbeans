@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.13
+#Version 2.14
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1230,6 +1230,7 @@ supr org.netbeans.modules.payara.tooling.PayaraIdeException
 hfds INVALID_ADMIN_INTERFACE,INVALID_CONTAINER,SERVER_HOME_NONEXISTENT,SERVER_HOME_NO_VERSION,SERVER_HOME_NULL,SERVER_ROOT_NONEXISTENT,SERVER_ROOT_NULL,SERVER_URL_NULL
 
 CLSS public org.netbeans.modules.payara.tooling.data.IdeContext
+ anno 0 java.lang.Deprecated()
 cons public init()
 supr java.lang.Object
 
@@ -1844,6 +1845,8 @@ hfds filesets,links,lookups,paths
 CLSS public final !enum org.netbeans.modules.payara.tooling.server.config.JavaEEProfile
 fld public final static char TYPE_SEPARATOR = '-'
 fld public final static int length
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v10_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v10_0_0_web
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_2
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_3
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_4
@@ -1860,8 +1863,6 @@ fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEE
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v9_0_0_web
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v9_1_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v9_1_0_web
-fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v10_0_0
-fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v10_0_0_web
 innr public final static !enum Type
 innr public final static !enum Version
 meth public java.lang.String toString()
@@ -1885,6 +1886,7 @@ hfds name
 
 CLSS public final static !enum org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version
  outer org.netbeans.modules.payara.tooling.server.config.JavaEEProfile
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v10_0_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_2
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_3
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_4
@@ -1895,7 +1897,6 @@ fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEE
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v8_0_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v9_0_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v9_1_0
-fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v10_0_0
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version valueOf(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version[] values()

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.21
+#Version 9.22
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -155,6 +155,7 @@ CLSS public abstract org.openide.execution.ExecutionEngine
 cons public init()
 meth protected abstract java.security.PermissionCollection createPermissions(java.security.CodeSource,org.openide.windows.InputOutput)
 meth protected abstract org.openide.execution.NbClassPath createLibraryPath()
+ anno 0 java.lang.Deprecated()
 meth public abstract org.openide.execution.ExecutorTask execute(java.lang.String,java.lang.Runnable,org.openide.windows.InputOutput)
 meth public static org.openide.execution.ExecutionEngine getDefault()
 supr java.lang.Object
@@ -169,10 +170,14 @@ supr org.openide.util.Task
 
 CLSS public org.openide.execution.NbClassLoader
 cons public init()
+ anno 0 java.lang.Deprecated()
 cons public init(org.openide.filesystems.FileObject[],java.lang.ClassLoader,org.openide.windows.InputOutput)
 cons public init(org.openide.filesystems.FileSystem[])
+ anno 0 java.lang.Deprecated()
 cons public init(org.openide.filesystems.FileSystem[],java.lang.ClassLoader)
+ anno 0 java.lang.Deprecated()
 cons public init(org.openide.windows.InputOutput)
+ anno 0 java.lang.Deprecated()
 fld protected org.openide.windows.InputOutput inout
 meth protected final java.security.PermissionCollection getPermissions(java.security.CodeSource)
 meth protected java.lang.Class findClass(java.lang.String) throws java.lang.ClassNotFoundException
@@ -190,9 +195,13 @@ meth public boolean equals(java.lang.Object)
 meth public java.lang.Exception[] getExceptions()
 meth public java.lang.String getClassPath()
 meth public static java.io.File toFile(org.openide.filesystems.FileObject)
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.execution.NbClassPath createBootClassPath()
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.execution.NbClassPath createClassPath()
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.execution.NbClassPath createLibraryPath()
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds classpath,items,serialVersionUID
 
@@ -214,6 +223,7 @@ supr java.lang.Object
 hfds arguments,execLog,info,processName,serialVersionUID
 
 CLSS public abstract org.openide.execution.ScriptType
+ anno 0 java.lang.Deprecated()
 cons public init()
 innr public static Context
 meth public abstract boolean acceptFileObject(org.openide.filesystems.FileObject)

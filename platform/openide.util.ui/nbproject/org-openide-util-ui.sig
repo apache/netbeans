@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.26
+#Version 9.28
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -887,7 +887,7 @@ intf java.util.EventListener
 meth public abstract void resultChanged(org.openide.util.LookupEvent)
 
 CLSS public org.openide.util.MapFormat
-cons public init(java.util.Map)
+cons public init(java.util.Map<java.lang.String,?>)
 meth protected java.lang.Object processKey(java.lang.String)
 meth public boolean isExactMatch()
 meth public boolean willThrowExceptionIfKeyWasNotFound()
@@ -901,7 +901,7 @@ meth public java.util.Map getMap()
 meth public static java.lang.String format(java.lang.String,java.util.Map)
 meth public void setExactMatch(boolean)
 meth public void setLeftBrace(java.lang.String)
-meth public void setMap(java.util.Map)
+meth public void setMap(java.util.Map<java.lang.String,?>)
 meth public void setRightBrace(java.lang.String)
 meth public void setThrowExceptionIfKeyWasNotFound(boolean)
 supr java.text.Format
@@ -1335,6 +1335,7 @@ meth public static java.net.URL toURL(java.io.File) throws java.net.MalformedURL
 meth public static java.util.List partialSort(java.util.List,java.util.Comparator,boolean)
  anno 0 java.lang.Deprecated()
 meth public static java.util.List<? extends javax.swing.Action> actionsForPath(java.lang.String)
+meth public static java.util.List<? extends javax.swing.Action> actionsForPath(java.lang.String,org.openide.util.Lookup)
 meth public static javax.swing.JPopupMenu actionsToPopup(javax.swing.Action[],java.awt.Component)
 meth public static javax.swing.JPopupMenu actionsToPopup(javax.swing.Action[],org.openide.util.Lookup)
 meth public static javax.swing.KeyStroke stringToKey(java.lang.String)

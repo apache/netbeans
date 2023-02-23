@@ -301,7 +301,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                 index++;
                 commaIndex = elements.indexOf(',', index);
                 if (commaIndex < 0) {
-                    nStr = elements.substring(index, elements.length());
+                    nStr = elements.substring(index);
                     if (checkEmpty(nStr, elements)) return;
                     n3 = Integer.parseInt(nStr);
                     n4 = n3;
@@ -309,7 +309,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                     nStr = elements.substring(index, commaIndex);
                     if (checkEmpty(nStr, elements)) return;
                     n3 = Integer.parseInt(nStr);
-                    nStr = elements.substring(commaIndex+1, elements.length());
+                    nStr = elements.substring(commaIndex+1);
                     if (nStr == null || nStr.length() == 0) n4 = n3;
                     else n4 = Integer.parseInt(nStr);
                 }
@@ -341,7 +341,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                     if (checkEmpty(nStr, elements)) return;
                     n2 = Integer.parseInt(nStr);
                 }
-                nStr = elements.substring(index+1, elements.length());
+                nStr = elements.substring(index+1);
                 if (checkEmpty(nStr, elements)) return;
                 n3 = Integer.parseInt(nStr);
             } catch (NumberFormatException e) {
@@ -375,7 +375,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                 index++;
                 commaIndex = elements.indexOf(',', index);
                 if (commaIndex < 0) {
-                    nStr = elements.substring(index, elements.length());
+                    nStr = elements.substring(index);
                     if (checkEmpty(nStr, elements)) return;
                     n3 = Integer.parseInt(nStr);
                     n4 = n3;
@@ -383,7 +383,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                     nStr = elements.substring(index, commaIndex);
                     if (checkEmpty(nStr, elements)) return;
                     n3 = Integer.parseInt(nStr);
-                    nStr = elements.substring(commaIndex+1, elements.length());
+                    nStr = elements.substring(commaIndex+1);
                     if (nStr == null || nStr.length() == 0) n4 = n3;
                     else n4 = Integer.parseInt(nStr);
                 }

@@ -37,7 +37,6 @@ import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.UiUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -48,7 +47,6 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelException;
 import org.netbeans.modules.j2ee.persistence.api.EntityClassScope;
 import org.netbeans.modules.j2ee.persistence.api.metadata.orm.Entity;
@@ -85,12 +83,11 @@ public class NamedQueryHyperlinkProvider implements HyperlinkProviderExt {
     @Override
     public void performClickAction(final Document doc, final int offset, HyperlinkType type) {
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
-            @Override
-            public void run() {
-                goToNQ(doc, offset);
-            }
-        }, NbBundle.getMessage(NamedQueryHyperlinkProvider.class, "LBL_GoToNamedQuery"), cancel, false);
+        ProgressUtils.runOffEventDispatchThread( 
+                () -> goToNQ(doc, offset), 
+                NbBundle.getMessage(NamedQueryHyperlinkProvider.class, "LBL_GoToNamedQuery"), 
+                cancel, 
+                false);
     }
 
     @Override
@@ -155,73 +152,69 @@ public class NamedQueryHyperlinkProvider implements HyperlinkProviderExt {
 
         if (ent != null) {
             try {
-                js.runUserActionTask(new Task<CompilationController>() {
-
-                    @Override
-                    public void run(CompilationController parameter) throws Exception {
-                        parameter.toPhase(JavaSource.Phase.RESOLVED);
-                        AnnotationMirror foundAm = null;
-                        AnnotationValue get = null;
-                        Trees trees = parameter.getTrees();
-                        
-                        TypeElement entityElement = parameter.getElements().getTypeElement(entClasst);trees.getSourcePositions().getStartPosition(parameter.getCompilationUnit(), trees.getPath(entityElement).getLeaf());
-                        List<? extends AnnotationMirror> annotationMirrors = entityElement.getAnnotationMirrors();
-                        if (annotationMirrors != null) {
-                            Iterator<? extends AnnotationMirror> iterator = annotationMirrors.iterator();
-                            while (iterator.hasNext() && foundAm == null) {
-                                AnnotationMirror next = iterator.next();
-                                if (next.getAnnotationType().toString().equals("javax.persistence.NamedQueries")) {//NOI18N
-
-                                    Map<? extends ExecutableElement, ? extends AnnotationValue> maps = next.getElementValues();
-
-                                    for (AnnotationValue vl : maps.values()) {
-                                        List lst = (List) vl.getValue();
-                                        for (Object val : lst) {
-                                            if (val instanceof AnnotationMirror) {
-                                                AnnotationMirror am = (AnnotationMirror) val;
-                                                if ("javax.persistence.NamedQuery".equals(am.getAnnotationType().toString())) {//NOI18N
-                                                    Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = am.getElementValues();
-                                                    for (ExecutableElement el : elementValues.keySet()) {
-                                                        if (el.getSimpleName().contentEquals("name")) { //NOI18N
-                                                            get = elementValues.get(el);
-                                                            if (get.getValue().toString().equals(nam)) {
-                                                                foundAm = am;
-                                                                break;
-                                                            }
+                js.runUserActionTask( (CompilationController parameter) -> {
+                    parameter.toPhase(JavaSource.Phase.RESOLVED);
+                    AnnotationMirror foundAm = null;
+                    AnnotationValue get = null;
+                    Trees trees = parameter.getTrees();
+                    TypeElement entityElement = parameter.getElements().getTypeElement(entClasst);
+                    
+                    List<? extends AnnotationMirror> annotationMirrors = entityElement.getAnnotationMirrors();
+                    if (annotationMirrors != null) {
+                        Iterator<? extends AnnotationMirror> iterator = annotationMirrors.iterator();
+                        while (iterator.hasNext() && foundAm == null) {
+                            AnnotationMirror next = iterator.next();
+                            if (next.getAnnotationType().toString().equals("javax.persistence.NamedQueries")) {//NOI18N
+                                
+                                Map<? extends ExecutableElement, ? extends AnnotationValue> maps = next.getElementValues();
+                                
+                                for (AnnotationValue vl : maps.values()) {
+                                    List lst = (List) vl.getValue();
+                                    for (Object val : lst) {
+                                        if (val instanceof AnnotationMirror) {
+                                            AnnotationMirror am = (AnnotationMirror) val;
+                                            if ("javax.persistence.NamedQuery".equals(am.getAnnotationType().toString())) {//NOI18N
+                                                Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = am.getElementValues();
+                                                for (ExecutableElement el : elementValues.keySet()) {
+                                                    if (el.getSimpleName().contentEquals("name")) { //NOI18N
+                                                        get = elementValues.get(el);
+                                                        if (get.getValue().toString().equals(nam)) {
+                                                            foundAm = am;
+                                                            break;
                                                         }
                                                     }
                                                 }
-                                            }
-                                            if(foundAm != null) {
-                                                break;
                                             }
                                         }
                                         if(foundAm != null) {
                                             break;
                                         }
                                     }
-
-                                } else if (next.getAnnotationType().toString().equals("javax.persistence.NamedQuery")) {//NOI18N
-                                    if (next.getElementValues().size() > 0) {
-                                        Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = next.getElementValues();
-                                        for (ExecutableElement el : elementValues.keySet()) {
-                                            if (el.getSimpleName().contentEquals("name")) { //NOI18N
-                                                get = elementValues.get(el);
-                                                if (get.getValue().toString().equals(nam)) {
-                                                    foundAm = next;
-                                                    break;
-                                                }
+                                    if(foundAm != null) {
+                                        break;
+                                    }
+                                }
+                                
+                            } else if (next.getAnnotationType().toString().equals("javax.persistence.NamedQuery")) {//NOI18N
+                                if (!next.getElementValues().isEmpty()) {
+                                    Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = next.getElementValues();
+                                    for (ExecutableElement el : elementValues.keySet()) {
+                                        if (el.getSimpleName().contentEquals("name")) { //NOI18N
+                                            get = elementValues.get(el);
+                                            if (get.getValue().toString().equals(nam)) {
+                                                foundAm = next;
+                                                break;
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                        if(foundAm != null) {
-                            TreePath tree = trees.getPath(entityElement, foundAm, get);                            
-                            int startOffset = (int) trees.getSourcePositions().getStartPosition(parameter.getCompilationUnit(), tree.getLeaf());
-                            UiUtils.open(ent, startOffset );
-                        }
+                    }
+                    if(foundAm != null) {
+                        TreePath tree = trees.getPath(entityElement, foundAm, get);
+                        int startOffset = (int) trees.getSourcePositions().getStartPosition(parameter.getCompilationUnit(), tree.getLeaf());
+                        UiUtils.open(ent, startOffset );
                     }
                 }, true);
                 //parameter.getClasspathInfo()
@@ -254,12 +247,7 @@ public class NamedQueryHyperlinkProvider implements HyperlinkProviderExt {
         }
         if (ecs != null) {
             try {
-                entities = ecs.getEntityMappingsModel(false).runReadAction(new MetadataModelAction<EntityMappingsMetadata, Entity[]>() {
-                    @Override
-                    public Entity[] run(EntityMappingsMetadata metadata) throws Exception {
-                        return metadata.getRoot().getEntity();
-                    }
-                });
+                entities = ecs.getEntityMappingsModel(false).runReadAction( (EntityMappingsMetadata metadata) -> metadata.getRoot().getEntity() );
             } catch (MetadataModelException ex) {
             } catch (IOException ex) {
             }
@@ -293,12 +281,7 @@ public class NamedQueryHyperlinkProvider implements HyperlinkProviderExt {
         }
         if (ecs != null) {
             try {
-                entities = ecs.getEntityMappingsModel(false).runReadAction(new MetadataModelAction<EntityMappingsMetadata, Entity[]>() {
-                    @Override
-                    public Entity[] run(EntityMappingsMetadata metadata) throws Exception {
-                        return metadata.getRoot().getEntity();
-                    }
-                });
+                entities = ecs.getEntityMappingsModel(false).runReadAction( (EntityMappingsMetadata metadata) -> metadata.getRoot().getEntity() );
             } catch (MetadataModelException ex) {
                 Exceptions.printStackTrace(ex);
             } catch (IOException ex) {
@@ -336,40 +319,37 @@ public class NamedQueryHyperlinkProvider implements HyperlinkProviderExt {
         }
 
         final int[] ret = new int[]{-1, -1};
-        doc.render(new Runnable() {
-            @Override
-            public void run() {
-                TokenHierarchy th = TokenHierarchy.get(doc);
-                TokenSequence<JavaTokenId> ts = SourceUtils.getJavaTokenSequence(th, offset);
-
-                if (ts == null) {
-                    return;
-                }
-
-                ts.move(offset);
-                if (!ts.moveNext()) {
-                    return;
-                }
-
-                Token<JavaTokenId> t = ts.token();
-                boolean hasMessage = false;
-                if (USABLE_TOKEN_IDS.contains(t.id())) {
-                    for (int i = 0; i < 5; i++) {
-                        if (!ts.movePrevious()) {
-                            break;
-                        }
-                        Token<JavaTokenId> tk = ts.token();
-                        if (TokenUtilities.equals(CCParser.CREATE_NAMEDQUERY, tk.text())) {//NOI18N
-                            hasMessage = true;
-                        }
+        doc.render( () -> {
+            TokenHierarchy th = TokenHierarchy.get(doc);
+            TokenSequence<JavaTokenId> ts = SourceUtils.getJavaTokenSequence(th, offset);
+            
+            if (ts == null) {
+                return;
+            }
+            
+            ts.move(offset);
+            if (!ts.moveNext()) {
+                return;
+            }
+            
+            Token<JavaTokenId> t = ts.token();
+            boolean hasMessage = false;
+            if (USABLE_TOKEN_IDS.contains(t.id())) {
+                for (int i = 0; i < 5; i++) {
+                    if (!ts.movePrevious()) {
+                        break;
                     }
-                    if (hasMessage) {
-                        ts.move(offset);
-                        ts.moveNext();
-                        ret[0] = ts.offset();
-                        ret[1] = ts.offset() + t.length();
-                        return;
+                    Token<JavaTokenId> tk = ts.token();
+                    if (TokenUtilities.equals(CCParser.CREATE_NAMEDQUERY, tk.text())) {//NOI18N
+                        hasMessage = true;
                     }
+                }
+                if (hasMessage) {
+                    ts.move(offset);
+                    ts.moveNext();
+                    ret[0] = ts.offset();
+                    ret[1] = ts.offset() + t.length();
+                    return;
                 }
             }
         });

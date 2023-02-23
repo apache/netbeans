@@ -96,7 +96,11 @@ public enum GlassFishVersion {
     /** GlassFish 6.2.4 */
     GF_6_2_4       ((short) 6, (short) 2, (short) 4, (short) 0, GlassFishVersion.GF_6_2_4_STR),
     /** GlassFish 6.2.5 */
-    GF_6_2_5       ((short) 6, (short) 2, (short) 5, (short) 0, GlassFishVersion.GF_6_2_5_STR);
+    GF_6_2_5       ((short) 6, (short) 2, (short) 5, (short) 0, GlassFishVersion.GF_6_2_5_STR),
+    /** GlassFish 7.0.0 */
+    GF_7_0_0       ((short) 7, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_7_0_0_STR),
+    /** GlassFish 7.0.1 */
+    GF_7_0_1       ((short) 7, (short) 0, (short) 1, (short) 0, GlassFishVersion.GF_7_0_1_STR);
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
     ////////////////////////////////////////////////////////////////////////////
@@ -247,6 +251,16 @@ public enum GlassFishVersion {
     /** Additional <code>String</code> representations of GF_6_2_5 value. */
     static final String GF_6_2_5_STR_NEXT[] = {"6.2.5", "6.2.5.0"};
 
+    /** A <code>String</code> representation of GF_7_0_0 value. */
+    static final String GF_7_0_0_STR = "7.0.0";
+    /** Additional <code>String</code> representations of GF_7_0_0 value. */
+    static final String GF_7_0_0_STR_NEXT[] = {"7.0.0", "7.0.0.0"};
+    
+    /** A <code>String</code> representation of GF_7_0_1 value. */
+    static final String GF_7_0_1_STR = "7.0.1";
+    /** Additional <code>String</code> representations of GF_7_0_1 value. */
+    static final String GF_7_0_1_STR_NEXT[] = {"7.0.1", "7.0.1.0"};
+
     /**
      * Stored <code>String</code> values for backward <code>String</code>
      * conversion.
@@ -283,6 +297,8 @@ public enum GlassFishVersion {
         initStringValuesMapFromArray(GF_6_2_3, GF_6_2_3_STR_NEXT);
         initStringValuesMapFromArray(GF_6_2_4, GF_6_2_4_STR_NEXT);
         initStringValuesMapFromArray(GF_6_2_5, GF_6_2_5_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_0, GF_7_0_0_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_1, GF_7_0_1_STR_NEXT);
     }
 
     ////////////////////////////////////////////////////////////////////////////

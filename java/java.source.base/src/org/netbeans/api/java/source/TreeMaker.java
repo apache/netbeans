@@ -1278,6 +1278,19 @@ public final class TreeMaker {
         return delegate.BindingPattern(vt);
     }
 
+      /**
+     * Creates a new Tree for a given DeconstructionPatternTree
+     * @param deconstructor deconstructor of record pattern
+     * @param nested list of nested patterns
+     * @param vt the variable of record pattern
+     * @see com.sun.source.tree.DeconstructionPatternTree
+     * @return the newly created RecordPatternTree
+     * @since 19
+     */
+    public DeconstructionPatternTree RecordPattern(ExpressionTree deconstructor, List<PatternTree> nested, VariableTree vt) {
+        return delegate.DeconstructionPattern(deconstructor, nested, vt);
+    }
+
     /**
      * Creates a new VariableTree from a VariableElement.
      *

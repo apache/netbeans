@@ -46,6 +46,7 @@ public final class TokenFactory<T extends TokenId> {
      *
      * @deprecated Use {@link #isSkipToken(Token)} instead.
      */
+    @Deprecated
     public static final Token SKIP_TOKEN = LexerUtilsConstants.SKIP_TOKEN;
     
     private final LexerInputOperation<T> operation;
@@ -201,6 +202,7 @@ public final class TokenFactory<T extends TokenId> {
      * @deprecated This method is deprecated without replacement - see description
      *  how a similar effect can be obtained.
      */
+    @Deprecated
     public Token<T> createCustomTextToken(T id, CharSequence text, int length, PartType partType) {
         if (partType != null) {
             throw new IllegalArgumentException("This method is deprecated and it should" + 

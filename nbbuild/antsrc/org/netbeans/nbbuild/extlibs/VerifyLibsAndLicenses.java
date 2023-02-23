@@ -540,7 +540,7 @@ public class VerifyLibsAndLicenses extends Task {
     }
     private static String headOrTail(String text, boolean useHead) {
         int context = 20;
-        return text.length() > context ? (useHead ? text.substring(0, context) : text.substring(text.length() - context, text.length())) : text;
+        return text.length() > context ? (useHead ? text.substring(0, context) : text.substring(text.length() - context)) : text;
     }
 
     static List<String> loadPatterns(String resource) throws IOException {

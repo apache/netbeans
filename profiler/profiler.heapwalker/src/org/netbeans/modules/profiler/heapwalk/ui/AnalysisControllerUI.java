@@ -200,7 +200,7 @@ public class AnalysisControllerUI extends JPanel {
     }
 
     private boolean[] getRulesSelection() {
-        List<JCheckBox> ruleCheckboxes = new ArrayList();
+        List<JCheckBox> ruleCheckboxes = new ArrayList<>();
 
         for (Component component : rulesContainer.getComponents()) {
             if (component instanceof JCheckBox && ((JCheckBox) component).getActionCommand().equals("RULE_CHECKBOX")) {

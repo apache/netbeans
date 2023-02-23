@@ -104,6 +104,7 @@ public class FileObject75826Test extends NbTestCase {
                 this.info = new LocalFileSystem.Impl(this) {
                     public OutputStream outputStream(String name) throws java.io.IOException {
                         return new FilterOutputStream(super.outputStream(name)) {
+                            @Override
                             public void close() throws IOException {
                                 throw new IOException();
                             }

@@ -22,7 +22,6 @@
 
 package org.netbeans.modules.maven.indexer;
 
-import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -92,6 +91,7 @@ import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
 import org.netbeans.modules.maven.indexer.api.QueryField;
 import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
+import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
 import org.netbeans.modules.maven.indexer.spi.ArchetypeQueries;
 import org.netbeans.modules.maven.indexer.spi.BaseQueries;
 import org.netbeans.modules.maven.indexer.spi.ChecksumQueries;
@@ -152,7 +152,16 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     private static final HashMap<String,Mutex> repoMutexMap = new HashMap<>(4);
 
     private static final Set<Mutex> indexingMutexes = new HashSet<>();
-    private static final RequestProcessor RP = new RequestProcessor("indexing", 1);
+
+    /**
+     * For local IO heavy repo indexing tasks and everything what does not involve downloads.
+     */
+    private static final RequestProcessor RP_LOCAL = new RequestProcessor("maven-local-indexing");
+
+    /**
+     * For remote repo download and indexing tasks.
+     */
+    private static final RequestProcessor RP_REMOTE = new RequestProcessor("maven-remote-indexing");
 
     @Override
     public boolean handlesRepository(RepositoryInfo repo) {
@@ -294,7 +303,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         }
         // At least one of the group caches could not be loaded, so rebuild it
         if(needGroupCacheRebuild) {
-            RP.submit(() -> {
+            RP_LOCAL.submit(() -> {
                 try {
                     context.rebuildGroups();
                     storeGroupCache(repo, context);
@@ -637,7 +646,12 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
 
     //spawn the indexing into a separate thread..
     private void spawnIndexLoadedRepo(final RepositoryInfo repo) {
-        RP.post(() -> {
+
+        // 2 RPs allow concurrent local repo indexing during remote index downloads
+        // while also largely avoiding to run two disk-IO heavy tasks at once.
+        RequestProcessor rp = repo.isLocal() ? RP_LOCAL : RP_REMOTE;
+
+        rp.post(() -> {
             getRepoMutex(repo).writeAccess((Mutex.Action<Void>) () -> {
                 try {
                     indexLoadedRepo(repo, true);

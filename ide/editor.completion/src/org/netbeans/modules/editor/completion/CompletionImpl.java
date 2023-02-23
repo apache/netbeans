@@ -721,7 +721,7 @@ CaretListener, KeyListener, FocusListener, ListSelectionListener, PropertyChange
                 // true as providers are registered using classnames.
                 int lastSlash = id.lastIndexOf('/'); // NOI18N
                 if (lastSlash > 0) {
-                    String fname = id.substring(lastSlash + 1, id.length());
+                    String fname = id.substring(lastSlash + 1);
                     if (!seenProviders.add(fname)) {
                         // the provider has been already seen in this list; do not add it.
                         continue;

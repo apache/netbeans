@@ -41,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumSet;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
@@ -81,7 +82,7 @@ import org.netbeans.api.java.source.WorkingCopy;
 
     private static ProspectiveOperation handleCompoundAssignementReducer(TreeMaker tm, ExpressionTree expr, OperationType operationType, PreconditionsChecker precond, WorkingCopy workingCopy, List<ProspectiveOperation> ls, ProspectiveOperation redOp) {
         //this variable will be removed at a later stage.
-        VariableTree var = tm.Variable(tm.Modifiers(new HashSet<Modifier>()), "dummyVar18912", tm.Type("Object"), ((CompoundAssignmentTree) expr).getExpression());
+        VariableTree var = tm.Variable(tm.Modifiers(EnumSet.noneOf(Modifier.class)), "dummyVar18912", tm.Type("Object"), ((CompoundAssignmentTree) expr).getExpression());
         ProspectiveOperation map = new ProspectiveOperation(var, operationType.MAP, precond.getInnerVariables(), workingCopy, precond.getVarToName());
         map.getAvailableVariables().add(var.getName());
         ls.add(map);
@@ -277,7 +278,7 @@ import org.netbeans.api.java.source.WorkingCopy;
         args.add(this.reducingVariable);
         if (TreeUtilities.isPreOrPostfixOp(opKind)) {
             Tree type = null;//treeMaker.Type("Integer");
-            var = this.treeMaker.Variable(treeMaker.Modifiers(new HashSet<Modifier>()), "accumulator", null, null);
+            var = this.treeMaker.Variable(treeMaker.Modifiers(EnumSet.noneOf(Modifier.class)), "accumulator", null, null);
             VariableTree var1 = makeUnknownVariable();
             if (opKind == Tree.Kind.POSTFIX_INCREMENT || opKind == Tree.Kind.PREFIX_INCREMENT) {
                 if (isInteger(this.reducingVariable, workingCopy)) {
@@ -299,7 +300,7 @@ import org.netbeans.api.java.source.WorkingCopy;
         } else if (TreeUtilities.isCompoundAssignementAssignement(opKind)) {
             Tree type = null;//treeMaker.Type("Integer");
 
-            var = this.treeMaker.Variable(treeMaker.Modifiers(new HashSet<Modifier>()), "accumulator", null, null);
+            var = this.treeMaker.Variable(treeMaker.Modifiers(EnumSet.noneOf(Modifier.class)), "accumulator", null, null);
             VariableTree var1 = makeUnknownVariable();
             if (opKind == Tree.Kind.PLUS_ASSIGNMENT) {
                 if (isString(this.reducingVariable)) {
@@ -332,7 +333,7 @@ import org.netbeans.api.java.source.WorkingCopy;
             Name varName = getOneFromSet(this.neededVariables);
             //If types need to be made explicit the null should be replaced with the commented expression
             Tree type = null;// treeMaker.Type(this.varToType.get(varName).toString());
-            var = this.treeMaker.Variable(treeMaker.Modifiers(new HashSet<Modifier>()), varName.toString(), type, null);
+            var = this.treeMaker.Variable(treeMaker.Modifiers(EnumSet.noneOf(Modifier.class)), varName.toString(), type, null);
         }
         return var;
     }
@@ -354,7 +355,7 @@ import org.netbeans.api.java.source.WorkingCopy;
     }
 
     private VariableTree makeUnknownVariable() {
-        return this.treeMaker.Variable(treeMaker.Modifiers(new HashSet<Modifier>()), UNKNOWN_NAME, null, null);
+        return this.treeMaker.Variable(treeMaker.Modifiers(EnumSet.noneOf(Modifier.class)), UNKNOWN_NAME, null, null);
     }
 
     public static enum OperationType {

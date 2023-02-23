@@ -73,11 +73,14 @@ import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.WorkspaceFoldersOptions;
+import org.eclipse.lsp4j.WorkspaceServerCapabilities;
 import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
+import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
@@ -180,6 +183,10 @@ public final class Server {
                     }
                 });
             })
+            .setExceptionHandler((t) -> {
+                LOG.log(Level.WARNING, "Error occurred during LSP message dispatch", t);
+                return RemoteEndpoint.DEFAULT_EXCEPTION_HANDLER.apply(t);
+            })
             .create();
     }
 
@@ -255,6 +262,9 @@ public final class Server {
                         Lookups.executeWith(ll, () -> {
                             try {
                                 delegate.consume(msg);
+                            } catch (RuntimeException | Error e) {
+                                LOG.log(Level.WARNING, "Error occurred during message dispatch", e);
+                                throw e;
                             } finally {
                                 // cancel while the OperationContext is still active.
                                 if (ftoCancel != null) {
@@ -633,6 +643,7 @@ public final class Server {
                 projectSet.retainAll(openedProjects);
                 projectSet.addAll(projects);
 
+                Project[] prjsRequested = projects.toArray(new Project[projects.size()]);
                 Project[] prjs = projects.toArray(new Project[projects.size()]);
                 LOG.log(Level.FINER, "{0}: Finished opening projects: {1}", new Object[]{id, Arrays.asList(projects)});
                 synchronized (this) {
@@ -652,7 +663,7 @@ public final class Server {
                         openingFileOwners.put(p, f.thenApply(unused -> p));
                     }
                 }
-                f.complete(prjs);
+                f.complete(prjsRequested);
             }).exceptionally(e -> {
                 f.completeExceptionally(e);
                 return null;
@@ -727,7 +738,7 @@ public final class Server {
                 capabilities.setDocumentFormattingProvider(true);
                 capabilities.setDocumentRangeFormattingProvider(true);
                 capabilities.setReferencesProvider(true);
-                
+
                 CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
                 chOpts.setWorkDoneProgress(true);
                 capabilities.setCallHierarchyProvider(chOpts);
@@ -764,6 +775,14 @@ public final class Server {
                 FoldingRangeProviderOptions foldingOptions = new FoldingRangeProviderOptions();
                 capabilities.setFoldingRangeProvider(foldingOptions);
                 textDocumentService.init(init.getCapabilities(), capabilities);
+
+                // register for workspace changess
+                WorkspaceServerCapabilities wcaps = new WorkspaceServerCapabilities();
+                WorkspaceFoldersOptions wfopts = new WorkspaceFoldersOptions();
+                wfopts.setSupported(true);
+                wfopts.setChangeNotifications(true);
+                wcaps.setWorkspaceFolders(wfopts);
+                capabilities.setWorkspace(wcaps);
             }
             return new InitializeResult(capabilities);
         }
@@ -1079,10 +1098,17 @@ public final class Server {
     private static void hackConfigureGroovySupport(NbCodeClientCapabilities caps) {
         boolean b = caps != null && caps.wantsGroovySupport();
         try {
-            Class clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
+            Class<?> clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
             Method m = clazz.getDeclaredMethod("setIndexingEnabled", Boolean.TYPE);
             m.setAccessible(true);
             m.invoke(null, b);
+        } catch (ClassNotFoundException ex) {
+            // java.lang.ClassNotFoundException is expected when Groovy support is not activated / enabled. Do not log, if the
+            // client wants groovy disabled, which is obviuously true in this case :)
+            if (b && !groovyClassWarningLogged) {
+                groovyClassWarningLogged = true;
+                LOG.log(Level.WARNING, "Unable to configure Groovy indexing: Groovy support is not enabled");
+            }
         } catch (ReflectiveOperationException ex) {
             if (!groovyClassWarningLogged) {
                 groovyClassWarningLogged = true;

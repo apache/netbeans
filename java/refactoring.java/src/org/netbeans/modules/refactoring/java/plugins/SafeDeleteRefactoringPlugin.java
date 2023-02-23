@@ -131,7 +131,7 @@ public class SafeDeleteRefactoringPlugin extends JavaRefactoringPlugin {
             q.getContext().add(refactoring);
             q.getContext().add(this);
             
-            if(Tree.Kind.METHOD.equals(handle.getKind())) {
+            if(Tree.Kind.METHOD == handle.getKind()) {
                 JavaSource source;
                 source = JavaSource.forFileObject(handle.getFileObject());
                 try {

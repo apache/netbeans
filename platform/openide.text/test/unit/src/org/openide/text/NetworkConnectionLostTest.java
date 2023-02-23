@@ -165,6 +165,7 @@ implements CloneableEditorSupport.Env {
         }
         
         class ContentStream extends java.io.ByteArrayOutputStream {
+            @Override
             public void close () throws java.io.IOException {
                 super.close ();
                 content = new String (toByteArray ());

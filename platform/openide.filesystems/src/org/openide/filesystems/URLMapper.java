@@ -315,7 +315,7 @@ public abstract class URLMapper {
                 if (root == null) {
                     Object rootPath = fsRoot.getAttribute("FileSystem.rootPath"); //NOI18N
 
-                    if ((rootPath != null) && (rootPath instanceof String)) {
+                    if (rootPath instanceof String) {
                         rootName = (String) rootPath;
                     } else {
                         continue;
@@ -540,7 +540,7 @@ public abstract class URLMapper {
                     if (++separator != spec.length()) {
                         try {
                             // XXX new URI("substring").getPath() might be better?
-                            entryName = URLDecoder.decode(spec.substring(separator, spec.length()),"UTF-8");
+                            entryName = URLDecoder.decode(spec.substring(separator),"UTF-8");
                         } catch (UnsupportedEncodingException ex) {
                             return;
                         }

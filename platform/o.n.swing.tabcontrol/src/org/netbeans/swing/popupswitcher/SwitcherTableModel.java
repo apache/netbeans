@@ -95,15 +95,18 @@ class SwitcherTableModel extends AbstractTableModel {
             fireTableChanged(event);
         }
     }
-    
+
+    @Override
     public Class getColumnClass(int columnIndex) {
         return SwitcherTableItem.class;
     }
-    
+
+    @Override
     public String getColumnName(int columnIndex) {
         return "";
     }
-    
+
+    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return true;
     }

@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.css.lib.AbstractParseTreeNode;
 import org.netbeans.modules.css.lib.ErrorsProviderQuery;
@@ -39,7 +38,7 @@ public class CssParserResult extends ParserResult {
     private AbstractParseTreeNode parseTree;
     private List<ProblemDescription> diagnostics;
     
-    private Map properties;
+    private Map<Class<?>,Object> properties;
     
     public CssParserResult(Snapshot snapshot, AbstractParseTreeNode parseTree, List<ProblemDescription> diagnostics) {
         super(snapshot);
@@ -97,6 +96,7 @@ public class CssParserResult extends ParserResult {
         return getDiagnostics(false);
     }
     
+    @SuppressWarnings("unchecked")
     public <T> T getProperty(Class<T> type) {
         if(properties == null) {
             return null;
@@ -107,7 +107,7 @@ public class CssParserResult extends ParserResult {
     
     public <T> void setProperty(Class<T> type, T value) {
         if(properties == null) {
-            properties = new HashMap();
+            properties = new HashMap<>();
         }
         properties.put(type, value);
     }

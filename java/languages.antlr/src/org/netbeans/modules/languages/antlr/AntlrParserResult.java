@@ -44,6 +44,12 @@ import org.openide.filesystems.FileObject;
  */
 public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
 
+    public enum GrammarType {
+        UNKNOWN, LEXER, PARSER, MIXED, TREE;
+    }
+    
+    protected GrammarType grammarType = GrammarType.UNKNOWN;
+    
     public final List<DefaultError> errors = new ArrayList<>();
     public final Map<String, Reference> references = new TreeMap<>();
     public final Map<String, List<OffsetRange>> occurrences = new HashMap<>();
@@ -53,7 +59,7 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
 
     volatile boolean finished = false;
 
-    public static final Reference EOF = new Reference("EOF", OffsetRange.NONE); //NOI18N
+    public static final Reference EOF = new Reference(ReferenceType.TOKEN, "EOF", OffsetRange.NONE); //NOI18N
     
     public AntlrParserResult(Snapshot snapshot) {
         super(snapshot);
@@ -64,20 +70,15 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
 
     public AntlrParserResult get() {
         if (! finished) {
-            FileObject fo = getSnapshot().getSource().getFileObject();
             T parser = createParser(getSnapshot());
             parser.addErrorListener(createErrorListener());
             parser.addParseListener(createFoldListener());
             parser.addParseListener(createReferenceListener());
             parser.addParseListener(createImportListener());
-            evaluateParser(parser);
-
-            // Start a second parsing phase for checking;
-            parser = createParser(getSnapshot());
             parser.addParseListener(createStructureListener());
             parser.addParseListener(createOccurancesListener());
-            parser.addParseListener(createCheckReferences());
             evaluateParser(parser);
+
             finished = true;
         }
         return this;
@@ -98,11 +99,21 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
         return finished;
     }
 
+    public final GrammarType getGrammarType() {
+        return grammarType;
+    }
+
+    public enum ReferenceType {
+        FRAGMENT, TOKEN, RULE, CHANNEL, MODE
+    }
+    
     public static class Reference {
+        public final ReferenceType type;
         public final String name;
         public final OffsetRange defOffset;
 
-        public Reference(String name, OffsetRange defOffset) {
+        public Reference(ReferenceType type, String name, OffsetRange defOffset) {
+            this.type = type;
             this.name = name;
             this.defOffset = defOffset;
         }
@@ -135,8 +146,6 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
     protected abstract ParseTreeListener createFoldListener();
     protected abstract ParseTreeListener createStructureListener();
     protected abstract ParseTreeListener createOccurancesListener();
-
-    protected abstract ParseTreeListener createCheckReferences();
 
     protected ANTLRErrorListener createErrorListener() {
         return new BaseErrorListener() {

@@ -152,11 +152,11 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
                     "(length=" + ArrayReferenceWrapper.length((ArrayReference) v) + ")";
             }
             return "#" + ObjectReferenceWrapper.uniqueID((ObjectReference) v);
-        } catch (InternalExceptionWrapper iex) {
-            return "";
-        } catch (ObjectCollectedExceptionWrapper oex) {
-            return "";
-        } catch (VMDisconnectedExceptionWrapper dex) {
+        } catch (InternalExceptionWrapper | ObjectCollectedExceptionWrapper |
+                VMDisconnectedExceptionWrapper | ClassNotLoadedException |
+                ClassNotPreparedExceptionWrapper |
+                IncompatibleThreadStateException | InvalidTypeException |
+                InvocationException e) {
             return "";
         }
     }

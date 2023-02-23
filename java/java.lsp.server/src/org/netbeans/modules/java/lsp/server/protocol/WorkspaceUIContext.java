@@ -21,6 +21,8 @@ package org.netbeans.modules.java.lsp.server.protocol;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
@@ -36,10 +38,13 @@ import org.openide.awt.StatusDisplayer;
  * @author sdedic
  */
 class WorkspaceUIContext extends UIContext {
+    private static final Logger LOG = Logger.getLogger(WorkspaceUIContext.class.getName());
+    
     private final NbCodeLanguageClient client;
 
     public WorkspaceUIContext(NbCodeLanguageClient client) {
         this.client = client;
+        LOG.log(Level.FINE, "Starting WorkspaceUIContext for: {0}, context instance: {1}", new Object[] { client, this });
     }
 
     @Override

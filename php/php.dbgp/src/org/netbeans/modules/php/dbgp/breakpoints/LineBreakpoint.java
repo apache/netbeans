@@ -104,7 +104,7 @@ public class LineBreakpoint extends AbstractBreakpoint {
                 DataObject dataObject = DataEditorSupport.findDataObject(myLine);
                 EditorCookie editorCookie = (EditorCookie) dataObject.getLookup().lookup(EditorCookie.class);
                 final StyledDocument styledDocument = editorCookie.getDocument();
-                if (styledDocument != null && styledDocument instanceof BaseDocument) {
+                if (styledDocument instanceof BaseDocument) {
                     try {
                         final BaseDocument baseDocument = (BaseDocument) styledDocument;
                         Source source = Source.create(baseDocument);
@@ -113,7 +113,7 @@ public class LineBreakpoint extends AbstractBreakpoint {
                             @Override
                             public void run(ResultIterator resultIterator) throws Exception {
                                 Parser.Result parserResult = resultIterator.getParserResult();
-                                if (parserResult != null && parserResult instanceof PHPParseResult) {
+                                if (parserResult instanceof PHPParseResult) {
                                     PHPParseResult phpParserResult = (PHPParseResult) parserResult;
                                     int rowStart = LineDocumentUtils.getLineStartFromIndex(baseDocument, myLine.getLineNumber());
                                     int contentStart = Utilities.getRowFirstNonWhite(baseDocument, rowStart);

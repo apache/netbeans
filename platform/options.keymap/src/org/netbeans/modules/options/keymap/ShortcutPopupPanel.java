@@ -181,16 +181,19 @@ public class ShortcutPopupPanel extends javax.swing.JPanel {
 
         list.setModel(model);
         list.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 listMouseMoved(evt);
             }
         });
         list.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 listKeyPressed(evt);
             }
         });
         list.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listMouseClicked(evt);
             }

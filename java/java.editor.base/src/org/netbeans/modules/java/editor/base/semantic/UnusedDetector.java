@@ -141,7 +141,8 @@ public class UnusedDetector {
                     }
                 }
             } else if ((el.getKind() == ElementKind.CONSTRUCTOR || el.getKind() == ElementKind.METHOD) && (isPrivate || isPkgPrivate)) {
-                if (!isSerializationMethod(info, (ExecutableElement)el) && !uses.contains(UseTypes.USED)) {
+                if (!isSerializationMethod(info, (ExecutableElement)el) && !uses.contains(UseTypes.USED)
+                        && !info.getElementUtilities().overridesMethod((ExecutableElement)el)) {
                     if (isPrivate || isUnusedInPkg(info, el, cancel)) {
                         result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_USED));
                     }

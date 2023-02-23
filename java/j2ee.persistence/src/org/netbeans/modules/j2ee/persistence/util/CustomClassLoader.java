@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AllPermission;
@@ -40,7 +42,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import org.openide.ErrorManager;
-import org.openide.util.Exceptions;
+import org.openide.util.Utilities;
 
 /**
  * Custom classloader for Persistence plugin. It subclasses URLClassLoader
@@ -53,7 +55,7 @@ import org.openide.util.Exceptions;
  */
 public class CustomClassLoader extends URLClassLoader {
 
-    private Map<String, File> package2File = new HashMap<String, File>();
+    private Map<String, File> package2File = new HashMap<>();
     private static final Logger logger = Logger.getLogger(CustomClassLoader.class.getName());
 
     public CustomClassLoader(URL[] urls, ClassLoader parent) {
@@ -76,7 +78,7 @@ public class CustomClassLoader extends URLClassLoader {
             return clazz;
         }
         String packageName = null;
-        int lastDotIndex = name.lastIndexOf(".");
+        int lastDotIndex = name.lastIndexOf('.');
         if (lastDotIndex != -1) {
             packageName = name.substring(0, lastDotIndex);
         }
@@ -102,7 +104,7 @@ public class CustomClassLoader extends URLClassLoader {
             // the logging output
             throw new ClassNotFoundException("Log4J is forbidden");
         }
-        int dotIndex = name.indexOf(".");
+        int dotIndex = name.indexOf('.');
         String fileName;
         String separator = File.separator;
         if (separator.equals("\\")) {
@@ -114,18 +116,14 @@ public class CustomClassLoader extends URLClassLoader {
             fileName = name + ".class";
         }
         Class loadedClass = null;
-        InputStream is = getLocalResourceAsStream(packageName, fileName);
-        if (is != null) {
-            try {
+        try (InputStream is = getLocalResourceAsStream(packageName, fileName)) {
+            if (is != null) {
                 loadedClass = loadClass(name, is);
-            } finally {
-                try {
-                    is.close();
-                } catch (IOException ex) {
-                    // Ignore it
-                }
-            }
+            } 
+        } catch (IOException ex) {
+            // Ignore it
         }
+
         if (loadedClass != null) {
             return loadedClass;
         }
@@ -134,8 +132,7 @@ public class CustomClassLoader extends URLClassLoader {
     }
 
     private Class loadClass(String className, InputStream is) {
-        try {
-            BufferedInputStream bis = new BufferedInputStream(is);
+        try (BufferedInputStream bis = new BufferedInputStream(is)) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             byte[] bytes = new byte[1024 * 5];
             int readBytes;
@@ -144,10 +141,7 @@ public class CustomClassLoader extends URLClassLoader {
             }
             byte[] b = os.toByteArray();
             return defineClass(className, b, 0, b.length);
-        } catch (ClassFormatError ex) {
-            ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
-            return null;
-        } catch (IOException ex) {
+        } catch (ClassFormatError | IOException ex) {
             ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
             return null;
         }
@@ -166,7 +160,7 @@ public class CustomClassLoader extends URLClassLoader {
         if (packageName != null) {
             preferred = package2File.get(packageName);
         }
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         if (preferred != null) {
             files.add(preferred);
         }
@@ -177,16 +171,14 @@ public class CustomClassLoader extends URLClassLoader {
                 if (f.exists()) {
                     try {
                         package2File.put(packageName, entry);
-                        return f.toURI().toURL();
+                        return Utilities.toURI(f).toURL();
                     } catch (MalformedURLException ex) {
                         continue;
                     }
                 }
             } else {
                 if (entry.isFile() && entry.exists()) {
-                    ZipFile zf = null;
-                    try {
-                        zf = new ZipFile(entry);
+                    try (ZipFile zf = new ZipFile(entry)) {
                         // Zip entries are delimited by /
                         name = name.replaceAll("\\\\", "/");
                         ZipEntry zipEntry = zf.getEntry(name);
@@ -196,21 +188,14 @@ public class CustomClassLoader extends URLClassLoader {
                             if (!url.startsWith("/")) {
                                 url = "/" + url;
                             }
-                            URL r = new URL("jar:file://" + url + "!/" + name);
+                            URL r = new URI("jar:file://" + url + "!/" + name).toURL();
                             package2File.put(packageName, entry);
                             return r;
                         }
                     } catch (ZipException ex) {
                         // continue
-                    } catch (IOException ex) {
+                    } catch (IOException | URISyntaxException ex) {
                         // continue
-                    } finally {
-                        try {
-                            if(zf!=null){
-                                zf.close();
-                            }
-                        } catch (IOException ex) {
-                        }
                     }
                 }
             }

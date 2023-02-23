@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.j2ee.persistence.unit;
 
-import junit.framework.*;
 import java.util.List;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
@@ -35,6 +34,7 @@ public class PersistenceValidatorTest extends PersistenceEditorTestBase {
         super(testName);
     }
     
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
     }
@@ -85,7 +85,7 @@ public class PersistenceValidatorTest extends PersistenceEditorTestBase {
         // Java EE
         PersistenceValidator javaEEvalidator = new PersistenceValidatorImpl(dataObject, false);
         errors = javaEEvalidator.validate();
-        assertTrue(errors.isEmpty());;
+        assertTrue(errors.isEmpty());
     }
     
     /**
@@ -109,7 +109,7 @@ public class PersistenceValidatorTest extends PersistenceEditorTestBase {
         // Java EE
         PersistenceValidator javaEEvalidator = new PersistenceValidatorImpl(dataObject, false);
         errors = javaEEvalidator.validate();
-        assertTrue(errors.isEmpty());;
+        assertTrue(errors.isEmpty());
     }
     
     /**
@@ -125,6 +125,7 @@ public class PersistenceValidatorTest extends PersistenceEditorTestBase {
             this.javaSE = javaSE;
         }
 
+        @Override
         protected boolean isJavaSE() {
             return javaSE;
         }

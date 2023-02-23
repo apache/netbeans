@@ -234,6 +234,7 @@ public abstract class AbstractDocumentModel<T extends DocumentComponent<T>>
      * @deprecated Use {@link org.netbeans.modules.xml.xam.dom.AbstractDocumentModel#prepareChangeInfo(java.util.List, java.util.List)} instead. It is necessary for fixing bug #166177.
      *
      */
+    @Deprecated
     public ChangeInfo prepareChangeInfo(List<Node> pathToRoot) {
         return prepareChangeInfo(pathToRoot, pathToRoot);
     }
@@ -365,7 +366,7 @@ public abstract class AbstractDocumentModel<T extends DocumentComponent<T>>
     }
     
     protected void firePropertyChangedEvents(SyncUnit unit, Element oldElement) {
-        Set<String> propertyNames = new HashSet(unit.getRemovedAttributes().keySet());
+        Set<String> propertyNames = new HashSet<>(unit.getRemovedAttributes().keySet());
         propertyNames.addAll(unit.getAddedAttributes().keySet());
         for (String name : propertyNames) {
             Attr oldAttr = unit.getRemovedAttributes().get(name);

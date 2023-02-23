@@ -822,7 +822,9 @@
                                 </FormalParameter>
                                 <FormalParameter start='1388' end='1440' modifier='private readonly' isMandatory='false' isVariadic='false'>
                                     <ParametrType>
-                                        <Identifier start='1405' end='1410' name='array'/>
+                                        <NamespaceName start='1405' end='1410' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1405' end='1410' name='array'/>
+                                        </NamespaceName>
                                     </ParametrType>
                                     <ParametrName>
                                         <Variable start='1411' end='1435' isDollared='true'>
@@ -868,7 +870,9 @@
                                 </FormalParameter>
                                 <FormalParameter start='1579' end='1631' modifier='private readonly' isMandatory='false' isVariadic='false'>
                                     <ParametrType>
-                                        <Identifier start='1596' end='1601' name='array'/>
+                                        <NamespaceName start='1596' end='1601' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1596' end='1601' name='array'/>
+                                        </NamespaceName>
                                     </ParametrType>
                                     <ParametrName>
                                         <Variable start='1602' end='1626' isDollared='true'>
@@ -1062,7 +1066,9 @@
                                 </FormalParameter>
                                 <FormalParameter start='2342' end='2394' modifier='private readonly' isMandatory='false' isVariadic='false'>
                                     <ParametrType>
-                                        <Identifier start='2359' end='2364' name='array'/>
+                                        <NamespaceName start='2359' end='2364' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2359' end='2364' name='array'/>
+                                        </NamespaceName>
                                     </ParametrType>
                                     <ParametrName>
                                         <Variable start='2365' end='2389' isDollared='true'>
@@ -1108,7 +1114,9 @@
                                 </FormalParameter>
                                 <FormalParameter start='2533' end='2585' modifier='private readonly' isMandatory='false' isVariadic='false'>
                                     <ParametrType>
-                                        <Identifier start='2550' end='2555' name='array'/>
+                                        <NamespaceName start='2550' end='2555' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2550' end='2555' name='array'/>
+                                        </NamespaceName>
                                     </ParametrType>
                                     <ParametrName>
                                         <Variable start='2556' end='2580' isDollared='true'>

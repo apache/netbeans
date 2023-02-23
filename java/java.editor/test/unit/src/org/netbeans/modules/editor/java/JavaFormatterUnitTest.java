@@ -38,7 +38,7 @@ import org.openide.util.Lookup;
 /**
  * Java formatter tests.
  *
- * @autor Miloslav Metelka
+ * @author Miloslav Metelka
  */
 public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
 

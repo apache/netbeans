@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -71,12 +70,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
+import org.eclipse.lsp4j.DidChangeWorkspaceFoldersParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ShowDocumentParams;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.WorkspaceSymbol;
 import org.eclipse.lsp4j.WorkspaceSymbolLocation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
@@ -129,10 +130,12 @@ import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
@@ -664,7 +667,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
 
         public CompletableFuture<LspProjectInfo[]> process() {
-            List<FileObject> files = new ArrayList();
+            List<FileObject> files = new ArrayList<>();
             for (URL u : locations) {
                 FileObject f = URLMapper.findFileObject(u);
                 if (f != null) {
@@ -747,7 +750,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
         
         CompletableFuture<LspProjectInfo[]> finalizeInfos() {
-            List<LspProjectInfo> list = new ArrayList();
+            List<LspProjectInfo> list = new ArrayList<>();
             for (URL u : locations) {
                 FileObject f = URLMapper.findFileObject(u);
                 Project owner = FileOwnerQuery.getOwner(f);
@@ -1170,6 +1173,54 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
     }
 
+    @NbBundle.Messages({
+        "# {0} - project name",
+        "MSG_ProjectFolderInitializationComplete=Completed initialization of project {0}",
+        "# {0} - some project name",
+        "# {1} - number of other projects loaded",
+        "MSG_ProjectFolderInitializationComplete2=Completed initialization of {0} and {1} other projectss"
+    })
+    @Override
+    public void didChangeWorkspaceFolders(DidChangeWorkspaceFoldersParams params) {
+        List<FileObject> refreshProjectFolders = new ArrayList<>();
+        for (WorkspaceFolder wkspFolder : params.getEvent().getAdded()) {
+            String uri = wkspFolder.getUri();
+            try {
+                FileObject f = Utils.fromUri(uri);
+                if (f != null) {
+                    refreshProjectFolders.add(f);
+                }
+            } catch (MalformedURLException ex) {
+                // expected, perhaps some client-specific URL scheme ?
+                LOG.fine("Workspace folder URI could not be converted into fileobject: {0}");
+            }
+        }
+        if (!refreshProjectFolders.isEmpty()) {
+            server.asyncOpenSelectedProjects(refreshProjectFolders, true).thenAccept((projects) -> {
+                // report initialization of a project / projects
+                String msg;
+                if (projects.length == 0) {
+                    // this should happen immediately
+                    return;
+                } 
+                ProjectInformation pi = ProjectUtils.getInformation(projects[0]);
+                String n = pi.getDisplayName();
+                if (n == null) {
+                    n = pi.getName();
+                }
+                if (n == null) {
+                    n = projects[0].getProjectDirectory().getName();
+                }
+                if (projects.length == 1) {
+                    msg = Bundle.MSG_ProjectFolderInitializationComplete(n);
+                } else {
+                    msg = Bundle.MSG_ProjectFolderInitializationComplete2(n, projects.length);
+                }
+                StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
+            });
+        }
+    }
+
     @Override
     public void didChangeWatchedFiles(DidChangeWatchedFilesParams arg0) {
         //TODO: not watching files for now
@@ -1182,7 +1233,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     private static final class CommandProgress extends ActionProgress {
 
-        private final CompletableFuture<Object> commandFinished = new CompletableFuture<>();;
+        private final CompletableFuture<Object> commandFinished = new CompletableFuture<>();
         private int running;
         private int success;
         private int failure;

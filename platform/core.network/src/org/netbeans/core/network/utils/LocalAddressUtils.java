@@ -146,7 +146,7 @@ public class LocalAddressUtils {
         try (final DatagramSocket socket = new DatagramSocket()) {
             socket.connect(SOMEADDR_IPV4, 10002);   // doesn¨t need to be reachable .. and port it irrelevant
             InetAddress addr = socket.getLocalAddress();
-            if (addr != null && (addr instanceof Inet4Address) && (!addr.isAnyLocalAddress() && (!addr.isLoopbackAddress()))) {
+            if ((addr instanceof Inet4Address) && (!addr.isAnyLocalAddress() && (!addr.isLoopbackAddress()))) {
                 list.add(addr);
             }
         } catch (SecurityException | SocketException ex) {
@@ -155,7 +155,7 @@ public class LocalAddressUtils {
         try (final DatagramSocket socket = new DatagramSocket()) {
             socket.connect(SOMEADDR_IPV6, 10002);   // doesn¨t need to be reachable .. and port it irrelevant
             InetAddress addr = socket.getLocalAddress();
-            if (addr != null && (addr instanceof Inet6Address) && (!addr.isAnyLocalAddress() && (!addr.isLoopbackAddress()))) {
+            if ((addr instanceof Inet6Address) && (!addr.isAnyLocalAddress() && (!addr.isLoopbackAddress()))) {
                 list.add(addr);
             }
         } catch (SecurityException | SocketException ex) {

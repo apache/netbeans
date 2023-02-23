@@ -894,6 +894,7 @@ class SplitSubModel {
 
         /** Overrides superclass method. Adds info about dividePos, orientation,
          * first and second sub-nodes. */
+        @Override
         public String toString() {
             StringBuffer sb = new StringBuffer();
             sb.append(super.toString());
@@ -972,7 +973,7 @@ class SplitSubModel {
         }
         
         public void setChildSplitWeight(Node child, double weight) {
-            if(child == null || !child2splitWeight.keySet().contains(child)) {
+            if(child == null || !child2splitWeight.containsKey(child)) {
                 return;
             }
             
@@ -1028,6 +1029,7 @@ class SplitSubModel {
         }
 
         /** Indicates whether component represented by this node is visible or not. */
+        @Override
         public boolean isVisibleInSplit() {
             int count = 0;
             for(Iterator it = index2child.values().iterator(); it.hasNext(); ) {
@@ -1045,6 +1047,7 @@ class SplitSubModel {
         }
 
         /** Indicates whether there is at least one visible descendant. */
+        @Override
         public boolean hasVisibleDescendant() {
             for(Iterator it = index2child.values().iterator(); it.hasNext(); ) {
                 Node node = (Node)it.next();
@@ -1106,6 +1109,7 @@ class SplitSubModel {
             return mode;
         }
 
+        @Override
         public boolean isVisibleInSplit() {
             if(mode.getOpenedTopComponents().isEmpty()) {
                 return false;

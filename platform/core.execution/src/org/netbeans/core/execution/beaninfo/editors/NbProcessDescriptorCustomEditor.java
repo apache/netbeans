@@ -69,6 +69,7 @@ implements PropertyChangeListener {
         env.addPropertyChangeListener(this);
     }
 
+    @Override
     public java.awt.Dimension getPreferredSize() {
         java.awt.Dimension inh = super.getPreferredSize ();
         return new java.awt.Dimension (DEFAULT_WIDTH, Math.max (inh.height, DEFAULT_HEIGHT));

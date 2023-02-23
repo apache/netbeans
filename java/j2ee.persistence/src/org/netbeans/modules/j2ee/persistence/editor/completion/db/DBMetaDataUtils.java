@@ -21,7 +21,6 @@ package org.netbeans.modules.j2ee.persistence.editor.completion.db;
 
 import java.sql.SQLException;
 import org.netbeans.modules.dbschema.TableElement;
-import org.netbeans.modules.j2ee.persistence.editor.completion.*;
 
 /**
  *

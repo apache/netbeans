@@ -26,6 +26,7 @@ import com.sun.source.tree.LambdaExpressionTree.BodyKind;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModuleTree;
+import com.sun.source.tree.PatternTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import static com.sun.source.tree.Tree.*;
@@ -2091,8 +2092,26 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitTree(JCTree tree) {
-	print("(UNKNOWN: " + tree + ")");
-	newline();
+        print("(UNKNOWN: " + tree + ")");
+        newline();
+    }
+    
+    @Override
+    public void visitRecordPattern(JCRecordPattern tree) {
+        print(tree.deconstructor);
+        print("(");
+        Iterator<JCPattern> it = tree.nested.iterator();
+        while (it.hasNext()) {
+            JCPattern pattern = it.next();
+            doAccept(pattern, true);
+            if (it.hasNext()) {
+                print(", ");
+            }
+        }
+        print(") ");
+        if (tree.var != null) {
+            print(tree.var.name.toString());
+        }
     }
 
     /**************************************************************************

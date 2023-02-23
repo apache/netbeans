@@ -456,7 +456,7 @@ public final class SerParser implements ObjectStreamConstants {
             /*
             if (((ObjFieldDesc)fd).array) {
                 if (! clazz.startsWith("[")) throw new CorruptException("Field type: " + clazz); // NOI18N
-                clazz = clazz.substring(1, clazz.length());
+                clazz = clazz.substring(1);
             }
             if (! (clazz.startsWith("L") && clazz.endsWith(";"))) throw new CorruptException("Field type: " + clazz); // NOI18N
             fd.type = clazz.substring(1, clazz.length() - 1).replace('/', '.'); // NOI18N

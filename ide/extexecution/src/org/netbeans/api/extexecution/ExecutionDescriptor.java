@@ -397,6 +397,7 @@ public final class ExecutionDescriptor {
      *             processor to use for standard output
      * @deprecated use {@link #outProcessorFactory(org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory2)}
      */
+    @Deprecated
     @NonNull
     @CheckReturnValue
     public ExecutionDescriptor outProcessorFactory(@NullAllowed InputProcessorFactory outProcessorFactory) {
@@ -471,6 +472,7 @@ public final class ExecutionDescriptor {
      *             processor to use for standard error output
      * @deprecated use {@link #errProcessorFactory(org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory2)}
      */
+    @Deprecated
     @NonNull
     @CheckReturnValue
     public ExecutionDescriptor errProcessorFactory(@NullAllowed InputProcessorFactory errProcessorFactory) {
@@ -812,6 +814,7 @@ public final class ExecutionDescriptor {
      * Factory creating the input processor.
      * @deprecated use {@link InputProcessorFactory2}
      */
+    @Deprecated
     public interface InputProcessorFactory {
 
         /**

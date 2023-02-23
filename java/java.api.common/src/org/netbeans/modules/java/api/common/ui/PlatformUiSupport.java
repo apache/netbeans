@@ -769,7 +769,7 @@ public final class PlatformUiSupport {
                     final String active = eval.getProperty(ProjectProperties.PLATFORM_ACTIVE);
                     if (active != null) {
                         final String activeHomeKey = String.format("platforms.%s.home", active);    //NOI18N
-                        if (eval.getProperty(activeHomeKey) != null && !globalProps.keySet().contains(activeHomeKey)) {
+                        if (eval.getProperty(activeHomeKey) != null && !globalProps.containsKey(activeHomeKey)) {
                             projectPlatform = project != null ?
                                 ProjectPlatform.forProject(
                                     project,

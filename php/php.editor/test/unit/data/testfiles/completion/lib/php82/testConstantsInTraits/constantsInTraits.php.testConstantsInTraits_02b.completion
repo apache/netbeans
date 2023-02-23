@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo self::IMPLICIT_PUBLIC|_TRAIT . PHP_EOL;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   IMPLICIT_PUBLIC_TRAIT 'Example  [PUBLIC]   ExampleTrait

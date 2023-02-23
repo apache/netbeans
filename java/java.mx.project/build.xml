@@ -31,7 +31,7 @@
             <arg value="clone"/>
             <arg value="--depth=1"/>
             <arg value="--branch"/>
-            <arg value="vm-20.3.0"/>
+            <arg value="vm-22.3.0"/>
             <arg value="--single-branch"/>
             <arg value="https://github.com/oracle/graal"/>
         </exec>
@@ -41,7 +41,7 @@
             <arg value="clone"/>
             <arg value="--depth=1"/>
             <arg value="--branch"/>
-            <arg value="5.279.0"/>
+            <arg value="6.7.0"/>
             <arg value="--single-branch"/>
             <arg value="https://github.com/graalvm/mx"/>
         </exec>

@@ -852,7 +852,7 @@ public class JTreeTable extends JTable implements CellTipAware, MouseListener, M
     public void processMouseEvent(MouseEvent e) {
         if (e instanceof MouseWheelEvent) {
             Component target = JTreeTable.this.getParent();
-            if (target == null || !(target instanceof JViewport))
+            if (!(target instanceof JViewport))
                 target = JTreeTable.this;
             MouseEvent mwe = SwingUtilities.convertMouseEvent(
                     JTreeTable.this, (MouseWheelEvent)e, target);
@@ -908,11 +908,11 @@ public class JTreeTable extends JTable implements CellTipAware, MouseListener, M
         treeTableModelAdapter.changeRoot(newRoot);
     }
     
-    public void setup(List expanded, TreePath selected) {
+    public void setup(List<TreePath> expanded, TreePath selected) {
         treeTableModelAdapter.setup(expanded, selected);
     }
     
-    public List getExpandedPaths() {
+    public List<TreePath> getExpandedPaths() {
         return treeTableModelAdapter.getExpandedPaths();
     }
 

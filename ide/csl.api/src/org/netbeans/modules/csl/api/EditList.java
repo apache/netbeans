@@ -63,7 +63,7 @@ public class EditList {
     private Document doc;
     private List<Edit> edits;
     private boolean formatAll;
-    private List<DelegatedPosition> positions = new ArrayList<DelegatedPosition>();;
+    private List<DelegatedPosition> positions = new ArrayList<DelegatedPosition>();
     
     public EditList(BaseDocument doc) {
         this.doc = doc;
@@ -105,6 +105,7 @@ public class EditList {
      * @deprecated use {@link #applyTo}.
      * @param otherDoc 
      */
+    @Deprecated
     public void applyToDocument(BaseDocument otherDoc/*, boolean narrow*/) {
         applyTo(otherDoc);
     }
@@ -256,6 +257,7 @@ public class EditList {
      * @param doc
      * @return 
      */
+    @Deprecated
     public int firstLine(BaseDocument doc) {
         return firstEditLine(doc);
     }

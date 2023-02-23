@@ -67,7 +67,7 @@ final class TimelineChart extends SynchronousXYChart {
     private int lastHoverMode;
     private int lastMoveMode;
 
-    private final Set<RowListener> rowListeners = new HashSet();
+    private final Set<RowListener> rowListeners = new HashSet<>();
 
 
     // --- Constructors --------------------------------------------------------
@@ -75,8 +75,8 @@ final class TimelineChart extends SynchronousXYChart {
     TimelineChart(SynchronousXYItemsModel itemsModel) {
         super(itemsModel, new PaintersModel.Default());
 
-        rows = new ArrayList();
-        itemsToRows = new HashMap();
+        rows = new ArrayList<>();
+        itemsToRows = new HashMap<>();
 
         setBottomBased(false);
 
@@ -170,7 +170,7 @@ final class TimelineChart extends SynchronousXYChart {
     void increaseRowHeights(boolean step) {
         if (rows.isEmpty()) return;
         int incr = step ? ROW_RESIZE_STEP : 1;
-        List<Row> resized = new ArrayList(rows.size());
+        List<Row> resized = new ArrayList<>(rows.size());
         for (Row row : rows)
             if (row.setHeight(row.getHeight() + incr, step))
                 resized.add(row);
@@ -183,7 +183,7 @@ final class TimelineChart extends SynchronousXYChart {
     void decreaseRowHeights(boolean step) {
         if (rows.isEmpty()) return;
         int decr = step ? ROW_RESIZE_STEP : 1;
-        List<Row> resized = new ArrayList(rows.size());
+        List<Row> resized = new ArrayList<>(rows.size());
         for (Row row : rows)
             if (row.setHeight(row.getHeight() - decr, step))
                 resized.add(row);
@@ -195,7 +195,7 @@ final class TimelineChart extends SynchronousXYChart {
 
     void resetRowHeights() {
         if (rows.isEmpty()) return;
-        List<Row> resized = new ArrayList(rows.size());
+        List<Row> resized = new ArrayList<>(rows.size());
         for (Row row : rows)
             if (row.setHeight(DEF_ROW_HEIGHT, true))
                 resized.add(row);
@@ -491,7 +491,7 @@ final class TimelineChart extends SynchronousXYChart {
         // --- Constructors ----------------------------------------------------
 
         Row() {
-            items = new ArrayList();
+            items = new ArrayList<>();
             context = new RowContext(this);
         }
 

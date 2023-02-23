@@ -75,6 +75,7 @@ import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo.Report;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
+import org.netbeans.modules.gradle.execute.GradleNetworkProxySupport;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
@@ -326,6 +327,11 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         Throwable th = ex;
         while (th != null) {
             problems.add(GradleProject.createGradleReport(null, th.getMessage()));
+            ex = th;
+            th = th.getCause();
+            if (ex == th) {
+                break;
+            }
         }
         return problems;
     }
@@ -356,39 +362,29 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         return Collections.singletonList(createReport(t.getCause()));
     }
     
-    /**
-     * Accessor for the 'location' property on LocationAwareException
-     */
-    private static Method locationAccessor;
-
-    /**
-     * Accessor for the 'lineNumber' property on LocationAwareException
-     */
-    private static Method lineNumberAccessor;
-    
     private static String getLocation(Throwable locationAwareEx) {
         try {
-            if (locationAccessor == null) {
-                locationAccessor = locationAwareEx.getClass().getMethod("getLocation"); // NOI18N
-            }
+            Method locationAccessor = locationAwareEx.getClass().getMethod("getLocation"); // NOI18N
             return (String)locationAccessor.invoke(locationAwareEx);
         } catch (ReflectiveOperationException ex) {
             LOG.log(Level.FINE,"Error getting location", ex);
-            return null;
+        } catch (IllegalArgumentException iae) {
+            LOG.log(Level.FINE, "This probably should not happen: " + locationAwareEx.getClass().getName(), iae);
         }
+        return null;
     }
 
     private static int getLineNumber(Throwable locationAwareEx) {
         try {
-            if (lineNumberAccessor == null) {
-                lineNumberAccessor = locationAwareEx.getClass().getMethod("getLineNumber"); // NOI18N
-            }
+            Method lineNumberAccessor = locationAwareEx.getClass().getMethod("getLineNumber"); // NOI18N
             Integer i = (Integer)lineNumberAccessor.invoke(locationAwareEx);
             return i != null ? i : -1;
         } catch (ReflectiveOperationException ex) {
             LOG.log(Level.FINE,"Error getting line number", ex);
-            return -1;
+        } catch (IllegalArgumentException iae) {
+            LOG.log(Level.FINE, "This probably should not happen: " + locationAwareEx.getClass().getName(), iae);
         }
+        return -1;
     }
 
     /**
@@ -454,6 +450,9 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         return ret;
     }
 
+    @NbBundle.Messages({
+        "ERR_UserAbort=Project analysis aborted by the user."
+    })
     private static NbProjectInfo retrieveProjectInfo(NbGradleProjectImpl projectImpl, GoOnline goOnline, ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl, AtomicBoolean wasOnline) throws GradleConnectionException, IllegalStateException {
         NbProjectInfo ret;
 
@@ -489,8 +488,26 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                 }
             }
         }
+
+        BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, online, token, pl);        
+        // since we're going online, check the network settings:
+        GradleNetworkProxySupport support = projectImpl.getLookup().lookup(GradleNetworkProxySupport.class);
+        if (support != null) {
+            try {
+                GradleNetworkProxySupport.ProxyResult result = support.checkProxySettings().get();
+                switch (result.getStatus()) {
+                    case ABORT:
+                        LOG.log(Level.FINE, "User cancelled the project load");
+                        throw new IllegalStateException(Bundle.ERR_UserAbort());
+                }
+                action = result.configure(action);
+            } catch (InterruptedException ex) {
+                throw new IllegalStateException(ex);
+            } catch (ExecutionException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
         
-        BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, online, token, pl);
         wasOnline.set(true);
         return runInfoAction(action);
     }

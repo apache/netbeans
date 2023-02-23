@@ -266,10 +266,17 @@ public final class VariousUtils {
     public static String getUnionType(UnionType unionType) {
         StringBuilder sb = new StringBuilder();
         for (Expression type : unionType.getTypes()) {
-            QualifiedName name = QualifiedName.create(type);
             if (sb.length() > 0) {
                 sb.append(Type.SEPARATOR);
             }
+            // GH-4725: PHP 8.2 Disjunctive Normal Form Types
+            // e.g. (X&Y)|(A&B)
+            if (type instanceof IntersectionType) {
+                IntersectionType intersectionType = (IntersectionType) type;
+                sb.append("(").append(getIntersectionType(intersectionType)).append(")"); // NOI18N
+                continue;
+            }
+            QualifiedName name = QualifiedName.create(type);
             assert name != null : type;
             sb.append(name.toString());
         }
@@ -428,7 +435,7 @@ public final class VariousUtils {
             if (scalarType.equals(Scalar.Type.STRING)) {
                 String stringValue = scalar.getStringValue().toLowerCase();
                 if (stringValue.equals("false") || stringValue.equals("true")) { //NOI18N
-                    return Type.BOOLEAN;
+                    return Type.BOOL;
                 }
                 if (stringValue.equals(Type.NULL)) {
                     return Type.NULL;
@@ -1918,6 +1925,32 @@ public final class VariousUtils {
      * string|\Foo\ClassName|null
      */
     public static String qualifyTypeNames(String typeNames, int offset, Scope inScope) {
+        // GH-4725: PHP 8.2 Disjunctive Normal Form Types
+        // e.g. (X&Y)|(A&B)|Countable
+        StringBuilder sb = new StringBuilder();
+        if (typeNames != null) {
+            if (typeNames.contains("(")) { // NOI18N
+                String[] split = TYPE_SEPARATOR_PATTERN.split(typeNames);
+                for (String type : split) {
+                    if (sb.length() > 0) {
+                        sb.append(Type.SEPARATOR);
+                    }
+                    String typeName = type.replace("(", "").replace(")", ""); // NOI18N
+                    boolean isIntersectionType = typeName.contains(Type.SEPARATOR_INTERSECTION);
+                    if (isIntersectionType) {
+                        sb.append("(").append(qualifyUnionOrIntersectionTypeNames(typeName, offset, inScope)).append(")"); // NOI18N
+                    } else {
+                        sb.append(qualifyUnionOrIntersectionTypeNames(typeName, offset, inScope));
+                    }
+                }
+            } else {
+                sb.append(qualifyUnionOrIntersectionTypeNames(typeNames, offset, inScope));
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String qualifyUnionOrIntersectionTypeNames(String typeNames, int offset, Scope inScope) {
         StringBuilder retval = new StringBuilder();
         if (typeNames != null) {
             if (!typeNames.matches(SPACES_AND_TYPE_DELIMITERS)) {
@@ -1935,7 +1968,7 @@ public final class VariousUtils {
                     int indexOfArrayDelim = typeName.indexOf('[');
                     if (indexOfArrayDelim != -1) {
                         typeRawPart = typeName.substring(0, indexOfArrayDelim);
-                        typeArrayPart = typeName.substring(indexOfArrayDelim, typeName.length());
+                        typeArrayPart = typeName.substring(indexOfArrayDelim);
                     }
                     if ("$this".equals(typeName)) { //NOI18N
                         // #239987

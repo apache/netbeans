@@ -41,6 +41,11 @@
                         </folder>
                     </folder>
                 </folder>
+                <folder name="Preferences">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-languages-antlr-v3-preferences.xml" url="v3/preferences.xml"/>
+                    </folder>
+                </folder>                
             </folder>
             <folder name="x-antlr4">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.languages.antlr.Bundle#Editors/text/x-antlr4"/>
@@ -60,6 +65,14 @@
                         </folder>
                     </folder>
                 </folder>
+                <folder name="CodeTemplates">
+                    <file name="org-netbeans-modules-languages-antlr-v4-snippets.xml" url="v4/snippets.xml"/>
+                </folder>                
+                <folder name="Preferences">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-languages-antlr-v4-preferences.xml" url="v4/preferences.xml"/>
+                    </folder>
+                </folder>                
             </folder>
         </folder>
     </folder>

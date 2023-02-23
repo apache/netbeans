@@ -301,7 +301,7 @@ public class MergeDialogComponent extends TopComponent implements ChangeListener
     
     public MergePanel getSelectedMergePanel() {
         Component selected = mergeTabbedPane.getSelectedComponent();
-        if (selected == null || !(selected instanceof MergePanel)) return null;
+        if (!(selected instanceof MergePanel)) return null;
         return ((MergePanel) selected);
     }
     

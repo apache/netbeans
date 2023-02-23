@@ -227,7 +227,8 @@ public class JavadocAndSourceRootDetection {
             final boolean singleRoot,
             final int depth) {
         final FileObject pkgList = folder.getFileObject("package-list", null); // NOI18N
-        if (pkgList != null) {
+        final FileObject elmList = folder.getFileObject("element-list", null); // NOI18N
+        if (pkgList != null || elmList != null) {
             result.add(folder);
             return singleRoot;
         }

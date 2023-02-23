@@ -711,6 +711,7 @@ public abstract class ErrorManager extends Object {
         }
 
         /** Calls all delegates. */
+        @Override
         public boolean isLoggable(int severity) {
             if (severity == UNKNOWN) {
                 throw new IllegalArgumentException("ErrorManager.isLoggable(UNKNOWN) is not permitted"); // NOI18N
@@ -730,6 +731,7 @@ public abstract class ErrorManager extends Object {
         }
 
         /** Calls all delegates. */
+        @Override
         public boolean isNotifiable(int severity) {
             if (severity == UNKNOWN) {
                 throw new IllegalArgumentException("ErrorManager.isNotifiable(UNKNOWN) is not permitted"); // NOI18N
@@ -767,8 +769,8 @@ public abstract class ErrorManager extends Object {
         /**
          * Takes all our delegates, asks them for an instance identified by
          * name and adds those results as new delegates for dem.
-         * @param String name
-         * @param DelagatingErrorManager d the instance to which we will attach
+         * @param dem the instance to which we will attach
+         * @param name name
          */
         private void attachNewDelegates(DelegatingErrorManager dem, String name) {
             Set<ErrorManager> newDelegatesForDem = new HashSet<ErrorManager>();
@@ -818,6 +820,7 @@ public abstract class ErrorManager extends Object {
         /** additional mapping from throwables that refuse initCause call */
         private static Map<Throwable, AnnException> extras = new WeakHashMap<Throwable, AnnException>();
 
+        @Override
         public String getMessage() {
             StringBuilder sb = new StringBuilder();
             String sep = "";
@@ -880,16 +883,19 @@ public abstract class ErrorManager extends Object {
             return r == null ? empty : r.toArray(empty);
         }
 
+        @Override
         public void printStackTrace(PrintStream s) {
             super.printStackTrace(s);
             logRecords(s);
         }
 
+        @Override
         public void printStackTrace(PrintWriter s) {
             super.printStackTrace(s);
             logRecords(s);
         }
 
+        @Override
         public void printStackTrace() {
             printStackTrace(System.err);
         }
@@ -903,7 +909,7 @@ public abstract class ErrorManager extends Object {
 
                 for (LogRecord log : r) {
                     if (log.getMessage() != null) {
-                        a.append(log.getMessage()).append("\n");;
+                        a.append(log.getMessage()).append("\n");
                     }
                     if (log.getThrown() != null) {
                         StringWriter w = new StringWriter();

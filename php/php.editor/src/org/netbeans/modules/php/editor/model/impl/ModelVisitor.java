@@ -36,6 +36,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.php.api.editor.PhpBaseElement;
 import org.netbeans.modules.php.api.editor.PhpType;
 import org.netbeans.modules.php.api.editor.PhpVariable;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.Cache;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.NavUtils;
@@ -313,7 +314,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             } else if (expression instanceof Scalar) {
                 typeName = VariousUtils.extractVariableTypeFromExpression(expression, null);
             }
-            if (typeName != null) {
+            if (!StringUtils.isEmpty(typeName)) {
                 functionScope.addReturnType(QualifiedName.create(typeName).toString());
             }
         }
@@ -321,6 +322,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
 
     private static final Set<String> recursionDetection = new HashSet<>(); //#168868
 
+    @CheckForNull
     private String resolveVariableType(String varName, FunctionScopeImpl varScope, ReturnStatement node) {
         try {
             if (varName != null && recursionDetection.add(varName)) {

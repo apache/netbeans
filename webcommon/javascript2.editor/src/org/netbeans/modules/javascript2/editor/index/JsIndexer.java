@@ -260,7 +260,7 @@ public class JsIndexer extends EmbeddingIndexer {
             if (parent != null && parent.getJSKind() == JsElement.Kind.FILE) {
                 return false;
             }
-            if (parent != null && parent instanceof JsFunction) {
+            if (parent instanceof JsFunction) {
                 Collection<? extends TypeUsage> returnTypes = ((JsFunction) parent).getReturnTypes();
                 String fqn = object.getFullyQualifiedName();
                 for (TypeUsage returnType : returnTypes) {

@@ -41,6 +41,7 @@ public class ClientDataLoader extends UniFileLoader {
     private static final String REQUIRED_MIME_PREFIX_5 = "text/x-dd-client7.0"; // NOI18N
     private static final String REQUIRED_MIME_PREFIX_6 = "text/x-dd-client8.0"; // NOI18N
     private static final String REQUIRED_MIME_PREFIX_7 = "text/x-dd-client9.0"; // NOI18N
+    private static final String REQUIRED_MIME_PREFIX_8 = "text/x-dd-client10.0"; // NOI18N
     
     public ClientDataLoader() {
         super("org.netbeans.modules.j2ee.ddloaders.client.ClientDataObject");  // NOI18N
@@ -66,6 +67,7 @@ public class ClientDataLoader extends UniFileLoader {
         getExtensions().addMimeType(REQUIRED_MIME_PREFIX_5);
         getExtensions().addMimeType(REQUIRED_MIME_PREFIX_6);
         getExtensions().addMimeType(REQUIRED_MIME_PREFIX_7);
+        getExtensions().addMimeType(REQUIRED_MIME_PREFIX_8);
     }
     
     @Override

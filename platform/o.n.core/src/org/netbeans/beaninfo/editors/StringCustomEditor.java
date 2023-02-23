@@ -68,6 +68,7 @@ public class StringCustomEditor extends javax.swing.JPanel implements PropertyCh
     
     /** Initializes the Form 
      * @deprecated Nothing should be using this constructor */
+    @Deprecated
     public StringCustomEditor(String s, boolean editable) {
         init (s, editable);
     }
@@ -176,7 +177,8 @@ public class StringCustomEditor extends javax.swing.JPanel implements PropertyCh
                 prefHeight));
         }
     }
-    
+
+    @Override
     public void addNotify () {
         super.addNotify();
         //force focus to the editable area

@@ -304,7 +304,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
             case XMLDefaultTokenContext.DECLARATION_ID:
                 
                 // we treat internal DTD as one syntax element
-                boolean seekforDTDEnd = false;;
+                boolean seekforDTDEnd = false;
                 while( id == XMLDefaultTokenContext.DECLARATION
                         || id == XMLDefaultTokenContext.VALUE
                         || seekforDTDEnd) {
@@ -618,7 +618,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                     dotPos = target.getCaret().getDot();
                     try {
                         SyntaxElement sel = getElementChain(dotPos);
-                        if(sel != null && sel instanceof StartTag) {
+                        if(sel instanceof StartTag) {
                             retVal = COMPLETION_POPUP;
                         }
                     } catch (BadLocationException e) {
@@ -875,7 +875,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                 String tag = token.getImage().substring(2).trim().toLowerCase();
                 while ( token != null){
                     if (token.getTokenID() == XMLTokenIDs.TAG && !">".equals(token.getImage())) {
-                        if (token.getImage().substring(1).trim().toLowerCase().equals(tag)
+                        if (token.getImage().substring(1).trim().equalsIgnoreCase(tag)
                         && !isSingletonTag(token)) {
                             //it's an open tag
                             if (poss == 0){
@@ -911,7 +911,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                 String tag = token.getImage().substring(1).toLowerCase();
                 while ( token != null){
                     if (token.getTokenID() == XMLTokenIDs.TAG && !">".equals(token.getImage())) {
-                        if (token.getImage().substring(2).trim().toLowerCase().equals(tag)) {
+                        if (token.getImage().substring(2).trim().equalsIgnoreCase(tag)) {
                             //it's a close tag
                             if (poss == 0) {
                                 //get offset of previous token: < or </
@@ -922,7 +922,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                             } else
                                 poss--;
                         } else{
-                            if (token.getImage().substring(1).toLowerCase().equals(tag)
+                            if (token.getImage().substring(1).equalsIgnoreCase(tag)
                             && !isSingletonTag(token))
                                 poss++;
                         }

@@ -655,7 +655,7 @@ public class Interpreter implements org.xml.sax.DocumentHandler {
             return null;
         }
     }
-    private static final String ATT_VALUE="value";;
+    private static final String ATT_VALUE="value";
     private String findKeyValue(AttributeList l) throws SAXException {
         String result = l.getValue(ATT_VALUE);
         if (result != null) {

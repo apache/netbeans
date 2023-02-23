@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -74,6 +75,9 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         return new File(destDir);
     }
     protected @Override void setUp() throws Exception {
+        // this property could be eventually initialized by NB module system, as MavenCacheDisabler i @OnStart, but that's unreliable.
+        System.setProperty("maven.defaultProjectBuilder.disableGlobalModelCache", "true");
+        
         clearWorkDir();
         
         // This is needed, otherwose the core window's startup code will redirect
@@ -127,7 +131,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
             }
         };
         ap.invokeAction(ActionProvider.COMMAND_PRIME, Lookups.fixed(prg));
-        primeLatch.await(20, TimeUnit.SECONDS);
+        primeLatch.await(300, TimeUnit.SECONDS);
     }
     
     public void testCompileDependencies() throws Exception {
@@ -248,12 +252,42 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         assertTrue(text.contains("<artifactId>test-lib</artifactId>"));
     }
     
+    /**
+     * Checks that a complete dependency graph of a real-world project is printed out. Note that
+     * the dependency graph is enormous as it contains lots of duplicated shared libraries.
+     * 
+     * @throws Exception 
+     */
+    public void testDuplicatedDependencies() throws Exception {
+        FileUtil.toFileObject(getWorkDir()).refresh();
+
+        FileObject testApp = dataFO.getFileObject("projects/dependencies/duplicates/micronaut");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "micronaut");
+        
+        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        assertNotNull(p);
+
+        primeProject(p);
+        DependencyResult dr = ProjectDependencies.findDependencies(p, ProjectDependencies.newQuery(Scopes.RUNTIME));
+        
+        assertContents(printDependencyTree(dr.getRoot()), getName());
+    }
+    
     void assertContents(String contents, String golden) throws IOException {
         File f = new File(getDataDir(), "projects/dependencies/golden/" + golden);
         Path res = Files.write(getWorkDir().toPath().resolve(getName() + ".output"), 
                 Arrays.asList(contents.split("\n")),
                 StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        assertFile(res.toFile(), f, new File(getWorkDir(), getName() + ".diff"));
+        File diff = new File(getWorkDir(), getName() + ".diff");
+        try {
+            assertFile(res.toFile(), f, diff);
+        } catch (AssertionError err) {
+            System.err.println("Differences: ");
+            System.err.println(String.join("\n", Files.readAllLines(diff.toPath())));
+            System.err.println("Actual contents:");
+            System.err.println(contents);
+            throw err;
+        }
     }
     
     static String printDependencyTree(Dependency root) {
@@ -280,7 +314,11 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         }
         sb.append("\n");
         int index = 0;
-        for (Dependency c : (List<Dependency>)from.getChildren()) {
+        List<Dependency> sorted = new ArrayList<>(from.getChildren());
+        Collections.sort(sorted, (d1, d2) -> {
+            return d1.getArtifact().toString().compareToIgnoreCase(d2.getArtifact().toString());
+        });
+        for (Dependency c : sorted) {
             printDependencyTree(c, levels + 1, sb);
             index++;
         }

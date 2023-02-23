@@ -168,8 +168,6 @@ public abstract class StringUtils {
     
     public static String formatSize(
             final long longBytes) {
-        StringBuffer result = new StringBuffer();
-        
         double bytes = (double) longBytes;
         
         // try as GB

@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -46,7 +47,10 @@ import org.openide.util.Pair;
 final class ConnectionSpec implements Closeable {
     private final Boolean listen;
     private final int port;
+    // @GuardedBy (this)
     private final List<Closeable> close = new ArrayList<>();
+    // @GuardedBy (this)
+    private final List<Closeable> closed = new ArrayList<>();
 
     private ConnectionSpec(Boolean listen, int port) {
         this.listen = listen;
@@ -110,11 +114,15 @@ final class ConnectionSpec implements Closeable {
                 @Override
                 public void run() {
                     while (true) {
+                        Socket socket = null;
                         try {
-                            Socket socket = server.accept();
+                            socket = server.accept();
                             close.add(socket);
                             connectToSocket(socket, prefix, session, serverSetter, launcher);
                         } catch (IOException ex) {
+                            if (isClosed(server)) {
+                                break;
+                            }
                             Exceptions.printStackTrace(ex);
                         }
                     }
@@ -144,7 +152,9 @@ final class ConnectionSpec implements Closeable {
                     serverSetter.accept(session, connectionObject);
                     connectionObject.getRunningFuture().get();
                 } catch (IOException | InterruptedException | ExecutionException ex) {
-                    Exceptions.printStackTrace(ex);
+                    if (!isClosed(socket)) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 } finally {
                     serverSetter.accept(session, null);
                 }
@@ -152,11 +162,24 @@ final class ConnectionSpec implements Closeable {
         };
         connectedThread.start();
     }
+    
+    private boolean isClosed(Closeable c) {
+        synchronized (this) {
+            return closed.contains(c);
+        }
+    }
 
     @Override
     public void close() throws IOException {
-        for (Closeable c : close) {
-            c.close();
+        synchronized (this) {
+            for (Closeable c : close) {
+                try {
+                    c.close();
+                    closed.add(c);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
         }
     }
 }

@@ -66,7 +66,7 @@ public class ProfileTest extends NbTestCase {
 
         for (ConfigVersion cfgV : ConfigVersion.values()) {
             String cfgStr = ConfigVersion.CONFIG_1_0.equals(cfgV) ? "10-" : "13-";
-            ArrayList<String> profiles = new ArrayList();
+            ArrayList<String> profiles = new ArrayList<>();
             PolicyModelHelper.setConfigVersion(b, cfgV, null);
             for (SecurityProfile sP : secProfiles) {
                 if (sP.isProfileSupported(null, b, false)) {

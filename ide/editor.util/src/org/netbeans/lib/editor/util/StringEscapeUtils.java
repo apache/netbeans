@@ -56,7 +56,7 @@ public class StringEscapeUtils {
         }
 
         public static boolean isInBasicEscape(char c) {
-            return lookup.keySet().contains(c);
+            return lookup.containsKey(c);
         }
     }
 
@@ -82,7 +82,7 @@ public class StringEscapeUtils {
         if (builder == null) {
             return text;
         } else {
-            builder.append(text.substring(lastChange, text.length()));
+            builder.append(text.substring(lastChange));
             return builder.toString();
         }
     }

@@ -174,17 +174,20 @@ public class CLILookupHelpNoDirTest extends NbTestCase {
     
     private static final class NoExit extends SecurityManager {
         public static boolean disable;
-        
+
+        @Override
         public void checkExit(int status) {
             if (!disable) {
                 throw new SecurityException(String.valueOf(status));
             }
         }
 
+        @Override
         public void checkPermission(Permission perm) {
             
         }
 
+        @Override
         public void checkPermission(Permission perm, Object context) {
             
         }

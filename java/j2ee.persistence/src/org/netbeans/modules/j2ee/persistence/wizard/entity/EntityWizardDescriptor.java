@@ -20,7 +20,6 @@
 package org.netbeans.modules.j2ee.persistence.wizard.entity;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -57,14 +56,11 @@ public class EntityWizardDescriptor implements WizardDescriptor.FinishablePanel,
     public java.awt.Component getComponent() {
         if (p == null) {
             p = new EntityWizardPanel(this);
-            p.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(EntityWizardPanel.IS_VALID)) {
-                        Object newvalue = evt.getNewValue();
-                        if ((newvalue != null) && (newvalue instanceof Boolean)) {
-                            stateChanged(null);
-                        }
+            p.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+                if (evt.getPropertyName().equals(EntityWizardPanel.IS_VALID)) {
+                    Object newvalue = evt.getNewValue();
+                    if (newvalue instanceof Boolean) {
+                        stateChanged(null);
                     }
                 }
             });
@@ -100,7 +96,7 @@ public class EntityWizardDescriptor implements WizardDescriptor.FinishablePanel,
                     NbBundle.getMessage(EntityWizardDescriptor.class, "ERR_NeedProperSourceLevel")); // NOI18N
             return false;
         }
-        if (p.getPrimaryKeyClassName().trim().equals("")) { //NOI18N
+        if (p.getPrimaryKeyClassName().trim().isEmpty()) { //NOI18N
             wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(EntityWizardDescriptor.class,"ERR_PrimaryKeyNotEmpty")); //NOI18N
             return false;
         }
@@ -125,9 +121,7 @@ public class EntityWizardDescriptor implements WizardDescriptor.FinishablePanel,
             } else {
                 p.setPersistenceUnitButtonVisibility(false);
             }
-        } catch (InvalidPersistenceXmlException ipx){ 
-            p.setPersistenceUnitButtonVisibility(false);
-        } catch (RuntimeException ipx){ 
+        } catch (InvalidPersistenceXmlException | RuntimeException ex){ 
             p.setPersistenceUnitButtonVisibility(false);
         }
     }

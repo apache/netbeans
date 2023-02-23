@@ -30,7 +30,7 @@ public interface Saver {
     public void markDirty();
 
     /** Notify the framework the setting object is changed and can be written down
-     * @exception IOException if the save cannot be performed
+     * @exception java.io.IOException if the save cannot be performed
      */
     public void requestSave() throws java.io.IOException;
 }

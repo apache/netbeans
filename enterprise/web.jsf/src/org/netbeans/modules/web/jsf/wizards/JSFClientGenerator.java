@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -1067,7 +1068,7 @@ public class JSFClientGenerator {
                     MethodModel.Variable.create("java.lang.String", "string")
                 ),
                 Collections.<String>emptyList(),
-                Collections.<Modifier>emptySet()    //no modifiers 
+                Collections.<Modifier>emptySet()    //no modifiers
                 ) : null;
 
         String entityReferenceName = entityClass;
@@ -1697,13 +1698,16 @@ public class JSFClientGenerator {
             i++;
         }
 
+        Set<Modifier> modifiersSet = EnumSet.noneOf(Modifier.class);
+        modifiersSet.addAll(Arrays.asList(modifiers));
+
         MethodModel methodModel = MethodModel.create(
                 name,
                 returnType,
                 body,
                 paramsList,
                 Arrays.asList(exceptions),
-                new HashSet<Modifier>(Arrays.asList(modifiers))
+                modifiersSet
                 );
         return MethodModelSupport.createMethodTree(workingCopy, methodModel);
     }

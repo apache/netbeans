@@ -116,7 +116,7 @@ public class DialogDisplayerImpl extends DialogDisplayer {
                             // all docked windows implements ModeUIBase interface
                             if (! (w instanceof DefaultSeparateContainer.ModeUIBase)) {
                                 Container cont = SwingUtilities.getAncestorOfClass(Window.class, w);
-                                if (cont != null && (cont instanceof DefaultSeparateContainer.ModeUIBase)) {
+                                if (cont instanceof DefaultSeparateContainer.ModeUIBase) {
                                     w = (Window) cont;
                                 } else {
                                     // don't set non-ide window as parent
@@ -225,7 +225,7 @@ public class DialogDisplayerImpl extends DialogDisplayer {
             // if a modal dialog is active use it as parent
             // otherwise use the main window
 
-            NbPresenter presenter = null;
+            NbPresenter presenter;
             if (descriptor instanceof DialogDescriptor) {
                 if (NbPresenter.currentModalDialog != null) {
                     if (NbPresenter.currentModalDialog.isLeaf ()) {
@@ -252,11 +252,8 @@ public class DialogDisplayerImpl extends DialogDisplayer {
                         presenter = new NbPresenter(descriptor, NbPresenter.currentModalDialog, true);
                     }
                 } else {
-                    Frame f = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow() 
-                        instanceof Frame ? 
-                        (Frame) KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow() 
-                        : WindowManager.getDefault().getMainWindow();
-
+                    Window w = KeyboardFocusManager.getCurrentKeyboardFocusManager ().getActiveWindow ();
+                    Frame f = w instanceof Frame ? (Frame) w : WindowManager.getDefault().getMainWindow();
                     if (noParent) {
                         f = null;
                     }

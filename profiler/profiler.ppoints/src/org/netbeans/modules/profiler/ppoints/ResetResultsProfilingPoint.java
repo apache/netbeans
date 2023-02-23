@@ -269,7 +269,7 @@ public final class ResetResultsProfilingPoint extends CodeProfilingPoint.Single 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
     private Annotation annotation;
-    private List<Result> results = new ArrayList();
+    private List<Result> results = new ArrayList<>();
     private final Object resultsSync = new Object();
     private WeakReference<Report> reportReference;
 

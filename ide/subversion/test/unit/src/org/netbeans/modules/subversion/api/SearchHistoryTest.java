@@ -61,7 +61,7 @@ public class SearchHistoryTest extends NbTestCase {
         wc = new File(dataRootDir, getName() + "_wc");
         repoDir = new File(dataRootDir, "repo");
         String repoPath = repoDir.getAbsolutePath();
-        if(repoPath.startsWith("/")) repoPath = repoPath.substring(1, repoPath.length());
+        if(repoPath.startsWith("/")) repoPath = repoPath.substring(1);
         repoUrl = new SVNUrl("file:///" + repoPath);
 
         System.setProperty("netbeans.user", System.getProperty("data.root.dir") + "/cache");

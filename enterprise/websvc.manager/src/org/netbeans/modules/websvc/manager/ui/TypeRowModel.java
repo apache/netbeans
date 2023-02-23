@@ -123,14 +123,14 @@ public class TypeRowModel implements RowModel {
          */
 
         DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) node.getParent();
-        if(null != parentNode && parentNode instanceof ListTypeTreeNode) {
+        if(parentNode instanceof ListTypeTreeNode) {
             ((ListTypeTreeNode)parentNode).updateValueFromChildren(data);
-        } else if(null != parentNode && parentNode instanceof StructureTypeTreeNode) {
+        } else if(parentNode instanceof StructureTypeTreeNode) {
             /**
              * This type should be a JavaStructureMember
              */
             ((StructureTypeTreeNode)parentNode).updateValueFromChildren(data);
-        } else if(null != parentNode && parentNode instanceof HolderTypeTreeNode) {
+        } else if(parentNode instanceof HolderTypeTreeNode) {
 
             ((HolderTypeTreeNode)parentNode).updateValueFromChildren(data);
         }

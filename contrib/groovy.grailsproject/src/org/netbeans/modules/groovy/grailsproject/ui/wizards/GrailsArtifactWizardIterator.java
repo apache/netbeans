@@ -250,7 +250,7 @@ public class GrailsArtifactWizardIterator implements WizardDescriptor.ProgressIn
         // Make sure list of steps is accurate.
         String[] beforeSteps = null;
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA);
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = createSteps(beforeSteps, panels);

@@ -162,6 +162,8 @@ public class AppClientProjectGenerator {
         String resource;
         if(j2eeProfile == null) {
             resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+        } else if (Profile.JAKARTA_EE_10_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_10_WEB.equals(j2eeProfile)) {
+                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-10.xml"; // NOI18N
         } else if (Profile.JAKARTA_EE_9_1_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_1_WEB.equals(j2eeProfile)) {
                  resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
         } else if (Profile.JAKARTA_EE_9_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_WEB.equals(j2eeProfile)) {
@@ -389,6 +391,8 @@ public class AppClientProjectGenerator {
             String resource;
             if (j2eeProfile == null) {
                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+            } else if (Profile.JAKARTA_EE_10_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_10_WEB.equals(j2eeProfile)) {
+                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-10.xml"; // NOI18N
             } else if (Profile.JAKARTA_EE_9_1_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_1_WEB.equals(j2eeProfile)) {
                  resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
             } else if (Profile.JAKARTA_EE_9_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_WEB.equals(j2eeProfile)) {

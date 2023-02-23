@@ -37,7 +37,7 @@ public class DatatypeTest extends AbstractTestCase {
     public static final String TEST_XSD         = "resources/types.xsd";
     public static final String GLOBAL_ELEMENT   = "purchaseOrder";
     
-    private List<AbstractAttribute> attList;;
+    private List<AbstractAttribute> attList;
     
     public DatatypeTest(String testName) {
         super(testName, TEST_XSD, GLOBAL_ELEMENT);

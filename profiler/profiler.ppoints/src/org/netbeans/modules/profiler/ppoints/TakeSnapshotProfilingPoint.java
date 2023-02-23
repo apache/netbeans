@@ -361,7 +361,7 @@ public final class TakeSnapshotProfilingPoint extends CodeProfilingPoint.Single 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
     private Annotation annotation;
-    private List<Result> results = new ArrayList();
+    private List<Result> results = new ArrayList<>();
     private final Object resultsSync = new Object();
     private String snapshotFile = System.getProperty("java.io.tmpdir"); // NOI18N
     private String snapshotTarget = TARGET_PROJECT_KEY;

@@ -541,7 +541,7 @@ public abstract class AbstractModel<T extends Component<T>>
             for (ComponentEvent cle:cEvents) {
                 // make sure we only fire one event per component per event type.
                 Object source = cle.getSource();
-                if (fired.keySet().contains(source)) {
+                if (fired.containsKey(source)) {
                     Set<ComponentEvent.EventType> types = fired.get(source);
                     if (types.contains(cle.getEventType())) {
                         continue;

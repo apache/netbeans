@@ -93,7 +93,7 @@ public class InnerPanelSupport {
     public static void enablePanel(JPanel panel, boolean enable) {
         panel.setEnabled(enable);
         List<Component> contents = getAllComponents(panel);
-        List<Component> enabled = new ArrayList(contents.size() / 2);
+        List<Component> enabled = new ArrayList<>(contents.size() / 2);
         
         if (enable) {
             List<Runnable> reCheck = new ArrayList<>(3);

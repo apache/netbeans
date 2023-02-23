@@ -79,7 +79,7 @@ public class CodeEvaluatorUI extends TopComponent implements HelpCtx.Provider,
     // Solves the problem with calling getText() in non-AWT thread.
     private volatile String codeText = "";
     //private History history;
-    private Reference<EvaluatorService> debuggerRef = new WeakReference(null);
+    private Reference<EvaluatorService> debuggerRef = new WeakReference<>(null);
     private final DbgManagerListener dbgManagerListener;
     //private TopComponent resultView;
     private final JButton dropDownButton;

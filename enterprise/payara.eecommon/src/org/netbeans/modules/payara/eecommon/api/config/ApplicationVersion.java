@@ -54,6 +54,34 @@ public final class ApplicationVersion extends J2EEBaseVersion {
         "6.0", 6000	// NOI18N
         );
 
+    /** Represents application version 7.0
+     */
+    public static final ApplicationVersion APPLICATION_7_0 = new ApplicationVersion(
+        "7.0", 7000,	// NOI18N
+        "7.0", 7000	// NOI18N
+        );
+    
+    /** Represents application version 8.0
+     */
+    public static final ApplicationVersion APPLICATION_8_0 = new ApplicationVersion(
+        "8.0", 8000,	// NOI18N
+        "8.0", 8000	// NOI18N
+        );
+    
+    /** Represents application version 9.0
+     */
+    public static final ApplicationVersion APPLICATION_9_0 = new ApplicationVersion(
+        "9.0", 9000,	// NOI18N
+        "9.0", 9000	// NOI18N
+        );
+
+    /** Represents application version 9.0
+     */
+    public static final ApplicationVersion APPLICATION_10_0 = new ApplicationVersion(
+        "10.0", 10000,	// NOI18N
+        "10.0", 10000	// NOI18N
+        );
+
     /** -----------------------------------------------------------------------
      *  Implementation
      */
@@ -87,6 +115,14 @@ public final class ApplicationVersion extends J2EEBaseVersion {
             result = APPLICATION_5_0;
         } else if(APPLICATION_6_0.toString().equals(version)) {
             result = APPLICATION_6_0;
+        } else if(APPLICATION_7_0.toString().equals(version)) {
+            result = APPLICATION_7_0;
+        } else if(APPLICATION_8_0.toString().equals(version)) {
+            result = APPLICATION_8_0;
+        } else if(APPLICATION_9_0.toString().equals(version)) {
+            result = APPLICATION_9_0;
+        }else if(APPLICATION_10_0.toString().equals(version)) {
+            result = APPLICATION_10_0;
         }
 
         return result;

@@ -123,6 +123,7 @@ public abstract class Retriever {
      * This method will be removed soon. Please make sure not to use this method anymore.
      * @deprecated Please use {@link retrieveResource(FileObject, URI)} instead
      */
+    @Deprecated
     public abstract File retrieveResource(File targetFolder, URI source)
     throws UnknownHostException, URISyntaxException, IOException;
     

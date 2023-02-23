@@ -361,6 +361,7 @@ public abstract class DialogDisplayer {
                 getRootPane().getActionMap().put(actionKey, cancelAction);
                 addWindowListener(
                     new WindowAdapter() {
+                        @Override
                         public void windowClosing(WindowEvent ev) {
                             if (!haveFinalValue) {
                                 StandardDialog.this.nd.setValue(NotifyDescriptor.CLOSED_OPTION);

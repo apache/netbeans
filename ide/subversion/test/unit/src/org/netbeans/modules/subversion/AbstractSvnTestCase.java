@@ -76,7 +76,7 @@ public abstract class AbstractSvnTestCase extends NbTestCase {
         repoDir = new File(getDataDir().getAbsolutePath() + "/repo");
         repoPath = repoDir.getAbsolutePath();
         if(repoPath.startsWith("/")) {
-            //repoPath = repoPath.substring(1, repoPath.length());
+            //repoPath = repoPath.substring(1);
         }
         
         wc = new File(workDir, getName() + "_wc");        

@@ -61,7 +61,7 @@ public class SchemaUpdate {
         if(key != null) {
             List<AXIComponent> items = uniqueMap.get(key);
             if(items == null) {
-                items = new ArrayList();
+                items = new ArrayList<>();
                 uniqueMap.put(key, items);
             }
             items.add(key);

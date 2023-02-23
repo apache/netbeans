@@ -127,7 +127,7 @@ public final class ProfilesTracker {
      * Gets description for a profile by its name.
      * 
      * @param displayName The display name of the profile to get the description for.
-     * @retutn The profile's description or <code>null</code> if there is no
+     * @return The profile's description or <code>null</code> if there is no
      *   profile with the display name.
      */
     public ProfileDescription getProfileByDisplayName(String displayName) {

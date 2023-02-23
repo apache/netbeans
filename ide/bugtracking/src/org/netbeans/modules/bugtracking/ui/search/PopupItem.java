@@ -77,7 +77,7 @@ abstract class PopupItem {
                 idx = displayTextLower.indexOf(displayTextLower, lastIdx);
             }
             if(lastIdx < displayText.length()) {
-                sb.append(displayText.substring(lastIdx, displayText.length()));
+                sb.append(displayText.substring(lastIdx));
             } 
             sb.append("</table></html>");                                       // NOI18N
             return sb.toString();

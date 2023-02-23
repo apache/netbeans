@@ -31,6 +31,7 @@ public class ProgressPanelTest extends NbTestCase {
         super(testName);
     }
 
+    @Override
     public boolean runInEQ() {
         return true;
     }

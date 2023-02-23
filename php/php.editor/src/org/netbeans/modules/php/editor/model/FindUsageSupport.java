@@ -114,7 +114,7 @@ public final class FindUsageSupport {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {
                         Result parameter = resultIterator.getParserResult();
-                        if (parameter != null && parameter instanceof PHPParseResult) {
+                        if (parameter instanceof PHPParseResult) {
                             Model model = ModelFactory.getModel((PHPParseResult) parameter);
                             ModelVisitor modelVisitor = model.getModelVisitor();
                             retval.addAll(modelVisitor.getOccurence(element));

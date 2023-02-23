@@ -89,7 +89,7 @@ final class SuiteSubprojectProviderImpl implements SubprojectProvider {
                 if (dir != null) {
                     try {
                         Project subp = ProjectManager.getDefault().findProject(dir);
-                        if (subp != null && subp instanceof NbModuleProject) {
+                        if (subp instanceof NbModuleProject) {
                             newProjects.add((NbModuleProject) subp);
                         }
                     } catch (IOException e) {

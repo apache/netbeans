@@ -516,6 +516,7 @@ public class TabbedContainer extends JComponent implements Accessible {
         return true;
     }
 
+    @Override
     public boolean isPaintingOrigin() {
         return true;
     }
@@ -931,7 +932,7 @@ public class TabbedContainer extends JComponent implements Accessible {
             Component c = getModel().getTab(0).getComponent();
             if( c instanceof JComponent ) {
                 Object val = ((JComponent)c).getClientProperty("isSliding"); //NOI18N
-                res = null != val && val instanceof Boolean && ((Boolean)val).booleanValue();
+                res = val instanceof Boolean && ((Boolean) val).booleanValue();
             }
         }
         return res;

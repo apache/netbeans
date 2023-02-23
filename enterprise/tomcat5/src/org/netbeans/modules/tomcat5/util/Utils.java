@@ -53,13 +53,9 @@ public final class Utils {
     
     /** Return true if the specified port is free, false otherwise. */
     public static boolean isPortFree(int port) {
-        try {
-            ServerSocket soc = new ServerSocket(port);
-            try {
-                soc.close();
-            } finally {
-                return true;
-            }
+        try (ServerSocket soc = new ServerSocket(port)) {
+            soc.close();
+            return true;
         } catch (IOException ioe) {
             return false;
         }
@@ -68,60 +64,48 @@ public final class Utils {
     /** Return true if a Tomcat server is running on the specifed port */
     public static boolean pingTomcat(int port, int timeout, String serverHeader, String managerUrl) {
         // checking whether a socket can be created is not reliable enough, see #47048
-        Socket socket = new Socket();
-        try {
-            try {
-                socket.connect(new InetSocketAddress("localhost", port), timeout); // NOI18N
-                socket.setSoTimeout(timeout);
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                try {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    try {
-                        // request
-                        out.println("HEAD /netbeans-tomcat-status-test HTTP/1.1\r\nHost: localhost:" + port + "\r\n\r\n"); // NOI18N
-                        out.flush();
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress("localhost", port), timeout); // NOI18N
+            socket.setSoTimeout(timeout);
+            try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+                // request
+                out.println("HEAD /netbeans-tomcat-status-test HTTP/1.1\r\nHost: localhost:" + port + "\r\n\r\n"); // NOI18N
+                out.flush();
 
-                        // response
-                        String text = in.readLine();
-                        if (text == null || !text.startsWith("HTTP/")) { // NOI18N
-                            return false; // not an http response
-                        }
-                        Map<String, List<String>> headerFileds = new HashMap();
-                        while ((text = in.readLine()) != null && text.length() > 0) {
-                            int colon = text.indexOf(':');
-                            if (colon <= 0) {
-                                return false; // not an http header
-                            }
-                            String name = text.substring(0, colon).trim();
-                            String value = text.substring(colon + 1).trim();
-                            List<String> list = headerFileds.get(name);
-                            if (list == null) {
-                                list = new ArrayList();
-                                headerFileds.put(name, list);
-                            }
-                            list.add(value);
-                        }
-                        List<String> server = headerFileds.get("Server"); // NIO18N
-                        if (server != null) {
-                            if (server.contains(serverHeader)) { // NOI18N
-                                return true;
-                            } else if (server.contains("Sun-Java-System/Web-Services-Pack-1.4")) {  // NOI18N
-                                // it is probably Tomcat with JWSDP installed
-                                return true;
-                            }
-                        }
-                        if (managerUrl != null) {
-                            return pingTomcatManager(managerUrl, port, timeout);
-                        }
-                        return false;
-                    } finally {
-                        in.close();
-                    }
-                } finally {
-                    out.close();
+                // response
+                String text = in.readLine();
+                if (text == null || !text.startsWith("HTTP/")) { // NOI18N
+                    return false; // not an http response
                 }
-            } finally {
-                socket.close();
+                Map<String, List<String>> headerFileds = new HashMap<>();
+                while ((text = in.readLine()) != null && text.length() > 0) {
+                    int colon = text.indexOf(":");
+                    if (colon <= 0) {
+                        return false; // not an http header
+                    }
+                    String name = text.substring(0, colon).trim();
+                    String value = text.substring(colon + 1).trim();
+                    List<String> list = headerFileds.get(name);
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        headerFileds.put(name, list);
+                    }
+                    list.add(value);
+                }
+                List<String> server = headerFileds.get("Server"); // NIO18N
+                if (server != null) {
+                    if (server.contains(serverHeader)) { // NOI18N
+                        return true;
+                    } else if (server.contains("Sun-Java-System/Web-Services-Pack-1.4")) {  // NOI18N
+                        // it is probably Tomcat with JWSDP installed
+                        return true;
+                    }
+                }
+                if (managerUrl != null) {
+                    return pingTomcatManager(managerUrl, port, timeout);
+                }
+                return false;
             }
         } catch (IOException ioe) {
             return false;

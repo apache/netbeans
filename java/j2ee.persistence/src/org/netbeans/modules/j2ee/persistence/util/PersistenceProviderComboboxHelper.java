@@ -28,7 +28,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -118,6 +117,7 @@ public final class PersistenceProviderComboboxHelper {
             Object currentItem = providerCombo.getSelectedItem();
             int currentIndex = providerCombo.getSelectedIndex();
             
+            @Override
             public void actionPerformed(ActionEvent e) {
                 Object selectedItem = providerCombo.getSelectedItem();
                 // skipping of separator
@@ -209,18 +209,22 @@ public final class PersistenceProviderComboboxHelper {
     }
     
     private static class NewPersistenceLibraryItem implements LibraryItem {
+        @Override
         public String getText() {
             return NbBundle.getMessage(PersistenceProviderComboboxHelper.class, "LBL_NewPersistenceLibrary");
         }
+        @Override
         public void performAction() {
             PersistenceLibraryCustomizer.showCustomizer();
         }
     }
     
     private static class ManageLibrariesItem implements LibraryItem {
+        @Override
         public String getText() {
             return NbBundle.getMessage(PersistenceProviderComboboxHelper.class, "LBL_ManageLibraries");
         }
+        @Override
         public void performAction() {
             LibrariesCustomizer.showCustomizer(null);
         }
@@ -234,6 +238,7 @@ public final class PersistenceProviderComboboxHelper {
             this.defaultProvider = defaultProvider;
         }
         
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             
             if (isSelected) {
@@ -283,7 +288,7 @@ public final class PersistenceProviderComboboxHelper {
         
         @Override
         public List<Provider> getSupportedProviders() {
-            ArrayList<Provider> providers = new ArrayList<Provider>();
+            ArrayList<Provider> providers = new ArrayList<>();
             for (Provider each : PersistenceLibrarySupport.getProvidersFromLibraries()){
                 boolean found = false;
                 for (int i = 0; i < providers.size(); i++) {
@@ -300,6 +305,7 @@ public final class PersistenceProviderComboboxHelper {
             return providers;
         }
 
+        @Override
         public boolean supportsDefaultProvider() {
             return false;
         }

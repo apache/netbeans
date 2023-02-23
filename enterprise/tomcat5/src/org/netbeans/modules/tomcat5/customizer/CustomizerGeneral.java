@@ -25,7 +25,6 @@ import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import javax.accessibility.AccessibleContext;
 import java.awt.Font;
-import org.netbeans.modules.tomcat5.deploy.TomcatManager.TomcatVersion;
 
 /**
  * Customizer general (connection) tab.

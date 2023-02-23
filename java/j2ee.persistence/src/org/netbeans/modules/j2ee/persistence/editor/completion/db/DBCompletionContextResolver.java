@@ -97,13 +97,19 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
         
         //parse the annotation
         CCParser.CC parsedNN = ctx.getParsedAnnotation();
-        if (parsedNN == null) return result;
+        if (parsedNN == null) {
+            return result;
+        }
         
         CCParser.NNAttr nnattr = parsedNN.getAttributeForOffset(ctx.getCompletionOffset());
-        if(nnattr == null) return result;
+        if(nnattr == null) {
+            return result;
+        }
         
         String annotationName = parsedNN.getName();
-        if(annotationName == null) return result;
+        if(annotationName == null) {
+            return result;
+        }
         
         try {
             //get nn index from the nn list
@@ -126,7 +132,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                     } else {
                         //Database connection not established ->
                         //put 'connect' CC item
-                        result = new ArrayList();
+                        result = new ArrayList<>();
                         result.add(new JPACompletionItem.NoConnectionElementItem(dbconn));
                         return result;
                     }
@@ -186,7 +192,9 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
             annotationName = annotationName.substring(annotationName.lastIndexOf('.') + 1);
         }
         for(int i = 0; i < ANNOTATION_QUERY_TYPES.length; i++) {
-            if(ANNOTATION_QUERY_TYPES[i].equals(annotationName)) return i;
+            if(ANNOTATION_QUERY_TYPES[i].equals(annotationName)) {
+                return i;
+            }
         }
         return -1;
     }
@@ -238,7 +246,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
             return null;
         }
         List<DatabaseConnection> dbconns = findDatabaseConnections(datasource);
-        if (dbconns.size() > 0) {
+        if (!dbconns.isEmpty()) {
             return dbconns.get(0);
         }
         return null;
@@ -263,13 +271,13 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
         if (databaseUrl == null || user == null) {
             return Collections.emptyList();
         }
-        List<DatabaseConnection> result = new ArrayList<DatabaseConnection>();
+        List<DatabaseConnection> result = new ArrayList<>();
         for (DatabaseConnection dbconn : ConnectionManager.getDefault().getConnections()) {
             if (databaseUrl.equals(dbconn.getDatabaseURL()) && user.equals(dbconn.getUser())) {
                 result.add(dbconn);
             }
         }
-        if (result.size() > 0) {
+        if (!result.isEmpty()) {
             return Collections.unmodifiableList(result);
         } else {
             return Collections.emptyList();
@@ -328,8 +336,8 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                 int testLen = cmplOffset - nnattr.getValueOffset();
                 String toParse = nnattr.getValue().toString();
                 //column list is simple structure with space and ',' separator
-                int lastSpace = toParse.lastIndexOf(" ");
-                int lastComma = toParse.lastIndexOf(",");
+                int lastSpace = toParse.lastIndexOf(' ');
+                int lastComma = toParse.lastIndexOf(',');
                 int shift  =  Math.max(lastComma, lastSpace) + 1 + (nnattr.isValueQuoted() ? 1 : 0);
                 //
                 boolean compleTables = false;
@@ -387,7 +395,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
         Map<String,Object> members = nn.getAttributes();
         
         if ("table".equals(completedMember)) { // NOI18N
-            Set/*<String>*/ mappingTables = getMappingEntityTableNames(((TypeElement) ctx.getJavaClass()).getQualifiedName().toString());
+            Set<String> mappingTables = getMappingEntityTableNames(((TypeElement) ctx.getJavaClass()).getQualifiedName().toString());
             for (Iterator i = mappingTables.iterator(); i.hasNext();) {
                 String tableName = (String)i.next();
                 results.add(new JPACompletionItem.TableElementItem(tableName, nnattr.isValueQuoted(), nnattr.getValueOffset()));
@@ -479,7 +487,9 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                 
                 String resolvedType = type.getQualifiedName().toString();
                 
-                if(DEBUG) System.out.println("completion called on property " + propertyName + " of " + resolvedType + " type.");
+                if(DEBUG) {
+                    System.out.println("completion called on property " + propertyName + " of " + resolvedType + " type.");
+                }
                 
                 EntityMappings em = ctx.getEntityMappings();
                 
@@ -533,7 +543,9 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                 
                 
                 if(m2onn != null || o2onn != null) {
-                    if(DEBUG) System.out.println("found OneToOne or ManyToOne annotation on the completed field.");
+                    if(DEBUG) {
+                        System.out.println("found OneToOne or ManyToOne annotation on the completed field.");
+                    }
                     //OneToOne or ManyToOne
                     //find the entity according to the type of the referred object
                     Entity ent = PersistenceUtils.getEntity(resolvedType, ctx.getEntityMappings());
@@ -544,14 +556,18 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                         String targetEntity = m2onn.getTargetEntity();
                         if(targetEntity != null) {
                             ent = PersistenceUtils.getEntity(targetEntity, em);
-                            if(DEBUG) System.out.println("entity " + ent.getName() +  " is specified in ManyToOne element.");
+                            if(DEBUG) {
+                                System.out.println("entity " + ent.getName() +  " is specified in ManyToOne element.");
+                            }
                         }
                     }
                     if(o2onn != null) {
                         String targetEntity = o2onn.getTargetEntity();
                         if(targetEntity != null) {
                             ent = PersistenceUtils.getEntity(targetEntity, em);
-                            if(DEBUG) System.out.println("entity " + ent.getName() +  " is specified in OneToOne element.");
+                            if(DEBUG) {
+                                System.out.println("entity " + ent.getName() +  " is specified in OneToOne element.");
+                            }
                         }
                     }
                     
@@ -568,11 +584,15 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                                     for (int i = 0; i < columnElements.length; i++) {
                                         results.add(new JPACompletionItem.ColumnElementItem(columnElements[i].getName().getName(), tableName, nnattr.isValueQuoted(), nnattr.getValueOffset()));
                                     }
-                                    if(DEBUG) System.out.println("added " +columnElements.length + " CC items.");
+                                    if(DEBUG) {
+                                        System.out.println("added " +columnElements.length + " CC items.");
+                                    }
                                 }
                             }
                         } else {
-                            if(DEBUG) System.out.println("the found entity has not defined table!?! (probably a  bug in values defaultter).");
+                            if(DEBUG) {
+                                System.out.println("the found entity has not defined table!?! (probably a  bug in values defaultter).");
+                            }
                         }
                     }
                     
@@ -581,20 +601,24 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                 //the @JoinTable doesn't make sense for @OneToMany
                 
                 if(m2mnn != null) {
-                    if(DEBUG) System.out.println("found ManyToMany annotation on the completed field.");
+                    if(DEBUG) {
+                        System.out.println("found ManyToMany annotation on the completed field.");
+                    }
                     //the column names in this case needs to be gotten from the surrounding @JoinTable annotation
                     //using of the model doesn't make much sense here because once we complete @JoinColumn inside
                     //a @JoinTable the @JoinTable must be present in the source
                     
                     //gettting the annotations structure from own simple parser
                     
-                    if(DEBUG) System.out.println(nn);
+                    if(DEBUG) {
+                        System.out.println(nn);
+                    }
                     
                     CCParser.CC tblNN = null;
                     if(nn != null && nn.getName().equals("JoinTable")) { //NOI18N
                         Map attrs = nn.getAttributes();
                         Object val = attrs.get("table"); //NOI18N
-                        if(val != null && val instanceof CCParser.CC) {
+                        if(val instanceof CCParser.CC) {
                             CCParser.CC tableNN = (CCParser.CC)val;
                             if(tableNN.getName().equals("Table")) {//NOI18N
                                 tblNN = tableNN;
@@ -643,13 +667,13 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
         
         if ("mappedBy".equals(completedMember)) { // NOI18N
             Element type = null;//ctx.getSyntaxSupport().getTypeFromName(resolvedClassName, false, null, false);
-            if(type != null && type instanceof TypeElement) {
+            if(type instanceof TypeElement) {
                 TypeElement cdef = (TypeElement)type;
                 Entity entity = PersistenceUtils.getEntity(cdef.getQualifiedName().toString(), ctx.getEntityMappings());
                 if(entity != null) {
                     //the class is entity => get all its properties
-                    List<ExecutableElement> resultMethods = new LinkedList<ExecutableElement>();
-                    List<VariableElement> resultFields = new LinkedList<VariableElement>();
+                    List<ExecutableElement> resultMethods = new LinkedList<>();
+                    List<VariableElement> resultFields = new LinkedList<>();
                     TypeElement typeElement = cdef;
                     while (typeElement != null) {
                         if (org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil.isAnnotatedWith(cdef, "javax.persistence.Entity") || org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil.isAnnotatedWith(cdef, "javax.persistence.MappedSuperclass")) { // NOI18N
@@ -661,9 +685,13 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                     element:
                     for(VariableElement f : resultFields) {
                         for(javax.lang.model.element.Modifier mod:f.getModifiers()){
-                            if(javax.lang.model.element.Modifier.TRANSIENT.equals(mod))continue element;
+                            if(javax.lang.model.element.Modifier.TRANSIENT == mod) {
+                                continue element;
+                            }
                         }
-                        if(JpaControllerUtil.isAnnotatedWith(f,"javax.persistence.Transient"))continue;//NOI18N
+                        if(JpaControllerUtil.isAnnotatedWith(f,"javax.persistence.Transient")) { //NOI18N
+                            continue;
+                        }
                         String name = f.getSimpleName().toString();
                         String capName = Character.toUpperCase(name.charAt(0))+name.substring(1);
                         for(ExecutableElement meth:resultMethods){
@@ -692,7 +720,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
     /**
      * Returns the tables to which this class is mapped.
      */
-    private Set/*<String>*/ getMappingEntityTableNames(TypeElement clazz) {
+    private Set<String> getMappingEntityTableNames(TypeElement clazz) {
         Set result = new TreeSet();
         List<? extends AnnotationMirror> annotations = clazz.getAnnotationMirrors();
         
@@ -725,7 +753,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
     
     private String getThisOrDefaultCatalog(String catalogName) throws SQLException {
         assert provider != null;
-        if (catalogName != null && !catalogName.equals("")) {
+        if (catalogName != null && !catalogName.isEmpty()) {
             return catalogName;
         } else {
             return provider.getDefaultCatalog();
@@ -734,7 +762,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
     
     private String getThisOrDefaultSchema(String schemaName) {
         assert dbconn != null;
-        if (schemaName != null && !schemaName.equals("")) {
+        if (schemaName != null && !schemaName.isEmpty()) {
             return schemaName;
         } else {
             // XXX this may be wrong, the persistence provider would use
@@ -756,7 +784,9 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
         
         @Override
         public boolean add(Object o) {
-            if(!(o instanceof JPACompletionItem)) return false;
+            if(!(o instanceof JPACompletionItem)) {
+                return false;
+            }
             
             JPACompletionItem ri = (JPACompletionItem)o;
             //check if the pretext corresponds to the result item text

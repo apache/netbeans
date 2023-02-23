@@ -54,18 +54,22 @@ public final class TomcatModule implements TargetModuleID {
         return docRoot;
     }
     
+    @Override
     public TargetModuleID[] getChildTargetModuleID () {
         return null;
     }
     
+    @Override
     public String getModuleID () {
         return getWebURL ();
     }
     
+    @Override
     public TargetModuleID getParentTargetModuleID () {
         return null;
     }
     
+    @Override
     public Target getTarget () {
         return target;
     }
@@ -75,10 +79,12 @@ public final class TomcatModule implements TargetModuleID {
         return path;
     }
 
+    @Override
     public String getWebURL () {
         return target.getServerUri () + path.replace(" ", "%20");
     }
     
+    @Override
     public String toString () {
         return getModuleID ();
     }

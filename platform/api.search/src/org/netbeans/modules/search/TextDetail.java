@@ -674,8 +674,8 @@ public final class TextDetail implements Selectable {
          * text.
          * @param matchEnd Line index after the last character of the matched
          * text.
-         * @param lineLength Lenght of the line.
-         * @param detailLength Lengt of matched part.
+         * @param lineLength Length of the line.
+         * @param matchedLength Length of matched part.
          */
         private void appendMarkedTextMatch(StringBuilder text, int matchStart,
                 int matchEnd, int lineLength, int matchedLength)

@@ -401,15 +401,15 @@ public abstract class XMLUtils {
             final Properties properties,
             final Element element) {
         final Document document = element.getOwnerDocument();
-        
-        for (Object key: properties.keySet()) {
+
+        properties.forEach((name, textObj) -> {
             final Element propertyElement = document.createElement("property");
             
-            propertyElement.setAttribute("name", key.toString());
-            propertyElement.setTextContent(properties.get(key).toString());
+            propertyElement.setAttribute("name", name.toString());
+            propertyElement.setTextContent(textObj.toString());
             
             element.appendChild(propertyElement);
-        }
+        });
         
         return element;
     }
@@ -541,20 +541,20 @@ public abstract class XMLUtils {
             final Map<Locale, String> map,
             final Element element) {
         final Document document = element.getOwnerDocument();
-        
+
+        String s = map.get(new Locale(StringUtils.EMPTY_STRING));
+
         final Element defaultElement = document.createElement("default");
-        defaultElement.setTextContent(StringUtils.convertToAscii(
-                map.get(new Locale(StringUtils.EMPTY_STRING))));
+        defaultElement.setTextContent(StringUtils.convertToAscii(s));
         element.appendChild(defaultElement);
-        
-        for (Locale locale: map.keySet()) {
-            if (!map.get(locale).equals(map.get(new Locale(StringUtils.EMPTY_STRING)))) {
+
+        for (Map.Entry<Locale, String> entry : map.entrySet()) {
+            if (!entry.getValue().equals(s)) {
                 final Element localizedElement = document.createElement("localized");
-                
-                localizedElement.setAttribute("locale", locale.toString());
-                localizedElement.setTextContent(StringUtils.convertToAscii(
-                        map.get(locale)));
-                
+
+                localizedElement.setAttribute("locale", entry.getKey().toString());
+                localizedElement.setTextContent(StringUtils.convertToAscii(entry.getValue()));
+
                 element.appendChild(localizedElement);
             }
         }

@@ -94,7 +94,7 @@ public final class ScanUtils {
         Parameters.notNull("src", src);
         Parameters.notNull("uat", uat);
 
-        AtomicReference<Throwable> status = new AtomicReference(null);
+        AtomicReference<Throwable> status = new AtomicReference<>(null);
         Future<Void> f = postJavaTask(src, uat, status);
         
         Throwable t = status.get();
@@ -128,7 +128,7 @@ public final class ScanUtils {
         Parameters.notNull("src", src);
         Parameters.notNull("task", task);
 
-        AtomicReference<Throwable> status = new AtomicReference(null);
+        AtomicReference<Throwable> status = new AtomicReference<>(null);
         Future<Void> f = postUserTask(src, task, status);
         
         Throwable t = status.get();
@@ -164,7 +164,7 @@ public final class ScanUtils {
         if (SwingUtilities.isEventDispatchThread()) {
             throw new IllegalStateException("Illegal to call within EDT");
         }
-        AtomicReference<Throwable> status = new AtomicReference(null);
+        AtomicReference<Throwable> status = new AtomicReference<>(null);
         Future<Void> f = postJavaTask(src, uat, status);
         if (f.isDone()) {
             return;
@@ -220,7 +220,7 @@ public final class ScanUtils {
         if (SwingUtilities.isEventDispatchThread()) {
             throw new IllegalStateException("Illegal to call within EDT");
         }
-        AtomicReference<Throwable> status = new AtomicReference(null);
+        AtomicReference<Throwable> status = new AtomicReference<>(null);
         Future<Void> f = postUserTask(src, task, status);
         if (f.isDone()) {
             Throwable t = status.get();

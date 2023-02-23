@@ -20,9 +20,102 @@ HINT:Enum cannot have properties
     public function __construct() {
                     -----------
 HINT:Enum cannot have a constructor
+    public function cases():array {}
+                    -----
+HINT:Enum cannot redeclare method "cases"
+    public function __get($name) {}
+                    -----
+HINT:Enum cannot contain magic method method "__get"
+    public function __set($name,$value) {}
+                    -----
+HINT:Enum cannot contain magic method method "__set"
+    public function __isset($name) {}
+                    -------
+HINT:Enum cannot contain magic method method "__isset"
+    public function __unset($name) {}
+                    -------
+HINT:Enum cannot contain magic method method "__unset"
+    public function __sleep() {}
+                    -------
+HINT:Enum cannot contain magic method method "__sleep"
+    public function __wakeup() {}
+                    --------
+HINT:Enum cannot contain magic method method "__wakeup"
+    public function __serialize() {}
+                    -----------
+HINT:Enum cannot contain magic method method "__serialize"
+    public function __unserialize($array) {}
+                    -------------
+HINT:Enum cannot contain magic method method "__unserialize"
+    public function __toString() {}
+                    ----------
+HINT:Enum cannot contain magic method method "__toString"
+    public static function __set_state($state) {}
+                           -----------
+HINT:Enum cannot contain magic method method "__set_state"
+    public function __clone() {}
+                    -------
+HINT:Enum cannot contain magic method method "__clone"
+    public function __debugInfo() {}
+                    -----------
+HINT:Enum cannot contain magic method method "__debugInfo"
+    public function cases():array {}
+                    -----
+HINT:Enum cannot redeclare method "cases"
+    public function from(string|int $value):self {}
+                    ----
+HINT:Backed enum cannot redeclare method "from"
+    public function tryFrom(string|int $value):self {}
+                    -------
+HINT:Backed enum cannot redeclare method "tryFrom"
+    public function Cases():array {}
+                    -----
+HINT:Enum cannot redeclare method "cases"
+    public function __GET($name) {}
+                    -----
+HINT:Enum cannot contain magic method method "__get"
+    public function __seT($name,$value) {}
+                    -----
+HINT:Enum cannot contain magic method method "__set"
+    public function __ISset($name) {}
+                    -------
+HINT:Enum cannot contain magic method method "__isset"
+    public function __unSET($name) {}
+                    -------
+HINT:Enum cannot contain magic method method "__unset"
+    public function __sleeP() {}
+                    -------
+HINT:Enum cannot contain magic method method "__sleep"
+    public function __wAkeup() {}
+                    --------
+HINT:Enum cannot contain magic method method "__wakeup"
+    public function __Serialize() {}
+                    -----------
+HINT:Enum cannot contain magic method method "__serialize"
+    public function __Unserialize($array) {}
+                    -------------
+HINT:Enum cannot contain magic method method "__unserialize"
+    public function __ToString() {}
+                    ----------
+HINT:Enum cannot contain magic method method "__toString"
+    public static function __Set_State($state) {}
+                           -----------
+HINT:Enum cannot contain magic method method "__set_state"
+    public function __clONe() {}
+                    -------
+HINT:Enum cannot contain magic method method "__clone"
+    public function __DebugInfo() {}
+                    -----------
+HINT:Enum cannot contain magic method method "__debugInfo"
     case C;
     -------
 HINT:"case" can only be in enums
     case D = 1;
+    -----------
+HINT:"case" can only be in enums
+    case X;
+    -------
+HINT:"case" can only be in enums
+    case Y = 1;
     -----------
 HINT:"case" can only be in enums

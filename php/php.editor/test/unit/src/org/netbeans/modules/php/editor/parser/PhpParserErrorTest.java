@@ -1262,6 +1262,10 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/newInInitializers_01.php");
     }
 
+    public void testNewInInitializers_02() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializers_02.php");
+    }
+
     public void testNewInInitializersWithClassConstantError() throws Exception {
         checkErrors("testfiles/parser/php81/newInInitializersWithClassConstantError.php");
     }
@@ -1357,6 +1361,34 @@ public class PhpParserErrorTest extends PHPTestBase {
 
     public void testGH4684() throws Exception {
         checkErrors("testfiles/parser/gh4684.php");
+    }
+
+    public void testReadonlyClass_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyClass_01.php");
+    }
+
+    public void testFetchPropertiesInConstExpressions_01() throws Exception {
+        checkErrors("testfiles/parser/php82/fetchPropertiesInConstExpressions_01.php");
+    }
+
+    public void testReadonlyTraitError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyTraitError_01.php");
+    }
+
+    public void testReadonlyInterfaceError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyInterfaceError_01.php");
+    }
+
+    public void testReadonlyEnumError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyEnumError_01.php");
+    }
+
+    public void testConstantsInTraits_01() throws Exception {
+        checkErrors("testfiles/parser/php82/constantsInTraits_01.php");
+    }
+
+    public void testDnfTypes_01() throws Exception {
+        checkErrors("testfiles/parser/php82/dnfTypes_01.php");
     }
 
 }

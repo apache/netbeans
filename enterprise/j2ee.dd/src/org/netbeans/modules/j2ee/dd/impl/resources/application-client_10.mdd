@@ -1,0 +1,385 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
+
+This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v. 2.0, which is available at
+http://www.eclipse.org/legal/epl-2.0.
+
+This Source Code may also be made available under the following Secondary
+Licenses when the conditions for such availability set forth in the
+Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+version 2 with the GNU Classpath Exception, which is available at
+https://www.gnu.org/software/classpath/license.html.
+
+SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+-->
+<metaDD>
+    <meta-element>
+        <dtd-name>application-client</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ApplicationClient</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.client.AppClient</implements>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <user-code>
+            public org.xml.sax.SAXParseException getError() {
+                return null;
+            }
+            public int getStatus() {
+                return STATE_VALID;
+            }
+            public void setVersion(java.math.BigDecimal value) {
+                setAttributeValue(VERSION, value.toString());
+            }
+            public java.math.BigDecimal getVersion() {
+                return new java.math.BigDecimal(getAttributeValue(VERSION));
+            }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>env-entryType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EnvEntry</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.EnvEntry, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "EnvEntryName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>ejb-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EjbRef</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.EjbRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "EjbRefName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>resource-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ResourceRef</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.ResourceRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "ResRefName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>resource-env-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ResourceEnvRef</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.ResourceEnvRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "ResourceEnvRefName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>message-destination-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MessageDestinationRef</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.MessageDestinationRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "MessageDestinationRefName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>persistence-context-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>PersistenceContextRefType</bean-name>
+    </meta-element>
+    <meta-element>
+        <dtd-name>persistence-unit-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>PersistenceUnitRefType</bean-name>
+    </meta-element>
+    <meta-element>
+        <dtd-name>lifecycle-callbackType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>LifecycleCallbackType</bean-name>
+    </meta-element>
+    <meta-element>
+        <dtd-name>fully-qualified-classType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>FullyQualifiedClass</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>message-destinationType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MessageDestination</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.MessageDestination, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "MessageDestinationName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>string</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>String</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>xsdStringType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>XsdStringType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>descriptionType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>DescriptionType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>display-nameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>DisplayNameType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>iconType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>Icon</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends> 
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.Icon
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>pathType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>PathType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>java-identifierType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>JavaIdentifierType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>jndi-nameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>JndiNameType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>injection-targetType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>InjectionTarget</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.common.InjectionTarget</implements>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends> 
+    </meta-element>
+    <meta-element>
+        <dtd-name>persistence-context-typeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>PersistenceContextTypeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>message-destination-typeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MessageDestinationTypeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>message-destination-usageType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MessageDestinationUsageType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>message-destination-linkType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MessageDestinationLinkType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>res-authType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ResAuthType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>res-sharing-scopeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ResSharingScopeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>service-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRef</bean-name>
+        <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.ServiceRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "ServiceRefName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>xsdAnyURIType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>XsdAnyURIType</bean-name>
+        <wrapper-class>java.net.URI</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>xsdQNameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>XsdQNameType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>port-component-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>PortComponentRef</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends> 
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.PortComponentRef
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>service-ref_handlerType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefHandler</bean-name>
+        <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandler, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "HandlerName"; }
+        </user-code>
+    </meta-element>
+    <meta-element> 
+        <dtd-name>service-ref_handler-chainsType</dtd-name> 
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefHandlerChains</bean-name> 
+        <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChains</implements> 
+    </meta-element> 
+    <meta-element>
+        <dtd-name>service-ref_handler-chainType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefHandlerChainType</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChain</implements> 
+    </meta-element>
+    <meta-element>
+        <dtd-name>service-ref_qname-pattern</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefQnamePattern</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>service-ref_protocol-bindingListType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefProtocolBindingListType</bean-name>
+        <wrapper-class>String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>param-valueType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>InitParam</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.InitParam, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "ParamName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>true-falseType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>TrueFalseType</bean-name>
+        <wrapper-class>boolean</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>ejb-ref-nameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EjbRefNameType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>ejb-ref-typeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EjbRefTypeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>homeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>HomeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>remoteType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>RemoteType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>ejb-linkType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EjbLinkType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>env-entry-type-valuesType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EnvEntryTypeValuesType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+
+    <!-- changes added for EE6: -->
+
+    <meta-element>
+        <dtd-name>handlerType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefHandler</bean-name>
+        <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements>
+            org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandler, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "HandlerName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>handler-chainsType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefHandlerChains</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChains</implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>handler-chainType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefHandlerChainType</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChain</implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>dewey-versionType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>version</bean-name>
+        <wrapper-class>java.math.BigDecimal</wrapper-class>
+    </meta-element>
+</metaDD>

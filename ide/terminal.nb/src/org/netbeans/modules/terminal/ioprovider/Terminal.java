@@ -586,19 +586,19 @@ public final class Terminal extends JComponent {
 	StringTokenizer st = new StringTokenizer(value, ",");	// NOI18N
 	while (st.hasMoreTokens()) {
 	    String s = st.nextToken();
-	    if (s.toLowerCase().equals("ops"))			// NOI18N
+	    if (s.equalsIgnoreCase("ops"))			// NOI18N
 		flags |= Term.DEBUG_OPS;
-	    else if (s.toLowerCase().equals("keys"))		// NOI18N
+	    else if (s.equalsIgnoreCase("keys"))		// NOI18N
 		flags |= Term.DEBUG_KEYS;
-	    else if (s.toLowerCase().equals("input"))		// NOI18N
+	    else if (s.equalsIgnoreCase("input"))		// NOI18N
 		flags |= Term.DEBUG_INPUT;
-	    else if (s.toLowerCase().equals("output"))		// NOI18N
+	    else if (s.equalsIgnoreCase("output"))		// NOI18N
 		flags |= Term.DEBUG_OUTPUT;
-	    else if (s.toLowerCase().equals("wrap"))		// NOI18N
+	    else if (s.equalsIgnoreCase("wrap"))		// NOI18N
 		flags |= Term.DEBUG_WRAP;
-	    else if (s.toLowerCase().equals("margins"))		// NOI18N
+	    else if (s.equalsIgnoreCase("margins"))		// NOI18N
 		flags |= Term.DEBUG_MARGINS;
-	    else if (s.toLowerCase().equals("sequences"))	// NOI18N
+	    else if (s.equalsIgnoreCase("sequences"))	// NOI18N
 		term.setSequenceLogging(true);
 	    else
 		;
@@ -670,7 +670,7 @@ public final class Terminal extends JComponent {
         }
         findState.setVisible(true);
         Container ancestor = SwingUtilities.getAncestorOfClass(TerminalContainer.class, this);
-        if (ancestor != null && ancestor instanceof TerminalContainer) {
+        if (ancestor instanceof TerminalContainer) {
             Task t = new Task.ActivateSearch((TerminalContainer) ancestor, this);
             t.post();
         }
@@ -1043,7 +1043,7 @@ public final class Terminal extends JComponent {
 	findAction.setEnabled(false);
         
         Container container = SwingUtilities.getAncestorOfClass(TerminalContainer.class, this);
-        boolean isTerminalContainer = (container != null && container instanceof TerminalContainer);
+        boolean isTerminalContainer = container instanceof TerminalContainer;
 	
 	JPopupMenu menu = Utilities.actionsToPopup(
 		new Action[]{

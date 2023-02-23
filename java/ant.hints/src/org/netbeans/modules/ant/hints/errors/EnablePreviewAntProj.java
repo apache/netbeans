@@ -203,7 +203,7 @@ public class EnablePreviewAntProj implements ErrorRule<Void> {
         if (prjDir == null) {
             return false;
         }
-        List<FileObject> antProjectFiles = new ArrayList();
+        List<FileObject> antProjectFiles = new ArrayList<>();
         antProjectFiles.add(prjDir.getFileObject("build.xml"));   // NOI18N
         antProjectFiles.add(prjDir.getFileObject("nbproject/project.properties"));   // NOI18N
         antProjectFiles.add(prjDir.getFileObject("nbproject/project.xml"));   // NOI18N

@@ -32,6 +32,7 @@ public final class NbJUnitProcessor extends AbstractProcessor {
         return true;
     }
 
+    @Override
     public Set<String> getSupportedAnnotationTypes() {
         TreeSet<String> all = new TreeSet<>();
 

@@ -76,6 +76,7 @@ public final class CodeStyle {
      * @deprecated Please use {@link #getDefault(javax.swing.text.Document)}
      *   or {@link #getDefault(org.openide.filesystems.FileObject)} respectively.
      */
+    @Deprecated
     public static CodeStyle getDefault(Project project) {
         return getDefault(project.getProjectDirectory());
     }

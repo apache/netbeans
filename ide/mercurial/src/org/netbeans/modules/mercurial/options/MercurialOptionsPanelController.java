@@ -299,7 +299,7 @@ final class MercurialOptionsPanelController extends OptionsPanelController imple
             sb.append(annotation.substring(0, pos));
             sb.append(variable);
             if(pos < annotation.length()) {
-                sb.append(annotation.substring(pos, annotation.length()));
+                sb.append(annotation.substring(pos));
             }
             panel.annotationTextField.setText(sb.toString());
             panel.annotationTextField.requestFocus();

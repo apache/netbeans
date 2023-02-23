@@ -74,12 +74,10 @@ public class AXIModelListener implements PropertyChangeListener {
         Object oldValue = evt.getOldValue();
         Object newValue = evt.getNewValue();
         //proxy child added
-        if( (newValue != null) && (oldValue == null) &&
-            (newValue instanceof AXIComponentProxy) )
+        if( (oldValue == null) && (newValue instanceof AXIComponentProxy) )
             return true;
         //proxy child removed
-        if( (oldValue != null) && (newValue == null) &&
-            (oldValue instanceof AXIComponentProxy) )
+        if( (newValue == null) && (oldValue instanceof AXIComponentProxy) )
             return true;
         
         return false;

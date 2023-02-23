@@ -37,7 +37,8 @@ class GtkToolBarButtonUI extends ButtonUI implements ChangeListener {
     /** Creates a new instance of AquaToolBarButtonUI */
     public GtkToolBarButtonUI() {
     }
-    
+
+    @Override
     public void installUI (JComponent c) {
         AbstractButton b = (AbstractButton) c;
         b.addMouseListener (listener);
@@ -49,7 +50,8 @@ class GtkToolBarButtonUI extends ButtonUI implements ChangeListener {
         b.setBorder (BorderFactory.createEmptyBorder());
         b.putClientProperty("hideActionText", Boolean.TRUE); //NOI18N
     }
-    
+
+    @Override
     public void uninstallUI(JComponent c) {
         c.removeMouseListener (listener);
     }
@@ -59,6 +61,7 @@ class GtkToolBarButtonUI extends ButtonUI implements ChangeListener {
     }
     
     private final Rectangle scratch = new Rectangle();
+    @Override
     public void paint (Graphics g, JComponent c) {
         Rectangle r = c.getBounds(scratch);
         AbstractButton b = (AbstractButton) c;
@@ -75,7 +78,7 @@ class GtkToolBarButtonUI extends ButtonUI implements ChangeListener {
         } else if (b.getModel().isPressed()) {
             compositeColor (g, r, Color.BLUE, 0.3f);
         } else if (b.getModel().isSelected()) {
-            compositeColor (g, r, new Color (0, 120, 255), 0.2f);;
+            compositeColor (g, r, new Color (0, 120, 255), 0.2f);
         } 
     }
     
@@ -146,6 +149,7 @@ class GtkToolBarButtonUI extends ButtonUI implements ChangeListener {
     }
     
     private static final int minButtonSize = 32;
+    @Override
     public Dimension getPreferredSize(JComponent c) {
         if (c instanceof AbstractButton) {
             Icon ic = getIconForState((AbstractButton) c);

@@ -49,6 +49,7 @@ public class OperationEvent extends EventObject {
         return obj;
     }
 
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append(super.toString());
@@ -85,6 +86,7 @@ public class OperationEvent extends EventObject {
             return name;
         }
 
+        @Override
         final void writeDebug(StringBuffer sb) {
             sb.append(" originalname: ");
             sb.append(name);
@@ -112,7 +114,8 @@ public class OperationEvent extends EventObject {
         public FileObject getOriginalPrimaryFile () {
             return file;
         }
-        
+
+        @Override
         final void writeDebug(StringBuffer sb) {
             sb.append(" originalfile: ");
             sb.append(file);
@@ -142,8 +145,9 @@ public class OperationEvent extends EventObject {
         public DataObject getOriginalDataObject () {
             return orig;
         }
-        
-        
+
+
+        @Override
         final void writeDebug(StringBuffer sb) {
             sb.append(" originalobj: ");
             sb.append(orig);

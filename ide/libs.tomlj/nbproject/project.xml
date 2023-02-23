@@ -30,7 +30,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.18</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>1.20</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
@@ -40,7 +41,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/tomlj.jar</runtime-relative-path>
-                <binary-origin>external/tomlj-1.0.0.jar</binary-origin>
+                <binary-origin>external/tomlj-1.1.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

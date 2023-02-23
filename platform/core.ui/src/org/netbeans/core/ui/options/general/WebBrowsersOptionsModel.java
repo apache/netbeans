@@ -106,7 +106,7 @@ public class WebBrowsersOptionsModel extends DefaultListModel {
         index2desc.clear();
         int index = 0;
         for (WebBrowserDesc desc : browsersList) {
-            if (!desc.getChangeStatus().equals(ChangeStatus.REMOVED)) {
+            if (desc.getChangeStatus() != ChangeStatus.REMOVED) {
                 String newName = desc.getNewName();
                 if (newName != null) {
                     addElement(newName);

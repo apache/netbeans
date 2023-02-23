@@ -763,7 +763,7 @@ class LayoutFeeder implements LayoutConstants {
     private boolean plainAlignmentChange(IncludeDesc ndesc, IncludeDesc odesc) {
         if (closedSpace != null && odesc.snappedParallel != null) {
             if (restoreDimension()) {
-                LayoutInterval li = dragger.getMovingComponents()[0].getLayoutInterval(dimension);;
+                LayoutInterval li = dragger.getMovingComponents()[0].getLayoutInterval(dimension);
                 while (li.getParent() != null) {
                     if (li.getParent().isParallel()) {
                         layoutModel.setIntervalAlignment(li, ndesc.alignment);
@@ -3852,7 +3852,7 @@ class LayoutFeeder implements LayoutConstants {
                         }
                         if (gaps[LEADING] != null && gaps[TRAILING] != null) {
                             if (unifyGaps == null) {
-                                unifyGaps = new ArrayList();
+                                unifyGaps = new ArrayList<>();
                             }
                             unifyGaps.add(gaps);
                         }

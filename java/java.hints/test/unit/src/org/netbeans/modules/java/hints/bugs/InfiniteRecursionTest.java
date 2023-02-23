@@ -506,4 +506,196 @@ public class InfiniteRecursionTest extends NbTestCase {
                 .run(InfiniteRecursion.class)
                 .assertWarnings();
     }
+
+    /**
+     * Checks that switch expressions with value, where one arm returns,
+     * don't produce a warning.
+     *
+     * @throws Exception
+     */
+    public void testSwitchExpressionValue1() throws Exception {
+        HintTest.create()
+                .input(
+                "package test;\n"
+                + "public final class Test {\n"
+                + "    final int v = 1;\n"
+                + "    public final int recurse(int var) {\n"
+                + "        return switch (var) {\n"
+                + "            case 0 -> 0;\n"
+                + "            default -> recurse(var + 2); \n"
+                + "        };\n"
+                + "    } \n"
+                + "}\n"
+                + ""
+                )
+                .sourceLevel("17")
+                .run(InfiniteRecursion.class)
+                .assertWarnings();
+    }
+
+    /**
+     * Checks that switch expressions with values produce a warning when
+     * all arms recurse.
+     *
+     * @throws Exception
+     */
+    public void testSwitchExpressionValue2() throws Exception {
+        HintTest.create()
+                .input(
+                "package test;\n"
+                + "public final class Test {\n"
+                + "    final int v = 1;\n"
+                + "    public final int recurse(int var) {\n"
+                + "        return switch (var) {\n"
+                + "            case 0 -> recurse(var + 1);\n"
+                + "            default -> recurse(var + 2); \n"
+                + "        };\n"
+                + "    } \n"
+                + "}\n"
+                + ""
+                )
+                .sourceLevel("17")
+                .run(InfiniteRecursion.class)
+                .assertWarnings("5:22-5:38:verifier:The method recurse will recurse infinitely");
+    }
+
+    /**
+     * Checks that switch expressions with yields don't produce a warning when
+     * some arms may not recurse.
+     *
+     * @throws Exception
+     */
+    public void testSwitchExpressionYield1() throws Exception {
+        HintTest.create()
+                .input(
+                "package test;\n"
+                + "public final class Test {\n"
+                + "    final int v = 1;\n"
+                + "    public final int recurse(int var) {\n"
+                + "        return switch (var) {\n"
+                + "            case 0 -> { yield recurse(var + 1); }\n"
+                + "            default -> { if (var == 1) yield recurse(var + 2); else yield 0; }\n"
+                + "        };\n"
+                + "    } \n"
+                + "}\n"
+                + ""
+                )
+                .sourceLevel("17")
+                .run(InfiniteRecursion.class)
+                .assertWarnings();
+    }
+
+    /**
+     * Checks that switch expressions with values produce a warning when
+     * all arms recurse.
+     *
+     * @throws Exception
+     */
+    public void testSwitchExpressionYield2() throws Exception {
+        HintTest.create()
+                .input(
+                "package test;\n"
+                + "public final class Test {\n"
+                + "    final int v = 1;\n"
+                + "    public final int recurse(int var) {\n"
+                + "        return switch (var) {\n"
+                + "            case 0 -> { yield recurse(var + 1); }\n"
+                + "            default -> { yield recurse(var + 2); }\n"
+                + "        };\n"
+                + "    } \n"
+                + "}\n"
+                + ""
+                )
+                .sourceLevel("17")
+                .run(InfiniteRecursion.class)
+                .assertWarnings("5:30-5:46:verifier:The method recurse will recurse infinitely");
+    }
+
+    /**
+     * Checks that switch with rule cases does not fall through.
+     *
+     * @throws Exception
+     */
+    public void testSwitchCaseDoesNotFallThrough() throws Exception {
+        HintTest.create()
+                .input(
+                "package test;\n"
+                + "public final class Test {\n"
+                + "    final int v = 1;\n"
+                + "    public final int recurse(int var) {\n"
+                + "        int i;\n"
+                + "        switch (var) {\n"
+                + "            case 0 -> i = 0;\n"
+                + "            default -> i = recurse(var + 2); \n"
+                + "        }\n"
+                + "        return i;\n"
+                + "    } \n"
+                + "}\n"
+                + ""
+                )
+                .sourceLevel("17")
+                .run(InfiniteRecursion.class)
+                .assertWarnings();
+    }
+
+    /**
+     * Checks that exhaustive switches don't have an empty default,
+     * and that default shouldn't ordinarily be taken.
+     *
+     * @throws Exception
+     */
+    public void testSwitchExhaustive1() throws Exception {
+        HintTest.create()
+                .input(
+                "package test;\n"
+                + "public final class Test {\n"
+                + "    final int v = 1;\n"
+                + "    public final int recurse(I var) {\n"
+                + "        int i;\n"
+                + "        switch (var) {\n"
+                + "            case C c -> i = recurse(c); \n"
+                + "        }\n"
+                + "        return i;\n"
+                + "    } \n"
+                + "    sealed interface I {}\n"
+                + "    final class C implements I {}\n"
+                + "}\n"
+                + ""
+                )
+                .sourceLevel("19")
+                .options("--enable-preview")
+                .run(InfiniteRecursion.class)
+                .assertWarnings("6:28-6:38:verifier:The method recurse will recurse infinitely");
+    }
+
+    /**
+     * Checks that switches that should be exhaustive, but are not, don't
+     * produce a recursive warning.
+     *
+     * @throws Exception
+     */
+    public void testSwitchExhaustive2() throws Exception {
+        HintTest.create()
+                .input(
+                "package test;\n"
+                + "public final class Test {\n"
+                + "    final int v = 1;\n"
+                + "    public final int recurse(Integer var) {\n"
+                + "        int i;\n"
+                + "        switch (var) {\n"
+                + "            case null -> i = recurse(0); \n"
+                + "        }\n"
+                + "        return i;\n"
+                + "    } \n"
+                + "    sealed interface I {}\n"
+                + "    final class C implements I {}\n"
+                + "}\n"
+                + "", false
+                )
+                .sourceLevel("19")
+                .options("--enable-preview")
+                .run(InfiniteRecursion.class)
+                .assertWarnings(); //erroneous code, OK to not produce warnings
+    }
+
 }

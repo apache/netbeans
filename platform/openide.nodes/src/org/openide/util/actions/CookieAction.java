@@ -164,7 +164,7 @@ public abstract class CookieAction extends NodeAction {
             for (Class<?> cookie : cookies) {
                 // test for supported cookies
                 @SuppressWarnings("unchecked")
-                Lookup.Template<?> templ = new Lookup.Template(cookie);
+                Lookup.Template<?> templ = new Lookup.Template<>(cookie);
                 if (n.getLookup().lookupItem(templ) != null) {
                     ret++;
 

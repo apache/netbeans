@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumMap;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -427,7 +428,7 @@ public class Tiny {
                 JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_RedundantToString(), ctx.getPath(), "$v"));
     }
     
-    private static final Map<TypeKind, String[]> PARSE_METHODS = new HashMap<>(7);
+    private static final Map<TypeKind, String[]> PARSE_METHODS = new EnumMap<>(TypeKind.class);
     static {
         PARSE_METHODS.put(TypeKind.BOOLEAN, new String[] { "Boolean", "parseBoolean" }); // NOI18N
         PARSE_METHODS.put(TypeKind.BYTE, new String[] { "Byte", "parseByte"}); // NOI18N
@@ -534,7 +535,7 @@ public class Tiny {
             List<? extends TypeMirror> type = CreateElementUtilities.resolveType(
                     EnumSet.noneOf(ElementKind.class), ctx.getInfo(), parent, leaf, pos, new TypeMirror[1], new int[1]);
 
-            if (!type.isEmpty()) {
+            if ((type != null) && !type.isEmpty()) {
                 return type.get(0);
             }
         }

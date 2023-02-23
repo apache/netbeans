@@ -154,7 +154,7 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
         if (sourceSetNames != null) {
             for (String name : sourceSetNames) {
                 Set<File> dirs = (Set<File>) info.get("sourceset_" + name + "_output_classes");
-                sourceSetOutputs.addAll(dirs);
+                sourceSetOutputs.addAll(dirs != null ? dirs : Collections.emptySet());
                 sourceSetOutputs.add((File) info.get("sourceset_" + name + "_output_resources"));
             }
         }
@@ -317,7 +317,10 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                 }
                 Map<GradleDependency, Collection<GradleDependency>> deps = new HashMap<>();
                 Set<GradleDependency> children = new LinkedHashSet<>();
-                for (String parentId : directDependencies.keySet()) {
+
+                for (Map.Entry<String, Collection<String>> it : directDependencies.entrySet()) {
+                    String parentId = it.getKey();
+
                     GradleDependency parentD;
                     if (parentId.equals("")) {
                         parentD = GradleConfiguration.SELF_DEPENDENCY;
@@ -339,7 +342,7 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                         
                     }
                     
-                    for (String cid : directDependencies.get(parentId)) {
+                    for (String cid : it.getValue()) {
                         GradleDependency childD;
                         if (cid.startsWith(DEPENDENCY_PROJECT_PREFIX)) {
                             int sep1 = cid.indexOf(':', DEPENDENCY_PROJECT_PREFIX.length());

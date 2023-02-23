@@ -673,9 +673,11 @@ public class OptionsPanel extends JPanel {
                         if (categoryid2tabs.get(id) != null) {
                             HashMap<Integer, TabInfo> tabsInfo = categoryid2tabs.get(id);
                             boolean foundInNoTab = true;
-                            for (Integer tabIndex : tabsInfo.keySet()) {
+                            for (Map.Entry<Integer, TabInfo> it : tabsInfo.entrySet()) {
+                                Integer tabIndex = it.getKey();
+
                                 if (tabIndex != -1) {
-                                    ArrayList<String> tabWords = tabsInfo.get(tabIndex).getWords();
+                                    ArrayList<String> tabWords = it.getValue().getWords();
                                     boolean foundInTab = false;
                                     if (containsAllSearchWords(tabWords, stWords)) {
                                         foundInTab = true;

@@ -727,6 +727,7 @@ public class Analyzer {
     /** createWhitespaceFillBuffer() with the non-capital 's' should be used.
      * @deprecated
      */
+    @Deprecated
     public static char[] createWhiteSpaceFillBuffer(int startCol, int endCol,
     int tabSize) {
         return createWhitespaceFillBuffer(startCol, endCol, tabSize);

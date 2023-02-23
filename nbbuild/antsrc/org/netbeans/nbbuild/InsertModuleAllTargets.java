@@ -140,7 +140,7 @@ public final class InsertModuleAllTargets extends Task {
                 String myCluster = clustersOfModules.get(entry.getNetbeansOrgId());
                 if (myCluster != null) {
                     String clusterDep = "all-cluster-" + myCluster;
-                    if (!prj.getTargets().keySet().contains(clusterDep)) {
+                    if (!prj.getTargets().containsKey(clusterDep)) {
                         Target t = new Target();
                         t.setName(clusterDep);
                         t.setLocation(getLocation());

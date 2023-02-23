@@ -92,6 +92,7 @@ public final class HttpServerSettings {
     /** http settings
      * @deprecated use <CODE>SharedClassObject.findObject()</CODE>
      */
+    @Deprecated
     public static HttpServerSettings OPTIONS = null;
 
     /** Lock for the httpserver operations */

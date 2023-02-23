@@ -105,6 +105,7 @@ public abstract class IDENativeMavenWizardIterator implements WizardDescriptor.I
     /**
      * @deprecated Hook into {@link IDENativeTemplateHandler} instead.
      */
+    @Deprecated
     protected CreateProjectBuilder createBuilder(File projFile, ProjectInfo vi, ProgressHandle handle) {
             CreateProjectBuilder builder = new CreateProjectBuilder(projFile, vi.groupId, vi.artifactId, vi.version)
                     .setProgressHandle(handle)

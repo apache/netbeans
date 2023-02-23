@@ -1002,7 +1002,7 @@ public class AddDependencyPanel extends javax.swing.JPanel {
         }
 
         private void refreshList() {
-            List<Node> keys = new ArrayList();
+            List<Node> keys = new ArrayList<>();
             for (Node node : myNodes) {
                 keys.add(node);
             }

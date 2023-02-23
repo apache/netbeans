@@ -218,7 +218,7 @@ public final class TestUtil extends ProxyLookup {
     public static List<URL> getJARs(String propertyName) throws MalformedURLException {
         String path = System.getProperty(propertyName);
         String[] paths = PropertyUtils.tokenizePath(path);
-        List<URL> list = new ArrayList();
+        List<URL> list = new ArrayList<>();
         for (int i = 0; i< paths.length; i++) {
             String token = paths[i];
             File f = new File(token);

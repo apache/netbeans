@@ -59,7 +59,7 @@ class InstallPanelVisual extends javax.swing.JPanel {
     
     private static final Logger LOGGER = Logger.getLogger(InstallPanelVisual.class.getName());
 
-    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<>();
     
     private String errorMessage;
     private boolean infoMessage;
@@ -80,14 +80,17 @@ class InstallPanelVisual extends javax.swing.JPanel {
     public InstallPanelVisual() {
         initComponents();
         DocumentListener updateListener = new DocumentListener() {
+            @Override
             public void changedUpdate(DocumentEvent e) {
                 fireChange();
             }
 
+            @Override
             public void removeUpdate(DocumentEvent e) {
                 fireChange();
             }
 
+            @Override
             public void insertUpdate(DocumentEvent e) {
                 fireChange();
             }
@@ -96,25 +99,21 @@ class InstallPanelVisual extends javax.swing.JPanel {
         jTextFieldBaseDir.getDocument().addDocumentListener(updateListener);
         jTextFieldUsername.getDocument().addDocumentListener(updateListener);
         jTextFieldPassword.getDocument().addDocumentListener(updateListener);
-        createUserCheckBox.getModel().addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                fireChange();
-            }
+        createUserCheckBox.getModel().addItemListener( (ItemEvent e) -> {
+            fireChange();
         });
-        addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                // if JWSDP installed, disable the catalina base directory
-                if (isJWSDP()) {
-                    if (jCheckBoxShared.isEnabled()) {
-                        jCheckBoxShared.setEnabled(false);
-                        setBaseEnabled(false);
-                    }
-                } else {
-                    if (!jCheckBoxShared.isEnabled()) {
-                        jCheckBoxShared.setEnabled(true);
-                        if (jCheckBoxShared.isSelected()) {
-                            setBaseEnabled(true);
-                        }
+        addChangeListener( (ChangeEvent e) -> {
+            // if JWSDP installed, disable the catalina base directory
+            if (isJWSDP()) {
+                if (jCheckBoxShared.isEnabled()) {
+                    jCheckBoxShared.setEnabled(false);
+                    setBaseEnabled(false);
+                }
+            } else {
+                if (!jCheckBoxShared.isEnabled()) {
+                    jCheckBoxShared.setEnabled(true);
+                    if (jCheckBoxShared.isSelected()) {
+                        setBaseEnabled(true);
                     }
                 }
             }
@@ -355,6 +354,15 @@ class InstallPanelVisual extends javax.swing.JPanel {
     public String getUrl() {
         String url;
         switch (getTomcatVersion()) {
+            case TOMCAT_110:
+                url = TomcatFactory.TOMCAT_URI_PREFIX_110;
+                break;
+            case TOMCAT_101:
+                url = TomcatFactory.TOMCAT_URI_PREFIX_101;
+                break;
+            case TOMCAT_100:
+                url = TomcatFactory.TOMCAT_URI_PREFIX_100;
+                break;
             case TOMCAT_90:
                 url = TomcatFactory.TOMCAT_URI_PREFIX_90;
                 break;
@@ -381,7 +389,7 @@ class InstallPanelVisual extends javax.swing.JPanel {
         if (jCheckBoxShared.isEnabled() && jCheckBoxShared.isSelected()) {
             url += ":base=" + jTextFieldBaseDir.getText();  // NOI18N
         }
-        Logger.getLogger(InstallPanelVisual.class.getName()).log(Level.FINE, "TomcatInstall.getUrl: " + url);    // NOI18N
+        Logger.getLogger(InstallPanelVisual.class.getName()).log(Level.FINE, "TomcatInstall.getUrl: {0}", url);    // NOI18N
         return url;
     }
     
@@ -441,13 +449,9 @@ class InstallPanelVisual extends javax.swing.JPanel {
                 Integer.parseInt(shutdownPort);
                 return true;
             }
-        } catch (IOException ioe) {
-            Logger.getLogger(InstallPanelVisual.class.getName()).log(Level.INFO, null, ioe);
-        } catch (NumberFormatException nfe) {
-            Logger.getLogger(InstallPanelVisual.class.getName()).log(Level.INFO, null, nfe);
-        } catch (RuntimeException e) {
+        } catch (IOException | RuntimeException ex) {
             // catch any runtime exception that may occur during graph parsing
-            Logger.getLogger(InstallPanelVisual.class.getName()).log(Level.INFO, null, e);
+            Logger.getLogger(InstallPanelVisual.class.getName()).log(Level.INFO, null, ex);
         }
         return false;
     }
@@ -504,14 +508,7 @@ class InstallPanelVisual extends javax.swing.JPanel {
         if (isHomeValid()) {
             File homeDir = getHomeDir();
             if (homeDir != null && homeDir.exists()) {
-                File files[] = homeDir.listFiles(new FilenameFilter() {
-                    public boolean accept(File dir, String name) {
-                        if ("jwsdp-shared".equals(name)) { // NOI18N
-                            return true;
-                        }
-                        return false;
-                    }
-                });
+                File files[] = homeDir.listFiles( (File dir, String name) -> "jwsdp-shared".equals(name) );  // NOI18N
                 return files.length != 0;
             }
         }
@@ -586,9 +583,7 @@ class InstallPanelVisual extends javax.swing.JPanel {
                     infoMessage = true;
                 } else if (!TomcatUsers.hasManagerRole(getTomcatVersion(), tomcatUsersXml, jTextFieldUsername.getText())) {
                     errorMessage = NbBundle.getMessage(InstallPanelVisual.class, "MSG_UserHasNotManagerRole",
-                            TomcatVersion.TOMCAT_70.equals(getTomcatVersion())
-                                    || TomcatVersion.TOMCAT_80.equals(getTomcatVersion())
-                                    || TomcatVersion.TOMCAT_90.equals(getTomcatVersion())
+                            getTomcatVersion().isAtLeast(TomcatVersion.TOMCAT_70)
                                 ? "manager-script"
                                 : "manager");
                     infoMessage = true;
@@ -632,25 +627,20 @@ class InstallPanelVisual extends javax.swing.JPanel {
             textHomeDir = jTextFieldHomeDir.getText();
         }
         if (validationTask == null) {
-            validationTask = RequestProcessor.getDefault().create(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (InstallPanelVisual.this) {
-                        version = TomcatFactory.getTomcatVersion(new File(textHomeDir));
-                        LOGGER.log(Level.FINE, "Detected Tomcat version {0}", version);
-                    }
-
-                    SwingUtilities.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            ChangeEvent event = new ChangeEvent(this);
-                            for (ChangeListener listener : listeners) {
-                                listener.stateChanged(event);
-                            }
-                        }
-                    });
+            validationTask = RequestProcessor.getDefault().create( () -> {
+                synchronized (InstallPanelVisual.this) {
+                    version = TomcatFactory.getTomcatVersion(new File(textHomeDir));
+                    LOGGER.log(Level.FINE, "Detected Tomcat version {0}", version);
                 }
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        ChangeEvent event = new ChangeEvent(this);
+                        for (ChangeListener listener : listeners) {
+                            listener.stateChanged(event);
+                        }
+                    }
+                });
             });
         }
         validationTask.schedule(60);

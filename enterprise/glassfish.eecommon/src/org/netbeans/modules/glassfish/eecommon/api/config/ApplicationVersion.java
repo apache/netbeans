@@ -75,6 +75,13 @@ public final class ApplicationVersion extends J2EEBaseVersion {
         "9.0", 9000	// NOI18N
         );
 
+    /** Represents application version 10.0
+     */
+    public static final ApplicationVersion APPLICATION_10_0 = new ApplicationVersion(
+        "10.0", 10000,	// NOI18N
+        "10.0", 10000	// NOI18N
+        );
+
     /** -----------------------------------------------------------------------
      *  Implementation
      */
@@ -114,6 +121,8 @@ public final class ApplicationVersion extends J2EEBaseVersion {
             result = APPLICATION_8_0;
         } else if(APPLICATION_9_0.toString().equals(version)) {
             result = APPLICATION_9_0;
+        }else if(APPLICATION_10_0.toString().equals(version)) {
+            result = APPLICATION_10_0;
         }
 
         return result;

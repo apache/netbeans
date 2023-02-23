@@ -374,7 +374,7 @@ public class Utils {
                 i += 1;
             }
             if (replaced != null) {
-                replaced.append(text.substring(lastPos, text.length()));
+                replaced.append(text.substring(lastPos));
                 text = replaced.toString();
             }
             replaced = null;

@@ -225,7 +225,7 @@ public class SearchModuleDependency implements org.netbeans.modules.java.hints.s
                             NewArrayTree arrayTree = (NewArrayTree) initializer;
                             Tree type = arrayTree.getType();
                             if (type != null) {
-                                if (type.getKind().equals(Kind.IDENTIFIER)) {
+                                if (type.getKind() == Kind.IDENTIFIER) {
                                     itName = ((IdentifierTree) type).getName();
                                 }
                             }

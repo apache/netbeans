@@ -18,42 +18,34 @@
  */
 package org.netbeans.modules.languages.antlr.v3;
 
+import org.antlr.parser.antlr3.ANTLRv3Lexer;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
 import static org.antlr.parser.antlr3.ANTLRv3Lexer.*;
-import org.netbeans.modules.languages.antlr.AbstractAntlrLexer;
 import org.netbeans.modules.languages.antlr.AntlrTokenId;
 import static org.netbeans.modules.languages.antlr.AntlrTokenId.*;
-import org.netbeans.modules.languages.antlr.LexerInputCharStream;
+import org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge;
 
 /**
  *
  * @author lkishalmi
  */
-public final class Antlr3Lexer extends AbstractAntlrLexer {
+public final class Antlr3Lexer extends AbstractAntlrLexerBridge<ANTLRv3Lexer, AntlrTokenId> {
 
 
     public Antlr3Lexer(LexerRestartInfo<AntlrTokenId> info) {
-        super(info, new org.antlr.parser.antlr3.ANTLRv3Lexer(new LexerInputCharStream(info.input())));
+        super(info, ANTLRv3Lexer::new);
     }
 
-    private org.antlr.v4.runtime.Token preFetchedToken = null;
+    @Override
+    public Object state() {
+        return new State(lexer);
+    }
 
     @Override
-    public Token<AntlrTokenId> nextToken() {
-        org.antlr.v4.runtime.Token nextToken;
-        if (preFetchedToken != null) {
-            nextToken = preFetchedToken;
-            lexer.getInputStream().seek(preFetchedToken.getStopIndex() + 1);
-            preFetchedToken = null;
-        } else {
-            nextToken = lexer.nextToken();
-        }
-        if (nextToken.getType() == EOF) {
-            return null;
-        }
-        switch (nextToken.getType()) {
+    protected Token<AntlrTokenId> mapToken(org.antlr.v4.runtime.Token antlrToken) {
+        switch (antlrToken.getType()) {
             case TOKEN_REF:
                 return token(AntlrTokenId.TOKEN);
             case RULE_REF:
@@ -129,16 +121,26 @@ public final class Antlr3Lexer extends AbstractAntlrLexer {
                 return token(WHITESPACE);
 
             case ACTION_CONTENT:
-                preFetchedToken = lexer.nextToken();
-                while (preFetchedToken.getType() == ACTION_CONTENT) {
-                    preFetchedToken = lexer.nextToken();
-                }
-                lexer.getInputStream().seek(preFetchedToken.getStartIndex());
-                return token(ACTION);
+                return groupToken(ACTION, ACTION_CONTENT);
 
             default:
                 return token(ERROR);
         }
     }
 
+    private static class State extends AbstractAntlrLexerBridge.LexerState<ANTLRv3Lexer> {
+        final int currentRuleType;
+
+        public State(ANTLRv3Lexer lexer) {
+            super(lexer);
+            this.currentRuleType = lexer.getCurrentRuleType();
+        }
+
+        @Override
+        public void restore(ANTLRv3Lexer lexer) {
+            super.restore(lexer);
+            lexer.setCurrentRuleType(currentRuleType);
+        }
+
+    }
 }

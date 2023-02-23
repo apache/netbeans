@@ -61,9 +61,9 @@ import org.openide.util.lookup.Lookups;
  * <A name="use_cases">There are several use cases for RequestProcessor</A>,
  * most of them start with creating own <code>RequestProcessor</code>
  * instance (which by itself is quite lightweight).
- *
- * <h5>Do something later</h5>
- *
+ * <p>
+ * <strong>Do something later</strong>
+ * <p>
  * In case you want something to be done later in some background thread,
  * create an instance of <code>RequestProcessor</code> and post tasks to it.
  * <pre>
@@ -94,9 +94,9 @@ import org.openide.util.lookup.Lookups;
  * // later wait
  * last.{@link RequestProcessor.Task#waitFinished waitFinished()}
  * </pre>
- *
- * <h5>Periodic task</h5>
- *
+ * <p>
+ * <strong>Periodic task</strong>
+ * <p>
  * It is also possible to do something periodically. Use the {@link RequestProcessor.Task#schedule schedule} method:
  * <pre>
  * class Periodic implements Runnable {
@@ -112,9 +112,9 @@ import org.openide.util.lookup.Lookups;
  *  background activity. It is generally considered evil if some code runs
  *  without any user action. Your code shall respect  the application's state,
  *  and for example when the application is minimized, do nothing.
- *
- * <h5>Sliding task</h5>
- *
+ * <p>
+ * <strong>Sliding task</strong>
+ * <p>
  * Often you want to perform an update of your object internals
  * based on changes in some model. However your update may be costly
  * and you want to do it just once, regardless of how many changes are
@@ -136,9 +136,9 @@ import org.openide.util.lookup.Lookups;
  * The above code coalesces all events that arrive in 1s and for all of them
  * does <code>doTheWork</code> just once.
  *
- *
- * <h5>Interruption of tasks</h5>
- *
+ * <p>
+ * <strong>Interruption of tasks</strong>
+ * <p>
  * Since version 6.3 there is a conditional support for interruption of long running tasks.
  * There always was a way to cancel not yet running task using {@link RequestProcessor.Task#cancel }
  * but if the task's run() method was already running, one was out of luck.
@@ -157,7 +157,7 @@ import org.openide.util.lookup.Lookups;
  *     }
  * }
  * </pre>
- * <p/>
+ * <p>
  * Since <code>org.openide.util</code>, implements
  * {@link java.util.concurrent.ScheduledExecutorService}
  * @author Petr Nejedly, Jaroslav Tulach, Tim Boudreau
@@ -506,7 +506,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
      *
      * @deprecated Sharing of one singlethreaded <CODE>RequestProcessor</CODE>
      * among different users and posting even blocking requests is inherently
-     * deadlock-prone. See <A href="#use_cases">use cases</A>. */
+     * deadlock-prone. See {@link RequestProcessor use cases}. */
     @Deprecated
     public static Task postRequest(Runnable run) {
         return DEFAULT.post(run);
@@ -522,7 +522,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
      *
      * @deprecated Sharing of one singlethreaded <CODE>RequestProcessor</CODE>
      * among different users and posting even blocking requests is inherently
-     * deadlock-prone. See <A href="#use_cases">use cases</A>. */
+     * deadlock-prone. See {@link RequestProcessor use cases}. */
     @Deprecated
     public static Task postRequest(final Runnable run, int timeToWait) {
         return DEFAULT.post(run, timeToWait);
@@ -538,7 +538,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
      *
      * @deprecated Sharing of one singlethreaded <CODE>RequestProcessor</CODE>
      * among different users and posting even blocking requests is inherently
-     * deadlock-prone. See <A href="#use_cases">use cases</A>. */
+     * deadlock-prone. See {@link RequestProcessor use cases}. */
     @Deprecated
     public static Task postRequest(final Runnable run, int timeToWait, int priority) {
         return DEFAULT.post(run, timeToWait, priority);
@@ -552,7 +552,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
      *
      * @deprecated Sharing of one singlethreaded <CODE>RequestProcessor</CODE>
      * among different users and posting even blocking requests is inherently
-     * deadlock-prone. See <A href="#use_cases">use cases</A>. */
+     * deadlock-prone. See {@link RequestProcessor use cases}. */
     @Deprecated
     public static Task createRequest(Runnable run) {
         return DEFAULT.create(run);
@@ -642,7 +642,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
 
     /**
      * {@inheritDoc}
-     * @throws an IllegalStateException if called on the
+     * @throws IllegalStateException if called on the
      * {@linkplain #getDefault default request processor}
      * @since org.openide.util 8.2
      */
@@ -658,7 +658,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
 
     /**
      * {@inheritDoc}
-     * @throws an IllegalStateException if called on the
+     * @throws IllegalStateException if called on the
      * {@linkplain #getDefault default request processor}
      * @since org.openide.util 8.2
      */
@@ -759,7 +759,7 @@ outer:  do {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * <b>Note:</b> If the passed {@link java.util.concurrent.Callable} implements
      * {@link org.openide.util.Cancellable}, then that object's {@link org.openide.util.Cancellable#cancel()}
      * method will be called if {@link java.util.concurrent.Future#cancel(boolean)} is invoked.
@@ -805,7 +805,7 @@ outer:  do {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * <b>Note:</b> If the passed {@link java.lang.Runnable} implements
      * {@link org.openide.util.Cancellable}, then that object's {@link org.openide.util.Cancellable#cancel()}
      * method will be called if {@link java.util.concurrent.Future#cancel(boolean)} is invoked.
@@ -841,7 +841,7 @@ outer:  do {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Executes the given tasks, returning a list of Futures holding their
      * status and results when all complete or the timeout expires, whichever
      * happens first.
@@ -870,7 +870,7 @@ outer:  do {
     }
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Executes the given tasks, returning the result of one which has
      * completed and cancelling any incomplete tasks.
      * @since org.openide.util 8.2
@@ -901,7 +901,7 @@ outer:  do {
     }
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Executes the given tasks, returning a list of Futures holding their
      * status and results when all complete or the timeout expires, whichever
      * happens first.
@@ -985,7 +985,7 @@ outer:  do {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Schedules a runnable which will run with a given frequency, regardless
      * of how long execution takes, with the exception that if execution takes
      * longer than the specified delay, execution will be delayed but will
@@ -999,7 +999,7 @@ outer:  do {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Schedules a runnable which will run repeatedly after the specified initial
      * delay, with the specified delay between the completion of one run and
      * the start of the next.
@@ -1380,13 +1380,14 @@ outer:  do {
         private AtomicBoolean cancelled;
 
         /** @param run runnable to start
-        * @param delay amount of millis to wait
-        * @param priority the priorty of the task
         */
         Task(Runnable run) {
             super(run);
         }
 
+        /** @param run runnable to start
+         * @param priority the priorty of the task
+         */
         Task(Runnable run, int priority) {
             super(run);
 

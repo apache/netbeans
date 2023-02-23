@@ -262,7 +262,7 @@ public final class RelationshipMappingWhereUsed extends JavaRefactoringPlugin {
                 DataObject dobj = DataObject.find(getParentFile());
                 if (dobj != null) {
                     EditorCookie.Observable obs = dobj.getLookup().lookup(EditorCookie.Observable.class);
-                    if (obs != null && obs instanceof CloneableEditorSupport) {
+                    if (obs instanceof CloneableEditorSupport) {
                         CloneableEditorSupport supp = (CloneableEditorSupport)obs;
 
                     PositionBounds bounds = new PositionBounds(

@@ -92,7 +92,7 @@ class BaseJspEditorSupport extends DataEditorSupport implements EditCookie, Edit
     public BaseJspEditorSupport(JspDataObject obj) {
         super(obj, null, new BaseJspEnv(obj));
         DataObject data = getDataObject();
-        if ((data != null) && (data instanceof JspDataObject)) {
+        if (data instanceof JspDataObject) {
             setMIMEType(JspLoader.getMimeType((JspDataObject) data));
         }
 

@@ -1299,6 +1299,7 @@ public class DataNode extends AbstractNode {
                 }
             }
 
+            @Override
             public void remove() {
                 getIteratorDelegate().remove();
             }

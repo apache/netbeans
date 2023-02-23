@@ -67,6 +67,8 @@ public abstract class Union2<First,Second> implements Cloneable, Serializable {
 
     /**
      * Construct a union based on the first type.
+     * @param <First> type of first type
+     * @param <Second> type of second type
      * @param first an object of the first type
      * @return a union containing that object
      */
@@ -76,6 +78,8 @@ public abstract class Union2<First,Second> implements Cloneable, Serializable {
 
     /**
      * Construct a union based on the second type.
+     * @param <First> type of first type
+     * @param <Second> type of second type
      * @param second an object of the second type
      * @return a union containing that object
      */

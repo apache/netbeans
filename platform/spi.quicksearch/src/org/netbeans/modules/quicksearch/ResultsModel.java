@@ -195,7 +195,7 @@ public final class ResultsModel extends AbstractListModel implements ActionListe
             sb.append(safeEscape(text.substring(index, endIndex)));
             sb.append("</b>");
             if (endIndex < text.length()) {
-                sb.append(safeEscape(text.substring(endIndex, text.length())));
+                sb.append(safeEscape(text.substring(endIndex)));
             }
             return sb.toString();
         }

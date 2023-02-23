@@ -26,7 +26,6 @@ import java.sql.DatabaseMetaData;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.db.test.jdbcstub.ConnectionImpl;
 import org.netbeans.test.stub.api.Stub;
-import org.netbeans.test.stub.api.StubDelegate;
 
 /**
  *

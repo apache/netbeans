@@ -41,7 +41,7 @@ public class Schema {
     private DBMetaDataProvider provider;
     private Catalog catalog;
     private String name;
-    private Set/*<String>*/ tableNames;
+    private Set<String> tableNames;
     
     private ConnectionProvider cp;
     private SchemaElementImpl schemaElementImpl;
@@ -64,7 +64,7 @@ public class Schema {
             tableNames = getTableNamesByType("TABLE"); // NOI18N
         }
         
-        return (String[])tableNames.toArray(new String[tableNames.size()]);
+        return (String[])tableNames.toArray(new String[0]);
     }
     
     public TableElement getTable(String tableName) throws SQLException {
@@ -106,22 +106,20 @@ public class Schema {
         tableNames = null;
     }
     
-    private Set/*<String>*/ getTableNamesByType(String type) throws SQLException {
-        Set/*<String>*/ result = new TreeSet();
+    private Set<String> getTableNamesByType(String type) throws SQLException {
+        Set<String> result = new TreeSet<>();
 
-        ResultSet rs = provider.getMetaData().getTables(catalog.getName(), name, "%", new String[] { type }); // NOI18N
-        try {
+        try (ResultSet rs = provider.getMetaData().getTables(catalog.getName(), name, "%", new String[] { type })) { // NOI18N
             while (rs.next()) {
                 String tableName = rs.getString("TABLE_NAME"); // NOI18N
                 result.add(tableName);
             }
-        } finally {
-            rs.close();
         }
 
         return result;
     }
     
+    @Override
     public String toString() {
         return "Schema[catalog=" + catalog + ",name='" + name + "']"; // NOI18N
     }

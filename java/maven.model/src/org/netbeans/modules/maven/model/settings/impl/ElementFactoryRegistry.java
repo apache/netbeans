@@ -79,9 +79,7 @@ public class ElementFactoryRegistry {
     }
     
     public void unregister(ElementFactory fac){
-        for (QName q : fac.getElementQNames()) {
-            factories.remove(q);
-        }
+        factories.keySet().removeAll(fac.getElementQNames());
         resetQNameCache();
     }
     

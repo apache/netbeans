@@ -375,7 +375,7 @@ public final class WebProjectProperties {
         PLATFORM_LIST_RENDERER = PlatformUiSupport.createPlatformListCellRenderer();
         SpecificationVersion minimalSourceLevel = null;
         Profile profile = Profile.fromPropertiesString(evaluator.getProperty(J2EE_PLATFORM));
-        if (Profile.JAKARTA_EE_9_1_FULL.equals(profile)) {
+        if (Profile.JAKARTA_EE_9_1_FULL.equals(profile) || Profile.JAKARTA_EE_10_FULL.equals(profile)) {
             minimalSourceLevel = new SpecificationVersion("11");
         } else if (Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_9_FULL.equals(profile)) {
             minimalSourceLevel = new SpecificationVersion("1.8");

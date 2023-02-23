@@ -66,7 +66,7 @@ public class MapFormat extends Format {
     private String rdel = "}"; // NOI18N
 
     /** Used formatting map */
-    private Map<String, Object> argmap;
+    private Map<String, ?> argmap;
 
     /** Offsets to {} expressions */
     private int[] offsets;
@@ -88,7 +88,7 @@ public class MapFormat extends Format {
     * For common work use  <code>format(pattern, arguments) </code>.
     * @param arguments keys and values to use in the format
     */
-    public MapFormat(Map arguments) {
+    public MapFormat(Map<String, ?> arguments) {
         super();
         setMap(arguments);
     }
@@ -135,7 +135,7 @@ public class MapFormat extends Format {
     }
     */
     /** Returns the value for given key. Subclass may define its own beahvior of
-    * this method. For example, if key is not defined, subclass can return <not defined>
+    * this method. For example, if key is not defined, subclass can return &lt;not defined&gt;
     * string.
     *
     * @param key Key.
@@ -151,6 +151,7 @@ public class MapFormat extends Format {
     * @exception IllegalArgumentException if number of arguments exceeds BUFSIZE or
     * parser found unmatched brackets (this exception should be switched off
     * using setExactMatch(false)).
+    * @return parsed string
     */
     public String processPattern(String newPattern) throws IllegalArgumentException {
         int idx = 0;
@@ -290,7 +291,7 @@ public class MapFormat extends Format {
             result.append(obj);
         }
 
-        result.append(pattern.substring(lastOffset, pattern.length()));
+        result.append(pattern.substring(lastOffset));
 
         return result;
     }
@@ -306,6 +307,7 @@ public class MapFormat extends Format {
     /**
     * Parses the string. Does not yet handle recursion (where
     * the substituted strings contain {n} references.)
+    * @param source string to parse
     * @return New format.
     */
     public String parse(String source) {
@@ -339,6 +341,7 @@ public class MapFormat extends Format {
     /** Test whether formatter will throw exception if object for key was not found.
     * If given map does not contain object for key specified, it could
     * throw an exception. Returns true if throws. If not, key is left unchanged.
+    * @return true if throws.
     */
     public boolean willThrowExceptionIfKeyWasNotFound() {
         return throwex;
@@ -356,6 +359,7 @@ public class MapFormat extends Format {
     /** Test whether both brackets are required in the expression.
     * If not, use setExactMatch(false) and formatter will ignore missing right
     * bracket. Advanced feature.
+    * @return true if both brackets are required
     */
     public boolean isExactMatch() {
         return exactmatch;
@@ -370,7 +374,9 @@ public class MapFormat extends Format {
         exactmatch = flag;
     }
 
-    /** Returns string used as left brace */
+    /** Returns string used as left brace.
+     * @return string used as left brace
+     */
     public String getLeftBrace() {
         return ldel;
     }
@@ -382,7 +388,9 @@ public class MapFormat extends Format {
         ldel = delimiter;
     }
 
-    /** Returns string used as right brace */
+    /** Returns string used as right brace.
+     *  @return string used as right brace
+     */
     public String getRightBrace() {
         return rdel;
     }
@@ -394,7 +402,9 @@ public class MapFormat extends Format {
         rdel = delimiter;
     }
 
-    /** Returns argument map */
+    /** Returns argument map.
+     * @return argument map
+     */
     public Map getMap() {
         return argmap;
     }
@@ -407,7 +417,7 @@ public class MapFormat extends Format {
     *
     * @param map the argument map
     */
-    public void setMap(Map map) {
+    public void setMap(Map<String, ?> map) {
         argmap = map;
     }
 

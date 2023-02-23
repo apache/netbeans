@@ -223,6 +223,12 @@ class NotifyDescriptorAdapter {
                     break;
             }
         }
+        Object[] add = descriptor.getAdditionalOptions();
+        if (add != null && add.length > 0) {
+            Object[] addOpts = Arrays.copyOf(add, add.length + options.length);
+            System.arraycopy(options, 0, addOpts, add.length, options.length);
+            options = addOpts;
+        }
         for (Object o : options) {
             String text;
             
@@ -286,6 +292,7 @@ class NotifyDescriptorAdapter {
     }
     
     public CompletableFuture<Object> clientNotifyLater() {
+        LOG.log(Level.FINE, "notifyLater with context: {0}", this.client);
         return clientNotifyCompletion().thenApply(d -> d.getValue()).exceptionally(t -> {
             if (t instanceof CompletionException) {
                 t = t.getCause();

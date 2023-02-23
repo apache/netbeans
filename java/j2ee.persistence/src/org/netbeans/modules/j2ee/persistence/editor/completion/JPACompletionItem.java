@@ -44,7 +44,6 @@ import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.j2ee.persistence.editor.JPAEditorUtil;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
@@ -882,7 +881,7 @@ public abstract class JPACompletionItem implements CompletionItem {
             try {
                 Position position = doc.createPosition(offset);
                 doc.remove(offset, len);
-                doc.insertString(position.getOffset(), text.toString(), null);
+                doc.insertString(position.getOffset(), text, null);
             } catch (BadLocationException ble) {
                 // nothing can be done to update
             } finally {
@@ -1066,18 +1065,14 @@ public abstract class JPACompletionItem implements CompletionItem {
                             return;
                         }
 
-                        js.runUserActionTask(new Task<CompilationController>() {
-
-                            @Override
-                            public void run(CompilationController cc) throws Exception {
-                                cc.toPhase(JavaSource.Phase.RESOLVED);
-                                Element element = elemHandle.resolve(cc);
-                                if (element == null) {
-                                    return;
-                                }
-                                PersistenceCompletionDocumentation doc = PersistenceCompletionDocumentation.createJavaDoc(cc, element);
-                                resultSet.setDocumentation(doc);
+                        js.runUserActionTask( (CompilationController cc) -> {
+                            cc.toPhase(JavaSource.Phase.RESOLVED);
+                            Element element = elemHandle.resolve(cc);
+                            if (element == null) {
+                                return;
                             }
+                            PersistenceCompletionDocumentation doc1 = PersistenceCompletionDocumentation.createJavaDoc(cc, element);
+                            resultSet.setDocumentation(doc1);
                         }, false);
                         resultSet.finish();
                     } catch (IOException ex) {

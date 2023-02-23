@@ -608,7 +608,7 @@ public final class TreePathHandle {
         }
 
         static class KindPath {
-            private ArrayList<Tree.Kind> kindPath = new ArrayList();
+            private ArrayList<Tree.Kind> kindPath = new ArrayList<>();
 
             KindPath(TreePath treePath) {
                 while (treePath != null) {

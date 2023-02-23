@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 159.61 159.61" width="8" height="8" version="1.0">
+  <defs id="defs2048">
+    <linearGradient id="linearGradient2109" x1="264.58" gradientUnits="userSpaceOnUse" y1="296.37" gradientTransform="matrix(.31227 0 0 .32049 127.55 434.38)" x2="380.68" y2="553.74">
+      <stop id="stop5192" stop-color="#fff" offset="0"/>
+      <stop id="stop5194" stop-color="#f00" offset="1"/>
+    </linearGradient>
+    <linearGradient id="linearGradient2107" x1="249.48" gradientUnits="userSpaceOnUse" y1="262.87" gradientTransform="matrix(-.30163 .080822 -.082949 -.30957 402.86 730.11)" x2="272.03" y2="427.54">
+      <stop id="stop5199" stop-color="#fff" offset="0"/>
+      <stop id="stop5201" stop-color="#f00" offset="1"/>
+    </linearGradient>
+  </defs>
+  <g id="layer1" transform="translate(-311.62 -429.7)">
+    <g id="g2100" transform="matrix(.9 0 0 .9 170.44 -31.113)">
+      <path id="path2174" d="m634.29 559.51a250 250 0 1 1 -500 0 250 250 0 1 1 500 0z" fill-rule="evenodd" transform="matrix(.30686 0 0 .30686 127.62 429)" stroke="#cb0000" stroke-width="20.128" fill="red"/>
+      <path id="path2540" fill-rule="evenodd" fill="url(#linearGradient2107)" d="m264.19 668.93c19.05-5.1 34.17-17.66 43.23-33.82 14.71-34.82-40.17 46.7-85.49 31.89 13.17 4.83 27.81 5.8 42.26 1.93z"/>
+      <path id="path2197" fill-rule="evenodd" fill="url(#linearGradient2109)" d="m245.66 529.36c-39.44 0-71.44 32.85-71.44 73.32 0 5.48 0.6 10.81 1.71 15.94 39.21-75.47 81.45-27.96 135.91-43.55-10.64-26.8-36.26-45.71-66.18-45.71z"/>
+      <path id="text2705" opacity=".73529" fill="#fff" d="m267.42 640.04l-21.68-21.68-21.88 21.88-17.87-17.87 21.88-21.89-21.68-21.68 17.4-17.4 21.68 21.68 21.95-21.95 17.88 17.88-21.96 21.95 21.68 21.68-17.4 17.4"/>
+      <path id="text2713" d="m267.3 637.01l-21.59-21.59-21.76 21.76-14.9-14.91 21.76-21.75-21.59-21.59 14.51-14.51 21.58 21.59 21.82-21.81 14.9 14.9-21.81 21.81 21.58 21.59-14.5 14.51" fill="#fff"/>
+    </g>
+  </g>
+</svg>

@@ -337,6 +337,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                 toRet.add(ProjectProblem.createError(TXT_Artifact_Not_Found(), getDescriptionText(e)));
                 problemReporter.addMissingArtifact(((ArtifactNotFoundException) e).getArtifact());
             } else if (e instanceof ProjectBuildingException) {
+                LOG.log(Level.FINE, "Creating sanity build action for {0}", project.getProjectDirectory());
                 toRet.add(ProjectProblem.createError(TXT_Cannot_Load_Project(), getDescriptionText(e), createSanityBuildAction()));
                 if (e.getCause() instanceof ModelBuildingException) {
                     ModelBuildingException mbe = (ModelBuildingException) e.getCause();
@@ -408,8 +409,10 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
             // sanity build action has been created
             SanityBuildAction saba = cachedSanityBuild.get();
             if (saba == null) {
+                LOG.log(Level.FINE, "Sanity build action does not exist");
                 listener.finished(true);
             } else {
+                LOG.log(Level.FINE, "Resolving sanity build action");
                 CompletableFuture<ProjectProblemsProvider.Result> r = saba.resolve();
                 r.whenComplete((a, e) -> {
                    listener.finished(e == null); 
@@ -425,20 +428,24 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
             Collection<? extends ProjectProblem> probs = doGetProblems(false);
             if (probs == null) {
                 // no value means that cache was not populated yet, Conservatively enable.
+                LOG.log(Level.FINE, "Priming action enabled because problems are not yet evaluated.");
                 return true;
             }
             if (probs.isEmpty()) {
                 // problems identified: there are none. No primiing build.
+                LOG.log(Level.FINE, "Priming action disabled, no problems found.");
                 return false;
             }
             // sanity build action has been created
             SanityBuildAction saba = cachedSanityBuild.get();
             if (saba == null) {
                 // other problems, but no need to prime.
+                LOG.log(Level.FINE, "Problems present, but no SanityBuildAction created");
                 return false;
             }
             Future<?> res = saba.getPendingResult();
             // do not enabel, if the priming build was already started.
+            LOG.log(Level.FINE, "Sanity build state is: {0}", res == null || res.isDone());
             return res == null || !res.isDone();
         }
 

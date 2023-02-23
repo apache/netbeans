@@ -59,21 +59,18 @@ public class JPQLEditorController {
             final PersistenceEnvironment pe,
             final int maxRowCount,
             final ProgressHandle ph) {
-        final List<URL> localResourcesURLList = new ArrayList<URL>();
+        final List<URL> localResourcesURLList = new ArrayList<>();
 
         //
-        final HashMap<String, String> props = new HashMap<String, String>();
-        final List<String> initialProblems = new ArrayList<String>();
+        final HashMap<String, String> props = new HashMap<>();
+        final List<String> initialProblems = new ArrayList<>();
         //connection open
         final DatabaseConnection dbconn = JPAEditorUtil.findDatabaseConnection(pu, pe.getProject());
         if (dbconn != null) {
             if (dbconn.getJDBCConnection() == null) {
-                Mutex.EVENT.readAccess(new Mutex.Action<DatabaseConnection>() {
-                    @Override
-                    public DatabaseConnection run() {
-                        ConnectionManager.getDefault().showConnectionDialog(dbconn);
-                        return dbconn;
-                    }
+                Mutex.EVENT.readAccess( (Mutex.Action<DatabaseConnection>) () -> {
+                    ConnectionManager.getDefault().showConnectionDialog(dbconn);
+                    return dbconn;
                 });
             }
         }
@@ -124,12 +121,8 @@ public class JPQLEditorController {
                     }
                     final JPQLResult jpqlResult0 = jpqlResult;
                     final ClassLoader customClassLoader0 = customClassLoader;
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            editorTopComponent.setResult(jpqlResult0, customClassLoader0);
-                        }
-                    });
+                    SwingUtilities.invokeLater( () -> 
+                            editorTopComponent.setResult(jpqlResult0, customClassLoader0) );
 
                     Thread.currentThread().setContextClassLoader(defClassLoader);
                 }

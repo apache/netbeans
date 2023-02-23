@@ -413,7 +413,7 @@ public class UpdateJFXImplTest extends NbTestCase {
             public boolean accept(File file, String string) {
                 return string.length() >= JFXIMPL_BACKUP_NAME.length() + 4
                         && string.substring(0,JFXIMPL_BACKUP_NAME.length()).equalsIgnoreCase(JFXIMPL_BACKUP_NAME) 
-                        && string.substring(string.length() - 4, string.length()).equalsIgnoreCase(".xml");
+                        && string.substring(string.length() - 4).equalsIgnoreCase(".xml");
             }
         });
         if(fBackups != null) {

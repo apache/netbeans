@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.29
+#Version 2.32
 
 CLSS public abstract interface java.io.Serializable
 
@@ -570,7 +570,7 @@ meth public static java.net.URI getWrapperDistributionURI(java.io.File) throws j
 meth public static org.netbeans.modules.gradle.api.execute.GradleDistributionManager get()
 meth public static org.netbeans.modules.gradle.api.execute.GradleDistributionManager get(java.io.File)
 supr java.lang.Object
-hfds CACHE,DIST_VERSION_PATTERN,DOWNLOAD_URI,JAVA_VERSION,JDK_COMPAT,MINIMUM_SUPPORTED_VERSION,RP,VERSION_BLACKLIST,gradleUserHome
+hfds CACHE,DIST_VERSION_PATTERN,DOWNLOAD_URI,JDK_COMPAT,MINIMUM_SUPPORTED_VERSION,RP,VERSION_BLACKLIST,gradleUserHome
 hcls DownloadTask,GradleVersionRange
 
 CLSS public final org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution
@@ -581,6 +581,7 @@ meth public boolean isAvailable()
 meth public boolean isBlackListed()
 meth public boolean isCompatibleWithJava(int)
 meth public boolean isCompatibleWithSystemJava()
+ anno 0 java.lang.Deprecated()
 meth public int compareTo(org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution)
 meth public int hashCode()
 meth public int lastSupportedJava()
@@ -663,6 +664,7 @@ meth public static org.netbeans.modules.gradle.api.execute.RunConfig createRunCo
  anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider findActionProvider(org.netbeans.api.project.Project,org.openide.util.Lookup)
 meth public static org.netbeans.modules.gradle.spi.actions.ReplaceTokenProvider simpleReplaceTokenProvider(java.lang.String,java.lang.String)
+meth public static org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager$JavaRuntime getActiveRuntime(org.netbeans.api.project.Project)
 meth public static org.openide.execution.ExecutorTask executeGradle(org.netbeans.modules.gradle.api.execute.RunConfig,java.lang.String)
 meth public static org.openide.filesystems.FileObject extractFileObjectfromLookup(org.openide.util.Lookup)
 meth public static org.openide.filesystems.FileObject[] extractFileObjectsfromLookup(org.openide.util.Lookup)
@@ -670,6 +672,7 @@ meth public static org.openide.util.Pair getActivePlatform(java.lang.String)
  anno 0 java.lang.Deprecated()
 meth public static org.openide.util.Pair getActivePlatform(org.netbeans.api.project.Project)
  anno 0 java.lang.Deprecated()
+meth public static void setActiveRuntime(org.netbeans.api.project.Project,org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager$JavaRuntime)
 supr java.lang.Object
 hfds BRANDING_API_PREFIX,EXECUTOR_FACTORY,GRADLE_TASKS,LOG,OPTION_MESSAGE_PREFIX,TRUST_DIALOG_OPTION_IDS
 
@@ -797,6 +800,7 @@ innr public final static !enum DownloadLibsRule
 innr public final static !enum DownloadMiscRule
 innr public final static !enum GradleExecutionRule
 meth public boolean getNoRebuild()
+ anno 0 java.lang.Deprecated()
 meth public boolean getUseConfigCache()
 meth public boolean isAlwaysShowOutput()
 meth public boolean isCacheDisabled()
@@ -843,6 +847,7 @@ meth public void setGradleUserHome(java.io.File)
 meth public void setGradleVersion(java.lang.String)
 meth public void setHideEmptyConfigurations(boolean)
 meth public void setNoRebuild(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setOffline(boolean)
 meth public void setOpenLazy(boolean)
  anno 0 java.lang.Deprecated()
@@ -971,6 +976,34 @@ meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
 
 CLSS public abstract interface org.netbeans.modules.gradle.spi.execute.GradleJavaPlatformProvider
 meth public abstract java.io.File getJavaHome() throws java.io.FileNotFoundException
+
+CLSS public abstract interface org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager
+fld public final static java.lang.String DEFAULT_RUNTIME_ID = "default_platform"
+innr public final static JavaRuntime
+meth public abstract java.util.Map<java.lang.String,org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager$JavaRuntime> getAvailableRuntimes()
+meth public java.util.Optional<java.lang.Runnable> manageRuntimesAction()
+meth public static org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager$JavaRuntime createJavaRuntime(java.lang.String,java.io.File)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager$JavaRuntime createJavaRuntime(java.lang.String,java.lang.String,java.io.File)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public void addChangeListener(javax.swing.event.ChangeListener)
+meth public void removeChangeListener(javax.swing.event.ChangeListener)
+
+CLSS public final static org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager$JavaRuntime
+ outer org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager
+intf java.lang.Comparable<org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager$JavaRuntime>
+meth public boolean equals(java.lang.Object)
+meth public boolean isBroken()
+meth public int compareTo(org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager$JavaRuntime)
+meth public int hashCode()
+meth public java.io.File getJavaHome()
+meth public java.lang.String getDisplayName()
+meth public java.lang.String getId()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds displayName,id,javaHome
+
+CLSS abstract interface org.netbeans.modules.gradle.spi.execute.package-info
 
 CLSS public abstract org.netbeans.modules.gradle.spi.newproject.BaseGradleWizardIterator
 cons public init()

@@ -276,7 +276,7 @@ public class MethodCompletion extends BaseCompletion {
      */
     private boolean exactConstructorExists(List<? extends Element> typelist, String prefix) {
         for (Element element : typelist) {
-            if (prefix.toUpperCase().equals(element.getSimpleName().toString().toUpperCase())) {
+            if (prefix.equalsIgnoreCase(element.getSimpleName().toString())) {
                 return true;
             }
         }
@@ -294,7 +294,7 @@ public class MethodCompletion extends BaseCompletion {
                         // all the constructors are named <init>.
                         String constructorName = element.getSimpleName().toString();
 
-                        if (constructorName.toUpperCase().equals(context.getPrefix().toUpperCase())) {
+                        if (constructorName.equalsIgnoreCase(context.getPrefix())) {
                             addConstructorProposal(tel.getQualifiedName().toString(), (ExecutableElement) encl);
                         }
                     }

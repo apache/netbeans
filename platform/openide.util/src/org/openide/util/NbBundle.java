@@ -585,7 +585,7 @@ public class NbBundle extends Object {
      * @param sname the name with slashes, e.g. <code>org/netbeans/modules/foo/Bundle</code>
      * @param locale the locale to use
      * @param suffixes a list of suffixes to apply to the bundle name, in <em>increasing</em> order of specificity
-     * @param loader a class loader to search in
+     * @param l a class loader to search in
      * @return a resource bundle (merged according to the suffixes), or null if not found
      */
     private static ResourceBundle loadBundleClass(

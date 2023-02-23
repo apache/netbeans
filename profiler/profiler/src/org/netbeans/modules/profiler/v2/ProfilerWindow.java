@@ -537,7 +537,7 @@ class ProfilerWindow extends ProfilerTopComponent {
     private void displayPopupImpl() {
         final Set<ProfilerFeature> _features = features.getAvailable();
         final Set<ProfilerFeature> _selected = features.getActivated();
-        final List<ToggleButtonMenuItem> _items = new ArrayList();
+        final List<ToggleButtonMenuItem> _items = new ArrayList<>();
         
         // --- Features listener ---
         final ProfilerFeatures.Listener listener = new ProfilerFeatures.Listener() {

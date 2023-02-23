@@ -344,8 +344,8 @@ implements DropTargetGlassPane.Observer, DropTargetGlassPane.Informer {
             root2glass.clear();
         }
 
-        for(JRootPane root: removedRoots.keySet()) {
-            setOriginalGlassPane(root, removedRoots.get(root));
+        for(Map.Entry<JRootPane, Component> entry: removedRoots.entrySet()) {
+            setOriginalGlassPane(entry.getKey(), entry.getValue());
         }
     }
     

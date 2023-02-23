@@ -769,8 +769,8 @@ public abstract class ErrorManager extends Object {
         /**
          * Takes all our delegates, asks them for an instance identified by
          * name and adds those results as new delegates for dem.
-         * @param String name
-         * @param DelagatingErrorManager d the instance to which we will attach
+         * @param dem the instance to which we will attach
+         * @param name name
          */
         private void attachNewDelegates(DelegatingErrorManager dem, String name) {
             Set<ErrorManager> newDelegatesForDem = new HashSet<ErrorManager>();

@@ -79,7 +79,7 @@ public final class FoldRegistry  {
         this.enumType = enumType;
     }
     
-    private static volatile Reference<FoldRegistry>     INSTANCE = new WeakReference(null);
+    private static volatile Reference<FoldRegistry>     INSTANCE = new WeakReference<>(null);
     
     public static FoldRegistry get() {
         FoldRegistry fr = INSTANCE.get();

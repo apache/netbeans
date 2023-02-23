@@ -62,7 +62,7 @@ public class Log {
         if (logger == null) {
             String prop = System.getProperty(packageName, DEFAULT_NAME);
             for (int i = 1; i < LEVELS.length; i++) {
-                if (prop.toLowerCase().equals(LEVEL_NAMES[i].toLowerCase())) {
+                if (prop.equalsIgnoreCase(LEVEL_NAMES[i])) {
                     level = LEVELS[i];
                     break;
                 }

@@ -194,7 +194,7 @@ public class InjectionPointParameterAnalyzer
                 .getAnnotationsByType(qualifiers);
         boolean hasDefault = model.hasImplicitDefaultQualifier(varElement);
         if (!hasDefault
-                && qualifiersFqns.keySet().contains(AnnotationUtil.DEFAULT_FQN))
+                && qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN))
         {
             hasDefault = true;
         }

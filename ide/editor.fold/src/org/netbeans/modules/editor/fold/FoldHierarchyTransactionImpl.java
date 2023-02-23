@@ -1263,7 +1263,7 @@ public final class FoldHierarchyTransactionImpl {
             }
         }
         if (reinsertSet == null) {
-            reinsertSet = new LinkedHashSet();
+            reinsertSet = new LinkedHashSet<>();
         }
         if (bl) {
             if (f.getFoldCount() > 0 || f.getParent() != null) {

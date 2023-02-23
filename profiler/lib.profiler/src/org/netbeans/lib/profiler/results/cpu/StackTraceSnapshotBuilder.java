@@ -270,7 +270,7 @@ public class StackTraceSnapshotBuilder {
     int stackTraceCount = 0;
     //    int builderBatchSize;
     final Set<String> ignoredThreadNames = new HashSet<String>();
-    final Map<Long,Long> threadtimes = new HashMap();
+    final Map<Long,Long> threadtimes = new HashMap<>();
     
     {
         registerNewMethodInfo(new MethodInfo("Thread","")); // NOI18N
@@ -308,7 +308,7 @@ public class StackTraceSnapshotBuilder {
         
         if (timediff < 0) return;
         synchronized (lock) {
-            Map<Long,SampledThreadInfo> tinfoMap = new HashMap();
+            Map<Long,SampledThreadInfo> tinfoMap = new HashMap<>();
             
             for (SampledThreadInfo tinfo : threads) {
                 tinfoMap.put(tinfo.getThreadId(),tinfo);
@@ -325,7 +325,7 @@ public class StackTraceSnapshotBuilder {
         
         if (timediff < 0) return;
         synchronized (lock) {
-            Map<Long,SampledThreadInfo> tinfoMap = new HashMap();
+            Map<Long,SampledThreadInfo> tinfoMap = new HashMap<>();
             
             //            if (stackTraceCount%builderBatchSize == 0) {
             //                ccgb.doBatchStart();

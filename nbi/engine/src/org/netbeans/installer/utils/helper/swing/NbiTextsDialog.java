@@ -59,10 +59,8 @@ public class NbiTextsDialog extends NbiDialog {
         setTitle(title);
         
         textsTabbedPane.removeAll();
-        
-        for (String tabTitle: texts.keySet()) {
-            textsTabbedPane.addTab(tabTitle, createTab(texts.get(tabTitle)));
-        }
+
+        texts.forEach((tabTitle, component) -> textsTabbedPane.addTab(tabTitle, createTab(component)));
     }
     
     private void initComponents() {

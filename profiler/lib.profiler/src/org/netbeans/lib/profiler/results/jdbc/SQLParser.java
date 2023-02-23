@@ -91,7 +91,7 @@ class SQLParser {
         
         if (fromClause != null) {
             String[] tablesRefs = fromClause.trim().split(",");
-            Set<String> tables = new HashSet(tablesRefs.length);
+            Set<String> tables = new HashSet<>(tablesRefs.length);
             
             for (int i = 0; i < tablesRefs.length; i++) {
                 Matcher m = wordPattern.matcher(tablesRefs[i]);

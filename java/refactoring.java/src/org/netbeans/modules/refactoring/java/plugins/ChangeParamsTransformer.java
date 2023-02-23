@@ -374,7 +374,7 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
     }
     
     private List<ExpressionTree> getNewCompatibleArguments(List<? extends VariableTree> parameters) {
-        List<ExpressionTree> arguments = new ArrayList();
+        List<ExpressionTree> arguments = new ArrayList<>();
         ParameterInfo[] pi = paramInfos;
         for (int i = 0; i < pi.length; i++) {
             int originalIndex = pi[i].getOriginalIndex();
@@ -432,7 +432,7 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
     }
     
     private List<ExpressionTree> getNewArguments(List<? extends ExpressionTree> currentArguments, boolean passThrough, ExecutableElement method) {
-        List<ExpressionTree> arguments = new ArrayList();
+        List<ExpressionTree> arguments = new ArrayList<>();
         ParameterInfo[] pi = paramInfos;
         for (int i = 0; i < pi.length; i++) {
             int originalIndex = pi[i].getOriginalIndex();

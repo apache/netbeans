@@ -87,5 +87,5 @@ namespace callable {}
 namespace extends {}
 namespace implements {}
 namespace trait {}
-namespace ineterface {}
+namespace interface {}
 namespace enum {}

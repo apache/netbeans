@@ -166,7 +166,7 @@ final class SaveSupport {
     }
     
     /** Notifies all registered listeners about the event.
-     * @param event The event to be fired
+     * @param name the programmatic name of the property change event to be fired
      * @see #PROP_FILE_CHANGED
      * @see #PROP_SAVE
      */

@@ -105,7 +105,7 @@ public class JsStructureScanner implements StructureScanner {
         if (cancel.isCancelled()) {
             return collectedItems;
         }
-        Collection<? extends JsObject> properties = new ArrayList(jsObject.getProperties().values());
+        Collection<? extends JsObject> properties = new ArrayList<>(jsObject.getProperties().values());
         boolean countFunctionChild = (jsObject.getJSKind().isFunction() && !jsObject.isAnonymous() && jsObject.getJSKind() != JsElement.Kind.CONSTRUCTOR
                 && !containsFunction(jsObject))
                 || (ModelUtils.PROTOTYPE.equals(jsObject.getName()) && properties.isEmpty());

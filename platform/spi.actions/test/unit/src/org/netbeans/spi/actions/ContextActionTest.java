@@ -739,7 +739,7 @@ public class ContextActionTest extends NbTestCase {
         }
         a.removePropertyChangeListener(pcl);
         //diagnostics
-        Reference<PCL> pclRef = new WeakReference(pcl);
+        Reference<PCL> pclRef = new WeakReference<>(pcl);
         pcl = null;
         assertGC("PCL still alive", pclRef, rootsHint);
 
@@ -925,7 +925,7 @@ public class ContextActionTest extends NbTestCase {
         }
 
         public Object assertFired(String key) {
-            assertTrue(fired.keySet().contains(key));
+            assertTrue(fired.containsKey(key));
             return fired.remove(key);
         }
 

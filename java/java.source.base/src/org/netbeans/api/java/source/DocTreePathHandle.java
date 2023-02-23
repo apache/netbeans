@@ -350,7 +350,7 @@ public final class DocTreePathHandle {
 
         static class KindPath {
 
-            private ArrayList<DocTree.Kind> kindPath = new ArrayList();
+            private ArrayList<DocTree.Kind> kindPath = new ArrayList<>();
 
             KindPath(DocTreePath treePath) {
                 while (treePath != null) {

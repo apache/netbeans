@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.87.0
+#Version 1.88.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -1128,6 +1128,7 @@ fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion J
 fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_2_2
 fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_2_3
 fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_3_0
+fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_4_0
 meth public boolean isAtLeast(org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String getShortName()

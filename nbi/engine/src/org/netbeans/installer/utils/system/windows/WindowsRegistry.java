@@ -633,14 +633,15 @@ public class WindowsRegistry {
     public void setAdditionalValues(int section, String key, Map<String,Object> values) throws NativeException {
         LogManager.log("setting " + values.size() + " values");
         
-        for (String name: values.keySet()) {
-            final Object value = values.get(name);
+        for (Map.Entry<String,Object> entry: values.entrySet()) {
+            final Object value = entry.getValue();
+            String name = entry.getKey();
             
             LogManager.log(name + " = " + value.toString());
             
             if (value instanceof Short) {
                 LogManager.log("Type is short. Set REG_DWORD value");
-                
+
                 set32BitValue(section, key, name, ((Short) value).intValue());
             } else if (value instanceof Integer) {
                 LogManager.log("Type is integer. Set REG_DWORD value");

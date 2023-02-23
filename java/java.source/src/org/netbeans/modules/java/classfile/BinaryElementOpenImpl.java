@@ -41,8 +41,13 @@ public class BinaryElementOpenImpl implements BinaryElementOpen {
 
     @Override
     public boolean open(ClasspathInfo cpInfo, final ElementHandle<? extends Element> toOpen, final AtomicBoolean cancel) {
-        FileObject source = CodeGenerator.generateCode(cpInfo, toOpen);
+        boolean[] sourceAttrApplied = { false };
+        FileObject source = CodeGenerator.generateCode(cpInfo, toOpen, sourceAttrApplied);
         if (source != null) {
+            if (sourceAttrApplied[0]) {
+              return open(source, 0);
+            }
+
             final int[] pos = new int[] {-1};
 
             try {

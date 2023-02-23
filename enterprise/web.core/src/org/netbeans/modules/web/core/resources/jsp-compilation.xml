@@ -28,8 +28,8 @@
     <volume>
         <type>classpath</type>
         <resource>jar:nbinst://org.apache.tools.ant.module/ant/lib/ant.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.servletjspapi/modules/ext/servlet3.1-jsp2.3-api.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.web.jspparser/modules/ext/glassfish-jspparser-4.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.servletjspapi/modules/ext/servlet4.0-jsp2.3-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.web.jspparser/modules/ext/glassfish-jspparser-5.1.0.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.web.jsf20/modules/ext/jsf-2_2/javax.faces.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.jstl/modules/ext/jstl-api.jar!/</resource>
 <!--        <resource>jar:nbinst://org.netbeans.libs.glassfish_logging/modules/ext/glassfish-logging-2.0.jar!/</resource>-->

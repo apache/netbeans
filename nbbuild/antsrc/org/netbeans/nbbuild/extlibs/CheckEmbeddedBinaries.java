@@ -26,10 +26,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -94,10 +97,9 @@ public class CheckEmbeddedBinaries extends Task {
             throw new BuildException("Could not open " + manifest + ": " + x, x, getLocation());
 
         }
-        try {
+        try (Stream<Path> list = Files.list(dir.toPath())) {
             StringBuilder errorList = new StringBuilder();
-            Files.list(dir.toPath())
-                    .forEach((t) -> {
+            list.forEach((t) -> {
                         String sha1 = hash(t.toFile());
                         if (!shamap.containsKey(sha1)) {
                             errorList.append("No sha1 (expected ").append(sha1).append(" for file: ").append(t).append("\n");

@@ -2366,7 +2366,7 @@ public class ETable extends JTable {
     }
     
     private ComboBoxModel<String> getSearchComboModel() {
-        DefaultComboBoxModel<String> result = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> result = new DefaultComboBoxModel<>();
         for (Enumeration<TableColumn> en = getColumnModel().getColumns(); en.hasMoreElements(); ) {
             TableColumn column = en.nextElement();
             if (column instanceof ETableColumn) {

@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-613F624102267B1397E845B3181A72273BD6F399 org.glassfish.web:javax.servlet.jsp:2.3.2
-0232ABFE1F919127E9CFCD6E4E2C6324BB394535 org.glassfish.web:javax.el:2.2.6
-D7AF4BB0743A2CE81236FBBB63CEA5A61CF38035 org.glassfish.main.common:glassfish-ee-api:4.1
-6A8DF14D674E2760B50C7694E8B2FAFFF2A8B2AE org.glassfish.main.common:common-util:5.0
+13192D5874B787C0CE0C70B35E95181E8B683A1C org.glassfish.web:jakarta.servlet.jsp:2.3.6
+F48473482C0E3E714F87186D9305BCAE30B7F5CB org.glassfish:jakarta.el:3.0.4
+9A3D933B7B079AD73C43878BF09AC47586FAC897 org.glassfish.main.common:glassfish-ee-api:5.1.0
+CED8804F81DB0C9099786472C615A12EA592C44B org.glassfish.main.common:common-util:5.1.0

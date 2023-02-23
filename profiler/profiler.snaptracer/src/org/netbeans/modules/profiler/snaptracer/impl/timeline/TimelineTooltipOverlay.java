@@ -213,7 +213,7 @@ final class TimelineTooltipOverlay extends ChartOverlay implements ActionListene
             int itemsCount = row.getItemsCount();
             TimelineTooltipPainter.Model model = rowModels[rowIndex];
             for (int mark : selectedTimestamps) {
-                List<ItemSelection> selections = new ArrayList(itemsCount);
+                List<ItemSelection> selections = new ArrayList<>(itemsCount);
                 for (int itemIndex = 0; itemIndex < itemsCount; itemIndex++) {
                     SynchronousXYItem item = (SynchronousXYItem)row.getItem(itemIndex);
                     selections.add(new XYItemSelection.Default(item, mark,
@@ -245,7 +245,7 @@ final class TimelineTooltipOverlay extends ChartOverlay implements ActionListene
                 setPosition(null, tooltipPainter, i, false);
             } else {
                 TimelineChart.Row row = chart.getRow(i);
-                List<ItemSelection> selections = new ArrayList(highlightedItems.size());
+                List<ItemSelection> selections = new ArrayList<>(highlightedItems.size());
 
                 for (ItemSelection sel : highlightedItems)
                     if (row.containsItem(sel.getItem()))

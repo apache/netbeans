@@ -164,9 +164,8 @@ public final class SelectedTables {
         Set<Table> removedTables = new HashSet<>(validatedTables);
         removedTables.removeAll(tableClosure.getSelectedTables());
 
-        for (Table table : removedTables) {
-            table2Problems.remove(table);
-        }
+        table2Problems.keySet().removeAll(removedTables);
+
         for (Table table : addedTables) {
             putProblems(table, validateClassName(getClassName(table)));
         }

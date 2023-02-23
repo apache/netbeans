@@ -229,8 +229,9 @@ class KeymapViewModel extends DefaultTableModel implements Runnable {
 
         supressDataEvents = true;
         getDataVector().removeAllElements();
-        for (String categorySet : getCategories().keySet()) {
-            for (String category : getCategories().get(categorySet)) {
+
+        for (List<String> categories : getCategories().values()) {
+            for (String category : categories) {
                 for (Object o : mutableModel.getItems(category, false)) {
                     ShortcutAction sca = (ShortcutAction) o;
                     String[] shortcuts = mutableModel.getShortcuts(sca);

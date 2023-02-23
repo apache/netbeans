@@ -646,7 +646,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * 
      * @param component the component to open
      * @param displayName the display name of the action
-     * @param image the image to associated with the action
+     * @param iconBase the location to the actions icon
      * @param noIconInMenu true if this icon shall not have an item in menu
      * @see OpenActionRegistration
      * 
@@ -888,7 +888,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * window.
      * It is safe to call this method outside EDT.
      *
-     * @param True to start 'busy' notification, 'false' to stop it.
+     * @param busy True to start 'busy' notification, 'false' to stop it.
      *
      * @see WindowManager#topComponentMakeBusy(org.openide.windows.TopComponent, boolean)
      * @since 6.51

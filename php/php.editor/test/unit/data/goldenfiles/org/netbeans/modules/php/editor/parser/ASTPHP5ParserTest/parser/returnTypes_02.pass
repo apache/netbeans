@@ -36,7 +36,9 @@
                 <Identifier start='16' end='19' name='foo'/>
                 <FormalParameters>
                 </FormalParameters>
-                <Identifier start='23' end='28' name='array'/>
+                <NamespaceName start='23' end='28' isCurrent='false' isGlobal='false'>
+                    <Identifier start='23' end='28' name='array'/>
+                </NamespaceName>
                 <Block start='29' end='32' isCurly='true'>
                 </Block>
             </FunctionDeclaration>

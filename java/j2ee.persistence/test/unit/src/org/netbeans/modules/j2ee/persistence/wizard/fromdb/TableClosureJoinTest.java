@@ -176,7 +176,7 @@ public class TableClosureJoinTest extends TestCase {
      * table, but should not mark STUDENT_TEACHER as a join (referenced) table.
      */
     public void testNeverAddingAlreadySelectedTablesAsJoinTables() {
-        HashSet<Table> tables = new HashSet();
+        HashSet<Table> tables = new HashSet<>();
         tables.add(provider.getTableByName("ROOM"));
         tables.add(provider.getTableByName("STUDENT"));
         tables.add(provider.getTableByName("STUDENT_TEACHER"));

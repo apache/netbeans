@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.183.0
+#Version 0.184.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -711,6 +711,7 @@ meth public org.netbeans.api.java.source.CodeStyle$WrapStyle wrapTryResources()
 meth public org.netbeans.api.java.source.CodeStyle$WrapStyle wrapWhileStatement()
 meth public static org.netbeans.api.java.source.CodeStyle getDefault(javax.swing.text.Document)
 meth public static org.netbeans.api.java.source.CodeStyle getDefault(org.netbeans.api.project.Project)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.java.source.CodeStyle getDefault(org.openide.filesystems.FileObject)
 supr java.lang.Object
 hfds preferences
@@ -876,6 +877,7 @@ meth public org.netbeans.api.java.source.ClasspathInfo getClasspathInfo()
 meth public org.netbeans.api.java.source.ElementUtilities getElementUtilities()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.api.java.source.JavaSource getJavaSource()
+ anno 0 java.lang.Deprecated()
  anno 0 org.netbeans.api.annotations.common.NullUnknown()
 meth public org.netbeans.api.java.source.JavaSource$Phase getPhase()
  anno 0 org.netbeans.api.annotations.common.NonNull()
@@ -1219,6 +1221,7 @@ hfds retryGuard
 hcls FinishedFuture,RetryWhenScanFinished,TaskWrapper
 
 CLSS public org.netbeans.api.java.source.SourceUtils
+meth public !varargs static org.openide.filesystems.FileObject getFile(org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,org.netbeans.api.java.source.ClasspathInfo,java.lang.String[])
 meth public static boolean checkTypesAssignable(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.type.TypeMirror,javax.lang.model.type.TypeMirror)
 meth public static boolean isClassFile(org.openide.filesystems.FileObject)
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1227,6 +1230,7 @@ meth public static boolean isMainClass(java.lang.String,org.netbeans.api.java.so
 meth public static boolean isMainMethod(javax.lang.model.element.ExecutableElement)
 meth public static boolean isScanInProgress()
 meth public static java.lang.Object getDiagnosticParam(javax.tools.Diagnostic<?>,int)
+meth public static java.lang.String findSourceFileName(javax.lang.model.element.Element)
 meth public static java.lang.String getModuleName(java.net.URL)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1271,9 +1275,11 @@ meth public static javax.lang.model.type.TypeMirror resolveCapturedType(org.netb
 meth public static javax.lang.model.type.WildcardType resolveCapturedType(javax.lang.model.type.TypeMirror)
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> getJavaTokenSequence(org.netbeans.api.lexer.TokenHierarchy,int)
 meth public static org.openide.filesystems.FileObject getFile(javax.lang.model.element.Element,org.netbeans.api.java.source.ClasspathInfo)
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.filesystems.FileObject getFile(org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,org.netbeans.api.java.source.ClasspathInfo)
 meth public static void forceSource(org.netbeans.api.java.source.CompilationController,org.openide.filesystems.FileObject)
 meth public static void waitScanFinished() throws java.lang.InterruptedException
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds LOG
 hcls CaseInsensitiveMatch,CaseSensitiveMatch,Match
@@ -1569,6 +1575,7 @@ fld public final static java.util.Set<com.sun.source.tree.Tree$Kind> CLASS_TREE_
 meth public !varargs boolean hasError(com.sun.source.tree.Tree,java.lang.String[])
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public boolean isAccessible(com.sun.source.tree.Scope,javax.lang.model.element.Element,javax.lang.model.type.TypeMirror)
+ anno 0 java.lang.Deprecated()
 meth public boolean isAnnotation(com.sun.source.tree.ClassTree)
  anno 0 java.lang.Deprecated()
 meth public boolean isClass(com.sun.source.tree.ClassTree)

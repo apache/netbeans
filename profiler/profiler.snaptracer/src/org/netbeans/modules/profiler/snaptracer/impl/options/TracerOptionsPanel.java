@@ -564,7 +564,7 @@ final class TracerOptionsPanel extends JPanel {
     }
 
     private List<AbstractButton> getSelected(JPanel container) {
-        List<AbstractButton> selected = new ArrayList();
+        List<AbstractButton> selected = new ArrayList<>();
         for (Component c : container.getComponents())
             if (c instanceof AbstractButton && ((AbstractButton)c).isSelected())
                 selected.add((AbstractButton)c);

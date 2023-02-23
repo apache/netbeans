@@ -935,7 +935,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     }
 
     private File checkAvailability(String ver, VersionRange vr, InputOutput ioput) {
-        ArrayList<String> all = new ArrayList(MavenSettings.getDefault().getUserDefinedMavenRuntimes());
+        ArrayList<String> all = new ArrayList<>(MavenSettings.getDefault().getUserDefinedMavenRuntimes());
         //TODO this could be slow? but is it slower than downloading stuff?
         //is there a faster way? or can we somehow log the findings after first attempt?
         DefaultArtifactVersion candidate = null;

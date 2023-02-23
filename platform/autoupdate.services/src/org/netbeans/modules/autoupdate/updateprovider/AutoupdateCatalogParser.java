@@ -430,7 +430,7 @@ public class AutoupdateCatalogParser extends DefaultHandler {
                 // put license impl to map for future refilling
                 UpdateItemImpl impl = Trampoline.SPI.impl (m);
                 String licName = impl.getUpdateLicenseImpl ().getName ();
-                if (this.name2license.keySet ().contains (licName)) {
+                if (this.name2license.containsKey(licName)) {
                     impl.setUpdateLicenseImpl (this.name2license.get (licName));
                 } else {
                     this.name2license.put (impl.getUpdateLicenseImpl ().getName (), impl.getUpdateLicenseImpl ());

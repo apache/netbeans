@@ -56,7 +56,7 @@ public class StringEscapeUtils {
         }
 
         public static boolean isInBasicEscape(char c) {
-            return lookup.keySet().contains(c);
+            return lookup.containsKey(c);
         }
     }
 

@@ -950,7 +950,7 @@ public class WorkingCopy extends CompilationController {
         if (textChanges.isEmpty()) {
             return;
         }
-        List<Diff> orderedDiffs = new ArrayList(textChanges);
+        List<Diff> orderedDiffs = new ArrayList<>(textChanges);
         Collections.sort(orderedDiffs, new Comparator<Diff>() {
             @Override
             public int compare(Diff o1, Diff o2) {

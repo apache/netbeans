@@ -162,7 +162,7 @@ public class PropertiesTest extends TestCase {
         // First test that the properties can be collected:
         Properties p = Properties.getDefault();
         p = p.getProperties("listening");
-        WeakReference<? extends Properties> pRef = new WeakReference(p);
+        WeakReference<? extends Properties> pRef = new WeakReference<>(p);
         p = null;
         System.gc();
         NbTestCase.assertGC("The Properties are not collected.", pRef);

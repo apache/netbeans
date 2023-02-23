@@ -479,9 +479,10 @@ public class ProxyLookup extends Lookup {
         }
 
         /** Called when there is a change in the list of proxied lookups.
-         * @param added set of added lookups
-         * @param remove set of removed lookups
          * @param current array of current lookups
+         * @param oldData
+         * @param added set of added lookups
+         * @param removed set of removed lookups
          */
         final void lookupChange(
             ImmutableInternalData newData, Lookup[] current, ImmutableInternalData oldData,

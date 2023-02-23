@@ -154,6 +154,7 @@ public class VariablesModelFilter extends ViewModelSupport
                 FilterType.SCALARS,
                 FilterType.SUPERGLOBALS,
                 FilterType.RESOURCE,
+                FilterType.NULL,
         };
         myShowFilters.set( filters );
     }

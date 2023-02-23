@@ -214,7 +214,7 @@ public class DatabaseConnector {
                         col.setColumnSize(0);
                     }
 
-                    col.setNullAllowed((rset.get(Integer.valueOf(18))).toUpperCase().equals("YES")); //NOI18N
+                    col.setNullAllowed((rset.get(Integer.valueOf(18))).equalsIgnoreCase("YES")); //NOI18N
                     col.setDefaultValue(rset.get(Integer.valueOf(13)));
                     rset.clear();
                 } else {

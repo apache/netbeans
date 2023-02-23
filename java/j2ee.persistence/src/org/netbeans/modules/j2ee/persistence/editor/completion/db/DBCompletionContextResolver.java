@@ -132,7 +132,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                     } else {
                         //Database connection not established ->
                         //put 'connect' CC item
-                        result = new ArrayList();
+                        result = new ArrayList<>();
                         result.add(new JPACompletionItem.NoConnectionElementItem(dbconn));
                         return result;
                     }

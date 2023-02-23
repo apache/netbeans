@@ -221,7 +221,7 @@ public class SvnClientInvocationHandler implements InvocationHandler {
             } catch (SSLKeyException ex) {
                 if(ex.getCause() instanceof InvalidKeyException) {
                     InvalidKeyException ike = (InvalidKeyException) ex.getCause();
-                    if(ike.getMessage().toLowerCase().equals("illegal key size or default parameters")) { // NOI18N
+                    if(ike.getMessage().equalsIgnoreCase("illegal key size or default parameters")) { // NOI18N
                         SvnClientExceptionHandler.handleInvalidKeyException(ike);
                     }
                     return null; 

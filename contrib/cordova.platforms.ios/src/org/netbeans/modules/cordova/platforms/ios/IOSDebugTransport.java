@@ -350,7 +350,7 @@ public abstract class IOSDebugTransport extends MobileDebugTransport implements 
 
     private class Tabs {
 
-        private HashMap<String, TabDescriptor> map = new HashMap();
+        private HashMap<String, TabDescriptor> map = new HashMap<>();
         private Object monitor = new Object();
         private boolean inited = false;
 
@@ -365,7 +365,7 @@ public abstract class IOSDebugTransport extends MobileDebugTransport implements 
             }
             boolean wasEmpty = map.isEmpty();
             boolean connectionUrlFound = false;
-            HashMap<String, TabDescriptor> currentMap = new HashMap();
+            HashMap<String, TabDescriptor> currentMap = new HashMap<>();
             for (String s : listing.allKeys()) {
                 NSDictionary o = (NSDictionary) listing.objectForKey(s);
                 NSObject identifier = o.objectForKey("WIRPageIdentifierKey"); // NOI18N

@@ -186,7 +186,7 @@ public final class JBossDatasourceManager implements DatasourceManager {
                 continue;
             JBossDatasource ds = (JBossDatasource)o;
             String jndiName = JBossDatasource.getRawName(ds.getJndiName());
-            if (ddsMap.keySet().contains(jndiName)) { // conflicting ds found
+            if (ddsMap.containsKey(jndiName)) { // conflicting ds found
                 if (!ddsMap.get(jndiName).equals(ds)) { // found ds is not equal
                     conflictDS.add(ddsMap.get(jndiName)); // NOI18N
                 }
@@ -217,7 +217,7 @@ public final class JBossDatasourceManager implements DatasourceManager {
         LocalTxDatasource ltxds[] = deployedDSGraph.getLocalTxDatasource();
         for (int i = 0; i < ltxds.length; i++) {
             String jndiName = ltxds[i].getJndiName();
-            if (newDS.keySet().contains(jndiName)) //conflict, we must remove it from graph
+            if (newDS.containsKey(jndiName)) //conflict, we must remove it from graph
                 deployedDSGraph.removeLocalTxDatasource(ltxds[i]);
         }
         

@@ -256,7 +256,7 @@ public abstract class OptionImpl implements Cloneable {
     
     /** Consistency test, based on the list of leaf options present in the
      * command line.
-     * @param present set of leaf options present in the command line
+     * @param presentOptions set of leaf options present in the command line
      * @return Boolean - TRUE option is there, FALSE option is not there, null everything is broken
      */
     public abstract Appearance checkConsistent(Set<OptionImpl> presentOptions);

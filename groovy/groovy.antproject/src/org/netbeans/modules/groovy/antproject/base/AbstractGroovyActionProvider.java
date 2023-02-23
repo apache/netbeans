@@ -116,7 +116,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
 
     @Override
     public boolean isActionEnabled(String command, Lookup context) {
-        if (supportedActions.keySet().contains(command)) {
+        if (supportedActions.containsKey(command)) {
             if (COMMAND_TEST.equals(command)) {
                 return true;
             }
@@ -178,7 +178,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
     }
 
     private String[] getTargetNames(String command, Lookup context, Properties p) {
-        if (supportedActions.keySet().contains(command)) {
+        if (supportedActions.containsKey(command)) {
             if (command.equals(COMMAND_TEST)) {
                 return setupTestAll(p);
             }

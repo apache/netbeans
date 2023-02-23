@@ -389,7 +389,7 @@ public class NbMainSequence extends WizardSequence {
         }        
 
         private ExecutionResults runIDE(List<String> commandsBase, File nbInstallLocation, boolean checkForUpdate, CompositeProgress compositeProgress) throws IOException {
-            List<String> commands = new ArrayList(commandsBase);
+            List<String> commands = new ArrayList<>(commandsBase);
 
             String title = null;
             if (checkForUpdate) {

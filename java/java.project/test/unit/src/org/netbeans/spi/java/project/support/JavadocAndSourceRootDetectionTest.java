@@ -135,8 +135,8 @@ public class JavadocAndSourceRootDetectionTest extends NbTestCase {
         TestFileUtils.writeFile(root2,"org/me/Test2.java","package org.me; class Test2{}");
         TestFileUtils.writeFile(root3,"org/me/Test3.java","package org.me; class Test3{}");
         TestFileUtils.writeFile(root4,"org/me/Test4.java","package org.me; class Test4{}");
-        final List<FileObject> result = new ArrayList(JavadocAndSourceRootDetection.findSourceRoots(wd, null));
-        final List<FileObject> expected = new ArrayList(Arrays.asList(
+        final List<FileObject> result = new ArrayList<>(JavadocAndSourceRootDetection.findSourceRoots(wd, null));
+        final List<FileObject> expected = new ArrayList<>(Arrays.asList(
                 root1,
                 root2,
                 root3,

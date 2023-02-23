@@ -1491,7 +1491,7 @@ public class ProfilerTreeTable extends ProfilerTable {
         
         public void setSelectionPaths(TreePath[] paths) {
             if (changingModel && paths != null) {
-                List<TreePath> similarPaths = new ArrayList();
+                List<TreePath> similarPaths = new ArrayList<>();
                 for (int i = 0; i < paths.length; i++) {
                     TreePath similarPath = getSimilarPath(paths[i]);
                     if (similarPath != null) similarPaths.add(similarPath);

@@ -1152,7 +1152,7 @@ public class Reformatter implements ReformatTask {
                                 newline();
                             else
                                 space();
-                        } else if (sp.getStartPosition(root, mods) != sp.getStartPosition(root, node.getType())) {
+                        } else {
                             space();
                         }
                     } else if (afterAnnotation) {

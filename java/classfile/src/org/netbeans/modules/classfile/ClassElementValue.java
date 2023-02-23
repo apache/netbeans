@@ -39,6 +39,7 @@ public final class ClassElementValue extends ElementValue {
 
     /**
      * Returns the value of this component, as a class constant pool entry.
+     * @return classname of this component
      */
     public final ClassName getClassName() {
 	return ClassName.getClassName(name);

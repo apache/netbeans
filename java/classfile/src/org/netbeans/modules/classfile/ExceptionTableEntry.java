@@ -70,6 +70,8 @@ public final class ExceptionTableEntry {
     /**
      * Returns the beginning offset into the method's bytecodes of this
      * exception handler.
+     * @return beginning offset of the exception handling code into
+     * the method bytecode
      */
     public final int getStartPC() {
         return startPC;
@@ -79,6 +81,8 @@ public final class ExceptionTableEntry {
      * Returns the ending offset into the method's bytecodes of this
      * exception handler, or the length of the bytecode array if the
      * handler supports the method's last bytecodes (JVM 4.7.3).
+     * @return ending offset of the exception handling code into
+     * the method bytecode
      */
     public final int getEndPC() {
         return endPC;
@@ -87,6 +91,8 @@ public final class ExceptionTableEntry {
     /**
      * Returns the starting offset into the method's bytecodes of the 
      * exception handling code.
+     * @return starting offset of the exception handling code into
+     * the method bytecode
      */
     public final int getHandlerPC() {
         return handlerPC;
@@ -96,6 +102,7 @@ public final class ExceptionTableEntry {
      * Returns the type of exception handler, or <code>null</code>
      * if this handler catches all exceptions, such as an exception
      * handler for a "<code>finally</code>" clause (JVM 4.7.3).
+     * @return type of exception handler
      */
     public final CPClassInfo getCatchType() {
         return catchType;

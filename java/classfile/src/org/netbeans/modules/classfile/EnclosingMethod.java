@@ -50,6 +50,7 @@ public final class EnclosingMethod {
 
     /**
      * Returns the constant pool entry for the enclosing class.
+     * @return the constant pool entry for the enclosing class
      */
     public CPClassInfo getClassInfo() {
 	return classInfo;
@@ -60,6 +61,8 @@ public final class EnclosingMethod {
      * the inner class is defined within.  If false, then the inner
      * class was defined in an init block (or statement) in the class,
      * outside of any method or constructor bodies.
+     * @return true if the enclosing method attribute describes a method the inner class 
+     * is defined within
      */
     public boolean hasMethod() {
 	return methodInfo != null;
@@ -73,6 +76,7 @@ public final class EnclosingMethod {
      * Note: a CPNameAndTypeInfo instance is returned because the method
      * is external to the enclosed class.  Do not attempt to cast it to a
      * CPMethodInfo type, which is an internal method structure.
+     * @return the constant pool entry for the enclosing method
      */
     public CPNameAndTypeInfo getMethodInfo() {
 	return methodInfo;

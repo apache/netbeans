@@ -63,12 +63,12 @@ public final class ClassName implements Comparable<ClassName>, Comparator<ClassN
      * replaced with dollar signs ('$').  Array classes have one
      * or more left brackets ('[') prepending the class type.
      * For example:
-     * <PRE><CODE>
+     * <pre>
      *   java.lang.String         java/lang/String
      *   java.util.HashMap.Entry  java/util/HashMap$Entry
      *   java.lang.Integer[]      [java/lang/Integer
      *   java.awt.Point[][]       [[java/awt/Point
-     * </CODE><PRE>
+     * </pre>
      * <P>
      * This method also accepts type strings which contain with
      * 'L' and end with ';' characters.  This format is used

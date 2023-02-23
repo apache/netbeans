@@ -105,6 +105,7 @@ public abstract class StackMapFrame {
     /**
      * Returns the frame_type for this frame.  As documented in the JVM specification,
      * different tag ranges define different frame_type values.
+     * @return frame_type for the frame
      */
     public final int getFrameType() {
         return frameType;
@@ -113,7 +114,7 @@ public abstract class StackMapFrame {
     /**
      * Returns the <code>offset_delta</code> for this frame type.  From the 
      * Java Virtual Machine Specification, section 4.8.4:
-     * <br/><br/>
+     * <br>
      * "Each stack_map_frame structure specifies the type state at a particular 
      * byte code offset. Each frame type specifies (explicitly or implicitly) a 
      * value, <code>offset_delta</code>, that is used to calulate the actual byte 
@@ -121,6 +122,7 @@ public abstract class StackMapFrame {
      * applies is given by adding <code>1 + offset_delta</code> to the offset of 
      * the previous frame, unless the previous frame is the initial frame of
      * the method, in which case the byte code offset is <code>offset_delta</code>."
+     * @return offset_delta for this frame type
      */
     public abstract int getOffsetDelta();
         
@@ -137,6 +139,7 @@ public abstract class StackMapFrame {
         /**
          * The <code>offset_delta</code> value for the frame is the value 
          * of the tag item, frame_type.
+         * @return offset_delta
          */
         public int getOffsetDelta() {
             return frameType;
@@ -158,6 +161,7 @@ public abstract class StackMapFrame {
         /**
          * The <code>offset_delta</code> value for the frame is the value 
          * <code>(frame_type - 64)</code>.
+         * @return offset_delta
          */
         public int getOffsetDelta() {
             return frameType - 64;
@@ -166,6 +170,7 @@ public abstract class StackMapFrame {
         /**
          * Returns the verification type info for the single stack item
          * referenced by this frame.
+         * @return verification type info
          */
         public VerificationTypeInfo getVerificationTypeInfo() {
             return typeInfo;
@@ -188,6 +193,7 @@ public abstract class StackMapFrame {
         
         /**
          * Returns the <code>offset_delta</code> for this frame type.
+         * @return offset_delta
          */
         public int getOffsetDelta() {
             return offset;
@@ -196,6 +202,7 @@ public abstract class StackMapFrame {
         /**
          * Returns the verification type info for the single stack item for 
          * this frame.
+         * @return verification type info
          */
         public VerificationTypeInfo getVerificationTypeInfo() {
             return typeInfo;
@@ -217,6 +224,7 @@ public abstract class StackMapFrame {
         
         /**
          * Returns the <code>offset_delta</code> for this frame type.
+         * @return offset_delta
          */
         public int getOffsetDelta() {
             return offset;
@@ -237,6 +245,7 @@ public abstract class StackMapFrame {
         
         /**
          * Returns the <code>offset_delta</code> for this frame type.
+         * @return offset_delta
          */
         public int getOffsetDelta() {
             return offset;
@@ -260,6 +269,7 @@ public abstract class StackMapFrame {
         
         /**
          * Returns the <code>offset_delta</code> for this frame type.
+         * @return offset_delta
          */
         public int getOffsetDelta() {
             return offset;
@@ -268,6 +278,7 @@ public abstract class StackMapFrame {
         /**
          * Returns the verification type info for this frame's set of
          * locals.
+         * @return verification type info
          */
         public VerificationTypeInfo[] getLocals() {
             return locals.clone();
@@ -292,6 +303,7 @@ public abstract class StackMapFrame {
         
         /**
          * Returns the <code>offset_delta</code> for this frame type.
+         * @return offset_delta
          */
         public int getOffsetDelta() {
             return offset;
@@ -300,6 +312,7 @@ public abstract class StackMapFrame {
         /**
          * Returns the verification type info for this frame's set of
          * locals.
+         * @return verification type info
          */
         public VerificationTypeInfo[] getLocals() {
             return locals.clone();
@@ -308,6 +321,7 @@ public abstract class StackMapFrame {
         /**
          * Returns the verification type info for this frame's set of
          * stack items.
+         * @return verification type info
          */
         public VerificationTypeInfo[] getStackItems() {
             return stackItems.clone();

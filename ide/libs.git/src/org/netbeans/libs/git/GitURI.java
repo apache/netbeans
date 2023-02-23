@@ -131,6 +131,7 @@ public final class GitURI {
 
     /**
      * Returns <code>true</code> if this URI references a repository on another system.
+     * @return true if this URI references a repository on another system.
      */
     public boolean isRemote() {
         return uri.isRemote();
@@ -138,6 +139,7 @@ public final class GitURI {
 
     /**
      * Returns the username part of the URI's credentials part.
+     * @return username part of the URI's credentials part
      */
     public String getUser() {
         return uri.getUser();
@@ -145,6 +147,7 @@ public final class GitURI {
 
     /**
      * Returns the URI's scheme as a string.
+     * @return URI scheme as a string
      */
     public String getScheme() {
         return uri.getScheme();
@@ -152,6 +155,7 @@ public final class GitURI {
 
     /**
      * Returns the port number specified by the URI.
+     * @return the port number from the URI
      */
     public int getPort() {
         return uri.getPort();
@@ -159,6 +163,7 @@ public final class GitURI {
 
     /**
      * Returns the path on the host to the resource denoted by the URI.
+     * @return the path from URI
      */
     public String getPath() {
         return uri.getPath();
@@ -166,6 +171,7 @@ public final class GitURI {
 
     /**
      * Returns the password part of the URI's credentials part.
+     * @return the password part of the URI's credentials part.
      */
     public String getPass() {
         return uri.getPass();
@@ -173,6 +179,7 @@ public final class GitURI {
 
     /**
      * Returns the URI's host.
+     * @return the host from the URI
      */
     public String getHost() {
         return uri.getHost();

@@ -58,7 +58,7 @@
         <compatibility addition="yes"/>
         <description>
             <p>
-                Add support for JUnit <a href="http://junit.sourceforge.net/javadoc/org/junit/Ignore.html">@Ignore</a> annotation on NbTestCase test case extension.
+                Add support for JUnit <a href="https://junit.org/junit4/javadoc/latest/org/junit/Ignore.html">@Ignore</a> annotation on NbTestCase test case extension.
             </p>
         </description>
         <class package="org.netbeans.junit" name="NbTestCase"/>
@@ -389,7 +389,7 @@
                 Methods <code>enableInstances</code> and 
                 <code>assertInstances</code> added to <code>Log</code> class to
                 simplify writing memory leaks tests integrated with
-                <a href="http://wiki.netbeans.org/wiki/view/FitnessViaTimersCounters">timers/counters</a> infastructure.
+                <a href="https://netbeans.apache.org/wiki/FitnessViaTimersCounter">timers/counters</a> infastructure.
             </p>
         </description>
         <class package="org.netbeans.junit" name="Log"/>

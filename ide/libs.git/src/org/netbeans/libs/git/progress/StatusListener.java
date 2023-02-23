@@ -36,6 +36,7 @@ import org.netbeans.libs.git.GitStatus;
 public interface StatusListener extends NotificationListener {
     /**
      * Invoked when a file is processed and its status is identified.
+     * @param status git status
      */
     public void notifyStatus (GitStatus status);
 }

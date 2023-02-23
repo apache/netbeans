@@ -6367,6 +6367,42 @@ public class FormatingTest extends NbTestCase {
                 + "    }\n"
                 + "}\n";
         reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try ( var  out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (var out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try ( final  var  out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (final var out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
     }
 
     public void testSynchronizedBlockAfterFor() throws Exception {

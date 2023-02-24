@@ -85,7 +85,10 @@ public class BridgingJpaSupportImpl implements JpaSupportImplementation {
         candidates.put(ProviderUtil.HIBERNATE_PROVIDER2_2, "hibernatePersistenceProviderIsDefault2.2"); // NOI18N
         candidates.put(ProviderUtil.TOPLINK_PROVIDER1_0, "toplinkPersistenceProviderIsDefault"); // NOI18N
         candidates.put(ProviderUtil.KODO_PROVIDER, "kodoPersistenceProviderIsDefault"); // NOI18N
-        candidates.put(ProviderUtil.DATANUCLEUS_PROVIDER, "dataNucleusPersistenceProviderIsDefault"); // NOI18N
+        candidates.put(ProviderUtil.DATANUCLEUS_PROVIDER2_2, "dataNucleusPersistenceProviderIsDefault2.2"); // NOI18N
+        candidates.put(ProviderUtil.DATANUCLEUS_PROVIDER2_1, "dataNucleusPersistenceProviderIsDefault2.1"); // NOI18N
+        candidates.put(ProviderUtil.DATANUCLEUS_PROVIDER2_0, "dataNucleusPersistenceProviderIsDefault2.0"); // NOI18N
+        candidates.put(ProviderUtil.DATANUCLEUS_PROVIDER1_0, "dataNucleusPersistenceProviderIsDefault1.0"); // NOI18N
         candidates.put(ProviderUtil.OPENJPA_PROVIDER1_0, "openJpaPersistenceProviderIsDefault1.0"); // NOI18N
         candidates.put(ProviderUtil.OPENJPA_PROVIDER2_0, "openJpaPersistenceProviderIsDefault2.0"); // NOI18N
         candidates.put(ProviderUtil.OPENJPA_PROVIDER2_1, "openJpaPersistenceProviderIsDefault2.1"); // NOI18N

@@ -74,7 +74,10 @@ public class ProviderUtil {
     public static final Provider ECLIPSELINK_PROVIDER2_1 = new EclipseLinkProvider(Persistence.VERSION_2_1);
     public static final Provider ECLIPSELINK_PROVIDER2_2 = new EclipseLinkProvider(Persistence.VERSION_2_2);
     public static final Provider KODO_PROVIDER = new KodoProvider();
-    public static final Provider DATANUCLEUS_PROVIDER = new DataNucleusProvider();
+    public static final Provider DATANUCLEUS_PROVIDER1_0 = new DataNucleusProvider(Persistence.VERSION_1_0);
+    public static final Provider DATANUCLEUS_PROVIDER2_0 = new DataNucleusProvider(Persistence.VERSION_2_0);
+    public static final Provider DATANUCLEUS_PROVIDER2_1 = new DataNucleusProvider(Persistence.VERSION_2_1);
+    public static final Provider DATANUCLEUS_PROVIDER2_2 = new DataNucleusProvider(Persistence.VERSION_2_2);
     public static final Provider OPENJPA_PROVIDER1_0 = new OpenJPAProvider(Persistence.VERSION_1_0);
     public static final Provider OPENJPA_PROVIDER2_0 = new OpenJPAProvider(Persistence.VERSION_2_0);
     public static final Provider OPENJPA_PROVIDER2_1 = new OpenJPAProvider(Persistence.VERSION_2_1);

@@ -47,7 +47,7 @@ class DataNucleusProvider extends Provider{
 
     @Override
     public String getDisplayName() {
-        return NbBundle.getMessage(DataNucleusProvider.class, "LBL_DataNucleus"); //NOI18N
+        return NbBundle.getMessage(DataNucleusProvider.class, "LBL_DataNucleus") + (getVersion()!=null ? " (JPA "+getVersion()+")" : ""); //NOI18N
     }
 
     @Override

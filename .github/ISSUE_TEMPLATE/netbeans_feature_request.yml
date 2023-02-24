@@ -62,12 +62,10 @@ body:
 #      value: "Thank you for completing our form!"
   - type: markdown
     attributes:
-      value: "###Code of Conduct
-        
-        
-        **By submitting this form you agree to follow the Apache Software Foundation's
-         [Code of Conduct](https://www.apache.org/foundation/policies/conduct.html)**.
-         The Code of Conduct helps create a safe space for everyone.
+      value: "**By submitting this form you agree to follow the Apache Software Foundation's
+        [Code of Conduct](https://www.apache.org/foundation/policies/conduct.html)**.
+         
+        The Code of Conduct helps create a safe space for everyone.
         
         
         Thank you for completing our form!"

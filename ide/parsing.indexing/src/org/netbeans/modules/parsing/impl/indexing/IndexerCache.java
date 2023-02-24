@@ -264,6 +264,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
         "text/x-orm2.1", //NOI18N
         "text/x-orm2.2", //NOI18N
         "text/x-orm3.0", //NOI18N
+        "text/x-orm3.1", //NOI18N
         "application/xhtml+xml", //NOI18N
         "text/x-maven-pom+xml", //NOI18N
         "text/x-maven-profile+xml", //NOI18N

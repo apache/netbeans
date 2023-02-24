@@ -979,31 +979,27 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
     class Decorator implements TreeItemDecorator<Visualizer> {
         private provider : CustomizableTreeDataProvider<Visualizer>;
-        private serverPreferred : Thenable<any>;
         private setCommand : vscode.Disposable;
 
         constructor(provider : CustomizableTreeDataProvider<Visualizer>, client : NbLanguageClient) {
             this.provider = provider;
-            this.serverPreferred = vscode.commands.executeCommand('java.db.preferred.connection');
             this.setCommand = vscode.commands.registerCommand('java.local.db.set.preferred.connection', (n) => this.setPreferred(n));
         }
 
         async decorateTreeItem(vis : Visualizer, item : vscode.TreeItem) : Promise<vscode.TreeItem> {
-            return new Promise((resolve, reject) => {
-                this.serverPreferred.then((id) => {
-                    if (id == vis.id) {
-                        let s : string = typeof item.label == 'string' ? item.label : item.label?.label || '';
-                        const high : [number, number][] = [[0, s.length]];
-                        item.label = { label : s, highlights: high };
-                    }
-                    resolve(item);
-                });
-            })
+            if (!(item.contextValue && item.contextValue.match(/class:ddl.DBConnection/))) {
+                return item;
+            }
+            return vscode.commands.executeCommand('java.db.preferred.connection').then((id) => {
+                if (id == vis.id) {
+                    item.description = '(default)';
+                }
+                return item;
+            });
         }
 
         setPreferred(...args : any[]) {
             const id : number = args[0]?.id || -1;
-            this.serverPreferred = new  Promise((resolve, reject) => resolve(id));
             vscode.commands.executeCommand('nbls:Database:netbeans.db.explorer.action.makepreferred', ...args);
             // refresh all
             this.provider.fireItemChange();

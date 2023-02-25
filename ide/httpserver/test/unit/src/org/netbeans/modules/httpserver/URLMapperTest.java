@@ -22,13 +22,11 @@ package org.netbeans.modules.httpserver;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashSet;
 import junit.framework.TestSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.Repository;
 import org.openide.filesystems.URLMapper;
 
 /** Test for HttpServerURLMapper.
@@ -106,6 +104,33 @@ public class URLMapperTest extends NbTestCase {
             }
         }
         checkFileObjectURLMapping(fo, url, getMapper());
+    }
+
+    public void testFileWithRelativeUrl() throws Exception {
+        FileObject baseFo;
+        FileObject targetFo;
+        URL resolvedUrl;
+        URLMapper mapper = getMapper();
+
+        baseFo = getTestFSRoot().getFileObject("org/netbeans/test/httpserver/dir with spaces/");
+        targetFo = getTestFSRoot().getFileObject("org/netbeans/test/httpserver/Page.html");
+        resolvedUrl = mapper.getURL(baseFo,  URLMapper.NETWORK).toURI().resolve("../Page.html").toURL();
+        checkFileObjectURLMapping(targetFo, resolvedUrl, getMapper());
+
+        baseFo = getTestFSRoot().getFileObject("org/netbeans/test/httpserver/dir with spaces/");
+        targetFo = getTestFSRoot().getFileObject("org/netbeans/test/httpserver/dir with spaces/file with spaces.txt");
+        resolvedUrl = mapper.getURL(baseFo,  URLMapper.NETWORK).toURI().resolve("./file%20with%20spaces.txt").toURL();
+        checkFileObjectURLMapping(targetFo, resolvedUrl, getMapper());
+
+        baseFo = getTestFSRoot().getFileObject("org/netbeans/test/httpserver/Page.html");
+        targetFo = getTestFSRoot().getFileObject("org/netbeans/test/httpserver/dir with spaces/file with spaces.txt");
+        resolvedUrl = mapper.getURL(baseFo,  URLMapper.NETWORK).toURI().resolve("dir%20with%20spaces/file%20with%20spaces.txt").toURL();
+        checkFileObjectURLMapping(targetFo, resolvedUrl, getMapper());
+
+        baseFo = getTestFSRoot().getFileObject("org/netbeans/test/httpserver/dir with spaces/file with spaces.txt");
+        targetFo = getTestFSRoot().getFileObject("org/netbeans/test/httpserver/dir with spaces/file with spaces.txt");
+        resolvedUrl = mapper.getURL(baseFo,  URLMapper.NETWORK).toURI().resolve("../dir%20with%20spaces/file%20with%20spaces.txt").toURL();
+        checkFileObjectURLMapping(targetFo, resolvedUrl, getMapper());
     }
 
     /**

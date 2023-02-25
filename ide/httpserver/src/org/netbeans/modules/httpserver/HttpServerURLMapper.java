@@ -33,8 +33,16 @@ import org.openide.filesystems.URLMapper;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
-/** Implementation of a URLMapper which creates http URLs for fileobjects in the IDE.
- * Directs the requests for URLs to WrapperServlet.
+/**
+ * Implementation of a URLMapper which creates http URLs for fileobjects in the
+ * IDE.
+ * <p>Directs the requests for URLs to WrapperServlet.</p>
+ *
+ * <p>This URL Mapper encodes an URL, so that it can be accessed using a webserver
+ * the IDE provides. The intention is, that relative paths can be resolved, so
+ * the URL is encoded in a way, that the path structure is retained.</p>
+ *
+ * @see #encodeURL(java.net.URL) 
  *
  * @author Petr Jiricka, David Konecny
  */
@@ -82,7 +90,12 @@ public class HttpServerURLMapper extends URLMapper {
                 newPath.append(tok);
             } else {
                 try {
-                    newPath.append(URLDecoder.decode(tok, "UTF-8")); // NOI18N
+                    String decodedToken = URLDecoder.decode(tok, "UTF-8"); // NOI18N
+                    if(decodedToken.startsWith("/") && decodedToken.endsWith("/")) { // NOI18N
+                        newPath.append(decodedToken, 1, decodedToken.length() - 1);
+                    } else {
+                        newPath.append(tok);
+                    }
                 } catch (UnsupportedEncodingException e) {
                     assert false : e;
                     return null;
@@ -101,7 +114,7 @@ public class HttpServerURLMapper extends URLMapper {
 
     /**
      * Get a good URL for this file object which works according to type:
-     * -inside this VM
+     * - inside this VM
      * - inside this machine
      * - from networked machines
      *
@@ -143,6 +156,22 @@ public class HttpServerURLMapper extends URLMapper {
         }
     }
 
+    /**
+     * {@code encodeUrl} encodes the supplied URL, so that it can be appended
+     * to another URL as a path.
+     *
+     * <p>The supplied URL is encoded to its external form and then split at the
+     * slashed (/). Each resulting component is checked if it is identical to
+     * its URL escaped form. If not the URL encoded form is appended.</p>
+     *
+     * <p>To make it possible to detect the encoded parts, slashes are wrapped
+     * around the individual components before the encoding. The assumption is,
+     * that in normal operation encoded slashes are not part of the URL and
+     * even then not as pairs at front and end.</p>
+     *
+     * @param u URL to be encoded
+     * @return encoded form
+     */
     private String encodeURL(URL u) {
         String orig = u.toExternalForm();
         StringTokenizer slashTok = new StringTokenizer(orig, "/", true); // NOI18N
@@ -153,7 +182,11 @@ public class HttpServerURLMapper extends URLMapper {
                 path.append(tok);
             } else {
                 try {
-                    path.append(URLEncoder.encode(tok, "UTF-8")); // NOI18N
+                    if(! URLEncoder.encode(tok, "UTF-8").equals(tok)) {  // NOI18N;
+                        path.append(URLEncoder.encode("/" + tok + "/", "UTF-8"));  // NOI18N;
+                    } else {
+                        path.append(tok);
+                    }
                 } catch (UnsupportedEncodingException e) {
                     assert false : e;
                     return null;

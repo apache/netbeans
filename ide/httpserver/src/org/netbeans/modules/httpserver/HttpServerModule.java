@@ -178,6 +178,9 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
         tomcat.setPort(httpserverSettings().getPort());
         tomcat.getServer().setUtilityThreads(1);
         tomcat.getConnector().setXpoweredBy(false);
+        // The WrapperServlet expects to be able to use encoded slashes as
+        // markers, so they need to be passed through
+        tomcat.getConnector().setEncodedSolidusHandling("PASSTHROUGH");
 	TaskQueue tq = new TaskQueue(10);
 	ThreadPoolExecutor tf  = new ThreadPoolExecutor(0, 3, 60, TimeUnit.SECONDS, tq);
 	tomcat.getConnector().getProtocolHandler().setExecutor(tf);

@@ -22,7 +22,6 @@ package org.netbeans.modules.httpserver;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
@@ -66,9 +65,11 @@ public class WrapperServlet extends HttpServlet {
     throws ServletException, java.io.IOException {
         ServletOutputStream out = response.getOutputStream ();
         try {
-            FileObject file = URLMapper.findFileObject(getRequestURL(request));
+            FileObject file = URLMapper.findFileObject(new URL(request.getRequestURL().toString()));
             if (file == null) {
-                throw new IOException();
+                LOG.log(Level.FINE, "File not found: " + request.getRequestURL().toString());
+                response.sendError (HttpServletResponse.SC_NOT_FOUND);
+                return;
             }
             URL internal = URLMapper.findURL(file, URLMapper.INTERNAL);
             URLConnection conn = internal.openConnection();
@@ -95,7 +96,7 @@ public class WrapperServlet extends HttpServlet {
 
         }
         catch (MalformedURLException | IllegalArgumentException ex) {
-            LOG.log(Level.FINE, "Failed to parse target URL from request", ex);
+            LOG.log(Level.FINE, "Failed to parse target URL from request: " + request.getRequestURL().toString(), ex);
             try {
                 response.sendError (HttpServletResponse.SC_NOT_FOUND,
                                    NbBundle.getMessage(WrapperServlet.class, "MSG_HTTP_NOT_FOUND"));
@@ -103,20 +104,12 @@ public class WrapperServlet extends HttpServlet {
             catch (IOException ex2) {}
         }
         catch (IOException ex) {
+            LOG.log(Level.FINE, "Failed read data for request: " + request.getRequestURL().toString(), ex);
             try {
                 response.sendError (HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
             catch (IOException ex2) {}
         }
-    }
-
-    private URL getRequestURL(HttpServletRequest request) throws MalformedURLException, IllegalArgumentException {
-        String pi = request.getPathInfo();
-        if (pi.startsWith("/")) { // NOI18N
-            pi = pi.substring(1);
-        }
-
-        return URI.create(pi).toURL();
     }
 
 }

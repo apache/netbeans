@@ -19,24 +19,31 @@
 package org.netbeans.modules.rust.grammar.antlr4;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.rust.grammar.RustTokenID;
 import org.netbeans.modules.rust.grammar.antlr4.RustParser.CrateContext;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  * Rust Lexer/Parser utilities.
  */
-final class RustTestUtils {
+public final class RustTestUtils {
 
     private static File getTestFile(File dataDir, String name) throws FileNotFoundException {
         File file = new File(dataDir, name);
@@ -112,6 +119,37 @@ final class RustTestUtils {
                 crate.accept(visitor);
             }
             return crate;
+        }
+    }
+
+    public static FileObject getFileObject(File dataDir, String fileName) throws IOException {
+        File testFile = new File(dataDir, fileName);
+        return FileUtil.toFileObject(testFile);
+    }
+
+    public static String getErrorMessages(Collection<DefaultError> errors) {
+        return errors.stream().map((e) -> {
+            return String.format("%d:%d:%s%n", 
+                    e.getStartPosition(), 
+                    e.getEndPosition(), 
+                    e.getDescription());
+        }).collect(Collectors.joining());
+    }
+
+    public static String getFileText(File dataDir, String fileName) throws IOException {
+        File testFile = new File(dataDir, fileName);
+        // When NB is on JDK 11 let's use return Files.readString(testFile.toPath());
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream(32 * 1024); //
+                 FileInputStream input = new FileInputStream(testFile)) {
+            byte [] buffer = new byte[16*1024];
+            do {
+                int n = input.read(buffer);
+                if (n < 0) {
+                    byte [] bytes = output.toByteArray();
+                    return new String(bytes, StandardCharsets.UTF_8);
+                }
+                output.write(buffer, 0, n);
+            } while(true);
         }
     }
 

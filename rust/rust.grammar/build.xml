@@ -63,6 +63,8 @@
             <arg value="-Xexact-output-dir"/>
             <arg value="-package" />
             <arg value="org.netbeans.modules.rust.grammar.antlr4" />
+            <arg value="-no-listener"/>
+            <arg value="-visitor"/>
             <arg value="-o"/>
             <arg value="${antlr.apt.output.dir}"/>
             <arg value="${antlr.apt.grammar.dir}/RustParser.g4"/>

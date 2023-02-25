@@ -30,11 +30,11 @@ import org.netbeans.modules.parsing.spi.SourceModificationEvent;
  */
 public class RustLanguageParser extends Parser {
 
-    private Result lastResult;
+    private transient RustLanguageParserResult lastResult;
 
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
-        lastResult = new RustLanguageParserResult(snapshot).get();
+        lastResult = new RustLanguageParserResult(snapshot).parse();
     }
 
     @Override
@@ -50,6 +50,13 @@ public class RustLanguageParser extends Parser {
     @Override
     public void removeChangeListener(ChangeListener changeListener) {
         // Empty
+    }
+
+    @Override
+    public void cancel(CancelReason reason, SourceModificationEvent event) {
+        if (lastResult != null) {
+            lastResult.cancel();
+        }
     }
     
 }

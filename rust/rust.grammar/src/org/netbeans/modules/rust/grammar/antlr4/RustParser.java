@@ -294,12 +294,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_crate; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterCrate(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitCrate(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitCrate(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -370,12 +367,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroInvocation; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroInvocation(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroInvocation(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroInvocation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -423,12 +417,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_delimTokenTree; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterDelimTokenTree(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitDelimTokenTree(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitDelimTokenTree(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -540,12 +531,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tokenTree; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTokenTree(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTokenTree(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTokenTree(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -735,12 +723,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tokenTreeToken; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTokenTreeToken(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTokenTreeToken(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTokenTreeToken(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -823,12 +808,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroInvocationSemi; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroInvocationSemi(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroInvocationSemi(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroInvocationSemi(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -953,12 +935,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroRulesDefinition; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroRulesDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroRulesDefinition(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroRulesDefinition(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1006,12 +985,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroRulesDef; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroRulesDef(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroRulesDef(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroRulesDef(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1091,12 +1067,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroRules; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroRules(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroRules(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroRules(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1165,12 +1138,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroRule; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroRule(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroRule(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroRule(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1218,12 +1188,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroMatcher; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroMatcher(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroMatcher(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroMatcher(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1358,12 +1325,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroMatch; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroMatch(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroMatch(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroMatch(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1508,12 +1472,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroMatchToken; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroMatchToken(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroMatchToken(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroMatchToken(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1575,12 +1536,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroFragSpec; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroFragSpec(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroFragSpec(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroFragSpec(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1622,12 +1580,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroRepSep; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroRepSep(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroRepSep(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroRepSep(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1689,12 +1644,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroRepOp; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroRepOp(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroRepOp(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroRepOp(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1738,12 +1690,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroTranscriber; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroTranscriber(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroTranscriber(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroTranscriber(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1787,12 +1736,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_item; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1918,12 +1864,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_visItem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterVisItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitVisItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitVisItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2052,12 +1995,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroItem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2122,12 +2062,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_module; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterModule(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitModule(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitModule(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2232,12 +2169,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_externCrate; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterExternCrate(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitExternCrate(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitExternCrate(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2290,12 +2224,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_crateRef; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterCrateRef(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitCrateRef(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitCrateRef(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2349,12 +2280,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_asClause; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterAsClause(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitAsClause(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitAsClause(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2411,12 +2339,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_useDeclaration; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterUseDeclaration(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitUseDeclaration(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitUseDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2474,12 +2399,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_useTree; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterUseTree(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitUseTree(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitUseTree(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2657,12 +2579,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_function_; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterFunction_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitFunction_(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitFunction_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2768,12 +2687,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_functionQualifiers; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterFunctionQualifiers(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitFunctionQualifiers(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitFunctionQualifiers(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2856,12 +2772,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_abi; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterAbi(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitAbi(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitAbi(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2915,12 +2828,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_functionParameters; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterFunctionParameters(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitFunctionParameters(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitFunctionParameters(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3029,12 +2939,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_selfParam; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterSelfParam(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitSelfParam(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitSelfParam(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3101,12 +3008,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_shorthandSelf; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterShorthandSelf(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitShorthandSelf(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitShorthandSelf(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3175,12 +3079,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_typedSelf; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypedSelf(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypedSelf(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypedSelf(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3240,12 +3141,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_functionParam; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterFunctionParam(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitFunctionParam(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitFunctionParam(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3320,12 +3218,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_functionParamPattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterFunctionParamPattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitFunctionParamPattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitFunctionParamPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3406,12 +3301,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_functionReturnType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterFunctionReturnType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitFunctionReturnType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitFunctionReturnType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3460,12 +3352,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_typeAlias; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypeAlias(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypeAlias(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypeAlias(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3540,12 +3429,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_struct_; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStruct_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStruct_(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStruct_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3606,12 +3492,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structStruct; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructStruct(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructStruct(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructStruct(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3712,12 +3595,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tupleStruct; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTupleStruct(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTupleStruct(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTupleStruct(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3798,12 +3678,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structFields; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructFields(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructFields(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructFields(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3881,12 +3758,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structField; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructField(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructField(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructField(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3957,12 +3831,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tupleFields; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTupleFields(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTupleFields(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTupleFields(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4036,12 +3907,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tupleField; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTupleField(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTupleField(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTupleField(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4113,12 +3981,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumeration; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumeration(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumeration(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumeration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4197,12 +4062,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumItems; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumItems(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumItems(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumItems(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4285,12 +4147,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumItem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4379,12 +4238,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumItemTuple; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumItemTuple(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumItemTuple(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumItemTuple(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4434,12 +4290,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumItemStruct; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumItemStruct(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumItemStruct(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumItemStruct(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4488,12 +4341,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumItemDiscriminant; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumItemDiscriminant(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumItemDiscriminant(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumItemDiscriminant(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4542,12 +4392,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_union_; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterUnion_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitUnion_(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitUnion_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4622,12 +4469,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_constantItem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterConstantItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitConstantItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitConstantItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4712,12 +4556,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_staticItem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStaticItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStaticItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStaticItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4809,12 +4650,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_trait_; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTrait_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTrait_(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTrait_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4940,12 +4778,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_implementation; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterImplementation(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitImplementation(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitImplementation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5014,12 +4849,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_inherentImpl; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterInherentImpl(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitInherentImpl(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitInherentImpl(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5139,12 +4971,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_traitImpl; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTraitImpl(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTraitImpl(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTraitImpl(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5277,12 +5106,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_externBlock; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterExternBlock(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitExternBlock(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitExternBlock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5388,12 +5214,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_externalItem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterExternalItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitExternalItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitExternalItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5511,12 +5334,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_genericParams; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterGenericParams(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitGenericParams(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitGenericParams(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5605,12 +5425,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_genericParam; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterGenericParam(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitGenericParam(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitGenericParam(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5687,12 +5504,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_lifetimeParam; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterLifetimeParam(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitLifetimeParam(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitLifetimeParam(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5761,12 +5575,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_typeParam; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypeParam(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypeParam(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypeParam(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5849,12 +5660,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_constParam; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterConstParam(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitConstParam(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitConstParam(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5903,12 +5711,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_whereClause; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterWhereClause(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitWhereClause(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitWhereClause(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5976,12 +5781,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_whereClauseItem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterWhereClauseItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitWhereClauseItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitWhereClauseItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6033,12 +5835,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_lifetimeWhereClauseItem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterLifetimeWhereClauseItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitLifetimeWhereClauseItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitLifetimeWhereClauseItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6084,12 +5883,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_typeBoundWhereClauseItem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypeBoundWhereClauseItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypeBoundWhereClauseItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypeBoundWhereClauseItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6148,12 +5944,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_forLifetimes; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterForLifetimes(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitForLifetimes(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitForLifetimes(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6208,12 +6001,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_associatedItem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterAssociatedItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitAssociatedItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitAssociatedItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6326,12 +6116,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_innerAttribute; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterInnerAttribute(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitInnerAttribute(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitInnerAttribute(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6377,12 +6164,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_outerAttribute; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterOuterAttribute(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitOuterAttribute(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitOuterAttribute(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6426,12 +6210,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_attr; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterAttr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitAttr(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitAttr(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6481,12 +6262,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_attrInput; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterAttrInput(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitAttrInput(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitAttrInput(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6550,12 +6328,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_statement; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStatement(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStatement(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6640,12 +6415,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_letStatement; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterLetStatement(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitLetStatement(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitLetStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6727,12 +6499,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_expressionStatement; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterExpressionStatement(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitExpressionStatement(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitExpressionStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6805,12 +6574,9 @@ public class RustParser extends RustParserBase {
 		}
 		public TypeCastExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypeCastExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypeCastExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypeCastExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -6820,12 +6586,9 @@ public class RustParser extends RustParserBase {
 		}
 		public PathExpression_Context(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterPathExpression_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitPathExpression_(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitPathExpression_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -6843,12 +6606,9 @@ public class RustParser extends RustParserBase {
 		}
 		public TupleExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTupleExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTupleExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTupleExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -6863,12 +6623,9 @@ public class RustParser extends RustParserBase {
 		public TerminalNode RSQUAREBRACKET() { return getToken(RustParser.RSQUAREBRACKET, 0); }
 		public IndexExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterIndexExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitIndexExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitIndexExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -6883,12 +6640,9 @@ public class RustParser extends RustParserBase {
 		public TerminalNode DOTDOTEQ() { return getToken(RustParser.DOTDOTEQ, 0); }
 		public RangeExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterRangeExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitRangeExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitRangeExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -6898,12 +6652,9 @@ public class RustParser extends RustParserBase {
 		}
 		public MacroInvocationAsExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroInvocationAsExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroInvocationAsExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroInvocationAsExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -6914,12 +6665,9 @@ public class RustParser extends RustParserBase {
 		}
 		public ReturnExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterReturnExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitReturnExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitReturnExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -6931,12 +6679,9 @@ public class RustParser extends RustParserBase {
 		public TerminalNode KW_AWAIT() { return getToken(RustParser.KW_AWAIT, 0); }
 		public AwaitExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterAwaitExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitAwaitExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitAwaitExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -6947,12 +6692,9 @@ public class RustParser extends RustParserBase {
 		public TerminalNode QUESTION() { return getToken(RustParser.QUESTION, 0); }
 		public ErrorPropagationExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterErrorPropagationExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitErrorPropagationExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitErrorPropagationExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -6964,12 +6706,9 @@ public class RustParser extends RustParserBase {
 		}
 		public ContinueExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterContinueExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitContinueExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitContinueExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -6983,12 +6722,9 @@ public class RustParser extends RustParserBase {
 		public TerminalNode EQ() { return getToken(RustParser.EQ, 0); }
 		public AssignmentExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterAssignmentExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitAssignmentExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitAssignmentExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7007,12 +6743,9 @@ public class RustParser extends RustParserBase {
 		}
 		public MethodCallExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMethodCallExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMethodCallExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMethodCallExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7022,12 +6755,9 @@ public class RustParser extends RustParserBase {
 		}
 		public LiteralExpression_Context(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterLiteralExpression_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitLiteralExpression_(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitLiteralExpression_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7037,12 +6767,9 @@ public class RustParser extends RustParserBase {
 		}
 		public StructExpression_Context(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructExpression_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructExpression_(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructExpression_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7056,12 +6783,9 @@ public class RustParser extends RustParserBase {
 		}
 		public TupleIndexingExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTupleIndexingExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTupleIndexingExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTupleIndexingExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7073,12 +6797,9 @@ public class RustParser extends RustParserBase {
 		public TerminalNode NOT() { return getToken(RustParser.NOT, 0); }
 		public NegationExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterNegationExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitNegationExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitNegationExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7093,12 +6814,9 @@ public class RustParser extends RustParserBase {
 		}
 		public CallExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterCallExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitCallExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitCallExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7113,12 +6831,9 @@ public class RustParser extends RustParserBase {
 		public TerminalNode OROR() { return getToken(RustParser.OROR, 0); }
 		public LazyBooleanExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterLazyBooleanExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitLazyBooleanExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitLazyBooleanExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7129,12 +6844,9 @@ public class RustParser extends RustParserBase {
 		}
 		public DereferenceExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterDereferenceExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitDereferenceExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitDereferenceExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7144,12 +6856,9 @@ public class RustParser extends RustParserBase {
 		}
 		public ExpressionWithBlock_Context(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterExpressionWithBlock_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitExpressionWithBlock_(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitExpressionWithBlock_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7167,12 +6876,9 @@ public class RustParser extends RustParserBase {
 		}
 		public GroupedExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterGroupedExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitGroupedExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitGroupedExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7184,12 +6890,9 @@ public class RustParser extends RustParserBase {
 		}
 		public BreakExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterBreakExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitBreakExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitBreakExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7213,12 +6916,9 @@ public class RustParser extends RustParserBase {
 		}
 		public ArithmeticOrLogicalExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterArithmeticOrLogicalExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitArithmeticOrLogicalExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitArithmeticOrLogicalExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7232,12 +6932,9 @@ public class RustParser extends RustParserBase {
 		}
 		public FieldExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterFieldExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitFieldExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitFieldExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7247,12 +6944,9 @@ public class RustParser extends RustParserBase {
 		}
 		public EnumerationVariantExpression_Context(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumerationVariantExpression_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumerationVariantExpression_(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumerationVariantExpression_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7268,12 +6962,9 @@ public class RustParser extends RustParserBase {
 		}
 		public ComparisonExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterComparisonExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitComparisonExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitComparisonExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7289,12 +6980,9 @@ public class RustParser extends RustParserBase {
 		}
 		public AttributedExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterAttributedExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitAttributedExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitAttributedExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7307,12 +6995,9 @@ public class RustParser extends RustParserBase {
 		public TerminalNode KW_MUT() { return getToken(RustParser.KW_MUT, 0); }
 		public BorrowExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterBorrowExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitBorrowExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitBorrowExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7328,12 +7013,9 @@ public class RustParser extends RustParserBase {
 		}
 		public CompoundAssignmentExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterCompoundAssignmentExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitCompoundAssignmentExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitCompoundAssignmentExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7343,12 +7025,9 @@ public class RustParser extends RustParserBase {
 		}
 		public ClosureExpression_Context(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterClosureExpression_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitClosureExpression_(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitClosureExpression_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -7366,12 +7045,9 @@ public class RustParser extends RustParserBase {
 		}
 		public ArrayExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterArrayExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitArrayExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitArrayExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8104,12 +7780,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_shiftOperator; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterShiftOperator(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitShiftOperator(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitShiftOperator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8166,12 +7839,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_comparisonOperator; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterComparisonOperator(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitComparisonOperator(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitComparisonOperator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8222,12 +7892,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_compoundAssignOperator; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterCompoundAssignOperator(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitCompoundAssignOperator(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitCompoundAssignOperator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8298,12 +7965,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_expressionWithBlock; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterExpressionWithBlock(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitExpressionWithBlock(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitExpressionWithBlock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8421,12 +8085,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_literalExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterLiteralExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitLiteralExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitLiteralExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8473,12 +8134,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_pathExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterPathExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitPathExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitPathExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8544,12 +8202,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_blockExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterBlockExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitBlockExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitBlockExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8620,12 +8275,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_statements; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStatements(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStatements(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStatements(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8705,12 +8357,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_asyncBlockExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterAsyncBlockExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitAsyncBlockExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitAsyncBlockExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8759,12 +8408,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_unsafeBlockExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterUnsafeBlockExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitUnsafeBlockExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitUnsafeBlockExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8809,12 +8455,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_arrayElements; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterArrayElements(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitArrayElements(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitArrayElements(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8903,12 +8546,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tupleElements; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTupleElements(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTupleElements(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTupleElements(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8973,12 +8613,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tupleIndex; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTupleIndex(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTupleIndex(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTupleIndex(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9019,12 +8656,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9093,12 +8727,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structExprStruct; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructExprStruct(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructExprStruct(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructExprStruct(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9188,12 +8819,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structExprFields; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructExprFields(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructExprFields(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructExprFields(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9287,12 +8915,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structExprField; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructExprField(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructExprField(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructExprField(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9379,12 +9004,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structBase; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructBase(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructBase(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructBase(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9439,12 +9061,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structExprTuple; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructExprTuple(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructExprTuple(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructExprTuple(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9539,12 +9158,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structExprUnit; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructExprUnit(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructExprUnit(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructExprUnit(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9585,12 +9201,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumerationVariantExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumerationVariantExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumerationVariantExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumerationVariantExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9650,12 +9263,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumExprStruct; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumExprStruct(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumExprStruct(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumExprStruct(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9712,12 +9322,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumExprFields; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumExprFields(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumExprFields(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumExprFields(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9789,12 +9396,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumExprField; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumExprField(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumExprField(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumExprField(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9876,12 +9480,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumExprTuple; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumExprTuple(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumExprTuple(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumExprTuple(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9960,12 +9561,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_enumExprFieldless; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterEnumExprFieldless(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitEnumExprFieldless(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitEnumExprFieldless(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10007,12 +9605,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_callParams; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterCallParams(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitCallParams(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitCallParams(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10093,12 +9688,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_closureExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterClosureExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitClosureExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitClosureExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10245,12 +9837,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_closureParameters; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterClosureParameters(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitClosureParameters(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitClosureParameters(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10325,12 +9914,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_closureParam; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterClosureParam(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitClosureParam(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitClosureParam(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10404,12 +9990,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_loopExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterLoopExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitLoopExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitLoopExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10482,12 +10065,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_infiniteLoopExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterInfiniteLoopExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitInfiniteLoopExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitInfiniteLoopExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10528,12 +10108,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_predicateLoopExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterPredicateLoopExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitPredicateLoopExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitPredicateLoopExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10581,12 +10158,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_predicatePatternLoopExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterPredicatePatternLoopExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitPredicatePatternLoopExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitPredicatePatternLoopExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10639,12 +10213,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_iteratorLoopExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterIteratorLoopExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitIteratorLoopExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitIteratorLoopExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10686,12 +10257,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_loopLabel; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterLoopLabel(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitLoopLabel(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitLoopLabel(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10742,12 +10310,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_ifExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterIfExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitIfExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitIfExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10837,12 +10402,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_ifLetExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterIfLetExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitIfLetExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitIfLetExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10931,12 +10493,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_matchExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMatchExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMatchExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMatchExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11022,12 +10581,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_matchArms; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMatchArms(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMatchArms(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMatchArms(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11102,12 +10658,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_matchArmExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMatchArmExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMatchArmExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMatchArmExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11177,12 +10730,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_matchArm; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMatchArm(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMatchArm(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMatchArm(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11243,12 +10793,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_matchArmGuard; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMatchArmGuard(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMatchArmGuard(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMatchArmGuard(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11292,12 +10839,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_pattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterPattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitPattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11365,12 +10909,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_patternNoTopAlt; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterPatternNoTopAlt(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitPatternNoTopAlt(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitPatternNoTopAlt(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11451,12 +10992,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_patternWithoutRange; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterPatternWithoutRange(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitPatternWithoutRange(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitPatternWithoutRange(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11582,12 +11120,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_literalPattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterLiteralPattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitLiteralPattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitLiteralPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11718,12 +11253,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_identifierPattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterIdentifierPattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitIdentifierPattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitIdentifierPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11789,12 +11321,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_wildcardPattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterWildcardPattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitWildcardPattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitWildcardPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11827,12 +11356,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_restPattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterRestPattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitRestPattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitRestPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11880,12 +11406,9 @@ public class RustParser extends RustParserBase {
 		public TerminalNode DOTDOTEQ() { return getToken(RustParser.DOTDOTEQ, 0); }
 		public InclusiveRangePatternContext(RangePatternContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterInclusiveRangePattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitInclusiveRangePattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitInclusiveRangePattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -11899,12 +11422,9 @@ public class RustParser extends RustParserBase {
 		public TerminalNode DOTDOTDOT() { return getToken(RustParser.DOTDOTDOT, 0); }
 		public ObsoleteRangePatternContext(RangePatternContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterObsoleteRangePattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitObsoleteRangePattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitObsoleteRangePattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -11915,12 +11435,9 @@ public class RustParser extends RustParserBase {
 		public TerminalNode DOTDOT() { return getToken(RustParser.DOTDOT, 0); }
 		public HalfOpenRangePatternContext(RangePatternContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterHalfOpenRangePattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitHalfOpenRangePattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitHalfOpenRangePattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11993,12 +11510,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_rangePatternBound; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterRangePatternBound(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitRangePatternBound(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitRangePatternBound(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12091,12 +11605,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_referencePattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterReferencePattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitReferencePattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitReferencePattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12157,12 +11668,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structPattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructPattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructPattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12216,12 +11724,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structPatternElements; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructPatternElements(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructPatternElements(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructPatternElements(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12297,12 +11802,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structPatternFields; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructPatternFields(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructPatternFields(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructPatternFields(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12371,12 +11873,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structPatternField; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructPatternField(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructPatternField(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructPatternField(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12478,12 +11977,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_structPatternEtCetera; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterStructPatternEtCetera(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitStructPatternEtCetera(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitStructPatternEtCetera(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12538,12 +12034,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tupleStructPattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTupleStructPattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTupleStructPattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTupleStructPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12600,12 +12093,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tupleStructItems; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTupleStructItems(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTupleStructItems(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTupleStructItems(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12672,12 +12162,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tuplePattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTuplePattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTuplePattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTuplePattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12735,12 +12222,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tuplePatternItems; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTuplePatternItems(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTuplePatternItems(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTuplePatternItems(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12833,12 +12317,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_groupedPattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterGroupedPattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitGroupedPattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitGroupedPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12879,12 +12360,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_slicePattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterSlicePattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitSlicePattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitSlicePattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12939,12 +12417,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_slicePatternItems; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterSlicePatternItems(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitSlicePatternItems(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitSlicePatternItems(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13012,12 +12487,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_pathPattern; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterPathPattern(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitPathPattern(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitPathPattern(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13081,12 +12553,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_type_; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterType_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitType_(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitType_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13180,12 +12649,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_typeNoBounds; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypeNoBounds(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypeNoBounds(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypeNoBounds(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13319,12 +12785,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_parenthesizedType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterParenthesizedType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitParenthesizedType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitParenthesizedType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13361,12 +12824,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_neverType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterNeverType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitNeverType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitNeverType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13410,12 +12870,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_tupleType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTupleType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTupleType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTupleType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13500,12 +12957,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_arrayType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterArrayType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitArrayType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitArrayType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13550,12 +13004,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_sliceType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterSliceType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitSliceType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitSliceType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13599,12 +13050,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_referenceType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterReferenceType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitReferenceType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitReferenceType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13665,12 +13113,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_rawPointerType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterRawPointerType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitRawPointerType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitRawPointerType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13730,12 +13175,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_bareFunctionType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterBareFunctionType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitBareFunctionType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitBareFunctionType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13809,12 +13251,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_functionTypeQualifiers; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterFunctionTypeQualifiers(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitFunctionTypeQualifiers(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitFunctionTypeQualifiers(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13879,12 +13318,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_bareFunctionReturnType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterBareFunctionReturnType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitBareFunctionReturnType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitBareFunctionReturnType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13924,12 +13360,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_functionParametersMaybeNamedVariadic; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterFunctionParametersMaybeNamedVariadic(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitFunctionParametersMaybeNamedVariadic(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitFunctionParametersMaybeNamedVariadic(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13984,12 +13417,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_maybeNamedFunctionParameters; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMaybeNamedFunctionParameters(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMaybeNamedFunctionParameters(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMaybeNamedFunctionParameters(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14065,12 +13495,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_maybeNamedParam; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMaybeNamedParam(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMaybeNamedParam(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMaybeNamedParam(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14164,12 +13591,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_maybeNamedFunctionParametersVariadic; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMaybeNamedFunctionParametersVariadic(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMaybeNamedFunctionParametersVariadic(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMaybeNamedFunctionParametersVariadic(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14243,12 +13667,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_traitObjectType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTraitObjectType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTraitObjectType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTraitObjectType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14295,12 +13716,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_traitObjectTypeOneBound; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTraitObjectTypeOneBound(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTraitObjectTypeOneBound(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTraitObjectTypeOneBound(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14347,12 +13765,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_implTraitType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterImplTraitType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitImplTraitType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitImplTraitType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14390,12 +13805,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_implTraitTypeOneBound; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterImplTraitTypeOneBound(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitImplTraitTypeOneBound(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitImplTraitTypeOneBound(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14430,12 +13842,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_inferredType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterInferredType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitInferredType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitInferredType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14477,12 +13886,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_typeParamBounds; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypeParamBounds(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypeParamBounds(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypeParamBounds(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14549,12 +13955,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_typeParamBound; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypeParamBound(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypeParamBound(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypeParamBound(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14623,12 +14026,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_traitBound; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTraitBound(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTraitBound(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTraitBound(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14740,12 +14140,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_lifetimeBounds; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterLifetimeBounds(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitLifetimeBounds(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitLifetimeBounds(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14808,12 +14205,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_lifetime; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterLifetime(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitLifetime(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitLifetime(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14864,12 +14258,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_simplePath; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterSimplePath(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitSimplePath(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitSimplePath(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14938,12 +14329,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_simplePathSegment; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterSimplePathSegment(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitSimplePathSegment(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitSimplePathSegment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15023,12 +14411,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_pathInExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterPathInExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitPathInExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitPathInExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15097,12 +14482,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_pathExprSegment; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterPathExprSegment(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitPathExprSegment(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitPathExprSegment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15154,12 +14536,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_pathIdentSegment; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterPathIdentSegment(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitPathIdentSegment(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitPathIdentSegment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15257,12 +14636,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_genericArgs; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterGenericArgs(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitGenericArgs(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitGenericArgs(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15433,12 +14809,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_genericArg; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterGenericArg(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitGenericArg(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitGenericArg(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15507,12 +14880,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_genericArgsConst; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterGenericArgsConst(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitGenericArgsConst(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitGenericArgsConst(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15603,12 +14973,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_genericArgsLifetimes; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterGenericArgsLifetimes(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitGenericArgsLifetimes(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitGenericArgsLifetimes(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15669,12 +15036,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_genericArgsTypes; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterGenericArgsTypes(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitGenericArgsTypes(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitGenericArgsTypes(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15735,12 +15099,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_genericArgsBindings; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterGenericArgsBindings(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitGenericArgsBindings(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitGenericArgsBindings(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15798,12 +15159,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_genericArgsBinding; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterGenericArgsBinding(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitGenericArgsBinding(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitGenericArgsBinding(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15852,12 +15210,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_qualifiedPathInExpression; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterQualifiedPathInExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitQualifiedPathInExpression(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitQualifiedPathInExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15921,12 +15276,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_qualifiedPathType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterQualifiedPathType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitQualifiedPathType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitQualifiedPathType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15988,12 +15340,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_qualifiedPathInType; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterQualifiedPathInType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitQualifiedPathInType(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitQualifiedPathInType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16058,12 +15407,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_typePath; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypePath(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypePath(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypePath(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16135,12 +15481,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_typePathSegment; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypePathSegment(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypePathSegment(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypePathSegment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16207,12 +15550,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_typePathFn; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypePathFn(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypePathFn(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypePathFn(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16279,12 +15619,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_typePathInputs; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterTypePathInputs(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitTypePathInputs(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitTypePathInputs(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16356,12 +15693,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_visibility; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterVisibility(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitVisibility(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitVisibility(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16440,12 +15774,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_identifier; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterIdentifier(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitIdentifier(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitIdentifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16539,12 +15870,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_keyword; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterKeyword(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitKeyword(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitKeyword(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16595,12 +15923,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroIdentifierLikeToken; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroIdentifierLikeToken(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroIdentifierLikeToken(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroIdentifierLikeToken(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16676,12 +16001,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroLiteralToken; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroLiteralToken(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroLiteralToken(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroLiteralToken(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16752,12 +16074,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_macroPunctuationToken; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterMacroPunctuationToken(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitMacroPunctuationToken(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitMacroPunctuationToken(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16802,12 +16121,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_shl; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterShl(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitShl(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitShl(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16847,12 +16163,9 @@ public class RustParser extends RustParserBase {
 		}
 		@Override public int getRuleIndex() { return RULE_shr; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).enterShr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RustParserListener ) ((RustParserListener)listener).exitShr(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RustParserVisitor ) return ((RustParserVisitor<? extends T>)visitor).visitShr(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

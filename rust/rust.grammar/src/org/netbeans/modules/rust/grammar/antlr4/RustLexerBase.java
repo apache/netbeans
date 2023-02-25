@@ -36,12 +36,10 @@
  */
 package org.netbeans.modules.rust.grammar.antlr4;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.Token;
-import org.netbeans.modules.rust.grammar.RustTokenID;
 
 /**
  *

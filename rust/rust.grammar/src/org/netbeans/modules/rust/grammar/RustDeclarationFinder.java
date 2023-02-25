@@ -18,34 +18,28 @@
  */
 package org.netbeans.modules.rust.grammar;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.logging.Logger;
+import javax.swing.text.Document;
+import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.csl.api.StructureItem;
-import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.ParserResult;
 
 /**
- *
+ * TODO: ParserResult has a RustAST inside...
+ * @author antonio
  */
-public final class RustStructureScanner implements StructureScanner {
+public final class RustDeclarationFinder implements DeclarationFinder {
+
+    private static final Logger LOG = Logger.getLogger(RustDeclarationFinder.class.getName());
 
     @Override
-    public List<? extends StructureItem> scan(ParserResult info) {
-        // TODO: Improve
-        return Collections.emptyList();
+    public DeclarationLocation findDeclaration(ParserResult info, int caretOffset) {
+        return DeclarationLocation.NONE;
     }
 
     @Override
-    public Map<String, List<OffsetRange>> folds(ParserResult info) {
-        // TODO: Improve
-        return Collections.singletonMap("codeblocks", ((RustLanguageParserResult)info).folds); // NOI18N
-    }
-
-    @Override
-    public Configuration getConfiguration() {
-        return new Configuration(true, false);
+    public OffsetRange getReferenceSpan(Document doc, int caretOffset) {
+        return OffsetRange.NONE;
     }
     
 }

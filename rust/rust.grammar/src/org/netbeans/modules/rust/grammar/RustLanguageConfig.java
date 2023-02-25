@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.rust.grammar;
 
+import org.netbeans.modules.rust.grammar.structure.RustStructureScanner;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
+import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
@@ -66,7 +68,12 @@ public class RustLanguageConfig extends DefaultLanguageConfig {
     public String getLineCommentPrefix() {
         return "//"; // NOI18N
     }
-    
+
+    @Override
+    public DeclarationFinder getDeclarationFinder() {
+        return new RustDeclarationFinder();
+    }
+
     @NbBundle.Messages("Source=&Source")
     @MultiViewElement.Registration(
             displayName = "#Source",

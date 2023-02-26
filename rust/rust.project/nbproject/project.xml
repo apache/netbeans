@@ -168,11 +168,6 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <test-dependencies>
-                <test-type>
-                    <name>unit</name>
-                </test-type>
-            </test-dependencies>
             <public-packages>
                 <package>org.netbeans.modules.rust.project.api</package>
             </public-packages>

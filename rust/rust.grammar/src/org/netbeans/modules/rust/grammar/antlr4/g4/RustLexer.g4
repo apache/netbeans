@@ -195,15 +195,15 @@ CHAR_LITERAL
     ) '\''
     ;
 
-STRING_LITERAL: '"\\\\"' | '"' ( '\\' '"' | ~["] )*? '"';
+STRING_LITERAL: '"\\\\"' | '"' ( '\\' '"' | ~["] )*? ('"' | EOF);
 
 RAW_STRING_LITERAL: 'r' RAW_STRING_CONTENT;
+ 
+fragment RAW_STRING_CONTENT: '#' RAW_STRING_CONTENT '#' | '"' .*? ('"' | EOF);
 
-fragment RAW_STRING_CONTENT: '#' RAW_STRING_CONTENT '#' | '"' .*? '"';
+BYTE_LITERAL: 'b\'' (. | QUOTE_ESCAPE | BYTE_ESCAPE) ('\'' | EOF);
 
-BYTE_LITERAL: 'b\'' (. | QUOTE_ESCAPE | BYTE_ESCAPE) '\'';
-
-BYTE_STRING_LITERAL: 'b"' (~["] | QUOTE_ESCAPE | BYTE_ESCAPE)* '"';
+BYTE_STRING_LITERAL: 'b"' (~["] | QUOTE_ESCAPE | BYTE_ESCAPE)* ('"' | EOF);
 
 RAW_BYTE_STRING_LITERAL: 'br' RAW_STRING_CONTENT;
 

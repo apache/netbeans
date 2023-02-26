@@ -31,7 +31,8 @@ public enum RustTokenIDCategory {
     OPERATOR("operator"),
     SEPARATOR("separator"),
     STRING("string"),
-    WHITESPACE("whitespace");
+    WHITESPACE("whitespace"),
+    EOF("other");
 
     public final String category;
 

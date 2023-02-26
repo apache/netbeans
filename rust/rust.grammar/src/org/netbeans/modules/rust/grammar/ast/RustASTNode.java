@@ -68,7 +68,7 @@ public class RustASTNode {
      */
     private final TreeMap<String, RustASTNode> traits;
     /**
-     * Any nested folds this node may have. 
+     * Any nested folds this node may have.
      */
     private final List<OffsetRange> codeblockFolds;
 
@@ -127,12 +127,17 @@ public class RustASTNode {
             if (stopOffset <= startOffset) {
                 stopOffset = startOffset;
             }
-            this.fold = new OffsetRange(startOffset, stopOffset);
+            if (startOffset > 0) {
+                this.fold = new OffsetRange(startOffset, stopOffset);
+            } else {
+                this.fold = new OffsetRange(0, 1);
+            }
         }
     }
 
     /**
      * Returns this node's fold, if any.
+     *
      * @return The fold for this node, or null.
      */
     public OffsetRange getFold() {
@@ -140,10 +145,10 @@ public class RustASTNode {
     }
 
     /**
-     * Adds a fold for a child node.
-     * For instance, a function may have multiple "if" statements, and these
-     * may have folds grouping statements between '{' and '}'.
-     * 
+     * Adds a fold for a child node. For instance, a function may have multiple
+     * "if" statements, and these may have folds grouping statements between '{'
+     * and '}'.
+     *
      * @param startNode a Terminal node where the nested fold starts.
      * @param stopNode a Terminal node where the nested fold ends.
      */
@@ -153,7 +158,7 @@ public class RustASTNode {
             Token stopToken = stopNode.getSymbol();
             int foldStart = startToken.getStartIndex();
             int foldStop = stopToken.getStartIndex() + 1;
-            if (foldStart <= foldStop) {
+            if (foldStart > 0 && foldStart <= foldStop) {
                 OffsetRange range = new OffsetRange(foldStart, foldStop);
                 if (!codeblockFolds.contains(range)) {
                     codeblockFolds.add(range);
@@ -245,6 +250,5 @@ public class RustASTNode {
     public Collection<RustASTNode> traits() {
         return traits.values();
     }
-
 
 }

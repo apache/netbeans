@@ -20,15 +20,24 @@ package org.netbeans.modules.rust.grammar.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.DefaultErrorStrategy;
+import org.antlr.v4.runtime.InputMismatchException;
+import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.IntervalSet;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.DefaultError;
+import org.netbeans.modules.rust.grammar.RustTokenID;
 import org.netbeans.modules.rust.grammar.antlr4.RustLexer;
 import org.netbeans.modules.rust.grammar.antlr4.RustParser;
 import org.openide.filesystems.FileObject;
@@ -41,6 +50,8 @@ import org.openide.filesystems.FileObject;
  */
 public final class RustAST {
 
+    private static final Logger LOG = Logger.getLogger(RustAST.class.getName());
+
     /**
      * Builds a RustAST for a given text in a fileObject.
      *
@@ -52,7 +63,15 @@ public final class RustAST {
      */
     public static RustAST parse(FileObject fileObject, CharSequence text) {
         RustAST ast = new RustAST(fileObject);
-        ast.parse(text);
+        try {
+            ast.parse(text);
+        } catch (Exception e) {
+            StringBuilder message = new StringBuilder();
+            message.append(String.format("  Couldn't parse file %s%n", fileObject == null ? "???" : fileObject.getNameExt()));
+            message.append("  If you think this file is valid Rust code then please report it to improve our Rust grammar.\n");
+            message.append(String.format("  Error is of type '%s':%n---%n%s%n---%n", e.getClass().getName(), e.getMessage()));
+            LOG.log(Level.SEVERE, message.toString());
+        }
         return ast;
     }
 
@@ -79,16 +98,39 @@ public final class RustAST {
 
         @Override
         public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-            int errorPosition = 0;
+            int errorStartIndex = 0;
+            int errorStopIndex = 0;
             if (offendingSymbol instanceof Token) {
                 Token offendingToken = (Token) offendingSymbol;
-                errorPosition = offendingToken.getStartIndex();
-                if (offendingToken.getChannel() == RustLexer.CHANNEL_COMMENT) {
-                    return;
-                }
+                errorStartIndex = offendingToken.getStartIndex();
+                errorStopIndex = offendingToken.getStopIndex();
             }
-            errors.add(new DefaultError(null, msg, null, fileObject, errorPosition, errorPosition, Severity.ERROR));
+            errors.add(new DefaultError(null, msg, null, fileObject, errorStartIndex, errorStopIndex, Severity.ERROR));
         }
+    }
+
+    private final class RustANTLRErrorStrategy extends DefaultErrorStrategy {
+
+        @Override
+        protected void reportMissingToken(Parser recognizer) {
+            beginErrorCondition(recognizer);
+            Token t = recognizer.getCurrentToken();
+            IntervalSet expecting = getExpectedTokens(recognizer);
+            throw new RecognitionException("", recognizer, recognizer.getInputStream(), recognizer.getContext());
+        }
+
+        @Override
+        protected void reportInputMismatch(Parser recognizer, InputMismatchException e) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Offending token. I was expecting any of ");
+            sb.append(e.getExpectedTokens().toList().stream().map(RustTokenID::fromType).map(RustTokenID::name).collect(Collectors.joining(",")));
+            String msg = sb.toString();
+            RecognitionException ex = new RecognitionException(msg, recognizer, recognizer.getInputStream(), recognizer.getContext());
+            int start = e.getOffendingToken().getStartIndex();
+            int stop = e.getOffendingToken().getStopIndex();
+            errors.add(new DefaultError(null, msg, null, fileObject, start, stop, Severity.ERROR));
+        }
+
     }
 
     /**
@@ -111,9 +153,12 @@ public final class RustAST {
         ANTLRErrorListener errorListener = new RustANTLRErrorListener();
         // Prepare a lexer over this text
         RustLexer lexer = new RustLexer(CharStreams.fromString(String.valueOf(text)));
+        lexer.removeErrorListeners();
         lexer.addErrorListener(errorListener);
         // Prepare a parser over the lexer
         RustParser parser = new RustParser(new CommonTokenStream(lexer));
+        parser.removeErrorListeners();
+        parser.setErrorHandler(new RustANTLRErrorStrategy());
         parser.addErrorListener(errorListener);
         // Parse a crate.
         RustParser.CrateContext crate = parser.crate();

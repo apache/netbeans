@@ -74,6 +74,9 @@ public final class RustStructureScanner implements StructureScanner {
     private List<? extends StructureItem> createStructureFromAST(final RustAST ast) {
         ArrayList<StructureItem> items = new ArrayList<>();
         RustASTNode crate = ast.getCrate();
+        if (crate == null) {
+            return Collections.emptyList();
+        }
         Consumer<RustASTNode> adder = (node) -> {
             items.add(new RustStructureItem(ast, node));
         };

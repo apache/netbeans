@@ -160,7 +160,9 @@ public enum RustTokenID implements TokenId {
     STAREQ(OPERATOR, RustLexer.STAREQ),
     STRING_LITERAL(STRING, RustLexer.STRING_LITERAL),
     UNDERSCORE(OPERATOR, RustLexer.UNDERSCORE),
-    WHITESPACE(RustTokenIDCategory.WHITESPACE, RustLexer.WHITESPACE);
+    WHITESPACE(RustTokenIDCategory.WHITESPACE, RustLexer.WHITESPACE),
+    EOF(RustTokenIDCategory.EOF, RustLexer.EOF),
+    ERROR(RustTokenIDCategory.ERROR, RustLexer.VOCABULARY.getMaxTokenType() + 1);
 
     private static Map<Integer, RustTokenID> ANTLR_2_TOKENID;
 
@@ -185,12 +187,17 @@ public enum RustTokenID implements TokenId {
      * to a RustTokenID.
      */
     public static RustTokenID from(Token token) {
-        RustTokenID rustToken = ANTLR_2_TOKENID.get(token.getType());
-        // RustTokenID rustToken = RustLanguageLexer.ANT2RUST.get(token.getType());
-        if (rustToken == null) {
-            throw new IllegalStateException(String.format("Cannot find RustTokenID for AntlrV4 token %d (%s)", token.getType(), token.getText()));
-        }
-        return rustToken;
+        return fromType(token.getType());
+    }
+
+    /**
+     * Returns a RustTokenID from an AntlrV4 token type.
+     * @param type The type of the token.
+     * @return An equivalent RustTokenID.
+     */
+    public static RustTokenID fromType(int type) {
+        RustTokenID rustToken = ANTLR_2_TOKENID.get(type);
+        return rustToken == null ? ERROR: rustToken;
     }
 
     public int getValue() {

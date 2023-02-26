@@ -100,12 +100,17 @@ public final class RustFoldingScanner {
             return Collections.emptyMap();
         }
         RustASTNode crate = ast.getCrate();
+        if (crate == null) {
+            return Collections.emptyMap();
+        }
         HashMap<String, List<OffsetRange>> folds = new HashMap<>();
         List<OffsetRange> allFunctionFolds = new ArrayList<>();
         List<OffsetRange> allCodeblockFolds = new ArrayList<>();
 
         Consumer<? super RustASTNode> addFunction = (function) -> {
-            allFunctionFolds.add(function.getFold());
+            if (function.getFold() != null) {
+                allFunctionFolds.add(function.getFold());
+            }
             allCodeblockFolds.addAll(function.codeblockFolds());
         };
 

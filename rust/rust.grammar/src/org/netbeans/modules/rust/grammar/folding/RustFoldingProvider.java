@@ -40,6 +40,8 @@ public class RustFoldingProvider implements FoldTypeProvider {
         TYPES.add(RustFoldingScanner.TYPE_FUNCTION);
         TYPES.add(RustFoldingScanner.TYPE_IMPL);
         TYPES.add(RustFoldingScanner.TYPE_TRAIT);
+        TYPES.add( RustFoldingScanner.TYPE_ENUM);
+        TYPES.add( RustFoldingScanner.TYPE_MACRO);
         // TODO: Add more fold types
     }
 

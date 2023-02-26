@@ -68,6 +68,14 @@ public class RustASTNode {
      */
     private final TreeMap<String, RustASTNode> traits;
     /**
+     * The inner enums in this node.
+     */
+    private final TreeMap<String, RustASTNode> enums;
+    /**
+     * The inner macros in this node.
+     */
+    private final TreeMap<String, RustASTNode> macros;
+    /**
      * Any nested folds this node may have.
      */
     private final List<OffsetRange> codeblockFolds;
@@ -88,6 +96,8 @@ public class RustASTNode {
         this.structs = new TreeMap<>();
         this.impls = new TreeMap<>();
         this.traits = new TreeMap<>();
+        this.enums = new TreeMap<>();
+        this.macros = new TreeMap<>();
         this.codeblockFolds = new ArrayList<>();
     }
 
@@ -249,6 +259,32 @@ public class RustASTNode {
 
     public Collection<RustASTNode> traits() {
         return traits.values();
+    }
+
+    public void addEnum(RustASTNode e) {
+        e.setParent(this);
+        enums.put(e.getName(), e);
+    }
+
+    public RustASTNode getEnum(String name) {
+        return enums.get(name);
+    }
+
+    public Collection<RustASTNode> enums() {
+        return enums.values();
+    }
+
+    public void addMacro(RustASTNode macro) {
+        macro.setParent(this);
+        macros.put(macro.getName(), macro);
+    }
+
+    public RustASTNode getMacro(String name) {
+        return macros.get(name);
+    }
+
+    public Collection<RustASTNode> macros() {
+        return macros.values();
     }
 
 }

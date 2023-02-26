@@ -47,9 +47,12 @@ public final class RustStructureItem implements StructureItem {
             case FUNCTION:
                 return "org/netbeans/modules/rust/grammar/structure/resources/structure-function.png"; // NOI18N
             case STRUCT:
+                return "org/netbeans/modules/rust/grammar/structure/resources/structure-struct.png"; // NOI18N
             case IMPL:
             case TRAIT:
-                return "org/netbeans/modules/rust/grammar/structure/resources/structure-struct.png"; // NOI18N
+                return "org/netbeans/modules/rust/grammar/structure/resources/structure-impl.png"; // NOI18N
+            case MACRO:
+                return "org/netbeans/modules/rust/grammar/structure/resources/structure-macro.png"; // NOI18N
             default:
                 return "org/netbeans/modules/rust/grammar/structure/resources/structure-struct.png"; // NOI18N
         }

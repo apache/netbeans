@@ -85,6 +85,8 @@ public final class RustStructureScanner implements StructureScanner {
         crate.structs().forEach(adder);
         crate.traits().forEach(adder);
         crate.functions().forEach(adder);
+        crate.enums().forEach(adder);
+        crate.macros().forEach(adder);
 
         return items;
     }

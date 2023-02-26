@@ -84,6 +84,61 @@ final class RustASTVisitor extends RustParserBaseVisitor<RustASTNode> implements
         return crate;
     }
 
+    @Override
+    public RustASTNode visitEnumeration(RustParser.EnumerationContext ctx) {
+        if (cancelled.get()) {
+            return null;
+        }
+        RustASTNode current = peek();
+
+        RustASTNode e = new RustASTNode(RustASTNodeKind.ENUM);
+        e.setName(ctx.identifier().getText());
+        e.setRange(ctx.start, ctx.stop);
+        e.setFold(ctx.LCURLYBRACE(), ctx.RCURLYBRACE());
+
+        current.addEnum(e);
+
+        LOG.log(LOGLEVEL, String.format("Visiting enum %s%n", e.getName()));
+
+        push(e);
+        // Visit children to seek for functions
+        for (ParseTree tree : ctx.children) {
+            tree.accept(this);
+        }
+        pop();
+
+        return e;
+    }
+
+    @Override
+    public RustASTNode visitMacroRulesDefinition(RustParser.MacroRulesDefinitionContext ctx) {
+        if (cancelled.get()) {
+            return null;
+        }
+        RustASTNode current = peek();
+
+        RustASTNode macro = new RustASTNode(RustASTNodeKind.MACRO);
+        macro.setName(ctx.identifier().getText());
+        macro.setRange(ctx.start, ctx.stop);
+        RustParser.MacroRulesDefContext def = ctx.macroRulesDef();
+        if (def != null) {
+            macro.setFold(def.LCURLYBRACE(), def.RCURLYBRACE());
+        }
+
+        current.addMacro(macro);
+
+        LOG.log(LOGLEVEL, String.format("Visiting macro %s%n", macro.getName()));
+
+        push(macro);
+        // Visit children to seek for functions
+        for (ParseTree tree : ctx.children) {
+            tree.accept(this);
+        }
+        pop();
+
+        return macro;
+    }
+
    @Override
     public RustASTNode visitTrait_(RustParser.Trait_Context ctx) {
         if (cancelled.get()) {

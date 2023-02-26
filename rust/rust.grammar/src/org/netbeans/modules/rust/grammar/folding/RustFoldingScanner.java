@@ -89,6 +89,22 @@ public final class RustFoldingScanner {
             FoldTemplate.DEFAULT_BLOCK);
 
     /**
+     * FoldType for Rust enums
+     */
+    @NbBundle.Messages("FT_Enums=Enums")
+    public static final FoldType TYPE_ENUM = FoldType.MEMBER.derive("enum", // NOI18N
+            getBundleString("FT_Enums"), // NOI18N
+            FoldTemplate.DEFAULT_BLOCK);
+
+    /**
+     * FoldType for Rust enums
+     */
+    @NbBundle.Messages("FT_Macros=Macros")
+    public static final FoldType TYPE_MACRO = FoldType.MEMBER.derive("macro", // NOI18N
+            getBundleString("FT_Macros"), // NOI18N
+            FoldTemplate.DEFAULT_BLOCK);
+
+    /**
      * Returns the codeblockFolds from the giveh RustLanguageParserResult
      *
      * @param rustLanguageParserResult The result of parsing, i.e.: a RustAST
@@ -137,6 +153,20 @@ public final class RustFoldingScanner {
             List<OffsetRange> traitFolds = crate.traits().stream().map(RustASTNode::getFold).filter(Objects::nonNull).collect(Collectors.toList());
             folds.put(TYPE_TRAIT.code(), traitFolds);
             crate.traits().forEach(addFunctionsInNode);
+        }
+
+        // Enums
+        {
+            List<OffsetRange> enumFolds = crate.enums().stream().map(RustASTNode::getFold).filter(Objects::nonNull).collect(Collectors.toList());
+            folds.put(TYPE_ENUM.code(), enumFolds);
+            crate.enums().forEach(addFunctionsInNode);
+        }
+
+        // Macros
+        {
+            List<OffsetRange> macroFolds = crate.macros().stream().map(RustASTNode::getFold).filter(Objects::nonNull).collect(Collectors.toList());
+            folds.put(TYPE_MACRO.code(), macroFolds);
+            crate.macros().forEach(addFunctionsInNode);
         }
 
         // Function folds 

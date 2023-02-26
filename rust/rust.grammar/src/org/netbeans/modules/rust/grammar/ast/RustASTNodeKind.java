@@ -45,6 +45,9 @@ public enum RustASTNodeKind {
     /**
      * A Rust trait.
      */
-    TRAIT
-
+    TRAIT,
+    /**
+     * A Rust macro rules
+     */
+    MACRO,
 }

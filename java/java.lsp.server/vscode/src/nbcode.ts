@@ -31,6 +31,8 @@ export interface LaunchInfo {
     storagePath: string;
     jdkHome: string | unknown;
     verbose? : boolean;
+    enableModules? : string[];
+    disableModules? : string[];
 }
 
 function find(info: LaunchInfo): string {
@@ -46,6 +48,30 @@ function find(info: LaunchInfo): string {
     return nbcodePath;
 }
 
+function enableDisableModules(
+    info: LaunchInfo,
+    userDir : string,
+    modules : string[] | undefined,
+    enable : boolean) {
+    if (modules) {
+        for (var i = 0; i < modules.length; i++) {
+            const module = modules[i];
+            const moduleXml : string = module.replace(/\./g, "-") + ".xml";
+            var xmlContent : string = "";
+            const clusters : string[] = fs.readdirSync(path.join(info.extensionPath, "nbcode"));
+            for (var c = 0; c < clusters.length; c++) {
+                const sourceXmlPath : string = path.join(info.extensionPath, "nbcode", clusters[c], "config", "Modules", moduleXml);
+                if (fs.existsSync(sourceXmlPath)) {
+                    xmlContent = fs.readFileSync(sourceXmlPath).toString();
+                }
+            }
+            xmlContent = xmlContent.replace(`<param name="enabled">${!enable}</param>`, `<param name="enabled">${enable}</param>`);
+            fs.mkdirSync(path.join(userDir, "config", "Modules"), {recursive: true});
+            fs.writeFileSync(path.join(userDir, "config", "Modules", moduleXml), xmlContent);
+        }
+    }
+}
+
 export function launch(
     info: LaunchInfo,
     ...extraArgs : string[]
@@ -58,6 +84,9 @@ export function launch(
     if (!userDirPerm.isDirectory()) {
         throw `Cannot create ${userDir}`;
     }
+
+    enableDisableModules(info, userDir, info.disableModules, false);
+    enableDisableModules(info, userDir, info.enableModules, true);
 
     let clusterPath = info.clusters.join(path.delimiter);
     let ideArgs: string[] = [

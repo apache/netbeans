@@ -48,21 +48,21 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Building NetBeans
 
-Build with the default config (See the [cluster.config](https://github.com/apache/netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
+Build the default `release` config (See the [cluster.config](https://github.com/apache/netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
 ```
-$ ant
+$ ant build
 ```
 Build the basic project (mainly Java features):
 ```
-$ ant -Dcluster.config=basic
+$ ant -Dcluster.config=basic build
 ```
-Build the full project (including Groovy, PHP, JavaEE/JakartaEE and JavaScript features):
+Build the full project (may include clusters which are not be in the release):
 ```
-$ ant -Dcluster.config=full
+$ ant -Dcluster.config=full build
 ```
 Build the NetBeans Platform:
 ```
-$ ant -Dcluster.config=platform
+$ ant -Dcluster.config=platform build
 ```
 Cleanup:
 ```

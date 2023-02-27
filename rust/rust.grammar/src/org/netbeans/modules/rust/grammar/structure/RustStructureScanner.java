@@ -23,7 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.api.StructureScanner;
@@ -37,6 +38,9 @@ import org.netbeans.modules.rust.grammar.folding.RustFoldingScanner;
  *
  */
 public final class RustStructureScanner implements StructureScanner {
+
+    private static final Logger LOG = Logger.getLogger(RustStructureScanner.class.getName());
+    private static final Level LOGLEVEL = Level.FINE;
 
     /**
      * Factory method
@@ -72,21 +76,34 @@ public final class RustStructureScanner implements StructureScanner {
     }
 
     private List<? extends StructureItem> createStructureFromAST(final RustAST ast) {
-        ArrayList<StructureItem> items = new ArrayList<>();
         RustASTNode crate = ast.getCrate();
         if (crate == null) {
             return Collections.emptyList();
         }
+        return recursivelyCreateStructureFromNode(ast, crate);
+    }
+
+    private static List<RustStructureItem> recursivelyCreateStructureFromNode(final RustAST ast, final RustASTNode root) {
+        if (root == null) {
+            return Collections.emptyList();
+        }
+        ArrayList<RustStructureItem> items = new ArrayList<>();
+
         Consumer<RustASTNode> adder = (node) -> {
-            items.add(new RustStructureItem(ast, node));
+            RustStructureItem item = new RustStructureItem(ast, node);
+            items.add(item);
+            item.getChildren().addAll(recursivelyCreateStructureFromNode(ast, node));
         };
 
-        crate.impls().forEach(adder);
-        crate.structs().forEach(adder);
-        crate.traits().forEach(adder);
-        crate.functions().forEach(adder);
-        crate.enums().forEach(adder);
-        crate.macros().forEach(adder);
+        LOG.log(LOGLEVEL, String.format("Visiting child %s", root.toString()));
+
+        root.enums().forEach(adder);
+        root.functions().forEach(adder);
+        root.macros().forEach(adder);
+        root.structs().forEach(adder);
+        root.traits().forEach(adder);
+        root.impls().forEach(adder);
+        root.modules().forEach(adder);
 
         return items;
     }

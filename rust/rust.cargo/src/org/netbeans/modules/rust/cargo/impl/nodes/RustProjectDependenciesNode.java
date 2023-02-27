@@ -21,6 +21,7 @@ package org.netbeans.modules.rust.cargo.impl.nodes;
 import java.awt.Image;
 import javax.swing.Action;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
+import org.netbeans.modules.rust.cargo.impl.nodes.actions.dependencies.RustAddDependencyAction;
 import org.netbeans.modules.rust.project.api.RustIconFactory;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -31,13 +32,34 @@ import org.openide.util.lookup.Lookups;
 /**
  * The "Dependencies" node in a Rust project.
  *
- * @author antonio
  */
 public final class RustProjectDependenciesNode extends AbstractNode {
 
+    /**
+     * The kind of children in a "Dependencies" node in a Rust project.
+     *
+     * @see
+     * <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies>Specifying
+     * dependencies</a>
+     * @see
+     * <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#development-dependencies>Development
+     * dependencies.</a>
+     * @see
+     * <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#build-dependencies>Build
+     * dependencies</a>
+     */
     public enum DependencyType {
+        /**
+         * Normal Rust project runtime dependencies.
+         */
         DEPENDENCY,
+        /**
+         * Development time dependencies.
+         */
         DEV_DEPENDENCY,
+        /**
+         * Build time dependencies.
+         */
         BUILD_DEPENDENCY,
     }
 
@@ -105,9 +127,18 @@ public final class RustProjectDependenciesNode extends AbstractNode {
         return RustIconFactory.getDependenciesFolderIcon(true);
     }
 
+    /**
+     * Let users add dependencies, development dependencies and build dependencies
+     * from the main "Dependencies node".
+     * @param context
+     * @return 
+     */
     @Override
     public Action[] getActions(boolean context) {
-        return new Action[0];
+        return new Action[]{
+            new RustAddDependencyAction(cargotoml, DependencyType.DEPENDENCY),
+            new RustAddDependencyAction(cargotoml, DependencyType.DEV_DEPENDENCY),
+            new RustAddDependencyAction(cargotoml, DependencyType.BUILD_DEPENDENCY),};
     }
 
 }

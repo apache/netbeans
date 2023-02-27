@@ -32,6 +32,6 @@ public class RustProjectAPI {
      */
     public static final String RUST_PROJECT_KEY = "org-netbeans-modules-rust-project";
     @StaticResource
-    public static final String ICON = "org/netbeans/modules/rust/project/api/rust-logo-2.png";
+    public static final String ICON = "org/netbeans/modules/rust/project/api/rust-logo-3.png";
     
 }

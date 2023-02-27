@@ -34,26 +34,55 @@ public final class RustPackage {
     private final SemVer semver;
     private final String description;
     private final boolean optional;
+    private final String git;
+    private final String branch;
 
-    public RustPackage(CargoTOML cargotoml, String name, String version) {
+    private RustPackage(CargoTOML cargotoml, String name, String version) {
         this(cargotoml, name, version, false);
     }
 
-    public RustPackage(CargoTOML cargotoml, String name, String version, Boolean optional) {
-        this(cargotoml, name, version, optional, null);
+    private RustPackage(CargoTOML cargotoml, String name, String version, Boolean optional) {
+        this(cargotoml, name, version, optional, null, null, null);
     }
 
-    public RustPackage(CargoTOML cargotoml, String name, String version, String description) {
-        this(cargotoml, name, version, false, description);
-
+    private RustPackage(CargoTOML cargotoml, String name, String version, String description) {
+        this(cargotoml, name, version, false, description, null, null);
     }
-    public RustPackage(CargoTOML cargotoml, String name, String version, Boolean optional, String description) {
+
+    private RustPackage(CargoTOML cargotoml, String name, String version, Boolean optional, String description, String git, String branch) {
         this.cargotoml = cargotoml;
         this.name = name;
         this.version = version;
-        this.semver = new SemVer(version);
         this.description = description;
         this.optional = optional == null ? false : optional;
+        this.git = git;
+        this.branch = branch;
+        // TODO: We set a "SemVer" to "0.0.0" if this comes from git.
+        this.semver = version == null ? new SemVer("0.0.0") : new SemVer(version);
+    }
+
+    public static final RustPackage withNameAndVersion(CargoTOML cargotoml, String name, String version) {
+        return withNameAndVersion(cargotoml, name, version, false);
+    }
+
+    public static final RustPackage withNameAndVersion(CargoTOML cargotoml, String name, String version, Boolean optional) {
+        return new RustPackage(cargotoml, name, version, optional, null, null, null);
+    }
+
+    public static RustPackage withNameVersionAndDescription(CargoTOML cargotoml, String name, String version, String description) {
+        return new RustPackage(cargotoml, name, version, false, description, null, null);
+    }
+
+    public static final RustPackage withGit(CargoTOML cargotoml, String name, String git, String branch) {
+        return new RustPackage(cargotoml, name, null, false, null, git, branch);
+    }
+
+    public String getGit() {
+        return git;
+    }
+
+    public String getBranch() {
+        return branch;
     }
 
     public CargoTOML getCargotoml() {

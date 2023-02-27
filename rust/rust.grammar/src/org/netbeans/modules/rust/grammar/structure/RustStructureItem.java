@@ -21,7 +21,6 @@ package org.netbeans.modules.rust.grammar.structure;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import org.netbeans.modules.csl.api.ElementHandle;
@@ -53,6 +52,8 @@ public final class RustStructureItem implements StructureItem {
                 return "org/netbeans/modules/rust/grammar/structure/resources/structure-impl.png"; // NOI18N
             case MACRO:
                 return "org/netbeans/modules/rust/grammar/structure/resources/structure-macro.png"; // NOI18N
+            case MODULE:
+                return "org/netbeans/modules/rust/grammar/structure/resources/structure-module.png"; // NOI18N
             default:
                 return "org/netbeans/modules/rust/grammar/structure/resources/structure-struct.png"; // NOI18N
         }
@@ -60,7 +61,7 @@ public final class RustStructureItem implements StructureItem {
 
     final RustAST ast;
     final RustASTNode node;
-    private List<? extends StructureItem> children;
+    private List<RustStructureItem> children;
 
     public RustStructureItem(RustAST ast, RustASTNode node) {
         this.ast = ast;
@@ -83,13 +84,10 @@ public final class RustStructureItem implements StructureItem {
         return node.getStart();
     }
 
-    private List<? extends StructureItem> getChildren() {
+    List<RustStructureItem> getChildren() {
+        // TODO: We're not thread safe. Does this matter?
         if (children == null) {
-            List<StructureItem> children = new ArrayList<>();
-            node.functions().forEach((f) -> {
-                children.add(new RustStructureItem(ast, f));
-            });
-            this.children = children;
+            this.children = new ArrayList<>();
         }
         return children;
     }
@@ -146,6 +144,11 @@ public final class RustStructureItem implements StructureItem {
     @Override
     public String getName() {
         return node.getName();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[ITEM: %s]", node.toString());
     }
 
 }

@@ -34,8 +34,6 @@
     <target name="init-antlr">
         <property name="antlr.apt.output.dir" location="src/org/netbeans/modules/rust/grammar/antlr4" />
         <property name="antlr.apt.grammar.dir" location="src/org/netbeans/modules/rust/grammar/antlr4/g4" />
-        <property name="antlr.jar" location="external/antlr4-4.11.1.jar" />
-        <property name="antlr-runtime.jar" location="external/antlr4-runtime-4.11.1.jar" />
     </target>
 
     <!-- Checks if Antlr needs to be run or not (to force you may remove file "RustParser.tokens" -->

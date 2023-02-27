@@ -63,6 +63,10 @@ options
  * specific language governing permissions and limitations
  * under the License.
  */
+
+// DO NOT MODIFY THIS FILE!
+// This file is generated file from RustParser.g4 at compile time!
+
 }
 // entry point
 // 4

@@ -147,14 +147,28 @@ public class CargoTOMLParser {
             Object value = declaredDependency.getValue();
             if (value instanceof String) {
                 String stringValue = (String) value;
-                packages.add(new RustPackage(cargotoml, key, stringValue));
+                packages.add(RustPackage.withNameAndVersion(cargotoml, key, stringValue));
             } else if (value instanceof TomlTable) {
                 String dependencyName = key.replaceAll("^dependencies\\.", ""); // NOI18N
                 TomlTable dependencyInfo = (TomlTable) value;
                 String version = dependencyInfo.getString("version"); // NOI18N
-                Boolean optional = dependencyInfo.getBoolean("optional"); // NOI18N
-                RustPackage rp = new RustPackage(cargotoml, dependencyName, version, optional);
-                packages.add(new RustPackage(cargotoml, dependencyName, version));
+                String git = dependencyInfo.getString("git"); // NOI18N
+                if (version != null) {
+                    // Examples:
+                    // [dependencies]
+                    // some-crate = { version = "1.0", registry = "my-registry" }
+                    Boolean optional = dependencyInfo.getBoolean("optional"); // NOI18N
+                    RustPackage rp = RustPackage.withNameAndVersion(cargotoml, dependencyName, version, optional);
+                    packages.add(rp);
+                } else if (git != null) {
+                    // Examples:
+                    // [dependencies]
+                    // regex = { git = "https://github.com/rust-lang/regex" }
+                    // regex = { git = "https://github.com/rust-lang/regex", branch = "next" }
+                    String branch = dependencyInfo.getString("branch");
+                    RustPackage rp = RustPackage.withGit(cargotoml, dependencyName, git, branch);
+                    packages.add(rp);
+                }
             } else {
                 // TODO: Add support for github dependencies and registry dependencies https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
                 LOG.warning(String.format("Unrecognized cargo dev-dependency on file %s with key '%s', value '%s'",

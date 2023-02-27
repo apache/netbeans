@@ -65,7 +65,6 @@ public enum CargoCommand {
 
     public String getDescription() {
         return NbBundle.getMessage(CargoCommand.class, name() + "_DESC"); // NOI18N
-        // NOI18N
     }
 
 }

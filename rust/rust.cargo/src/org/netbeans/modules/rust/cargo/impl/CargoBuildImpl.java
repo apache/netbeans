@@ -29,8 +29,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
@@ -86,6 +84,7 @@ public class CargoBuildImpl implements Cargo {
             File workingDirectory = FileUtil.toFile(cargotoml.getFileObject()).getParentFile();
             pb.setWorkingDirectory(workingDirectory.getAbsolutePath());
             pb.setRedirectErrorStream(false);
+            // TODO: Parametrize the "cargo" path
             pb.setExecutable("cargo"); // NOI18N
             pb.setArguments(arguments);
 
@@ -117,6 +116,7 @@ public class CargoBuildImpl implements Cargo {
             String commandNames = Arrays.stream(commands).map(CargoCommand::getDisplayName).collect(Collectors.joining(",")); // NOI18N
             String ioName = String.format("%s (%s)", projectName, commandNames); // NOI18N
             InputOutput console = IOProvider.getDefault().getIO(ioName, false);
+            console.select();
 
             ExecutionDescriptor ed = new ExecutionDescriptor()
                     .inputOutput(IOProvider.getDefault().getIO(ioName, false))
@@ -184,7 +184,8 @@ public class CargoBuildImpl implements Cargo {
             File workingDirectory = new File(System.getProperty("user.home")); // NOI18N
             pb.setWorkingDirectory(workingDirectory.getAbsolutePath());
             pb.setRedirectErrorStream(false);
-            pb.setExecutable("cargo");
+            // TODO: Parametrize the "cargo" path
+            pb.setExecutable("cargo"); // NOI18N
             String[] arguments = {
                 "search", // NOI18N
                 text, // TODO: What happens with spaces?
@@ -244,7 +245,7 @@ public class CargoBuildImpl implements Cargo {
             description = line.substring(i + 1);
             description = description.replace("\n", "");
 
-            RustPackage rustPackage = new RustPackage(cargotoml, name, version, description);
+            RustPackage rustPackage = RustPackage.withNameVersionAndDescription(cargotoml, name, version, description);
             packages.add(rustPackage);
         }
         return packages;

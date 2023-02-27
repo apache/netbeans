@@ -20,12 +20,10 @@ package org.netbeans.modules.rust.grammar.ast;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.netbeans.modules.rust.grammar.antlr4.RustParser;
 import org.netbeans.modules.rust.grammar.antlr4.RustParserBaseVisitor;
 import org.openide.util.Cancellable;
@@ -111,6 +109,31 @@ final class RustASTVisitor extends RustParserBaseVisitor<RustASTNode> implements
     }
 
     @Override
+    public RustASTNode visitModule(RustParser.ModuleContext ctx) {
+        if (cancelled.get()) {
+            return null;
+        }
+        RustASTNode current = peek();
+
+        RustASTNode module = new RustASTNode(RustASTNodeKind.MODULE);
+        module.setName(ctx.identifier().getText());
+        module.setRange(ctx.start, ctx.stop);
+        module.setFold(ctx.LCURLYBRACE(), ctx.RCURLYBRACE());
+        current.addModule(module);
+
+        LOG.log(LOGLEVEL, String.format("Visiting module %s%n", module.getName()));
+
+        push(module);
+        // Visit children to seek for other things (modules, functions, etc.)
+        for (ParseTree tree : ctx.children) {
+            tree.accept(this);
+        }
+        pop();
+
+        return module;
+    }
+
+    @Override
     public RustASTNode visitMacroRulesDefinition(RustParser.MacroRulesDefinitionContext ctx) {
         if (cancelled.get()) {
             return null;
@@ -139,7 +162,7 @@ final class RustASTVisitor extends RustParserBaseVisitor<RustASTNode> implements
         return macro;
     }
 
-   @Override
+    @Override
     public RustASTNode visitTrait_(RustParser.Trait_Context ctx) {
         if (cancelled.get()) {
             return null;
@@ -193,7 +216,6 @@ final class RustASTVisitor extends RustParserBaseVisitor<RustASTNode> implements
         return impl;
     }
 
- 
     @Override
     public RustASTNode visitTraitImpl(RustParser.TraitImplContext ctx) {
         if (cancelled.get()) {
@@ -271,56 +293,6 @@ final class RustASTVisitor extends RustParserBaseVisitor<RustASTNode> implements
 
         current.addFunction(function);
         return function;
-    }
-
-    private final void addFoldToParent(RustASTNode parent, TerminalNode start, TerminalNode stop) {
-        parent.addCodeblockFold(start, stop);
-    }
-
-    @Override
-    public RustASTNode visitExpressionWithBlock(RustParser.ExpressionWithBlockContext ctx) {
-        if (cancelled.get()) {
-            return null;
-        }
-        RustASTNode parent = peek();
-        Consumer<? super RustParser.BlockExpressionContext> addBlockFold = (c) -> {
-            if (c != null) {
-                addFoldToParent(parent, c.LCURLYBRACE(), c.RCURLYBRACE());
-            }
-        };
-        // TODO: Review this folding. We're invoking the same functions several times here, is this ok?
-        addBlockFold.accept(ctx.blockExpression());
-        if (ctx.asyncBlockExpression() != null && ctx.asyncBlockExpression().blockExpression() != null) {
-            addBlockFold.accept(ctx.asyncBlockExpression().blockExpression());
-        }
-        if (ctx.expressionWithBlock() != null) {
-            visitExpressionWithBlock(ctx.expressionWithBlock());
-        }
-        if (ctx.ifExpression() != null) {
-            ctx.ifExpression().blockExpression().forEach(addBlockFold);
-        }
-        if (ctx.ifLetExpression() != null) {
-            ctx.ifLetExpression().blockExpression().forEach(addBlockFold);
-        }
-        if (ctx.loopExpression() != null) {
-            RustParser.LoopExpressionContext loop = ctx.loopExpression();
-            if (loop.infiniteLoopExpression() != null) {
-                addBlockFold.accept(loop.infiniteLoopExpression().blockExpression());
-            }
-            if (loop.predicateLoopExpression() != null) {
-                addBlockFold.accept(loop.predicateLoopExpression().blockExpression());
-            }
-            if (loop.iteratorLoopExpression() != null) {
-                addBlockFold.accept(loop.iteratorLoopExpression().blockExpression());
-            }
-            if (loop.predicatePatternLoopExpression() != null) {
-                addBlockFold.accept(loop.predicatePatternLoopExpression().blockExpression());
-            }
-        }
-        if (ctx.matchExpression() != null) {
-            addFoldToParent(parent, ctx.matchExpression().LCURLYBRACE(), ctx.matchExpression().RCURLYBRACE());
-        }
-        return parent;
     }
 
     @Override

@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -76,6 +78,10 @@ public class RustASTNode {
      */
     private final TreeMap<String, RustASTNode> macros;
     /**
+     * The modules in this node.
+     */
+    private final TreeMap<String, RustASTNode> modules;
+    /**
      * Any nested folds this node may have.
      */
     private final List<OffsetRange> codeblockFolds;
@@ -92,13 +98,29 @@ public class RustASTNode {
 
     public RustASTNode(RustASTNodeKind kind) {
         this.kind = kind;
-        this.functions = new TreeMap<>();
-        this.structs = new TreeMap<>();
-        this.impls = new TreeMap<>();
-        this.traits = new TreeMap<>();
         this.enums = new TreeMap<>();
+        this.functions = new TreeMap<>();
+        this.impls = new TreeMap<>();
         this.macros = new TreeMap<>();
+        this.modules = new TreeMap<>();
+        this.structs = new TreeMap<>();
+        this.traits = new TreeMap<>();
         this.codeblockFolds = new ArrayList<>();
+    }
+
+    /**
+     * Recursively visits this node's children with a visitor.
+     *
+     * @param visitor The visitor.
+     */
+    public void visit(Consumer<RustASTNode> visitor) {
+        enums().forEach(visitor);
+        functions().forEach(visitor);
+        impls().forEach(visitor);
+        macros().forEach(visitor);
+        modules().forEach(visitor);
+        structs().forEach(visitor);
+        traits().forEach(visitor);
     }
 
     private void setParent(RustASTNode parent) {
@@ -285,6 +307,24 @@ public class RustASTNode {
 
     public Collection<RustASTNode> macros() {
         return macros.values();
+    }
+
+    public void addModule(RustASTNode module) {
+        module.setParent(this);
+        modules.put(module.getName(), module);
+    }
+
+    public RustASTNode getModule(String name) {
+        return modules.get(name);
+    }
+
+    public Collection<RustASTNode> modules() {
+        return modules.values();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s:%s]", kind.name(), name);
     }
 
 }

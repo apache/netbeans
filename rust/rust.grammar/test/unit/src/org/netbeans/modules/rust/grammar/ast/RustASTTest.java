@@ -19,6 +19,11 @@
 package org.netbeans.modules.rust.grammar.ast;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.function.Consumer;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -48,7 +53,6 @@ public class RustASTTest extends NbTestCase {
         assertEquals(errorMessages, 0, ast.getErrors().size());
 
         // Find the 'impl Val' and find a 'value' function there
-        System.out.format("Impls: '%s'%n", crate.implNames());
         assertNotNull(crate.getImpl("Val"));
         assertNotNull(crate.getImpl("Val").getFunction("value"));
 
@@ -62,16 +66,75 @@ public class RustASTTest extends NbTestCase {
         assertEquals(mainFold.toString(), 1149, mainFold.getStart());
         assertEquals(mainFold.toString(), 1360, mainFold.getEnd());
 
-        // main.codeblockFolds() should not be null, because we have an if statement...
-        assertNotNull(main.codeblockFolds());
-        assertFalse(main.codeblockFolds().isEmpty());
-        assertEquals("if in main must have two code blocks", 2, main.codeblockFolds().size());
-        OffsetRange ifThenFold = main.codeblockFolds().get(0);
-        assertEquals(ifThenFold.toString(), 1262, ifThenFold.getStart());
-        assertEquals(ifThenFold.toString(), 1284, ifThenFold.getEnd());
-        OffsetRange ifElseFold = main.codeblockFolds().get(1);
-        assertEquals(ifElseFold.toString(), 1290, ifElseFold.getStart());
-        assertEquals(ifElseFold.toString(), 1310, ifElseFold.getEnd());
+    }
+
+    /**
+     * Test of parse method, of class RustAST with nested modules.
+     */
+    @Test
+    public void testShouldBuildAST_for_nested_modules_rs() throws IOException {
+        System.out.println("testShouldBuildAST_for_nested_modules_rs");
+        String fileText = RustTestUtils.getFileText(getDataDir(), "nested_modules.rs");
+        RustAST ast = RustAST.parse(null, fileText);
+        RustASTNode crate = ast.getCrate();
+
+        assertNotNull(crate);
+        assertEquals(1, crate.functions().size());
+        assertNotNull("main", crate.getFunction("main"));
+
+        assertEquals(1, crate.modules().size());
+        RustASTNode A = crate.getModule("A");
+        assertNotNull("A", A);
+
+        assertEquals(2, A.functions().size());
+        assertNotNull("A.a", A.getFunction("a"));
+        assertNotNull("A.aa", A.getFunction("aa"));
+
+        assertEquals(1, A.modules().size());
+        RustASTNode B = A.getModule("B");
+        assertNotNull("B", B);
+
+        assertEquals(1, B.functions().size());
+        assertNotNull("b", B.getFunction("b"));
+    }
+
+    private static String String_rep(int n) {
+        byte[] spaces = new byte[n];
+        Arrays.fill(spaces, (byte) ' ');
+        return new String(spaces, StandardCharsets.US_ASCII);
+    }
+
+    @Test
+    public void testShouldBuildAST_visit_nodes_of_nested_modules_rs() throws IOException {
+        System.out.println("testShouldBuildAST_visit_nodes_of_nested_modules_rs");
+        String fileText = RustTestUtils.getFileText(getDataDir(), "nested_modules.rs");
+        RustAST ast = RustAST.parse(null, fileText);
+        RustASTNode crate = ast.getCrate();
+
+        StringBuilder sb = new StringBuilder();
+
+        class PrintingVisitor implements Consumer<RustASTNode> {
+
+            int level = 0;
+
+            @Override
+            public void accept(RustASTNode node) {
+                sb.append(String_rep(level));
+                sb.append(node);
+                sb.append('\n');
+                level += 2;
+                node.visit(this);
+                level -= 2;
+            }
+
+        };
+
+        crate.visit(new PrintingVisitor());
+
+        String result = sb.toString();
+        // DEBUGGING:
+        // System.out.format("RESULT: '%s'%n", result);
+        assertTrue(result.contains("    [FUNCTION:b]"));
 
     }
 

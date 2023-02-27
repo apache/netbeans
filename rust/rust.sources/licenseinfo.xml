@@ -22,8 +22,16 @@
 <licenseinfo>
     <fileset>
         <file>src/org/netbeans/modules/rust/sources/rs/templates/rust-file.rs</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP">
+            A sample rust file for the user to edit.
+        </comment>
+    </fileset>
+    <fileset>
         <file>src/org/netbeans/modules/rust/sources/rs/templates/rust-file.png</file>
         <license ref="Apache-2.0-ASF" />
-        <comment type="TEMPLATE_MINIMAL_IP" />
+        <comment type="COMMENT_UNSUPPORTED">
+            Icon for Rust files.
+        </comment>
     </fileset>
 </licenseinfo>

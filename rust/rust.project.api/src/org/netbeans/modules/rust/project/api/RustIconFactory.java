@@ -35,6 +35,21 @@ public final class RustIconFactory {
     private static final String OPENED_ICON_PATH = "org/netbeans/modules/rust/project/api/defaultFolderOpen.gif";  // NOI18N
     private static final String ICON_PATH = "org/netbeans/modules/rust/project/api/defaultFolder.gif"; // NOI18N
 
+    /**
+     * Returns an icon for Rust.
+     *
+     * @return The icon.
+     */
+    public static Image getRustIcon() {
+        return ImageUtilities.loadImage(RustProjectAPI.ICON);
+    }
+
+    /**
+     * Returns a folder icon suitable for light/dark themes. Vectorized.
+     *
+     * @param opened true for opened icon, false otherwise.
+     * @return The folder icon
+     */
     public static Image getTreeFolderIcon(boolean opened) {
         Image base = (Image) UIManager.get(opened ? OPENED_ICON_KEY_UIMANAGER_NB : ICON_KEY_UIMANAGER_NB); // #70263;
         if (base == null) {
@@ -49,24 +64,45 @@ public final class RustIconFactory {
         return base;
     }
 
+    /**
+     * Returns a folder icon, optionally opened, with a "source" badge.
+     *
+     * @param opened True for opened icon
+     * @return The icon
+     */
     public static Image getSourceFolderIcon(boolean opened) {
         Image base = getTreeFolderIcon(opened);
         Image badge = ImageUtilities.loadImage("org/netbeans/modules/rust/project/api/sources-badge.png"); // NOI18N
         return ImageUtilities.mergeImages(base, badge, 8, 8);
     }
 
+    /**
+     * Returns a folder icon, optionally opened, with a "dependencies" badge.
+     * @param opened True for opened icon.
+     * @return The icon
+     */
     public static Image getDependenciesFolderIcon(boolean opened) {
         Image base = getTreeFolderIcon(opened);
         Image badge = ImageUtilities.loadImage("org/netbeans/modules/rust/project/api/libraries-badge.png"); // NOI18N
         return ImageUtilities.mergeImages(base, badge, 8, 8);
     }
 
+    /**
+     * Returns a folder icon, optionally opened, with a "config" badge.
+     * @param opened True for opened icon.
+     * @return The icon
+     */
     public static Image getImportantFilesFolderIcon(boolean opened) {
         Image base = getTreeFolderIcon(opened);
         Image badge = ImageUtilities.loadImage("org/netbeans/modules/rust/project/api/config-badge.gif"); // NOI18N
         return ImageUtilities.mergeImages(base, badge, 8, 8);
     }
 
+    /**
+     * Returns a folder icon, optionally opened, with a "workspace" badge.
+     * @param opened True for opened icon.
+     * @return The icon
+     */
     public static Image getWorkspaceFolderIcon(boolean opened) {
         Image base = getTreeFolderIcon(opened);
         Image badge = ImageUtilities.loadImage("org/netbeans/modules/rust/project/api/rust-badge.png"); // NOI18N

@@ -56,6 +56,7 @@ public class RustProjectTemplatePanelVisual extends JPanel implements DocumentLi
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        optProjectType = new javax.swing.ButtonGroup();
         projectNameLabel = new javax.swing.JLabel();
         projectNameTextField = new javax.swing.JTextField();
         projectLocationLabel = new javax.swing.JLabel();
@@ -63,6 +64,8 @@ public class RustProjectTemplatePanelVisual extends JPanel implements DocumentLi
         browseButton = new javax.swing.JButton();
         createdFolderLabel = new javax.swing.JLabel();
         createdFolderTextField = new javax.swing.JTextField();
+        optApplication = new javax.swing.JRadioButton();
+        optLibrary = new javax.swing.JRadioButton();
 
         projectNameLabel.setLabelFor(projectNameTextField);
         org.openide.awt.Mnemonics.setLocalizedText(projectNameLabel, org.openide.util.NbBundle.getMessage(RustProjectTemplatePanelVisual.class, "RustProjectTemplatePanelVisual.projectNameLabel.text")); // NOI18N
@@ -83,6 +86,15 @@ public class RustProjectTemplatePanelVisual extends JPanel implements DocumentLi
 
         createdFolderTextField.setEditable(false);
 
+        optProjectType.add(optApplication);
+        optApplication.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(optApplication, org.openide.util.NbBundle.getMessage(RustProjectTemplatePanelVisual.class, "RustProjectTemplatePanelVisual.optApplication.text")); // NOI18N
+        optApplication.setToolTipText(org.openide.util.NbBundle.getMessage(RustProjectTemplatePanelVisual.class, "RustProjectTemplatePanelVisual.optApplication.toolTipText")); // NOI18N
+
+        optProjectType.add(optLibrary);
+        org.openide.awt.Mnemonics.setLocalizedText(optLibrary, org.openide.util.NbBundle.getMessage(RustProjectTemplatePanelVisual.class, "RustProjectTemplatePanelVisual.optLibrary.text")); // NOI18N
+        optLibrary.setToolTipText(org.openide.util.NbBundle.getMessage(RustProjectTemplatePanelVisual.class, "RustProjectTemplatePanelVisual.optLibrary.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -95,11 +107,18 @@ public class RustProjectTemplatePanelVisual extends JPanel implements DocumentLi
                     .addComponent(createdFolderLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(projectNameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
-                    .addComponent(projectLocationTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
-                    .addComponent(createdFolderTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(browseButton)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(projectNameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+                            .addComponent(projectLocationTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+                            .addComponent(createdFolderTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(browseButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(optLibrary)
+                            .addComponent(optApplication))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -118,7 +137,11 @@ public class RustProjectTemplatePanelVisual extends JPanel implements DocumentLi
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(createdFolderLabel)
                     .addComponent(createdFolderTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(213, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(optApplication)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(optLibrary)
+                .addContainerGap(228, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -149,6 +172,9 @@ public class RustProjectTemplatePanelVisual extends JPanel implements DocumentLi
     private javax.swing.JButton browseButton;
     private javax.swing.JLabel createdFolderLabel;
     private javax.swing.JTextField createdFolderTextField;
+    private javax.swing.JRadioButton optApplication;
+    private javax.swing.JRadioButton optLibrary;
+    private javax.swing.ButtonGroup optProjectType;
     private javax.swing.JLabel projectLocationLabel;
     private javax.swing.JTextField projectLocationTextField;
     private javax.swing.JLabel projectNameLabel;
@@ -211,6 +237,8 @@ public class RustProjectTemplatePanelVisual extends JPanel implements DocumentLi
 
         d.putProperty("projdir", new File(folder));
         d.putProperty("name", name);
+
+        d.putProperty("is-rust-library", optLibrary.isSelected());
     }
 
     void read(WizardDescriptor settings) {
@@ -224,8 +252,16 @@ public class RustProjectTemplatePanelVisual extends JPanel implements DocumentLi
 
         String projectName = (String) settings.getProperty("name");
         if (projectName == null) {
-            projectName = "RustProjectTemplate";
+            projectName = "MyRustProject";
         }
+
+        Boolean isLibraryProject = (Boolean) settings.getProperty("is-rust-library"); // NOI18N
+        if (isLibraryProject != null && isLibraryProject) {
+            optLibrary.setSelected(true);
+        } else {
+            optApplication.setSelected(true);
+        }
+
         this.projectNameTextField.setText(projectName);
         this.projectNameTextField.selectAll();
     }

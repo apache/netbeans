@@ -44,12 +44,16 @@ import org.openide.util.lookup.InstanceContent;
     "MINOR=Minor version",
     "PATCH=Patch version",
     "DESCRIPTION=Description",
+    "GIT=Git repository",
+    "BRANCH=Git repository branch",
     "NAME_DESC=The name of this package",
     "VERSION_DESC=The version of this package",
     "MAJOR_DESC=The major version of this package",
     "MINOR_DESC=The minor version of this package",
     "PATCH_DESC=The patch version of this package",
-    "DESCRIPTION_DESC=The description of this package"
+    "DESCRIPTION_DESC=The description of this package",
+    "GIT_DESC=A git repository where this package is downloaded from",
+    "BRANCH_DESC=The branch used to fetch this package source from git",
 })
 public final class RustPackageNode extends AbstractNode {
 
@@ -59,7 +63,9 @@ public final class RustPackageNode extends AbstractNode {
         MAJOR,
         MINOR,
         PATCH,
-        DESCRIPTION;
+        DESCRIPTION,
+        GIT,
+        BRANCH;
     }
 
     private final RustPackage rustPackage;
@@ -101,6 +107,8 @@ public final class RustPackageNode extends AbstractNode {
         set.put(getMinorProperty());
         set.put(getPatchProperty());
         set.put(getDescriptionProperty());
+        set.put( getGitProperty());
+        set.put( getBranchProperty());
 
         // Add the set of properties to the sheet
         sheet.put(set);
@@ -130,6 +138,14 @@ public final class RustPackageNode extends AbstractNode {
 
     public Property<String> getDescriptionProperty() {
         return getStringProperty(PROPS.DESCRIPTION, RustPackage::getDescription);
+    }
+
+    public Property<String> getGitProperty() {
+        return getStringProperty(PROPS.GIT, RustPackage::getGit);
+    }
+
+    public Property<String> getBranchProperty() {
+        return getStringProperty(PROPS.BRANCH, RustPackage::getBranch);
     }
 
     private Property<String> getStringProperty(PROPS props, Function<RustPackage, String> value) {

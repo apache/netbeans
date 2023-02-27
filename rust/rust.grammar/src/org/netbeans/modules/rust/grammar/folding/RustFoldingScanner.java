@@ -39,7 +39,7 @@ import org.openide.util.NbBundle;
  */
 public final class RustFoldingScanner {
 
-    private static final String getBundleString(String key) {
+    private static String getBundleString(String key) {
         return NbBundle.getMessage(RustFoldingScanner.class, key);
     }
 
@@ -97,7 +97,7 @@ public final class RustFoldingScanner {
             FoldTemplate.DEFAULT_BLOCK);
 
     /**
-     * FoldType for Rust enums
+     * FoldType for Rust macros
      */
     @NbBundle.Messages("FT_Macros=Macros")
     public static final FoldType TYPE_MACRO = FoldType.MEMBER.derive("macro", // NOI18N
@@ -105,12 +105,96 @@ public final class RustFoldingScanner {
             FoldTemplate.DEFAULT_BLOCK);
 
     /**
+     * FoldType for Rust modules
+     */
+    @NbBundle.Messages("FT_Modules=Modules")
+    public static final FoldType TYPE_MODULE = FoldType.MEMBER.derive("module", // NOI18N
+            getBundleString("FT_Modules"), // NOI18N
+            FoldTemplate.DEFAULT_BLOCK);
+
+    public Map<String, List<OffsetRange>> folds(RustLanguageParserResult rustLanguageParserResult) {
+        RustAST ast = rustLanguageParserResult.getAST();
+        if (ast == null) {
+            return Collections.emptyMap();
+        }
+        RustASTNode crate = ast.getCrate();
+        if (crate == null) {
+            return Collections.emptyMap();
+        }
+
+        HashMap<String, List<OffsetRange>> foldMap = new HashMap<>();
+        recursivelyAddFolds(crate, foldMap);
+        return foldMap;
+
+    }
+
+    private Map<String, List<OffsetRange>> recursivelyAddFolds(
+            RustASTNode node,
+            final Map<String, List<OffsetRange>> foldMap) {
+
+        if (node.getFold() != null) {
+            String foldType = null;
+            switch (node.getKind()) {
+                case ENUM:
+                    foldType = TYPE_ENUM.code();
+                    break;
+                case FUNCTION:
+                    foldType = TYPE_FUNCTION.code();
+                    break;
+                case IMPL:
+                    foldType = TYPE_IMPL.code();
+                    break;
+                case MACRO:
+                    foldType = TYPE_MACRO.code();
+                    break;
+                case MODULE:
+                    foldType = TYPE_MODULE.code();
+                    break;
+                case STRUCT:
+                    foldType = TYPE_STRUCTS.code();
+                    break;
+                case TRAIT:
+                    foldType = TYPE_TRAIT.code();
+                    break;
+            }
+            if (foldType != null) {
+                List<OffsetRange> folds = foldMap.get(foldType);
+                if (folds == null) {
+                    folds = new ArrayList<>();
+                    foldMap.put(foldType,folds);
+                }
+                if (! folds.contains(node.getFold())) {
+                    folds.add(node.getFold());
+                }
+            }
+        }
+
+        node.visit( (child) -> { recursivelyAddFolds(child, foldMap); });
+
+        if (node.codeblockFolds() != null) {
+            List<OffsetRange> codeBlockFolds = foldMap.get(TYPE_CODE_BLOCKS.code());
+            if (codeBlockFolds == null) {
+                codeBlockFolds = new ArrayList<>();
+                foldMap.put(TYPE_CODE_BLOCKS.code(), codeBlockFolds);
+            }
+            final List<OffsetRange> finalCodeBlocks = codeBlockFolds;
+            node.codeblockFolds().forEach( (range) -> {
+                if (! finalCodeBlocks.contains(range)) {
+                    finalCodeBlocks.add(range);
+                }
+            });
+        }
+
+        return foldMap;
+    }
+
+    /**
      * Returns the codeblockFolds from the giveh RustLanguageParserResult
      *
      * @param rustLanguageParserResult The result of parsing, i.e.: a RustAST
      * @return A list of codeblockFolds of appropriate types.
      */
-    public Map<String, List<OffsetRange>> folds(RustLanguageParserResult rustLanguageParserResult) {
+    public Map<String, List<OffsetRange>> foldsOLD(RustLanguageParserResult rustLanguageParserResult) {
         RustAST ast = rustLanguageParserResult.getAST();
         if (ast == null) {
             return Collections.emptyMap();
@@ -167,6 +251,13 @@ public final class RustFoldingScanner {
             List<OffsetRange> macroFolds = crate.macros().stream().map(RustASTNode::getFold).filter(Objects::nonNull).collect(Collectors.toList());
             folds.put(TYPE_MACRO.code(), macroFolds);
             crate.macros().forEach(addFunctionsInNode);
+        }
+
+        // Modules
+        {
+            List<OffsetRange> moduleFolds = crate.modules().stream().map(RustASTNode::getFold).filter(Objects::nonNull).collect(Collectors.toList());
+            folds.put(TYPE_MODULE.code(), moduleFolds);
+            crate.modules().forEach(addFunctionsInNode);
         }
 
         // Function folds 

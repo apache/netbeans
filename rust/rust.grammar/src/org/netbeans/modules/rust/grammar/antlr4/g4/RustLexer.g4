@@ -66,6 +66,10 @@ CHANNEL_COMMENT
  * specific language governing permissions and limitations
  * under the License.
  */
+
+// DO NOT MODIFY THIS FILE!
+// This file is generated file from RustLexer.g4 at compile time!
+
     }
     
     // https://doc.rust-lang.org/reference/keywords.html strict

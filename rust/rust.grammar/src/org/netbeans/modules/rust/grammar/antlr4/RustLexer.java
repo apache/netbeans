@@ -19,6 +19,10 @@ package org.netbeans.modules.rust.grammar.antlr4;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+// DO NOT MODIFY THIS FILE!
+// This file is generated file from RustLexer.g4 at compile time!
+
     
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;

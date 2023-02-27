@@ -53,6 +53,8 @@ public class RustSources implements Sources {
     @Override
     public SourceGroup[] getSourceGroups(String type) {
         if (Sources.TYPE_GENERIC.equals(type)) {
+            return new SourceGroup[] { new RustSourceGroup(project, project.getProjectDirectory()) };
+            /*
             ArrayList<RustSourceGroup> groups = new ArrayList<>();
             FileObject rootFO = project.getProjectDirectory();
             // Which "SourceGroups" do we have in Rust projects?
@@ -74,6 +76,7 @@ public class RustSources implements Sources {
                 }
             }
             return groups.toArray(new RustSourceGroup[0]);
+            */
         }
         return new SourceGroup[0];
     }

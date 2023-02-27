@@ -16,42 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.rust.grammar.ast;
 
-/**
- * The different kinds of ASTNodes.
- */
-public enum RustASTNodeKind {
-    /**
-     * A Rust crate.
-     */
-    CRATE,
-    /**
-     * A rust enum.
-     */
-    ENUM,
-    /**
-     * A Rust Impl.
-     */
-    IMPL,
-    /**
-     * A Rust struct.
-     */
-    STRUCT,
-    /**
-     * A Rust function.
-     */
-    FUNCTION, 
-    /**
-     * A Rust trait.
-     */
-    TRAIT,
-    /**
-     * A Rust macro rules
-     */
-    MACRO,
-    /**
-     * A Rust module
-     */
-    MODULE,
+mod A {
+
+    mod B {
+        fn b() {
+            println!("B.b function");
+        }
+    }
+
+    fn a() {
+        println!("A.a function");
+    }
+
+    pub fn aa() {
+        println!("A.aa function");
+    }
+}
+
+fn main() {
+
+    let x = if 1 == 2  {
+        "Wow!"
+    } else {
+        "world!"
+    };
+    let z = if 2 == 3 {
+        "Whatever"
+    } else {
+        "Another thing!"
+    };
+    println!("Hello, {}: {}!", x, z);
 }

@@ -20,6 +20,10 @@ package org.netbeans.modules.rust.grammar.antlr4;
  * under the License.
  */
 
+// DO NOT MODIFY THIS FILE!
+// This file is generated file from RustParser.g4 at compile time!
+
+
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**

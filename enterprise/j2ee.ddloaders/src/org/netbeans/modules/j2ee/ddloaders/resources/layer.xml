@@ -24,6 +24,9 @@
      <folder name="Navigator">
         <folder name="Panels">
             <folder name="text">
+                <folder name="x-dd-application10.0">
+                    <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
+                </folder>
                 <folder name="x-dd-application9.0">
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
@@ -40,6 +43,9 @@
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
                 <folder name="x-dd-application1.4">
+                    <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
+                </folder>
+                <folder name="x-dd-client10.0">
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
                 <folder name="x-dd-client9.0">
@@ -105,6 +111,9 @@
                 <folder name="x-dd-servlet5.0">
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
+                <folder name="x-dd-servlet6.0">
+                    <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
+                </folder>
                 <folder name="x-dd-servlet-fragment3.0">
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
@@ -115,6 +124,9 @@
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
                 <folder name="x-dd-servlet-fragment5.0">
+                    <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
+                </folder>
+                <folder name="x-dd-servlet-fragment6.0">
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
             </folder>

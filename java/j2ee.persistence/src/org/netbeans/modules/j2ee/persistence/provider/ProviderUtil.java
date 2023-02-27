@@ -980,7 +980,6 @@ public class ProviderUtil {
         return null;
     }
     
-    
     public static String getDatasourceName(PersistenceUnit pu) {
         String datasourceName = pu.getJtaDataSource();
         if (datasourceName == null) {
@@ -988,19 +987,34 @@ public class ProviderUtil {
         }
         return datasourceName;
     }
+    
     /**
      * @return array of providers known to the IDE.
      */
     public static Provider[] getAllProviders() {
-        return new Provider[]{
-                    ECLIPSELINK_PROVIDER1_0, ECLIPSELINK_PROVIDER2_0, ECLIPSELINK_PROVIDER2_1, ECLIPSELINK_PROVIDER2_2,
+        return new Provider[] {
+                    DATANUCLEUS_PROVIDER2_2, 
+                    ECLIPSELINK_PROVIDER2_2, 
+                    HIBERNATE_PROVIDER2_2, 
+                    OPENJPA_PROVIDER2_2, 
+                    DATANUCLEUS_PROVIDER2_1, 
+                    ECLIPSELINK_PROVIDER2_1, 
+                    HIBERNATE_PROVIDER2_1, 
+                    OPENJPA_PROVIDER2_1, 
+                    DATANUCLEUS_PROVIDER2_0, 
+                    ECLIPSELINK_PROVIDER2_0, 
+                    HIBERNATE_PROVIDER2_0, 
+                    OPENJPA_PROVIDER2_0, 
+                    DATANUCLEUS_PROVIDER1_0, 
+                    ECLIPSELINK_PROVIDER1_0, 
+                    HIBERNATE_PROVIDER1_0, 
+                    KODO_PROVIDER, 
+                    OPENJPA_PROVIDER1_0, 
                     TOPLINK_PROVIDER1_0, 
-                    HIBERNATE_PROVIDER1_0, HIBERNATE_PROVIDER2_0, HIBERNATE_PROVIDER2_1, HIBERNATE_PROVIDER2_2,
-                    KODO_PROVIDER, DATANUCLEUS_PROVIDER, 
-                    OPENJPA_PROVIDER1_0, OPENJPA_PROVIDER2_0, OPENJPA_PROVIDER2_1, OPENJPA_PROVIDER2_2,
-                    TOPLINK_PROVIDER_55_COMPATIBLE};
+                    TOPLINK_PROVIDER_55_COMPATIBLE
+        };
     }
-
+    
     /**
      * Makes the given persistence unit portable if possible, i.e. removes the provider class from it.
      * A persistence unit may be made portable if it uses the default provider of the project's target

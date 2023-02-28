@@ -90,27 +90,27 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         SFTP("sftp", NbBundle.getMessage(RemoteRepository.class, "Scheme.SFTP")), //NOI18N
 //        RSYNC("rsync", NbBundle.getMessage(RemoteRepository.class, "Scheme.RSYNC")), //NOI18N
         GIT("git", NbBundle.getMessage(RemoteRepository.class, "Scheme.GIT")); //NOI18N
-        
+
         private final String name;
         private final String tip;
 
         private Scheme(String name, String tip) {
             this.name = name;
             this.tip = tip;
-        };        
-         
+        };
+
         private String getTip() {
             return tip;
         }
-        
+
         @Override
         public String toString() {
             return name;
         }
     };
-    
+
     private final RemoteRepositoryPanel panel;
-    
+
     public RemoteRepository(String forPath) {
         this(null, forPath);
     }
@@ -118,11 +118,11 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
     public RemoteRepository(PasswordAuthentication pa, String forPath) {
         this(pa, forPath, false);
     }
-    
+
     private RemoteRepository(PasswordAuthentication pa, String forPath, boolean fixedUrl) {
         assert !fixedUrl || forPath != null && !forPath.trim().isEmpty();
         this.panel = new RemoteRepositoryPanel();
-        
+
         this.urlFixed = fixedUrl;
         settingTypes = new ConnectionSettingsType[] {
             new GitConnectionSettingsType(),
@@ -137,25 +137,25 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         updateCurrentSettingsType();
         validateFields();
     }
-    
+
     public JPanel getPanel() {
         return panel;
     }
-    
+
     public boolean isValid() {
         return valid;
     }
-    
+
     public Message getMessage() {
         return msg;
     }
-    
+
     public GitURI getURI() {
         return getURI(true);
     }
-    
+
     private GitURI getURI (boolean trimSpaces) {
-        String uriString = getURIString(trimSpaces);        
+        String uriString = getURIString(trimSpaces);
         if(uriString != null && !uriString.isEmpty()) {
             try {
                 return new GitURI(uriString);
@@ -165,11 +165,11 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         }
         return null;
     }
-    
+
     public void store () {
         activeSettingsType.store();
     }
-    
+
     public void setEnabled (boolean enabled) {
         this.enabled = enabled;
         panel.urlComboBox.setEnabled(enabled && urlComboEnabled);
@@ -177,7 +177,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             type.setEnabled(enabled);
         }
     }
-    
+
     public void removeChangeListener(ChangeListener listener) {
         support.removeChangeListener(listener);
     }
@@ -185,16 +185,16 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
     public void addChangeListener(ChangeListener listener) {
         support.addChangeListener(listener);
     }
-    
+
     private String getURIString (boolean trimSpaces) {
         String uriString = (String) panel.urlComboBox.getEditor().getItem();
         return uriString == null ? null : (trimSpaces ? uriString.trim() : uriString);
     }
-    
+
     private void attachListeners () {
         panel.proxySettingsButton.addActionListener(this);
         panel.directoryBrowseButton.addActionListener(this);
-        ((JTextComponent) panel.urlComboBox.getEditor().getEditorComponent()).getDocument().addDocumentListener(this);        
+        ((JTextComponent) panel.urlComboBox.getEditor().getEditorComponent()).getDocument().addDocumentListener(this);
         panel.urlComboBox.addItemListener(this);
     }
 
@@ -251,7 +251,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         JPanel panel = repository.getPanel();
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         final DialogDescriptor dd = new DialogDescriptor(panel, NbBundle.getMessage(RemoteRepositoryPanel.class, "ACSD_RepositoryPanel_Title"), //NOI18N
-                true, new Object[] { DialogDescriptor.OK_OPTION, DialogDescriptor.CANCEL_OPTION }, DialogDescriptor.OK_OPTION, 
+                true, new Object[] { DialogDescriptor.OK_OPTION, DialogDescriptor.CANCEL_OPTION }, DialogDescriptor.OK_OPTION,
                 DialogDescriptor.DEFAULT_ALIGN, new HelpCtx(RemoteRepository.class), null);
         Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
         repository.addChangeListener(new ChangeListener() {
@@ -275,7 +275,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         try {
             valid = true;
             msg = null;
-            
+
             GitURI uri = getURI();
             if(uri == null) {
                 valid = false;
@@ -286,8 +286,8 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         } finally {
             support.fireChange();
         }
-    }    
-    
+    }
+
     private void updateCurrentSettingsType () {
         Mutex.EVENT.readAccess(new Runnable() {
             @Override
@@ -373,7 +373,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         txt.setCaretPosition(end);
         txt.moveCaretPosition(start);
     }
-    
+
     private boolean initialized;
     public void waitPopulated() {
         synchronized (this) {
@@ -381,12 +381,12 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                 try {
                     wait();
                 } catch (InterruptedException ex) {
-                    
+
                 }
             }
         }
     }
-    
+
     private Map<String, ConnectionSettings> recentConnectionSettings = new HashMap<String, ConnectionSettings>();
     private void initUrlComboValues(final String forPath, final PasswordAuthentication pa) {
         enableUrlCombo(false);
@@ -395,7 +395,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             public void run() {
                 try {
                     final DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-                    
+
                     try {
                         List<ConnectionSettings> settings = GitModuleConfig.getDefault().getRecentConnectionSettings();
                         for (ConnectionSettings sett : settings) {
@@ -407,7 +407,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                     } catch (Throwable t) {
                         Git.LOG.log(Level.WARNING, null, t);
                     }
-                    
+
                     final List<String> schemeUris = new ArrayList<String>(Scheme.values().length);
                     for (Scheme s : Scheme.values()) {
                         String uri = s.toString() + (s == Scheme.FILE ? ":///" : "://");
@@ -499,7 +499,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         } catch (URISyntaxException ex) {
             //
         }
-        JFileChooser fileChooser = new AccessibleJFileChooser(NbBundle.getMessage(RemoteRepositoryPanel.class, "RepositoryPanel.FileChooser.Descritpion"), //NOI18N
+        JFileChooser fileChooser = new AccessibleJFileChooser(NbBundle.getMessage(RemoteRepositoryPanel.class, "RepositoryPanel.FileChooser.Description"), //NOI18N
                 file);
         fileChooser.setDialogTitle(NbBundle.getMessage(RemoteRepositoryPanel.class, "RepositoryPanel.FileChooser.Title")); //NOI18N
         fileChooser.setMultiSelectionEnabled(false);
@@ -509,12 +509,12 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         if (f != null) {
             comboEditor.setText(f.toURI().toString());
         }
-    }    
-    
+    }
+
     private void onProxyConfiguration() {
         OptionsDisplayer.getDefault().open("General");              // NOI18N
-    }       
-    
+    }
+
     private abstract class ConnectionSettingsType {
         protected abstract void setEnabled (boolean enabled);
         protected abstract void store ();
@@ -524,13 +524,13 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         protected void populateCredentials(PasswordAuthentication pa) { }
         protected void requestFocusInWindow () { }
     }
-    
+
     //<editor-fold defaultstate="collapsed" desc="Connection Setting Types">
     private class DefaultConnectionSettingsType extends ConnectionSettingsType {
         private final JComponent[] inputFields;
         private final UserPasswordPanel settingsPanel;
         private final EnumSet<Scheme> acceptableSchemes;
-        
+
         public DefaultConnectionSettingsType () {
             settingsPanel = new UserPasswordPanel();
             this.inputFields = new JComponent[] {
@@ -547,14 +547,14 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             };
             acceptableSchemes = EnumSet.of(Scheme.GIT, Scheme.HTTP, Scheme.HTTPS);
         }
-        
+
         @Override
         protected void setEnabled (boolean enabled) {
             for (JComponent inputField : inputFields) {
                 inputField.setEnabled(enabled);
             }
         }
-        
+
         @Override
         protected void populateFields (ConnectionSettings settings) {
             if (settings == null) {
@@ -581,7 +581,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             settingsPanel.savePasswordCheckBox.setSelected(true);
             settingsPanel.savePasswordCheckBox.setEnabled(false);
         }
-        
+
         @Override
         protected void store () {
             GitURI guri = getURI();
@@ -589,13 +589,13 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             if(guri == null) {
                 return;
             }
-            
+
             final ConnectionSettings settings = new ConnectionSettings(guri);
             settings.setUser(settingsPanel.userTextField.getText());
             settings.setPrivateKeyAuth(false);
             settings.setSaveCredentials(settingsPanel.savePasswordCheckBox.isSelected());
             settings.setPassword(settingsPanel.userPasswordField.getPassword());
-            
+
             Runnable outOfAWT = new Runnable() {
                 @Override
                 public void run() {
@@ -609,7 +609,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                 outOfAWT.run();
             }
         }
-        
+
         @Override
         protected boolean acceptUri (GitURI uri) {
             boolean accepts = false;
@@ -642,14 +642,14 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             settingsPanel.userTextField.requestFocusInWindow();
         }
     }
-    
+
     private final class SSHConnectionSettingsType extends ConnectionSettingsType implements ActionListener {
         private final JComponent[] inputFields;
         private final SSHPanel settingsPanel;
         private final JComponent[] authKeyFields;
         private final JComponent[] authPasswordFields;
         private final EnumSet<Scheme> acceptableSchemes;
-        
+
         public SSHConnectionSettingsType () {
             settingsPanel = new SSHPanel();
             this.inputFields = new JComponent[] {
@@ -688,13 +688,13 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             acceptableSchemes = EnumSet.of(Scheme.SSH, Scheme.SFTP);
             attachListeners();
         }
-        
+
         private void attachListeners () {
             settingsPanel.btnBrowse.addActionListener(this);
             settingsPanel.rbPrivateKey.addActionListener(this);
             settingsPanel.rbUsernamePassword.addActionListener(this);
         }
-        
+
         @Override
         protected void setEnabled (boolean enabled) {
             for (JComponent inputField : inputFields) {
@@ -704,7 +704,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                 updateAuthSelection();
             }
         }
-        
+
         @Override
         protected void populateFields (ConnectionSettings settings) {
             if(settings == null) {
@@ -740,7 +740,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             settingsPanel.txtIdentityFile.setText(settings.getIdentityFile());
             updateAuthSelection();
         }
-        
+
         @Override
         protected void store () {
             GitURI guri = getURI();
@@ -748,7 +748,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             if(guri == null) {
                 return;
             }
-            
+
             final ConnectionSettings settings = new ConnectionSettings(guri);
             settings.setUser(settingsPanel.userTextField.getText());
             settings.setPrivateKeyAuth(settingsPanel.rbPrivateKey.isSelected());
@@ -769,7 +769,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                 outOfAWT.run();
             }
         }
-        
+
         @Override
         protected boolean acceptUri (GitURI uri) {
             boolean accepts = false;
@@ -806,14 +806,14 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                 updateAuthSelection();
             }
         }
-        
+
         private void onBrowse() {
             String path = settingsPanel.txtIdentityFile.getText();
             if (path.isEmpty()) {
                 path = getDefaultIdentityFilePath();
             }
             File file = new File(path);
-            JFileChooser fileChooser = new AccessibleJFileChooser(NbBundle.getMessage(RemoteRepositoryPanel.class, "RepositoryPanel.IdentityFile.FileChooser.Descritpion"), //NOI18N
+            JFileChooser fileChooser = new AccessibleJFileChooser(NbBundle.getMessage(RemoteRepositoryPanel.class, "RepositoryPanel.IdentityFile.FileChooser.Description"), //NOI18N
                     path.isEmpty() ? null : file.getParentFile());
             if (!path.isEmpty()) {
                 fileChooser.setSelectedFile(file);
@@ -872,11 +872,11 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             settingsPanel.userTextField.requestFocusInWindow();
         }
     }
-    
+
     private final class FileConnectionSettingsType extends ConnectionSettingsType {
         private final JComponent[] inputFields;
         private final EnumSet<Scheme> acceptableSchemes;
-        
+
         public FileConnectionSettingsType () {
             this.inputFields = new JComponent[] {
                 panel.directoryBrowseButton,
@@ -886,14 +886,14 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             };
             acceptableSchemes = EnumSet.of(Scheme.FILE);
         }
-        
+
         @Override
         protected void setEnabled (boolean enabled) {
             for (JComponent inputField : inputFields) {
                 inputField.setEnabled(enabled);
             }
         }
-        
+
         @Override
         protected void store () {
             GitURI guri = getURI();
@@ -901,7 +901,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             if (guri == null) {
                 return;
             }
-            
+
             final ConnectionSettings settings = new ConnectionSettings(guri);
             Runnable outOfAWT = new Runnable() {
                 @Override
@@ -916,7 +916,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                 outOfAWT.run();
             }
         }
-        
+
         @Override
         protected boolean acceptUri (GitURI uri) {
             boolean accepts = false;
@@ -940,10 +940,10 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             return accepts;
         }
     }
-    
+
     private class GitConnectionSettingsType extends ConnectionSettingsType {
         private final JComponent[] inputFields;
-        
+
         public GitConnectionSettingsType () {
             this.inputFields = new JComponent[] {
                 panel.directoryBrowseButton,
@@ -952,14 +952,14 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                 panel.tipLabel
             };
         }
-        
+
         @Override
         protected void setEnabled (boolean enabled) {
             for (JComponent inputField : inputFields) {
                 inputField.setEnabled(enabled);
             }
         }
-        
+
         @Override
         protected void store () {
             GitURI guri = getURI();
@@ -967,9 +967,9 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             if(guri == null) {
                 return;
             }
-            
+
             final ConnectionSettings settings = new ConnectionSettings(guri);
-            
+
             Runnable outOfAWT = new Runnable() {
                 @Override
                 public void run() {
@@ -983,7 +983,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                 outOfAWT.run();
             }
         }
-        
+
         @Override
         protected boolean acceptUri (GitURI uri) {
             boolean accepts = false;

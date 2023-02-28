@@ -37,7 +37,7 @@ public class SwingBrowser implements HtmlBrowser.Factory, java.io.Serializable {
     protected transient PropertyChangeSupport pcs;
 
     private static final long serialVersionUID = -3735603646171376891L;
-    
+
     /** Creates new Browser */
     public SwingBrowser () {
         init ();
@@ -51,10 +51,10 @@ public class SwingBrowser implements HtmlBrowser.Factory, java.io.Serializable {
     /** Getter for browser name
      *  @return browserName name of browser
      */
-    public String getDescritpion () {
+    public String getDescription () {
         return NbBundle.getMessage (SwingBrowser.class, "LBL_SwingBrowserDescription");
     }
-    
+
     /**
      * Returns a new instance of BrowserImpl implementation.
      */
@@ -72,20 +72,20 @@ public class SwingBrowser implements HtmlBrowser.Factory, java.io.Serializable {
             return null;
         }
     }
-    
+
     /**
-     * @param l new PropertyChangeListener */    
+     * @param l new PropertyChangeListener */
     public void addPropertyChangeListener (PropertyChangeListener l) {
         pcs.addPropertyChangeListener (l);
     }
-    
+
     /**
-     * @param l PropertyChangeListener to be removed */    
+     * @param l PropertyChangeListener to be removed */
     public void removePropertyChangeListener (PropertyChangeListener l) {
         pcs.removePropertyChangeListener (l);
     }
-    
-    private void readObject (java.io.ObjectInputStream ois) 
+
+    private void readObject (java.io.ObjectInputStream ois)
     throws java.io.IOException, ClassNotFoundException {
         ois.defaultReadObject ();
         init ();

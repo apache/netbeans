@@ -227,7 +227,7 @@ public class RepositoryPanel extends javax.swing.JPanel {
         } catch (URISyntaxException | IllegalArgumentException ex) {
             //
         }
-        JFileChooser fileChooser = new AccessibleJFileChooser(NbBundle.getMessage(RepositoryPanel.class, "RepositoryPanel.FileChooser.Descritpion"), //NOI18N
+        JFileChooser fileChooser = new AccessibleJFileChooser(NbBundle.getMessage(RepositoryPanel.class, "RepositoryPanel.FileChooser.Description"), //NOI18N
                 file);
         fileChooser.setDialogTitle(NbBundle.getMessage(RepositoryPanel.class, "RepositoryPanel.FileChooser.Title")); //NOI18N
         fileChooser.setMultiSelectionEnabled(false);
@@ -238,8 +238,8 @@ public class RepositoryPanel extends javax.swing.JPanel {
             comboEditor.setText(f.toURI().toString());
         }
     }//GEN-LAST:event_chooseFolderButtonActionPerformed
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     final javax.swing.JButton chooseFolderButton = new javax.swing.JButton();
     private final javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
@@ -258,5 +258,5 @@ public class RepositoryPanel extends javax.swing.JPanel {
     final javax.swing.JPasswordField userPasswordField = new javax.swing.JPasswordField();
     final javax.swing.JTextField userTextField = new javax.swing.JTextField();
     // End of variables declaration//GEN-END:variables
-        
+
 }

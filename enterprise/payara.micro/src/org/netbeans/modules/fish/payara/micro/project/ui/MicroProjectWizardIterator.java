@@ -79,7 +79,7 @@ public final class MicroProjectWizardIterator extends BaseWizardIterator {
         String payaraMicroVersion = (String) descriptor.getProperty(PROP_PAYARA_MICRO_VERSION);
         String autoBindHttp = (String) descriptor.getProperty(PROP_AUTO_BIND_HTTP);
         String contextRoot = (String) descriptor.getProperty(PROP_CONTEXT_ROOT);
-        Archetype archetype = createMojoArchetype();
+        Archetype archetype = createMojoArchetype(payaraMicroVersion);
 
         Map<String, String> properties = new HashMap<>();
         if (payaraMicroVersion != null) {
@@ -106,11 +106,16 @@ public final class MicroProjectWizardIterator extends BaseWizardIterator {
         return projects;
     }
 
-    private Archetype createMojoArchetype() {
+    private Archetype createMojoArchetype(String payaraMicroVersion) {
         Archetype archetype = new Archetype();
         archetype.setGroupId(ARCHETYPE_GROUP_ID);
         archetype.setArtifactId(ARCHETYPE_ARTIFACT_ID);
-        // latest version of archetype automatically fetched from remote catalog
+        String[] versionToken = payaraMicroVersion.split("\\.");
+        if (versionToken.length > 1 && Integer.parseInt(versionToken[0]) < 6) {
+            archetype.setVersion("1.4.0");
+        } else {
+            // latest version of archetype automatically fetched from remote catalog
+        }
         return archetype;
     }
 

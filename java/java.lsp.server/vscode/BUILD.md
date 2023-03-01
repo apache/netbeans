@@ -23,14 +23,11 @@
 
 ## Prerequisities
 
-- JDK, version 11
+- JDK, version 11 or later
 - Ant, latest version
 - Maven, latest version
 - node.js, latest LTS (to build VSIX)
 
-It is currently possible to use JDK 8 for the build and execution.
-However, as the Apache NetBeans project is slowly moving towards JDK 11,
-using JDK 11 may be the safest bet.
 
 ## Getting the Code
 

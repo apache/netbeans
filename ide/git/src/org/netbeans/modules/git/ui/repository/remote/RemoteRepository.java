@@ -499,7 +499,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         } catch (URISyntaxException ex) {
             //
         }
-        JFileChooser fileChooser = new AccessibleJFileChooser(NbBundle.getMessage(RemoteRepositoryPanel.class, "RepositoryPanel.FileChooser.Descritpion"), //NOI18N
+        JFileChooser fileChooser = new AccessibleJFileChooser(NbBundle.getMessage(RemoteRepositoryPanel.class, "RepositoryPanel.FileChooser.Description"), //NOI18N
                 file);
         fileChooser.setDialogTitle(NbBundle.getMessage(RemoteRepositoryPanel.class, "RepositoryPanel.FileChooser.Title")); //NOI18N
         fileChooser.setMultiSelectionEnabled(false);
@@ -813,7 +813,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                 path = getDefaultIdentityFilePath();
             }
             File file = new File(path);
-            JFileChooser fileChooser = new AccessibleJFileChooser(NbBundle.getMessage(RemoteRepositoryPanel.class, "RepositoryPanel.IdentityFile.FileChooser.Descritpion"), //NOI18N
+            JFileChooser fileChooser = new AccessibleJFileChooser(NbBundle.getMessage(RemoteRepositoryPanel.class, "RepositoryPanel.IdentityFile.FileChooser.Description"), //NOI18N
                     path.isEmpty() ? null : file.getParentFile());
             if (!path.isEmpty()) {
                 fileChooser.setSelectedFile(file);

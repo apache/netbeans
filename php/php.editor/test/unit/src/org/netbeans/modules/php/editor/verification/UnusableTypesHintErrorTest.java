@@ -71,6 +71,10 @@ public class UnusableTypesHintErrorTest extends PHPHintsTestBase {
         checkHints(new UnusableTypesHintError(), "testDnfTypes_01.php");
     }
 
+    public void testDuplicateTypes_01() throws Exception {
+        checkHints(new UnusableTypesHintError(), "testDuplicateTypes_01.php");
+    }
+
     @Override
     protected String getTestDirectory() {
         return TEST_DIRECTORY + "UnusableTypesHintError/";

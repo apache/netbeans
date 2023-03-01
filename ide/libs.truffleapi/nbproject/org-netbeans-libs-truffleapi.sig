@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.18
+#Version 1.19
 
 CLSS public final com.oracle.truffle.api.ArrayUtils
 meth public !varargs static int indexOf(byte[],int,int,byte[])

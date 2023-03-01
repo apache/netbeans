@@ -183,6 +183,11 @@ public class OptionsImpl implements Options {
         throw new UnsupportedOperationException();
     }
     
+    public String getCompilerClassName() {
+        // should not be needed
+        throw new UnsupportedOperationException();
+    }
+    
     public int getInitialCapacity(){
         throw new UnsupportedOperationException();
     }

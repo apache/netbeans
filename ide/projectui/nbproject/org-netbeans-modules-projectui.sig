@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.77.0
+#Version 1.78.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -23,6 +23,7 @@ supr java.lang.Object
 
 CLSS public org.netbeans.modules.project.ui.api.ProjectTemplates
 fld public final static java.lang.String PRESELECT_CATEGORY = "PRESELECT_CATEGORY"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PRESELECT_TEMPLATE = "PRESELECT_TEMPLATE"
 supr java.lang.Object
 

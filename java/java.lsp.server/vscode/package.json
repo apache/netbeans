@@ -498,7 +498,7 @@
 			},
 			{
 				"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
-				"title": "Disconnect"
+				"title": "Disconnect from Database"
 			},
 			{
 				"command": "nbls:Database:netbeans.db.explorer.action.Refresh",
@@ -568,7 +568,7 @@
 			},
 			{
 				"command": "java.local.db.set.preferred.connection",
-				"title": "Make Default Connection"
+				"title": "Set as Default Connection"
 			},
 			{
 				"command": "java.workspace.configureRunSettings",
@@ -758,19 +758,23 @@
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
-					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/ && viewItem =~ /is:disconnected/",
+					"group": "db@10"
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
-					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/ && viewItem =~ /is:connected/",
+					"group": "db@20"
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Refresh",
-					"when": "viewItem =~ /class:ddl.DBConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/",
+					"group": "db@30"
 				},
 				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
-					"when": "viewItem =~ /cap:delete/"
+					"when": "viewItem =~ /cap:delete/",
+					"group": "db@50"
 				},
 				{
 					"command": "java.workspace.new",
@@ -804,7 +808,8 @@
 				},
 				{
 					"command": "java.local.db.set.preferred.connection",
-					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/",
+					"group": "db@40"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",

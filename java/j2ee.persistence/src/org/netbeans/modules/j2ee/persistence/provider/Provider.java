@@ -29,8 +29,6 @@ import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.dd.common.Property;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class represents a persistence provider.
@@ -43,8 +41,6 @@ public abstract class Provider {
     public static final String TABLE_GENERATION_CREATE = "tableGenerationCreate";
     public static final String TABLE_GENERATION_DROPCREATE = "tableGenerationDropCreate";
     public static final String TABLE_GENERATTION_UNKOWN = "tableGenerationUnknown";
-    
-    private static final Logger LOG = Logger.getLogger(Provider.class.getName());
 
     /**
      * Fully qualified class name of the provider.

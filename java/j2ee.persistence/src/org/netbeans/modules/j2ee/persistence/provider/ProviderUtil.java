@@ -51,8 +51,6 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
 import org.openide.util.Parameters;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A utility class for handling persistence units and providers. Provides means
@@ -86,8 +84,6 @@ public class ProviderUtil {
     public static final Provider DEFAULT_PROVIDER2_0 = new DefaultProvider(Persistence.VERSION_2_0);
     public static final Provider DEFAULT_PROVIDER2_1 = new DefaultProvider(Persistence.VERSION_2_1);
     public static final Provider DEFAULT_PROVIDER2_2 = new DefaultProvider(Persistence.VERSION_2_2);
-
-    private static final Logger LOG = Logger.getLogger(ProviderUtil.class.getName());
 
     /**
      * TopLink provider using the provider class that was used in NetBeans 5.5. Needed

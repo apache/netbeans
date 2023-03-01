@@ -31,9 +31,6 @@ import org.netbeans.modules.xml.catalog.spi.CatalogReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Catalog for persistence related schemas.
@@ -51,8 +48,6 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
     private static final String RESOURCE_PATH = "nbres:/org/netbeans/modules/j2ee/persistence/dd/resources/"; //NOI18N 
     
     private List<SchemaInfo> schemas = new ArrayList<>();
-
-    private static final Logger LOG = Logger.getLogger(PersistenceCatalog.class.getName());
 
     public PersistenceCatalog() {
         initialize();
@@ -72,7 +67,6 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         schemas.add(new SchemaInfo("orm_2_2.xsd", RESOURCE_PATH, ORM_NS));
         schemas.add(new SchemaInfo("orm_3_0.xsd", RESOURCE_PATH, ORM_JAKARTA_NS));
         schemas.add(new SchemaInfo("orm_3_1.xsd", RESOURCE_PATH, ORM_JAKARTA_NS));
-        LOG.log(Level.INFO, "(72) ==== isInitialized?: {0}", true);
     }
     
     @Override

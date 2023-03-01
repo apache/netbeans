@@ -57,7 +57,6 @@ public class DBDecorationProvider implements TreeDataProvider.Factory {
                 data.setContextValues(status);
                 return data;
             }
-            LOG.log(Level.WARNING, "Could not get DatabaseConnection for node: {0}", n);  // NOI18N
             return null;
         }
 

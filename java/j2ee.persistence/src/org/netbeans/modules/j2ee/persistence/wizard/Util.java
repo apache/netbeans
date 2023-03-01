@@ -181,7 +181,7 @@ public class Util {
             return true;
         }
         if (JPAModuleInfo.ModuleType.WEB == moduleInfo.getType()
-                && asList("2.5", "3.1", "3.0", "4.0", "5.0").contains(moduleInfo.getVersion())) {
+                && asList("2.5", "3.1", "3.0", "4.0", "5.0", "6.0").contains(moduleInfo.getVersion())) {
             return true;
         }
         return false;

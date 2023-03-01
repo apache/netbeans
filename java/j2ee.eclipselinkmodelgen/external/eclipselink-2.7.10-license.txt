@@ -1,6 +1,5 @@
 Name: EclipseLink
 Origin: Eclipse
-<<<<<<<< HEAD:java/j2ee.eclipselinkmodelgen/external/eclipselink-2.7.10-license.txt
 Version: 2.7.10
 Description: The Eclipse Persistence Services Project ( EclipseLink) project.
 License: EPL-v10-eclipselink
@@ -8,15 +7,6 @@ Origin: http://www.eclipse.org/eclipselink/
 Files: org.eclipse.persistence.jpa.modelgen.processor-2.7.10.jar
 
 Use of EclipseLink version 2.7.10 is governed by the terms of the license below:
-========
-Version: 2.7.7
-Description: The Eclipse Persistence Services Project ( EclipseLink) project.
-License: EPL-v10-eclipselink
-Origin: http://www.eclipse.org/eclipselink/
-Files: org.eclipse.persistence.jpa.modelgen.processor-2.7.7.jar
-
-Use of EclipseLink version 2.7.7 is governed by the terms of the license below:
->>>>>>>> 1b15fcc6aa (Update eclipselink from 2.5.2 to 2.7.7):java/j2ee.eclipselinkmodelgen/external/eclipselink-2.7.7-license.txt
 
 License
 
@@ -274,5 +264,4 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 

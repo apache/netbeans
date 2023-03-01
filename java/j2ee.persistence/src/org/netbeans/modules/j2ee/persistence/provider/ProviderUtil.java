@@ -105,6 +105,7 @@ public class ProviderUtil {
      * in the given project.
      *
      * @param providerClass the FQN of the class that specifies the persistence provider.
+     * @param project
      *
      * @return the provider that the given providerClass represents or null if it was
      * an empty string and the project doesn't support a default (container managed)
@@ -384,7 +385,6 @@ public class ProviderUtil {
      * @return the created persistence unit.
      */
     public static PersistenceUnit buildPersistenceUnit(String name, Provider provider, DatabaseConnection connection, String version) {
-
         Parameters.notNull("name", name);
         Parameters.notNull("provider", provider);
         Parameters.notNull("connection", connection);

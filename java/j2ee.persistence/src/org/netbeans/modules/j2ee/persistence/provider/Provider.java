@@ -239,12 +239,12 @@ public abstract class Provider {
     }
     
     /**
-     * @return Map<String, String> containing vendor specific properties.
+     * @return Map{@code <String, String>} containing vendor specific properties.
      */
     public abstract Map getUnresolvedVendorSpecificProperties();
     
     /**
-     * @return Map<String, String> containing vendor specific properties
+     * @return Map{@code <String, String>} containing vendor specific properties
      * which should be set on a new unit by default.
      */
     public abstract Map getDefaultVendorSpecificProperties();

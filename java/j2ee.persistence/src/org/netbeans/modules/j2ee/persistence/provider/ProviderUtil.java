@@ -119,7 +119,6 @@ public class ProviderUtil {
         
        String ver = PersistenceUtils.getJPAVersion(project);
        ver = ver == null ? Persistence.VERSION_2_2 : ver;
-       LOG.log(Level.INFO, "(117) ==== version: {0}", ver);
        
        Provider ret = null;
        switch(ver) {
@@ -136,12 +135,9 @@ public class ProviderUtil {
                ret = DEFAULT_PROVIDER2_2;
        }// some unknown provider
        
-       LOG.log(Level.INFO, "(133) ==== providerClass: {0}", providerClass);
        for (Provider each : getAllProviders()) {
-            LOG.log(Level.INFO, "(135) ==== provider: {0}", each);
             if (each.getProviderClass().equals(providerClass.trim())) {
                 ret = each;
-                LOG.log(Level.INFO, "(138) ==== ver.equals(ProviderUtil.getVersion(each)): {0}", ver.equals(ProviderUtil.getVersion(each)));
                 if(ver.equals(ProviderUtil.getVersion(each))) {
                     return each;
                 }
@@ -288,18 +284,14 @@ public class ProviderUtil {
     public static void setTableGeneration(PersistenceUnit persistenceUnit, String tableGenerationStrategy, Provider provider) {
         // issue 123224. The user can have a persistence.xml in J2SE project without provider specified
         if (provider == null) {
-            LOG.log(Level.INFO, "(283) ==== isProvider null?: {0}", provider == null);
             return;
         }
         String version = Persistence.VERSION_1_0;
         if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {
-            LOG.log(Level.INFO, "(288) ==== persistenceUnit instanceof 2_0: {0}", true);
             version = Persistence.VERSION_2_0;
         } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
-            LOG.log(Level.INFO, "(291) ==== persistenceUnit instanceof 2_1: {0}", true);
             version = Persistence.VERSION_2_1;
         } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) {
-            LOG.log(Level.INFO, "(294) ==== persistenceUnit instanceof 2_2: {0}", true);
             version = Persistence.VERSION_2_2;
         }
         Property tableGenerationProperty = provider.getTableGenerationProperty(tableGenerationStrategy, version);
@@ -622,7 +614,6 @@ public class ProviderUtil {
                 return DEFAULT_PROVIDER2_2;
             }// some unknown provider
        }
-       LOG.log(Level.INFO, "(622) ==== top_provider: {0}", top_provider);
        return top_provider;
     }
 

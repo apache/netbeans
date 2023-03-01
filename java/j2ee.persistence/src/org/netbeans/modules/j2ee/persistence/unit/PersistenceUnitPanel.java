@@ -55,8 +55,6 @@ import org.netbeans.modules.xml.multiview.Error;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -70,23 +68,18 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
     private Boolean isContainerManaged;
     private boolean jpa2x=false;
 
-    private static final Logger LOG = Logger.getLogger(PersistenceUnitPanel.class.getName());
-
     private final RequestProcessor RP = new RequestProcessor(PersistenceUnitPanel.class.getSimpleName(), 5);
 
     //jpa2.0 specific
-    private final java.lang.String[] validationModes = {"AUTO", "CALLBACK", "NONE"};//NOI18N
-    private final java.lang.String[] cachingTypes = {"ALL", "NONE", "ENABLE_SELECTIVE", "DISABLE_SELECTIVE", "UNSPECIFIED"};//NOI18N
+    private final String[] validationModes = {"AUTO", "CALLBACK", "NONE"};//NOI18N
+    private final String[] cachingTypes = {"ALL", "NONE", "ENABLE_SELECTIVE", "DISABLE_SELECTIVE", "UNSPECIFIED"};//NOI18N
     
     public PersistenceUnitPanel(SectionView view, final PUDataObject dObj,  final PersistenceUnit persistenceUnit) {
         super(view);
         this.dObj=dObj;
-        LOG.log(Level.INFO, "(85) ==== version: {0}", Double.parseDouble(dObj.getPersistence().getVersion()));
-        LOG.log(Level.INFO, "(86) ==== version_2_0: {0}", Double.parseDouble(Persistence.VERSION_2_0));
         this.jpa2x=Double.parseDouble(Persistence.VERSION_2_0)<=Double.parseDouble(dObj.getPersistence().getVersion());
         this.persistenceUnit=persistenceUnit;
         this.project = FileOwnerQuery.getOwner(this.dObj.getPrimaryFile());
-        
         
         assert project != null : "Could not resolve project for " + dObj.getPrimaryFile(); //NOI18N]
         
@@ -225,7 +218,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
         } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {
             caching = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) persistenceUnit).getSharedCacheMode();
         }
-        LOG.log(Level.INFO, "(235) ==== caching: {0}", caching);
+
         if(cachingTypes[0].equals(caching))
         {
             ddAll.setSelected(true);

@@ -85,13 +85,10 @@ public abstract class Provider {
     {
         String classRelativePath = getProviderClass().replace('.', '/') + ".class"; //NOI18N
         boolean ret = cp.findResource(classRelativePath) != null;
-        LOG.log(Level.INFO, "(88) ==== version: {0}", version);
-        LOG.log(Level.INFO, "(89) ==== classRelativePath: {0}", classRelativePath);
         if(ret && version != null)
         {
             if (Persistence.VERSION_2_2.equals(version)) {
                 ret &= cp.findResource("javax/persistence/TableGenerators.class") != null;
-                LOG.log(Level.INFO, "(94) ==== Persistence.VERSION_2_2: {0}", Persistence.VERSION_2_2);
             } else if (Persistence.VERSION_2_1.equals(version)) {
                 ret &= cp.findResource("javax/persistence/criteria/CriteriaUpdate.class") != null;
             } else if (Persistence.VERSION_2_0.equals(version)) {
@@ -136,11 +133,9 @@ public abstract class Provider {
     public final Property getTableGenerationProperty(String strategy, String version){
         if ("".equals(getTableGenerationPropertyName())){
             // provider doesn't support table generation
-            LOG.log(Level.INFO, "(139) ==== provider doesn't support table generation: {0}", "".equals(getTableGenerationPropertyName()));
             return null;
         }
         Property result;
-        LOG.log(Level.INFO, "(143) ==== version: {0}", version);
         if  (Persistence.VERSION_2_2.equals(version)) {
                 result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Property();
         } else if  (Persistence.VERSION_2_1.equals(version)) {

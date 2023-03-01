@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.44
+#Version 1.45
 
 CLSS public abstract interface java.io.Serializable
 
@@ -165,6 +165,7 @@ CLSS public final org.netbeans.modules.javaee.specs.support.api.JpaProvider
 meth public boolean isDefault()
 meth public boolean isJpa1Supported()
 meth public boolean isJpa21Supported()
+meth public boolean isJpa22Supported()
 meth public boolean isJpa2Supported()
 meth public java.lang.String getClassName()
 supr java.lang.Object
@@ -218,7 +219,7 @@ meth public abstract java.lang.String activationConfigProperty()
 CLSS public final org.netbeans.modules.javaee.specs.support.spi.JpaProviderFactory
 cons public init()
 innr public abstract static Accessor
-meth public static org.netbeans.modules.javaee.specs.support.api.JpaProvider createJpaProvider(java.lang.String,boolean,boolean,boolean,boolean)
+meth public static org.netbeans.modules.javaee.specs.support.api.JpaProvider createJpaProvider(java.lang.String,boolean,boolean,boolean,boolean,boolean)
 meth public static org.netbeans.modules.javaee.specs.support.api.JpaProvider createJpaProvider(org.netbeans.modules.javaee.specs.support.spi.JpaProviderImplementation)
 supr java.lang.Object
 
@@ -235,6 +236,7 @@ CLSS public abstract interface org.netbeans.modules.javaee.specs.support.spi.Jpa
 meth public abstract boolean isDefault()
 meth public abstract boolean isJpa1Supported()
 meth public abstract boolean isJpa21Supported()
+meth public abstract boolean isJpa22Supported()
 meth public abstract boolean isJpa2Supported()
 meth public abstract java.lang.String getClassName()
 

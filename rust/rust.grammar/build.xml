@@ -67,7 +67,11 @@
             <arg value="${antlr.apt.output.dir}"/>
             <arg value="${antlr.apt.grammar.dir}/RustParser.g4"/>
             <classpath refid="antlr.path" />
-        </java> 
+        </java>
+        <delete>
+            <fileset dir="${antlr.apt.output.dir}" includes="*.interp" />
+            <fileset dir="${antlr.apt.output.dir}" includes="*.tokens" />
+        </delete>
     </target>
 
     <!-- Compiles as usual, but invokes "antlr" first if needed -->

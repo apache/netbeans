@@ -84,7 +84,7 @@ public class ProjectAuditCommand extends CodeActionsProvider {
     private final Gson gson;
 
     public ProjectAuditCommand() {
-        gson = NbGsonBuilderUtils.createGsonBuilder().create();
+        gson = new Gson();
     }
 
     @NbBundle.Messages({

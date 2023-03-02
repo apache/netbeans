@@ -309,7 +309,7 @@ public class ElementNode extends AbstractNode implements Iterable<ElementNode> {
         }
     }
     
-    public Description getDescritption() {
+    public Description getDescription() {
         return description;
     }
 

@@ -245,7 +245,7 @@
 -->
  <answer id="compat-version">
   <p>
-    Yes, the moudle is designed to evolve over time. 
+    Yes, the module is designed to evolve over time. 
     Currently the module persists one (boolean) property via standard NbPreferences API and can live
     happily with future releases, it ignores all other settings.
   </p>

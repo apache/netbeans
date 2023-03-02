@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/*
+ Original fils is from grammars-v4 repository:
+ https://github.com/antlr/grammars-v4/blob/f6bc057cd789775e83489ced42e90c9cefc8b502/rust/RustLexer.g4
+ */
+
 /*
 Copyright (c) 2010 The Rust Project Developers
 Copyright (c) 2020-2022 Student Main

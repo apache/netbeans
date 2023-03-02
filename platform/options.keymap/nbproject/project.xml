@@ -148,6 +148,7 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.netbeans.core.output2</friend>
+                <friend>org.netbeans.core.windows</friend>
                 <friend>org.netbeans.modules.editor.macros</friend>
                 <friend>org.netbeans.modules.jumpto</friend>
                 <friend>org.netbeans.modules.jvi</friend>

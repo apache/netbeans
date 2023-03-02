@@ -25,13 +25,25 @@ package org.netbeans.core.windows.view;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.*;
+import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.Border;
+import org.netbeans.api.editor.settings.MultiKeyBinding;
+import org.netbeans.core.options.keymap.api.ShortcutsFinder;
 import org.netbeans.core.windows.*;
 import org.netbeans.core.windows.view.dnd.*;
+import org.netbeans.modules.editor.settings.storage.api.EditorSettingsStorage;
+import org.openide.filesystems.FileAttributeEvent;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.*;
 import org.openide.windows.*;
 
@@ -170,6 +182,42 @@ public class EditorView extends ViewElement {
         }
     }
     
+    private static class ShortcutLabelPanel {
+        private final JLabel textLabel;
+        private final JLabel hotkeyLabel;
+        private final JPanel shortcutPanel;
+
+        public ShortcutLabelPanel(String textLabelString, String hotkeyString) {
+            this.textLabel = new JLabel(textLabelString);
+            this.hotkeyLabel = new JLabel(hotkeyString);
+
+            this.shortcutPanel = new JPanel();
+
+            init();
+        }
+
+        public void setHotkeyLabel(String value) {
+            this.hotkeyLabel.setText(value);
+        }
+
+        public JPanel getShortcutPanel() {
+            return shortcutPanel;
+        }
+
+        private void init() {
+            Font labelFont = new Font(textLabel.getFont().getName(), Font.BOLD, 14);
+
+            textLabel.setFont(labelFont);
+            hotkeyLabel.setFont(labelFont);
+
+            textLabel.setForeground(Color.GRAY);
+            hotkeyLabel.setForeground(new Color(10, 100, 152));
+
+            this.shortcutPanel.add(textLabel);
+            this.shortcutPanel.add(hotkeyLabel);
+        }
+    }
+
     private static class EditorAreaComponent extends JPanel
     implements TopComponentDroppable {
         
@@ -179,6 +227,7 @@ public class EditorView extends ViewElement {
         private final WindowDnDManager windowDnDManager;
         
         private Component areaComponent;
+        private JPanel pnlCenter;
         
         
         public EditorAreaComponent(EditorView editorView, WindowDnDManager windowDnDManager) {
@@ -196,7 +245,9 @@ public class EditorView extends ViewElement {
 //            if (lfID.equals("Windows")) {
 //                setBackground((Color)UIManager.get("nb_workplace_fill"));
 //            }
-            
+
+            showCommonShortcuts();
+
             // PENDING Adding image into empty area.
             String imageSource = Constants.SWITCH_IMAGE_SOURCE; // NOI18N
             if(imageSource != null) {
@@ -268,13 +319,104 @@ public class EditorView extends ViewElement {
             }
             setBackground(background);
         }
-        
+
+        private String getKey(String path) {
+            final ShortcutsFinder finder = Lookup.getDefault().lookup(ShortcutsFinder.class);
+            String[] shortcuts = finder.getShortcuts(finder.findActionForId(path));
+
+            if (shortcuts.length > 0) {
+                return finder.getShortcuts(finder.findActionForId(path))[0];
+            }
+
+            return NbBundle.getMessage(EditorView.class, "LBL_NoShortcutAssigned");
+        }
+
+        private final Map<String, String> shortcuts = new HashMap<>();
+        private final Map<String, ShortcutLabelPanel> shortcutLabelPanels = new HashMap<>();
+
+        private void updateShortcuts() {
+            shortcuts.clear();
+
+            shortcuts.put("LBL_NewProject", "org-netbeans-modules-project-ui-NewProject");
+            shortcuts.put("LBL_OpenProject", "org-netbeans-modules-project-ui-OpenProject");
+            shortcuts.put("LBL_QuickSearch", "org-netbeans-modules-quicksearch-QuickSearchAction");
+            shortcuts.put("LBL_NewFile", "org-netbeans-modules-project-ui-NewFile");
+            shortcuts.put("LBL_OpenRecentFile", "org-netbeans-modules-openfile-RecentFileAction");
+            shortcuts.put("LBL_GoToFile", "org-netbeans-modules-jumpto-file-FileSearchAction");
+        }
+
+        private void drawShortcutPanels() {
+            updateShortcuts();
+
+            GridBagConstraints constraints = new GridBagConstraints();
+            int counter = 0;
+
+            for (Map.Entry<String, String> en : shortcuts.entrySet()) {
+                constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+                constraints.gridx = 0;
+                constraints.gridy = counter++;
+
+                shortcutLabelPanels.put(en.getKey(), new ShortcutLabelPanel(NbBundle.getMessage(EditorView.class, en.getKey()), getKey(en.getValue())));
+
+                pnlCenter.add(shortcutLabelPanels.get(en.getKey()).getShortcutPanel(), constraints);
+            }
+
+            constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+            constraints.gridwidth = 2;
+            constraints.gridx = 0;
+            constraints.gridy = 6;
+
+            ShortcutLabelPanel dropFileLabelPanel = new ShortcutLabelPanel(NbBundle.getMessage(EditorView.class, "LBL_DropFilesHere"), "");
+
+            pnlCenter.add(dropFileLabelPanel.getShortcutPanel(), constraints);
+
+            constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+            constraints.gridwidth = 2;
+            constraints.gridx = 0;
+            constraints.gridy = 7;
+
+            ShortcutLabelPanel dropFolderLabelPanel = new ShortcutLabelPanel(NbBundle.getMessage(EditorView.class, "LBL_DropFolderHere"), "");
+            pnlCenter.add(dropFolderLabelPanel.getShortcutPanel(), constraints);
+        }
+
+        private void showCommonShortcuts() {
+            this.pnlCenter = new JPanel(new GridBagLayout());
+
+            drawShortcutPanels();
+
+            EditorSettingsStorage<Collection<KeyStroke>, MultiKeyBinding> ess = EditorSettingsStorage.get("Keybindings"); //NOI18N
+            ess.addPropertyChangeListener((PropertyChangeEvent pce) -> {
+                redrawShortcutPanels();
+            });
+
+            FileObject keymaps = FileUtil.getConfigFile("Keymaps"); //NOI18N
+            keymaps.addFileChangeListener(new FileChangeAdapter() {
+                @Override
+                public void fileAttributeChanged(FileAttributeEvent fe) {
+                    redrawShortcutPanels();
+                }
+            });
+        }
+
+        private void redrawShortcutPanels() {
+            updateShortcuts();
+
+            shortcutLabelPanels.forEach((key, value) -> {
+                value.setHotkeyLabel(getKey(shortcuts.get((key))));
+            });
+        }
+
         public void setAreaComponent(Component areaComponent) {
+            if (areaComponent == null) {
+                add(this.pnlCenter, BorderLayout.CENTER);
+            }
+
             if(this.areaComponent == areaComponent) {
                 // XXX PENDING revise how to better manipulate with components
                 // so there don't happen unneeded removals.
                 if(areaComponent != null
                 && !Arrays.asList(getComponents()).contains(areaComponent)) {
+                    remove(this.pnlCenter);
                     add(areaComponent, BorderLayout.CENTER);
                 }
                 
@@ -283,11 +425,13 @@ public class EditorView extends ViewElement {
             
             if(this.areaComponent != null) {
                 remove(this.areaComponent);
+                add(this.pnlCenter, BorderLayout.CENTER);
             }
             
             this.areaComponent = areaComponent;
             
             if(this.areaComponent != null) {
+                remove(this.pnlCenter);
                 add(this.areaComponent, BorderLayout.CENTER);
             }
 

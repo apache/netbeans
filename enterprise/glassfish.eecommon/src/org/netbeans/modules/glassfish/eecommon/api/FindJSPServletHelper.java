@@ -36,7 +36,7 @@ public class FindJSPServletHelper {
         return s;
     }
 
-    // After Apace donation, should use org.apache.jasper utilities in 
+    // After Apache donation, should use org.apache.jasper utilities in
     // JspUtil and JspCompilationContext
     private static String getServletPackageName(String jspUri) {
         String jspBasePackageName = "org/apache/jsp";//NOI18N
@@ -49,7 +49,7 @@ public class FindJSPServletHelper {
 
     }
     
-    // After Apace donation, should use org.apache.jasper utilities in 
+    // After Apache donation, should use org.apache.jasper utilities in
     // JspUtil and JspCompilationContext
     private static String getServletClassName(String jspUri) {
         int iSep = jspUri.lastIndexOf('/') + 1;

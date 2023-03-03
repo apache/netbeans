@@ -185,7 +185,7 @@ public class ViewUpdatesTesting {
                     // Following will trigger rebuild_all in view hierarchy => skip this rebuild
                     HighlightingManager.getInstance(pane).testSetSingleContainer(bag);
                     if (docView != null) {
-                        docView.op.viewsRebuildOrMarkInvalid(); // Rebiuld all views
+                        docView.op.viewsRebuildOrMarkInvalid(); // Rebuild all views
                     }
                 }
             });

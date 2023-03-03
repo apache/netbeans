@@ -249,7 +249,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     /**
      * Deserializes stored cross-reference of external files to their projects.
      * It is called from @OnStart, which runs asynchronously/in parallel, but 
-     * getOwner() queries require that the cross-ref is laoded so the answers are
+     * getOwner() queries require that the cross-ref is loaded so the answers are
      * consistent in time.
      */
     static void deserialize() {

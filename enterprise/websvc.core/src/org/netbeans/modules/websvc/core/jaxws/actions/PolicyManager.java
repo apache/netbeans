@@ -251,12 +251,12 @@ class PolicyManager {
     }
     
     private boolean hasServicePolicies( FileObject wsdl , 
-            Collection<Lookup> supportLokups) 
+            Collection<Lookup> supportLookups)
     {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             SAXParser saxParser = factory.newSAXParser();
-            WsdlPolicyHandler handler = new WsdlPolicyHandler( wsdl, supportLokups );
+            WsdlPolicyHandler handler = new WsdlPolicyHandler( wsdl, supportLookups );
             saxParser.parse(FileUtil.toFile( wsdl), handler );
             policyIds = handler.getPolicyIds();
             return handler.hasPolicy();

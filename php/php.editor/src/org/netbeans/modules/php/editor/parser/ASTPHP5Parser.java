@@ -2667,7 +2667,7 @@ new EncodedActionTable19().getTableData()
      * @param info    an extra object reserved for use by specialized subclasses.
      */
     public void report_error(String message, Object info) {
-        System.out.print("report_eror"  + message);
+        System.out.print("report_error"  + message);
     }
 
     /**

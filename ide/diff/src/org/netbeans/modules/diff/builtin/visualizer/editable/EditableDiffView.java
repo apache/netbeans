@@ -1206,7 +1206,7 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
                                 open = DialogDisplayer.getDefault().notify(desc).equals(NotifyDescriptor.OK_OPTION);
                             }
                             if (open) {
-                                LOG.log(Level.INFO, "User acepted UQE: {0}", fo.getPath()); //NOI18N
+                                LOG.log(Level.INFO, "User accepted UQE: {0}", fo.getPath()); //NOI18N
                                 ex.confirmed();
                                 sdoc = ec.openDocument();
                             } else {

@@ -80,7 +80,7 @@ public class PayaraPropertiesCustomizer extends JTabbedPane {
          */
         @Override
         public void ancestorRemoved(final AncestorEvent event) {
-            LOGGER.log(Level.INFO, "Storing {0} atributes",
+            LOGGER.log(Level.INFO, "Storing {0} attributes",
                     instance.getDisplayName());
             try {
                 // #254197

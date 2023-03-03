@@ -78,7 +78,7 @@ public class Schema2BeansUtil {
 
     /**
      * Merge "unsupported" elements - elements which are not represented
-     * in model (whitespaces, comments, unknown atributes and tags),
+     * in model (whitespaces, comments, unknown attributes and tags),
      * but they should be merged to DOMBinding
      *
      * @param patternBean

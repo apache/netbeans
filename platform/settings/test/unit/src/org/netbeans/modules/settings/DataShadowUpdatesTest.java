@@ -43,7 +43,7 @@ public class DataShadowUpdatesTest extends NbTestCase {
 
     /**
      * The test simulates a situation in which a .shadow file in the user
-     * configuration is reverted, and an original contents/atributes,
+     * configuration is reverted, and an original contents/attributes,
      * with a different target, are revealed.
      * <p/>
      * The DataShadow should at least produce the appropriate cookies.

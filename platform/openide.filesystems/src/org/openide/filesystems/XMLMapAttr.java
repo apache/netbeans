@@ -47,7 +47,7 @@ import org.openide.util.io.NbMarshalledObject;
 import org.openide.util.io.NbObjectInputStream;
 
 /**
- *Holds in Map attributes: Map(String attrName,XMLMapAttr.Attr attribute). This map holds all atributes for one FileObject.
+ *Holds in Map attributes: Map(String attrName,XMLMapAttr.Attr attribute). This map holds all attributes for one FileObject.
  *<BR><BR>
  *<H3>Detailed description</H3>
  * Each file object (file or folder element) can have 0..* attributes.<BR> <BR>

@@ -390,7 +390,7 @@ public final class Util extends Object {
      * @param folder FileObject folder where to create the properties file
      * @param fileName String name of the file without the extension, can include
      *        relative path underneath the folder
-     * @return created PropertiesDataObjet
+     * @return created PropertiesDataObject
      */
     public static PropertiesDataObject createPropertiesDataObject(FileObject folder, String fileName)
         throws IOException

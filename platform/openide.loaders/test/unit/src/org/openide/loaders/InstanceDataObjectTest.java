@@ -393,7 +393,7 @@ public class InstanceDataObjectTest extends NbTestCase {
         
     }
     
-    /** Test if the Lookup reflects IDO' cokie changes. */
+    /** Test if the Lookup reflects IDO' cookie changes. */
     public void testLookupRefreshOfInstanceCookieChanges() throws Exception {
 //        Object ser = new Button();
         Object ser = new BeanContextChildSupport();

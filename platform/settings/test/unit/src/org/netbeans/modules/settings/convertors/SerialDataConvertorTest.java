@@ -343,7 +343,7 @@ public class SerialDataConvertorTest extends NbTestCase {
         }
     }
     
-    /** Test if the Lookup reflects IDO' cokie changes. */
+    /** Test if the Lookup reflects IDO' cookie changes. */
     public void testLookupRefreshOfInstanceCookieChanges() throws Exception {
 //        Object ser = new java.awt.Button ();
         Object ser = new java.beans.beancontext.BeanContextChildSupport();

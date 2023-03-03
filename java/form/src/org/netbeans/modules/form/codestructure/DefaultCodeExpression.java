@@ -175,7 +175,7 @@ final class DefaultCodeExpression implements CodeExpression {
             codeStructure.logUndoableChange(undoableChange);
 
         boolean stillUsed = !getExpressionUsage().isEmpty();
-        if (!stillUsed) // the elment is no longer used in the structure
+        if (!stillUsed) // the element is no longer used in the structure
             codeStructure.removeExpressionFromVariable(this);
         return stillUsed;
     }

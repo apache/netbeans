@@ -111,7 +111,7 @@ public class SelectorsGroupEditor extends javax.swing.JPanel {
         selectElementComboBox = new javax.swing.JComboBox();
         selectClassRadioButton = new javax.swing.JRadioButton();
         selectClassTextField = new javax.swing.JTextField();
-        selectElelmentIdRadioButton = new javax.swing.JRadioButton();
+        selectElementIdRadioButton = new javax.swing.JRadioButton();
         selectElementIdTextField = new javax.swing.JTextField();
         classPrefixComboBox = new javax.swing.JComboBox();
         classPrefixSeparator = new javax.swing.JLabel();
@@ -174,11 +174,11 @@ public class SelectorsGroupEditor extends javax.swing.JPanel {
             }
         });
 
-        selectRuleButtonGroup.add(selectElelmentIdRadioButton);
-        selectElelmentIdRadioButton.setMnemonic(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "ELEMENT_ID_RULE_TYPE_MNEMONIC").charAt(0));
-        selectElelmentIdRadioButton.setText(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "ELEMENT_ID_LBL")); // NOI18N
-        selectElelmentIdRadioButton.setActionCommand(ELEMENT_ID_TYPE);
-        selectElelmentIdRadioButton.addActionListener(new java.awt.event.ActionListener() {
+        selectRuleButtonGroup.add(selectElementIdRadioButton);
+        selectElementIdRadioButton.setMnemonic(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "ELEMENT_ID_RULE_TYPE_MNEMONIC").charAt(0));
+        selectElementIdRadioButton.setText(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "ELEMENT_ID_LBL")); // NOI18N
+        selectElementIdRadioButton.setActionCommand(ELEMENT_ID_TYPE);
+        selectElementIdRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectRuleActionPerformed(evt);
             }
@@ -334,7 +334,7 @@ public class SelectorsGroupEditor extends javax.swing.JPanel {
                                     .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(selectElelmentIdRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(selectElementIdRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addContainerGap()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,7 +415,7 @@ public class SelectorsGroupEditor extends javax.swing.JPanel {
                             .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(selectElelmentIdRadioButton)
+                            .addComponent(selectElementIdRadioButton)
                             .addComponent(selectElementIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -471,8 +471,8 @@ public class SelectorsGroupEditor extends javax.swing.JPanel {
         selectClassRadioButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "CLASS_RULE_TYPE_ACCESSIBLE_DESCRIPTION")); // NOI18N
         selectClassTextField.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "CLASS_TEXT_FIELD_ACCESSIBLE_NAME")); // NOI18N
         selectClassTextField.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "CLASS_TEXT_FIELD_ACCESSIBLE_DESC")); // NOI18N
-        selectElelmentIdRadioButton.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "ELEMENT_ID_LBL")); // NOI18N
-        selectElelmentIdRadioButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "ELEMENT_ID_RULE_TYPE_ACCESSIBLE_DESCRIPTION")); // NOI18N
+        selectElementIdRadioButton.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "ELEMENT_ID_LBL")); // NOI18N
+        selectElementIdRadioButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "ELEMENT_ID_RULE_TYPE_ACCESSIBLE_DESCRIPTION")); // NOI18N
         selectElementIdTextField.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "ELEMENT_ID_TEXTFIELD_ACCESSIBLE_NAME")); // NOI18N
         selectElementIdTextField.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "ELEMENT_ID_TEXTFIELD_ACCESSIBLE_DESC")); // NOI18N
         classPrefixComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(SelectorsGroupEditor.class, "OPTIONAL_ELEMENT_ACCESSIBLE_DESC")); // NOI18N
@@ -655,7 +655,7 @@ public class SelectorsGroupEditor extends javax.swing.JPanel {
     private javax.swing.JScrollPane ruleHierarchyScroll;
     private javax.swing.JRadioButton selectClassRadioButton;
     private javax.swing.JTextField selectClassTextField;
-    private javax.swing.JRadioButton selectElelmentIdRadioButton;
+    private javax.swing.JRadioButton selectElementIdRadioButton;
     private javax.swing.JComboBox selectElementComboBox;
     private javax.swing.JTextField selectElementIdTextField;
     private javax.swing.JRadioButton selectElementRadioButton;

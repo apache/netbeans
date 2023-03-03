@@ -458,7 +458,7 @@ public class JSFConfigModelTest extends NbTestCase {
         assertEquals("Number of applications ", 1, applications.size());
 
         List<ViewHandler> viewHandlers = applications.get(0).getViewHandlers();
-        assertEquals("Number of view hadlers ", 1, viewHandlers.size());
+        assertEquals("Number of view handlers ", 1, viewHandlers.size());
         assertEquals("Name of handler ", "org.test.ViewHandler", viewHandlers.get(0).getFullyQualifiedClassType());
 
         List<LocaleConfig> localeConfigs = applications.get(0).getLocaleConfig();

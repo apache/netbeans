@@ -164,7 +164,7 @@ public class ElementBindings extends HashMap {
     }
 
     /**
-     * Holds binding element name -> (method  name, hadler type, parslet name).
+     * Holds binding element name -> (method  name, handler type, parslet name).
      */        
     public static final class Entry {
 

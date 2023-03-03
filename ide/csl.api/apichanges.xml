@@ -125,7 +125,7 @@
         <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible" deprecation="no"/>
         <description>
             <p>
-                Extending code completion hadler to provide a way client may
+                Extending code completion handler to provide a way client may
                 specify external documentation URL.
             </p>
         </description>

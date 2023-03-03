@@ -134,6 +134,7 @@ public final class Code {
      * Returns an array of int pairs consisting of a start_pc and a 
      * line_number.  For example, [0] = first pc, [1] = first line, 
      * [2] = second pc, etc.
+     * @return array of int pair
      */
     public final int[] getLineNumberTable() {
         return lineNumberTable.clone();
@@ -141,6 +142,7 @@ public final class Code {
 
     /**
      * Returns the local variable table for this code.
+     * @return local variable table
      */
     public final LocalVariableTableEntry[] getLocalVariableTable() {
         return localVariableTable.clone();
@@ -150,6 +152,7 @@ public final class Code {
      * Returns the local variable type table for this code, which 
      * describes the generic reference type for those variables which
      * are generic.
+     * @return local variable table
      */
     public final LocalVariableTypeTableEntry[] getLocalVariableTypeTable() {
         return localVariableTypeTable.clone();
@@ -158,6 +161,7 @@ public final class Code {
     /**
      * Returns the stack map table for this code, which defines the stack frame
      * information needed by the new classfile verifier in Java 6.
+     * @return stack map table table
      */
     public final StackMapFrame[] getStackMapTable() {
         return stackMapTable.clone();

@@ -1581,7 +1581,7 @@ DOCTYPE_LOOP:
         }
         
         /**
-         * As positons will be supported
+         * As positions will be supported
          */
         private void setBeginPosition (TreeNode n) {
             //!!!

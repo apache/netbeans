@@ -43,7 +43,7 @@ import org.netbeans.installer.utils.helper.ErrorLevel;
  * politeness.
  *
  * <p>
- * In some cases the opreation handler is not capable of working directly with the
+ * In some cases the operation handler is not capable of working directly with the
  * progress that was passed to it. In this case it should construct a specialized
  * {@link Progress} instance and use the synchronization facility to keep these two
  * in sync.

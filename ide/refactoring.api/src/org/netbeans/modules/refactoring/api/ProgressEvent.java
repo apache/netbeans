@@ -36,7 +36,7 @@ public final class ProgressEvent extends EventObject {
 
     // event id
     private final int eventId;
-    // type of opreation that is being processed (source-specific number)
+    // type of operation that is being processed (source-specific number)
     private final int operationType;
     // number of steps of the operation being processed
     private final int count;

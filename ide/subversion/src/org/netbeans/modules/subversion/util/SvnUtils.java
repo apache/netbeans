@@ -526,7 +526,7 @@ public class SvnUtils {
             // this looks like the WC was created with a client < 1.3.0. I wouldn't mind for myself and
             // get the URL from the server, it's just that it could be quite a performance killer.
             // XXX and now i'm just currious how we will handle this if there will be some javahl or
-            // pure java client suport -> without dispatching to our metadata parser
+            // pure java client support -> without dispatching to our metadata parser
             if (new File(lastManaged, SvnUtils.SVN_WC_DB).canRead()) {
                 throw new SVNClientException(NbBundle.getMessage(SvnUtils.class, "MSG_too_old_client", lastManaged));
             } else {

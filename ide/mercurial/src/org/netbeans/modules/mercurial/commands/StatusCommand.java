@@ -307,7 +307,7 @@ public final class StatusCommand extends HgCommand<Map<File, FileInformation>> {
         case HG_STATUS_CODE_NOTTRACKED:
             info = new FileInformation(FileInformation.STATUS_NOTVERSIONED_NEWLOCALLY,null, false);
             break;
-        // Leave this here for whenever Hg status suports conflict markers
+        // Leave this here for whenever Hg status supports conflict markers
         case HG_STATUS_CODE_CONFLICT:
             info = new FileInformation(FileInformation.STATUS_VERSIONED_CONFLICT,null, false);
             break;

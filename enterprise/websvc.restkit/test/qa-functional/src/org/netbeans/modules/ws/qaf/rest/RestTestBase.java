@@ -231,7 +231,7 @@ public abstract class RestTestBase extends WebServicesTestBase {
      * Create Rest test client under Web Pages in tested project so we're able
      * to test it
      * <strong>Note</strong>: This method uses reflection to call appropriate
-     * method from RestSuport class because RESTful plugin is not part of
+     * method from RestSupport class because RESTful plugin is not part of
      * standart NetBeans distribution yet
      *
      * @throws java.io.IOException

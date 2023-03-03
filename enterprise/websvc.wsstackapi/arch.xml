@@ -164,7 +164,7 @@
    </usecase>
    <usecase id="5" name="JAX-WS Stack in Tomcat">
        Tomcat supports JAX-WS technology. However it doesn't support JSR109 deployment style. 
-       Tomcat plugin creates s {@link org.netbeans.modules.websvc.wsstack.spi.WSStackImplementation} containing information that JSR109 is not suported.
+       Tomcat plugin creates s {@link org.netbeans.modules.websvc.wsstack.spi.WSStackImplementation} containing information that JSR109 is not supported.
    </usecase>
  </answer>
 

@@ -135,7 +135,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             try {
                 ConflictResolvedAction.perform(file);  // remove conflict status
             } catch (SVNClientException ex) {
-                // XXX consolidate with the progresssuport
+                // XXX consolidate with the progresssupport
                 SvnClientExceptionHandler.notifyException(ex, true, true);
             } finally {
                 if (lock != null) {
@@ -492,7 +492,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             try {
                 ConflictResolvedAction.perform(file);
             } catch (SVNClientException ex) {
-                // XXX consolidate with the progresssuport
+                // XXX consolidate with the progresssupport
                 SvnClientExceptionHandler.notifyException(ex, true, true);
             }
         }

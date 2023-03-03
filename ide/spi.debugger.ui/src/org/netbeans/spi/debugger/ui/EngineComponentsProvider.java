@@ -179,7 +179,7 @@ public interface EngineComponentsProvider {
         
     }
     
-    /*public - when generic Component suport is required. */
+    /*public - when generic Component support is required. */
     static interface ComponentProvider {
         
         Component getComponent();

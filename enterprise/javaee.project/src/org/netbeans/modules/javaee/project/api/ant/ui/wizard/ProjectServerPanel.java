@@ -615,7 +615,7 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
             try {
                 J2eePlatform j2eePlatform = Deployment.getDefault().getServerInstance(serverInstanceId).getJ2eePlatform();
                 Set<String> jdks = j2eePlatform.getSupportedJavaPlatformVersions();
-                // make sure that chosen source level is suported by server:
+                // make sure that chosen source level is supported by server:
                 if (jdks != null && !jdks.contains(sourceLevel)) { // workaround for #212146 when jdks == null
                     if ("11".equals(sourceLevel) && jdks.contains("1.8")) {
                         sourceLevel = "1.8";

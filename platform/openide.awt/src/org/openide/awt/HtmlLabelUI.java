@@ -512,7 +512,7 @@ class HtmlLabelUI extends LabelUI {
                 unfocusedSelBg = UIManager.getColor("controlShadow"); //NOI18N
                 
                 if (unfocusedSelBg == null) {
-                    //Okay, the look and feel doesn't suport it, punt
+                    //Okay, the look and feel doesn't support it, punt
                     unfocusedSelBg = Color.lightGray;
                 }
 
@@ -538,7 +538,7 @@ class HtmlLabelUI extends LabelUI {
                 unfocusedSelFg = UIManager.getColor("textText"); //NOI18N
                 
                 if (unfocusedSelFg == null) {
-                    //Okay, the look and feel doesn't suport it, punt
+                    //Okay, the look and feel doesn't support it, punt
                     unfocusedSelFg = Color.BLACK;
                 }
             }

@@ -1065,7 +1065,7 @@ public class Action {
     /**
      * getter for popup menu path
      *
-     * @return String popup menu path (or null if not suported)
+     * @return String popup menu path (or null if not supported)
      */
     public String getPopupPath() {
         return popupPath;
@@ -1074,7 +1074,7 @@ public class Action {
     /**
      * getter for main menu path
      *
-     * @return String main menu path (or null if not suported)
+     * @return String main menu path (or null if not supported)
      */
     public String getMenuPath() {
         return menuPath;
@@ -1083,7 +1083,7 @@ public class Action {
     /**
      * getter for system action class
      *
-     * @return Class of system action (or null if not suported)
+     * @return Class of system action (or null if not supported)
      */
     public Class getSystemActionClass() {
         return systemActionClass;

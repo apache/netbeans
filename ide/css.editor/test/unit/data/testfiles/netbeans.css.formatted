@@ -515,7 +515,7 @@ img.right {
 }
 /* -------------------------- */
 
-/* ----------- Docs & Suport spec styles -------------*/
+/* ----------- Docs & Support spec styles -------------*/
 /* D&S pages are wrapped by this, can set extra style here */
 #doc {
     line-height:165%;

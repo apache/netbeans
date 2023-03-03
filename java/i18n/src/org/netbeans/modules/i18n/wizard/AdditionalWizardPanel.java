@@ -370,7 +370,7 @@ final class AdditionalWizardPanel extends JPanel {
         }
         
         /** Indicates if there are additional customizers in any of selected sources. 
-         * @return true if at least one source suport has additional customizer. */
+         * @return true if at least one source support has additional customizer. */
         private static boolean hasAdditional(Map<DataObject,SourceData> sourceMap) {
             for (Map.Entry<DataObject,SourceData> entry : sourceMap.entrySet()) {
                 if (entry.getValue().getSupport().hasAdditionalCustomizer()) {

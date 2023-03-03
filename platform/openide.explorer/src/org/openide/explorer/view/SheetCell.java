@@ -660,7 +660,7 @@ abstract class SheetCell extends AbstractCellEditor implements TableModelListene
                 //try to get standard shadow color
                 noFocusSelectionBackground = UIManager.getColor("controlShadow"); //NOI18N
                 if (noFocusSelectionBackground == null) {
-                    //Okay, the look and feel doesn't suport it, punt
+                    //Okay, the look and feel doesn't support it, punt
                     noFocusSelectionBackground = Color.lightGray;
                 }
                 //Lighten it a bit because disabled text will use controlShadow/
@@ -689,7 +689,7 @@ abstract class SheetCell extends AbstractCellEditor implements TableModelListene
                 //try to get standard shadow color
                 noFocusSelectionForeground = UIManager.getColor("textText"); //NOI18N
                 if (noFocusSelectionForeground == null) {
-                    //Okay, the look and feel doesn't suport it, punt
+                    //Okay, the look and feel doesn't support it, punt
                     noFocusSelectionForeground = Color.BLACK;
                 }
             }

@@ -139,9 +139,9 @@ public final class ExternalTerminalProvider {
     }
 
     /**
-     * Returns collection of all suported terminals IDs. These IDs can be passed
+     * Returns collection of all supported terminals IDs. These IDs can be passed
      * to {@link #getTerminal(java.lang.String)} method.
-     * @return collection of all suported terminals IDs.
+     * @return collection of all supported terminals IDs.
      */
     public static Collection<String> getSupportedTerminalIDs() {
         return profiles.keySet();

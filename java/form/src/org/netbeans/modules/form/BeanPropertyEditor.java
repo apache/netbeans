@@ -33,7 +33,7 @@ public interface BeanPropertyEditor {
 
     /**
      * @return true if the current value is a bean not directly
-     *         suported by the editor
+     *         supported by the editor
      */
     public boolean valueIsBeanProperty();
 

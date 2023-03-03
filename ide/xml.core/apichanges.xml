@@ -82,7 +82,7 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
-        <change id="description-source-suport">
+        <change id="description-source-support">
             <api name="XMLCoreAPI"/>
             <summary>Added support for link resolution in completion documentation</summary>
             <version major="1" minor="31"/>

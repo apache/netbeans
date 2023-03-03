@@ -281,7 +281,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                 valid = false;
                 msg = new Message(NbBundle.getMessage(RemoteRepository.class, "MSG_EMPTY_URI_ERROR"), true); // NOI18N
             } else {
-                // XXX check suported protocols
+                // XXX check supported protocols
             }
         } finally {
             support.fireChange();

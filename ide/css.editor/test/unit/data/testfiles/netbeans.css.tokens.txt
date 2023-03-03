@@ -2405,7 +2405,7 @@ RBRACE          "}", st=0
 S               "\n", la=1, st=0
 COMMENT         "/* -------------------------- */", st=0
 S               "\n\n", la=1, st=0
-COMMENT         "/* ----------- Docs & Suport spec styles -------------*/", st=0
+COMMENT         "/* ----------- Docs & Support spec styles -------------*/", st=0
 S               "\n", la=1, st=0
 COMMENT         "/* D&S pages are wrapped by this, can set extra style here */", st=0
 S               "\n", la=1, st=0

@@ -57,7 +57,7 @@ public final class LocalRepository {
     private static LocalRepository instance;
     private final Repository repository;
     private final BugtrackingSupport<LocalRepository, LocalQuery, LocalTask> fac;
-    private final PropertyChangeSupport propertySuport;
+    private final PropertyChangeSupport propertySupport;
     private static final String ICON_PATH = "org/netbeans/modules/localtasks/resources/local_repo.png"; // NOI18N
     private final Image icon;
     private TaskRepository taskRepository;
@@ -77,7 +77,7 @@ public final class LocalRepository {
     public LocalRepository () {
         fac = new BugtrackingSupport<>(new RepositoryProviderImpl(), new QueryProviderImpl(), new IssueProviderImpl());
         icon = ImageUtilities.loadImage(ICON_PATH, true);
-        propertySuport = new PropertyChangeSupport(this);
+        propertySupport = new PropertyChangeSupport(this);
         repository = fac.createRepository(this, new IssueStatusProviderImpl(), 
                 new IssueSchedulingProviderImpl(), null, null);
     }
@@ -87,11 +87,11 @@ public final class LocalRepository {
     }
 
     void addPropertyChangeListener (PropertyChangeListener listener) {
-        propertySuport.addPropertyChangeListener(listener);
+        propertySupport.addPropertyChangeListener(listener);
     }
 
     void removePropertyChangeListener (PropertyChangeListener listener) {
-        propertySuport.removePropertyChangeListener(listener);
+        propertySupport.removePropertyChangeListener(listener);
     }
 
     Image getIcon () {

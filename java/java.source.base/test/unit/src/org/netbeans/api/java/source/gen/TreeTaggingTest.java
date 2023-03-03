@@ -34,7 +34,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 /**
- * Unit tests for Tree tagging / span suport
+ * Unit tests for Tree tagging / span support
  *
  * @author Max Sauer
  */

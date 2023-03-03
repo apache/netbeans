@@ -300,7 +300,7 @@ public class LocalVariablesTest extends DebuggerTestCase {
             long total = Long.parseLong(property.getValue().toString());
             property = (org.openide.nodes.Node.Property)jTableOperator.getValueAt(27, 2);
             long taken = Long.parseLong(property.getValue().toString());
-            assertTrue("Local varaibles values does not seem to be correct (total != free + taken) - "+total+" != "+free+" + "+taken, (total == free + taken));
+            assertTrue("Local variables values does not seem to be correct (total != free + taken) - "+total+" != "+free+" + "+taken, (total == free + taken));
 
         } catch (java.lang.IllegalAccessException e1) {
             assertTrue(e1.getMessage(), false);

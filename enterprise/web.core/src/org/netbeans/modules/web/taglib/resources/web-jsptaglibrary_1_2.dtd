@@ -346,7 +346,7 @@ variable-class           Name of the class of the variable.
 declare                  Whether the variable is declared or not.
                          True is the default.
 
-scope                    The scope of the scripting varaible
+scope                    The scope of the scripting variable
                          defined.  NESTED is default.
 
 description              Optional description of this variable

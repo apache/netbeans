@@ -1983,7 +1983,7 @@ public final class TreeUtilities {
 
         int tokensLength = 0;
 
-        // To find out the first subtree from compound varaible declaration statement(if any).
+        // To find out the first subtree from compound variable declaration statement(if any).
         while (tokenSequence.moveNext()) {
             tokensLength += tokenSequence.token().length();
             if (tokenSequence.token().id() == JavaTokenId.IDENTIFIER) {

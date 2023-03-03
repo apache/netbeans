@@ -212,7 +212,7 @@ abstract class FieldInjectionPointLogic {
                     elementType, cancel );
             if ( defaultQualifier ){
                 LOGGER.fine("@Default annotation requires test for implementors" +
-                        " of varaible type");                      // NOI18N
+                        " of variable type");                      // NOI18N
                 /*
                  *  Filter all appropriate types for presence qualifier.
                  *  It should be either absent at all or qualifiers 

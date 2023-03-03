@@ -3797,7 +3797,7 @@ class JavaCodeGenerator extends CodeGenerator {
                         }
                         continue;
                     } else if (str.startsWith(CODE_MARK_VARIABLE_SUBST, idx)) {
-                        // there is a code that can be cached in a local varaible to
+                        // there is a code that can be cached in a local variable to
                         // avoid calling it multiple times (e.g. ResourceBundle.getBundle)
                         int sub = idx + CODE_MARK_VARIABLE_SUBST.length();
                         idx = str.indexOf(CODE_MARK, sub);
@@ -3895,7 +3895,7 @@ class JavaCodeGenerator extends CodeGenerator {
             }
             variable = formModel.getCodeStructure().getExternalVariableName(type, varName, true);
             repeatedCodeVariables.put(codeToSubst, variable);
-            // add varaible declaration
+            // add variable declaration
             writer.write(varType);
             writer.write(" "); // NOI18N
             writer.write(variable);

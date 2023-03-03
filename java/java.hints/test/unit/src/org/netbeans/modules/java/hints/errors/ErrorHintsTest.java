@@ -266,7 +266,7 @@ public class ErrorHintsTest extends HintsTestBase {
         performTestDoNotPerform("org.netbeans.test.java.hints.CreateField7", 9, 18);
     }
     
-    //Create field which type is a type varaible, does not work yet:
+    //Create field which type is a type variable, does not work yet:
 //    public void testCreateField8() throws Exception {
 //        performTest("org.netbeans.test.java.hints.CreateField8", "Field", 6, 18);
 //    }

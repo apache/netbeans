@@ -941,7 +941,7 @@ via: http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/j2ee/index.html
 	declare                  Whether the variable is declared
 				 or not.  True is the default.
 
-	scope                    The scope of the scripting varaible
+	scope                    The scope of the scripting variable
 				 defined.  NESTED is default.
 
       </xsd:documentation>

@@ -27,7 +27,7 @@ import org.netbeans.modules.php.dbgp.packets.Property;
 import org.netbeans.modules.php.dbgp.packets.ContextNamesResponse.Context;
 
 /**
- * Represent context which contains varaibles ( VariableNodes ). Could be Local,
+ * Represent context which contains variables ( VariableNodes ). Could be Local,
  * Superglobal,...
  *
  * @author ads
@@ -54,7 +54,7 @@ public abstract class ContextNode extends AbstractModelNode implements ModelNode
         return myIndex;
     }
 
-    public int getVaraibleSize() {
+    public int getVariableSize() {
         return getVariables().size();
     }
 

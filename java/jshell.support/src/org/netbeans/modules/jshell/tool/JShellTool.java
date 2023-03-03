@@ -951,7 +951,7 @@ public class JShellTool implements MessageHandler {
                 }   break;
             case 1:
                 Command command = candidates[0];
-                // If comand was successful and is of a replayable kind, add it the replayable history
+                // If command was successful and is of a replayable kind, add it the replayable history
                 if (command.run.apply(arg) && command.kind == CommandKind.REPLAY) {
                     addToReplayHistory((command.command + " " + arg).trim());
                 }   break;

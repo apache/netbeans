@@ -43,7 +43,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 /**
- * Suggest to use combind assignment operaotors.
+ * Suggest to use combind assignment operators.
  *
  * e.g.
  * <pre>

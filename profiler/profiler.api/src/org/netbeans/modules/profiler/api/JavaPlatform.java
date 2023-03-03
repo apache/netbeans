@@ -45,7 +45,7 @@ public final class JavaPlatform {
     /**
      * finds platform with specified platform id.
      * @param platformId unique id of the platform
-     * @return platform which has plarformId as unique id
+     * @return platform which has platformId as unique id
      * or <code>null</code> if the is no such platform
      */
     public static JavaPlatform getJavaPlatformById(String platformId) {

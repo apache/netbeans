@@ -78,7 +78,7 @@ public abstract class QueryParameter {
     static final ParameterValue PV_FIELD_COMPONENT = new ParameterValue("component", "component"); // NOI18N
     static final ParameterValue PV_FIELD_DEADLINE = new ParameterValue("deadline", "deadline"); // NOI18N
     static final ParameterValue PV_FIELD_EVER_CONFIRMED = new ParameterValue("everconfirmed", "everconfirmed"); // NOI18N
-    static final ParameterValue PV_FIELD_REP_PLARFORM = new ParameterValue("rep_platform", "rep_platform"); // NOI18N
+    static final ParameterValue PV_FIELD_REP_PLATFORM = new ParameterValue("rep_platform", "rep_platform"); // NOI18N
     static final ParameterValue PV_FIELD_REMAINING_TIME = new ParameterValue("remaining_time", "remaining_time"); // NOI18N
     static final ParameterValue PV_FIELD_WORK_TIME = new ParameterValue("work_time", "work_time"); // NOI18N
     static final ParameterValue PV_FIELD_KEYWORDS = new ParameterValue("keywords", "keywords"); // NOI18N
@@ -127,7 +127,7 @@ public abstract class QueryParameter {
         PV_FIELD_COMPONENT,
         PV_FIELD_DEADLINE,
         PV_FIELD_EVER_CONFIRMED,
-        PV_FIELD_REP_PLARFORM,
+        PV_FIELD_REP_PLATFORM,
         PV_FIELD_REMAINING_TIME,
         PV_FIELD_WORK_TIME,
         PV_FIELD_KEYWORDS,

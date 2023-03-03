@@ -135,7 +135,7 @@ public class CssRuleCreateActionDialog extends javax.swing.JPanel {
         selectElementComboBox = new javax.swing.JComboBox();
         selectClassRadioButton = new javax.swing.JRadioButton();
         selectClassTextField = new javax.swing.JTextField();
-        selectElelmentIdRadioButton = new javax.swing.JRadioButton();
+        selectElementIdRadioButton = new javax.swing.JRadioButton();
         selectElementIdTextField = new javax.swing.JTextField();
         classPrefixComboBox = new javax.swing.JComboBox();
         classPrefixSeparator = new javax.swing.JLabel();
@@ -266,11 +266,11 @@ public class CssRuleCreateActionDialog extends javax.swing.JPanel {
         selectClassTextField.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(CssRuleCreateActionDialog.class, "CLASS_TEXT_FIELD_ACCESSIBLE_NAME")); // NOI18N
         selectClassTextField.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(CssRuleCreateActionDialog.class, "CLASS_TEXT_FIELD_ACCESSIBLE_DESC")); // NOI18N
 
-        selectRuleButtonGroup.add(selectElelmentIdRadioButton);
-        selectElelmentIdRadioButton.setMnemonic(org.openide.util.NbBundle.getMessage(CssRuleCreateActionDialog.class, "ELEMENT_ID_RULE_TYPE_MNEMONIC").charAt(0));
-        selectElelmentIdRadioButton.setText(org.openide.util.NbBundle.getMessage(CssRuleCreateActionDialog.class, "ELEMENT_ID_LBL")); // NOI18N
-        selectElelmentIdRadioButton.setActionCommand(ELEMENT_ID_TYPE);
-        selectElelmentIdRadioButton.addActionListener(new java.awt.event.ActionListener() {
+        selectRuleButtonGroup.add(selectElementIdRadioButton);
+        selectElementIdRadioButton.setMnemonic(org.openide.util.NbBundle.getMessage(CssRuleCreateActionDialog.class, "ELEMENT_ID_RULE_TYPE_MNEMONIC").charAt(0));
+        selectElementIdRadioButton.setText(org.openide.util.NbBundle.getMessage(CssRuleCreateActionDialog.class, "ELEMENT_ID_LBL")); // NOI18N
+        selectElementIdRadioButton.setActionCommand(ELEMENT_ID_TYPE);
+        selectElementIdRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectRuleActionPerformed(evt);
             }
@@ -282,8 +282,8 @@ public class CssRuleCreateActionDialog extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 5);
-        selectRulePanel.add(selectElelmentIdRadioButton, gridBagConstraints);
-        selectElelmentIdRadioButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(CssRuleCreateActionDialog.class, "ELEMENT_ID_RULE_TYPE_ACCESSIBLE_DESCRIPTION")); // NOI18N
+        selectRulePanel.add(selectElementIdRadioButton, gridBagConstraints);
+        selectElementIdRadioButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(CssRuleCreateActionDialog.class, "ELEMENT_ID_RULE_TYPE_ACCESSIBLE_DESCRIPTION")); // NOI18N
 
         selectElementIdTextField.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -530,7 +530,7 @@ public class CssRuleCreateActionDialog extends javax.swing.JPanel {
     private javax.swing.JPanel rulePanel;
     private javax.swing.JRadioButton selectClassRadioButton;
     private javax.swing.JTextField selectClassTextField;
-    private javax.swing.JRadioButton selectElelmentIdRadioButton;
+    private javax.swing.JRadioButton selectElementIdRadioButton;
     private javax.swing.JComboBox selectElementComboBox;
     private javax.swing.JTextField selectElementIdTextField;
     private javax.swing.JRadioButton selectElementRadioButton;

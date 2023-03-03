@@ -108,7 +108,7 @@ public final class ElementHandle<T extends Element> {
      * Resolves an {@link Element} from the {@link ElementHandle}.
      * @param compilationInfo representing the {@link javax.tools.CompilationTask}
      * in which the {@link Element} should be resolved.
-     * @return resolved subclass of {@link Element} or null if the elment does not exist on
+     * @return resolved subclass of {@link Element} or null if the element does not exist on
      * the classpath/sourcepath of {@link javax.tools.CompilationTask}.
      */
     @SuppressWarnings ("unchecked")     // NOI18N

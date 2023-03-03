@@ -30,7 +30,7 @@ public class IntroduceParameterOperator extends IntroduceOperator {
     
     private JCheckBoxOperator declareFinal;
     private JCheckBoxOperator replaceAllOccurences;
-    private JCheckBoxOperator generateJvadoc;
+    private JCheckBoxOperator generateJavadoc;
 
     private JRadioButtonOperator updateMethods;
     private JRadioButtonOperator createnewMethod;
@@ -57,10 +57,10 @@ public class IntroduceParameterOperator extends IntroduceOperator {
         return replaceAllOccurences;
     }
 
-    public JCheckBoxOperator getGenerateJvadoc() {
-        if(generateJvadoc == null)
-            generateJvadoc = new JCheckBoxOperator(this, 2);
-        return generateJvadoc;
+    public JCheckBoxOperator getGenerateJavadoc() {
+        if(generateJavadoc == null)
+            generateJavadoc = new JCheckBoxOperator(this, 2);
+        return generateJavadoc;
     }
 
     public JRadioButtonOperator getUpdateMethods() {

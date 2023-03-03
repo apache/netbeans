@@ -333,11 +333,11 @@ public class IntroduceParameterTest extends ModifyingRefactoring {
                     case testSimple_A_H:
                     case testSimple_A_L:
                          // Replace All Occurences = TRUE
-                        if(!ipo.getGenerateJvadoc().isSelected()) ipo.getGenerateJvadoc().doClick();
+                        if(!ipo.getGenerateJavadoc().isSelected()) ipo.getGenerateJavadoc().doClick();
                         break;
                     default:
                          // Replace All Occurences = FALSE
-                        if(ipo.getGenerateJvadoc().isSelected()) ipo.getGenerateJvadoc().doClick();
+                        if(ipo.getGenerateJavadoc().isSelected()) ipo.getGenerateJavadoc().doClick();
                         break;
                 }
                 

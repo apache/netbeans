@@ -447,7 +447,7 @@ public final class JavadocCompletionUtils {
     /**
      * Checks special case of empty javadoc <code>/**|&#42;/</code>. 
      * @param token javadoc token
-     * @param offset offset <B>INSIDE</B> jvadoc token
+     * @param offset offset <B>INSIDE</B> javadoc token
      * @return <code>true</code> in case of empty javadoc and the proper position
      */
     private static boolean isEmptyJavadoc(Token<JavaTokenId> token, int offset) {

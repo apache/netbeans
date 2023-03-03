@@ -24,7 +24,7 @@ import java.io.*;
 
 /**
  * Input source that can be sequentially shared including its steams.
- * Use {@link #reset} before passing it to subsequent procesor. It
+ * Use {@link #reset} before passing it to subsequent processor. It
  * is read only.
  */
 final class ShareableInputSource extends InputSource {

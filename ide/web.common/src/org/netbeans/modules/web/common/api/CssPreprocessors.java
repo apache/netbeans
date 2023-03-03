@@ -168,7 +168,7 @@ public final class CssPreprocessors {
      * Process given file (can be a folder as well) by the given CSS preprocessor.
      * <p>
      * For detailed information see {@link CssPreprocessorImplementation#process(Project, FileObject, String, String)}.
-     * @param cssPreprocessor CSS preprocesor
+     * @param cssPreprocessor CSS preprocessor
      * @param project project where the file belongs, can be {@code null} for file without a project
      * @param fileObject valid or even invalid file (or folder) to be processed
      * @see #process(CssPreprocessor, Project, FileObject, String, String)
@@ -184,7 +184,7 @@ public final class CssPreprocessors {
     /**
      * Same as {@link #process(CssPreprocessor, Project, FileObject)} but for rename operation so original name and extension
      * is provided as well.
-     * @param cssPreprocessor CSS preprocesor
+     * @param cssPreprocessor CSS preprocessor
      * @param project project where the file belongs, can be {@code null} for file without a project
      * @param fileObject valid file (or folder) to be processed
      * @param originalName original file name

@@ -577,8 +577,8 @@ public final class ImportClass implements ErrorRule<Void>{
                 Lookup lookup = MimeLookup.getLookup(MimePath.get(topLevelLanguageMIMEType));
                 Collection<? extends ImportProcessor> instances = lookup.lookupAll(ImportProcessor.class);
 
-                for (ImportProcessor importsProcesor : instances) {
-                    importsProcesor.addImport(doc, fqn);
+                for (ImportProcessor importsProcessor : instances) {
+                    importsProcessor.addImport(doc, fqn);
                 }
             }
         }

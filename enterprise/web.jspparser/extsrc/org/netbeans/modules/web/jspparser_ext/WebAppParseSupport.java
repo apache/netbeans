@@ -197,7 +197,7 @@ public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListe
         }
         fileSystemListener = new FileSystemListener();
 
-        // request procesor tasks
+        // request processor tasks
         RequestProcessor requestProcessor = new RequestProcessor("JSP parser :: Reinit caches"); // NOI18N
         reinitCachesTask = requestProcessor.create(new ReinitCaches());
 

@@ -62,12 +62,12 @@ public class HistorySupport {
     //@GuardedBy("HistorySupport.class")
     private static Map<Class<?>,HistorySupport> instances = new HashMap<Class<?>, HistorySupport>();
 
-    private final PropertyChangeSupport suppot;
+    private final PropertyChangeSupport support;
     //@GuardedBy("this")
     private final Deque<Pair<URI, ElementHandle<TypeElement>>> history;
 
     private HistorySupport() {
-        this.suppot = new PropertyChangeSupport(this);
+        this.support = new PropertyChangeSupport(this);
         this.history = new ArrayDeque<Pair<URI, ElementHandle<TypeElement>>>();
     }
 
@@ -87,7 +87,7 @@ public class HistorySupport {
                 history.addFirst(pair);
             }
         }
-        suppot.firePropertyChange(HISTORY, null, null);
+        support.firePropertyChange(HISTORY, null, null);
     }
 
     @NonNull
@@ -101,13 +101,13 @@ public class HistorySupport {
 
     public void addPropertyChangeListener(@NonNull final PropertyChangeListener listener) {
         assert listener != null;
-        suppot.addPropertyChangeListener(listener);
+        support.addPropertyChangeListener(listener);
     }
 
 
     public void removePropertyChangeListener(@NonNull final PropertyChangeListener listener) {
         assert listener != null;
-        suppot.removePropertyChangeListener(listener);
+        support.removePropertyChangeListener(listener);
     }
 
     @NonNull

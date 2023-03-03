@@ -176,9 +176,9 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
             FileObject localWsdl=null;
             try {
                 // download resources to xml-resources
-                FileObject xmlResorcesFo = getLocalWsdlFolderForService(finalServiceName,true);
+                FileObject xmlResourcesFo = getLocalWsdlFolderForService(finalServiceName,true);
                 localWsdl = WSUtils.retrieveResource(
-                        xmlResorcesFo,
+                        xmlResourcesFo,
                         new URI(wsdlUrl));
                 if (localWsdl!=null) {
 
@@ -228,7 +228,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
                         ErrorManager.getDefault().notify(ex);
                     }
                     service.setUseProvider(useProvider);
-                    String localWsdlUrl = FileUtil.getRelativePath(xmlResorcesFo, localWsdl);
+                    String localWsdlUrl = FileUtil.getRelativePath(xmlResourcesFo, localWsdl);
                     service.setLocalWsdlFile(localWsdlUrl);
                     FileObject catalog = getCatalogFileObject();
                     if (catalog!=null) service.setCatalogFile(CATALOG_FILE);

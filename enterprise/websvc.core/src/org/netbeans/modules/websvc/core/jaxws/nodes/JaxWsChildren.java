@@ -497,26 +497,26 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
             
         if (downloadWsdl) {
                 String serviceName = getNode().getName();
-                FileObject xmlResorcesFo = support.getLocalWsdlFolderForService(serviceName,true);
+                FileObject xmlResourcesFo = support.getLocalWsdlFolderForService(serviceName,true);
                 FileObject localWsdl = null;
                 try {
                     String oldWsdlUrl = service.getWsdlUrl();
                     boolean jaxWsModelChanged = false;
                     if (newWsdlUrl.length()>0 && !oldWsdlUrl.equals(newWsdlUrl)) {
                          localWsdl = WSUtils.retrieveResource(
-                                xmlResorcesFo,
+                                xmlResourcesFo,
                                 new URI(newWsdlUrl));   
                          jaxWsModelChanged = true;
                     } else {
                         localWsdl = WSUtils.retrieveResource(
-                                xmlResorcesFo,
+                                xmlResourcesFo,
                                 new URI(oldWsdlUrl));
                     }
                     if (jaxWsModelChanged) {
                         service.setWsdlUrl(newWsdlUrl);
-                        FileObject xmlResourcesFo = support.getLocalWsdlFolderForService(serviceName,false);
-                        if (xmlResourcesFo!=null) {
-                            String localWsdlUrl = FileUtil.getRelativePath(xmlResourcesFo, localWsdl);
+                        FileObject xmlResourcesFo2 = support.getLocalWsdlFolderForService(serviceName,false);
+                        if (xmlResourcesFo2!=null) {
+                            String localWsdlUrl = FileUtil.getRelativePath(xmlResourcesFo2, localWsdl);
                             service.setLocalWsdlFile(localWsdlUrl);
                         }
                         Project project = FileOwnerQuery.getOwner(srcRoot);
@@ -525,7 +525,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                     }  
                     // copy resources to WEB-INF/wsdl/${serviceName}
                     FileObject wsdlFolder = getWsdlFolderForService(support, serviceName);
-                    WSUtils.copyFiles(xmlResorcesFo, wsdlFolder);
+                    WSUtils.copyFiles(xmlResourcesFo, wsdlFolder);
                 } catch (URISyntaxException ex) {
                     ErrorManager.getDefault().notify(ex);
                 } catch (UnknownHostException ex) {

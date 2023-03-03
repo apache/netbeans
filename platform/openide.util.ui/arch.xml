@@ -81,7 +81,7 @@
   <p>
    There is not much things to localize in this module, so it is properly localized.
    But it is good to note that the module adds <api name="BrandingSupport" category="official" group="property" type="export" url="@org-openide-util@/org/openide/util/NbBundle.html">
-   which is similar to localization but also supports changes of resorces 
+   which is similar to localization but also supports changes of resources
    for application build on top of NetBeans. This is handled by our
    class <a href="@org-openide-util@/org/openide/util/NbBundle.html">NbBundle</a> which 
    reimplements the JDK's standard <a href="@JDK@/java/util/ResourceBundle.html">ResourceBundle</a>

@@ -100,7 +100,7 @@ public class CustomClassLoader extends URLClassLoader {
             return clazz;
         }
         if (packageName != null && packageName.startsWith("org.apache.log4j")) {
-            // Throw CNFE because we use java.util.logging hander in
+            // Throw CNFE because we use java.util.logging handler in
             // the logging output
             throw new ClassNotFoundException("Log4J is forbidden");
         }

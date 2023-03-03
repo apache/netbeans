@@ -30,7 +30,6 @@ import static org.netbeans.modules.glassfish.tooling.CommonTest.readProperties;
 import static org.netbeans.modules.glassfish.tooling.CommonTest.restoreDomain;
 import org.netbeans.modules.glassfish.tooling.GlassFishIdeException;
 import org.netbeans.modules.glassfish.tooling.GlassFishStatus;
-import static org.netbeans.modules.glassfish.tooling.admin.CommandRestTest.getGlassFishProperty;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
 import org.netbeans.modules.glassfish.tooling.data.StartupArgsEntity;
 import org.netbeans.modules.glassfish.tooling.logging.Logger;
@@ -59,7 +58,7 @@ public abstract class CommandHttpTest extends CommandTest {
     private static final Logger LOGGER = new Logger(CommandHttpTest.class);
 
     /** GlassFish test server property file. */
-    private static final String GLASSFISH_PROPERTES
+    private static final String GLASSFISH_PROPERTIES
             = "src/test/java/org/netbeans/modules/glassfish/tooling/GlassFishHttp.properties";
 
     /** GlassFish test server properties. */
@@ -100,7 +99,7 @@ public abstract class CommandHttpTest extends CommandTest {
     }
     
     public static Properties glassfishProperties() {
-        return glassfishProperties(GLASSFISH_PROPERTES);
+        return glassfishProperties(GLASSFISH_PROPERTIES);
     }
 
     /**

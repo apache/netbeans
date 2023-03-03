@@ -39,7 +39,7 @@ import org.testng.annotations.BeforeClass;
 public class ServerTasksTest extends CommonTest {
 
     /** GlassFish test server property file. */
-    private static final String GLASSFISH_PROPERTES = "src/test/java/org/netbeans/modules/glassfish/tooling/server/GF.properties";
+    private static final String GLASSFISH_PROPERTIES = "src/test/java/org/netbeans/modules/glassfish/tooling/server/GF.properties";
     
     private static Properties gfProperties;
     private static GlassFishServer gfServer;
@@ -47,7 +47,7 @@ public class ServerTasksTest extends CommonTest {
     
     @BeforeClass
     public static void init() {
-        gfProperties = readProperties(GLASSFISH_PROPERTES);
+        gfProperties = readProperties(GLASSFISH_PROPERTIES);
         gfServer = createGlassfishServer();
         args = new StartupArgs() {
             

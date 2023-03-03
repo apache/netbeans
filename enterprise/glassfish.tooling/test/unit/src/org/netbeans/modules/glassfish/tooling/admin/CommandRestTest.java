@@ -18,23 +18,17 @@
  */
 package org.netbeans.modules.glassfish.tooling.admin;
 
-import java.io.File;
 import org.netbeans.modules.glassfish.tooling.TaskState;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import org.netbeans.modules.glassfish.tooling.CommonTest;
 import static org.netbeans.modules.glassfish.tooling.CommonTest.readProperties;
 import org.netbeans.modules.glassfish.tooling.GlassFishIdeException;
-import org.netbeans.modules.glassfish.tooling.GlassFishStatus;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
 import org.netbeans.modules.glassfish.tooling.data.StartupArgsEntity;
 import org.netbeans.modules.glassfish.tooling.logging.Logger;
@@ -66,7 +60,7 @@ public abstract class CommandRestTest extends CommandTest {
     private static final Logger LOGGER = new Logger(CommandRestTest.class);
 
     /** GlassFish test server property file. */
-    private static final String GLASSFISH_PROPERTES
+    private static final String GLASSFISH_PROPERTIES
             = "src/test/java/org/netbeans/modules/glassfish/tooling/GlassFishRest.properties";
 
     /** GlassFish test server properties. */
@@ -100,7 +94,7 @@ public abstract class CommandRestTest extends CommandTest {
             synchronized(CommandRestTest.class) {
                 if (glassfishProperties == null) {
                     if (propertyFile == null)
-                        propertyFile = GLASSFISH_PROPERTES;
+                        propertyFile = GLASSFISH_PROPERTIES;
                     glassfishProperties = readProperties(propertyFile);
                 }
             }
@@ -109,7 +103,7 @@ public abstract class CommandRestTest extends CommandTest {
     }
     
     public static Properties glassfishProperties() {
-        return glassfishProperties(GLASSFISH_PROPERTES);
+        return glassfishProperties(GLASSFISH_PROPERTIES);
     }
 
     /**

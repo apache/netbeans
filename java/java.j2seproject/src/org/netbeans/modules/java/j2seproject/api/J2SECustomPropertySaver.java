@@ -23,7 +23,7 @@ import org.netbeans.api.project.Project;
 /**
  * Property saver to be implemented by J2SE Project extension modules
  * that introduce new project properties. Registered savers are
- * used to save extended propertes in addition to standard J2SE Project properties
+ * used to save extended properties in addition to standard J2SE Project properties
  * if modified by user in Project Properties dialog.
  * Implementation of the interface should be registered using {@link org.netbeans.spi.project.ProjectServiceProvider}.
  * 

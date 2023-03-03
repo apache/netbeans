@@ -58,7 +58,7 @@ public abstract class CommandHttpTest extends CommandTest {
     private static final Logger LOGGER = new Logger(CommandHttpTest.class);
 
     /** Payara test server property file. */
-    private static final String PAYARA_PROPERTES
+    private static final String PAYARA_PROPERTIES
             = "src/test/java/org/netbeans/modules/payara/tooling/PayaraHttp.properties";
 
     /** Payara test server properties. */
@@ -99,7 +99,7 @@ public abstract class CommandHttpTest extends CommandTest {
     }
     
     public static Properties payaraProperties() {
-        return payaraProperties(PAYARA_PROPERTES);
+        return payaraProperties(PAYARA_PROPERTIES);
     }
 
     /**

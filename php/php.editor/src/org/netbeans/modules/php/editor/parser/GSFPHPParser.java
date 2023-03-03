@@ -465,7 +465,7 @@ public class GSFPHPParser extends Parser implements PropertyChangeListener {
      *
      * @param start the start offset
      * @param source the source
-     * @return the start positon for sanitizing if it is found, otherwise -1
+     * @return the start position for sanitizing if it is found, otherwise -1
      */
     private int sanitizingStartPositionForUnionType(int start, String source) {
         int sanitizingStart = start;

@@ -71,7 +71,7 @@ public class FileNode extends AbstractNode {
      */
     static final class InstallProperty extends PropertySupport.ReadWrite<Boolean> {
         /** Name of the property. */
-        static final String NAME = "instal"; // NOI18N
+        static final String NAME = "install"; // NOI18N
         /** Value of the property. */
         private boolean value;
 

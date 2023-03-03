@@ -30,7 +30,7 @@
 // In that case the executable icon would have "shield" mark.
 // Using of nlw-alt.exe.manifest means that on Vista evaluation dialog is not displayed. To run it with admin right user have to execute "Run as Administrator" explicitely.
 // Without the build-it manifest the following issue can occur (reported Martin Sladecek):
-// When launcher would have "instal" in its name (uninstall.exe for instance), then - due to UAC and it`s method of checking "installer-like" names and code stamps - it would be executed with Administrator`s environment - it is would be different from the user that performed the installation.
+// When launcher would have "install" in its name (uninstall.exe for instance), then - due to UAC and it`s method of checking "installer-like" names and code stamps - it would be executed with Administrator`s environment - it is would be different from the user that performed the installation.
 // Only one of the following lines should be commented, the other one should be uncommented.
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "nlw.exe.manifest"
 //CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "nlw-alt.exe.manifest"

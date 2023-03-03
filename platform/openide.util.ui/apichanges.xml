@@ -416,7 +416,7 @@
             <p>
                 Most of the proxy and network credentials are currently read
                 from a default NetBeans storage. This may not be ideal
-                for other Platform aplications storing the settings in a different
+                for other Platform applications storing the settings in a different
                 way or computing them dynamically. 
                 A SPI <a href="@TOP@/org/openide/util/NetworkSettings.ProxyCredentialsProvider.html">
                 NetworkSettings.ProxyCredentialsProvider</a> allows NetBeans Platform

@@ -89,7 +89,7 @@ The project is based on the requirement to access the web module deployment desc
 There are multiple cases when web module deployment descriptor need to be modified from the "<b>outside</b>".<br>
 These are some examples of probable DD API <b>clients</b> :<br>
 <ul>
-<li>J2EE aplication need to read/write information from/into web module DD</li>
+<li>J2EE application need to read/write information from/into web module DD</li>
 <li>Web Services based on servlet need to access and modify the deployment descriptor</li>
 <li>Web application wizards (web module wizard, servlet wizard, filter wizard, etc.) need to add elements to Deployment descriptor</li>
 <li>DD visual editor need to access the deployment descriptor in a simple and version-independent way</li>
@@ -102,7 +102,7 @@ The goal of DD API is to provide a simple way how web module deployments descrip
 <h2>2. Use Cases</h2>
 
 <h4>Use case 1 : <b>J2EE Application</b></h4>
-J2EE Aplications often need to explore the included modules. Web modules are usually used as clients or front-end  components of J2EE application.<br>
+J2EE Applications often need to explore the included modules. Web modules are usually used as clients or front-end  components of J2EE application.<br>
 There is a requirement to be able to identify the sub-elements of web modules that are included to J2EE Application. For example, the J2EE Application need to be able to create a web module (<b>WEB client</b>), with the default web.xml file, then create a display-name and add a servlet element to deployment descriptor.
 <p>
 

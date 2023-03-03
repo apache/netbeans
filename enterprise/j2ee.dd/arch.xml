@@ -90,7 +90,7 @@ The root of the deployment descriptor is accessible through the <b>DDProvider</b
 <answer id="arch-usecases">
 
 <usecase id="web-dd-1" name="J2EE Application" >
-J2EE Aplications often need to explore the included modules. 
+J2EE Applications often need to explore the included modules.
 Ejb modules are usually used as components of a J2EE application.
 Web modules are usually used as clients or front-end  components of J2EE application.<br/>
 There is a requirement to be able to identify the sub-elements of web modules that are included to J2EE Application. 

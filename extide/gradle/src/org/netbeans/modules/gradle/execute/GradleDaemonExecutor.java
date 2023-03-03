@@ -264,7 +264,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 gradleTask.finish(1);
             } else {
                 // This can happen if cancelling a Gradle build which is running
-                // an external aplication
+                // an external application
                 showAbort();
             }
         } catch (GradleConnectionException ex) {

@@ -54,7 +54,7 @@ public final class CPPLiteActionsProvider extends ActionsProviderSupport {
         ACTIONS_TO_DISABLE.remove(ActionsManager.ACTION_KILL);
     }
 
-    /** The ReqeustProcessor used by action performers. */
+    /** The RequestProcessor used by action performers. */
     private static RequestProcessor     actionsRequestProcessor;
     private static RequestProcessor     killRequestProcessor;
 

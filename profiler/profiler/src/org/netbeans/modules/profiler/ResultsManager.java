@@ -833,7 +833,7 @@ public final class ResultsManager {
         return prepareSnapshot(true);
     }
 
-    public LoadedSnapshot prepareSnapshot(boolean reqeustData) {
+    public LoadedSnapshot prepareSnapshot(boolean requestData) {
         ResultsSnapshot snapshot = null;
 
         if (!resultsAvailable()) {
@@ -851,13 +851,13 @@ public final class ResultsManager {
                     case ProfilingSettings.PROFILE_MEMORY_ALLOCATIONS:
                     case ProfilingSettings.PROFILE_MEMORY_LIVENESS:
                     case ProfilingSettings.PROFILE_MEMORY_SAMPLING:
-                        snapshot = client.getMemoryProfilingResultsSnapshot(reqeustData);
+                        snapshot = client.getMemoryProfilingResultsSnapshot(requestData);
 
                         break;
                     case ProfilingSettings.PROFILE_CPU_ENTIRE:
                     case ProfilingSettings.PROFILE_CPU_PART:
                     case ProfilingSettings.PROFILE_CPU_SAMPLING:
-                        snapshot = client.getCPUProfilingResultsSnapshot(reqeustData);
+                        snapshot = client.getCPUProfilingResultsSnapshot(requestData);
 
                         break;
                     case ProfilingSettings.PROFILE_CPU_STOPWATCH:
@@ -865,7 +865,7 @@ public final class ResultsManager {
 
                         break;
                     case ProfilingSettings.PROFILE_CPU_JDBC:
-                        snapshot = client.getJdbcProfilingResultsSnapshot(reqeustData);
+                        snapshot = client.getJdbcProfilingResultsSnapshot(requestData);
 
                         break;
                 }

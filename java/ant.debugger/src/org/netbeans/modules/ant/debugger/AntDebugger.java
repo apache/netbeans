@@ -67,7 +67,7 @@ public class AntDebugger extends ActionsProviderSupport {
 
     private static final Logger logger = Logger.getLogger(AntDebugger.class.getName());
     
-    /** The ReqeustProcessor used by action performers. */
+    /** The RequestProcessor used by action performers. */
     private static RequestProcessor     actionsRequestProcessor;
     private static RequestProcessor     killRequestProcessor;
     

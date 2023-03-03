@@ -168,11 +168,11 @@ implements WritableLibraryProvider<LibraryImplementation>, ChangeListener {
                 } catch (SAXException e) {
                     //The library is broken, probably edited by user
                     //just log
-                    logBrokenLibraryDescripor(descriptorFile, e);
+                    logBrokenLibraryDescriptor(descriptorFile, e);
                 } catch (CharConversionException e) { {
                     //The library is broken, probably edited by user
                     //just log
-                    logBrokenLibraryDescripor(descriptorFile, e);
+                    logBrokenLibraryDescriptor(descriptorFile, e);
                 }
                 } catch (ParserConfigurationException e) {
                     Exceptions.printStackTrace(e);
@@ -403,7 +403,7 @@ implements WritableLibraryProvider<LibraryImplementation>, ChangeListener {
             }
         } catch (SAXException e) {
             //The library is broken, probably edited by user or unknown provider (FoD), log as warning
-            logBrokenLibraryDescripor(fo, e);
+            logBrokenLibraryDescriptor(fo, e);
         } catch (ParserConfigurationException e) {
             Exceptions.printStackTrace(e);
         } catch (IOException e) {
@@ -457,7 +457,7 @@ implements WritableLibraryProvider<LibraryImplementation>, ChangeListener {
                 }
             } catch (SAXException se) {
                 //The library is broken, probably edited by user, log as warning
-                logBrokenLibraryDescripor(definitionFile, se);
+                logBrokenLibraryDescriptor(definitionFile, se);
             } catch (ParserConfigurationException pce) {
                 Exceptions.printStackTrace(pce);
             } catch (IOException ioe) {
@@ -564,7 +564,7 @@ implements WritableLibraryProvider<LibraryImplementation>, ChangeListener {
         fireLibrariesChanged();
     }
 
-    private void logBrokenLibraryDescripor(
+    private void logBrokenLibraryDescriptor(
         @NonNull FileObject descriptorFile,
         @NonNull Exception cause){
         Level level = Level.WARNING;

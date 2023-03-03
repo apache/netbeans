@@ -368,7 +368,7 @@ public class PropertiesFileEntry extends PresentableFileEntry
      * @return <code>true</code> if it may (primary file can't be deleted)
      */
     public boolean isDeleteAllowed() {
-        // PENDING - better implementation : don't allow deleting Bunlde_en when Bundle_en_US exists
+        // PENDING - better implementation : don't allow deleting Bundle_en when Bundle_en_US exists
         return (getFile ().canWrite ()) && (!basicName.equals(getFile().getName()));
     }
 

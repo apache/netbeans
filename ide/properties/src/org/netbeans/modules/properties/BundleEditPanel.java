@@ -1080,7 +1080,7 @@ public class BundleEditPanel extends JPanel implements PropertyChangeListener {
         
         /**
          * The same like superclass removeEditor except it doesn't request focus back to table.
-         * We need this kind of behaviour (see bug in IssueaZilla #9237). The table shoudl request focus
+         * We need this kind of behaviour (see bug in IssueaZilla #9237). The table should request focus
          * after canceling editing when is showing only (submit bug to jdk ?).
          * @see javax.swing.JTable#removeEditor */
         public void removeEditorSilent() {

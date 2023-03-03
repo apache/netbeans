@@ -120,7 +120,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
      * Maps document {@link javax.swing.text.Element}s (representing lines) to
      * {@link AnnotateLine}. <code>null</code> means that
      * no data are available, yet. So alternative
-     * {@link #elementAnnotationsSubstitute} text shoudl be used.
+     * {@link #elementAnnotationsSubstitute} text should be used.
      *
      * @thread it is accesed from multiple threads all mutations
      * and iterations must be under elementAnnotations lock,

@@ -2046,5 +2046,5 @@ LINE_COMMENT
     ;
 
 // -------------
-//  Illegal.    Any other character shoudl not be allowed.
+//  Illegal.    Any other character should not be allowed.
 //

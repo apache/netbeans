@@ -39,7 +39,7 @@ public class TestBase extends CslTestBase {
     protected BaseDocument createDocument() {
         NbEditorDocument doc = new NbEditorDocument("text/html");
         doc.putProperty(PROP_MIME_TYPE, "text/html");
-        doc.putProperty(Language.class, HTMLTokenId.language()); //hack for LanguageManager - shoudl be removed
+        doc.putProperty(Language.class, HTMLTokenId.language()); //hack for LanguageManager - should be removed
 
         return doc;
     }

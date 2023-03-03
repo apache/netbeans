@@ -39,7 +39,7 @@ public interface VCSHistoryProvider {
      * between fromDate and now. 
      * 
      * @param files the files for which the history should be returned
-     * @param fromDate timedate starting from which the history shoudl be returned
+     * @param fromDate timedate starting from which the history should be returned
      * 
      * @return a list of HistoryEntries
      * 

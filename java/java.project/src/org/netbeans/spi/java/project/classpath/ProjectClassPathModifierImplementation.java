@@ -316,7 +316,7 @@ public abstract class ProjectClassPathModifierImplementation {
                 boolean fileLibraryCol = CollocationQuery.areCollocated(library.getParentFile(), file);
                 boolean libraryAbsolute = LibrariesSupport.convertFilePathToURI(helper.getLibrariesLocation()).isAbsolute();
                 // when library location is absolute, we are most probably dealing with the famous X: drive location
-                // since the library is absolute, it shoudl be safe to reference everything under it as absolute as well.
+                // since the library is absolute, it should be safe to reference everything under it as absolute as well.
                 if (libraryAbsolute && fileLibraryCol) {
                     f = file.getAbsolutePath();
                 } else if (libraryAbsolute && !fileLibraryCol) {

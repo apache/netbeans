@@ -72,7 +72,7 @@ public interface PreferencesCustomizer {
 
     /**
      * Gets the component with UI controls for customizing preferences controlled
-     * by this customizer. The UI controls shoudl treat the <code>Preferences</code>
+     * by this customizer. The UI controls should treat the <code>Preferences</code>
      * instance supplied to this customizer as their model. That is it should reflect
      * any changes done to the <code>preferences</code>' values they are
      * presenting in the UI and also write any changes done by user back to the

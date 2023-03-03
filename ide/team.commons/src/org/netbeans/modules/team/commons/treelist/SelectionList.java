@@ -304,7 +304,7 @@ public final class SelectionList extends JList<ListNode> {
         @Override
         public Component getListCellRendererComponent( JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus ) {
             if (!(value instanceof ListNode)) {
-                //shoudln't happen
+                //shouldn't happen
                 return new JLabel();
             }
             if( list instanceof SelectionList ) {

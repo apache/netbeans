@@ -2149,7 +2149,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                         property.getModifiers().add(Modifier.PROTECTED);
                     }
                     if(value instanceof CallNode) {
-                        // TODO for now, don't continue. There shoudl be handled cases liek
+                        // TODO for now, don't continue. There should be handled cases liek
                         // in the testFiles/model/property02.js file
                         //return null;
                     } else {

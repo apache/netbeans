@@ -255,7 +255,7 @@ public class TreeList extends JList {
 
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (!(value instanceof TreeListNode)) {
-                //shoudln't happen
+                //shouldn't happen
                 return new JLabel();
             }
             TreeListNode node = (TreeListNode) value;

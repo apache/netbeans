@@ -111,7 +111,7 @@ public class VerifierSupport extends TopComponent {
     JRadioButton failButton ;
     JRadioButton warnButton ;
     RadioListener myListener ;
-    //what shoudl be displayed:ALL, FAIL, WARN
+    //what should be displayed:ALL, FAIL, WARN
     int statusLeveltoDisplay = ALL;//by default
     boolean verifierIsStillRunning = true; //needed for the ui to know if a status message has to be printed or not...
     JPanel controlPanel;

@@ -189,7 +189,7 @@ public class RunJarStartupArgs implements LateBoundPrerequisitesChecker {
             
             if (!splitParameters) {
                 // the original cmdline was split between vmArgsValue appArgsValue and joinedArgs, so
-                // any customizations shoudl remain preserved.
+                // any customizations should remain preserved.
                 String newParams = String.join(" ", changedParams.getAllArguments(joinedArgs));
                 config.setProperty(MavenExecuteUtils.RUN_PARAMS, newParams);
             }

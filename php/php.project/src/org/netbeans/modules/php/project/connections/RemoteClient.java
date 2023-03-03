@@ -876,7 +876,7 @@ public final class RemoteClient implements Cancellable {
                     return false;
                 }
                 try (OutputStream out = foTarget.getOutputStream(lock)) {
-                    // TODO the doewnload action shoudln't save all file before
+                    // TODO the doewnload action shouldn't save all file before
                     // executing, then the ide will ask, whether user wants
                     // to replace currently editted file.
                     FileUtil.copy(in, out);

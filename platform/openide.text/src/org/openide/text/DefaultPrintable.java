@@ -166,7 +166,7 @@ final class DefaultPrintable extends Object implements Printable {
         if (processDummy) {
             for (int i = 0; i < startPage; i++) {
                 // XXX #21245 Processes dummy pages (first pages to not print).
-                // PENDING shuold be made better+faster way to skip
+                // PENDING should be made better+faster way to skip
                 // processing of such pages (then this - hot fix).
                 printImpl(g, pf, i, false);
             }

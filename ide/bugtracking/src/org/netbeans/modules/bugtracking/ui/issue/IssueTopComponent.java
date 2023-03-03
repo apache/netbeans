@@ -664,7 +664,7 @@ public final class IssueTopComponent extends TopComponent implements PropertyCha
             setNameAndTooltip();
         } else if(evt.getPropertyName().equals(RepositoryRegistry.EVENT_REPOSITORIES_CHANGED)) {
             if(!repositoryComboBox.isEnabled()) {
-                // well, looks like there shuold be only one repository available
+                // well, looks like there should be only one repository available
                 return;
             }
             SwingUtilities.invokeLater(new Runnable() {

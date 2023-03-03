@@ -193,7 +193,7 @@ class InsertRecordDialog extends javax.swing.JDialog {
         jTextArea1.setWrapStyleWord(true);
         jTextArea1.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         getContentPane().add(jTextArea1, java.awt.BorderLayout.NORTH);
-        jTextArea1.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(InsertRecordDialog.class, "insertRecodrDialog.jTextArea")); // NOI18N
+        jTextArea1.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(InsertRecordDialog.class, "insertRecordDialog.jTextArea")); // NOI18N
         jTextArea1.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(InsertRecordDialog.class, "insertRecord.textarea.desc")); // NOI18N
 
         jSplitPane1.setDividerLocation(250);

@@ -169,7 +169,7 @@ public final class IndexingBridge {
      */
     public static interface IndexingBridgeProvider {
         /**
-         * This method is te actual integration point between versioning and indexing.
+         * This method is the actual integration point between versioning and indexing.
          * A typical implementation should do something like this:
          * <ul>
          * <li>call the indexing infrastructure and turn off the immediate processing of events</li>

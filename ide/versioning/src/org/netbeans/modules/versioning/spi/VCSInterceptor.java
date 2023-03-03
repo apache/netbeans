@@ -58,7 +58,7 @@ public abstract class VCSInterceptor {
      * only supported attribute name is <code>ProvidedExtensions.RemoteLocation</code>
      * 
      * @param file a file to get the attribute for
-     * @param attrName te attributes name
+     * @param attrName the attributes name
      * @return the attributes value or null if not available
      * @since 1.10
      */

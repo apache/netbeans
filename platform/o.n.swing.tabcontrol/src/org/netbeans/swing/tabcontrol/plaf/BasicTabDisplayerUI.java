@@ -491,7 +491,7 @@ public abstract class BasicTabDisplayerUI extends AbstractTabDisplayerUI {
 
     /**
      * Convenience method to override for handling mouse wheel events. The
-     * defualt implementation does nothing.
+     * default implementation does nothing.
      */
     protected void processMouseWheelEvent(MouseWheelEvent e) {
         //do nothing

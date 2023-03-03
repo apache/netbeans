@@ -108,11 +108,11 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
     private static Map<String, LookupListener> COLORINGS_LISTENERS =
         Collections.synchronizedMap(new HashMap<String, LookupListener>());
 
-    private static final AttributeSet DEFUALT_ERROR =
+    private static final AttributeSet DEFAULT_ERROR =
             AttributesUtilities.createImmutable(EditorStyleConstants.WaveUnderlineColor, new Color(0xFF, 0x00, 0x00));
-    private static final AttributeSet DEFUALT_WARNING =
+    private static final AttributeSet DEFAULT_WARNING =
             AttributesUtilities.createImmutable(EditorStyleConstants.WaveUnderlineColor, new Color(0xC0, 0xC0, 0x00));
-    private static final AttributeSet DEFUALT_VERIFIER =
+    private static final AttributeSet DEFAULT_VERIFIER =
             AttributesUtilities.createImmutable(EditorStyleConstants.WaveUnderlineColor, new Color(0xFF, 0xD5, 0x55));
     private static final AttributeSet TOOLTIP =
             AttributesUtilities.createImmutable(EditorStyleConstants.Tooltip, new TooltipResolver());
@@ -1003,7 +1003,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
                     if (attributes != null) {
                         error = attributes;
                     } else {
-                        error = DEFUALT_ERROR;
+                        error = DEFAULT_ERROR;
                     }
                 }
                 attributes = fcs.getTokenFontColors("warning"); // NOI18N
@@ -1011,13 +1011,13 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
                     warning = attributes;
                     verifier = attributes;
                 } else {
-                    warning = DEFUALT_WARNING;
-                    verifier = DEFUALT_VERIFIER;
+                    warning = DEFAULT_WARNING;
+                    verifier = DEFAULT_VERIFIER;
                 }
             } else {
-                error = DEFUALT_ERROR;
-                warning = DEFUALT_WARNING;
-                verifier = DEFUALT_VERIFIER;
+                error = DEFAULT_ERROR;
+                warning = DEFAULT_WARNING;
+                verifier = DEFAULT_VERIFIER;
             }
             coloring.put(Severity.ERROR, AttributesUtilities.createComposite(error, TOOLTIP));
             coloring.put(Severity.WARNING, AttributesUtilities.createComposite(warning, TOOLTIP));

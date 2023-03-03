@@ -32,7 +32,7 @@ Document type declaration for AnnotationType.
 
 <!ATTLIST type localizing_bundle CDATA #IMPLIED>
 <!ATTLIST type description_key CDATA #IMPLIED>
-<!-- No localization/no description by defualt.
+<!-- No localization/no description by default.
    In fact, bundle/description is #REQUIRED for visible=true -->
 
 <!ATTLIST type glyph CDATA #IMPLIED>

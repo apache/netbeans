@@ -1267,7 +1267,7 @@ public final class LayoutDesigner implements LayoutConstants {
                     int diffToDefault = defaultSizes[maxIndex] - currentSize; // result is negative number
                     if (diffToDefault < units) { // above default size
                         newSize = currentSize + units;
-                    } else if (diffToDefault == units) { // right on defualt size
+                    } else if (diffToDefault == units) { // right on default size
                         newSize = NOT_EXPLICITLY_DEFINED;
                         if (defaultSizes.length > 1) {
                             newPaddingType = PaddingType.values()[maxIndex];

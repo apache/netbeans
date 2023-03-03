@@ -41,7 +41,7 @@ import org.openide.util.ContextAwareAction;
 public final class RefactoringActionsFactory {
     
     /**
-     * defualt event for actionPerformed
+     * default event for actionPerformed
      */
     public static final ActionEvent DEFAULT_EVENT = new ActionEvent(new Object(), 0, null) {
         @Override

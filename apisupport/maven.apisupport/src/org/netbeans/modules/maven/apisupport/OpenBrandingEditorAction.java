@@ -96,7 +96,7 @@ public class OpenBrandingEditorAction extends AbstractAction implements ContextA
                 EventQueue.invokeLater(new Runnable() {
                     @Override public void run() {
                         if (!hasAppProject && !hasExternalPlatform) {
-                            //TODO do we need the external platform check? MavenPLatfomrJarProvider has it, but it's more generic than branding
+                            //TODO do we need the external platform check? MavenPlatformJarProvider has it, but it's more generic than branding
                             NotifyDescriptor.Message message  = new NotifyDescriptor.Message(OpenBrandingEditorAction_Error_NoApplication(), NotifyDescriptor.ERROR_MESSAGE);
                             DialogDisplayer.getDefault().notify(message);
                             return;

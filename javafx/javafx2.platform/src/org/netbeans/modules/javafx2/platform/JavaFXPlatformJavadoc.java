@@ -191,13 +191,13 @@ public class JavaFXPlatformJavadoc implements JavadocForBinaryQueryImplementatio
 
     private static final class ResultImpl implements JavadocForBinaryQuery.Result, PropertyChangeListener {
 
-        private final Collection<? extends JavaPlatform> plaforms;
+        private final Collection<? extends JavaPlatform> platforms;
         private final ChangeSupport support;
 
         ResultImpl(@NonNull final Collection<? extends JavaPlatform> platforms) {
             Parameters.notNull("platforms", platforms); //NOI18N
-            this.plaforms = platforms;
-            for (JavaPlatform jp : this.plaforms) {
+            this.platforms = platforms;
+            for (JavaPlatform jp : this.platforms) {
                 jp.addPropertyChangeListener(WeakListeners.propertyChange(this, jp));
             }
             this.support = new ChangeSupport(this);
@@ -208,7 +208,7 @@ public class JavaFXPlatformJavadoc implements JavadocForBinaryQueryImplementatio
             try {
                 final long st = System.currentTimeMillis();
                 final Set<URI> collector = new LinkedHashSet<URI>();
-                for (JavaPlatform jp : plaforms) {
+                for (JavaPlatform jp : platforms) {
                     for (URL jdoc : jp.getJavadocFolders()) {
                         collector.add(jdoc.toURI());
                     }

@@ -79,7 +79,7 @@ public class RunJarPrereqChecker implements PrerequisitesChecker {
         String actionName = config.getActionName();
 
         // check for "java" and replace it with absolute path to
-        // project j2seplaform's java.exe
+        // project j2seplatform's java.exe
         String tool = config.getProperties().get("exec.executable"); //NOI18N
         if ("java".equals(tool)) { //NOI18N
             //TODO somehow use the config.getMavenProject() call rather than looking up the

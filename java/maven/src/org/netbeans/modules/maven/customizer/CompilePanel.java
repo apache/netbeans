@@ -597,7 +597,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
             final List<Union2<JavaPlatform,String>> tmp = new ArrayList<>();
             Arrays.stream(jpm.getPlatforms(null, new Specification (CommonProjectUtils.J2SE_PLATFORM_TYPE, null)))
                     .filter(JavaPlatform::isValid)
-                    .peek((jp) -> LOG.log(Level.FINE, "Adding JavaPlaform: {0}", jp.getDisplayName()))  //NOI18N
+                    .peek((jp) -> LOG.log(Level.FINE, "Adding JavaPlatform: {0}", jp.getDisplayName()))  //NOI18N
                     .map((jp) -> Union2.<JavaPlatform,String>createFirst(jp))
                     .forEach(tmp::add);
             String val = null;

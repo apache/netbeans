@@ -60,7 +60,7 @@
         <echo message="platform.home = ${platform.home}" level="verbose"/>
         <echo message="java.home = ${java.home}" level="verbose"/>
         <echo message="ant.rerun = ${ant.rerun}" level="verbose"/>
-        <condition property="ant-java-version-different-from-plaform-java">
+        <condition property="ant-java-version-different-from-platform-java">
             <and>
                 <isset property="platform.home" />
                 <not><equals arg1="${platform.home}" arg2="${java.home}"/></not>
@@ -3564,17 +3564,17 @@
         <antcall target="jfx-build-native-noscript"/>
     </target>
     
-    <target name="-build-on-another-platform" depends="-check-ant-vs-platform-jvm" if="ant-java-version-different-from-plaform-java">
+    <target name="-build-on-another-platform" depends="-check-ant-vs-platform-jvm" if="ant-java-version-different-from-platform-java">
         <target-on-another-jvm target="jfx-project-build"/> 
     </target>
-    <target name="-build-on-same-platform" depends="-check-ant-vs-platform-jvm" unless="ant-java-version-different-from-plaform-java">
+    <target name="-build-on-same-platform" depends="-check-ant-vs-platform-jvm" unless="ant-java-version-different-from-platform-java">
         <antcall target="jfx-project-build" />
     </target>
 
-    <target name="-rebuild-on-another-platform" depends="-check-ant-vs-platform-jvm" if="ant-java-version-different-from-plaform-java">
+    <target name="-rebuild-on-another-platform" depends="-check-ant-vs-platform-jvm" if="ant-java-version-different-from-platform-java">
         <target-on-another-jvm target="jfx-project-rebuild"/> 
     </target>
-    <target name="-rebuild-on-same-platform" depends="-check-ant-vs-platform-jvm" unless="ant-java-version-different-from-plaform-java">
+    <target name="-rebuild-on-same-platform" depends="-check-ant-vs-platform-jvm" unless="ant-java-version-different-from-platform-java">
         <antcall target="jfx-project-rebuild" />
     </target>
     
@@ -3897,10 +3897,10 @@
         <antcall target="clean"/>
     </target>
     
-    <target name="-run-on-another-platform" depends="-check-ant-vs-platform-jvm" if="ant-java-version-different-from-plaform-java">
+    <target name="-run-on-another-platform" depends="-check-ant-vs-platform-jvm" if="ant-java-version-different-from-platform-java">
         <target-on-another-jvm target="jfxsa-run-no-another-jvm"/> 
     </target>
-    <target name="-run-on-same-platform" depends="-check-ant-vs-platform-jvm" unless="ant-java-version-different-from-plaform-java">
+    <target name="-run-on-same-platform" depends="-check-ant-vs-platform-jvm" unless="ant-java-version-different-from-platform-java">
         <antcall target="jfxsa-run-no-another-jvm" />
     </target>
     
@@ -3910,13 +3910,13 @@
         <antcall target="-profile-on-same-platform"/>
     </target>
 
-    <target name="-debug-on-another-platform" depends="-check-ant-vs-platform-jvm" if="ant-java-version-different-from-plaform-java">
+    <target name="-debug-on-another-platform" depends="-check-ant-vs-platform-jvm" if="ant-java-version-different-from-platform-java">
         <target-on-another-jvm target="jfxsa-debug-on-another-platform"/> 
         <loadproperties srcFile="debug-another-platform.properties"/>
         <delete file="debug-another-platform.properties" />
         <antcall target="jfx-project-debug-on-another-platform" />
     </target>
-    <target name="-debug-on-same-platform" depends="-check-ant-vs-platform-jvm" unless="ant-java-version-different-from-plaform-java">
+    <target name="-debug-on-same-platform" depends="-check-ant-vs-platform-jvm" unless="ant-java-version-different-from-platform-java">
         <antcall target="jfxsa-debug-on-same-platform" />
     </target>
     <target name="jfxsa-debug-on-another-platform" depends="-check-jfx-runtime,-warn-of-preloader,jfx-project-prepare-debug-on-another-platform">
@@ -3925,10 +3925,10 @@
     
     <target name="jfxsa-debug-on-same-platform" depends="jar,-check-jfx-runtime,-warn-of-preloader,jfx-project-debug-on-same-platform"/>
 
-    <target name="-profile-on-another-platform" depends="-check-ant-vs-platform-jvm" if="ant-java-version-different-from-plaform-java">
+    <target name="-profile-on-another-platform" depends="-check-ant-vs-platform-jvm" if="ant-java-version-different-from-platform-java">
          <target-on-another-jvm target="jfxsa-run-no-another-jvm"/> 
     </target>
-    <target name="-profile-on-same-platform" depends="-check-ant-vs-platform-jvm" unless="ant-java-version-different-from-plaform-java">
+    <target name="-profile-on-same-platform" depends="-check-ant-vs-platform-jvm" unless="ant-java-version-different-from-platform-java">
        <antcall target="jfxsa-run-no-another-jvm"/>
     </target>
 

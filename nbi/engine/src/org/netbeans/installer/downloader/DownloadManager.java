@@ -26,7 +26,7 @@ import org.netbeans.installer.utils.helper.FinishHandler;
 /**
  * It's main downloader class. It's singleton.
  * Only from here client can access download service and register there own listeners.
- * Also from here managed execution of downloding process.
+ * Also from here managed execution of downloading process.
  * 
  * @author Danila_Dugurov
  */

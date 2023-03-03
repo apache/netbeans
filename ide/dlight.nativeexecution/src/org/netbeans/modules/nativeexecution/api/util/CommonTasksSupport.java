@@ -71,7 +71,7 @@ public final class CommonTasksSupport {
      * @return a <tt>Future&lt;Integer&gt;</tt> representing pending completion
      *         of the download task. The result of this Future is the exit
      *         code of the copying routine. 0 indicates that the file was
-     *         successfully downlodaded. Result other than 0 indicates an error.
+     *         successfully downloaded. Result other than 0 indicates an error.
      */
     public static Future<Integer> downloadFile(
             final String srcFileName,
@@ -97,7 +97,7 @@ public final class CommonTasksSupport {
      * @return a <tt>Future&lt;Integer&gt;</tt> representing pending completion
      *         of the download task. The result of this Future is the exit
      *         code of the copying routine. 0 indicates that the file was
-     *         successfully downlodaded. Result other than 0 indicates an error.
+     *         successfully downloaded. Result other than 0 indicates an error.
      */
     public static Future<Integer> downloadFile(
             final String srcFileName,

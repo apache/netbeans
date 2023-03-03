@@ -367,7 +367,7 @@ and array of all the itineraries if
 a value of '0' is passed.
 Pass a valid itinerary ID. '0' for
 getting all itineraries.
-Returns an array of GuestItinerary obejcts.
+Returns an array of GuestItinerary objects.
 Refer to classes/guestitinerary.php.
 */
 function getItinerary($IID){
@@ -556,7 +556,7 @@ and array of all the itineraries if
 a value of '0' is passed.
 Pass a valid itinerary ID. '0' for
 getting all itineraries.
-Returns an array of GuestItinerary obejcts.
+Returns an array of GuestItinerary objects.
 Refer to classes/guestitinerary.php.
 */
 function getItinerary2($IID){

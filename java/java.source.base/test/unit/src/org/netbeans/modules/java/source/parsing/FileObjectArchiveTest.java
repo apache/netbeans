@@ -67,7 +67,7 @@ public class FileObjectArchiveTest extends NbTestCase {
                 EnumSet.of(JavaFileObject.Kind.CLASS),
                 null,
                 false);
-        //Explicit list of non-package returns FileObejcts with prefix
+        //Explicit list of non-package returns FileObjects with prefix
         assertEquals(Arrays.asList("non-package.org.me.X", "non-package.org.me.Y"), toInferedName(res));    //NOI18N
     }
 
@@ -86,7 +86,7 @@ public class FileObjectArchiveTest extends NbTestCase {
                 EnumSet.of(JavaFileObject.Kind.CLASS),
                 null,
                 true);
-        //Explicit list of non-package returns FileObejcts with prefix
+        //Explicit list of non-package returns FileObjects with prefix
         assertEquals(Arrays.asList("non-package.org.me.X", "non-package.org.me.Y"), toInferedName(res));    //NOI18N
     }
 

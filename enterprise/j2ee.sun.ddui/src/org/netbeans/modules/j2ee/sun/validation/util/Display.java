@@ -51,8 +51,8 @@ public class Display {
             Iterator iterator = collection.iterator();
             while(iterator.hasNext()){
                 object = iterator.next();
-                boolean failureObect = isFailureObject(object);
-                if(failureObect){
+                boolean failureObject = isFailureObject(object);
+                if(failureObject){
                     failure = (Failure) object;
                     reportFailure(failure.failureMessage());
                 } else {

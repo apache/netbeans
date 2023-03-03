@@ -94,7 +94,7 @@ class DiffSidebar extends JPanel implements DocumentListener, ComponentListener,
     private final JTextComponent  textComponent;
     /**
      * We must keep FileObject here because a File may change if the FileObject is renamed.
-     * The fileObejct can be DELETED TOO!
+     * The fileObject can be DELETED TOO!
      */
     private FileObject            fileObject;
 

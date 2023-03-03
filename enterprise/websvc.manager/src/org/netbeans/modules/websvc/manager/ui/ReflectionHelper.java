@@ -666,7 +666,7 @@ public class ReflectionHelper {
                 classInstance = getPort.invoke(serviceObject);
                 clazz = classInstance.getClass();
             } catch (InstantiationException ia) {
-                throw new WebServiceReflectionException("InstantiationExceptoin", ia);
+                throw new WebServiceReflectionException("InstantiationException", ia);
             } catch (IllegalAccessException iae) {
                 throw new WebServiceReflectionException("IllegalAccessException", iae);
             } catch (NoSuchMethodException nsme) {

@@ -62,7 +62,7 @@ import org.netbeans.lib.editor.util.GapList;
  * and again no offset have to be recomputed. Offsets only have to be recomputed
  * when an insertion/removal happens not at the begginig of the gap. In that case
  * the gap has to be moved and offsets of any element, which is moved from 'behind'
- * the gap to a positoin in front of the gap, have to be recalculated. This algorithm
+ * the gap to a position in front of the gap, have to be recalculated. This algorithm
  * minimizes the number of recalculations needed for updating offsets when editing
  * a document under normal circumstances.
  *

@@ -583,7 +583,7 @@ public class BugzillaExecutor {
                                     Bugzilla.LOG.log(Level.INFO, key, ce); 
                                     return false;
                                 }
-                                // do not handle this kind of erorr until flag turned false by a succesfull command
+                                // do not handle this kind of error until flag turned false by a succesfull command
                                 alreadyCalled = true;                                
                                 boolean ret = Bugzilla.getInstance().getBugtrackingFactory().editRepository(executor.repository, errroMsg);
                                 if(!ret) {

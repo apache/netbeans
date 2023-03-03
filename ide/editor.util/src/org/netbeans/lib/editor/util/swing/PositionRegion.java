@@ -37,7 +37,7 @@ import javax.swing.text.Position;
 
 public class PositionRegion {
 
-    /** Copmarator for position regions */
+    /** Comparator for position regions */
     private static Comparator<PositionRegion> comparator;
     
     /**

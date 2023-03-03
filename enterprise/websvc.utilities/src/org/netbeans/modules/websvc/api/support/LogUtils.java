@@ -32,7 +32,7 @@ import org.openide.util.Parameters;
 public class LogUtils {
 
     private static final Logger USG_LOGGER_WEBSVC = Logger.getLogger("org.netbeans.ui.metrics.websvc"); // NOI18N
-    //private static final Logger USG_LOGGER_WEBSVC = Logger.getLogger("org.netbens.modules.websvc");
+    //private static final Logger USG_LOGGER_WEBSVC = Logger.getLogger("org.netbeans.modules.websvc");
 
     public static final String USG_WEBSVC_WIZARD = "USG_WEBSVC_WIZARD"; //NOI18N
     public static final String USG_WEBSVC_ACTION = "USG_WEBSVC_ACTION"; //NOI18N

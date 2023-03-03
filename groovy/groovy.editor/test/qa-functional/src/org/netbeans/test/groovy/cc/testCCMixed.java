@@ -196,9 +196,9 @@ public class testCCMixed extends GeneralGroovy {
         type(file, "\n public static int testInt(){\n return 0;");
         new EventTool().waitNoEvent(1000);
         file.save();
-        createGroovyFile(TEST_BASE_NAME + (name_iterator - 1), "Groovy Class", "EEE", "org.netbens.groovy");
+        createGroovyFile(TEST_BASE_NAME + (name_iterator - 1), "Groovy Class", "EEE", "org.netbeans.groovy");
         file = new EditorOperator("EEE.groovy");
-        file.setCaretPosition("package org.netbens.groovy", false);
+        file.setCaretPosition("package org.netbeans.groovy", false);
         waitScanFinished();
         file.pressKey(KeyEvent.VK_ENTER);
         type(file, "import o");

@@ -117,7 +117,7 @@ public class ConfigurationUtils {
     
     /** Returns the mapping for the Faces Servlet.
      * @param webModule web module, where the JSF framework should be defined
-     * @return The maping for the faces servlet. Null if the web module doesn't
+     * @return The mapping for the faces servlet. Null if the web module doesn't
      * contains definition of faces servlet.
      */
     public static String getFacesServletMapping(WebModule webModule){

@@ -760,7 +760,7 @@ is the proper place.
         <compatibility semantic="compatible" />
         <description>
         <p>
-        The DataEditorSupport overides the loadFromStreamToKit and saveFromKitToStream methods.
+        The DataEditorSupport overrides the loadFromStreamToKit and saveFromKitToStream methods.
         In these methods it uses FileEncodingQuery to find out the encoding of the file, creates
         the Reader or Writer with obtained encoding and calls EditorKit.read or EditorKit.write.
         </p>

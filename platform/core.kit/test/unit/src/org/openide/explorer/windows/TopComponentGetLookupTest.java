@@ -580,7 +580,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
     }
     
 
-    /** Overides some methods so it is not necessary to use the data object.
+    /** Overrides some methods so it is not necessary to use the data object.
      */
     protected static final class N extends AbstractNode {
         private Node.Cookie[] cookies = {

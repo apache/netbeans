@@ -251,7 +251,7 @@ public class PaletteItemDataObject extends MultiDataObject implements CookieSet.
             setExtensions(ext);
         }
         
-        /** Gets default display name. Overides superclass method. */
+        /** Gets default display name. Overrides superclass method. */
         @Override
         protected String defaultDisplayName() {
             return NbBundle.getBundle(PaletteItemDataObject.class)

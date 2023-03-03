@@ -54,7 +54,7 @@ public class FormDataLoader extends MultiFileLoader {
     }
 
     
-    /** Gets default display name. Overides superclass method. */
+    /** Gets default display name. Overrides superclass method. */
     @Override
     protected String defaultDisplayName() {
         return org.openide.util.NbBundle.getBundle(FormDataLoader.class)

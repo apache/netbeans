@@ -105,7 +105,7 @@ public final class NbLaunchRequestHandler {
         }
         boolean preferProjActions = true; // True when we prefer project actions to the current (main) file actions.
         if (filePath == null || mainFilePath != null) {
-            // main overides the current file
+            // main overrides the current file
             preferProjActions = false;
             filePath = mainFilePath;
         }

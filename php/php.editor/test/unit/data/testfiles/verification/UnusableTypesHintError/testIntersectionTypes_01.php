@@ -63,7 +63,7 @@ class InvalidField {
     public bool&Iterator $bool;
     public callable&Iterator $callable;
     public false&Iterator $false;
-    public float&Iterator $flaot;
+    public float&Iterator $float;
     public int&Iterator $int;
     public iterable&Iterator $iterable;
     public mixed&Iterator $mixed;

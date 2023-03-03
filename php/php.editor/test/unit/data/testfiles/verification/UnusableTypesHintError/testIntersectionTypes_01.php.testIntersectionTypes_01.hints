@@ -115,7 +115,7 @@ HINT:"callable" cannot be used as an intersection type.
     public false&Iterator $false;
            -----
 HINT:"false" cannot be used as an intersection type.
-    public float&Iterator $flaot;
+    public float&Iterator $float;
            -----
 HINT:"float" cannot be used as an intersection type.
     public int&Iterator $int;

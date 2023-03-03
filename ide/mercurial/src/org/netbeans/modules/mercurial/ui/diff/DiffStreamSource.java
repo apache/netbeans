@@ -117,7 +117,7 @@ public class DiffStreamSource extends StreamSource {
     public synchronized Reader createReader() throws IOException {
         if (baseFile.isDirectory()) {
             // XXX return directory listing?
-            // could be nice te return sorted directory content
+            // could be nice the return sorted directory content
             // such as vim if user "edits" directory // NOI18N
             return new StringReader(NbBundle.getMessage(DiffStreamSource.class, "LBL_Diff_NoFolderDiff")); // NOI18N
         }

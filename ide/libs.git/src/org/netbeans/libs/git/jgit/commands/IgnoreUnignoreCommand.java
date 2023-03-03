@@ -146,14 +146,14 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
                 } catch (IOException ex) { }
             }
             if (!tmpFile.renameTo(gitIgnore)) {
-                // cannot rename directly, try backup and delete te original .gitignore
+                // cannot rename directly, try backup and delete the original .gitignore
                 File tmpCopy = generateTempFile(Constants.DOT_GIT_IGNORE, gitIgnore.getParentFile()); //NOI18N
                 boolean success = false;
                 if (gitIgnore.renameTo(tmpCopy)) {
                     // and try to rename again
                     success = tmpFile.renameTo(gitIgnore);
                     if (!success) {
-                        // restore te original .gitignore file
+                        // restore the original .gitignore file
                         tmpCopy.renameTo(gitIgnore);
                     }
                     tmpCopy.delete();

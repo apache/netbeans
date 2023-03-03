@@ -230,7 +230,7 @@ abstract class TerminalContainerCommon extends TerminalContainer implements IOCo
 	// Remember tip text in attributes
 	// It gets recalled when this comp is re-added to the tabbedPane
 	//
-	// output2 remembers the tip text in te toolTipText property of
+	// output2 remembers the tip text in the toolTipText property of
 	// the JComponent itself.
 	Attributes attrs = attributesFor(comp);
 	attrs.toolTipText = text;

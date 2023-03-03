@@ -159,7 +159,7 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
             
             try {
                 // if it is a groovy file it is useless to load it with java
-                // at least until VirtualSourceProvider will do te job ;)
+                // at least until VirtualSourceProvider will do the job ;)
 //                if (getClassLoader().getResourceLoader().loadGroovySource(name) != null) {
 //                    return null;
 //                }

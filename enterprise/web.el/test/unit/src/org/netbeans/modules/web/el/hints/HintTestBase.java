@@ -181,7 +181,7 @@ public abstract class HintTestBase extends ELTestBaseForTestProject {
                 if (changeOffsetType != ChangeOffsetType.NONE) {
                     customizeHintInfo(pr, changeOffsetType);
 
-                    // Also: Delete te contents from the document!!!
+                    // Also: Delete the contents from the document!!!
                     // This ensures that the node offsets will be out of date by the time the rules run
                     originalDocumentContent = document.getText(0, document.getLength());
                     document.remove(0, document.getLength());

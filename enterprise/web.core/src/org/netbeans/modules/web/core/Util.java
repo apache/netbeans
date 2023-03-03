@@ -226,13 +226,13 @@ public class Util {
         return result;
     }
     
-    /** Parsing to get Set of Strings that correpond to tagName valeus inside elName, e.g.:
+    /** Parsing to get Set of Strings that correpond to tagName values inside elName, e.g.:
      *  to get all <servlet-name> values inside the <servlet> elements (in web.xml)
     */    
     public static Set getTagValues (java.io.InputStream is, String elName, String tagName) throws java.io.IOException, SAXException {
         return getTagValues(is,new String[]{elName},tagName);
     }
-    /** Parsing to get Set of Strings that correpond to tagName valeus inside elNames, e.g.:
+    /** Parsing to get Set of Strings that correpond to tagName values inside elNames, e.g.:
      *  to get all <name> values inside the <tag> and <tag-file> elements (in TLD)
     */
     public static Set getTagValues (java.io.InputStream is, String[] elNames, String tagName) throws java.io.IOException, SAXException {

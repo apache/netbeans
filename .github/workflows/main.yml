@@ -486,6 +486,9 @@ jobs:
       - name: ide/html.validation
         run: ant $OPTS -f ide/html.validation test
 
+      - name: ide/httpserver
+        run: ant $OPTS -f ide/httpserver test
+
       - name: ide/hudson
         run: ant $OPTS -f ide/hudson test
 

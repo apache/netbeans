@@ -1,7 +1,7 @@
-Name: Apache Tomcat
-Version: 3.2.4
+Name: Apache Tomcat (Annotations Package)
+Version: 9.0.71
 License: Apache-2.0
-Description: Tomcat HTTP server (internal)
+Description: Annotations used in Apache Tomcat
 Origin: http://tomcat.apache.org
 
                                 Apache License

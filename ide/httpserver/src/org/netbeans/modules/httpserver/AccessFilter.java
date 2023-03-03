@@ -21,60 +21,41 @@ package org.netbeans.modules.httpserver;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.rmi.ServerException;
 import java.util.Set;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.openide.util.Exceptions;
-
 import org.openide.util.NbBundle;
 
-/** Base servlet for servlets which access NetBeans Open APIs
-*
-* @author Petr Jiricka
-* @version 0.11 May 5, 1999
-*/
-public abstract class NbBaseServlet extends HttpServlet {
+/**
+ * Filter to protect/limit access to NetBeans Open APIs and resources.
+ */
+public class AccessFilter implements Filter {
 
-    /** Initializes the servlet. */
-    public void init() throws ServletException {
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain fc) throws IOException, ServletException {
+        if(! (req instanceof HttpServletRequest)) {
+            throw new ServerException("Invalid access");
+        }
+
+        if (!checkAccess(((HttpServletRequest) req))) {
+            ((HttpServletResponse) resp).sendError(HttpServletResponse.SC_FORBIDDEN,
+                    NbBundle.getMessage(AccessFilter.class, "MSG_HTTP_FORBIDDEN"));
+        }
+
+        fc.doFilter(req, resp);
     }
 
-    /** Processes the request for both HTTP GET and POST methods
-    * @param request servlet request
-    * @param response servlet response
-    */
-    protected abstract void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, java.io.IOException;
-
-    /** Performs the HTTP GET operation.
-    * @param request servlet request
-    * @param response servlet response
-    */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, java.io.IOException {
-        processRequest(request, response);
-    }
-
-    /** Performs the HTTP POST operation.
-    * @param request servlet request
-    * @param response servlet response
-    */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, java.io.IOException {
-        processRequest(request, response);
-    }
 
     /**
-    * Returns a short description of the servlet.
-    */
-    public String getServletInfo() {
-        return NbBundle.getBundle(NbBaseServlet.class).getString("MSG_BaseServletDescr");
-    }
-
-    /** Checks whether access should be permitted according to HTTP Server module access settings
-    * (localhost/anyhost, granted addesses)
-    *  @return true if access is granted
-    */
+     * Checks whether access should be permitted according to HTTP Server module
+     * access settings
+     * (localhost/anyhost, granted addesses)
+     *
+     * @return true if access is granted
+     */
     protected boolean checkAccess(HttpServletRequest request) throws IOException {
 
         HttpServerSettings settings = HttpServerSettings.getDefault();
@@ -96,7 +77,7 @@ public abstract class NbBaseServlet extends HttpServlet {
         try {
             String address = request.getRemoteAddr().trim();
             if (settings.allowAccess(InetAddress.getByName(address), pathI)) return true;
-        } catch (Exception ex) {
+        } catch (UnknownHostException | RuntimeException ex) {
             Exceptions.printStackTrace(ex);
             return false;
         }

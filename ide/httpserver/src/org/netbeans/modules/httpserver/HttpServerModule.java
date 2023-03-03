@@ -21,26 +21,36 @@ package org.netbeans.modules.httpserver;
 
 import java.io.Externalizable;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Vector;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
-import org.apache.tomcat.context.WebXmlReader;
-import org.apache.tomcat.startup.EmbededTomcat;
-import org.apache.tomcat.core.ContextManager;
-import org.apache.tomcat.core.Context;
-import org.apache.tomcat.logging.TomcatLogger;
-import org.apache.tomcat.service.PoolTcpConnector;
-import org.openide.filesystems.FileUtil;
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.Wrapper;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.startup.Tomcat;
+import org.apache.catalina.webresources.StandardRoot;
+import org.apache.tomcat.util.descriptor.web.FilterDef;
+import org.apache.tomcat.util.descriptor.web.FilterMap;
+import org.apache.tomcat.util.threads.TaskQueue;
 import org.openide.modules.ModuleInstall;
+import org.openide.modules.Places;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
-import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
+
+import static java.util.Arrays.asList;
 
 /**
 * Module installation class for Http Server
@@ -48,17 +58,21 @@ import org.openide.util.RequestProcessor;
 * @author Petr Jiricka
 */
 public class HttpServerModule extends ModuleInstall implements Externalizable {
+    private static final Logger LOG = Logger.getLogger(HttpServerModule.class.getName());
 
+    // Names for Filter/Servlet Mapping
+    private static final String SERVLET_MAPPER = "ServletMapper";   // NOI18N
+    private static final String WRAPPER_SERVLET = "WrapperServlet"; // NOI18N
+    private static final String ACCESS_FILTER = "AccessFilter";     // NOI18N
 
-    private static ContextManager server;
-    
     /** listener that reloads context when systemClassLoader changes */
     private static ContextReloader reloader;
-    
-    private static Thread serverThread;
+
+    private static Tomcat tomcat;
     private static boolean inSetRunning = false;
 
     /** Module is being closed. */
+    @Override
     public void close () {
         // stop the server, don't set the running status
         synchronized (HttpServerSettings.httpLock ()) {
@@ -75,47 +89,43 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
                 return;
             inSetRunning = true;
             try {
-                if ((serverThread != null) && (!httpserverSettings().running)) {
+                if ((tomcat != null) && (!HttpServerSettings.running)) {
                     // another thread is trying to start the server, wait for a while and then stop it if it's still bad
                     try {
-                        Thread.currentThread().sleep(2000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {}
-                    if ((serverThread != null) && (!httpserverSettings().running)) {
-                        serverThread.stop();
-                        serverThread = null;
+                    if ((tomcat != null) && (!HttpServerSettings.running)) {
+                        try {
+                            tomcat.stop();
+                            tomcat.destroy();
+                        } catch (LifecycleException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                        tomcat = null;
                     }
                 }
-                if (serverThread == null) {
-                    serverThread = new Thread("HTTPServer") { // NOI18N
-                        public void run() {
+                if (tomcat == null) {
+                    try {
+                        buildServer();
+                        tomcat.start();
+                        httpserverSettings().runSuccess();
+                        reloader.activate();
+                    } catch (Exception e) {
+                        if(tomcat != null) {
                             try {
-                                server = buildServer();
-                                server.start();
-                                httpserverSettings().runSuccess();
-                                reloader.activate();
-                                // this is not a debug message, this is a server startup message
-                                if (httpserverSettings().isStartStopMessages())
-                                    System.out.println(NbBundle.getMessage(HttpServerModule.class, "CTL_ServerStarted", new Object[] {Integer.valueOf(httpserverSettings().getPort())}));
-                            } catch (ThreadDeath td) {
-                                throw td;
-                            } catch (Throwable ex) {
-                                Logger.getLogger("global").log(Level.INFO, null, ex);
-                                // couldn't start
-                                serverThread = null;
-                                inSetRunning = false;
-                                httpserverSettings().runFailure(ex);
-                            } finally {
-                                httpserverSettings().setStartStopMessages(true);
+                                tomcat.stop();
+                                tomcat.destroy();
+                            } catch (LifecycleException ex) {
+                                Exceptions.printStackTrace(ex);
                             }
+                            tomcat = null;
                         }
-                    };
-                    serverThread.start();
-                }
-                // wait for the other thread to start the server
-                try {
-                    HttpServerSettings.httpLock().wait(HttpServerSettings.SERVER_STARTUP_TIMEOUT);
-                } catch (Exception e) {
-                    Logger.getLogger("global").log(Level.INFO, null, e);
+                        inSetRunning = false;
+                        Logger.getLogger("global").log(Level.INFO, null, e);
+                        httpserverSettings().runFailure(e);
+                    } finally {
+                        httpserverSettings().setStartStopMessages(true);
+                    }
                 }
             } finally {
                 inSetRunning = false;
@@ -123,12 +133,13 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
         }
     }
 
+    @Override
     public void uninstalled () {
         stopHTTPServer();
     }
     
     /** stops the HTTP server */
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings("deprecation")  // NOI18N
     static void stopHTTPServer() {
         if (inSetRunning)
             return;
@@ -142,27 +153,17 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
                     reloader = null;
                 }
                 
-                if ((serverThread != null) && (server != null)) {
+                if (tomcat != null) {
                     try {
-                        server.stop();
-                        serverThread.join();
+                        tomcat.stop();
+                        tomcat.destroy();
                     }
-                    catch (InterruptedException e) {
-                        serverThread.stop(); 
-                        /* deprecated, but this really is the last resort,
-                           only if everything else failed */
+                    catch (LifecycleException | RuntimeException e) {
                     }
-                    catch (Exception e) {
-                        //e.printStackTrace();
-                        serverThread.stop();
-                        /* deprecated, but this really is the last resort,
-                           only if everything else failed */
+                    tomcat = null;
+                    if (httpserverSettings().isStartStopMessages()) {
+                        LOG.log(Level.INFO, "Internal HTTP server stopped"); // NOI18N
                     }
-                    serverThread = null;
-                    // this is not a debug message, this is a server shutdown message
-                    if (httpserverSettings ().isStartStopMessages())
-                        System.out.println(NbBundle.getBundle(HttpServerModule.class).
-                                           getString("CTL_ServerStopped"));
                 }
             }
             finally {
@@ -171,113 +172,120 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
         }
     }
     
-    
-    private static ContextManager getContextManager(EmbededTomcat tc) {
-        try {
-            java.lang.reflect.Field fm = EmbededTomcat.class.getDeclaredField("contextM");   // NOI18N
-            fm.setAccessible(true);
-            return (ContextManager)fm.get(tc);
-        }
-        catch (NoSuchFieldException e) {
-            return null;
-        }
-        catch (IllegalAccessException e) {
-            return null;
-        }
-    }
-    
 
-    /** Removes WebXmlReader interceptor to avoid attempt 
-     *  to load JspServlet that processes jsp file and produces confusing message
-     */
-    private static void removeWebXmlReader (EmbededTomcat tc) {
-        try {
-            java.lang.reflect.Field fm = EmbededTomcat.class.getDeclaredField("contextInt");   // NOI18N
-            fm.setAccessible(true);
-            Vector contextInt = (Vector)fm.get(tc);
-            Iterator it = contextInt.iterator ();
-            while (it.hasNext ()) {
-                Object o = it.next ();
-                if (o instanceof WebXmlReader) {
-                    contextInt.remove (o);
-                    break;
+    private static void buildServer() throws Exception {
+        tomcat = new Tomcat();
+        tomcat.setPort(httpserverSettings().getPort());
+        tomcat.getServer().setUtilityThreads(1);
+        tomcat.getConnector().setXpoweredBy(false);
+        // The WrapperServlet expects to be able to use encoded slashes as
+        // markers, so they need to be passed through
+        tomcat.getConnector().setEncodedSolidusHandling("PASSTHROUGH");
+	TaskQueue tq = new TaskQueue(10);
+	ThreadPoolExecutor tf  = new ThreadPoolExecutor(0, 3, 60, TimeUnit.SECONDS, tq);
+	tomcat.getConnector().getProtocolHandler().setExecutor(tf);
+
+        File wd = Places.getCacheSubdirectory("httpwork");
+        Context ctx = tomcat.addContext("", wd.getAbsolutePath());
+
+        if(ctx instanceof StandardContext) {
+            ((StandardContext) ctx).setClearReferencesRmiTargets(false);
+        }
+
+        ctx.setResources(new StandardRoot() {
+            @Override
+            protected void registerURLStreamHandlerFactory() {
+                // Tomcat tries to override the URLStreamHandlerFactory, this
+                // collides with NetBeans usage and alternative registration
+                // methods are only available on JDK 9+
+                // So disable this here, we don't really need it.
+            }
+        });
+
+        ctx.setSessionTimeout(30);
+
+        initContext(ctx);
+
+        reloader = new ContextReloader (tomcat, ctx);
+    }
+
+    private static void initContext(Context ctx) {
+
+        ctx.setParentClassLoader(Lookup.getDefault().lookup(ClassLoader.class));
+
+        for (String mapping : ctx.findServletMappings()) {
+            ctx.removeServletMapping(mapping);
+        }
+
+        for (Container container : asList(ctx.findChildren())) {
+            ctx.removeChild(container);
+        }
+
+        for(FilterMap fm: ctx.findFilterMaps()) {
+            ctx.removeFilterMap(fm);
+        }
+
+        for(FilterDef fd: ctx.findFilterDefs()) {
+            ctx.removeFilterDef(fd);
+        }
+
+        FilterDef filterDef = new FilterDef();
+        filterDef.setFilter(new AccessFilter());
+        filterDef.setFilterName(ACCESS_FILTER);
+        FilterMap filterMap = new FilterMap();
+        filterMap.addURLPattern("/*");
+        filterMap.setFilterName(ACCESS_FILTER);
+        ctx.addFilterDef(filterDef);
+        ctx.addFilterMap(filterMap);
+
+        Wrapper sw = ctx.createWrapper();
+        sw.setServlet(new WrapperServlet());
+        sw.setName(WRAPPER_SERVLET);
+        ctx.addChild(sw);
+
+        ctx.addServletMappingDecoded(httpserverSettings().getWrapperBaseURL() + "*", WRAPPER_SERVLET);
+
+        // Originally the Apache Tomcat InvokerServlet took care of invoking
+        // servlet. This servlet was removed from Tomcat. As a replacement
+        // this servlet is used. The idea is, that this servlet serves as a
+        // fallback servlet. When it is invoked, it looksup the right servlet,
+        // registers it and redispatches the request.
+        sw = ctx.createWrapper();
+        sw.setServlet(new HttpServlet() {
+            @Override
+            protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                String className = classFromPath((HttpServletRequest) request);
+                LOG.log(Level.FINE, "Servlet class name: {0}", className);
+                if (className != null) {
+                    try {
+                        Class<?> clazz = Class.forName(className, true, ctx.getParentClassLoader());
+                        Tomcat.addServlet(ctx, className, (Servlet) clazz.getConstructor().newInstance());
+                        ctx.addServletMappingDecoded("/servlet/" + className + "/*", className);
+                        request.getRequestDispatcher(request.getRequestURI()).forward(request, response);
+                    } catch (ReflectiveOperationException | SecurityException | IllegalArgumentException ex) {
+                        LOG.log(Level.WARNING, null, ex);
+                    }
                 }
             }
-        }
-        catch (NoSuchFieldException e) {
-            return;
-        }
-        catch (IllegalAccessException e) {
-            return;
-        }
-    }
-    
+        });
+        sw.setName(SERVLET_MAPPER);
+        ctx.addChild(sw);
 
-    private static ContextManager buildServer() throws Exception {
-        HttpServerSettings op = httpserverSettings ();
-
-        NbLogger logger = new NbLogger();
-        logger.setName("tc_log");    // NOI18N
-
-        final EmbededTomcat tc=new EmbededTomcat();
-        
-        File wd = FileUtil.toFile (FileUtil.getConfigRoot());
-        wd = new File(wd, "httpwork"); // NOI18N
-        tc.setWorkDir(wd.getAbsolutePath());
-        
-        // install interceptors which need to be initialized BEFORE the default server interceptors
-	NbLoaderInterceptor nbL =new NbLoaderInterceptor();
-	tc.addContextInterceptor( nbL );
-        
-        // hack - force initialization of default interceptors, so our interceptor is after them
-        tc.addApplicationAdapter(null);
-
-        // install interceptors which need to be initialized AFTER the default server interceptors
-	NbServletsInterceptor nbI =new NbServletsInterceptor();
-	tc.addContextInterceptor( nbI );
-
-        removeWebXmlReader (tc);
-        
-        ServletContext sctx;
-        sctx=tc.addContext("", wd.toURI().toURL());  // NOI18N
-        tc.initContext( sctx );
-        //ctxt.getServletLoader().setParentLoader(TopManager.getDefault().systemClassLoader());
-        
-        tc.addEndpoint( op.getPort(), null, null);
-
-        final ContextManager cm = getContextManager(tc);
-        
-        reloader = new ContextReloader (tc, cm, sctx);
-        
-        // reduce number of threads
-        Enumeration e = cm.getConnectors ();
-        while (e.hasMoreElements ()) {
-            Object o = e.nextElement ();
-            if (o instanceof PoolTcpConnector) {
-                org.apache.tomcat.core.ServerConnector conn = (PoolTcpConnector)o;
-                conn.setAttribute (PoolTcpConnector.MIN_SPARE_THREADS, "0");     // NOI18N
-                conn.setAttribute (PoolTcpConnector.MAX_SPARE_THREADS, "1");     // NOI18N
-                conn.setAttribute (PoolTcpConnector.MAX_THREADS, "3");           // NOI18N
-            }
-        }
-        
-        return cm;
-        
+        ctx.addServletMappingDecoded("/servlet/*", SERVLET_MAPPER);
     }
 
-    private static class NbLogger extends TomcatLogger {
-        public NbLogger() {
-            super();
+    private static String classFromPath(HttpServletRequest request) {
+        String pathInfo = request.getPathInfo();
+        if (pathInfo == null) {
+            return null;
         }
-
-        protected void realLog(String message) {
+        int startPos = pathInfo.startsWith("/") ? 1 : 0;
+        int endPos = pathInfo.indexOf("/", startPos);
+        if (endPos < 0) {
+            endPos = pathInfo.length();
         }
-
-        protected void realLog(String message, Throwable t) {
-        }
-    
-        public void flush() {
-        }
+        String className = pathInfo.substring(startPos, endPos);
+        return className;
     }
 
     /** 
@@ -293,63 +301,41 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
      * of module reloading.
      */
     private static class ContextReloader implements LookupListener, Runnable {
-        
-        private ServletContext ide_ctx;
-        
-        private EmbededTomcat tc;
-        
-        private ContextManager cm;
 
-	private Lookup.Result<ClassLoader> res;
-        
-        public ContextReloader (EmbededTomcat tc, ContextManager cm, ServletContext ctx) {
-            ide_ctx = ctx;
-            this.tc = tc;
-            this.cm = cm;
+        private final Context ctx;
+
+        private Lookup.Result<ClassLoader> res;
+
+        public ContextReloader(Tomcat tc, Context ctx) {
+            this.ctx = ctx;
         }
-        
-        /** Starts to listen on class loader changes */
-        public void activate () {
-            res = Lookup.getDefault().lookup(new Lookup.Template<ClassLoader> (ClassLoader.class));
-            res.addLookupListener (this);
+
+        /**
+         * Starts to listen on class loader changes
+         */
+        public void activate() {
+            res = Lookup.getDefault().lookup(new Lookup.Template<>(ClassLoader.class));
+            res.addLookupListener(this);
         }
-        
-        /** Stops listening. */
-        public void deactivate () {
-	    if (res != null) {
-                res.removeLookupListener (this);
-	        res = null;
-	    }
-        }
-        
-        public void resultChanged (LookupEvent evt) {
-            RequestProcessor.getDefault ().post (this);
-        }
-        
-        public void run () {
-	    ClassLoader cl = (ClassLoader)res.allInstances ().iterator ().next ();
-            cm.setParentClassLoader (cl);
-            
-            File wd = FileUtil.toFile (FileUtil.getConfigRoot());
-            wd = new File(wd, "httpwork"); // NOI18N
-            
-            Enumeration e = cm.getContexts ();
-            while (e.hasMoreElements ()) {
-                Object o = e.nextElement ();
-                if (o instanceof Context) {
-                    Context ctx = (Context)o;
-                    // PENDING why this is in loop?
-                    tc.removeContext (ide_ctx);
-                    try {
-                        ide_ctx=tc.addContext ("", wd.toURI().toURL ());  // NOI18N
-                    }
-                    catch (MalformedURLException ex) {
-                        // ErrorManager.getDefault ().log (ErrorManager.INFORMATIONAL, ex);
-                    }
-                    tc.initContext ( ide_ctx );
-                }
+
+        /**
+         * Stops listening.
+         */
+        public void deactivate() {
+            if (res != null) {
+                res.removeLookupListener(this);
+                res = null;
             }
-            
+        }
+
+        @Override
+        public void resultChanged(LookupEvent evt) {
+            RequestProcessor.getDefault().post(this);
+        }
+
+        @Override
+        public void run() {
+            initContext(ctx);
         }
         
     }

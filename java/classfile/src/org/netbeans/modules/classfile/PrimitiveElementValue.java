@@ -39,6 +39,7 @@ public final class PrimitiveElementValue extends ElementValue {
 
     /**
      * Returns the value of this component, as a constant pool entry.
+     * @return the value of this component
      */
     public final CPEntry getValue() {
 	return value;

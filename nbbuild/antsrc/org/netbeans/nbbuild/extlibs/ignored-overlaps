@@ -133,3 +133,5 @@ rust/rust.grammar/external/antlr4-4.11.1.jar ide/libs.antlr4.runtime/external/an
 rust/rust.grammar/external/antlr4-runtime-4.11.1.jar ide/libs.antlr4.runtime/external/antlr4-runtime-4.11.1.jar 
 rust/rust.grammar/external/ST4-4.3.4.jar ide/libs.antlr4.runtime/external/ST4-4.3.4.jar 
 
+# The enterprise usage is for library - it is better to keep the two separate
+ide/servletapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websvc.restlib/external/jakarta.servlet-api-4.0.4.jar

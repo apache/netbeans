@@ -901,8 +901,8 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
     public List<? extends TreePathHandle> getHandles() {
         List<TreePathHandle> result = new LinkedList<TreePathHandle>();
         ElementNode rootNode = getRootNode();
-        if(rootNode != null && rootNode.getDescritption() != null) {
-            for (Description description : rootNode.getDescritption().getSubs()) {
+        if(rootNode != null && rootNode.getDescription() != null) {
+            for (Description description : rootNode.getDescription().getSubs()) {
                 if (description.getSelected() == Boolean.TRUE) {
                     result.add(TreePathHandle.from(description.getElementHandle(), description.getCpInfo()));
                 }

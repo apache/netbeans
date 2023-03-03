@@ -111,7 +111,7 @@ public class ObjectArrayUtilities {
     /**
      * Get index of the occurrence of the given item in the object array
      * by using binary search and scanning the adjacent items
-     * that are equal copmared to the searched item.
+     * that are equal compared to the searched item.
      * @param objectArray object array containing the item.
      * @param item object to be found.
      * @return index of the found object. The object must be the same physical
@@ -158,7 +158,7 @@ public class ObjectArrayUtilities {
     /**
      * Get index of the occurrence of the given item in the object array
      * by using binary search and scanning the adjacent items
-     * that are equal copmared to the searched item.
+     * that are equal compared to the searched item.
      * @param objectArray object array containing the item.
      * @param item object to be found.
      * @param c comparator to use to compare the items.

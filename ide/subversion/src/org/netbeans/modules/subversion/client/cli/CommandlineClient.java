@@ -241,7 +241,7 @@ public class CommandlineClient extends AbstractClientAdapter implements ISVNClie
                 break;
             } catch (SVNClientException e) {
                 if (e.getMessage().startsWith("svn: Attempted to lock an already-locked dir")) {
-                    Subversion.LOG.fine("ComandlineClient.comit() : " + e.getMessage());
+                    Subversion.LOG.fine("ComandlineClient.commit() : " + e.getMessage());
                     try {
                         retry++;
                         if (retry > 14) {

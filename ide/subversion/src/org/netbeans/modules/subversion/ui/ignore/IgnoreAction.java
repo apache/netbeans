@@ -132,7 +132,7 @@ public class IgnoreAction extends ContextAction {
                     FileStatusCache cache = Subversion.getInstance().getStatusCache();
                     try {
                         for (File file : files) {
-                            // revert all locally added files (svn added but not comitted)
+                            // revert all locally added files (svn added but not committed)
                             // #108369 - added files cannot be ignored
                             FileInformation s = cache.getStatus(file);
                             if (s.getStatus() == FileInformation.STATUS_VERSIONED_ADDEDLOCALLY) {

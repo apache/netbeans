@@ -1105,14 +1105,14 @@ public class CommitAction extends ContextAction {
     /**
      * Returns all files which have to be commited recursively (deleted and copied folders)
      */
-    private static List<File> getRecursiveCommits(List<File> nonRecursiveComits, List<File> removeCandidates) {
+    private static List<File> getRecursiveCommits(List<File> nonRecursiveCommits, List<File> removeCandidates) {
         FileStatusCache cache = Subversion.getInstance().getStatusCache();
         List<File> recursiveCommits = new ArrayList<File>();
 
         // 1. if there is at least one directory which isn't removed or copied
         //    we have to commit it nonrecursively ...
         boolean nonRecursiveDirs = false;
-        for(File file : nonRecursiveComits) {
+        for(File file : nonRecursiveCommits) {
             ISVNStatus st = null;
             if( file.isDirectory() &&
                 !( removeCandidates.contains(file) ||
@@ -1125,7 +1125,7 @@ public class CommitAction extends ContextAction {
         if(!nonRecursiveDirs) {
             // 2. ... otherwise we may commit all files recursivelly
             recursiveCommits.addAll(recursiveCommits);
-            recursiveCommits.addAll(nonRecursiveComits);
+            recursiveCommits.addAll(nonRecursiveCommits);
         } else {
             // 3. ... well, this is the worst case. we have folders which were deleted or copied
             //        and such have to be commited recursively (svn restriction). On the other hand,
@@ -1133,7 +1133,7 @@ public class CommitAction extends ContextAction {
             //        could cause that the commit would also apply to files which because of exclusion or
             //        the (bloody) flat-folder loginc aren't supposed to be commited at all =>
             //        => the commit has to be split in two parts.
-            for(File file : nonRecursiveComits) {
+            for(File file : nonRecursiveCommits) {
                 ISVNStatus st = null;
                 FileInformation fi = cache.getStatus(file);
                 if((file.isDirectory() || fi.isDirectory()) &&

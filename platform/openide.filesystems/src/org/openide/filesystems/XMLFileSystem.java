@@ -69,7 +69,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *         -for file,folder,attr name=....  (e.g.: &lt;folder name="Config"&gt;)
  *         -for attr is mandatory one of bytevalue,shortvalue,intvalue,longvalue,floatvalue,doublevalue,boolvalue,charvalue,stringvalue,methodvalue,serialvalue,urlvalue,bundlevalue
  *
- * Allowed atributes:
+ * Allowed attributes:
  *         -for file:        url=.... (e.g.: &lt;file name="sample.xml" url="file:/c:/sample.xml"&gt;)
  *         -for folder,filesystem        nothing allowed
  *

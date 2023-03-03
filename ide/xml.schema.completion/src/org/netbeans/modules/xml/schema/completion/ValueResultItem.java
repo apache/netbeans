@@ -108,7 +108,7 @@ public class ValueResultItem extends CompletionResultItem {
     }
 
     /**
-     * For atributes, the caret should go inside the double quotes.
+     * For attributes, the caret should go inside the double quotes.
      */
     @Override
     public int getCaretPosition() {

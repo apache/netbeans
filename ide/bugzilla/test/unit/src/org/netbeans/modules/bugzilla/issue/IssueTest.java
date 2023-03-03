@@ -120,7 +120,7 @@ public class IssueTest extends NbTestCase implements TestConstants {
 
 //    public void testFields() throws Throwable {
 //        // WARNING: the test assumes that there is more than one value
-//        // for atributes like platform, versions etc.
+//        // for attributes like platform, versions etc.
 //
 //        long ts = System.currentTimeMillis();
 //        String summary = "somary" + ts;
@@ -377,7 +377,7 @@ public class IssueTest extends NbTestCase implements TestConstants {
 
     public void testCC() throws Throwable {
         // WARNING: the test assumes that there are more than one value
-        // for atributes like platform, versions etc.
+        // for attributes like platform, versions etc.
 
         long ts = System.currentTimeMillis();
         String summary = "somary" + ts;

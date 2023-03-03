@@ -271,7 +271,7 @@ UnbufferedComment = "//-"
     TODO:
         - TagInterPolation http://jade-lang.com/reference/interpolation/
         - check interpolation in the text block
-        - mixin default atributes
+        - mixin default attributes
         - default attributes at all
     
 */

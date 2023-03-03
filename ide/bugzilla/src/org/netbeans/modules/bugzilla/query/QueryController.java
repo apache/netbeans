@@ -1215,7 +1215,7 @@ public class QueryController implements org.netbeans.modules.bugtracking.spi.Que
                 try {
                     querySemaphore.acquire();
                 } catch (InterruptedException ex) {
-                    Bugzilla.LOG.log(Level.INFO, "interuped while trying to lock query", ex); // NOI18N
+                    Bugzilla.LOG.log(Level.INFO, "interrupted while trying to lock query", ex); // NOI18N
                     return;
                 } 
                 querySemaphore.release();

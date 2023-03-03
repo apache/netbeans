@@ -93,7 +93,7 @@ public interface MultiViewElement {
     void componentClosed();
 
     /** Called when this MultiViewElement is about to be shown. 
-     * That can happen when switching the current perspective/view or when the topcomonent itself is shown for the first time.
+     * That can happen when switching the current perspective/view or when the topcomponent itself is shown for the first time.
      */
     void componentShowing();
     

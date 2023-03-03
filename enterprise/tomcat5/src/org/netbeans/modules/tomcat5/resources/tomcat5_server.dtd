@@ -93,7 +93,7 @@ The Engine element represents the entire request processing machinery associated
 <!ATTLIST Engine debug CDATA #IMPLIED>
 
 <!--
-A Valve element represents a comonent that will be inserted into the request processing pipeline for the associated Catalina container (Engine, Host, or Context). Individual Valves have distinct processing capabilities, and are described individually below.
+A Valve element represents a component that will be inserted into the request processing pipeline for the associated Catalina container (Engine, Host, or Context). Individual Valves have distinct processing capabilities, and are described individually below.
 -->
 
 <!ELEMENT Valve EMPTY >

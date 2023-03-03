@@ -99,21 +99,21 @@ public class WebserviceDescriptionImpl extends PersistentObject implements Webse
     }
 
     public PortComponent[] getPortComponent() {
-        initPortComonents();
+        initPortComponents();
         return portComponents;
     }
     
     public int sizePortComponent() {
-        initPortComonents();
+        initPortComponents();
         return portComponents.length;
     }
 
     public PortComponent getPortComponent(int index) {
-        initPortComonents();
+        initPortComponents();
         return portComponents[index];
     }
     
-    private void initPortComonents() {
+    private void initPortComponents() {
         
         if (portComponents != null) {
             return;

@@ -183,7 +183,7 @@ public class GlobalComponentsIndexTest {
 
     /**
      * A schema can have global components with the same name (but different tipes).
-     * It such case the components' index contains not a component but a list of comonent.
+     * It such case the components' index contains not a component but a list of component.
      * The test checks how it works.
      */
     @Test

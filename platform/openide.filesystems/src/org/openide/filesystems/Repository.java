@@ -339,7 +339,7 @@ public class Repository implements Serializable {
      * query, and will return the same instance as a system-wide Repository instance.
      * Instances provided by <code>Lookup.getDefault().lookup(Repository.class)</code> may vary
      * depending on the Lookup's implementation and context - be aware that multiple Repository
-     * instances may exist, possibly one for each contextual Lookup craeted.
+     * instances may exist, possibly one for each contextual Lookup created.
      * <p/>
      * 
      * @return default repository for the system

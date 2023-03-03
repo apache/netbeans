@@ -288,7 +288,7 @@ public final class CompositeFCS extends FontColorSettings {
         // for a long time and so keep supporting them. But they most likely have absolutely
         // no effect on JVM.
         //
-        // There is another 'officially unsupported' property called awt.useSystemAAFontSetings
+        // There is another 'officially unsupported' property called awt.useSystemAAFontSettings
         // introduced in JDK1.6, please http://java.sun.com/javase/6/docs/technotes/guides/2d/flags.html#aaFonts
         //
         String systemProperty = System.getProperty("javax.aatext"); //NOI18N

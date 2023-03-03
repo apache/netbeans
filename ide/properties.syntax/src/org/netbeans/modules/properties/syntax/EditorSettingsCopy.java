@@ -103,7 +103,7 @@ public class EditorSettingsCopy extends TableViewSettings {
     }
 
     
-    /** Implements <code>EditorSetings</code> interface method. */
+    /** Implements <code>EditorSettings</code> interface method. */
     public Color getKeyColor() {
         prepareSettings();
         if(keyColor == null) {
@@ -113,7 +113,7 @@ public class EditorSettingsCopy extends TableViewSettings {
         return keyColor;
     }
     
-    /** Implements <code>EditorSetings</code> interface method. */    
+    /** Implements <code>EditorSettings</code> interface method. */
     public Color getKeyBackground() {
         prepareSettings();
         if(keyBackground == null) {
@@ -123,7 +123,7 @@ public class EditorSettingsCopy extends TableViewSettings {
         return keyBackground;
     }
     
-    /** Implements <code>EditorSetings</code> interface method. */
+    /** Implements <code>EditorSettings</code> interface method. */
     public Color getValueColor() {
         prepareSettings();
         if(valueColor == null) {
@@ -133,7 +133,7 @@ public class EditorSettingsCopy extends TableViewSettings {
         return valueColor;
     }
     
-    /** Implements <code>EditorSetings</code> interface method. */
+    /** Implements <code>EditorSettings</code> interface method. */
     public Color getValueBackground() {
         prepareSettings();
         if(valueBackground == null) {
@@ -143,7 +143,7 @@ public class EditorSettingsCopy extends TableViewSettings {
         return valueBackground;
     }
     
-    /** Implements <code>EditorSetings</code> interface method. */
+    /** Implements <code>EditorSettings</code> interface method. */
     public Color getHighlightColor() {
         prepareSettings();
         if(highlightColor == null) {
@@ -153,7 +153,7 @@ public class EditorSettingsCopy extends TableViewSettings {
         return highlightColor;
     }
     
-    /** Implements <code>EditorSetings</code> interface method. */ 
+    /** Implements <code>EditorSettings</code> interface method. */
     public Color getHighlightBackground() {
         prepareSettings();
         if(highlightBackground == null) {
@@ -163,7 +163,7 @@ public class EditorSettingsCopy extends TableViewSettings {
         return highlightBackground;
     }
     
-    /** Implements <code>EditorSetings</code> inaterface method. */ 
+    /** Implements <code>EditorSettings</code> inaterface method. */
     public Color getShadowColor() {
         prepareSettings();
         if(shadowColor == null) {
@@ -179,7 +179,7 @@ public class EditorSettingsCopy extends TableViewSettings {
     }    
 
 
-    /** Implements <code>EditorSetings</code> interface method. */     
+    /** Implements <code>EditorSettings</code> interface method. */
     public KeyStroke[] getKeyStrokesFindNext() {
         prepareSettings();
         if(keyStrokesFindNext == null || keyStrokesFindNext.length == 0) {
@@ -189,7 +189,7 @@ public class EditorSettingsCopy extends TableViewSettings {
         return keyStrokesFindNext;
     }
     
-    /** Implements <code>EditorSetings</code> interface method. */     
+    /** Implements <code>EditorSettings</code> interface method. */
     public KeyStroke[] getKeyStrokesFindPrevious() {
         prepareSettings();
         if(keyStrokesFindPrevious == null || keyStrokesFindPrevious.length == 0) {
@@ -199,7 +199,7 @@ public class EditorSettingsCopy extends TableViewSettings {
         return keyStrokesFindPrevious;
     }
     
-    /** Implements <code>EditorSetings</code> interface method. */
+    /** Implements <code>EditorSettings</code> interface method. */
     public KeyStroke[] getKeyStrokesToggleHighlight() {
         prepareSettings();
         if(keyStrokesToggleHighlight == null || keyStrokesToggleHighlight.length == 0) {
@@ -209,19 +209,19 @@ public class EditorSettingsCopy extends TableViewSettings {
         return keyStrokesToggleHighlight;
     }
 
-    /** Implements <code>EditorSetings</code> interface method. */    
+    /** Implements <code>EditorSettings</code> interface method. */
     public void settingsUpdated() {
         if (prepared) {
         support.firePropertyChange(new PropertyChangeEvent(this, null, null, null));
     }
     }
 
-    /** Implements <code>EditorSetings</code> interface method. */     
+    /** Implements <code>EditorSettings</code> interface method. */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
     }
 
-    /** Implements <code>EditorSetings</code> interface method. */    
+    /** Implements <code>EditorSettings</code> interface method. */
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
     }

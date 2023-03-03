@@ -22,7 +22,7 @@ import java.util.Collection;
 
 import org.netbeans.api.db.sql.support.SQLIdentifiers;
 
-// The comon base type of every item present in a query
+// The common base type of every item present in a query
 
 public interface  QueryItem {
 

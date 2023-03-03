@@ -86,7 +86,7 @@
         <class package="org.netbeans.modules.csl.spi" name="ParserResult" link="no"/>
         <issue number="258520"/>
     </change>
-    <change id="CancelSuppport">
+    <change id="CancelSupport">
         <api name="csl.api"/>
         <summary>Added <code>CancelSupport</code> to allow scanners and other CSL services to check task cancelling</summary>
         <version major="2" minor="50"/>

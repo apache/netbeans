@@ -469,7 +469,7 @@ public class TabbedContainer extends JComponent implements Accessible {
     }
 
     /** Experimental property - alter the policy by which the components in
-     * the model are added to the container.  This may not remain suppported.
+     * the model are added to the container.  This may not remain supported.
      * If used, it should be called before populating the data model.
      */
     public final void setContentPolicy(int i) {

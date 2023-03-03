@@ -171,7 +171,7 @@ public class RemoveInvalidModifier implements ErrorRule<Void> {
             case METHOD:
                 return ((MethodTree) treePath.getLeaf()).getModifiers();
             default:
-                throw new UnsupportedOperationException("kind " + kind + " not yet suppported");
+                throw new UnsupportedOperationException("kind " + kind + " not yet supported");
         }
     }
 }

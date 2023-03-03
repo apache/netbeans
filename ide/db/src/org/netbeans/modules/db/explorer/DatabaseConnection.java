@@ -1291,7 +1291,7 @@ public final class DatabaseConnection implements DBConnection {
     }
 
     private Object readResolve() throws ObjectStreamException {
-        // sometimes deserialized objects have a null propertySuppport, not sure why
+        // sometimes deserialized objects have a null propertySupport, not sure why
         if (propertySupport == null) {
             propertySupport = new PropertyChangeSupport(this);
         }

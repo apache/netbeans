@@ -468,7 +468,7 @@ public class TargetServer {
 
         DeploymentManager dm = instance.getDeploymentManager();
 
-        // check if redeploy not suppported and not incremental then transfer to distribute list
+        // check if redeploy not supported and not incremental then transfer to distribute list
         if (incremental == null && getApplication() == null) {
             toRedeploy = Collections.EMPTY_SET;
         } else if (incremental == null) {

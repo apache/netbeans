@@ -114,7 +114,7 @@
 
     <answer id="arch-usecases">
         <p>
-            XML/Multiview offers suppport for implementing editors with multiple views for xml files.
+            XML/Multiview offers support for implementing editors with multiple views for xml files.
             <usecase id="basic-usage" name="Basic usage">
                 To implement an xml multiview editor using the framework, you need to provide the following components:
                 <ul>

@@ -174,7 +174,7 @@ public class IgnoreAction extends ContextAction {
                         SvnClientExceptionHandler.notifyException(e, true, true);
                     }
                 }
-                // refresh files manually, we do not suppport wildcards in ignore patterns so this is sufficient
+                // refresh files manually, we do not support wildcards in ignore patterns so this is sufficient
                 for (File file : files) {
                     Subversion.getInstance().getStatusCache().refresh(file, FileStatusCache.REPOSITORY_STATUS_UNKNOWN);
                 }

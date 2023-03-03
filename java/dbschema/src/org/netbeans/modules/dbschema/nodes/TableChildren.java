@@ -240,7 +240,7 @@ public class TableChildren extends Children.Keys {
         return keys;    
     }
     
-    /* check is view are suppported for this table
+    /* check is view are supported for this table
      * database name could be null see bug 53887
      **/
     private boolean isViewSupport( TableElement element){ 

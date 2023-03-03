@@ -157,7 +157,7 @@ final class SourceLevelQueryImpl implements SourceLevelQueryImplementation2, Ant
 
     private static class R implements Result {
 
-        private final ChangeSupport changeSuppport = new ChangeSupport(this);
+        private final ChangeSupport changeSupport = new ChangeSupport(this);
         private volatile String sourceLevel;
 
         private R(final String sourceLevel) {
@@ -166,7 +166,7 @@ final class SourceLevelQueryImpl implements SourceLevelQueryImplementation2, Ant
 
         private void update(final String sourceLevel) {
             this.sourceLevel = sourceLevel;
-            this.changeSuppport.fireChange();
+            this.changeSupport.fireChange();
         }
 
         @Override
@@ -176,12 +176,12 @@ final class SourceLevelQueryImpl implements SourceLevelQueryImplementation2, Ant
 
         @Override
         public void addChangeListener(ChangeListener listener) {
-            this.changeSuppport.addChangeListener(listener);
+            this.changeSupport.addChangeListener(listener);
         }
 
         @Override
         public void removeChangeListener(ChangeListener listener) {
-            this.changeSuppport.removeChangeListener(listener);
+            this.changeSupport.removeChangeListener(listener);
         }
 
     }

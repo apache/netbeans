@@ -1079,7 +1079,7 @@ nobugid (i18n-check: misc. warnings in terminalemulator)
 Started a debug/test infrastructure although it's not in the mainline
 NB src code yet. The following were done to support it ...
 
-nobugid (Suppport for raw pty's on linux)
+nobugid (Support for raw pty's on linux)
 	On Solaris one makes a pty raw by just not pushing the stream
 	modules ptem ldterm and ttcompat.
 

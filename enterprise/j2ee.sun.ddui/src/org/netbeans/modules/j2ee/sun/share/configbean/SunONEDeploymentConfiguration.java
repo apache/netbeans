@@ -370,7 +370,7 @@ extends GlassfishConfiguration implements DeploymentConfiguration {
         MessageDestination jmsResource = null;
         File resourceDir = module.getResourceDirectory();
         if (resourceDir == null) {
-            // Unable to create reqested JMS Resource
+            // Unable to create requested JMS Resource
             postResourceError(NbBundle.getMessage(SunONEDeploymentConfiguration.class, "ERR_NoJMSResource", name)); // NOI18N
             throw new ConfigurationException(NbBundle.getMessage(SunONEDeploymentConfiguration.class, "ERR_NoJMSResource", name)); // NOI18N
         }

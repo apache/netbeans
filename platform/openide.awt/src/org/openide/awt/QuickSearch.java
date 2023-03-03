@@ -694,7 +694,7 @@ public class QuickSearch {
                 } finally {
                     searchFieldListener.ignoreEvents = false;
                 }
-                // bugfix #32909, reqest focus when search field is removed
+                // bugfix #32909, request focus when search field is removed
                 requestOriginalFocusOwner();
                 //fireQuickSearchCanceled();
                 callback.quickSearchCanceled();

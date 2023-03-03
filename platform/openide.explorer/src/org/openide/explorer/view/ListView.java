@@ -807,7 +807,7 @@ public class ListView extends JScrollPane implements Externalizable {
                         removeSearchField();
                         ke.consume(); // #44394
 
-                        // bugfix #32909, reqest focus when search field is removed
+                        // bugfix #32909, request focus when search field is removed
                         NbList.this.requestFocus();
                     } else {
                         super.processKeyEvent(ke);

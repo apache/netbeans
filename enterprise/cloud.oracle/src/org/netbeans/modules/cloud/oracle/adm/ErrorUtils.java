@@ -61,10 +61,10 @@ class ErrorUtils {
         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(sb.toString()));
     }
     
-    public static void processError(BmcResponse reqest, String errorMessage) {
+    public static void processError(BmcResponse request, String errorMessage) {
         StringBuilder sb = new StringBuilder(errorMessage);
-        sb.append('\n').append(Bundle.MSG_Error_Code(reqest.get__httpStatusCode__()));
-        sb.append(getErrorDescription(reqest.get__httpStatusCode__()));
+        sb.append('\n').append(Bundle.MSG_Error_Code(request.get__httpStatusCode__()));
+        sb.append(getErrorDescription(request.get__httpStatusCode__()));
         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(sb.toString()));
     }
     

@@ -2029,7 +2029,7 @@ public class ETable extends JTable {
             //close a modal dialog
             if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 removeSearchField();
-                // bugfix #32909, reqest focus when search field is removed
+                // bugfix #32909, request focus when search field is removed
                 SwingUtilities.invokeLater(new Runnable() {
                     //additional bugfix - do focus change later or removing
                     //the component while it's focused will cause focus to

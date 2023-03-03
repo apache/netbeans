@@ -114,7 +114,7 @@ public class NbRenameRefactoringPlugin extends AbstractRefactoringPlugin {
                     if (FileUtil.isParentOf(gr.getRootFolder(), nrf.getFolder())) {
                         String relPath = FileUtil.getRelativePath(gr.getRootFolder(), nrf.getFolder());
                         relPath.replace('/', '.');
-                        //TODO probably aslo manifest or layers.
+                        //TODO probably also manifest or layers.
                         //TODO how to distinguish single package from recursive folder?
                     }
                 }

@@ -63,7 +63,7 @@ public final class PersistenceHandler implements PersistenceObserver {
     private final LazyLoader lazyLoader = new LazyLoader();
 
 
-    /** Creates a new instance of PersistenceHanlder */
+    /** Creates a new instance of PersistenceHandler */
     private PersistenceHandler() {
     }
 

@@ -286,7 +286,7 @@ public final class XNIBuilder implements TreeBuilder {
 
         private XMLDTDContentModelSource xmldtdContentModelSource; // XMLDTDContentModelHandler 2.4.0
 
-        private XMLDocumentSource xmlDocumentSource; // XMLDocumentHanlder 2.4.0
+        private XMLDocumentSource xmlDocumentSource; // XMLDocumentHandler 2.4.0
 
         /**
          * Create a parser with standard configuration.
@@ -928,7 +928,7 @@ DOCTYPE_LOOP:
             startEntity(name, publicId, systemId, baseSystemId, encoding, null);
         }
         
-        // XMLDTDHanlder 2.4.0
+        // XMLDTDHandler 2.4.0
         public void startParameterEntity(String name, XMLResourceIdentifier entity, String encoding, Augmentations a) {
             String pname = name;
             if (false == name.startsWith("%")) {
@@ -1252,7 +1252,7 @@ DOCTYPE_LOOP:
             }
         } // externalEntityDecl(String,String,String)
         
-        // XMLDTDHAnlder 2.4.0
+        // XMLDTDHAndler 2.4.0
         public void unparsedEntityDecl (String name,
         String publicId, String systemId,
         String notation, Augmentations a) {
@@ -1262,7 +1262,7 @@ DOCTYPE_LOOP:
         /**
          * An unparsed entity declaration.
          */
-        // XMLDTDHAnlder 2.0.0b4
+        // XMLDTDHAndler 2.0.0b4
         public void unparsedEntityDecl (String name,
         String publicId, String systemId,
         String notation) {

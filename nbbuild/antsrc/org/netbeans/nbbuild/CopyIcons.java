@@ -44,7 +44,7 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * Task for copying out icons from NetBeans projects. It creates paralel directory 
+ * Task for copying out icons from NetBeans projects. It creates parallel directory
  * structure in destdir with only copied icons. It creates index.html page that 
  * lists all found icons and group them according to nb modules. Icons are considered 
  * images with dimensions 8x8, 16x16, 24x24, 32x32 of type PNG or GIF. 
@@ -314,7 +314,7 @@ public class CopyIcons extends MatchingTask {
             pw.println("Destination Directory: " + destDir + "</h3>");
             pw.println("<p style=\"width: 70%\"><b>Description:</b><br/> New Image is image in the Destination Directory, Orig. Image is image in NetBeans Source Root. " +
                     "By replacing the image in Destination Directory under coresponding module and path you can prepare rebranded " +
-                    "icons in paralel directory structure and then copy them over to NetBeans Source Root. Orig. Image is " +
+                    "icons in parallel directory structure and then copy them over to NetBeans Source Root. Orig. Image is " +
                     "in the table just for comparison and reference what image was already changed.</p>");
             for (Iterator<ProjectIconInfo> iter = prjIconInfoList.iterator(); iter.hasNext(); ) {
                 ProjectIconInfo info = iter.next();

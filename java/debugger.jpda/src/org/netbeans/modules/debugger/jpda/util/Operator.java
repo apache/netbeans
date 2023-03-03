@@ -1156,7 +1156,7 @@ public class Operator {
         private Thread t;
         private boolean isMethodInvoke;
         private boolean haveParallelEventsInLoopThread;
-        private boolean interrupedToProcessParalelEvents;
+        private boolean interrupedToProcessParallelEvents;
         
         public LoopControl(Thread t, Executor starter,
                            SuspendControllersSupport scs, SuspendCount suspendCount) {
@@ -1167,7 +1167,7 @@ public class Operator {
             if (!isMethodInvoke) {
                 synchronized (this) {
                     if (haveParallelEventsInLoopThread) {
-                        interrupedToProcessParalelEvents = true;
+                        interrupedToProcessParallelEvents = true;
                         t.interrupt();
                     }
                 }
@@ -1178,8 +1178,8 @@ public class Operator {
         }
         
         public boolean isInterrupedToProcessParallelEvents() {
-            boolean is = this.interrupedToProcessParalelEvents;
-            this.interrupedToProcessParalelEvents = false;
+            boolean is = this.interrupedToProcessParallelEvents;
+            this.interrupedToProcessParallelEvents = false;
             return is;
         }
         

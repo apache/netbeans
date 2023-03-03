@@ -189,7 +189,7 @@ final class Memory {
             attributes = (Map) minimalMap.get(key);
         }
 
-        // keep promised value in tread local to survive paralell GC
+        // keep promised value in tread local to survive parallel GC
         boolean isPrepared = attributes != null && attributes.containsKey(name);
         if (isPrepared) {
             Entry entry = prepared.get();

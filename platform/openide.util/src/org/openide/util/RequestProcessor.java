@@ -1859,7 +1859,7 @@ outer:  do {
     /**
     /** A special thread that processes timouted Tasks from a RequestProcessor.
      * It uses the RequestProcessor as a synchronized queue (a Channel),
-     * so it is possible to run more Processors in paralel for one RequestProcessor
+     * so it is possible to run more Processors in parallel for one RequestProcessor
      */
     private static class Processor extends Thread {
         /** A stack containing all the inactive Processors */

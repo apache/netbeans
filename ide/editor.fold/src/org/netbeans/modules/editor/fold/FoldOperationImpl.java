@@ -63,7 +63,7 @@ import org.openide.util.Exceptions;
  *
  * <p>
  * This class changes its state upon displayability change
- * of the associated copmonent by listening on "ancestor" component property.
+ * of the associated component by listening on "ancestor" component property.
  * <br>
  * If the component is not displayable then the list of root folds becomes empty
  * while if the component gets displayable the root folds are created

@@ -181,12 +181,12 @@ public class NbEditorUtilities {
                        target.getCaret().getDot(), original);
     }
 
-    /** Get the top-component for the target copmonent */
+    /** Get the top-component for the target component */
     public static TopComponent getTopComponent(JTextComponent target) {
         return (TopComponent)SwingUtilities.getAncestorOfClass(TopComponent.class, target);
     }
 
-    /** Get the top-component for the target copmonent */
+    /** Get the top-component for the target component */
     public static TopComponent getOuterTopComponent(JTextComponent target) {
         TopComponent tc = null;
         TopComponent parent = (TopComponent)SwingUtilities.getAncestorOfClass(TopComponent.class, target);

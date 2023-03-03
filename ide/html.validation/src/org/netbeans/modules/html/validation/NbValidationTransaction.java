@@ -512,9 +512,9 @@ public class NbValidationTransaction extends ValidationTransaction {
                     : sourceCode.getLocationRecorder();
 
             if (baseUriTracker == null) {
-                wiretap.setWiretapContentHander(recorder);
+                wiretap.setWiretapContentHandler(recorder);
             } else {
-                wiretap.setWiretapContentHander(new CombineContentHandler(
+                wiretap.setWiretapContentHandler(new CombineContentHandler(
                         recorder, baseUriTracker));
             }
             wiretap.setWiretapLexicalHandler((LexicalHandler) recorder);

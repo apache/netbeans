@@ -45,7 +45,7 @@ diff --git a/src/nu/validator/htmlparser/dom/HtmlDocumentBuilder.java b/src/nu/v
 --- a/src/nu/validator/htmlparser/dom/HtmlDocumentBuilder.java
 +++ b/src/nu/validator/htmlparser/dom/HtmlDocumentBuilder.java
 @@ -377,26 +377,26 @@ public class HtmlDocumentBuilder extends
-     public void setTransitionHander(TransitionHandler handler) {
+     public void setTransitionHandler(TransitionHandler handler) {
          transitionHandler = handler;
          driver = null;
      }
@@ -320,7 +320,7 @@ diff --git a/src/nu/validator/htmlparser/xom/HtmlBuilder.java b/src/nu/validator
          lazyInit();
          treeBuilder.setFragmentContext(contextLocal.intern(), contextNamespace.intern(), null, false);
 @@ -414,26 +414,26 @@ public class HtmlBuilder extends Builder
-     public void setTransitionHander(TransitionHandler handler) {
+     public void setTransitionHandler(TransitionHandler handler) {
          transitionHandler = handler;
          driver = null;
      }

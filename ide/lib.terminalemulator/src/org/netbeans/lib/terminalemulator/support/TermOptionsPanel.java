@@ -36,7 +36,7 @@ public final class TermOptionsPanel extends javax.swing.JPanel {
     // Why variables???
     // These are used in gui-builder-generated code
     // If we use automatic bundle usage in the gui-builder it will
-    // use o.n.openide.NbBundel but we're ina "pure" module and don't
+    // use o.n.openide.NbBundle but we're ina "pure" module and don't
     // want to be polluted with NB dependencies
     // If we use cusom code and inline the Catalog.get() then there's
     // no opportunity to insert a // NOI18N.

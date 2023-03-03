@@ -52,7 +52,7 @@ public interface InvokeOperationCookie {
 
         /** Set Node selection valid or invalid.
          *
-         * @param selectionValid true node selection is valid fasle if not
+         * @param selectionValid true node selection is valid false if not
          */
         protected final void setSelectionValid(boolean selectionValid) {
             boolean wasSelectionValid = this.selectionValid;

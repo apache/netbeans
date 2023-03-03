@@ -340,7 +340,7 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
     private RequestProcessor.Task pendingTask;
     
     /**
-     * Stamp guarding against paralel obsolete overwrites.
+     * Stamp guarding against parallel obsolete overwrites.
      */
     private final AtomicInteger serial = new AtomicInteger(0);
     

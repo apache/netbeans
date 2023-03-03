@@ -201,7 +201,7 @@ final class XMLMIMEComponent extends DefaultParser {
 
     /**
      * Create just one shared parser instance per thread.
-     * Consequently one instance cannot be run in paralel eliminating need for sync.
+     * Consequently one instance cannot be run in parallel eliminating need for sync.
      */
     private static class LocalSniffingParser extends ThreadLocal<WeakReference<SniffingParser>> {
         LocalSniffingParser() {}

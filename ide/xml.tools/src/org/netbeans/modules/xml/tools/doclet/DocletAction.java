@@ -109,7 +109,7 @@ public final class DocletAction extends CookieAction implements CollectDTDAction
                 }
             };
 
-            //start task in paralel with user input
+            //start task in parallel with user input
             
             thread = new Thread(task, "Creating XML doc..."); // NOI18N        
             thread.setPriority(Thread.MIN_PRIORITY);

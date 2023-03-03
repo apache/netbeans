@@ -74,7 +74,7 @@ import org.openide.windows.OutputWriter;
  */
 public class CommandLineOutputHandler extends AbstractOutputHandler {
 
-    //32 means 16 paralel builds, one for input, one for output. #229904
+    //32 means 16 parallel builds, one for input, one for output. #229904
     private static final RequestProcessor PROCESSOR = new RequestProcessor("Maven ComandLine Output Redirection", Integer.getInteger("maven.concurrent.builds", 16) * 2); //NOI18N
     private static final Logger LOG = Logger.getLogger(CommandLineOutputHandler.class.getName());
     private InputOutput inputOutput;

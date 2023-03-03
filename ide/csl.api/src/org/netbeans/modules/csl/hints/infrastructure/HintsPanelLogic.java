@@ -318,7 +318,7 @@ class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectionListen
             // Enable components
             componentsSetEnabled(true);
             
-            // Set proper values to the componetnts
+            // Set proper values to the components
             
             Preferences p = getCurrentPrefernces(hint);
 

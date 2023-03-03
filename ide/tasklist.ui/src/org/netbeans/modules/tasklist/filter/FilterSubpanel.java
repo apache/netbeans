@@ -21,7 +21,7 @@ package org.netbeans.modules.tasklist.filter;
 
 /**
  * Updates filter using addtional data. It's
- * called by FilterPanel on all sub componets
+ * called by FilterPanel on all sub components
  * before returning final filter.
  *
  * @author  Petr Kuzel

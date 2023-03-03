@@ -26,7 +26,7 @@ import java.util.*;
  * It allows to access diff parameters, multifile setup.
  *
  * <p>It can be implemented directly by respective
- * TopComponets or it can be added in their lookup
+ * TopComponents or it can be added in their lookup
  * (it allows proxing).
  *
  * @author Maros Sandor

@@ -350,7 +350,7 @@ public class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectio
 
                 editScript.setEnabled(hint.category.equals(Utilities.CUSTOM_CATEGORY));
 
-                // Set proper values to the componetnts
+                // Set proper values to the components
                 if (hint.kind == Kind.ACTION) {
                     severityComboBox.setSelectedIndex(severity2index.get(Severity.HINT));
                     severityComboBox.setEnabled(false);

@@ -80,7 +80,7 @@ public class CodeSnifferCustomizerPanel extends JPanel {
         // avoid NPE
         RP.schedule(() -> {
             EventQueue.invokeLater(() -> {
-                setAllComponetsEnabled(enabledCheckBox.isSelected());
+                setAllComponentsEnabled(enabledCheckBox.isSelected());
                 // clear error because the error may be left when the configuration is changed
                 context.setError(null);
                 if (enabledCheckBox.isSelected()) {
@@ -96,7 +96,7 @@ public class CodeSnifferCustomizerPanel extends JPanel {
         // don't set errors in initialization becuase NPE occurs
         // so add the listener after setSelected method
         enabledCheckBox.addItemListener((e) -> {
-            setAllComponetsEnabled(enabledCheckBox.isSelected());
+            setAllComponentsEnabled(enabledCheckBox.isSelected());
             setCodeSnifferEnabled();
             if (!enabledCheckBox.isSelected()) {
                 // NETBEANS-1550 clear errors because user can't set other configurations
@@ -202,7 +202,7 @@ public class CodeSnifferCustomizerPanel extends JPanel {
         settings.put(PATH, getCodeSnifferPath());
     }
 
-    private void setAllComponetsEnabled(boolean isEnabled) {
+    private void setAllComponentsEnabled(boolean isEnabled) {
         Component[] components = getComponents();
         for (Component component : components) {
             if (component != enabledCheckBox) {

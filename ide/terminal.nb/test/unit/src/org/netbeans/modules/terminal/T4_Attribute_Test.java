@@ -42,7 +42,7 @@ import org.openide.windows.InputOutput;
  * based on the "selected" component. I.e. when a new tab is selected the action
  * buttons have to be adjusted.
  * 'restore' means the attribute is managed by the tabbed pane. As a result,
- * when a componet is added or re-added after having been removed (aka closed)
+ * when a component is added or re-added after having been removed (aka closed)
  * these attributes need to be restored.
  * @author ivan
  */

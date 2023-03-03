@@ -118,7 +118,7 @@ public class AddComponents_SWING extends ExtJellyTestCase {
         palette.collapseSwingWindows();
         palette.collapseAWT();
         palette.expandSwingControls();
-        //Read all simple swing componet
+        //Read all simple swing component
 
         //
         

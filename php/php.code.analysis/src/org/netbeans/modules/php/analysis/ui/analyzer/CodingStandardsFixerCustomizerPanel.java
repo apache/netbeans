@@ -97,12 +97,12 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
     private void initEnabledCheckBox() {
         assert EventQueue.isDispatchThread();
         enabledCheckBox.addItemListener((e) -> {
-            setAllComponetsEnabled(enabledCheckBox.isSelected());
+            setAllComponentsEnabled(enabledCheckBox.isSelected());
             setCodingStandardsFixerEnabled();
         });
         boolean isEnabled = settings.getBoolean(ENABLED, false);
         enabledCheckBox.setSelected(isEnabled);
-        setAllComponetsEnabled(isEnabled);
+        setAllComponentsEnabled(isEnabled);
         enabledCheckBox.addItemListener(e -> {
             if (!enabledCheckBox.isSelected()) {
                 context.setError(null);
@@ -225,7 +225,7 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
         return true;
     }
 
-    private void setAllComponetsEnabled(boolean isEnabled) {
+    private void setAllComponentsEnabled(boolean isEnabled) {
         Component[] components = getComponents();
         for (Component component : components) {
             if (component != enabledCheckBox) {

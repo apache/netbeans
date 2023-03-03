@@ -66,7 +66,7 @@ public class BugzillaConfiguration {
     }
 
     /**
-     * Returns the componets for the given product or all known components if product is null
+     * Returns the components for the given product or all known components if product is null
      *
      * @param repository
      * @param product

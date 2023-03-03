@@ -90,12 +90,12 @@ public class PHPStanCustomizerPanel extends JPanel {
     private void initEnabledCheckBox() {
         assert EventQueue.isDispatchThread();
         phpStanEnabledCheckBox.addItemListener(e -> {
-            setAllComponetsEnabled(phpStanEnabledCheckBox.isSelected());
+            setAllComponentsEnabled(phpStanEnabledCheckBox.isSelected());
             setPHPStanEnabled();
         });
         boolean isEnabled = settings.getBoolean(ENABLED, false);
         phpStanEnabledCheckBox.setSelected(isEnabled);
-        setAllComponetsEnabled(isEnabled);
+        setAllComponentsEnabled(isEnabled);
         phpStanEnabledCheckBox.addItemListener(e -> {
             if (!phpStanEnabledCheckBox.isSelected()) {
                 context.setError(null);
@@ -202,7 +202,7 @@ public class PHPStanCustomizerPanel extends JPanel {
         return true;
     }
 
-    private void setAllComponetsEnabled(boolean isEnabled) {
+    private void setAllComponentsEnabled(boolean isEnabled) {
         Component[] components = getComponents();
         for (Component component : components) {
             if (component != phpStanEnabledCheckBox) {

@@ -433,7 +433,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
     }
 
     /** Descriptor can be cached and reused. We need to remove listeners
-     *  from descriptor, buttons and disconnect componets from container hierarchy.
+     *  from descriptor, buttons and disconnect components from container hierarchy.
      */
     private void uninitializePresenter() {
         descriptor.removePropertyChangeListener(this);

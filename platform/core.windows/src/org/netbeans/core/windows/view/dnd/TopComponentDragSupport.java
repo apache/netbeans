@@ -52,7 +52,7 @@ import org.openide.windows.TopComponent;
 
 
 /**
- * Window system drag support for <code>TopComponet</code>'s.
+ * Window system drag support for <code>TopComponent</code>'s.
  * It imitates role of drag gesture recognizer, possible
  * on any kind of <code>Component</code>, currently on <code>Tabbed</code>.
  * Starts also programatically the DnD for TopComponent in container

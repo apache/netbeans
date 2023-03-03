@@ -175,7 +175,7 @@ public class FormattingOptionsOperator extends NbDialogOperator {
 
         @Override
         public String getDescription() {
-            return "Componet labeled by " + label;
+            return "Component labeled by " + label;
         }
     }
 

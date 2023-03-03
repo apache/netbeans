@@ -65,7 +65,7 @@ public final class RegistryImpl extends Object implements TopComponent.Registry 
     public RegistryImpl() {
     }
     
-    /** Get all opened componets in the system.
+    /** Get all opened components in the system.
      *
      * @return immutable set of {@link TopComponent}s
      */

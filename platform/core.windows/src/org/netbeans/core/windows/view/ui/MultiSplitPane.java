@@ -117,7 +117,7 @@ public class MultiSplitPane extends JPanel
         List<Component> updatedComponents = collectComponents();
         
         ArrayList<Component> removed = new ArrayList<Component>( currentComponents );
-        removed.removeAll( updatedComponents ); //componets that were removed from the split
+        removed.removeAll( updatedComponents ); //components that were removed from the split
         ArrayList<Component> added = new ArrayList<Component>( updatedComponents );
         added.removeAll( currentComponents ); //components that were added to the split
         

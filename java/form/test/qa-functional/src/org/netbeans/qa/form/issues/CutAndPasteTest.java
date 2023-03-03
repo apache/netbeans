@@ -31,7 +31,7 @@ import org.netbeans.jemmy.operators.JTreeOperator;
 import org.netbeans.junit.NbModuleSuite;
 
 /**
- * Issue #103199 test - Undo after Cut&Paste removes componets from designer
+ * Issue #103199 test - Undo after Cut&Paste removes components from designer
  * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=103199">issue</a>
  *
  * @author Jiri Vagner

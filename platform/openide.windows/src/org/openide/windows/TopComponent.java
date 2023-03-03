@@ -1527,7 +1527,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
          */
         public static final String PROP_TC_CLOSED = "tcClosed"; // NOI18N
         
-        /** Get reference to a set of all opened componets in the system.
+        /** Get reference to a set of all opened components in the system.
         *
         * @return live read-only set of {@link TopComponent}s
         */

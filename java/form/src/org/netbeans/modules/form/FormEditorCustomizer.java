@@ -98,7 +98,7 @@ public final class FormEditorCustomizer extends JPanel implements  ActionListene
         cbAutoI18n.addItem(loc("CTL_AUTO_RESOURCE_ON")); // NOI18N
         cbAutoI18n.addItem(loc("CTL_AUTO_RESOURCE_OFF")); // NOI18N
 
-        JLabel generateComponetsLabel = new JLabel(loc("Generate_Components")); // NOI18N
+        JLabel generateComponentsLabel = new JLabel(loc("Generate_Components")); // NOI18N
         JLabel variableModifierLabel = new JLabel();
         JLabel layoutStyleLabel = new JLabel();
         JLabel componentNamesLabel = new JLabel();
@@ -119,7 +119,7 @@ public final class FormEditorCustomizer extends JPanel implements  ActionListene
         loc(cbPaintLayout, "Paint_Layout"); // NOI18N
         loc(codeGenSettingsHint, "Code_Settings_Hint"); // NOI18N
 
-        generateComponetsLabel.setToolTipText(loc("Generate_Components_Hint")); // NOI18N
+        generateComponentsLabel.setToolTipText(loc("Generate_Components_Hint")); // NOI18N
         variableModifierLabel.setToolTipText(loc("HINT_VARIABLES_MODIFIER")); // NOI18N
         layoutStyleLabel.setToolTipText(loc("HINT_LAYOUT_CODE_TARGET")); // NOI18N
         componentNamesLabel.setToolTipText(loc("HINT_AUTO_SET_COMPONENT_NAME")); // NOI18N
@@ -144,7 +144,7 @@ public final class FormEditorCustomizer extends JPanel implements  ActionListene
         selectionBorderColLabel.setLabelFor(selectionBorderColEditor);
         gridSizeLabel.setLabelFor(spGridSize);
 
-        brandVisibility("rbGenerateLocals", generateComponetsLabel, rbGenerateLocals, rbGenerateFields); // NOI18N
+        brandVisibility("rbGenerateLocals", generateComponentsLabel, rbGenerateLocals, rbGenerateFields); // NOI18N
         brandVisibility("cbModifier", variableModifierLabel, cbModifier); // NOI18N
         brandVisibility("cbListenerStyle", listenerStyleLabel, cbListenerStyle); // NOI18N
         brandVisibility("cbAutoI18n", autoI18nLabel, cbAutoI18n); // NOI18N
@@ -163,7 +163,7 @@ public final class FormEditorCustomizer extends JPanel implements  ActionListene
         setLayout(layout);
 
         GroupLayout.ParallelGroup labelHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
-        addComponent(generateComponetsLabel, labelHorizontalGroup);
+        addComponent(generateComponentsLabel, labelHorizontalGroup);
         addComponent(variableModifierLabel, labelHorizontalGroup);
         addComponent(componentNamesLabel, labelHorizontalGroup);
         addComponent(listenerStyleLabel, labelHorizontalGroup);
@@ -205,7 +205,7 @@ public final class FormEditorCustomizer extends JPanel implements  ActionListene
         GroupLayout.SequentialGroup verticalGroup = layout.createSequentialGroup();
         verticalGroup.addContainerGap();
         addLine(layout, verticalGroup, GroupLayout.Alignment.BASELINE,
-                generateComponetsLabel, rbGenerateLocals);
+                generateComponentsLabel, rbGenerateLocals);
         addComponent(rbGenerateFields, verticalGroup);
         addLine(layout, verticalGroup, GroupLayout.Alignment.BASELINE,
                 variableModifierLabel, cbModifier);

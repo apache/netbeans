@@ -50,7 +50,7 @@ public class TestInstallerAndUninstallerJava extends Installer{
 
         // Pages
           // Apache
-        Utils.stepChooseComponet( "Apache Tomcat", data );
+        Utils.stepChooseComponent( "Apache Tomcat", data );
         // Welcome
         Utils.stepWelcome();
         // Agreement

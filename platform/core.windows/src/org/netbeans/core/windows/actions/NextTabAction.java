@@ -33,7 +33,7 @@ import java.util.List;
 
 
 /**
- * Action which selects next TopComponetn in container.
+ * Action which selects next TopComponent in container.
  *
  * @author  Peter Zavadsky
  */

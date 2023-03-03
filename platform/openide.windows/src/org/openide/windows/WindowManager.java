@@ -203,7 +203,7 @@ public abstract class WindowManager extends Object implements Serializable {
     public abstract Workspace getCurrentWorkspace();
 
     /** Finds <code>TopComponentGroup</code> of given name.
-     * @return instance of TopComponetnGroup or null
+     * @return instance of TopComponentGroup or null
      * @since 4.13 */
     public abstract TopComponentGroup findTopComponentGroup(String name);
 

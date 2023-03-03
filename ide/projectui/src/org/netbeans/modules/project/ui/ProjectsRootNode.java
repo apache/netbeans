@@ -863,7 +863,7 @@ public class ProjectsRootNode extends AbstractNode {
             return original;
         }
         
-        /** Special version of to Strign used for logging as original toString uses display name
+        /** Special version of to String used for logging as original toString uses display name
          * => can cause deadlock issue #160512 */
         private String toStringForLog() {
             return getClass().getName() + "@" + Integer.toHexString(hashCode()) //NOI18N

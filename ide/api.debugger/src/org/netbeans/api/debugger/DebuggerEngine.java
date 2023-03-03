@@ -50,7 +50,7 @@ import org.netbeans.spi.debugger.ContextProvider;
  *    engine.getActionsManager ().doAction (ActionsManager.ACTION_KILL);</pre>
  *
  * <br>
- * <b>Support for aditional services:</b>
+ * <b>Support for additional services:</b>
  *    DebuggerEngine is final class. That is why the standard method how to 
  *    extend its functionality is using lookup methods ({@link #lookup} and 
  *    {@link #lookupFirst}).

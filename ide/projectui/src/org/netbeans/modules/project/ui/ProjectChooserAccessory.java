@@ -502,7 +502,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         displayNameTask = null;
     }
 
-    // Aditional innerclasses for the file chooser -----------------------------
+    // Additional innerclasses for the file chooser -----------------------------
 
     private static class ProjectFileChooser extends JFileChooser {
 

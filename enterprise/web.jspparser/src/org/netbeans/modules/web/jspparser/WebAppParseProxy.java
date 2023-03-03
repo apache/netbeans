@@ -31,7 +31,7 @@ import org.openide.filesystems.FileObject;
  *
  * Among other things, it does the following to correctly manage the development cycle:
  * <ul>
- *   <li>Creates the correct classloader for loading JavaBeans, tag hanlders and other classes managed by the application.</li>
+ *   <li>Creates the correct classloader for loading JavaBeans, tag handlers and other classes managed by the application.</li>
  *   <li>Caches the ServletContext (needed by the parser) corresponding to the application.</li>
  *   <li>Listens on changes in the application and releases caches as needed.</li>
  * </ul>

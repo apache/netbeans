@@ -215,7 +215,7 @@ public class PropertiesFileEntry extends PresentableFileEntry
     }
 
     /** Gets struct handler for this entry. 
-     * @return <StructHanlder</code> for this entry */
+     * @return <StructHandler</code> for this entry */
     public StructHandler getHandler() {
         if (propStruct == null) {
             propStruct = new StructHandler(this);

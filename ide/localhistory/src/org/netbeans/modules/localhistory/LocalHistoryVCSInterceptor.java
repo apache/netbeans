@@ -89,7 +89,7 @@ class LocalHistoryVCSInterceptor extends VCSInterceptor {
         if(!accept(file)) {
             return false;
         }
-        toBeDeleted.add(file); // XXX do this with a hanlder, get the correct ts
+        toBeDeleted.add(file); // XXX do this with a handler, get the correct ts
         getStore().waitForProcessedStoring(file, "beforeDelete"); // NOI18N
         
         return false;

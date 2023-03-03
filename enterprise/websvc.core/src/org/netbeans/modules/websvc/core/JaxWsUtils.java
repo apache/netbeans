@@ -1758,7 +1758,7 @@ public class JaxWsUtils {
     /**
      * Retrieve SOAP handler for given WSDL model.
      * @param model the WSDL model the handler is for.
-     * @return the hanlder or null if none exist.
+     * @return the handler or null if none exist.
      */
     public static FileObject getSoapHandler(
             WsdlModel model) {

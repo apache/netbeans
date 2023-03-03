@@ -162,7 +162,7 @@ public class ETableColumn extends TableColumn implements Comparable<ETableColumn
     }
     
     /**
-     * Returns the comparator used for sorting. The returned comparaotor
+     * Returns the comparator used for sorting. The returned comparator
      * operates over ETable.RowMapping objects.
      */
     Comparator<ETable.RowMapping> getComparator() {

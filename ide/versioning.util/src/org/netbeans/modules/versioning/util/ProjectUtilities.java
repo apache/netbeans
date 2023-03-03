@@ -99,7 +99,7 @@ public final class ProjectUtilities {
 
             public void run () {
                 if (ptLogicalExplorerManager == null) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Cannot find Project widnow, aborting.");
+                    Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Cannot find Project window, aborting.");
                     return;
                 }
                 Node root = ptLogicalExplorerManager.getExplorerManager ().getRootContext ();

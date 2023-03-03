@@ -215,7 +215,7 @@ public class VisualReplicator {
         }
 
         if (getDesignRestrictions() && clone instanceof RootPaneContainer && clone instanceof Window) {
-            // For a custom widnow we show its root pane (so not just the container delegate) in the
+            // For a custom window we show its root pane (so not just the container delegate) in the
             // design view so there is the maximum of the superclass visible. We need to remember
             // the window instance to be able to determine the real container delegate and to set
             // the window bean properties (might affect a subcomponent, so be visible in the designer).

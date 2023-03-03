@@ -108,7 +108,11 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
         int controllerPort = CONTROLLER_PORT;
         String adminPort = this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT);
         if(adminPort != null) {
-            controllerPort = Integer.parseInt(this.instanceProperties.getProperty(PROPERTY_ADMIN_PORT));
+            controllerPort = Integer.parseInt(adminPort);
+        }
+        String portOffSet = this.instanceProperties.getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET);
+         if(portOffSet != null) {
+            controllerPort = controllerPort + Integer.parseInt(portOffSet);
         }
         if (username != null && password != null) {
             this.client = new WildflyClient(instanceProperties, version, getHost(), controllerPort, username, password);
@@ -364,9 +368,15 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
     }
 
     public int getPort() {
-        String port = InstanceProperties.getInstanceProperties(realUri).
+        String httpPort = InstanceProperties.getInstanceProperties(realUri).
                 getProperty(WildflyPluginProperties.PROPERTY_PORT);
-        return Integer.parseInt(port);
+        String offSet = InstanceProperties.getInstanceProperties(realUri)
+                .getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET);
+        int port = Integer.parseInt(httpPort);
+        if (offSet != null) {
+            port = port + Integer.parseInt(offSet);
+        }
+        return port;
     }
 
     public Version getServerVersion() {

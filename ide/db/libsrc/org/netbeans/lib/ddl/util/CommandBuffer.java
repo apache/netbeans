@@ -28,7 +28,7 @@ import org.netbeans.lib.ddl.*;
 * - Optimized connection handling. Buffer opens JDBC connection before executing
 * of first command and closes it after a last one. It's safely then manually
 * handling connection and better then leaving commands open and close connection
-* for each comand separately.
+* for each command separately.
 * - Exception handler. You can assign an exception handler to buffer. When any
 * error occures during the execution, this handler catches it and lets user to
 * decide if continue or not (when you're dropping nonexisting table, you probably
@@ -96,7 +96,7 @@ public class CommandBuffer
     * Buffer opens JDBC connection before executing (if isn't already open)
     * of first command and closes it after a last one. It's safely then manually
     * handling connection and better then leaving commands open and close connection
-    * for each comand separately. You can also assign an exception handler to buffer.
+    * for each command separately. You can also assign an exception handler to buffer.
     * When any error occures during the execution, this handler catches it and lets user to
     * decide if continue or not (when you're dropping nonexisting table, you probably
     * would like to continue).

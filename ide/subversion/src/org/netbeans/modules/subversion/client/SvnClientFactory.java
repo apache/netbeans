@@ -216,7 +216,7 @@ public class SvnClientFactory {
                 if(setupJavaHl()) {
                     return;
                 }
-                LOG.log(Level.INFO, "JavaHL not available. Falling back on comandline.");
+                LOG.log(Level.INFO, "JavaHL not available. Falling back on commandline.");
                 setupCommandline();
             } else if(factoryType.trim().equals(FACTORY_TYPE_COMMANDLINE)) {
                 setupCommandline();

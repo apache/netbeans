@@ -24,7 +24,7 @@ import org.netbeans.modules.sendopts.OptionImpl;
 import org.netbeans.spi.sendopts.Env;
 import org.netbeans.spi.sendopts.Option;
 
-/** Default options that work with additonal arguments.
+/** Default options that work with additional arguments.
  *
  * @author Jaroslav Tulach
  */

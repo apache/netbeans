@@ -69,7 +69,7 @@ final class AdditionalWizardPanel extends JPanel {
     
     /** Empty component to show when no additional values are supported. */
     private static final JLabel EMPTY_COMPONENT = 
-                         new JLabel(Util.getString("TXT_HasNoAdditonal"));//NOI18N
+                         new JLabel(Util.getString("TXT_HasNoAdditional"));//NOI18N
     
     
     /** Creates new form HardCodedStringsPanel */
@@ -218,7 +218,7 @@ final class AdditionalWizardPanel extends JPanel {
         private transient AdditionalWizardPanel additionalPanel;
 
         Panel () {
-            emptyLabel = new JLabel(Util.getString("TXT_HasNoAdditonal"));//NOI18N
+            emptyLabel = new JLabel(Util.getString("TXT_HasNoAdditional"));//NOI18N
             emptyLabel.setHorizontalAlignment(JLabel.CENTER);
             emptyLabel.setVerticalAlignment(JLabel.CENTER);
         }        

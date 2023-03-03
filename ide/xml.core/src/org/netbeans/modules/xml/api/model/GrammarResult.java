@@ -24,7 +24,7 @@ import javax.swing.Icon;
 import org.netbeans.api.annotations.common.CheckForNull;
 
 /**
- * It represents additonal properties of a result option.
+ * It represents additional properties of a result option.
  * <p>
  * It enriches DOM Node with information useful for presenting
  * query result option to a user. Also all children or siblings of this

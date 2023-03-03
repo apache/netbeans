@@ -215,7 +215,7 @@ public abstract class ProductConfigurationLogic {
         return 10;
     }
     /** 
-     * Get additonal information about the product that is used during system integration
+     * Get additional information about the product that is used during system integration
      */
     public Map <String, Object> getAdditionalSystemIntegrationInfo() {
         return new HashMap<String, Object>();

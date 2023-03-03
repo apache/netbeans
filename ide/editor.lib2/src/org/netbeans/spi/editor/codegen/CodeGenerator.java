@@ -60,7 +60,7 @@ public interface CodeGenerator {
         /**
          * Creates code generators valid for the particular context.
          * @param context Contains an instance of
-         * {@link javax.swing.text.JTextComponent} by default. Additonal content
+         * {@link javax.swing.text.JTextComponent} by default. Additional content
          * could be added by the {@link CodeGeneratorContextProvider} registered
          * for the mime type.
          * @return the list of created code generators. An empty list should be

@@ -81,7 +81,7 @@ public final class ZOrderManager extends WindowAdapter {
         logger.entering(getClass().getName(), "attachWindow");
 
         if (!(rpc instanceof Window)) {
-            throw new IllegalArgumentException("Argument must be subclas of java.awt.Window: " + rpc);   //NOI18N
+            throw new IllegalArgumentException("Argument must be subclass of java.awt.Window: " + rpc);   //NOI18N
         }
         if (getWeak(rpc) != null) {
             throw new IllegalArgumentException("Window already attached: " + rpc);   //NOI18N
@@ -97,7 +97,7 @@ public final class ZOrderManager extends WindowAdapter {
         logger.entering(getClass().getName(), "detachWindow");
 
         if (!(rpc instanceof Window)) {
-            throw new IllegalArgumentException("Argument must be subclas of java.awt.Window: " + rpc);   //NOI18N
+            throw new IllegalArgumentException("Argument must be subclass of java.awt.Window: " + rpc);   //NOI18N
         }
 
         WeakReference<RootPaneContainer> ww = getWeak(rpc);

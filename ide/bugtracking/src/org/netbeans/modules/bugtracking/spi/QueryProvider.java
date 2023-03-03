@@ -60,7 +60,7 @@ public interface QueryProvider<Q, I> {
      * Determines whether it is possible to remove the given Query.
      * 
      * @param q the particular query instance
-     * @return  <code>true</code> in case it is possible to remove the query, otherwise <code>fasle</code>
+     * @return  <code>true</code> in case it is possible to remove the query, otherwise <code>false</code>
      * @since 1.85
      */
     public boolean canRemove(Q q);
@@ -81,7 +81,7 @@ public interface QueryProvider<Q, I> {
      * Determines whether it is possible to rename the given Query.
      * 
      * @param q the particular query instance
-     * @return <code>true</code> in case it is possible to rename the query, otherwise <code>fasle</code>
+     * @return <code>true</code> in case it is possible to rename the query, otherwise <code>false</code>
      * @since 1.85
      */
     public boolean canRename(Q q);

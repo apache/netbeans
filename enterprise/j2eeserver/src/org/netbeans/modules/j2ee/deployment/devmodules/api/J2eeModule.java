@@ -123,7 +123,7 @@ public class J2eeModule {
     
     
     /**
-     * Enterprise resorce directory property
+     * Enterprise resource directory property
      */
     public static final String PROP_RESOURCE_DIRECTORY = "resourceDir"; // NOI18N
     

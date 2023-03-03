@@ -151,8 +151,8 @@ public class JaxWsClientChildren extends Children.Keys<WsdlService> {
                 // copy resources to WEB-INF[META-INF]/wsdl/
                 FileObject sourceRoot = getNode().getLookup().lookup(FileObject.class);
                 Project project = FileOwnerQuery.getOwner(srcRoot);
-                FileObject xmlResorcesFo = support.getLocalWsdlFolderForClient(clientName, false);
-                if (xmlResorcesFo != null) {
+                FileObject xmlResourcesFo = support.getLocalWsdlFolderForClient(clientName, false);
+                if (xmlResourcesFo != null) {
                     FileObject webInfWsdlFolder = support.getWsdlFolder(true);
                     if (webInfWsdlFolder != null) {
                         try {
@@ -161,7 +161,7 @@ public class JaxWsClientChildren extends Children.Keys<WsdlService> {
                             if (jaxWsCatalog != null && catalog != null) {
                                 CatalogUtils.copyCatalogEntriesForClient(catalog, jaxWsCatalog, clientName);
                             }
-                            WSUtils.copyFiles(xmlResorcesFo, webInfWsdlFolder);
+                            WSUtils.copyFiles(xmlResourcesFo, webInfWsdlFolder);
                         } catch (IOException ex) {
                             Logger.getLogger(JaxWsClientChildren.class.getName()).log(Level.INFO, "Cannot copy files to "+webInfWsdlFolder, ex);
                         }

@@ -144,7 +144,7 @@ public class AttributesTestHidden extends TestBaseHid {
         assertTrue (TEST_ERR,testedFS != null);
         if (testedFS.isReadOnly ()) return;                
         
-        /** This test expects that gets testedFS where exists next resorce*/
+        /** This test expects that gets testedFS where exists next resource*/
         FileObject backup = testedFS.findResource ("/compatibility/filesystem.attributes.backup");
         assertTrue (TEST_ERR,backup != null);
         FileLock lock = backup.lock();        
@@ -166,7 +166,7 @@ public class AttributesTestHidden extends TestBaseHid {
         assertTrue (TEST_ERR,testedFS != null);
         if (testedFS.isReadOnly ()) return;                
         
-        /** This test expects that gets testedFS where exists next resorce*/
+        /** This test expects that gets testedFS where exists next resource*/
         FileObject testedFo = testedFS.findResource ("/compatibility");
         assertTrue (TEST_ERR,testedFo != null);
                 

@@ -43,7 +43,7 @@
             </module-dependencies>
             <friend-packages>
                 <friend>org.exampleorg.module.examplemodule</friend>
-                <package>org.netbeaans.examples.modules.action</package>
+                <package>org.netbeans.examples.modules.action</package>
             </friend-packages>
         </data>
     </configuration>

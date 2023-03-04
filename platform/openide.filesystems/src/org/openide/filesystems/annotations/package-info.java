@@ -104,19 +104,19 @@ public class FrobnitzFactoryProcessor extends LayerGeneratingProcessor {
  * </pre>
  * <p>Now when the module is compiled, {@code build/classes/META-INF/generated-layer.xml}
  * should look something like this:</p>
- * <pre>
-&lt;filesystem>
-    &lt;folder name="FrobnitzFactories">
-        &lt;folder name="text">
-            &lt;folder name="html">
-                &lt;file name="my-module-HtmlFactory.instance">
-                    &lt;attr name="position" intvalue="300"/>
-                &lt;/file>
-            &lt;/folder>
-        &lt;/folder>
-    &lt;/folder>
-&lt;/filesystem>
- * </pre>
+ * <pre>{@code
+<filesystem>
+    <folder name="FrobnitzFactories">
+        <folder name="text">
+            <folder name="html">
+                <file name="my-module-HtmlFactory.instance">
+                    <attr name="position" intvalue="300"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>
+ * }</pre>
  * <p>and this layer should be loaded automatically by the module system
  * (in addition to any explicit layer specified in source code).</p>
  * <p>There are two basic ways to test a layer-generating processor:</p>

@@ -28,21 +28,21 @@ package org.netbeans.spi.quicksearch;
  * providers, implementations of SearchProvider must be registered through xml
  * layer in following way:
  * 
- * <pre>
- *  &lt;folder name="QuickSearch"&gt;
- *      &lt;folder name="MyCategoryID"&gt;
- *          &lt;!--Attribute for localization - provide localized display name of category!--&gt;
- *          &lt;attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.yourmodule.YourBundle"/>
- *          &lt;!--Attribute for command prefix - used to narrow search to this category only!--&gt;
- *          &lt;attr name="command" stringvalue="p"/>
- *          &lt;!--Attribute for category ordering!--&gt;
- *          &lt;attr name="position" intvalue="200"/&gt;
- *          &lt;!--Note that multiple providers can contribute to one category!--&gt;
- *          &lt;file name="org-netbeans-module2-package2-MySearchProviderImpll.instance"/&gt;
- *          &lt;file name="org-netbeans-module2-package3-MySearchProviderImpl2.instance"/&gt;
- *      &lt;/folder&gt;
- *  &lt;/folder&gt;
- * </pre>
+ * <pre>{@code
+ *  <folder name="QuickSearch">
+ *      <folder name="MyCategoryID">
+ *          <!--Attribute for localization - provide localized display name of category!-->
+ *          <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.yourmodule.YourBundle"/>
+ *          <!--Attribute for command prefix - used to narrow search to this category only!-->
+ *          <attr name="command" stringvalue="p"/>
+ *          <!--Attribute for category ordering!-->
+ *          <attr name="position" intvalue="200"/>
+ *          <!--Note that multiple providers can contribute to one category!-->
+ *          <file name="org-netbeans-module2-package2-MySearchProviderImpll.instance"/>
+ *          <file name="org-netbeans-module2-package3-MySearchProviderImpl2.instance"/>
+ *      </folder>
+ *  </folder>
+ * }</pre>
  * 
  * @author  Jan Becicka, Dafe Simonek
  */

@@ -45,14 +45,14 @@ import org.openide.xml.XMLUtil;
 public final class XMLPropertiesConvertor extends Convertor implements PropertyChangeListener {
     /** file attribute containnig value whether the setting object will be
      * stored automaticaly (preventStoring==false) or SaveCookie will be provided.
-     * Default value is <code>preventStoring==false</code>. Usage
-     * <code>&lt;attr name="xmlproperties.preventStoring" boolvalue="[true|false]"/>
-     * </code>
+     * Default value is <pre>{@code preventStoring==false}</pre>. Usage
+     * <pre>{@code <attr name="xmlproperties.preventStoring" boolvalue="[true|false]"/>
+     * }</pre>
      */
     public static final String EA_PREVENT_STORING = "xmlproperties.preventStoring"; //NOI18N
     /** file attribute containnig list of property names their changes will be ignored. Usage
-     * <code>&lt;attr name="xmlproperties.ignoreChanges" stringvalue="name[, ...]"/>
-     * </code>
+     * <pre>{@code <attr name="xmlproperties.ignoreChanges" stringvalue="name[, ...]"/>
+     * }</pre>
      */
     public static final String EA_IGNORE_CHANGES = "xmlproperties.ignoreChanges"; //NOI18N
     private FileObject providerFO;

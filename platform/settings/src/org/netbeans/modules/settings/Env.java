@@ -36,42 +36,42 @@ import org.openide.util.Lookup;
  */
 public final class Env implements Environment.Provider {
     /** file attribute containing convertor object. Usage 
-     * <code>&lt;attr name="settings.convertor" methodvalue="org.netbeans.modules.settings.XMLPropertiesConvertor.create"/>
-     * </code>
+     * <pre>{@code <attr name="settings.convertor" methodvalue="org.netbeans.modules.settings.XMLPropertiesConvertor.create"/>
+     * }</pre>
      */
     public static final String EA_CONVERTOR = "settings.convertor"; //NOI18N
     /** file attribute containing path to the provider. Used by
      * InstanceDataObject.create or upgrade algorithm. Usage 
-     * <code>&lt;attr name="settings.providerPath" stringvalue="xml/lookups/NetBeans/DTD_XML_Properties_1_0.instance"/>
-     * </code>
+     * <pre>{@code <attr name="settings.providerPath" stringvalue="xml/lookups/NetBeans/DTD_XML_Properties_1_0.instance"/>
+     * }</pre>
      */
     public static final String EA_PROVIDER_PATH = "settings.providerPath"; // NOI18N
     /** file attribute containing PUBLIC attribute of xml header. Usage
-     * <code>&lt;attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD XML Properties 1.0//EN"/>
-     * </code>
+     * <pre>{@code <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD XML Properties 1.0//EN"/>
+     * }</pre>
      */
     public static final String EA_PUBLICID = "hint.originalPublicID"; // NOI18N
     /** file attribute containnig class name of the setting object. Usage
-     * <code>&lt;attr name="settings.instanceClass" stringvalue="org.netbeans.modules.foo.Foo"/>
-     * </code>
+     * <pre>{@code <attr name="settings.instanceClass" stringvalue="org.netbeans.modules.foo.Foo"/>
+     * }</pre>
      */
     public static final String EA_INSTANCE_CLASS_NAME = "settings.instanceClass"; //NOI18N
     /** file attribute containnig class name and subclass names of the setting object. Use the
      * attribute for performance reasons. Usage
-     * <code>&lt;attr name="settings.instanceOf" stringvalue="org.netbeans.modules.foo.Foo[, ...]"/>
-     * </code>
+     * <pre>{@code <attr name="settings.instanceOf" stringvalue="org.netbeans.modules.foo.Foo[, ...]"/>
+     * }</pre>
      */
     public static final String EA_INSTANCE_OF = "settings.instanceOf"; //NOI18N
     /** file attribute containnig the setting object. Usage
-     * <code>&lt;attr name="settings.instanceCreate" newvalue="org.netbeans.modules.foo.Foo"/>
-     * </code> or
-     * <code>&lt;attr name="settings.instanceCreate" methodvalue="org.netbeans.modules.foo.Foo.create"/>
-     * </code>
+     * <pre>{@code <attr name="settings.instanceCreate" newvalue="org.netbeans.modules.foo.Foo"/>
+     * }</pre> or
+     * <pre>{@code <attr name="settings.instanceCreate" methodvalue="org.netbeans.modules.foo.Foo.create"/>
+     * }</pre>
      */
     public static final String EA_INSTANCE_CREATE = "settings.instanceCreate"; //NOI18N
     /** file attribute determining whether the registration works also for subclasses of the registering
      * class. Use of this attribute is optional. The default is false, the value must be boolean, example:
-     * <code>&lt;attr name="settings.subclasses" boolvalue="true"/&gt;</code>
+     * <pre>{@code <attr name="settings.subclasses" boolvalue="true"/>}</pre>
      */
     public static final String EA_SUBCLASSES = "settings.subclasses"; // NOI18N
     

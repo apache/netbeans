@@ -42,12 +42,12 @@ public final class FoldingSupport {
      * starts with a String, which is stored under 'tokenId' key in the params map.
      * <p/>
      * The method is designed to be called from the filesystem layer as follows:
-     * <code><pre>
-     * &lt;file name="my-custom-foldmanager.instance">
-     * &lt;attr name="instanceCreate" methodvalue="org.netbeans.api.editor.fold.FoldUtilities.createUserFoldManager"/>
-     * &lt;attr name="tokenid" stringvalue="comment"/>
-     * &lt;/file>
-     * </pre></code>
+     * <pre>{@code
+     * <file name="my-custom-foldmanager.instance">
+     *  <attr name="instanceCreate" methodvalue="org.netbeans.api.editor.fold.FoldUtilities.createUserFoldManager"/>
+     *  <attr name="tokenid" stringvalue="comment"/>
+     * </file>
+     * }</pre>
      *
      * @param map the configuration parameters.
      * @return FoldManagerFactory instance

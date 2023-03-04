@@ -15,7 +15,7 @@ ${licensePrefix}to you under the Apache License, Version 2.0 (the
 ${licensePrefix}"License"); you may not use this file except in compliance
 ${licensePrefix}with the License.  You may obtain a copy of the License at
 ${licensePrefix?replace(" +$", "", "r")}
-${licensePrefix}  http://www.apache.org/licenses/LICENSE-2.0
+${licensePrefix}  https://www.apache.org/licenses/LICENSE-2.0
 ${licensePrefix?replace(" +$", "", "r")}
 ${licensePrefix}Unless required by applicable law or agreed to in writing,
 ${licensePrefix}software distributed under the License is distributed on an

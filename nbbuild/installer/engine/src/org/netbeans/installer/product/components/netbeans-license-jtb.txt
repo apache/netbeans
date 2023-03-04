@@ -6,7 +6,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+#   https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -148,21 +148,21 @@ This General Public License does not permit incorporating your program into prop
 
 "CLASSPATH" EXCEPTION TO THE GPL VERSION 2
 
-Certain source files distributed by Sun Microsystems, Inc.  are subject to 
+Certain source files distributed by Sun Microsystems, Inc.ï¿½ are subject to 
 the following clarification and special exception to the GPL Version 2, but only where Sun has expressly included in the particular source file's header the words 
 "Sun designates this particular file as subject to the "Classpath" exception as provided by Sun in the License file that accompanied this code." 
 
-   Linking this library statically or dynamically with other modules is making a combined work based on this library.  Thus, the terms and conditions of the GNU General Public License Version 2 cover the whole combination. 
+ï¿½ï¿½ Linking this library statically or dynamically with other modules is making a combined work based on this library.ï¿½ Thus, the terms and conditions of the GNU General Public License Version 2 cover the whole combination. 
 
-   As a special exception, the copyright holders of this library give you 
+ï¿½ï¿½ As a special exception, the copyright holders of this library give you 
 permission to link this library with independent modules to produce an 
 executable, regardless of the license terms of these independent modules, 
 and to copy and distribute the resulting executable under terms of your 
 choice, provided that you also meet, for each linked independent module, 
-the terms and conditions of the license of that module.  An independent 
-module is a module which is not derived from or based on this library.  If 
+the terms and conditions of the license of that module.ï¿½ An independent 
+module is a module which is not derived from or based on this library.ï¿½ If 
 you modify this library, you may extend this exception to your version of 
-the library, but you are not obligated to do so.  If you do not wish to do 
+the library, but you are not obligated to do so.ï¿½ If you do not wish to do 
 so, delete this exception statement from your version.
 
 
@@ -496,7 +496,7 @@ APPLY TO YOU.
 
 The Covered Software is a "commercial item," as that term is
 defined in 48 C.F.R. 2.101 (Oct. 1995), consisting of "commercial
-computer software" (as that term is defined at 48 C.F.R. ¤
+computer software" (as that term is defined at 48 C.F.R. ï¿½
 252.227-7014(a)(1)) and "commercial computer software
 documentation" as such terms are used in 48 C.F.R. 12.212 (Sept.
 1995). Consistent with 48 C.F.R. 12.212 and 48 C.F.R. 227.7202-1

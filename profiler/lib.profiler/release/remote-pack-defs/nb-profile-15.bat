@@ -6,7 +6,7 @@
 @rem "License"); you may not use this file except in compliance
 @rem with the License.  You may obtain a copy of the License at
 @rem
-@rem   http://www.apache.org/licenses/LICENSE-2.0
+@rem   https://www.apache.org/licenses/LICENSE-2.0
 @rem
 @rem Unless required by applicable law or agreed to in writing,
 @rem software distributed under the License is distributed on an

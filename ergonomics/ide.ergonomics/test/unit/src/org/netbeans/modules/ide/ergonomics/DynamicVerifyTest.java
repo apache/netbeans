@@ -31,6 +31,7 @@ import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.autoupdate.services.Trampoline;
 import org.netbeans.modules.autoupdate.updateprovider.FeatureItem;
 import org.netbeans.modules.autoupdate.updateprovider.UpdateItemImpl;
+import org.netbeans.modules.ide.ergonomics.fod.FeatureInfo;
 import org.netbeans.modules.ide.ergonomics.fod.FeatureManager;
 import org.netbeans.modules.ide.ergonomics.fod.FoDUpdateUnitProvider;
 import org.netbeans.spi.autoupdate.UpdateItem;
@@ -145,7 +146,23 @@ public class DynamicVerifyTest extends NbTestCase {
         all.put("FineToo", "org.netbeans.modules.project.ui.convertor.ProjectConvertorFactory");
         all.put("MostlyOK", "org.netbeans.modules.java.openjdk.project.FilterStandardProjects");
         all.put("NoProjectFileAvailable", "org.netbeans.modules.cpplite.project.CPPLiteProject$FactoryImpl");
-        all.put("NoProjectFileAvailableRust", "org.netbeans.modules.rust.project.RustProjectFactory");
+
+        /*
+         * The "rust" cluster is not included in all cluster configurations in nbbuild/cluster.properties.
+         * At the time of this writing, "rust" is in "cluster.config=full" but not in "cluster.config=release".
+         * If we add "RustProjectFactory" to the list of project factories to test, then this test will
+         * fail in the "release" configuration, but will pass in the "full" configuration.
+         * In order to avoid this, let's add the RustProjectFactory if and only if "rust" is included in the
+         * current build configuration, this is, if the rust feature is in "FeatureManager.features()".
+        */
+        for (FeatureInfo feature : FeatureManager.features()) {
+            String clusterName = feature.getClusterName();
+            if (clusterName.equals("rust")) {
+                System.out.println("testGetAllProjectFactories: we are testing org.netbeans.modules.rust.project.RustProjectFactory");
+                all.put("NoProjectFileAvailable-rust", "org.netbeans.modules.rust.project.RustProjectFactory");
+                break;
+            }
+        }
 
         iterateRegistrations(sb, ProjectFactory.class, null, all);
         

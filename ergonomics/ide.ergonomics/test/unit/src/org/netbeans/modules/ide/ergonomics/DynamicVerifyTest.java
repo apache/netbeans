@@ -145,6 +145,7 @@ public class DynamicVerifyTest extends NbTestCase {
         all.put("FineToo", "org.netbeans.modules.project.ui.convertor.ProjectConvertorFactory");
         all.put("MostlyOK", "org.netbeans.modules.java.openjdk.project.FilterStandardProjects");
         all.put("NoProjectFileAvailable", "org.netbeans.modules.cpplite.project.CPPLiteProject$FactoryImpl");
+        all.put("NoProjectFileAvailableRust", "org.netbeans.modules.rust.project.RustProjectFactory");
 
         iterateRegistrations(sb, ProjectFactory.class, null, all);
         

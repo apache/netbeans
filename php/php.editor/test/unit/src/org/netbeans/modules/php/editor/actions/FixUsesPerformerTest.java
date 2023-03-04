@@ -351,6 +351,56 @@ public class FixUsesPerformerTest extends PHPTestBase {
         Options options = new Options(false, false, false, false, true);
         performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
     }
+    
+    public void testGH5578_01() throws Exception {
+        String[] selections = new String[] {"\\NS1\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+    
+    public void testGH5578_02() throws Exception {
+        String[] selections = new String[] {"\\NS1\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+    
+    public void testGH5578_03() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\A", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\B", ItemVariant.Type.CLASS));
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", selections, true, options);
+    }
+    
+    public void testGH5578_04() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+    
+    public void testGH5578_05() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+    
+    public void testGH5578_06() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+    
+    public void testGH5578_07() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+    
+    public void testGH5578_08() throws Exception {
+        String[] selections = new String[] {"\\NS1\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
 
     private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final Options options) throws Exception {
         FileObject testFile = getTestFile(fileName);

@@ -56,6 +56,7 @@ public class CommonWireIOTestCase extends CommonProfilerTestCase {
             return running;
         }
 
+        @Override
         public void run() {
             try {
                 ServerSocket serverSocket = new ServerSocket(PORT);

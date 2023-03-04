@@ -42,6 +42,7 @@ public class CPUThread extends Thread {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void run() {
         run512();
         run512();

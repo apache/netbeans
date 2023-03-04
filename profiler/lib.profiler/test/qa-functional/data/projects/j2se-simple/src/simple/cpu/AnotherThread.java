@@ -22,6 +22,7 @@ package simple.cpu;
 class AnotherThread extends Thread {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void run() {
         Region r = new Region();
         r.run1000();

@@ -49,6 +49,7 @@ public class Producer extends Thread {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void run() {
         while (true) {
             int in = (int) (Math.random() * 500);

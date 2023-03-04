@@ -45,6 +45,7 @@ public class DumpStream extends Thread {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void run() {
         String line;
 

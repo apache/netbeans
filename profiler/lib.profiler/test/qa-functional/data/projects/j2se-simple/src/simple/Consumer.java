@@ -49,6 +49,7 @@ public class Consumer extends Thread {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void run() {
         int value = 0;
 

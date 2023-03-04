@@ -27,7 +27,8 @@ import org.openide.loaders.UniFileLoader;
 import org.openide.util.Utilities;
 
 public class MyDataLoaderBeanInfo extends SimpleBeanInfo {
-    
+
+    @Override
     public BeanInfo[] getAdditionalBeanInfo() {
         try {
             return new BeanInfo[] {Introspector.getBeanInfo(UniFileLoader.class)};
@@ -35,7 +36,8 @@ public class MyDataLoaderBeanInfo extends SimpleBeanInfo {
             throw new AssertionError(e);
         }
     }
-    
+
+    @Override
     public Image getIcon(int type) {
         return super.getIcon(type); // TODO add a custom icon here
         

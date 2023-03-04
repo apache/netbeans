@@ -100,7 +100,7 @@ public enum GlassFishVersion {
     /** GlassFish 7.0.0 */
     GF_7_0_0       ((short) 7, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_7_0_0_STR),
     /** GlassFish 7.0.1 */
-    GF_7_0_1       ((short) 7, (short) 0, (short) 1, (short) 0, GlassFishVersion.GF_7_0_1_STR);
+    GF_7_0_1       ((short) 7, (short) 0, (short) 1, (short) 0, GlassFishVersion.GF_7_0_1_STR),
     /** GlassFish 7.0.2 */
     GF_7_0_2       ((short) 7, (short) 0, (short) 2, (short) 0, GlassFishVersion.GF_7_0_2_STR);
     ////////////////////////////////////////////////////////////////////////////

@@ -1530,9 +1530,8 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
     private DeconstructionPatternTree rewriteChildren(DeconstructionPatternTree tree) {
         ExpressionTree newDeconstructor = (ExpressionTree) translate(tree.getDeconstructor());
         List<? extends PatternTree> newNestedPatterns = translate(tree.getNestedPatterns());
-        VariableTree newVariable = (VariableTree) translate(tree.getVariable());
-        if (newDeconstructor != tree.getDeconstructor() || newVariable != tree.getVariable() || !Objects.equals(newNestedPatterns, tree.getNestedPatterns())) {
-            DeconstructionPatternTree n = make.DeconstructionPattern(newDeconstructor, newNestedPatterns, newVariable);
+        if (newDeconstructor != tree.getDeconstructor() || !Objects.equals(newNestedPatterns, tree.getNestedPatterns())) {
+            DeconstructionPatternTree n = make.DeconstructionPattern(newDeconstructor, newNestedPatterns);
             model.setType(n, model.getType(tree));
             copyCommentTo(tree, n);
             copyPosTo(tree, n);

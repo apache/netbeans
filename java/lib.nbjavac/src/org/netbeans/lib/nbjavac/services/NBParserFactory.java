@@ -30,6 +30,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
@@ -138,8 +139,8 @@ public class NBParserFactory extends ParserFactory {
             //no end position. Inject the end position for the variable:
             if (result instanceof JCEnhancedForLoop) {
                 JCEnhancedForLoop tree = (JCEnhancedForLoop) result;
-                if (getEndPos(tree.var) == Position.NOPOS) {
-                    endPosTable.storeEnd(tree.var, getEndPos(tree.var.vartype));
+                if (getEndPos(tree.varOrRecordPattern) == Position.NOPOS) {
+                    endPosTable.storeEnd(tree.varOrRecordPattern, getEndPos(((JCVariableDecl) tree.varOrRecordPattern).vartype));
                 }
             }
             return result;

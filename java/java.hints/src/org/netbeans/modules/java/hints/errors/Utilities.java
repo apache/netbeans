@@ -2717,8 +2717,10 @@ public class Utilities {
                         ));
                 
             case BLOCK: {
-                BlockTree bt = (BlockTree)parent.getLeaf();
-                List<? extends StatementTree> stats = getRealStatements(wc, parent);
+                BlockTree originalBlock = (BlockTree)parent.getLeaf();
+                BlockTree bt = (BlockTree) wc.resolveRewriteTarget(originalBlock);
+                List<? extends StatementTree> stats = originalBlock == bt ? getRealStatements(wc, parent)
+                                                                          : bt.getStatements();
                 int index = stats.indexOf(toRemove.getLeaf());
                 if (index == -1) {
                     throw new IllegalArgumentException("Not proper child of the parent path");

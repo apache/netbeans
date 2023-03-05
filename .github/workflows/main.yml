@@ -55,6 +55,9 @@ env:
   # 'Groovy' label
   test_groovy: ${{ contains(github.event.pull_request.labels.*.name, 'Groovy') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
+  # 'Rust' label
+  test_rust: ${{ contains(github.event.pull_request.labels.*.name, 'Rust') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
   # 'Platform' label
   test_platform: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
@@ -1834,6 +1837,50 @@ jobs:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
+  rust-test:
+    name: Rust on Linux/JDK ${{ matrix.java }}
+    # equals env.test_rust == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Rust') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: rust/rust.cargo
+        run: ant $OPTS -f rust/rust.cargo test
+
+      - name: rust/rust.grammar
+        run: ant $OPTS -f rust/rust.grammar test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
   enterprise-test:
     name: Enterprise on Linux/JDK ${{ matrix.java }}
     needs: base-build
@@ -2332,6 +2379,7 @@ jobs:
       - php
       - javafx-test
       - groovy-test
+      - rust-test
       - enterprise-test
       - versioning-test
       - lsp-test

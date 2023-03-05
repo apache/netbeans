@@ -289,6 +289,7 @@ public final class CreateElementUtilities {
         if (mt.getReturnType() == error) {
             types.add(ElementKind.CLASS);
             types.add(ElementKind.INTERFACE);
+            types.add(ElementKind.RECORD);
             types.add(ElementKind.ENUM);
         }
 
@@ -637,6 +638,7 @@ public final class CreateElementUtilities {
             types.add(ElementKind.CLASS);
             types.add(ElementKind.ENUM);
             types.add(ElementKind.INTERFACE);
+            types.add(ElementKind.RECORD);
             
             return typeMirrorCollectionOrNull(info, "java.lang.Object");
         }
@@ -721,6 +723,7 @@ public final class CreateElementUtilities {
             } else {
                 types.add(ElementKind.CLASS);
                 types.add(ElementKind.INTERFACE);
+                types.add(ElementKind.RECORD);
             }
             
             if (numTypeParameters != null) {
@@ -785,6 +788,7 @@ public final class CreateElementUtilities {
             types.add(ElementKind.CLASS);
             types.add(ElementKind.ENUM);
             types.add(ElementKind.INTERFACE);
+            types.add(ElementKind.RECORD);
             
             return null;
         }

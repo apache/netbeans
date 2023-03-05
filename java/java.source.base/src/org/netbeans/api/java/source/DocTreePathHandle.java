@@ -179,25 +179,6 @@ public final class DocTreePathHandle {
         Position pos = preferredPosition >= 0 ? createPositionRef(treePathHandle.getFileObject(), preferredPosition, Bias.Forward) : null;
         return new DocTreePathHandle(new DocTreeDelegate(pos, new DocTreeDelegate.KindPath(docTreePath), treePathHandle));
     }
-
-    private static boolean isSupported(Element el) {
-        switch (el.getKind()) {
-            case PACKAGE:
-            case CLASS:
-            case INTERFACE:
-            case ENUM:
-            case METHOD:
-            case CONSTRUCTOR:
-            case INSTANCE_INIT:
-            case STATIC_INIT:
-            case FIELD:
-            case ANNOTATION_TYPE:
-            case ENUM_CONSTANT:
-                return true;
-            default:
-                return false;
-        }
-    }
     
         private static List<DocTree> listChildren(@NonNull DocTree t) {
         final List<DocTree> result = new LinkedList<DocTree>();

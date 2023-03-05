@@ -39,7 +39,7 @@ public class GlassFishVersionTest {
      * Test that <code>toValue</code> handles addition values for given version
      * and additional values array.
      */
-    public static void verifyToValueFromAdditionalArray(
+    private static void verifyToValueFromAdditionalArray(
             GlassFishVersion version, String[] values) {
         for (String value : values) {
             GlassFishVersion gfVersion = GlassFishVersion.toValue(value);

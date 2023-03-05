@@ -36,7 +36,8 @@ import org.openide.util.NbBundle.Messages;
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_RustFile_LOADER",
         mimeType = "text/x-rust",
-        extension = {"rs"}
+        extension = {"rs"},
+        position = 420
 )
 @DataObject.Registration(
         mimeType = "text/x-rust",

@@ -1,5 +1,4 @@
 Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.rust.cargo
 OpenIDE-Module-Layer: org/netbeans/modules/rust/cargo/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/rust/cargo/Bundle.properties

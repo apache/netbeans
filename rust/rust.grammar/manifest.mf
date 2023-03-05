@@ -1,5 +1,4 @@
 Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.rust.grammar
 OpenIDE-Module-Layer: org/netbeans/modules/rust/grammar/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/rust/grammar/Bundle.properties

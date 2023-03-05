@@ -382,7 +382,8 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
 
     private boolean isAttributeName( int character ) {
         return (! Character.isWhitespace(character)) && character != '/'
-            && character != '>' && character != '=' && character != 0;
+            && character != '>' && character != '<' && character != '='
+            && character != 0;
     }
 
     /**

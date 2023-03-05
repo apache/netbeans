@@ -227,7 +227,7 @@ public class HtmlLexerTest extends NbTestCase {
         checkTokens("<div {a} align=center>",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}|ARGUMENT",
                 " |WS", "align|ARGUMENT", "=|OPERATOR", "center|VALUE", ">|TAG_CLOSE_SYMBOL");
-        
+
         //in attribute
         checkTokens("<div {a}align=center>",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}align|ARGUMENT",
@@ -236,8 +236,8 @@ public class HtmlLexerTest extends NbTestCase {
         //end line in error
         checkTokens("<div {a}align=center\n <div>",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}align|ARGUMENT",
-                "=|OPERATOR", "center|VALUE", "\n |WS", "<div|ARGUMENT",
-                ">|TAG_CLOSE_SYMBOL");
+                "=|OPERATOR", "center|VALUE", "\n |WS", "<|TAG_OPEN_SYMBOL",
+                "div|TAG_OPEN", ">|TAG_CLOSE_SYMBOL");
         
         // tag close symbol
         checkTokens("<div {a> xxx",
@@ -304,7 +304,7 @@ public class HtmlLexerTest extends NbTestCase {
     public void testIssue213332_2() {
         checkTokens("<div align= </div>",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "align|ARGUMENT", "=|OPERATOR", " |WS", 
-                "<|ARGUMENT", "/|ERROR", "div|ARGUMENT", ">|TAG_CLOSE_SYMBOL");
+                "</|TAG_OPEN_SYMBOL", "div|TAG_CLOSE", ">|TAG_CLOSE_SYMBOL");
     }
 
     //Bug 218629 - Wrong syntax coloring in HTML for non-english text 

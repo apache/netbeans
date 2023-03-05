@@ -138,7 +138,7 @@ public class InterceptorResolutionTest extends CommonTestCase {
                 "@Target({METHOD, TYPE}) "+
                 "public @interface IBinding2  {" +
                 " String value() ;"+
-                " @Nonbinding String comment() defualt \"\" ; "+
+                " @Nonbinding String comment() default \"\" ; "+
                 "} ");
         createInterceptorBinding("IBinding3");
         

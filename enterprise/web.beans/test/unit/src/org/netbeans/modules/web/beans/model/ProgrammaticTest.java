@@ -132,7 +132,7 @@ public class ProgrammaticTest extends CommonTestCase {
         assertTrue( injectables instanceof DependencyInjectionResult.ResolutionResult );
         Set<TypeElement> typeElements = 
             ((DependencyInjectionResult.ApplicableResult)injectables).getTypeElements();
-        assertEquals("Incorrect number of eligible elemets are found",
+        assertEquals("Incorrect number of eligible elements are found",
                 3, typeElements.size());
         for( TypeElement type : typeElements ){
             if ( type.getQualifiedName().contentEquals("foo.Three")){

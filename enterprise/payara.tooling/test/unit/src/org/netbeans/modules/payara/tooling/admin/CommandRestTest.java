@@ -58,7 +58,7 @@ public abstract class CommandRestTest extends CommandTest {
     private static final Logger LOGGER = new Logger(CommandRestTest.class);
 
     /** Payara test server property file. */
-    private static final String PAYARA_PROPERTES
+    private static final String PAYARA_PROPERTIES
             = "src/test/java/org/netbeans/modules/payara/tooling/PayaraRest.properties";
 
     /** Payara test server properties. */
@@ -92,7 +92,7 @@ public abstract class CommandRestTest extends CommandTest {
             synchronized(CommandRestTest.class) {
                 if (payaraProperties == null) {
                     if (propertyFile == null)
-                        propertyFile = PAYARA_PROPERTES;
+                        propertyFile = PAYARA_PROPERTIES;
                     payaraProperties = readProperties(propertyFile);
                 }
             }
@@ -101,7 +101,7 @@ public abstract class CommandRestTest extends CommandTest {
     }
     
     public static Properties payaraProperties() {
-        return payaraProperties(PAYARA_PROPERTES);
+        return payaraProperties(PAYARA_PROPERTIES);
     }
 
     /**

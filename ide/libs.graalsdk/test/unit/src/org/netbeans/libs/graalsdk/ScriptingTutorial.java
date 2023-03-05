@@ -504,7 +504,7 @@ public class ScriptingTutorial extends NbTestCase {
     }
     // @end region="accessJavaScriptArrayWithTypedElementsFromJava"
 
-    public void tetsAccessJSONObjectProperties() throws Exception {
+    public void testAccessJSONObjectProperties() throws Exception {
         accessJavaScriptJSONObjectFromJava();
     }
 

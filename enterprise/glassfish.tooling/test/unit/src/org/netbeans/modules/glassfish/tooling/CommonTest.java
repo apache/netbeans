@@ -98,7 +98,7 @@ public abstract class CommonTest {
     public static final String JDKPROP_HOME           = "javaHome";
 
     /** Test JDK property file. */
-    private static final String JDK_PROPERTES =
+    private static final String JDK_PROPERTIES =
             "src/test/java/org/netbeans/modules/glassfish/tooling/Java.properties";
     
     /** Backup domain property. */
@@ -108,11 +108,11 @@ public abstract class CommonTest {
     private static volatile Properties jdkProperties;
    
     /** Name of static method to retrieve GlassFish test server properties.*/
-    private static final String GLASSFISH_PROPERTES_METHOD
+    private static final String GLASSFISH_PROPERTIES_METHOD
             = "getGlassFishProperty";
 
     /** GlassFish test server property file. */
-    private static final String GLASSFISH_PROPERTES
+    private static final String GLASSFISH_PROPERTIES
             = "src/test/java/org/netbeans/modules/glassfish/tooling/GlassFish.properties";
 
     /** Regex expression to find GlassFish log message informing about
@@ -189,7 +189,7 @@ public abstract class CommonTest {
         else {
             synchronized(CommonTest.class) {
                 if (jdkProperties == null) {
-                    jdkProperties = readProperties(JDK_PROPERTES);
+                    jdkProperties = readProperties(JDK_PROPERTIES);
                 }
             }
             return jdkProperties;
@@ -303,7 +303,7 @@ public abstract class CommonTest {
         final String METHOD = "createGlassfishServer";
         Method pMeth;
         try {
-            pMeth = pClass.getMethod(GLASSFISH_PROPERTES_METHOD, String.class);
+            pMeth = pClass.getMethod(GLASSFISH_PROPERTIES_METHOD, String.class);
         } catch (NoSuchMethodException | SecurityException nme) {
             LOGGER.log(Level.WARNING, METHOD, "accessorFailed", nme);
             return null;

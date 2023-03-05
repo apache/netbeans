@@ -226,15 +226,15 @@ public class DatabaseConnectionTest extends DBTestBase {
 
         Properties testConnProps = new Properties();
         testConnProps.put("testKey", "testValue");
-        DatabaseConnection somePopertiesConn = DatabaseConnection.create(
+        DatabaseConnection somePropertiesConn = DatabaseConnection.create(
                 getJDBCDriver(), getDbUrl(), getUsername(), getSchema(),
                 getPassword(), false, "Test", testConnProps);
-        Properties returnedProps = somePopertiesConn.getConnectionProperties();
+        Properties returnedProps = somePropertiesConn.getConnectionProperties();
         assertEquals(1, returnedProps.keySet().size());
         assertEquals("testValue", returnedProps.get("testKey"));
 
         returnedProps.put("addedKey", "addedValue");
-        Properties returnedAgain = somePopertiesConn.getConnectionProperties();
+        Properties returnedAgain = somePropertiesConn.getConnectionProperties();
         assertEquals("Internal properties should not be affected by changes",
                 1, returnedAgain.keySet().size());
     }

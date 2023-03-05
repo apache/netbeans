@@ -471,7 +471,7 @@ implements java.net.URLStreamHandlerFactory {
             }
         }
         
-        fail ("Cannot find property \"" + name + "\" in node " + n + " it has only " + names + " propeties.");
+        fail ("Cannot find property \"" + name + "\" in node " + n + " it has only " + names + " properties.");
         return null;
     }
 

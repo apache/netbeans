@@ -156,7 +156,7 @@ public abstract class AbstractTestUtil {
      * @return localized value.
      */
     public final String getStringTrimmed(String key) {
-        return Bundle.getStringTrimmed(getBundel(), key);
+        return Bundle.getStringTrimmed(getBundle(), key);
     }
     
     /** Get localized string.
@@ -194,7 +194,7 @@ public abstract class AbstractTestUtil {
         return NbBundle.getMessage(this.getClass(), key).charAt(0);
     }
     
-    private String getBundel() {
+    private String getBundle() {
         return this.getClass().getPackage().getName() + ".Bundle";
     }
     

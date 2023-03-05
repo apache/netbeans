@@ -102,7 +102,7 @@ public abstract class CommonTest {
     public static final String JDKPROP_HOME           = "javaHome";
 
     /** Test JDK property file. */
-    private static final String JDK_PROPERTES =
+    private static final String JDK_PROPERTIES =
             "src/test/java/org/netbeans/modules/payara/tooling/Java.properties";
     
     /** Backup domain property. */
@@ -112,11 +112,11 @@ public abstract class CommonTest {
     private static volatile Properties jdkProperties;
    
     /** Name of static method to retrieve Payara test server properties.*/
-    private static final String PAYARA_PROPERTES_METHOD
+    private static final String PAYARA_PROPERTIES_METHOD
             = "getPayaraProperty";
 
     /** Payara test server property file. */
-    private static final String PAYARA_PROPERTES
+    private static final String PAYARA_PROPERTIES
             = "src/test/java/org/netbeans/modules/payara/tooling/Payara.properties";
 
     /** Regex expression to find Payara log message informing about
@@ -190,7 +190,7 @@ public abstract class CommonTest {
         else {
             synchronized(CommonTest.class) {
                 if (jdkProperties == null) {
-                    jdkProperties = readProperties(JDK_PROPERTES);
+                    jdkProperties = readProperties(JDK_PROPERTIES);
                 }
             }
             return jdkProperties;
@@ -304,7 +304,7 @@ public abstract class CommonTest {
         final String METHOD = "createPayaraServer";
         Method pMeth;
         try {
-            pMeth = pClass.getMethod(PAYARA_PROPERTES_METHOD, String.class);
+            pMeth = pClass.getMethod(PAYARA_PROPERTIES_METHOD, String.class);
         } catch (NoSuchMethodException | SecurityException nme) {
             LOGGER.log(Level.WARNING, METHOD, "accessorFailed", nme);
             return null;

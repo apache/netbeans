@@ -402,7 +402,7 @@ public class Utils {
       new JButtonOperator( installerMain, NEXT_BUTTON_LABEL ).push( );
     }
 
-    public static void stepChooseComponet( String name, TestData data )
+    public static void stepChooseComponent(String name, TestData data )
     {
         JFrameOperator installerMain = new JFrameOperator(MAIN_FRAME_TITLE);
 

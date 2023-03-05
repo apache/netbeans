@@ -64,7 +64,7 @@ public class DefineRefineIgnoreTest extends TestCase {
         assertEquals("V2", "2", proc.clone.get(refine)[0]);
     }
     
-    public void testWithoutAdditonal() throws CommandException {
+    public void testWithoutAdditional() throws CommandException {
         Option pair = OptionGroups.allOf(ignore, files);
         Provider.add(proc, pair);
             

@@ -280,7 +280,7 @@ public class XMLUtilTest {
 
     //--------------------------------------------------------------------------
     @Test
-    public void findSubElements_returnsEmptyList_whenNodeWithCommentAndBlankTextChidrenOnly() {
+    public void findSubElements_returnsEmptyList_whenNodeWithCommentAndBlankTextChildrenOnly() {
 
         Element parent = this.document.createElement("parent");
         parent.appendChild(this.document.createComment("comment"));

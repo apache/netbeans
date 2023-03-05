@@ -458,7 +458,7 @@ public class JSFConfigModelTest extends NbTestCase {
         assertEquals("Number of applications ", 1, applications.size());
 
         List<ViewHandler> viewHandlers = applications.get(0).getViewHandlers();
-        assertEquals("Number of view hadlers ", 1, viewHandlers.size());
+        assertEquals("Number of view handlers ", 1, viewHandlers.size());
         assertEquals("Name of handler ", "org.test.ViewHandler", viewHandlers.get(0).getFullyQualifiedClassType());
 
         List<LocaleConfig> localeConfigs = applications.get(0).getLocaleConfig();
@@ -467,8 +467,8 @@ public class JSFConfigModelTest extends NbTestCase {
         assertEquals("Defautl locale ", "en", locale.getDefaultLocale().getLocale());
         List<SupportedLocale> supportedLocales = locale.getSupportedLocales();
         assertEquals("Number of supported-locale ", 2, supportedLocales.size());
-        assertEquals("Suported locale ", "cz", supportedLocales.get(0).getLocale());
-        assertEquals("Suported locale ", "jn", supportedLocales.get(1).getLocale());
+        assertEquals("Supported locale ", "cz", supportedLocales.get(0).getLocale());
+        assertEquals("Supported locale ", "jn", supportedLocales.get(1).getLocale());
 
         List<ResourceBundle> resourceBundles = applications.get(0).getResourceBundles();
         assertEquals("Number of resource-bundle ", 2, resourceBundles.size());

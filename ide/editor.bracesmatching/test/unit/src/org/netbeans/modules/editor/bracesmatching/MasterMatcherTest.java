@@ -121,12 +121,12 @@ public class MasterMatcherTest extends NbTestCase {
         
         HighlightsSequence hs = bag.getHighlights(0, Integer.MAX_VALUE);
         assertTrue("Wrong number of highlighted areas", hs.moveNext());
-        assertEquals("Wrong origin startOfset", 2, hs.getStartOffset());
-        assertEquals("Wrong origin endOfset", 3, hs.getEndOffset());
+        assertEquals("Wrong origin startOffset", 2, hs.getStartOffset());
+        assertEquals("Wrong origin endOffset", 3, hs.getEndOffset());
         
         assertTrue("Wrong number of highlighted areas", hs.moveNext());
-        assertEquals("Wrong match startOfset", 10, hs.getStartOffset());
-        assertEquals("Wrong match endOfset", 11, hs.getEndOffset());
+        assertEquals("Wrong match startOffset", 10, hs.getStartOffset());
+        assertEquals("Wrong match endOffset", 11, hs.getEndOffset());
         }        
     }
     

@@ -66,7 +66,7 @@ public abstract class CommandRestTest extends CommandTest {
     private static final Logger LOGGER = new Logger(CommandRestTest.class);
 
     /** GlassFish test server property file. */
-    private static final String GLASSFISH_PROPERTES
+    private static final String GLASSFISH_PROPERTIES
             = "src/test/java/org/netbeans/modules/glassfish/tooling/GlassFishRest.properties";
 
     /** GlassFish test server properties. */
@@ -100,7 +100,7 @@ public abstract class CommandRestTest extends CommandTest {
             synchronized(CommandRestTest.class) {
                 if (glassfishProperties == null) {
                     if (propertyFile == null)
-                        propertyFile = GLASSFISH_PROPERTES;
+                        propertyFile = GLASSFISH_PROPERTIES;
                     glassfishProperties = readProperties(propertyFile);
                 }
             }
@@ -109,7 +109,7 @@ public abstract class CommandRestTest extends CommandTest {
     }
     
     public static Properties glassfishProperties() {
-        return glassfishProperties(GLASSFISH_PROPERTES);
+        return glassfishProperties(GLASSFISH_PROPERTIES);
     }
 
     /**

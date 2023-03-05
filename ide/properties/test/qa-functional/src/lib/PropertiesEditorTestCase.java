@@ -41,8 +41,6 @@ import org.netbeans.jellytools.nodes.Node;
 import org.netbeans.jellytools.properties.*;
 import org.netbeans.jemmy.*;
 import org.netbeans.jemmy.operators.*;
-import org.netbeans.junit.ide.ProjectSupport;
-import org.openide.util.Exceptions;
 
 /** Class implementing all necessary methods for handling Property sheet in Editor window.
  * This class is used for automated tests of properties module.
@@ -207,7 +205,7 @@ public class PropertiesEditorTestCase extends JellyTestCase {
      * @param filesystemNode of mounted directory ( without extension )
      * @param filePath of file in explorer tree
      */
-    public void openExistedPropetiesFileInClassicEditor(Node filesystemNode, String filePath) {
+    public void openExistedPropertiesFileInClassicEditor(Node filesystemNode, String filePath) {
         new EditAction().performPopup(new Node(filesystemNode, filePath));
     }
 

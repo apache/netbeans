@@ -1,12 +1,12 @@
 Name: EclipseLink
 Origin: Eclipse
-Version: 2.7.10
+Version: 2.7.12
 Description: The Eclipse Persistence Services Project ( EclipseLink) project.
 License: EPL-v10-eclipselink
 Origin: http://www.eclipse.org/eclipselink/
-Files: org.eclipse.persistence.jpa.modelgen.processor-2.7.10.jar
+Files: org.eclipse.persistence.jpa.modelgen.processor-2.7.12.jar
 
-Use of EclipseLink version 2.7.10 is governed by the terms of the license below:
+Use of EclipseLink version 2.7.12 is governed by the terms of the license below:
 
 License
 

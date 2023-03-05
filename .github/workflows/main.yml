@@ -1874,6 +1874,9 @@ jobs:
       - name: rust/rust.grammar
         run: ant $OPTS -f rust/rust.grammar test
 
+      - name: rust/rust.options
+        run: ant $OPTS -f rust/rust.options test
+
       - name: Create Test Summary
         uses: test-summary/action@v2
         if: failure()

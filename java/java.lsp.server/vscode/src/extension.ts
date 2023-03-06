@@ -980,10 +980,18 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     class Decorator implements TreeItemDecorator<Visualizer> {
         private provider : CustomizableTreeDataProvider<Visualizer>;
         private setCommand : vscode.Disposable;
+        private initialized: boolean = false;
 
         constructor(provider : CustomizableTreeDataProvider<Visualizer>, client : NbLanguageClient) {
             this.provider = provider;
             this.setCommand = vscode.commands.registerCommand('java.local.db.set.preferred.connection', (n) => this.setPreferred(n));
+        }
+
+        decorateChildren(element: Visualizer, children: Visualizer[]): Visualizer[] {
+            if (element.id == this.provider.getRoot().id) {
+                vscode.commands.executeCommand('setContext', 'nb.database.view.active', children.length == 0);
+            }
+            return children;
         }
 
         async decorateTreeItem(vis : Visualizer, item : vscode.TreeItem) : Promise<vscode.TreeItem> {

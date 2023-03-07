@@ -356,7 +356,7 @@ public class HtmlCompletionQuery extends UserTask {
         if ((id == HTMLTokenId.TEXT || id == HTMLTokenId.VALUE) && ampIndex > -1) {
             //complete character references
             anchor = offset;
-            result = translateCharRefs(offset - len, model.getNamedCharacterReferences(), preText.substring(ampIndex + 1));
+            result = translateCharRefs(offset - preText.length(), model.getNamedCharacterReferences(), preText.substring(ampIndex + 1));
 
         } else if (id == HTMLTokenId.CHARACTER) {
             //complete character references
@@ -543,7 +543,7 @@ public class HtmlCompletionQuery extends UserTask {
                     if (attribute != null) {
                         result.addAll(translateValues(anchor, attribute.getPossibleValues()));
                         ValueCompletion<HtmlCompletionItem> valuesCompletion = AttrValuesCompletion.getSupport(tnode.name().toString(), argName);
-                        if (valuesCompletion != null && file != null) {
+                        if (valuesCompletion != null) {
                             result.addAll(valuesCompletion.getItems(file, anchor, ""));
                         }
                     }
@@ -571,7 +571,7 @@ public class HtmlCompletionQuery extends UserTask {
                     if (attribute != null) {
                         result.addAll(translateValues(documentItemOffset, filter(attribute.getPossibleValues(), prefix), quotationChar));
                         ValueCompletion<HtmlCompletionItem> valuesCompletion = AttrValuesCompletion.getSupport(tnode.name().toString(), argName);
-                        if (valuesCompletion != null && file != null) {
+                        if (valuesCompletion != null) {
                             result.addAll(valuesCompletion.getItems(file, anchor, prefix));
                         }
                     }

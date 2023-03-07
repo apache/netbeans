@@ -21,7 +21,6 @@ package org.netbeans.modules.rust.grammar;
 import java.util.BitSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Parser;
@@ -91,4 +90,28 @@ public class RustLanguageLexer extends AbstractAntlrLexerBridge<RustLexer, RustT
         return token(RustTokenID.from(antlrToken));
     }
 
+    @Override
+    public Object state() {
+        return new LexerState(lexer);
+    }
+
+    private static final class LexerState extends AbstractAntlrLexerBridge.LexerState<RustLexer> {
+        final org.antlr.v4.runtime.Token lt1;
+        final org.antlr.v4.runtime.Token lt2;
+
+        LexerState(RustLexer lexer) {
+            super(lexer);
+
+            this.lt1 = lexer.lt1;
+            this.lt2 = lexer.lt2;
+        }
+
+        @Override
+        public void restore(RustLexer lexer) {
+            super.restore(lexer);
+
+            lexer.lt1 = lt1;
+            lexer.lt2 = lt2;
+        }
+    }
 }

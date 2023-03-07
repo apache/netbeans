@@ -54,8 +54,8 @@ public abstract class RustLexerBase extends Lexer {
         super(input);
     }
 
-    Token lt1;
-    Token lt2;
+    public Token lt1;
+    public Token lt2;
 
     @Override
     public Token nextToken() {

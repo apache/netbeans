@@ -67,10 +67,10 @@ public interface MimeLookupInitializer {
      *
      * @param mimeType mime-type string representation e.g. "text/x-java"
      * @return non-null lookup result of MimeLookupInitializer(s).
-     *  <br/>
+     *  <br>
      *  Typically there should be just one child initializer although if there
      *  will be more than one all of them will be taken into consideration.
-     *  <br/>
+     *  <br>
      *  If there will be no specific initializers for the particular mime-type
      *  then an empty result should be returned.
      */

@@ -138,8 +138,8 @@ public class Diagnostic {
         /**
          * Create a new {@code Builder}
          *
-         * @param startOffset the start offset of the diagnostic
-         * @param endOffset the end offset of the diagnostic
+         * @param startPosition the start offset of the diagnostic
+         * @param endPosition the end offset of the diagnostic
          * @param description the description of the diagnostic
          * @return a new builder
          */

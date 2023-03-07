@@ -54,8 +54,8 @@ import org.netbeans.api.java.queries.SourceForBinaryQuery;
  * </ol>
  * </div>
  * @see org.netbeans.api.java.queries.SourceForBinaryQuery
- * @see org.netbeans.api.queries.FileOwnerQuery
- * @see org.netbeans.api.project.Project#getLookup
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/FileOwnerQuery.html">FileOwnerQuery</a>
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--">org.netbeans.api.project.Project#getLookup</a>
  * @since org.netbeans.api.java/1 1.4
  */
 public interface SourceForBinaryQueryImplementation {
@@ -73,11 +73,10 @@ public interface SourceForBinaryQueryImplementation {
      * <li>Create a new SourceForBinaryQuery.Result for the binaryRoot, put it into the cache
      * and return it.</li>
      * </ol>
-     * </p>
      * <p>
      * Any absolute URL may be used but typically it will use the <code>file</code>
      * protocol for directory entries and <code>jar</code> protocol for JAR entries
-     * (e.g. <samp>jar:file:/tmp/foo.jar!/</samp>).
+     * (e.g. <code>jar:file:/tmp/foo.jar!/</code>).
      * </p>
      * @param binaryRoot the class path root of Java class files
      * @return a result object encapsulating the answer or null if the binaryRoot is not recognized

@@ -101,7 +101,7 @@
         <author login="sdedic"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
         <description>
-            <a href="@TOP@/org/netbeans/spi/lsp/CallHiearchyProvider.html">CallHierarchyProvider</a> SPI allows to trace incoming and
+            <a href="@TOP@/org/netbeans/spi/lsp/CallHierarchyProvider.html">CallHierarchyProvider</a> SPI allows to trace incoming and
             outgoing calls. <a href="@TOP@/org/netbeans/api/lsp/CallHierarchyEntry.html">CallHierarchyEntry</a> describes a specific call site 
             or target.
         </description>
@@ -133,7 +133,7 @@
             An <code>ErrorProvider.Context.getOffset()</code> method introduced that allows to
             compute hint for a given file offset.
         </description>
-        <class package="org.netbeans.api.lsp" name="ErrorProvider"/>
+        <class package="org.netbeans.spi.lsp" name="ErrorProvider"/>
     </change>
     <change id="ErrorProvider">
         <api name="LSP_API"/>
@@ -146,7 +146,7 @@
             An <code>ErrorProvider</code> interface introduced that allows to
             compute errors/warnings for a given file.
         </description>
-        <class package="org.netbeans.api.lsp" name="ErrorProvider"/>
+        <class package="org.netbeans.spi.lsp" name="ErrorProvider"/>
     </change>
     <change id="HoverProvider">
         <api name="LSP_API"/>

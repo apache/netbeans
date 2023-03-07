@@ -226,9 +226,9 @@ public final class Utilities {
      * In order to provide useful support for this problem, this queue has been
      * provided.
      * <P>
-     * If you have a reference that needs cleanup, make it implement <link>Runnable</link>
+     * If you have a reference that needs cleanup, make it implement {@link Runnable}
      * and register it with the queue:
-     * <PRE>
+     * <PRE>{@code
      * class MyReference extends WeakReference<Thing> implements Runnable {
      *     private final OtherInfo dataToCleanUp;
      *     public MyReference(Thing ref, OtherInfo data) {
@@ -239,7 +239,7 @@ public final class Utilities {
      *         dataToCleanUp.releaseOrWhateverYouNeed();
      *     }
      * }
-     * </PRE>
+     * }</PRE>
      * When the <code>ref</code> object is garbage collected, your run method
      * will be invoked by calling
      * <code>((Runnable) reference).run()</code>
@@ -291,8 +291,8 @@ public final class Utilities {
     /** Test whether a given string is a valid Java identifier.
     * @param id string which should be checked
     * @return <code>true</code> if a valid identifier
-    * @see SourceVersion#isIdentifier
-    * @see SourceVersion#isKeyword
+    * @see javax.lang.model.SourceVersion#isIdentifier
+    * @see javax.lang.model.SourceVersion#isKeyword
     */
     public static boolean isJavaIdentifier(String id) {
         return BaseUtilities.isJavaIdentifier(id);
@@ -699,9 +699,9 @@ public final class Utilities {
     * <li>Include command names with embedded spaces, such as <code>c:\Program Files\jdk\bin\javac</code>.
     * <li>Include extra command arguments, such as <code>-Dname=value</code>.
     * <li>Do anything else which might require unusual characters or processing. For example:
-    * <p><code><pre>
+    * <pre>{@code
     * "c:\program files\jdk\bin\java" -Dmessage="Hello /\\/\\ there!" -Xmx128m
-    * </pre></code>
+    * }</pre>
     * <p>This example would create the following executable name and arguments:
     * <ol>
     * <li> <code>c:\program files\jdk\bin\java</code>
@@ -1187,7 +1187,7 @@ public final class Utilities {
      * system menus and the like.
      * On certain platforms this methods uses a cache to avoid performance degradation due to repeated calls.
      * This can be disabled by setting the property "-Dnetbeans.screen.insetsCache=false"
-     * See issue http://netbeans.org/bugzilla/show_bug.cgi?id=219507
+     * See issue https://bz.apache.org/netbeans/show_bug.cgi?id=219507
      *
      * @param gconf the GraphicsConfiguration of the monitor
      * @return the rectangle of the screen where one can place windows
@@ -1344,13 +1344,13 @@ public final class Utilities {
 
     /**
      * This is for use in situations where a standard swing API,
-     * such as {@linkplain JOptionPane.show*} or {@linkplain JFileChooser.show*},
+     * such as {@linkplain javax.swing.JOptionPane}.show* or {@linkplain javax.swing.JFileChooser}.show*,
      * is used to display a dialog. {@code null} should never be used
      * as a dialog's parent because it
      * frequently does the wrong thing in a multi-screen setup.
      * <p>
      * The use of the NetBeans API
-     * {@linkplain DialogDisplayer.getDefault.*}
+     * <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault--">DialogDisplayer.getDefault*</a>
      * is encouraged to display a dialog, but stuff happens.
      * @return A suitable parent component for swing dialog displayers.
      * @since 9.26
@@ -1393,7 +1393,7 @@ public final class Utilities {
      * @param parent
      * @param approveButtonText
      * @deprecated Not needed in JDK 1.4.
-     * @see <a href="@org-openide-filesystems@/org/openide/filesystems/FileChooserBuilder.html"><code>FileChooserBuilder</code></a>
+     * @see <a href="@org-openide-filesystems-nb@/org/openide/filesystems/FileChooserBuilder.html"><code>FileChooserBuilder</code></a>
      */
     @Deprecated
     public static int showJFileChooser(
@@ -1595,7 +1595,7 @@ public final class Utilities {
      * @exception TopologicalSortException if the sort cannot succeed due to cycles in the graph, the
      *   exception contains additional information to describe and possibly recover from the error
      * @since 3.30
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=27286">Issue #27286</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=27286">Issue #27286</a>
      */
     public static <T> List<T> topologicalSort(Collection<? extends T> c, Map<? super T, ? extends Collection<? extends T>> edges)
     throws TopologicalSortException {
@@ -1639,24 +1639,24 @@ public final class Utilities {
      * Btw. one can use spaces instead of <code>=</code> sign.
      * For a real world example
      * check the
-     * <a href="http://www.netbeans.org/source/browse/xml/text-edit/compat/src/META-INF/netbeans/">
+     * <a href="https://github.com/apache/netbeans/tree/master/ide/xml">
      * xml module</a>.
      *
      * <P>
-     * For purposes of <link>org.openide.util.io.NbObjectInputStream</link> there is
+     * For purposes of {@link org.openide.util.io.NbObjectInputStream} there is
      * a following special convention:
      * If the
      * className is not listed as one that is to be renamed, the returned
      * string == className, if the className is registered to be renamed
      * than the className != returned value, even in a case when className.equals (retValue)
-     * <p/>
+     * <p>
      * Similar behaviour applies to <b>filenames</b> provided by layers (system filesystem). Filenames
      * can be also translated to adapt to location changes e.g. in action registrations. Note that 
      * <b>no spaces or special characters</b> are allowed in both translated filenames or translation 
      * results. Filenames must conform to regexp {@code ^[/a-zA-Z0-9$_.+-]+$}. Keys and values are treated
      * as paths from fs root.
      * 
-     * <p/>
+     * <p>
      * Example of file path translation (action registration file has moved):
      * <pre>
      * # registration ID has changed
@@ -1932,9 +1932,9 @@ public final class Utilities {
     /**
      * Loads an image based on resource path.
      * Exactly like {@link #loadImage(String)} but may do a localized search.
-     * For example, requesting <samp>org/netbeans/modules/foo/resources/foo.gif</samp>
-     * might actually find <samp>org/netbeans/modules/foo/resources/foo_ja.gif</samp>
-     * or <samp>org/netbeans/modules/foo/resources/foo_mybranding.gif</samp>.
+     * For example, requesting <code>org/netbeans/modules/foo/resources/foo.gif</code>
+     * might actually find <code>org/netbeans/modules/foo/resources/foo_ja.gif</code>
+     * or <code>org/netbeans/modules/foo/resources/foo_mybranding.gif</code>.
      * 
      * <p>Caching of loaded images can be used internally to improve performance.
      * 
@@ -2048,7 +2048,7 @@ public final class Utilities {
      * and {@link URI#resolve(URI)}.
      * @param f a file
      * @return a {@code file}-protocol URI which may use the host field
-     * @see java.nio.file.Path.toUri
+     * @see java.nio.file.Path#toUri()
      * @since 8.25
      */
     public static URI toURI(File f) {
@@ -2061,7 +2061,7 @@ public final class Utilities {
      * which accepts UNC URIs with a host field.
      * @param u a {@code file}-protocol URI which may use the host field
      * @return a file
-     * @see java.nio.file.Paths.get(java.net.URI)
+     * @see java.nio.file.Paths#get(java.net.URI)
      * @since 8.25
      */
     public static File toFile(URI u) throws IllegalArgumentException {
@@ -2074,7 +2074,7 @@ public final class Utilities {
      * @return a URL using the <code>file</code> protocol
      * @throws MalformedURLException for no good reason
      * @see #toFile
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=29711">Issue #29711</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=29711">Issue #29711</a>
      * @since 3.26
      * @deprecated Use {@link #toURI} and {@link URI#toURL} instead under JDK 1.4.
      *             ({@link File#toURL} is buggy in JDK 1.3 and the bugs are not fixed in JDK 1.4.)
@@ -2103,7 +2103,7 @@ public final class Utilities {
      * @return an absolute file it points to, or <code>null</code> if the URL
      *         does not seem to point to a file at all
      * @see #toURL
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=29711">Issue #29711</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=29711">Issue #29711</a>
      * @since 3.26
      * @deprecated Use {@link URL#toURI} and {@link #toFile(URI)} instead under JDK 1.4.
      *             (There was no proper equivalent under JDK 1.3.)
@@ -2180,7 +2180,7 @@ public final class Utilities {
 
         /** Get the unorderable elements.
         * @return the elements
-        * @see Utilities.UnorderableException#Utilities.UnorderableException(Collection,Map)
+        * @see UnorderableException#UnorderableException(Collection,Map)
         */
         public Collection getUnorderable() {
             return unorderable;
@@ -2188,7 +2188,7 @@ public final class Utilities {
 
         /** Get the dependencies.
         * @return the dependencies
-        * @see Utilities.UnorderableException#Utilities.UnorderableException(Collection,Map)
+        * @see UnorderableException#UnorderableException(Collection,Map)
         */
         public Map getDeps() {
             return deps;

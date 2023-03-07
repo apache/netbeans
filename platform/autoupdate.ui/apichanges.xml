@@ -32,6 +32,22 @@
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="AutoupdateScheduler.InitialCheck">
+            <api name="ui"/>
+            <summary>Force initial AU check</summary>
+            <version major="1" minor="67"/>
+            <date day="7" month="3" year="2023"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" binary="compatible" deletion="no"
+                deprecation="no" semantic="compatible" source="compatible"
+            />
+            <description>
+                <p>
+                    <a href="@TOP@/index.html#group-property">Branding API</a> to force or skip initial check was added. If branded to false, the check on first startup is skipped
+                    in NEVER mode. By default the check is done initially even if mode is set to NEVER.
+                </p>
+            </description>
+        </change>
         <change id="PluginManager.installPlugins">
             <api name="ui"/>
             <summary>PluginManager.install</summary>

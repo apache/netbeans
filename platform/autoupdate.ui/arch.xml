@@ -525,6 +525,14 @@
    include <code>{ "update", "available", "local", "installed" }</code>.
    </api>
   </p>
+  <p>
+   <api category="devel" group="property" name="org.netbeans.modules.autoupdate.ui.api.AutoupdateCheckScheduler_InitialCheckForced" type="export">
+       Determines if an initial autoupdate check is forced at the first startup. By default (set to <code>true</code>), the check is performed always, regardless 
+       of actual AutoUpdate settings in the distribution. Once the check was done (last check is recorded), the configured settings applied. If
+       <code>false</code>, the check is done according to settings, even for the first time. This affects mainly NEVER setting, as the other are
+       time-based and the last-check time is missing on 1st startup.
+   </api>
+  </p>
  </answer>
 
 

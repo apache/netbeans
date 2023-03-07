@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -48,6 +49,7 @@ import org.netbeans.modules.autoupdate.ui.PluginManagerUI;
 import org.netbeans.modules.autoupdate.ui.Unit;
 import org.netbeans.modules.autoupdate.ui.UnitCategory;
 import org.netbeans.modules.autoupdate.ui.Utilities;
+import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.netbeans.modules.autoupdate.ui.wizards.InstallUnitWizard;
 import org.netbeans.modules.autoupdate.ui.wizards.LazyInstallUnitWizardIterator.LazyUnit;
 import org.netbeans.modules.autoupdate.ui.wizards.OperationWizardModel.OperationType;
@@ -67,6 +69,12 @@ import org.openide.windows.WindowManager;
  * @author Jiri Rechtacek
  */
 public class AutoupdateCheckScheduler {
+    /**
+     * System property that allows to skip forced initial check. If set to true, the check is not forced, if a check was never
+     * was performed - the scheduling is always driven by AU settings.
+     */
+    private static final String INITIAL_CHECK_SKIP_OPT = "autoupdate.initial.check.skip"; // NOI18N
+
     private static RequestProcessor.Task regularlyCheck = null;    
     private static final RequestProcessor REGULARLY_CHECK_TIMER = 
         new RequestProcessor("auto-checker-reqularly-timer", 1, true); // NOI18N
@@ -357,6 +365,14 @@ public class AutoupdateCheckScheduler {
         return problems;
     }
     
+    private static boolean isInitialCheckForced() {
+        try {
+            return Boolean.parseBoolean(NbBundle.getMessage(PluginManager.class, "API_AutoupdateCheckScheduler_InitialCheckForced")); // NOI18N
+        } catch (MissingResourceException ex) {
+            return true;
+        }
+    }
+    
     private static boolean timeToCheck () {
         if (getReqularlyTimerTask () != null) {
             // if time is off then is time to check
@@ -365,9 +381,16 @@ public class AutoupdateCheckScheduler {
             }
         }
         
+        Date lastCheck = AutoupdateSettings.getLastCheck ();
+        
         // If this is the first time always check
-        if (AutoupdateSettings.getLastCheck () == null) {
-            return true;
+        if (lastCheck == null) {
+            if (isInitialCheckForced()) {
+                return true;
+            }
+            Calendar c = Calendar.getInstance();
+            c.set(2000, 0, 0);
+            lastCheck = c.getTime();
         }
         
         switch (AutoupdateSettings.getPeriod ()) {
@@ -376,9 +399,8 @@ public class AutoupdateCheckScheduler {
             case AutoupdateSettings.NEVER:
                 return false;
             case AutoupdateSettings.CUSTOM_CHECK_INTERVAL:
-                return AutoupdateSettings.getLastCheck ().getTime () + AutoupdateSettings.getCheckInterval () < new Date ().getTime ();
+                return lastCheck.getTime () + AutoupdateSettings.getCheckInterval () < new Date ().getTime ();
             default:
-                Date lastCheck = AutoupdateSettings.getLastCheck();
                 GregorianCalendar calendar = new GregorianCalendar();
                 calendar.setTime (lastCheck);
 

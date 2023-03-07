@@ -74,7 +74,7 @@ public class RustLanguageLexer extends AbstractAntlrLexerBridge<RustLexer, RustT
 
     }
 
-    private static final RustLexer createLexer(CharStream input) {
+    private static RustLexer createLexer(CharStream input) {
         RustLexer lexer = new RustLexer(input);
         lexer.removeErrorListeners();
         lexer.addErrorListener(new RustLanguageLexerErrorListener());
@@ -96,8 +96,8 @@ public class RustLanguageLexer extends AbstractAntlrLexerBridge<RustLexer, RustT
     }
 
     private static final class LexerState extends AbstractAntlrLexerBridge.LexerState<RustLexer> {
-        final org.antlr.v4.runtime.Token lt1;
-        final org.antlr.v4.runtime.Token lt2;
+        final Integer lt1;
+        final Integer lt2;
 
         LexerState(RustLexer lexer) {
             super(lexer);

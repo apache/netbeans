@@ -54,8 +54,8 @@ public abstract class RustLexerBase extends Lexer {
         super(input);
     }
 
-    public Token lt1;
-    public Token lt2;
+    public Integer lt1;
+    public Integer lt2;
 
     @Override
     public Token nextToken() {
@@ -85,7 +85,7 @@ public abstract class RustLexerBase extends Lexer {
         if (next.getChannel() == Token.DEFAULT_CHANNEL) {
             // Keep track of the last token on the default channel.
             this.lt2 = this.lt1;
-            this.lt1 = next;
+            this.lt1 = next.getType();
         }
 
         return next;
@@ -130,10 +130,10 @@ public abstract class RustLexerBase extends Lexer {
         if (this.lt1 == null || this.lt2 == null) {
             return true;
         }
-        if (this.lt1.getType() != RustLexer.DOT) {
+        if (this.lt1 != RustLexer.DOT) {
             return true;
         }
-        switch (this.lt2.getType()) {
+        switch (this.lt2) {
             case RustLexer.CHAR_LITERAL:
             case RustLexer.STRING_LITERAL:
             case RustLexer.RAW_STRING_LITERAL:

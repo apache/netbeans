@@ -1,0 +1,11 @@
+.class\:with\:colon\:name {
+    color: red;
+}
+
+custom-element\:with\:colon {
+    color: red;
+}
+
+#id\:with\:colon {
+    color: red;
+}

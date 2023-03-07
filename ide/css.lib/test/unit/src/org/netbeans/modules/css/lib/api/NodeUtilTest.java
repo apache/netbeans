@@ -122,5 +122,12 @@ public class NodeUtilTest extends NbTestCase {
         assertEquals(NodeType.token, tokenNode.type());
         assertEquals("h1", tokenNode.image().toString());
     }
-        
+
+    public void testUnescape() throws Exception {
+        assertEquals(null, NodeUtil.unescape(null));
+        assertEquals("div", NodeUtil.unescape("div"));
+        assertEquals("demo:with:colon", NodeUtil.unescape("demo\\:with\\:colon"));
+        assertEquals("demo:with:colon", NodeUtil.unescape("demo\\3A with\\3A colon"));
+        assertEquals("demo\uD801\uDC37with\uD801\uDC37highSurrogate", NodeUtil.unescape("demo\\10437with\\10437highSurrogate"));
+    }
 }

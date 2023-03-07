@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.css.refactoring;
+package org.netbeans.modules.html.editor.refactoring;
 
 import java.util.Arrays;
 import javax.swing.event.ChangeListener;
@@ -31,6 +31,8 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
 
 /**
+ * <p>Copy of {@link org.netbeans.modules.css.refactoring.WhereUsedUI}
+ * to not add more API in CSS module or add circular dependency</p>
  *
  * @author mfukala@netbeans.org
  */

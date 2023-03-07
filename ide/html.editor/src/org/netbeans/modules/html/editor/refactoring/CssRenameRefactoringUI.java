@@ -16,14 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.css.refactoring;
+package org.netbeans.modules.html.editor.refactoring;
 
-import org.netbeans.modules.css.refactoring.api.CssRefactoringExtraInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.css.refactoring.api.CssRefactoringExtraInfo;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;
@@ -35,6 +35,8 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
 
 /**
+ * <p>Copy of {@link org.netbeans.modules.css.refactoring.CssRenameRefactoringUI}
+ * to not add more API in CSS module or add circular dependency</p>
  *
  * @author mfukala@netbeans.org
  */

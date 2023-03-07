@@ -149,8 +149,16 @@ public abstract class CssCompletionItem extends DefaultCompletionProposal {
             String value,
             int anchorOffset,
             boolean related) {
+        return createSelectorCompletionItem(element, value, anchorOffset, related, false);
+    }
 
-        return new SelectorCompletionItem(element, value, anchorOffset, related);
+    public static CssCompletionItem createSelectorCompletionItem(CssElement element,
+            String value,
+            int anchorOffset,
+            boolean related,
+            boolean escape) {
+
+        return new SelectorCompletionItem(element, value, anchorOffset, related, escape);
     }
 
     public static CssCompletionItem createFileCompletionItem(CssElement element,
@@ -568,14 +576,17 @@ public abstract class CssCompletionItem extends DefaultCompletionProposal {
     static class SelectorCompletionItem extends CssCompletionItem {
 
         private static final String RELATED_SELECTOR_COLOR = "007c00"; //NOI18N
-        private static String GRAY_COLOR_CODE = Integer.toHexString(Color.GRAY.getRGB()).substring(2);
-        private boolean related;
+        private static final String GRAY_COLOR_CODE = Integer.toHexString(Color.GRAY.getRGB()).substring(2);
+        private final boolean related;
+        private final String displayName;
 
         private SelectorCompletionItem(CssElement element,
                 String value,
                 int anchorOffset,
-                boolean related) {
-            super(element, value, anchorOffset, false);
+                boolean related,
+                boolean escape) {
+            super(element, escape ? escape(value) : value, anchorOffset, false);
+            this.displayName = value;
             this.related = related;
         }
 
@@ -590,7 +601,7 @@ public abstract class CssCompletionItem extends DefaultCompletionProposal {
                 buf.append(GRAY_COLOR_CODE);
             }
             buf.append(">");
-            buf.append(getName());
+            buf.append(displayName);
             buf.append("</font>"); //NOI18N
             if (related) {
                 buf.append("</b>"); //NOI18N
@@ -608,6 +619,42 @@ public abstract class CssCompletionItem extends DefaultCompletionProposal {
         @Override
         public int getSortPrioOverride() {
             return super.getSortPrioOverride() - (related ? 1 : 0);
+        }
+
+        /**
+         * Escape the input for usage in CSS files.
+         *
+         * @param input
+         * @return
+         */
+        private static String escape(String input) {
+            StringBuilder result = new StringBuilder(input.length());
+            boolean first = true;
+            for(int i = 0; i < input.length(); i++) {
+                char entry = input.charAt(i);
+                boolean mustBeEscaped = false;
+                if(first) {
+                    first = false;
+                    if(! ((entry == '_') || (entry >= 'a' && entry <= 'z') || (entry >= 'A' && entry <= 'Z'))) {
+                        mustBeEscaped = true;
+                    }
+                } else {
+                    if(! ((entry == '_') || (entry >= 'a' && entry <= 'z') || (entry >= 'A' && entry <= 'Z') || (entry >= '0' && entry <= '9') || entry == '-')) {
+                        mustBeEscaped = true;
+                    }
+                }
+                if (mustBeEscaped) {
+                    result.append("\\");
+                    if (entry > 127 || Character.isWhitespace(entry) || Character.isISOControl(entry)) {
+                        result.append((int) entry);
+                    } else {
+                        result.append(entry);
+                    }
+                } else {
+                    result.append(entry);
+                }
+            }
+            return result.toString();
         }
     }
 

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.css.refactoring;
+package org.netbeans.modules.html.editor.refactoring;
 
 
 import java.util.Collections;
@@ -29,7 +29,7 @@ import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.UiUtils;
 import org.netbeans.modules.csl.spi.GsfUtilities;
-import org.netbeans.modules.css.refactoring.api.Entry;
+import org.netbeans.modules.html.editor.indexing.Entry;
 import org.netbeans.modules.refactoring.spi.SimpleRefactoringElementImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.text.CloneableEditorSupport;
@@ -42,7 +42,10 @@ import org.openide.util.lookup.Lookups;
 
 /**
  * An element in the refactoring preview list which holds information about the find-usages-match
- * 
+ *
+ * <p>Copy of {@link org.netbeans.modules.css.refactoring.WhereUsedElement}
+ * to not add more API in CSS module or add circular dependency</p>
+ *
  * @author Tor Norbye
  * @author mfukala@netbeans.org
  */

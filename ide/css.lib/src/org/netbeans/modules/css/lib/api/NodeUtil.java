@@ -26,6 +26,8 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.netbeans.modules.css.lib.TokenNode;
 
 /**
@@ -391,5 +393,36 @@ public final class NodeUtil {
         visitor.visitChildren(node);
         
         return visitor.getResult().get();
+    }
+
+    private static final Pattern UNICODE = Pattern.compile("\\\\([0-9a-fA-F]{1,6})[\n\r\f\t ]*");
+    private static final Pattern ESCAPE = Pattern.compile("\\\\([^\n\r0-9A-Fa-f])");
+    public static String unescape(CharSequence image) {
+        if(image == null) {
+            return null;
+        }
+        Matcher m = UNICODE.matcher(image);
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            try {
+                String hexString = m.group(1);
+                int codePoint = Integer.parseInt(hexString, 16);
+                if(Character.isBmpCodePoint(codePoint)) {
+                    m.appendReplacement(sb, "");
+                    sb.append((char) codePoint);
+                } else if (Character.isValidCodePoint(codePoint)) {
+                    m.appendReplacement(sb, "");
+                    sb.append(Character.highSurrogate(codePoint));
+                    sb.append(Character.lowSurrogate(codePoint));
+                } else {
+                    m.appendReplacement(sb, m.group());
+                }
+            } catch (NumberFormatException ex) {
+                return m.group();
+            }
+        }
+        m.appendTail(sb);
+        String unescaped = ESCAPE.matcher(sb.toString()).replaceAll("$1");
+        return unescaped;
     }
 }

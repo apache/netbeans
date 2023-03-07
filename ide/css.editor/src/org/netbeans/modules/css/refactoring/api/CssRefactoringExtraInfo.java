@@ -16,32 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.css.lib.api;
 
-import java.util.List;
+package org.netbeans.modules.css.refactoring.api;
 
 /**
- * Node of the css source parse tree.
  *
- * @author marekfukala
+ * @author mfukala@netbeans.org
  */
-public interface Node {
-    
-    public int from();
+public class CssRefactoringExtraInfo {
 
-    public int to();
-    
-    public String name();
+    private boolean refactorAll;
 
-    public NodeType type();
-    
-    public List<Node> children();
-    
-    public Node parent();
-    
-    public CharSequence image();
+    public void setRefactorAll(boolean refactorAll) {
+        this.refactorAll = refactorAll;
+    }
 
-    public default String unescapedImage() {
-        return NodeUtil.unescape(image());
+    public boolean isRefactorAll() {
+        return refactorAll;
     }
 }

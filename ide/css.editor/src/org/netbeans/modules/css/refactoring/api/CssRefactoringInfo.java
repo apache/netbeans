@@ -16,22 +16,44 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.css.refactoring.api;
 
-package org.netbeans.modules.css.refactoring;
+import org.openide.filesystems.FileObject;
+
 
 /**
  *
  * @author mfukala@netbeans.org
  */
-class CssRefactoringExtraInfo {
-
-    private boolean refactorAll;
-
-    void setRefactorAll(boolean refactorAll) {
-        this.refactorAll = refactorAll;
+public class CssRefactoringInfo {
+    public enum Type {
+        ELEMENT,
+        CLASS,
+        ID,
+        HEX_COLOR,
+        RESOURCE_IDENTIFIER,
+        URI
     }
 
-    public boolean isRefactorAll() {
-        return refactorAll;
+    private final FileObject fileObject;
+    private final String name;
+    private final Type type;
+
+    public CssRefactoringInfo(FileObject fileObject, String name, Type type) {
+        this.fileObject = fileObject;
+        this.name = name;
+        this.type = type;
+    }
+
+    public FileObject getFileObject() {
+        return fileObject;
+    }
+
+    public String getElementName() {
+        return name;
+    }
+
+    public Type getType() {
+        return type;
     }
 }

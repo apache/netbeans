@@ -3,11 +3,6 @@
 	azimuth: behind;
 }
 
-  .pokus{}
  SELECTOR {
 	color: #660066;
 }
-
-  #pid{}
-  .aclass2{}
-  #divid2{}

@@ -16,23 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.css.refactoring;
+package org.netbeans.modules.html.editor.refactoring;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.spi.GsfUtilities;
-import org.netbeans.modules.css.editor.Css3Utils;
-import org.netbeans.modules.css.editor.CssProjectSupport;
-import org.netbeans.modules.css.indexing.CssFileModel;
 import org.netbeans.modules.css.indexing.api.CssIndex;
-import org.netbeans.modules.css.refactoring.api.CssRefactoringExtraInfo;
 import org.netbeans.modules.css.refactoring.api.CssRefactoringInfo;
+import org.netbeans.modules.css.refactoring.api.CssRefactoringExtraInfo;
 import org.netbeans.modules.css.refactoring.api.CssRefactoringInfo.Type;
-import org.netbeans.modules.css.refactoring.api.Entry;
-import org.netbeans.modules.css.refactoring.api.RefactoringElementType;
+import org.netbeans.modules.html.editor.indexing.Entry;
+import org.netbeans.modules.html.editor.indexing.HtmlFileModel;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.refactoring.api.Problem;
@@ -40,18 +41,20 @@ import org.netbeans.modules.refactoring.api.WhereUsedQuery;
 import org.netbeans.modules.refactoring.spi.RefactoringElementsBag;
 import org.netbeans.modules.refactoring.spi.RefactoringPlugin;
 import org.netbeans.modules.web.common.api.DependenciesGraph;
-import org.netbeans.modules.web.common.api.LexerUtils;
-import org.netbeans.modules.web.common.api.WebUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+
+import static java.util.Arrays.asList;
 
 /**
  *
  * @author mfukala@netbeans.org
  */
 public class CssWhereUsedQueryPlugin implements RefactoringPlugin {
+
+    private static final Logger LOG = Logger.getLogger(CssWhereUsedQueryPlugin.class.getName());
 
     private final WhereUsedQuery refactoring;
     private boolean cancelled = false;
@@ -69,7 +72,7 @@ public class CssWhereUsedQueryPlugin implements RefactoringPlugin {
     }
 
     @Override
-    public Problem prepare(final RefactoringElementsBag elements) {
+    public Problem prepare(final RefactoringElementsBag refactoringElements) {
         if (cancelled) {
             return null;
         }
@@ -78,67 +81,46 @@ public class CssWhereUsedQueryPlugin implements RefactoringPlugin {
         CssRefactoringInfo context = lookup.lookup(CssRefactoringInfo.class);
 
         if (context != null) {
-            CssRefactoringInfo econtext = (CssRefactoringInfo) context;
-            CssProjectSupport sup = CssProjectSupport.findFor(context.getFileObject());
-            if (sup == null) {
+            Project containingProject = FileOwnerQuery.getOwner(context.getFileObject());
+
+            if(containingProject == null) {
                 return null;
             }
-            CssIndex index = sup.getIndex();
 
-            Type cssType = econtext.getType();
+            CssIndex index = null;
+            try {
+                index = CssIndex.get(containingProject);
+            } catch (IOException ex) {
+                LOG.log(Level.INFO, "Failed to open CssIndex for: " + containingProject, ex);
+            }
+            if (index == null) {
+                return null;
+            }
 
-            //find usages of: 
-            //1.class or id selector
-            //2.hash color
+            Type cssType = context.getType();
+
+            if(!(cssType == Type.CLASS || cssType == Type.ID)) {
+                return null;
+            }
+
+            //find usages of: class or id selector
             Collection<FileObject> files;
             ElementKind kind;
-            String elementImage = econtext.getElementName();
-            RefactoringElementType type;
+            String elementImage = context.getElementName();
+
             switch (cssType) {
                 case CLASS:
                     files = index.findClasses(elementImage);
                     kind = ElementKind.CLASS;
-                    type = RefactoringElementType.CLASS;
                     break;
                 case ID:
                     files = index.findIds(elementImage);
                     kind = ElementKind.ATTRIBUTE;
-                    type = RefactoringElementType.ID;
                     break;
-                case HEX_COLOR:
-                    files = index.findColor(elementImage);
-                    kind = ElementKind.FIELD;
-                    type = RefactoringElementType.COLOR;
-                    break;
-                case RESOURCE_IDENTIFIER:
-                    {
-                        FileObject resolved = WebUtils.resolve(context.getFileObject(), elementImage);
-                        if (resolved != null) {
-                            refactorFile(resolved, elements);
-                        }
-                    }
-                    return null;
-                //fallback if the resourceIdentifier contains URI (no STRING) token
-                case URI:
-                    {
-                        Matcher m = Css3Utils.URI_PATTERN.matcher(elementImage);
-                        if (m.matches()) {
-                            int groupIndex = 1;
-                            String content = m.group(groupIndex);
-                            String unquoted = WebUtils.unquotedValue(content);
-                            FileObject resolved = WebUtils.resolve(context.getFileObject(), elementImage);
-                            if (resolved != null) {
-                                refactorFile(resolved, elements);
-                            }
-                        }
-                    }
-                    return null;
-
                 default:
                     //cannot happen
                     files = null;
                     kind = null;
-                    type = null;
             }
 
             List<FileObject> involvedFiles = new LinkedList<>(files);
@@ -173,62 +155,33 @@ public class CssWhereUsedQueryPlugin implements RefactoringPlugin {
                         source = Source.create(file);
                     }
 
-                    CssFileModel model = CssFileModel.create(source);
-                    Collection<Entry> entries = model.get(type);
+                    HtmlFileModel model = new HtmlFileModel(source);
 
-                    boolean related = relatedFiles.contains(file);
-                    for (Entry entry : entries) {
-                        if (entry.isValidInSourceDocument()
-                                && LexerUtils.equals(elementImage, entry.getName(), type == RefactoringElementType.COLOR, false)) {
-                            WhereUsedElement elem = WhereUsedElement.create(file, entry, kind, related);
-                            elements.add(refactoring, elem);
-                        }
+                    List<Entry> entries = null;
+
+                    if (Type.CLASS == cssType) {
+                        entries = model.getCssClasses().get(elementImage);
+                    } else if (Type.ID == cssType) {
+                        Entry e = model.getIds().get(elementImage);
+                        entries = e == null ? null : asList(e);
                     }
 
+                    if(entries == null) {
+                        continue;
+                    }
+
+                    boolean related = relatedFiles.contains(file);
+
+                    for (Entry e : entries) {
+                        refactoringElements.add(refactoring, WhereUsedElement.create(file, e, kind, related));
+                    }
                 } catch (ParseException ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }
-
-        } else {
-            FileObject fileObject = refactoring.getRefactoringSource().lookup(FileObject.class);
-            if (fileObject != null && fileObject.isData()) {
-                //css file where used query
-                refactorFile(fileObject, elements);
-            }
         }
 
         return null;
-    }
-
-    private void refactorFile(FileObject base, RefactoringElementsBag elements) {
-        CssProjectSupport sup = CssProjectSupport.findFor(base);
-        if (sup == null) {
-            return;
-        }
-
-        CssIndex index = sup.getIndex();
-        DependenciesGraph deps = index.getDependencies(base);
-
-        //find only files directly importing the base file
-        String baseFileName = base.getNameExt();
-        for (org.netbeans.modules.web.common.api.DependenciesGraph.Node referingNode : deps.getSourceNode().getReferingNodes()) {
-            try {
-                FileObject file = referingNode.getFile();
-                CssFileModel model = CssFileModel.create(Source.create(file));
-                Collection<Entry> imports = model.getImports();
-                //find the import of the base file
-                for (Entry e : imports) {
-                    if (e.isValidInSourceDocument() && e.getName().indexOf(baseFileName) != -1) {
-                        //found
-                        WhereUsedElement elem = WhereUsedElement.create(file, e, ElementKind.FILE);
-                        elements.add(refactoring, elem);
-                    }
-                }
-            } catch (ParseException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
     }
 
     @Override

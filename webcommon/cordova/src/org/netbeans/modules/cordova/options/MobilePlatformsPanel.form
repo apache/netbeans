@@ -113,9 +113,9 @@
                           <Component id="androidSdkLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="androidSdkField" min="-2" pref="357" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="androidSdkField" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="androidSdkBrowse" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
@@ -125,16 +125,16 @@
                               </Group>
                           </Group>
                       </Group>
-                      <Component id="envVarWarnLabel" alignment="0" max="32767" attributes="0"/>
+                      <Component id="envVarWarnLabel" alignment="0" pref="583" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace pref="18" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="androidSdkLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="androidSdkField" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -212,7 +212,7 @@
                       <Component id="identityTextField" max="32767" attributes="0"/>
                       <Component id="provisioningCombo" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

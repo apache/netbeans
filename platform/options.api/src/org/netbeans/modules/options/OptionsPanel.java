@@ -404,7 +404,7 @@ public class OptionsPanel extends JPanel {
 
         pOptions.setBorder(new CompoundBorder(
                 new VariableBorder(null, null, borderMac, null),
-                BorderFactory.createEmptyBorder(0, 5, 5, 5)
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
                 ));
         add(pCategories, BorderLayout.NORTH);
         add(pOptions, BorderLayout.CENTER);

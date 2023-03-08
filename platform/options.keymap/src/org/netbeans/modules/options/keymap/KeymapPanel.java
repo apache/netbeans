@@ -108,12 +108,9 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
         actionsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         actionsTable.setAutoscrolls(true);
         
-        ActionListener al = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                getModel().setSearchText(searchField.getText());
-                getModel().update();
-            }
+        ActionListener al = (ActionEvent e) -> {
+            getModel().setSearchText(searchField.getText());
+            getModel().update();
         };
 
         final Timer searchDelayTimer = new Timer(SEARCH_DELAY_TIME_LONG, al);
@@ -148,12 +145,7 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
 
         searchSCField.addKeyListener(new ShortcutListener(false));
 
-        ActionListener al2 = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                narrowByShortcut();
-            }
-        };
+        ActionListener al2 = (ActionEvent e) -> narrowByShortcut();
 
         final Timer searchDelayTimer2 = new Timer(SEARCH_DELAY_TIME_SHORT, al2);
         searchDelayTimer2.setRepeats(false);
@@ -296,20 +288,18 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
     private void narrowByShortcut() {
         if (searchSCField.getText().length() != 0) {
             final String searchText = searchSCField.getText();
-            getModel().runWithoutEvents(new Runnable() {
-                public void run() {
-                    getModel().getDataVector().removeAllElements();
-
-                    for(List<String> categories : getModel().getCategories().values()) {
-                        for(String category : categories) {
-                            for (Object o : getMutableModel().getItems(category, false)) {
-                                ShortcutAction sca = (ShortcutAction) o;
-                                String[] shortcuts = getMutableModel().getShortcuts(sca);
-                                for (int i = 0; i < shortcuts.length; i++) {
-                                    String shortcut = shortcuts[i];
-                                    if (searched(shortcut, searchText))
-                                        getModel().addRow(new Object[]{new ActionHolder(sca, false), shortcut, category, ""});
-                                }
+            getModel().runWithoutEvents(() -> {
+                getModel().getDataVector().removeAllElements();
+                
+                for(List<String> categories : getModel().getCategories().values()) {
+                    for(String category : categories) {
+                        for (Object o : getMutableModel().getItems(category, false)) {
+                            ShortcutAction sca = (ShortcutAction) o;
+                            String[] shortcuts = getMutableModel().getShortcuts(sca);
+                            for (int i = 0; i < shortcuts.length; i++) {
+                                String shortcut = shortcuts[i];
+                                if (searched(shortcut, searchText))
+                                    getModel().addRow(new Object[]{new ActionHolder(sca, false), shortcut, category, ""});
                             }
                         }
                     }
@@ -371,6 +361,7 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
         class I implements Runnable, TaskListener {
             int stage;
             
+            @Override
             public void run() {
                 if (stage > 0) {
                     ((CardLayout)actionsView.getLayout()).show(actionsView, "actions"); // NOI18N
@@ -464,8 +455,6 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
         lProfile = new javax.swing.JLabel();
         cbProfile = new javax.swing.JComboBox();
         manageButton = new javax.swing.JButton();
-        spShortcuts = new javax.swing.JScrollPane();
-        liShortcuts = new javax.swing.JList();
         searchField = new javax.swing.JTextField();
         searchLabel = new javax.swing.JLabel();
         searchSCLabel = new javax.swing.JLabel();
@@ -477,8 +466,6 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
         waitLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         actionsTable = new KeymapTable();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         btnPrintAsHTML = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
 
@@ -486,8 +473,6 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
         org.openide.awt.Mnemonics.setLocalizedText(lProfile, org.openide.util.NbBundle.getMessage(KeymapPanel.class, "CTL_Keymap_Name")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(manageButton, org.openide.util.NbBundle.getMessage(KeymapPanel.class, "CTL_Duplicate")); // NOI18N
-
-        spShortcuts.setViewportView(liShortcuts);
 
         searchField.setText(org.openide.util.NbBundle.getMessage(KeymapPanel.class, "KeymapPanel.searchField.text")); // NOI18N
 
@@ -524,18 +509,18 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
                 .addComponent(waitLabel)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(225, Short.MAX_VALUE)
+                .addContainerGap(222, Short.MAX_VALUE)
                 .addComponent(actionProgress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(224, Short.MAX_VALUE))
+                .addContainerGap(221, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(0, 57, Short.MAX_VALUE)
+                .addGap(0, 65, Short.MAX_VALUE)
                 .addComponent(waitLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(actionProgress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 90, Short.MAX_VALUE))
+                .addGap(0, 98, Short.MAX_VALUE))
         );
 
         actionsView.add(jPanel1, "wait");
@@ -564,23 +549,6 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(spShortcuts, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(83, 83, 83)
-                                .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lProfile)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbProfile, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnPrintAsHTML)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(manageButton))))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(searchLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -591,9 +559,21 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
                         .addComponent(searchSCField, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(moreButton))
-                    .addComponent(actionsView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(lProfile)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbProfile, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnPrintAsHTML)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(manageButton))
+                            .addComponent(actionsView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(6, 6, 6))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {searchField, searchSCField});
@@ -609,31 +589,22 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
                         .addComponent(lProfile)
                         .addComponent(cbProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnPrintAsHTML)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(moreButton)
-                            .addComponent(searchSCField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(searchSCLabel)
-                            .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(searchLabel))
-                        .addGap(10, 10, 10)
-                        .addComponent(actionsView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(87, 87, 87)
-                        .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spShortcuts, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filler1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(moreButton)
+                    .addComponent(searchSCField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchSCLabel)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(actionsView, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         searchField.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(KeymapPanel.class, "KeymapPanel.searchField.AccessibleContext.accessibleDescription")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
+    @Override
     public void hidePopup() {
         if (searchPopup != null) {
             searchPopup.hide();
@@ -674,20 +645,16 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
     private javax.swing.JPanel actionsView;
     private javax.swing.JButton btnPrintAsHTML;
     private javax.swing.JComboBox cbProfile;
-    private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lProfile;
-    private javax.swing.JList liShortcuts;
     private javax.swing.JButton manageButton;
     private javax.swing.JButton moreButton;
     private javax.swing.JTextField searchField;
     private javax.swing.JLabel searchLabel;
     private javax.swing.JTextField searchSCField;
     private javax.swing.JLabel searchSCLabel;
-    private javax.swing.JScrollPane spShortcuts;
     private javax.swing.JLabel waitLabel;
     // End of variables declaration//GEN-END:variables
 
@@ -760,11 +727,7 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
             }
             panel.setCustomProfile(keymapModel.getMutableModel().isCustomProfile(keymapModel.getMutableModel().getCurrentProfile()));
             popup.show(table, x, y);
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    panel.requestFocus();
-                }
-            });
+            SwingUtilities.invokeLater(panel::requestFocus);
             popup.requestFocus();
             return true;
         }
@@ -812,6 +775,7 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
         return;
     }
     
+    @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == getMutableModel()) {
             firePropertyChange(OptionsPanelController.PROP_CHANGED, Boolean.FALSE, Boolean.TRUE);

@@ -44,13 +44,12 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="jScrollPane1" min="-2" pref="140" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pnlCards" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="jScrollPane1" min="-2" pref="140" max="-2" attributes="0"/>
                   <Component id="lblCategory" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="pnlCards" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -60,11 +59,9 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="lblCategory" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="pnlCards" max="32767" attributes="0"/>
-                  <Component id="jScrollPane1" max="32767" attributes="0"/>
-              </Group>
+              <Component id="jScrollPane1" max="32767" attributes="0"/>
           </Group>
+          <Component id="pnlCards" alignment="1" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -93,7 +90,7 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="txtProjectNodeNameCustomPattern" max="32767" attributes="0"/>
-                                  <Component id="cbProjectNodeNameMode" pref="258" max="32767" attributes="0"/>
+                                  <Component id="cbProjectNodeNameMode" pref="318" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -171,7 +168,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="265" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="268" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="lblJavadoc" linkSize="2" min="-2" max="-2" attributes="0"/>
@@ -188,7 +185,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="comSource" max="32767" attributes="1"/>
                           </Group>
-                          <Component id="jLabel3" alignment="0" pref="472" max="32767" attributes="0"/>
+                          <Component id="jLabel3" alignment="0" pref="466" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -396,7 +393,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="lblDirectory" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="txtDirectory" pref="257" max="32767" attributes="0"/>
+                                      <Component id="txtDirectory" pref="285" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="btnDirectory" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -617,8 +614,8 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="lblCommandLine">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="org.openide.util.NbBundle.getMessage(SettingsPanel.class, &quot;SettingsPanel.lblCommandLine.text&quot;)" type="code"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/maven/options/Bundle.properties" key="SettingsPanel.lblCommandLine.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <AuxValues>

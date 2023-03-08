@@ -474,6 +474,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         descriptionPanel.add(descriptionLabel, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(saveButton, org.openide.util.NbBundle.getMessage(HintsPanel.class, "HintsPanel.saveButton.text")); // NOI18N

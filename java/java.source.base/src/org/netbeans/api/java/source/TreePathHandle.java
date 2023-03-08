@@ -53,7 +53,6 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.source.PositionRefProvider;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;                                                                                                                                                                                     
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
@@ -401,6 +400,7 @@ public final class TreePathHandle {
                         case CLASS: kind = Tree.Kind.CLASS; break;
                         case ENUM: kind = Tree.Kind.ENUM; break;
                         case INTERFACE: kind = Tree.Kind.INTERFACE; break;
+                        case RECORD: kind = Tree.Kind.RECORD; break;
                         case ENUM_CONSTANT: case FIELD: kind = Tree.Kind.VARIABLE; break;
                         case METHOD: case CONSTRUCTOR: kind = Tree.Kind.METHOD; break;
                         default: kind = null; break;

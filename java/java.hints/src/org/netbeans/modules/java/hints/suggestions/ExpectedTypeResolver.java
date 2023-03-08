@@ -1035,7 +1035,7 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
         } else if (el.getKind() == ElementKind.FIELD) {
             // access to a field
             Element parent = el.getEnclosingElement();
-            if (parent.getKind() == ElementKind.CLASS || parent.getKind() == ElementKind.INTERFACE || parent.getKind() == ElementKind.ENUM) {
+            if (parent.getKind() == ElementKind.CLASS || parent.getKind() == ElementKind.INTERFACE || parent.getKind() == ElementKind.ENUM || parent.getKind() == ElementKind.RECORD) {
                 return Collections.singletonList(parent.asType());
             }
         }

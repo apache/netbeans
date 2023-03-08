@@ -113,8 +113,8 @@ webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2
 harness/apisupport.harness/external/launcher-12.5-distribution.zip platform/o.n.bootstrap/external/launcher-12.5-distribution.zip
 
 # only one is part of the product:
-java/libs.javacapi/external/nb-javac-jdk-19.0.1-ga-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-19.0.1-ga-api.jar
-java/libs.javacapi/external/nb-javac-jdk-19.0.1-ga.jar java/libs.nbjavacapi/external/nb-javac-jdk-19.0.1-ga.jar
+java/libs.javacapi/external/nb-javac-jdk-20+34-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-20+34-api.jar
+java/libs.javacapi/external/nb-javac-jdk-20+34.jar java/libs.nbjavacapi/external/nb-javac-jdk-20+34.jar
 
 # Maven and Gradle are self-contained distributions - ignoring overlaps
 platform/o.apache.commons.lang3/external/commons-lang3-3.8.1.jar java/maven.embedder/external/apache-maven-3.8.7-bin.zip
@@ -127,3 +127,11 @@ enterprise/jakartaee10.platform/external/generated-jakarta.jakartaee-api-10.0.0-
 
 # Jakarta Servlet API is used by both servletjspapi and websvc.restlib
 enterprise/servletjspapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websvc.restlib/external/jakarta.servlet-api-4.0.4.jar
+
+# rust/rust.grammar uses ANTLR4 to compile grammars at build time, but use the runtime libraries from ide/libs.antlr4.runtime - ignoring overlaps
+rust/rust.grammar/external/antlr4-4.11.1.jar ide/libs.antlr4.runtime/external/antlr4-4.11.1.jar 
+rust/rust.grammar/external/antlr4-runtime-4.11.1.jar ide/libs.antlr4.runtime/external/antlr4-runtime-4.11.1.jar 
+rust/rust.grammar/external/ST4-4.3.4.jar ide/libs.antlr4.runtime/external/ST4-4.3.4.jar 
+
+# The enterprise usage is for library - it is better to keep the two separate
+ide/servletapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websvc.restlib/external/jakarta.servlet-api-4.0.4.jar

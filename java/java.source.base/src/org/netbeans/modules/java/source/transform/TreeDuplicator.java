@@ -701,7 +701,7 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
 
     @Override
     public Tree visitDeconstructionPattern(DeconstructionPatternTree tree, Void p) {
-        DeconstructionPatternTree n = make.DeconstructionPattern(tree.getDeconstructor(), tree.getNestedPatterns(), tree.getVariable());
+        DeconstructionPatternTree n = make.DeconstructionPattern(tree.getDeconstructor(), tree.getNestedPatterns());
         model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));

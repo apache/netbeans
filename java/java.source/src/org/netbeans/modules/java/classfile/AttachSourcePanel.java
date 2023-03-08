@@ -254,6 +254,7 @@ private void attachSources(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_at
             case PACKAGE:
             case CLASS:
             case INTERFACE:
+            case RECORD:
             case ENUM:
             case ANNOTATION_TYPE:
             case METHOD:

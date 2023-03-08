@@ -72,6 +72,7 @@ public final class LocalVariableTableEntry {
 
     /**
      * Returns the first byte code offset where this variable is valid.
+     * @return first bytecode offset where this variable is valid
      */ 
     public final int getStartPC() {
         return startPC;
@@ -80,6 +81,7 @@ public final class LocalVariableTableEntry {
     /**
      * Returns the length of the range of code bytes where this variable
      *         is valid.  
+     * @return length of range of code bytes where this variable is valid
      */
     public final int getLength() {
         return length;
@@ -87,6 +89,7 @@ public final class LocalVariableTableEntry {
 
     /**
      * Returns the name of this variable.
+     * @return name of the variable
      */
     public final String getName() {
         return name;
@@ -94,6 +97,7 @@ public final class LocalVariableTableEntry {
 
     /**
      * Returns the signature (type) of this variable.
+     * @return signature of this variable
      */
     public final String getDescription() {
         return description;
@@ -102,6 +106,7 @@ public final class LocalVariableTableEntry {
     /**
      * Returns the variable's index into the local variable array
      *         for the current stack frame.
+     * @return index of the variable
      */
     public final int getIndex() {
         return index;

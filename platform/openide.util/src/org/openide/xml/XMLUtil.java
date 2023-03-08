@@ -590,7 +590,7 @@ public final class XMLUtil extends Object {
 
     /**
      * Escape passed string as XML element content (<code>&lt;</code>,
-     * <code>&amp;</code> and <code>&gt;</code> in <code>]]></code> sequences).
+     * <code>&amp;</code> and <code>&gt;</code> in <code>]]&gt;</code> sequences).
      *
      * @param val a string to be escaped
      *

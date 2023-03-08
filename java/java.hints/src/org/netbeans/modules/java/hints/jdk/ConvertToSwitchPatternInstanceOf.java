@@ -21,6 +21,7 @@ package org.netbeans.modules.java.hints.jdk;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
@@ -161,15 +162,13 @@ public class ConvertToSwitchPatternInstanceOf {
                 CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseBindPattern, statementTree);
                 ctl.add(caseMultipleSwitchPatterns);
             }
-            List<Tree> caseDefaultLabel = new LinkedList<>();
-            caseDefaultLabel.add(wc.getTreeMaker().Identifier("default"));
             BlockTree elseTree = (BlockTree) ifPath;
             if (elseTree == null) {
                 elseTree = wc.getTreeMaker().Block(new ArrayList<>(), false);
             }
             
             Tree defaultTree = elseTree.getStatements().size() == 1 && isValidCaseTree(elseTree.getStatements().get(0))? elseTree.getStatements().get(0) : elseTree;
-            CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseDefaultLabel, defaultTree);
+            CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().Case(Collections.emptyList(), defaultTree);
             ctl.add(caseMultipleSwitchPatterns);
             wc.rewrite((IfTree) main.getLeaf(), wc.getTreeMaker().Switch(iot.getExpression(), ctl));
         }
@@ -257,15 +256,13 @@ public class ConvertToSwitchPatternInstanceOf {
                 CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseBindPattern, statementTree);
                 ctl.add(caseMultipleSwitchPatterns);
             }
-            List<Tree> caseDefaultLabel = new LinkedList<>();
-            caseDefaultLabel.add(wc.getTreeMaker().Identifier("default"));
             BlockTree elseTree = (BlockTree) ifPath;
             if (elseTree == null) {
                 elseTree = wc.getTreeMaker().Block(new ArrayList<>(), false);
             }
 
             Tree defaultTree = elseTree.getStatements().size() == 1 && isValidCaseTree(elseTree.getStatements().get(0))? elseTree.getStatements().get(0) : elseTree;
-            CaseTree casePatterns = wc.getTreeMaker().CasePatterns(caseDefaultLabel, defaultTree);
+            CaseTree casePatterns = wc.getTreeMaker().Case(Collections.emptyList(), defaultTree);
             ctl.add(casePatterns);
             wc.rewrite((IfTree) main.getLeaf(), wc.getTreeMaker().Switch(iot.getExpression(), ctl));
         }

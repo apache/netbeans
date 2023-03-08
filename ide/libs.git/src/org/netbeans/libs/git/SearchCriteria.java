@@ -138,6 +138,7 @@ public final class SearchCriteria {
     /**
      * No commit that was created before than the date returned by this method
      * does not satisfy the criteria.
+     * @return lower bounds date
      */
     public Date getFrom () {
         return from;
@@ -145,6 +146,7 @@ public final class SearchCriteria {
 
     /**
      * Sets the limit date all commits must satisfy.
+     * @param date lower bounds date
      */
     public void setFrom (Date date) {
         this.from = date;
@@ -153,6 +155,7 @@ public final class SearchCriteria {
     /**
      * No commit that was created later than the date returned by this method
      * does not satisfy the criteria.
+     * @return upper bound date
      */
     public Date getTo () {
         return to;
@@ -160,6 +163,7 @@ public final class SearchCriteria {
 
     /**
      * Sets the limit date all commits must satisfy.
+     * @param date upper dounds date
      */
     public void setTo (Date date) {
         this.to = date;
@@ -178,6 +182,7 @@ public final class SearchCriteria {
     /**
      * If the given value is <code>false</code> then no merge commits will 
      * satisfy the criteria and be processed.
+     * @param flag true to include merges
      */
     public void setIncludeMerges (boolean flag) {
         this.includeMerges = flag;
@@ -195,6 +200,7 @@ public final class SearchCriteria {
     /**
      * Sets the string that must be part of a commit's author or committer
      * string for the commit to pass the criteria.
+     * @param username substring
      */
     public void setUsername (String username) {
         this.username = username;
@@ -212,6 +218,7 @@ public final class SearchCriteria {
     /**
      * Sets the string that must be part of a commit's message string 
      * for the commit to pass the criteria.
+     * @param message substring
      */
     public void setMessage (String message) {
         this.message = message;
@@ -222,6 +229,7 @@ public final class SearchCriteria {
      * of commits should follow path renames and do not stop on a commit where 
      * an interesting file (given by the <code>getFiles</code> method) is 
      * renamed to another.
+     * @return true if follow renames
      */
     public boolean isFollow () {
         return follow;
@@ -230,6 +238,7 @@ public final class SearchCriteria {
     /**
      * Set the flag indicating the commits where a renamed file is modified 
      * satisfy the given criteria.
+     * @param flag follow renames
      */
     public void setFollowRenames (boolean flag) {
         this.follow = flag;

@@ -178,7 +178,7 @@ public final class OCIProfile implements OCISessionInitiator {
      * Optional.empty() OCI configuration was not found
      */
     @NbBundle.Messages({
-        "LBL_HomeRegion=Home Region: {0}"
+        "LBL_HomeRegion=Region: {0}"
     })
     public Optional<TenancyItem> getTenancy() {
         if (configProvider == null) {

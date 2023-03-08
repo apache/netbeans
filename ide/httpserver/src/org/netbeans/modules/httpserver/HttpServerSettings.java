@@ -20,13 +20,12 @@
 package org.netbeans.modules.httpserver;
 
 import java.awt.Dialog;
-import java.util.Hashtable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.Properties;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.prefs.Preferences;
 import javax.swing.event.EventListenerList;
 import org.openide.DialogDescriptor;
@@ -36,16 +35,15 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Utilities;
 import org.openide.NotifyDescriptor;
 import org.openide.DialogDisplayer;
-import org.openide.nodes.BeanNode;
 import org.openide.util.NbPreferences;
 
-/** Options for http server
-*
-* @author Ales Novak, Petr Jiricka
-*/
+/**
+ * Options for http server
+ *
+ * @author Ales Novak, Petr Jiricka
+ */
 public final class HttpServerSettings {
-    private static HttpServerSettings INSTANCE = new HttpServerSettings();
-    private static  BeanNode view = null;
+    private static final HttpServerSettings INSTANCE = new HttpServerSettings();
 
     private static final int MAX_START_RETRIES = 20;
     private static int currentRetries = 0;
@@ -55,10 +53,11 @@ public final class HttpServerSettings {
     /** Has this been initialized ?
     *  Becomes true if a "running" getter or setter is called
     */
+    @SuppressWarnings("PackageVisibleField")
     static boolean inited = false;
 
     /** Contains threads which are or will be asking for access for the given IP address. */
-    private static Hashtable<InetAddress,Thread> whoAsking = new Hashtable<InetAddress,Thread>();
+    private static final ConcurrentHashMap<InetAddress,Thread> whoAsking = new ConcurrentHashMap<>();
 
     public static final int SERVER_STARTUP_TIMEOUT = 3000;
 
@@ -67,33 +66,31 @@ public final class HttpServerSettings {
     /** constant for any host */
     public static final String ANYHOST = "any"; // NOI18N
 
+    @SuppressWarnings("PublicField")
     public static HostProperty hostProperty = null;
-    
-    public static final String PROP_PORT               = "port"; // NOI18N
-    public static final String PROP_HOST_PROPERTY      = "hostProperty"; // NOI18N
-    static final String PROP_WRAPPER_BASEURL    = "wrapperBaseURL"; // NOI18N
-    public static final String PROP_RUNNING            = "running"; // NOI18N
 
-    private static final String PROP_SHOW_GRANT_ACCESS  = "showGrantAccess"; // NOI18N
+    public static final String PROP_PORT = "port"; // NOI18N
+    public static final String PROP_HOST_PROPERTY = "hostProperty"; // NOI18N
+    public static final String PROP_RUNNING = "running"; // NOI18N
 
-    /** port */
-     private static final int DEFAULT_PORT = 8082;
+    private static final String PROP_SHOW_GRANT_ACCESS = "showGrantAccess"; // NOI18N
 
-    /** mapping of wrapper to URL */
+    /**
+     * port
+     */
+    private static final int DEFAULT_PORT = 8082;
+
+    /**
+     * mapping of wrapper to URL
+     */
+    @SuppressWarnings("FieldMayBeFinal")
     private static String wrapperBaseURL = "/resource/"; // NOI18N
     
     /** Reflects whether the server is actually running, not the running property */
+    @SuppressWarnings("PackageVisibleField")
     static boolean running = false;
 
     private static boolean startStopMessages = true;
-
-    private static Properties mappedServlets = new Properties();
-
-    /** http settings
-     * @deprecated use <CODE>SharedClassObject.findObject()</CODE>
-     */
-    @Deprecated
-    public static HttpServerSettings OPTIONS = null;
 
     /** Lock for the httpserver operations */
     private static Object httpLock;
@@ -137,6 +134,7 @@ public final class HttpServerSettings {
         synchronized (httpLock ()) {
             currentRetries = 0;
             running = true;
+            ServerControlNode.getInstance().updateNodeState();
             httpLock ().notifyAll();
         }
     }
@@ -147,6 +145,7 @@ public final class HttpServerSettings {
      */
     void runFailure(Throwable t) {
         running = false;
+        ServerControlNode.getInstance().updateNodeState();
         if (t instanceof IncompatibleClassChangeError) {
             // likely there is a wrong servlet API version on CLASSPATH
             DialogDisplayer.getDefault ().notify(new NotifyDescriptor.Message(
@@ -195,26 +194,10 @@ public final class HttpServerSettings {
         }
     }
 
-    /** Returns a relative directory URL with a leading and a trailing slash */
-    private String getCanonicalRelativeURL(String url) {
-        String newURL;
-        if (url.length() == 0)
-            newURL = "/";   // NOI18N
-        else {
-            if (url.charAt(0) != '/')
-                newURL = "/" + url; // NOI18N
-            else
-                newURL = url;
-            if (newURL.charAt(newURL.length() - 1) != '/')
-                newURL = newURL + "/";  // NOI18N
-        }
-        return newURL;
-    }
-
     /** setter for running status */
     public void setRunning(boolean running) {
         inited = true;
-        if (this.running == running)
+        if (HttpServerSettings.running == running)
             return;
 
         synchronized (httpLock ()) {
@@ -223,7 +206,8 @@ public final class HttpServerSettings {
                 HttpServerModule.initHTTPServer();
             }
             else {
-                this.running = false;
+                HttpServerSettings.running = false;
+                ServerControlNode.getInstance().updateNodeState();
                 HttpServerModule.stopHTTPServer();
             }
         }
@@ -236,29 +220,12 @@ public final class HttpServerSettings {
         return wrapperBaseURL;
     }
 
-    /** setter for classpath base */
-    void setWrapperBaseURL(String wrapperBaseURL) {
-        // canonical form starts and ends with a /
-        String oldURL;
-        String newURL = getCanonicalRelativeURL(wrapperBaseURL);
-
-        // check if any change is taking place
-        if (this.wrapperBaseURL.equals(newURL))
-            return;
-
-        // implement the change
-        synchronized (httpLock ()) {
-            oldURL = this.wrapperBaseURL;
-            this.wrapperBaseURL = newURL;
-            restartIfNecessary(false);
-        }
-    }
-
     /** setter for port */
     public void setPort(int p) {
         if (p <= 0 || p >65535) {
             NotifyDescriptor.Message msg = new NotifyDescriptor.Message(
-                        NbBundle.getMessage(HttpServerSettings.class, "ERR_PortNumberOutOfRange", Integer.valueOf(p)), NotifyDescriptor.ERROR_MESSAGE);
+                    NbBundle.getMessage(HttpServerSettings.class, "ERR_PortNumberOutOfRange", p),
+                    NotifyDescriptor.ERROR_MESSAGE);
             
             DialogDisplayer.getDefault().notify(msg);
             return;
@@ -284,17 +251,7 @@ public final class HttpServerSettings {
     }
 
     public HelpCtx getHelpCtx () {
-        return new HelpCtx (HttpServerSettings.class);
-    }
-
-    /** Returns string for localhost */
-    private String getLocalHost() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        }
-        catch (UnknownHostException e) {
-            return "localhost"; // NOI18N
-        }
+        return new HelpCtx ("org.netbeans.modules.httpserver.HttpServerSettings");
     }
 
     public void addGrantAccessListener(GrantAccessListener l) {
@@ -319,19 +276,22 @@ public final class HttpServerSettings {
         return (grantAccessEvent == null) ? false : grantAccessEvent.isGranted();
     }
 
-    /** Requests access for address addr. If necessary asks the user. Returns true it the access
-    * has been granted. */  
+    /**
+     * Requests access for address addr. If necessary asks the user. Returns
+     * true it the access
+     * has been granted.
+     */
     boolean allowAccess(InetAddress addr, String requestPath) {
         if (accessAllowedNow(addr, requestPath))
             return true;
 
-        Thread askThread = null;
+        Thread askThread;
         synchronized (whoAsking) {
             // one more test in the synchronized block
             if (accessAllowedNow(addr, requestPath))
                 return true;
 
-            askThread = (Thread)whoAsking.get(addr);
+            askThread = (Thread) whoAsking.get(addr);
             if (askThread == null) {
                 askThread = Thread.currentThread();
                 whoAsking.put(addr, askThread);
@@ -388,10 +348,7 @@ public final class HttpServerSettings {
         if (hs.contains(addr.getHostAddress()))
             return true;
 
-        if (fireGrantAccessEvent(addr, resource))
-            return true;
-
-        return false;
+        return fireGrantAccessEvent(addr, resource);
     }
 
     /** Appends the address to the list of addresses which have been granted access. */
@@ -410,7 +367,7 @@ public final class HttpServerSettings {
     /** Returns a list of addresses which have been granted access to the web server,
     * including the localhost. Addresses are represented as strings. */
     Set<String> getGrantedAddressesSet() {
-        HashSet<String> addr = new HashSet<String>();
+        HashSet<String> addr = new HashSet<>();
         try {
             addr.add(InetAddress.getByName("localhost").getHostAddress()); // NOI18N
             addr.add(InetAddress.getLocalHost().getHostAddress());
@@ -428,54 +385,6 @@ public final class HttpServerSettings {
         return addr;
     }
 
-    Properties getMappedServlets() {
-        return mappedServlets;
-    }
-
-    /** Converts string into string that is usable in URL. 
-     *  This mangling changes some characters
-     */
-    static String mangle (String name) {
-        StringBuffer sb = new StringBuffer ();
-        for (int i = 0; i < name.length (); i++) {
-            if (Character.isLetterOrDigit (name.charAt (i)) ||
-                name.charAt (i) == '.') {
-                sb.append (name.charAt (i));
-            }
-            else {
-                String code = Integer.toHexString ((int)name.charAt (i)).toUpperCase ();
-                if (code.length ()<2)
-                    code = (code.length () == 0)? "00": "0"+code;   // NOI18N
-                sb.append ("%").                                    // NOI18N
-                append ((code.length () == 2)? code: code.substring (code.length ()-2));
-            }
-        }
-        return sb.toString ();
-    }
-    
-    /** Unconverts string from URL into old string. 
-     *  This mangling decodes '%xy'
-     */
-    static String demangle (String name) {
-        StringBuffer sb = new StringBuffer ();
-        try {
-            for (int i = 0; i < name.length (); i++) {
-                if (name.charAt (i) != '%') {
-                    sb.append (name.charAt (i));
-                }
-                else {
-                    sb.append ((char)Integer.parseInt (name.substring (i+1, i+3), 16));
-                    i += 2;
-                }
-            }
-        }
-        catch (NumberFormatException ex) {
-            ex.printStackTrace ();
-            return "";  // NOI18N
-        }
-        return sb.toString ();
-    }
-    
     /** Getter for property hostProperty.
      * @return Value of property hostProperty.
      */
@@ -492,8 +401,8 @@ public final class HttpServerSettings {
      */
     public void setHostProperty (HttpServerSettings.HostProperty hostProperty) {
         if (ANYHOST.equals(hostProperty.getHost ()) || LOCALHOST.equals(hostProperty.getHost ())) {
-            this.hostProperty.setHost(hostProperty.getHost());
-            this.hostProperty.setGrantedAddresses(hostProperty.getGrantedAddresses());
+            HttpServerSettings.hostProperty.setHost(hostProperty.getHost());
+            HttpServerSettings.hostProperty.setGrantedAddresses(hostProperty.getGrantedAddresses());
             getPreferences().put("host", hostProperty.getHost());//NOI18N
             getPreferences().put("grantedAddresses", hostProperty.getGrantedAddresses());//NOI18N
         }

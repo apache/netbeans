@@ -16,24 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.javaee.specs.support.spi;
 
-/**
- *
- * @author Petr Hejl
- */
-public interface JpaProviderImplementation {
-    
-    boolean isJpa1Supported();
-    
-    boolean isJpa2Supported();
+@Schema2Beans(
+    schema="../../resources/orm_2_2.xsd",
+    docRoot="entity-mappings",
+    mddFile="../../resources/orm_2_2.mdd",
+    schemaType=SchemaType.XML_SCHEMA,
+    outputType=OutputType.TRADITIONAL_BASEBEAN,
+    useInterfaces=true,
+    validate=true,
+    attrProp=true,
+    removeUnreferencedNodes=true,
+    java5=true
+)
+@org.netbeans.api.annotations.common.SuppressWarnings(value="NM_SAME_SIMPLE_NAME_AS_INTERFACE", justification="Generated implementation classes")
+package org.netbeans.modules.j2ee.persistence.dd.orm.model_2_2;
 
-    boolean isJpa21Supported();
-
-    boolean isJpa22Supported();
-    
-    boolean isDefault();
-    
-    String getClassName();
-
-}
+import org.netbeans.modules.schema2beans.Schema2Beans;
+import org.netbeans.modules.schema2beans.Schema2Beans.OutputType;
+import org.netbeans.modules.schema2beans.Schema2Beans.SchemaType;

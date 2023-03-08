@@ -680,6 +680,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String PERSISTENCEORM_3_0 = JAKARTA_PERSISTENCEORM_NS+"/"+PERSISTENCEORM_3_0_XSD; // NOI18N  yes not ORM NS!!!
     public static final String PERSISTENCEORM_3_0_ID = "SCHEMA:"+PERSISTENCEORM_3_0; // NOI18N
     
+    private static final String PERSISTENCEORM_3_1_XSD="orm_3_1.xsd"; // NOI18N
+    private static final String PERSISTENCEORM_3_1 = JAKARTA_PERSISTENCEORM_NS+"/"+PERSISTENCEORM_3_1_XSD; // NOI18N  yes not ORM NS!!!
+    public static final String PERSISTENCEORM_3_1_ID = "SCHEMA:"+PERSISTENCEORM_3_1; // NOI18N
     
     public String getFullURLFromSystemId(String systemId){
         return null;
@@ -811,6 +814,8 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                 return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCE_2_2_XSD);
             } else if (systemId.endsWith(PERSISTENCEORM_3_0_XSD)) {
                 return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCEORM_3_0_XSD);
+            } else if ( systemId.endsWith(PERSISTENCEORM_3_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_3_1_XSD);
             } else if (systemId.endsWith(PERSISTENCE_3_0_XSD)) {
                 return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCE_3_0_XSD);
             } //webservice & webservice-client
@@ -1003,7 +1008,10 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                             inputSource = resolver.resolveEntity(PERSISTENCE_2_0_ID, "");
                             break;
                         case "text/x-persistence1.0":  // NOI18N
-                        inputSource = resolver.resolveEntity(PERSISTENCE_ID, "");
+                            inputSource = resolver.resolveEntity(PERSISTENCE_ID, "");
+                            break;
+                        case "text/x-orm3.1":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCEORM_3_1_ID, "");
                             break;
                         case "text/x-orm3.0":  // NOI18N
                             inputSource = resolver.resolveEntity(PERSISTENCEORM_3_0_ID, "");

@@ -1,36 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Java Persistence API object/relational mapping file schema -->
-<xsd:schema targetNamespace="http://xmlns.jcp.org/xml/ns/persistence/orm" 
-  xmlns:orm="http://xmlns.jcp.org/xml/ns/persistence/orm" 
+<!--
+    Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0 which is available at
+    http://www.eclipse.org/legal/epl-2.0,
+    or the Eclipse Distribution License v. 1.0 which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause
+
+-->
+
+<!-- Jakarta Persistence API object/relational mapping file schema -->
+<xsd:schema targetNamespace="https://jakarta.ee/xml/ns/persistence/orm" 
+  xmlns:orm="https://jakarta.ee/xml/ns/persistence/orm" 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   elementFormDefault="qualified" 
   attributeFormDefault="unqualified" 
-  version="2.2">
-
-  <xsd:annotation>
-    <xsd:documentation>
-      @(#)orm_2_2.xsd 2.2  July 7 2017
-    </xsd:documentation>
-  </xsd:annotation>
-
-  <xsd:annotation>
-    <xsd:documentation>
-
-  Copyright (c) 2008 - 2017 Oracle Corporation.  All rights reserved. 
-  
-  This program and the accompanying materials are made available under the 
-  terms of the Eclipse Public License v1.0 and Eclipse Distribution License v. 1.0 
-  which accompanies this distribution. 
-  The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
-  and the Eclipse Distribution License is available at 
-  http://www.eclipse.org/org/documents/edl-v10.php.
-  
-  Contributors:
-      Linda DeMichiel - Java Persistence 2.2, Version 2.2 (July 7, 2017)
-      Specification available from http://jcp.org/en/jsr/detail?id=338
-  
-    </xsd:documentation>
-  </xsd:annotation>
+  version="3.1">
 
   <xsd:annotation>
      <xsd:documentation><![CDATA[
@@ -44,16 +32,16 @@
        Object/relational mapping files must indicate the object/relational
        mapping file schema by using the persistence namespace:
 
-       http://xmlns.jcp.org/xml/ns/persistence/orm
+       https://jakarta.ee/xml/ns/persistence/orm
 
        and indicate the version of the schema by
        using the version element as shown below:
 
-      <entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+      <entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
-          http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd"
-        version="2.2">
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm
+          https://jakarta.ee/xml/ns/persistence/orm/orm_3_1.xsd"
+        version="3.1">
           ...
       </entity-mappings>
 
@@ -144,7 +132,7 @@
                      minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
       <xsd:attribute name="version" type="orm:versionType" 
-                     fixed="2.2" use="required"/>
+                     fixed="3.1" use="required"/>
     </xsd:complexType>
   </xsd:element>
 
@@ -1069,7 +1057,7 @@
     <xsd:annotation>
       <xsd:documentation>
 
-        public enum GenerationType { TABLE, SEQUENCE, IDENTITY, AUTO };
+        public enum GenerationType { TABLE, SEQUENCE, IDENTITY, UUID, AUTO };
 
       </xsd:documentation>
     </xsd:annotation>
@@ -1077,6 +1065,7 @@
       <xsd:enumeration value="TABLE"/>
       <xsd:enumeration value="SEQUENCE"/>
       <xsd:enumeration value="IDENTITY"/>
+      <xsd:enumeration value="UUID"/>
       <xsd:enumeration value="AUTO"/>
     </xsd:restriction>
   </xsd:simpleType>

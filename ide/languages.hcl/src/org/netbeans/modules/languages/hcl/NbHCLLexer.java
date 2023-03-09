@@ -19,7 +19,18 @@
 package org.netbeans.modules.languages.hcl;
 
 import java.text.Normalizer;
+import java.util.BitSet;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.antlr.v4.runtime.ANTLRErrorListener;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.modules.languages.hcl.grammar.HCLLexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
@@ -35,8 +46,10 @@ import static org.netbeans.modules.languages.hcl.grammar.HCLLexer.*;
  */
 public final class NbHCLLexer extends AbstractAntlrLexerBridge<HCLLexer, HCLTokenId> {
 
+    private static final Logger LOG = Logger.getLogger(NbHCLLexer.class.getName());
+
     public NbHCLLexer(LexerRestartInfo<HCLTokenId> info) {
-        super(info, HCLLexer::new);
+        super(info, NbHCLLexer::createLexer);
     }
     
     @Override
@@ -52,8 +65,8 @@ public final class NbHCLLexer extends AbstractAntlrLexerBridge<HCLLexer, HCLToke
             case NUMERIC_LIT:
                 return token(NUMBER);
 
-            case IDENTIFIER:
-                return token(VARIABLE);
+            case HCLLexer.IDENTIFIER:
+                return token(HCLTokenId.IDENTIFIER);
 
             case FOR:
             case IF:
@@ -93,9 +106,10 @@ public final class NbHCLLexer extends AbstractAntlrLexerBridge<HCLLexer, HCLToke
                 return token(OPERATOR);
 
             case QUOTE:
+                return token(STRING);
             case HEREDOC_START:
             case HEREDOC_END:
-                return token(STRING);
+                return token(HEREDOC_GUARD);
             case HEREDOC_CONTENT:
                 return groupToken(HEREDOC, HEREDOC_CONTENT);
 
@@ -115,9 +129,37 @@ public final class NbHCLLexer extends AbstractAntlrLexerBridge<HCLLexer, HCLToke
                 return token(ERROR);
         }
     }
+
     @Override
     public Object state() {
         return new LexerState(lexer);
+    }
+
+    private final static ANTLRErrorListener HCL_ERROR_LISTENER = new ANTLRErrorListener() {
+        @Override
+        public void syntaxError(Recognizer<?, ?> recognizer, Object offendingObject, int line, int charPositionInLine, String msg, RecognitionException e) {
+            LOG.log(Level.SEVERE, msg);
+            throw new ParseCancellationException(e);
+        }
+
+        @Override
+        public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean bln, BitSet bitset, ATNConfigSet atncs) {
+        }
+
+        @Override
+        public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitset, ATNConfigSet atncs) {
+        }
+
+        @Override
+        public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atncs) {
+        }
+    };
+
+    private static HCLLexer createLexer(CharStream input) {
+        HCLLexer lexer = new HCLLexer(input);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(HCL_ERROR_LISTENER);
+        return lexer;
     }
 
     private static class LexerState extends AbstractAntlrLexerBridge.LexerState<HCLLexer> {

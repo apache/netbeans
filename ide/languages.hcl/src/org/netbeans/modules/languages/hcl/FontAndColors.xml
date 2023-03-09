@@ -21,13 +21,18 @@
 -->
 <!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
 <fontscolors>
+    <fontcolor name="boolean" default="keyword"/>
     <fontcolor name="comment" default="comment"/>
     <fontcolor name="error" default="error"/>
-    <fontcolor name="interpolation" bgColor="ffe3f2e1" default="default"/>
+    <fontcolor name="heredoc" foreColor="ffce7b00"/>
+    <fontcolor name="heredoc-guard" foreColor="ffce7b00">
+        <font style="bold"/>
+    </fontcolor>
+    <fontcolor name="interpolation" default="default"/>
     <fontcolor name="keyword" default="keyword"/>
     <fontcolor name="number" default="number"/>
     <fontcolor name="operator" default="operator"/>
     <fontcolor name="separator" default="separator"/>
-
+    <fontcolor name="string" default="string"/>
     <fontcolor name="whitespace" default="whitespace"/>
 </fontscolors>

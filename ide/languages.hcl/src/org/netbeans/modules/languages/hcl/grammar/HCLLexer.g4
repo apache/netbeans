@@ -37,18 +37,18 @@ import HCLLexerBasics;
     }
 
     private boolean heredocEndAhead(String partialHeredoc) {
-        if (this.getCharPositionInLine() != 0) {
-          // If the lexer is not at the start of a line, no end-delimiter can be possible
-          return false;
+        int n = 1;
+        int c = _input.LA(1);
+        while ( c == 9 || c == 32) { // Skip leading space and tabs
+            c = _input.LA(++n);
         }
-
-        for (int n = 1; n < currentHereDocVar.length(); n++) {
-          if (this._input.LA(n) != currentHereDocVar.charAt(n - 1)) {
+        for (int v = 0; v < currentHereDocVar.length(); v++) {
+          if (this._input.LA(n + v) != currentHereDocVar.charAt(v)) {
             return false;
           }
         }
 
-        int charAfterDelimiter = this._input.LA(currentHereDocVar.length() + 1);
+        int charAfterDelimiter = this._input.LA(currentHereDocVar.length() + n);
 
         return charAfterDelimiter == EOF ||  Character.isWhitespace(charAfterDelimiter);
     }
@@ -239,7 +239,7 @@ TEMPLATE_START
     ;
 
 STRING_END
-    : DQuote       -> type(QUOTE), popMode
+    : DQuote      -> type(QUOTE), popMode
     ;
 
 STRING_CONTENT
@@ -281,7 +281,7 @@ TEMPLATE_CONTENT
 mode HEREDOC_MODE;
 
 HEREDOC_END
-    : ({heredocEndAhead(getText())}? Letter LetterDigit*) {popHereDocVar();} -> popMode
+    : ({heredocEndAhead(getText())}? Hws* Letter LetterDigit*) {popHereDocVar();} -> popMode
     ;
 
 H_INTERPOLATION_ESCAPE
@@ -298,4 +298,8 @@ H_TEMPLATE_START
 
 HEREDOC_CONTENT
     : ({!heredocEndAhead(getText())}? .)
+    ;
+
+HEREDOC_ERR
+    : . -> type(ERRCHAR)
     ;

@@ -57,7 +57,8 @@ import org.openide.windows.WindowManager;
  * 
  * Plus hooked WindowListener on main window (see {@link NbWindowsAdapter})
  */
-@ServiceProvider(service=Runnable.class, path="WarmUp")
+// disabled
+//@ServiceProvider(service=Runnable.class, path="WarmUp")
 public final class MenuWarmUpTask implements Runnable {
 
     private Component[] comps;

@@ -74,9 +74,11 @@
             <file name="refactoring-preview.settings" url="refactoring-preview.settings"/>
         </folder>
     </folder>
+    <!-- disabled
     <folder name="WarmUp">
       <file name="org-netbeans-modules-refactoring-impl-RefactoringWarmUpTask.instance"/>
     </folder>
+    -->
   <folder name="Loaders">
     <folder name="folder">
         <folder name="any">

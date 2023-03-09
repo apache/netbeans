@@ -352,8 +352,9 @@
             </folder>    
         </folder>
     </folder>
-    
+    <!-- disabled
     <folder name="WarmUp">
       <file name="org-netbeans-modules-editor-EditorWarmUpTask.instance"/>
     </folder>
+    -->
 </filesystem>

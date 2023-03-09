@@ -31,7 +31,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author  Dafe Simonek
  */
-@ServiceProvider(service=Runnable.class, path="WarmUp")
+// disabled
+//@ServiceProvider(service=Runnable.class, path="WarmUp")
 public final class DnDWarmUpTask implements Runnable {
 
     /** Performs DnD pre-heat.

@@ -135,7 +135,9 @@
     </folder>
     
     <folder name="WarmUp">
+      <!-- disabled
       <file name="org-netbeans-modules-java-j2seplatform-J2SEPlatformWarmUp.instance"/>
+      -->
       <file name="org-netbeans-modules-java-j2seplatform-DebianJavaPlatformDetector.instance"/>
       <file name="org-netbeans-modules-java-j2seplatform-SdkManJavaPlatformDetector.instance"/>
     </folder>

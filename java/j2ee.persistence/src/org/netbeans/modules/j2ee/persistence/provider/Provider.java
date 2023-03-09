@@ -87,7 +87,7 @@ public abstract class Provider {
                 ret &= cp.findResource("jakarta/persistence/spi/TransformerException.class.class") != null;
             } else if(Persistence.VERSION_3_0.equals(version)){
                 ret &= cp.findResource("jakarta/persistence/Entity.class") != null;
-            | else if (Persistence.VERSION_2_2.equals(version)) {
+            } else if (Persistence.VERSION_2_2.equals(version)) {
                 ret &= cp.findResource("javax/persistence/TableGenerators.class") != null;
             } else if (Persistence.VERSION_2_1.equals(version)) {
                 ret &= cp.findResource("javax/persistence/criteria/CriteriaUpdate.class") != null;

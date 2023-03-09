@@ -23,6 +23,18 @@
 <filesystem>
     <folder name="Editors">
         <folder name="text">
+            <folder name="x-hcl-tf">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.languages.hcl.terraform.Bundle#Editors/text/x-hcl-tf"/>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="FontAndColors.xml" url="FontAndColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.languages.hcl.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
             <folder name="x-hcl-tfvars">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.languages.hcl.tfvars.Bundle#Editors/text/x-hcl-tfvars"/>
                 <folder name="FontsColors">
@@ -39,6 +51,9 @@
     </folder>
     <folder name="Loaders">
         <folder name="text">
+            <folder name="x-hcl-tf">
+                <attr name="iconBase" stringvalue="org/netbeans/modules/languages/hcl/resources/terraform.png"/>
+            </folder>
             <folder name="x-hcl-tfvars">
                 <attr name="iconBase" stringvalue="org/netbeans/modules/languages/hcl/resources/terraform.png"/>
             </folder>

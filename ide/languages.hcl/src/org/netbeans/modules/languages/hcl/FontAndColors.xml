@@ -28,6 +28,7 @@
     <fontcolor name="heredoc-guard" foreColor="ffce7b00">
         <font style="bold"/>
     </fontcolor>
+    <fontcolor name="identifier" default="default"/>
     <fontcolor name="interpolation" default="default"/>
     <fontcolor name="keyword" default="keyword"/>
     <fontcolor name="number" default="number"/>

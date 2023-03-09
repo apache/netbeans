@@ -24,6 +24,8 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,29 +33,42 @@ import java.util.stream.Stream;
  *
  * @author lkishalmi
  */
-public class SdkManJavaPlatformDetector implements Runnable {
+public class LinuxJavaPlatformDetector implements Runnable {
 
-    static final Path SDKMAN_JAVA_DIR = Paths.get(System.getProperty("user.home"), ".sdkman", "candidates", "java"); //NOI18N
+    static final Path LINUX_JAVA_DIR = Paths.get("/usr/lib/jvm"); //NOI18N
+    
+    /*
+     * examples:
+     *  java-17-openjdk-amd64 (debian)
+     *  java-17-openjdk (arch, manjaro)
+     *  java-17-openjdk-17.0.6.0.10-1.fc37.x86_64 (fedora)
+     */
+    static final String JAVA_DIR_MATCHER = "^java-(\\d+)-openjdk(-.+)?"; //NOI18N
 
     @Override
     public void run() {
 
-        if (Files.isDirectory(SDKMAN_JAVA_DIR)) {
-            try (Stream<Path> files = Files.list(SDKMAN_JAVA_DIR)) {
+        if (Files.isDirectory(LINUX_JAVA_DIR)) {
 
+            try (Stream<Path> files = Files.list(LINUX_JAVA_DIR)) {
+
+                Pattern pattern = Pattern.compile(JAVA_DIR_MATCHER);
                 List<Path> jdks = files.filter(p -> Files.isDirectory(p, LinkOption.NOFOLLOW_LINKS))
-                                       .filter(p -> !p.getFileName().toString().equals("current"))
+                                       .filter(p -> pattern.matcher(p.getFileName().toString()).matches())
                                        .collect(Collectors.toList());
 
-                JDKDetectorUtils.registerJDKs(jdks, jdk -> getDisplayName(jdk));
+                JDKDetectorUtils.registerJDKs(jdks, path -> getDisplayName(path, pattern));
+                
             } catch (IOException ignore) {
                 // can't list files
             }
+            
         }
-
     }
 
-    private static String getDisplayName(Path path) {
-        return "JDK " + path.getFileName().toString() + " (SDKMAN)"; //NOI18
+    private static String getDisplayName(Path path, Pattern pattern) {
+        String folder = path.getFileName().toString();
+        Matcher m = pattern.matcher(folder);
+        return (m.matches() ? "JDK " + m.group(1) : folder) + " (System)";
     }
 }

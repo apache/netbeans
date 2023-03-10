@@ -206,7 +206,7 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
                 } else {
                     d.addContextValues(CTXVALUE_PROJECT_SUBPROJECT);
                 }
-            } else if (f == null || physFile != null) { 
+            } else if (n.canDestroy()) {
                 // TODO Hack: exclude projects from delete capability. The TreeItemData probably needs to support
                 // exclusion... Project delete UI is not suitable for LSP at the moment
                 d.addContextValues(CTXVALUE_CAP_DELETE);

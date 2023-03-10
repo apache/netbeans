@@ -126,6 +126,7 @@
          </p>
      </usecase>
      <usecase id="script" name="Using Scripting and Templating Languages" >
+        <a id="script"></a>
         <p>
         There is a built in <a href="@org-netbeans-api-scripting@/overview-summary.html">support for scripting languages</a>
         in the NetBeans Platform. If a template is annotated with
@@ -134,7 +135,7 @@
             return real instance of <code>ScriptEngine</code> interface or
             a <code>String</code> name of the engine that is then used to
             search for it in the <code>javax.script.ScriptEngineManager</code>.
-            Usually the <a href="https://freemarker.apache.org/">freemarker</a> engine is the one that is
+            Usually the <a href="https://freemarker.apache.org">freemarker</a> engine is the one that is
             supported by the NetBeans IDE - if your module wants to use it
             then include a token dependency <code>OpenIDE-Module-Needs: javax.script.ScriptEngine.freemarker</code>
             in your manifest file (also accessible through project customizer GUI)
@@ -230,7 +231,7 @@
             should be of type String and its content should be snippet of 
             JavaScript code to execute inside of your specified HTML page 
             (e.g. <code>x.html</code>) to create an instance of 
-            <a href="http://knockoutjs.com">KnockoutJS model</a> to 
+            <a href="https://knockoutjs.com">KnockoutJS model</a> to 
             drive the wizard. Here is a sample code for the model:     
         </p>        
         <pre>
@@ -260,7 +261,7 @@
         proprietary text value <code>msg</code> which is 
         going to be filled by the wizard and cannot be empty. Each
         page of the wizard is registered using a custom
-        <a href="http://knockoutjs.com">Knockout.js</a> binding called
+        <a href="https://knockoutjs.com">Knockout.js</a> binding called
         <code>step</code>. Here is an HTML page defining three steps:
     </p>
 <pre>
@@ -339,8 +340,8 @@ I feel ${wizard.msg}.
             way to rewrite the <a href="#html-and-js">HTML and JavaScript sample</a>
             to <b>Java</b>
             (and possibly run it in a plugin-less browser via 
-            <a onclick="target='_blank'" href="http://bck2brwsr.apidesign.org">bck2brwsr VM</a>). Keep the
-            same HTML, <a onclick="target='_blank'" href="http://freemarker.org/">Freemarker</a>, etc.
+            <a href="http://wiki.apidesign.org/wiki/Bck2Brwsr">bck2brwsr VM</a>). Keep the
+            same HTML, <a href="https://freemarker.apache.org">Freemarker</a>, etc.
             files - just instead of encoding the logic in JavaScript use Java:
         </p>
 <pre>
@@ -374,9 +375,9 @@ I feel ${wizard.msg}.
 </pre>        
 <p>
     The return value of the annotated method is now an
-    <a onclick="target='_blank'" href="http://bits.netbeans.org/html+java/">HTML/Java</a>
+    <a href="https://bits.netbeans.org/html+java/dev">HTML/Java</a>
     model class which can naturally represent the essential 
-    <a onclick="target='_blank'" href="http://knockoutjs.com">Knockout.js</a> objects
+    <a href="https://knockoutjs.com">Knockout.js</a> objects
     in Java. 
 </p>
     </usecase>

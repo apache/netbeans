@@ -206,7 +206,7 @@ public abstract class AbstractFileSystem extends FileSystem {
     /** Set the number of milliseconds between automatic
     * refreshes of the directory structure.
     *
-    * @param ms number of milliseconds between two refreshes; if <code><= 0</code> then refreshing is disabled
+    * @param ms number of milliseconds between two refreshes; if <code>&lt;= 0</code> then refreshing is disabled
     */
     protected final synchronized void setRefreshTime(int ms) {
         if (refresher != null) {

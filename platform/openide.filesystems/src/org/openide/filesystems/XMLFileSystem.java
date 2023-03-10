@@ -120,12 +120,12 @@ import org.xml.sax.helpers.DefaultHandler;
  * or two arguments. This method does not need to be public or in public class, if 
  * the filesystem has permissions to call the method. The method can take one
  * of the following signatures:
- * <pre>
+ * <pre>{@code
  * static Value methodName();
  * static Value methodName(FileObject fo);
  * static Value methodName(FileObject fo, String attrName);
  * static Value methodName(Map<String,Object> attrs); // since 7.0
- * static Value methodName(Map<String,Object> attrs, String attrName); // since 7.0
+ * static Value methodName(Map<String,Object> attrs, String attrName); // since 7.0}
  * </pre>
  * where <code>Value</code> can be any java type.
  * <p>

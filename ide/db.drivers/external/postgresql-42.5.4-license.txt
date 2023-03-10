@@ -1,9 +1,9 @@
 Name: PostgreSQL JDBC Driver
-Version: 42.2.16
+Version: 42.5.4
 Description: Allows Java programs to interact with a PostgreSQL database
 License: BSD-postgresql
 Origin: https://jdbc.postgresql.org/about/license.html
-Files: postgresql-42.2.16.jar
+Files: postgresql-42.5.4.jar
 Comment: Out-of-the-box support for Postgres Java database applications
 
 Copyright (c) 1997, PostgreSQL Global Development Group

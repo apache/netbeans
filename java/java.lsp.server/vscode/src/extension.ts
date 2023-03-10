@@ -1033,7 +1033,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }
 
         async decorateTreeItem(vis : Visualizer, item : vscode.TreeItem) : Promise<vscode.TreeItem> {
-            if (!(item.contextValue && item.contextValue.match(/class:ddl.DBConnection/))) {
+            if (!(item.contextValue && item.contextValue.match(/class:org.netbeans.api.db.explorer.DatabaseConnection/))) {
                 return item;
             }
             return vscode.commands.executeCommand('java.db.preferred.connection').then((id) => {

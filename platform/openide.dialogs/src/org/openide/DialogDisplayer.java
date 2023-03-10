@@ -81,7 +81,7 @@ public abstract class DialogDisplayer {
     /** Notify the user of something in a message box, possibly with feedback,
      * this method may be called
      * from any thread. The thread will return immediately and
-     * the dialog will be shown <q>later</q>, usually when AWT thread
+     * the dialog will be shown <em>later</em>, usually when AWT thread
      * is empty and can handle the request.
      * 
      * <p class="non-normative">

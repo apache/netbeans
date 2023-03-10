@@ -50,7 +50,7 @@ public class DialogSupport {
      * @param sidebuttons The buttons could be placed under the panel (false),
      *      or on the right side of the panel (true).
      * @param defaultIndex The index of default button in the buttons array,
-     *    if <CODE>index < 0</CODE>, no default button is set.
+     *    if <CODE>index &lt; 0</CODE>, no default button is set.
      * @param cancelIndex The index about cancel button - the button that will
      *    be <I>pressed</I> when closing the dialog.
      * @param listener The listener which will be notified of all button
@@ -68,13 +68,13 @@ public class DialogSupport {
     
     /** The method for setting custom factory for creating dialogs via
      * the {@link #createDialog(java.lang.String, javax.swing.JPanel, boolean, javax.swing.JButton[], boolean, int, int, java.awt.event.ActionListener) createDialog} method.
-     * If no factory is set, the {@link DialogSupport.DefaultDialogFactory DefaultDialogFactory}
+     * If no factory is set, the {@link org.netbeans.modules.editor.lib2.DialogSupport.DefaultDialogFactory DefaultDialogFactory}
      * will be used.
      * @param factory the {@link DialogSupport.DialogFactory DialogFactory}
      * implementation that will be responsible for providing dialogs.
      *
      * @see DialogSupport.DialogFactory
-     * @see DialogSupport.DefaultDialogFactory
+     * @see org.netbeans.modules.editor.lib2.DialogSupport.DefaultDialogFactory
      */
     public static void setDialogFactory( DialogFactory factory ) {
         org.netbeans.modules.editor.lib2.DialogSupport.getInstance().setExternalDialogFactory(new Wrapper(factory));
@@ -97,7 +97,7 @@ public class DialogSupport {
          * @param sidebuttons The buttons could be placed under the panel (false),
          *      or on the right side of the panel (true).
          * @param defaultIndex The index of default button in the buttons array,
-         *    if <CODE>index < 0</CODE>, no default button is set.
+         *    if <CODE>index &lt; 0</CODE>, no default button is set.
          * @param cancelIndex The index of cancel button - the button that will
          *    be <I>pressed</I> when closing the dialog.
          * @param listener The listener which will be notified of all button

@@ -42,7 +42,7 @@ public class FontMetricsCache {
     private static HashMap font2Info = new HashMap();
 
     /** Get the font-metrics for the given font.
-    * @param font font for which the metrics is being retrieved.
+    * @param f font for which the metrics is being retrieved.
     * @param c component that is used to retrieve the metrics in case it's
     *   not yet in the cache.
     */
@@ -56,7 +56,7 @@ public class FontMetricsCache {
     }
 
     /** Get the font-metrics for the given font.
-    * @param font font for which the metrics is being retrieved.
+    * @param f font for which the metrics is being retrieved.
     * @param g graphics that is used to retrieve the metrics in case it's
     *   not yet in the cache.
     */
@@ -71,7 +71,7 @@ public class FontMetricsCache {
 
     /** Get the info about the space-width and strike-through and underline
     * constants.
-    * @param font font for which the info is being retrieved.
+    * @param f font for which the info is being retrieved.
     */
     public static synchronized Info getInfo(Font f) {
         Info info = (Info)font2Info.get(f);

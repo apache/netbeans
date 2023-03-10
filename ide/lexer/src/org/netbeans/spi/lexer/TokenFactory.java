@@ -27,7 +27,7 @@ import org.netbeans.lib.lexer.LexerUtilsConstants;
 
 /**
  * Lexer should delegate all the token instances creation to this class.
- * <br/>
+ * <br>
  * It's not allowed to create empty tokens.
  *
  * @author Miloslav Metelka
@@ -72,7 +72,7 @@ public final class TokenFactory<T extends TokenId> {
      * @param length >=0 length of the token to be created. The length must not
      *  exceed the number of characters read from the lexer input.
      * @return non-null regular token instance.
-     *  <br/>
+     *  <br>
      *  {@link #SKIP_TOKEN} will be returned
      *  if tokens for the given token id should be skipped
      *  because of token id filter.
@@ -83,7 +83,7 @@ public final class TokenFactory<T extends TokenId> {
 
     /**
      * Create regular token instance with an explicit length and part type.
-     * <br/>
+     * <br>
      * This is suitable e.g. for unfinished block comment when a COMMENT token
      * and PartType.START arguments would be used.
      *
@@ -92,7 +92,7 @@ public final class TokenFactory<T extends TokenId> {
      *  exceed the number of characters read from the lexer input.
      * @param partType whether this token is complete token or a part of a complete token.
      * @return non-null regular token instance.
-     *  <br/>
+     *  <br>
      *  {@link #SKIP_TOKEN} will be returned
      *  if tokens for the given token id should be skipped
      *  because of token id filter.
@@ -103,18 +103,18 @@ public final class TokenFactory<T extends TokenId> {
 
     /**
      * Get flyweight token for the given arguments.
-     * <br/>
+     * <br>
      * <b>Note:</b> The returned token will not be flyweight under certain
      * conditions - see return value description.
      *
      * @param id non-null token id.
      * @param text non-null text that the flyweight token should carry.
      * @return non-null flyweight token instance.
-     *  <br/>
+     *  <br>
      *  For performance reasons there is a limit for number of successive
      *  flyweight tokens. If this limit would be exceeded a single non-flyweight
      *  token gets created instead of flyweight one.
-     *  <br/>
+     *  <br>
      *  {@link #SKIP_TOKEN} will be returned
      *  if tokens for the given token id should be skipped
      *  because of token id filter.
@@ -132,7 +132,7 @@ public final class TokenFactory<T extends TokenId> {
      * @param propertyProvider token property provider or null if there are no extra properties.
      *  See {@link TokenPropertyProvider} for examples how this parameter may be used.
      * @return non-null property token instance.
-     *  <br/>
+     *  <br>
      *  {@link #SKIP_TOKEN} will be returned
      *  if tokens for the given token id should be skipped
      *  because of token id filter.
@@ -152,7 +152,7 @@ public final class TokenFactory<T extends TokenId> {
      * @param partType whether this token is complete or just a part of complete token.
      *  Null may be passed which implies {@link PartType#COMPLETE}.
      * @return non-null property token instance.
-     *  <br/>
+     *  <br>
      *  {@link #SKIP_TOKEN} will be returned
      *  if tokens for the given token id should be skipped
      *  because of token id filter.
@@ -165,14 +165,14 @@ public final class TokenFactory<T extends TokenId> {
     /**
      * Create token with a custom text that possibly differs in length and content
      * from the text represented by the token in the input text.
-     * <br/>
+     * <br>
      * <b>Note: This method should not be used. It is planned to be removed completely.</b>
      * The custom text tokens no longer
      * save space by not refrencing the original characters (when read e.g. from a Reader).
-     * <br/>
+     * <br>
      * Having token's text to always match the input's text is more systematic
      * and simplifies the lexer module's design.
-     * <br/>
+     * <br>
      * Therefore the only benefit of custom text tokens would be if certain tools
      * e.g. parsers would require a different text than the one present naturally
      * in the token. In such case the token should have a property
@@ -190,9 +190,7 @@ public final class TokenFactory<T extends TokenId> {
      *     }
      * }
      * </pre>
-     * 
-     * <p>
-     * </p>
+     *
      * 
      * @param id non-null token id of the token being created.
      * @param text non-null custom text assigned to the token.

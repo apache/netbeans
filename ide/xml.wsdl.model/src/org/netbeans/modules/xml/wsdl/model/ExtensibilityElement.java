@@ -48,13 +48,18 @@ public interface ExtensibilityElement extends WSDLComponent {
     public void setAnyAttribute(QName attr, String value);
 
     /**
-     * Set/get content as XML fragment.
+     * Get content as XML fragment.
      * The XML fragment will be parsed and the resulting nodes will
      * replace the current children of this documentation element.
-     * @param text XML fragment text.
-     * @exception IOException if the fragment text is not well-form.
      */
     public String getContentFragment();
+     /**
+     * Set content as XML fragment.
+     * The XML fragment will be parsed and the resulting nodes will
+     * replace the current children of this documentation element.
+     * @param fragment XML fragment text.
+     * @exception IOException if the fragment text is not well-form.
+     */
     public void setContentFragment(String fragment) throws IOException;
 
     /**
@@ -70,7 +75,7 @@ public interface ExtensibilityElement extends WSDLComponent {
     public void removeAnyElement(ExtensibilityElement any);
     
     /**
-     * @returns list of children extensibility elements of unknown type.
+     * @return list of children extensibility elements of unknown type.
      */
     public List<ExtensibilityElement> getAnyElements();
     

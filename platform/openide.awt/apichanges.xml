@@ -273,7 +273,7 @@
         <description>
             <p>
                 New branding key for applications built on top of NetBeans
-                Platform to <a href="@TOP@architecture-summary.html#branding-USE_MNEMONICS">
+                Platform to <a href="@TOP@architecture-summary.html#branding-org.openide.awt.USE_MNEMONICS">
                 turn mnemonics in popup menus on</a>. 
             </p>
         </description>
@@ -700,7 +700,7 @@
         SpinButton used to have a field <code>rt</code>. The type of the field was a package private class. 
         As such the field was inaccessible to API users. Because this is not 
         checked as an error with our new 
-        <a href="http://wiki.netbeans.org/wiki/view/SignatureTest">signature test infrastructure</a>,
+        <a href="https://netbeans.apache.org/wiki/SignatureTest">signature test infrastructure</a>,
         we made the type of the field visible.
         </description>
         <class package="org.openide.awt" name="SpinButton"/>

@@ -4284,7 +4284,7 @@ public class BaseKit extends DefaultEditorKit {
 
     /** Increase/decrease indentation of the block of the code. Document
     * is atomically locked during the operation.
-    * <br/>
+    * <br>
     * If indent is in between multiplies of shiftwidth it jumps to multiplies of shiftwidth.
     * 
     * @param doc document to operate on

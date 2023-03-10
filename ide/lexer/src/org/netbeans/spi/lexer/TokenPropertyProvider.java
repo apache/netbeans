@@ -24,7 +24,7 @@ import org.netbeans.api.lexer.TokenId;
 
 /**
  * Provides extra properties of a token.
- * <br/>
+ * <br>
  * Normally each token has an extra instance of the property provider:
  * <pre>
  * final class MyTokenPropertyProvider implements TokenPropertyProvider {
@@ -43,10 +43,10 @@ import org.netbeans.api.lexer.TokenId;
  *
  * }
  * </pre>
- * <br/>
+ * <br>
  * However multiple flyweight instances of the provider may be used to save memory
  * if there are just several values for a property.
- * <br/>
+ * <br>
  * Example of two instances of a provider for boolean property "key":
  * <pre>
  * final class MyTokenPropertyProvider implements TokenPropertyProvider {
@@ -70,7 +70,7 @@ import org.netbeans.api.lexer.TokenId;
  *
  * }
  * </pre>
- * <br/>
+ * <br>
  * A special kind of token <code>PropertyToken</code> allows to carry token properties.
  *
  * @author Miloslav Metelka

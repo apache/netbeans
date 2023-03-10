@@ -48,13 +48,15 @@ public interface CatalogModel extends EntityResolver, LSResourceResolver{
      * @param locationURI
      * @return ModelSource
      * @throws CatalogModelException
-     * CatalogModelException will be throw for the following:<B></B>
-     * 1. If the file that was supposed to be there but not found. This case a
-     * FileNotFoundException is wrapped inside<B></B>
-     * 2. If a (java)File object could not be created from the retrived catalog
-     * entry.URISyntaxException will be wrapped inside DepResolverException.<B></B>
-     * 3. IOException will be wrapped around if a (NB)FileObject could not be
-     * created from the File object for various reasons by NB module
+     * CatalogModelException will be throw for the following:
+     * <ol>
+     * <li>If the file that was supposed to be there but not found. This case a
+     * FileNotFoundException is wrapped inside</li>
+     * <li>If a (java)File object could not be created from the retrived catalog
+     * entry.URISyntaxException will be wrapped inside DepResolverException.</li>
+     * <li>IOException will be wrapped around if a (NB)FileObject could not be
+     * created from the File object for various reasons by NB module</li>
+     * </ol>
      */
     public ModelSource getModelSource(URI locationURI) throws CatalogModelException;
     
@@ -70,13 +72,15 @@ public interface CatalogModel extends EntityResolver, LSResourceResolver{
      * @param modelSourceOfSourceDocument
      * @return ModelSource
      * @throws CatalogModelException
-     * CatalogModelException will be throw for the following:<B></B>
-     * 1. If the file that was supposed to be there but not found. This case a
-     * FileNotFoundException is wrapped inside<B></B>
-     * 2. If a (java)File object could not be created from the retrived catalog
-     * entry.URISyntaxException will be wrapped inside DepResolverException.<B></B>
-     * 3. IOException will be wrapped around if a (NB)FileObject could not be
-     * created from the File object for various reasons by NB module
+     * CatalogModelException will be throw for the following:
+     * <ol>
+     * <li>If the file that was supposed to be there but not found. This case a
+     * FileNotFoundException is wrapped inside</li>
+     * <li>If a (java)File object could not be created from the retrived catalog
+     * entry.URISyntaxException will be wrapped inside DepResolverException.</li>
+     * <li>IOException will be wrapped around if a (NB)FileObject could not be
+     * created from the File object for various reasons by NB module</li>
+     * </ol>
      */
     public ModelSource getModelSource(URI locationURI, ModelSource modelSourceOfSourceDocument) throws CatalogModelException;
     

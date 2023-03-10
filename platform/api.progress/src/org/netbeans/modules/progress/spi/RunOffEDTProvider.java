@@ -47,7 +47,7 @@ public interface RunOffEDTProvider {
          * Show a modal progress dialog that blocks the main window while running
          * a background process.  This call should block until the work is
          * completed.
-         * <p/>
+         * <p>
          * The resulting progress UI should show a cancel button if the passed
          * runnable implements org.openide.util.Cancellable.
          *
@@ -63,7 +63,7 @@ public interface RunOffEDTProvider {
          * Show a modal progress dialog that blocks the main window while running
          * a background process.  This call should block until the work is
          * completed.
-         * <p/>
+         * <p>
          * The resulting progress UI should show a cancel button if the passed
          * runnable implements org.openide.util.Cancellable.
          *
@@ -83,7 +83,7 @@ public interface RunOffEDTProvider {
          * a background process.  This call should block until the work is
          * started, and then return a Future which can be monitored for completion
          * or cancelled.
-         * <p/>
+         * <p>
          * The resulting progress UI should show a cancel button if the passed
          * runnable implements org.openide.util.Cancellable.
          *

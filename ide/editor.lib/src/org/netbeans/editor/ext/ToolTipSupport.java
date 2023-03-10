@@ -586,7 +586,7 @@ public class ToolTipSupport {
      * tooltips are actively displayed by the code, not initiated by user's mouse hover
      * or gesture. This call should be then followed by a call to {@code setTooltip}
      * to actually set the tooltip's value and position.
-     * <p/>
+     * <p>
      * Use {@link #setToolTipVisible(boolean)} to display a tooltip relevant to the
      * mouse position.
      * 

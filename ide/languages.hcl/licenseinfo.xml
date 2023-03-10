@@ -21,7 +21,6 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/languages/hcl/resources/vscode-terraform.svg</file>
         <file>src/org/netbeans/modules/languages/hcl/resources/terraform.png</file>
         <license ref="MIT-vscode-material-icon-theme" />
     </fileset>

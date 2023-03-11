@@ -297,13 +297,19 @@ public class CustomJavac extends Javac {
             Object c = System.getProperties().get(MAIN_COMPILER_CLASS);
             if (!(c instanceof Class<?>)) {
                 FileSet fs = new FileSet();
-                String nball = prj.getProperty("nb_all");
-                if (nball != null) {
-                    fs.setDir(new File(nball));
+                final File cpPath = new File(cp);
+                if (cpPath.isAbsolute()) {
+                    fs.setDir(cpPath.getParentFile());
+                    fs.setIncludes(cpPath.getName());
                 } else {
-                    fs.setDir(prj.getBaseDir());
+                    String nball = prj.getProperty("nb_all");
+                    if (nball != null) {
+                        fs.setDir(new File(nball));
+                    } else {
+                        fs.setDir(prj.getBaseDir());
+                    }
+                    fs.setIncludes(cp);
                 }
-                fs.setIncludes(cp);
                 List<URL> urls = new ArrayList<>();
                 final DirectoryScanner scan = fs.getDirectoryScanner(prj);
                 File base = scan.getBasedir();

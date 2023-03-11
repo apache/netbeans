@@ -286,7 +286,7 @@ public class ImageViewer extends CloneableTopComponent {
             @Override
             public void mousePressed(MouseEvent e) {
                 if(e.getButton() == 2) {
-                    startDragPos = e.getPoint();
+                    startDragPos = e.getLocationOnScreen();
                     scrollPaneStartPos = scrollPane.getViewport().getViewPosition();
                     panel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                 }
@@ -312,7 +312,7 @@ public class ImageViewer extends CloneableTopComponent {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if(startDragPos != null) {
-                    Point newPos = e.getPoint();
+                    Point newPos = e.getLocationOnScreen();
                     int delta_x = newPos.x - startDragPos.x;
                     int delta_y = newPos.y - startDragPos.y;
                     

@@ -37,9 +37,9 @@
             <arg value="-o"/>
             <arg value="${grammar.outdir}"/>
             <arg value="HCLLexer.g4"/>
+            <arg value="TerraformLexer.g4"/>
             <!--arg value="TFVarsParser.g4"/>
             <arg value="HCLExpressionParser.g4"/>
-            <arg value="TerraformLexer.g4"/>
             <arg value="TerraformParser.g4"/-->
         </java>
 

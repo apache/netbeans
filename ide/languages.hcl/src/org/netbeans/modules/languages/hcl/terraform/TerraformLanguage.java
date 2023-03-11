@@ -29,7 +29,6 @@ import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.languages.hcl.HCLTokenId;
-import org.netbeans.modules.languages.hcl.NbHCLLexer;
 import org.netbeans.spi.lexer.EmbeddingPresence;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageHierarchy;
@@ -152,7 +151,7 @@ public final class TerraformLanguage extends DefaultLanguageConfig {
 
         @Override
         protected Lexer<HCLTokenId> createLexer(LexerRestartInfo<HCLTokenId> info) {
-            return new NbHCLLexer(info);
+            return new TerraformHCLLexer(info);
         }
 
         @Override

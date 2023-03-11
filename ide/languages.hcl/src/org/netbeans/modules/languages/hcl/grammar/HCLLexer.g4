@@ -17,42 +17,8 @@
  * under the License.
  */
 lexer grammar HCLLexer;
+options { superClass = org.netbeans.modules.languages.hcl.HCLHereDocAdaptor; }
 import HCLLexerBasics;
-
-@lexer::members {
-    public LinkedList<String> hereDocStack = new LinkedList<>();
-    public String currentHereDocVar;
-
-    private void pushHereDocVar(String hereDocHead) {
-        String hereDocVar = hereDocHead.replaceAll("^<<-?", "");
-        hereDocVar = hereDocVar.substring(0, hereDocVar.length() - 1);
-        if (currentHereDocVar != null) {
-            hereDocStack.addFirst(currentHereDocVar);
-        }
-        currentHereDocVar = hereDocVar;
-    }
-
-    private void popHereDocVar() {
-        currentHereDocVar = hereDocStack.isEmpty() ? null : hereDocStack.removeFirst();
-    }
-
-    private boolean heredocEndAhead(String partialHeredoc) {
-        int n = 1;
-        int c = _input.LA(1);
-        while ( c == 9 || c == 32) { // Skip leading space and tabs
-            c = _input.LA(++n);
-        }
-        for (int v = 0; v < currentHereDocVar.length(); v++) {
-          if (this._input.LA(n + v) != currentHereDocVar.charAt(v)) {
-            return false;
-          }
-        }
-
-        int charAfterDelimiter = this._input.LA(currentHereDocVar.length() + n);
-
-        return charAfterDelimiter == EOF ||  Character.isWhitespace(charAfterDelimiter);
-    }
-}
 
 channels { COMMENTS }
 

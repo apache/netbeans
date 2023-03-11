@@ -95,6 +95,8 @@ public final class PersistenceProviderSupplierImpl implements PersistenceProvide
                 if (jpa != null) {
                     String version = ProviderUtil.getVersion(provider);
                     if (version == null
+                            || (version.equals(Persistence.VERSION_3_1) && jpa.isJpa31Supported())
+                            || (version.equals(Persistence.VERSION_3_0) && jpa.isJpa30Supported())
                             || (version.equals(Persistence.VERSION_2_2) && jpa.isJpa22Supported())
                             || (version.equals(Persistence.VERSION_2_1) && jpa.isJpa21Supported())
                             || (version.equals(Persistence.VERSION_2_0) && jpa.isJpa2Supported() && lessEE7)
@@ -123,7 +125,9 @@ public final class PersistenceProviderSupplierImpl implements PersistenceProvide
                 String version = ProviderUtil.getVersion(each);
                 if(lessEE7 || version == null 
                         || version.equals(Persistence.VERSION_2_1) 
-                        || version.equals(Persistence.VERSION_2_2)) {//we know gf4 do not support old providers, #233726, todo, we need to get supported from gf plugin instead
+                        || version.equals(Persistence.VERSION_2_2) 
+                        || version.equals(Persistence.VERSION_3_0) 
+                        || version.equals(Persistence.VERSION_3_1)) {//we know gf4 do not support old providers, #233726, todo, we need to get supported from gf plugin instead
                     providers.add(each);
                 }
             }

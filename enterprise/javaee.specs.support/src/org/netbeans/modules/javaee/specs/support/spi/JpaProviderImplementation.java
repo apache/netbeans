@@ -31,6 +31,10 @@ public interface JpaProviderImplementation {
     boolean isJpa21Supported();
 
     boolean isJpa22Supported();
+
+    boolean isJpa30Supported();
+
+    boolean isJpa31Supported();
     
     boolean isDefault();
     

@@ -39,7 +39,7 @@ class JpaSupportImpl implements JpaSupportImplementation {
     public JpaProvider getDefaultProvider() {
         String defaultProvider = platformImpl.getDefaultJpaProvider();
         boolean jpa2 = platformImpl.isJpa2Available();
-        return JpaProviderFactory.createJpaProvider(defaultProvider, true, true, jpa2, false, false);
+        return JpaProviderFactory.createJpaProvider(defaultProvider, true, true, jpa2, false, false, false, false);
     }
 
     @Override

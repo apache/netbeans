@@ -246,7 +246,7 @@ public class Util {
                     && (defProviderVersion == null || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 3.1 is supported by default (or first) is jpa1.0 or udefined version provider
             if(specialCase){
                 for (int i = 1; i<providers.size() ; i++){
-                    if(ProviderUtil.ECLIPSELINK_PROVIDER3_1.equals(providers.get(i))){//eclipselink jpa2.1 is preferred provider
+                    if(ProviderUtil.ECLIPSELINK_PROVIDER3_1.equals(providers.get(i))){//eclipselink jpa3.1 is preferred provider
                         defIndex = i;
                         break;
                     }

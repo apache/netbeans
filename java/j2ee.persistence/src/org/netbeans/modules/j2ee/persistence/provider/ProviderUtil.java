@@ -71,6 +71,7 @@ public class ProviderUtil {
     public static final Provider ECLIPSELINK_PROVIDER2_0 = new EclipseLinkProvider(Persistence.VERSION_2_0);
     public static final Provider ECLIPSELINK_PROVIDER2_1 = new EclipseLinkProvider(Persistence.VERSION_2_1);
     public static final Provider ECLIPSELINK_PROVIDER2_2 = new EclipseLinkProvider(Persistence.VERSION_2_2);
+    public static final Provider ECLIPSELINK_PROVIDER3_0 = new EclipseLinkProvider(Persistence.VERSION_3_0);
     public static final Provider ECLIPSELINK_PROVIDER3_1 = new EclipseLinkProvider(Persistence.VERSION_3_1);
     public static final Provider KODO_PROVIDER = new KodoProvider();
     public static final Provider DATANUCLEUS_PROVIDER1_0 = new DataNucleusProvider(Persistence.VERSION_1_0);

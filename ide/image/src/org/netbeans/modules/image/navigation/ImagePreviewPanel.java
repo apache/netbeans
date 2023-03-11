@@ -34,7 +34,7 @@ import org.openide.util.NbBundle;
  */
 public class ImagePreviewPanel extends JPanel {
 
-    BufferedImage image;
+    private BufferedImage image;
     private final int stringGapSize = 10;
     private final Color background = UIManager.getColor("Table.background");
     private final Color foreground = UIManager.getColor("Table.foreground");

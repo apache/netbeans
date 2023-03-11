@@ -39,9 +39,9 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
 
 
-/** 
- * OpenSupport flavored with some <code>CloneableEditorSupport</code> features like 
- * listening on changes of image file and renames on dataobject, 
+/**
+ * OpenSupport flavored with some <code>CloneableEditorSupport</code> features like
+ * listening on changes of image file and renames on dataobject,
  * so it can work appropriate in Editor window.
  *
  * @author Peter Zavadsky
@@ -53,19 +53,20 @@ public class ImageOpenSupport extends OpenSupport implements OpenCookie, CloseCo
     private long lastSaveTime;
 
     /** Listens for changes on file. */
-    private FileChangeListener fileChangeL; 
+    private FileChangeListener fileChangeL;
 
     /** Reloading task. */
     private Task reloadTask;
-    
+
 
     /** Constructs ImageOpenSupportObject on given MultiDataObject.Entry. */
     public ImageOpenSupport(MultiDataObject.Entry entry) {
         super(entry, new Environment(entry.getDataObject())); // TEMP
     }
 
-    
+
     /** Creates the CloenableTOPComponent viewer of image. */
+    @Override
     public CloneableTopComponent createCloneableTopComponent () {
         prepareViewer();
         return new ImageViewer((ImageDataObject)entry.getDataObject());
@@ -76,11 +77,12 @@ public class ImageOpenSupport extends OpenSupport implements OpenCookie, CloseCo
         // listen for changes on the image file
         if(fileChangeL == null) {
             fileChangeL = new FileChangeAdapter() {
+                @Override
                 public void fileChanged(final FileEvent evt) {
                     if(allEditors.isEmpty()) {
                         return;
                     }
-                    
+
                     if(evt.getFile().isVirtual()) {
                         entry.getFile().removeFileChangeListener(this);
                         // File doesn't exist on disk - simulate env
@@ -89,20 +91,16 @@ public class ImageOpenSupport extends OpenSupport implements OpenCookie, CloseCo
                         entry.getFile().addFileChangeListener(this);
                         return;
                     }
-                    
+
                     if (evt.getTime() > lastSaveTime) {
                         lastSaveTime = System.currentTimeMillis();
-                        
+
                         // Post in new task.
                         if(reloadTask == null || reloadTask.isFinished()) {
-                        
-                            reloadTask = RequestProcessor.getDefault().post(
-                                new Runnable() {
-                                    public void run() {
-                                        reload(evt);
-                                    }
-                                }
-                            );
+
+                            reloadTask = RequestProcessor.getDefault().post(() -> {
+                                reload();
+                            });
                         }
                     }
                 }
@@ -120,7 +118,7 @@ public class ImageOpenSupport extends OpenSupport implements OpenCookie, CloseCo
     }
 
     /** Ask and reload/close image views. */
-    private void reload(FileEvent evt) {
+    private void reload() {
         // ask if reload?
         // XXX the following is a resource path in NB 3.x and a URL after build system
         // merge; better to produce something nicer (e.g. FileUtil.toFile):
@@ -136,15 +134,13 @@ public class ImageOpenSupport extends OpenSupport implements OpenCookie, CloseCo
             Enumeration<CloneableTopComponent> e = editors.getComponents();
             while(e.hasMoreElements()) {
                 final Object pane = e.nextElement();
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        ((ImageViewer)pane).updateView(imageObj);
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    ((ImageViewer)pane).updateView(imageObj);
                 });
             }
         }
     }
-    
+
     /** Environment for image open support. */
     private static class Environment extends OpenSupport.Env {
         /** generated Serialized Version UID */
@@ -154,13 +150,14 @@ public class ImageOpenSupport extends OpenSupport implements OpenCookie, CloseCo
         public Environment(DataObject dataObject) {
             super(dataObject);
         }
-        
-        
+
+
         /** Overrides superclass method. Gets from OpenCookie. */
+        @Override
         public CloneableOpenSupport findCloneableOpenSupport() {
             return (CloneableOpenSupport)getDataObject().getCookie(OpenCookie.class);
         }
-        
+
         /** Called from enclosing support.
          * The components are going to be closed anyway and in case of
          * modified document its asked before if to save the change. */
@@ -170,7 +167,7 @@ public class ImageOpenSupport extends OpenSupport implements OpenCookie, CloseCo
             } catch(PropertyVetoException pve) {
                 // Ignore.
             }
-            
+
             firePropertyChange(PROP_VALID, Boolean.TRUE, Boolean.FALSE);
         }
     } // End of nested Environment class.

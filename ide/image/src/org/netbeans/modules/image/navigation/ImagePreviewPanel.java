@@ -24,6 +24,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import org.openide.awt.GraphicsUtils;
 import org.openide.util.NbBundle;
 
 /**
@@ -47,6 +48,7 @@ public class ImagePreviewPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        GraphicsUtils.configureDefaultRenderingHints(g);
         super.paintComponent(g);
         if (image != null) {
             g.setColor(foreground);

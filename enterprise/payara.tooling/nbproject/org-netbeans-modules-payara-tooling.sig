@@ -1333,6 +1333,8 @@ meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatfo
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public boolean isEE7Supported()
 meth public boolean isEE8Supported()
+meth public boolean isEE9Supported()
+meth public boolean isEE10Supported()
 meth public boolean isMinimumSupportedVersion()
 meth public int compareTo(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public java.lang.String getDirectUrl()

@@ -22,6 +22,6 @@
 <!DOCTYPE driver PUBLIC '-//NetBeans//DTD JDBC Driver 1.1//EN' 'http://www.netbeans.org/dtds/jdbc-driver-1_1.dtd'>
 <driver>
   <name value='IBMInformix'/>
-  <display-name value='IBM Informix'/>
+  <display-name value='Informix Dynamic Server'/>
   <class value='com.informix.jdbc.IfxDriver'/>
 </driver>

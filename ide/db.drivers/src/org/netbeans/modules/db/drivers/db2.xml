@@ -22,6 +22,6 @@
 <!DOCTYPE driver PUBLIC '-//NetBeans//DTD JDBC Driver 1.1//EN' 'http://www.netbeans.org/dtds/jdbc-driver-1_1.dtd'>
 <driver>
   <name value='IBMDb2'/>
-  <display-name value='IBM Db2'/>
+  <display-name value='IBM DB2 Universal Driver'/>
   <class value='com.ibm.db2.jcc.DB2Driver'/>
 </driver>

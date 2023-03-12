@@ -22,6 +22,6 @@
 <!DOCTYPE driver PUBLIC '-//NetBeans//DTD JDBC Driver 1.1//EN' 'http://www.netbeans.org/dtds/jdbc-driver-1_1.dtd'>
 <driver>
   <name value='MariaDB'/>
-  <display-name value='MariaDB (Connector/J driver)'/>
+  <display-name value='MariaDB (MySQL-compatible)'/>
   <class value='org.mariadb.jdbc.Driver'/>
 </driver>

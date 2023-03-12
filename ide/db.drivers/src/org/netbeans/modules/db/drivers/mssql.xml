@@ -22,6 +22,6 @@
 <!DOCTYPE driver PUBLIC '-//NetBeans//DTD JDBC Driver 1.1//EN' 'http://www.netbeans.org/dtds/jdbc-driver-1_1.dtd'>
 <driver>
   <name value='MSSQL'/>
-  <display-name value='MS SQL'/>
+  <display-name value='Microsoft SQL Server'/>
   <class value='com.microsoft.jdbc.sqlserver.SQLServerDriver'/>
 </driver>

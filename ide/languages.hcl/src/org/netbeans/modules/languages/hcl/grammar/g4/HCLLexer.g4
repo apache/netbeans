@@ -122,6 +122,10 @@ ELLIPSIS
    : Ellipsis
    ;
 
+LEGACY_INDEX
+    : Dot DecDigit+
+    ;
+
 DOT
    : Dot
    ;

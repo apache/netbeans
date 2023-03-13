@@ -395,34 +395,42 @@ public final class NodeUtil {
         return visitor.getResult().get();
     }
 
-    private static final Pattern UNICODE = Pattern.compile("\\\\([0-9a-fA-F]{1,6})[\n\r\f\t ]*");
-    private static final Pattern ESCAPE = Pattern.compile("\\\\([^\n\r0-9A-Fa-f])");
+    // CSS escapes are always prefixed with a backslash. The backslash is either
+    // followed by 1-6 hexadecimal characters (0-9, A-F, a-f) and a trailing
+    // whitespace character, that is required, if the following charachter is
+    // from the hexadecimal range and not all 6 hexadecimal characters are used.
+    // The alternative is a single character, that is not from the list of
+    // hexadecimal characters.
+    private static final Pattern ESCAPE = Pattern.compile("\\\\(?:(?:(?<hex>[0-9a-fA-F]{1,6})[\n\r\f\t ]?)|(?<direct>[^\n\r0-9A-Fa-f]))");
     public static String unescape(CharSequence image) {
         if(image == null) {
             return null;
         }
-        Matcher m = UNICODE.matcher(image);
+        Matcher m = ESCAPE.matcher(image);
         StringBuffer sb = new StringBuffer();
         while (m.find()) {
-            try {
+            if (m.group("hex") != null) {
                 String hexString = m.group(1);
-                int codePoint = Integer.parseInt(hexString, 16);
-                if(Character.isBmpCodePoint(codePoint)) {
-                    m.appendReplacement(sb, "");
-                    sb.append((char) codePoint);
-                } else if (Character.isValidCodePoint(codePoint)) {
-                    m.appendReplacement(sb, "");
-                    sb.append(Character.highSurrogate(codePoint));
-                    sb.append(Character.lowSurrogate(codePoint));
-                } else {
-                    m.appendReplacement(sb, m.group());
+                try {
+                    int codePoint = Integer.parseInt(hexString, 16);
+                    if (Character.isBmpCodePoint(codePoint)) {
+                        m.appendReplacement(sb, "");
+                        sb.append((char) codePoint);
+                    } else if (Character.isValidCodePoint(codePoint)) {
+                        m.appendReplacement(sb, "");
+                        sb.append(Character.highSurrogate(codePoint));
+                        sb.append(Character.lowSurrogate(codePoint));
+                    } else {
+                        m.appendReplacement(sb, m.group());
+                    }
+                } catch (NumberFormatException ex) {
+                    return m.group();
                 }
-            } catch (NumberFormatException ex) {
-                return m.group();
+            } else {
+                m.appendReplacement(sb, Matcher.quoteReplacement(m.group("direct")));
             }
         }
         m.appendTail(sb);
-        String unescaped = ESCAPE.matcher(sb.toString()).replaceAll("$1");
-        return unescaped;
+        return sb.toString();
     }
 }

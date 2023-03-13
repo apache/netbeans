@@ -627,31 +627,34 @@ public abstract class CssCompletionItem extends DefaultCompletionProposal {
          * @param input
          * @return
          */
-        private static String escape(String input) {
+        static String escape(String input) {
+            if(input == null) {
+                return null;
+            }
             StringBuilder result = new StringBuilder(input.length());
-            boolean first = true;
-            for(int i = 0; i < input.length(); i++) {
-                char entry = input.charAt(i);
+            boolean limitedSet = true;
+            for(int offset = 0; offset < input.length(); offset += Character.charCount(input.codePointAt(offset))) {
+                int entry = input.codePointAt(offset);
                 boolean mustBeEscaped = false;
-                if(first) {
-                    first = false;
-                    if(! ((entry == '_') || (entry >= 'a' && entry <= 'z') || (entry >= 'A' && entry <= 'Z'))) {
+                if (limitedSet) {
+                    if (!((entry == '_') || (entry >= 'a' && entry <= 'z') || (entry >= 'A' && entry <= 'Z') || entry == '-')) {
                         mustBeEscaped = true;
                     }
+                    limitedSet = offset == 0 || entry == '-';
                 } else {
-                    if(! ((entry == '_') || (entry >= 'a' && entry <= 'z') || (entry >= 'A' && entry <= 'Z') || (entry >= '0' && entry <= '9') || entry == '-')) {
+                    if (!((entry == '_') || (entry >= 'a' && entry <= 'z') || (entry >= 'A' && entry <= 'Z') || (entry >= '0' && entry <= '9') || entry == '-')) {
                         mustBeEscaped = true;
                     }
                 }
                 if (mustBeEscaped) {
                     result.append("\\");
                     if (entry > 127 || Character.isWhitespace(entry) || Character.isISOControl(entry)) {
-                        result.append((int) entry);
+                        result.append(String.format("%06x", (int) entry));
                     } else {
-                        result.append(entry);
+                        result.appendCodePoint(entry);
                     }
                 } else {
-                    result.append(entry);
+                    result.appendCodePoint(entry);
                 }
             }
             return result.toString();

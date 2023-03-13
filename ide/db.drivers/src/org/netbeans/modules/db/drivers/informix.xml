@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0'?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,26 +19,9 @@
     under the License.
 
 -->
-<library version="3.0" xmlns="http://www.netbeans.org/ns/library-declaration/3">
-    <name>PostgreSQLDriver</name>
-    <type>j2se</type>
-    <localizing-bundle>org.netbeans.modules.db.drivers.Bundle</localizing-bundle>
-    <volume>
-        <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.modules.db.drivers/modules/ext/postgresql-42.5.4.jar!/</resource>
-    </volume>
-    <volume>
-        <type>src</type>
-
-    </volume>
-    <volume>
-        <type>javadoc</type>
-
-    </volume>
-    <properties>
-        <property>
-            <name>maven-dependencies</name>
-            <value>org.postgresql:postgresql:42.5.4:jar</value>
-        </property>
-    </properties>
-</library>
+<!DOCTYPE driver PUBLIC '-//NetBeans//DTD JDBC Driver 1.1//EN' 'http://www.netbeans.org/dtds/jdbc-driver-1_1.dtd'>
+<driver>
+  <name value='IBMInformix'/>
+  <display-name value='Informix Dynamic Server'/>
+  <class value='com.informix.jdbc.IfxDriver'/>
+</driver>

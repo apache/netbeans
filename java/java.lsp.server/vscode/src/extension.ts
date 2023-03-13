@@ -1072,13 +1072,14 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         let tv : vscode.TreeView<Visualizer> = await ts.createView('foundProjects', 'Projects', { canSelectMany : false });
 
         async function revealActiveEditor(ed? : vscode.TextEditor) {
-            if (!window.activeTextEditor?.document?.uri) {
+            const uri = window.activeTextEditor?.document?.uri;
+            if (!uri || uri.scheme.toLowerCase() !== 'file') {
                 return;
             }
             if (!tv.visible) {
                 return;
             }
-            let vis : Visualizer | undefined = await ts.findPath(tv, window.activeTextEditor?.document?.uri?.toString());
+            let vis : Visualizer | undefined = await ts.findPath(tv, uri.toString());
             if (!vis) {
                 return;
             }

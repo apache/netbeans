@@ -290,7 +290,8 @@ class NbProjectInfoBuilder {
         Map<String, Object> taskProperties = new HashMap<>();
         Map<String, String> taskPropertyTypes = new HashMap<>();
         
-        for (Task task : project.getTasks().getAsMap().values()) {
+        // make a copy of the task map; may mutate.
+        for (Task task : new ArrayList<>(project.getTasks().getAsMap().values())) {
             Class taskClass = task.getClass();
             Class nonDecorated = findNonDecoratedClass(taskClass);
             
@@ -305,7 +306,8 @@ class NbProjectInfoBuilder {
     private void detectTaskDependencies(NbProjectInfoModel model) {
         Map<String, Object> tasks = new HashMap<>();
         
-        for (Task task : project.getTasks().getAsMap().values()) {
+        // make a copy of the task map; may mutate.
+        for (Task task : new ArrayList<>(project.getTasks().getAsMap().values())) {
             Map<String, String> taskInfo = new HashMap<>();
             taskInfo.put("name", task.getPath()); // NOI18N
             taskInfo.put("enabled", Boolean.toString(task.getEnabled())); // NOI18N

@@ -69,12 +69,6 @@ import org.openide.windows.WindowManager;
  * @author Jiri Rechtacek
  */
 public class AutoupdateCheckScheduler {
-    /**
-     * System property that allows to skip forced initial check. If set to true, the check is not forced, if a check was never
-     * was performed - the scheduling is always driven by AU settings.
-     */
-    private static final String INITIAL_CHECK_SKIP_OPT = "autoupdate.initial.check.skip"; // NOI18N
-
     private static RequestProcessor.Task regularlyCheck = null;    
     private static final RequestProcessor REGULARLY_CHECK_TIMER = 
         new RequestProcessor("auto-checker-reqularly-timer", 1, true); // NOI18N

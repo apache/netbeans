@@ -26,9 +26,12 @@ import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
+import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.languages.hcl.HCLTokenId;
+import org.netbeans.modules.languages.hcl.NbHCLParser;
+import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.lexer.EmbeddingPresence;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageHierarchy;
@@ -140,6 +143,21 @@ public final class TerraformLanguage extends DefaultLanguageConfig {
     @Override
     public String getLineCommentPrefix() {
         return "#"; // NOI18N
+    }
+
+    @Override
+    public Parser getParser() {
+        return new NbHCLParser();
+    }
+
+    @Override
+    public StructureScanner getStructureScanner() {
+        return new TerraformStructureScanner();
+    }
+
+    @Override
+    public boolean hasStructureScanner() {
+        return true;
     }
 
     private static final Language<HCLTokenId> language = new LanguageHierarchy<HCLTokenId>() {

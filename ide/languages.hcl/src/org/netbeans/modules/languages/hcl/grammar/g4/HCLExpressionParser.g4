@@ -50,13 +50,16 @@ collectionValue
     | object
     ;
 
+
 tuple
-    : LBRACK expression (COMMA expression)* COMMA? RBRACK
+    // The original separator in HCL is Comma or NewLine
+    : LBRACK expression (COMMA? expression)* COMMA? RBRACK
     | LBRACK RBRACK
     ;
 
 object
-    : LBRACE objectElem (COMMA objectElem)* COMMA? RBRACE
+    // The original separator in HCL is Comma or NewLine
+    : LBRACE objectElem (COMMA? objectElem)* COMMA? RBRACE
     | LBRACE RBRACE
     ;
 
@@ -79,7 +82,7 @@ stringContent
     ;
 
 interpolation
-    : INTERPOLATION_START INTERPOLATION_CONTENT* INTERPOLATION_END
+    : INTERPOLATION_START ( INTERPOLATION_CONTENT | quotedTemplate) * INTERPOLATION_END
     ;
 
 template

@@ -182,6 +182,9 @@ WS
     : Hws + -> channel(HIDDEN)
     ;
 
+// HCL Specification handles NewLine different every now and then
+// Sending NewLine to the hidden channel makes the parser simpler,
+// though some rules cannot be enforced by it.
 NL
     : Vws + -> channel(HIDDEN)
     ;

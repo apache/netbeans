@@ -34,6 +34,14 @@
                         </folder>
                     </folder>
                 </folder>
+                <folder name="CodeTemplates">
+                    <file name="org-netbeans-modules-languages-hcl-terraform-snippets.xml" url="terraform/snippets.xml"/>
+                </folder>
+                <folder name="Preferences">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-languages-hcl-terraform-preferences.xml" url="terraform/preferences.xml"/>
+                    </folder>
+                </folder>
             </folder>
             <folder name="x-hcl-tfvars">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.languages.hcl.tfvars.Bundle#Editors/text/x-hcl-tfvars"/>
@@ -44,6 +52,11 @@
                                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.languages.hcl.Bundle"/>
                             </file>
                         </folder>
+                    </folder>
+                </folder>
+                <folder name="Preferences">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-languages-hcl-tfvars-preferences.xml" url="tfvars/preferences.xml"/>
                     </folder>
                 </folder>
             </folder>

@@ -1,7 +1,7 @@
 Name: Gradle Wrapper
 Description: Gradle Tooling API
-Version: 8.0-rc-1
-Files: gradle-tooling-api-8.0-rc-1.jar
+Version: 8.0.2
+Files: gradle-tooling-api-8.0.2.jar
 License: Apache-2.0
 Origin: Gradle Inc.
 URL: https://gradle.org/

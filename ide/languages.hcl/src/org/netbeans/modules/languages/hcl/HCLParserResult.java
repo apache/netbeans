@@ -24,7 +24,6 @@ import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
@@ -63,11 +62,8 @@ public class HCLParserResult  extends ParserResult {
             HCLLexer lexer = new HCLLexer(CharStreams.fromString(getSnapshot().getText().toString()));
             lexer.removeErrorListeners();
             HCLParser parser = new HCLParser(new CommonTokenStream(lexer));
-            parser.removeErrorListeners();
 
-            parser.addErrorListener(createErrorListener());
-
-            parser.addParseListener(createFoldListener());
+            configureParser(parser);
 
             parser.configFile();
             
@@ -88,6 +84,13 @@ public class HCLParserResult  extends ParserResult {
 
     @Override
     protected void invalidate() {
+    }
+
+    protected void configureParser(HCLParser parser) {
+        parser.removeErrorListeners();
+        parser.addErrorListener(createErrorListener());
+
+        parser.addParseListener(createFoldListener());
     }
 
     private void addFold(int start, int stop) {

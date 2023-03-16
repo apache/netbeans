@@ -85,7 +85,7 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
    
     private final Project proj;
     private TransientRepositories transRepos;
-    private final List<URI> uriReferences = new ArrayList<URI>();
+    private final List<URI> uriReferences = new ArrayList<>();
 
     // ui logging
     static final String UI_LOGGER_NAME = "org.netbeans.ui.maven.project"; //NOI18N
@@ -106,7 +106,7 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
                 NbMavenProjectImpl project = proj.getLookup().lookup(NbMavenProjectImpl.class);
                 Set<URI> newuris = getProjectExternalSourceRoots(project);
                 synchronized (uriReferences) {
-                    Set<URI> olduris = new HashSet<URI>(uriReferences);
+                    Set<URI> olduris = new HashSet<>(uriReferences);
                     olduris.removeAll(newuris);
                     newuris.removeAll(uriReferences);
                     for (URI old : olduris) {
@@ -135,7 +135,7 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
         checkSourceDownloads();
         checkJavadocDownloads();
         project.attachUpdater();
-        registerWithSubmodules(FileUtil.toFile(proj.getProjectDirectory()), new HashSet<File>());
+        registerWithSubmodules(FileUtil.toFile(proj.getProjectDirectory()), new HashSet<>());
         //manually register the listener for this project, we know it's loaded and should be listening on changes.
         //registerCoordinates() doesn't attach listeners
         MavenFileOwnerQueryImpl.getInstance().attachProjectListener(project);
@@ -203,7 +203,7 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
                                 LOGGER.log(Level.FINER, "Index once a Week :{0}", ri.getId());//NOI18N
                                 run = true;
                             }
-                            if (run && ri.isRemoteDownloadable()) {
+                            if (run && ri.isRemoteDownloadable() && RepositoryPreferences.isIndexDownloadEnabled()) {
                                 RepositoryIndexer.indexRepo(ri);
                             }
                         }
@@ -214,8 +214,8 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
     }
 
     private Set<URI> getProjectExternalSourceRoots(NbMavenProjectImpl project) throws IllegalArgumentException {
-        Set<URI> uris = new HashSet<URI>();
-        Set<URI> toRet = new HashSet<URI>();
+        Set<URI> uris = new HashSet<>();
+        Set<URI> toRet = new HashSet<>();
         uris.addAll(Arrays.asList(project.getSourceRoots(false)));
         uris.addAll(Arrays.asList(project.getSourceRoots(true)));
         //#167572 in the unlikely event that generated sources are located outside of

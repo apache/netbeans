@@ -651,7 +651,12 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     }
 
     //spawn the indexing into a separate thread..
-    private void spawnIndexLoadedRepo(final RepositoryInfo repo) {
+    private boolean spawnIndexLoadedRepo(final RepositoryInfo repo) {
+
+        if (!RepositoryPreferences.isIndexDownloadEnabled() && repo.isRemoteDownloadable()) {
+            LOGGER.log(Level.FINE, "Skipping remote index request for {0}", repo);
+            return false;
+        }
 
         // 2 RPs allow concurrent local repo indexing during remote index downloads
         // while also largely avoiding to run two disk-IO heavy tasks at once.
@@ -667,10 +672,16 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                 return null;
             });
         });
+        return true;
     }    
 
     @Override
     public void indexRepo(final RepositoryInfo repo) {
+        
+        if (!RepositoryPreferences.isIndexDownloadEnabled() && repo.isRemoteDownloadable()) {
+            LOGGER.log(Level.FINE, "Skipping remote index request for {0}", repo);
+            return;
+        }
         LOGGER.log(Level.FINER, "Indexing Context: {0}", repo);
         try {
             RemoteIndexTransferListener.addToActive(Thread.currentThread());
@@ -944,8 +955,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                             if (!RepositoryPreferences.isIndexRepositories()) {
                                 return null;
                             }
-                            actionSkip.run(repo, null);
-                            spawnIndexLoadedRepo(repo);
+                            boolean spawned = spawnIndexLoadedRepo(repo);
+                            if (spawned) {
+                                actionSkip.run(repo, null);
+                            }
                             return null;
                         }
                         IndexingContext context = getIndexingContexts().get(repo.getId());

@@ -993,20 +993,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         updateCheckboxes();
     }//GEN-LAST:event_cbEnableIndexingActionPerformed
 
-    // short term UI memory, to select index download again when indexing
-    // was toggled off and on by the user
-    private boolean indexDownloadWasEnabled = false;
-
     private void updateCheckboxes() {
-        if (!cbEnableIndexing.isSelected()) {
-            indexDownloadWasEnabled = cbEnableIndexDownload.isSelected();
-            cbEnableIndexDownload.setSelected(false);
-        } else if (indexDownloadWasEnabled) {
-            cbEnableIndexDownload.setSelected(true);
-        }
         cbEnableIndexDownload.setEnabled(cbEnableIndexing.isSelected());
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDirectory;

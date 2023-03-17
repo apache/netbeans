@@ -390,6 +390,17 @@ public final class RepositoryPreferences {
         return getPreferences().getBoolean(PROP_DOWNLOAD_INDEX, getDefaultDownloadIndexEnabled());
     }
 
+    /**
+     * Downloading the remote index should only happen if indexing in general
+     * and downloading in particular are enabled.
+     *
+     * @since 2.60
+     * @return true if indexing and downloading are both enabled.
+     */
+    public static boolean isIndexDownloadEnabledEffective() {
+        return isIndexRepositories() && isIndexDownloadEnabled();
+    }
+
     @NbBundle.Messages({
         "# true or false:",
         "DEFAULT_DOWNLOAD_INDEX=true"

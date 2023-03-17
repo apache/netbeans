@@ -94,12 +94,15 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
     // major release.
     /**
      * GlassFish JPA support matrix:<p/><table>
-     * <tr><th>GlassFish</th><th>JPA 1.0</th><th>JPA 2.0</th><th>JPA 2.1</th><th>JPA 2.2</th></tr>
-     * <tr><th>V1</th><td>YES</td><td>NO</td><td>NO</td><td>NO</td></tr>
-     * <tr><th>V2</th><td>YES</td><td>NO</td><td>NO</td><td>NO</td></tr>
-     * <tr><th>V3</th><td>YES</td><td>YES</td><td>NO</td><td>NO</td></tr>
-     * <tr><th>V4</th><td>YES</td><td>YES</td><td>YES</td><td>NO</td></tr>
-     * <tr><th>V5</th><td>YES</td><td>YES</td><td>YES</td><td>YES</td></tr>
+     * <tr><th>GlassFish</th><th>JPA 1.0</th><th>JPA 2.0</th><th>JPA 2.1</th>
+     * <th>JPA 2.2</th><th>JPA 3.0</th><th>JPA 3.1</th></tr>
+     * <tr><th>V1</th><td>YES</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td></tr>
+     * <tr><th>V2</th><td>YES</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td></tr>
+     * <tr><th>V3</th><td>YES</td><td>YES</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td></tr>
+     * <tr><th>V4</th><td>YES</td><td>YES</td><td>YES</td><td>NO</td><td>NO</td><td>NO</td></tr>
+     * <tr><th>V5</th><td>YES</td><td>YES</td><td>YES</td><td>YES</td><td>NO</td><td>NO</td></tr>
+     * <tr><th>V6</th><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>YES</td><td>NO</td></tr>
+     * <tr><th>V7</th><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>YES</td><td>YES</td></tr>
      * </table>
      */
     private static final JpaSupportVector jpaSupport[]
@@ -109,10 +112,10 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
     static {
         for (GlassFishVersion version : GlassFishVersion.values()) {
             jpaSupport[version.ordinal()] = new JpaSupportVector(
-                    GlassFishVersion.lt(version, GlassFishVersion.GF_7_0_0),
-                    GlassFishVersion.lt(version, GlassFishVersion.GF_7_0_0) && GlassFishVersion.ge(version, GlassFishVersion.GF_3),
-                    GlassFishVersion.lt(version, GlassFishVersion.GF_7_0_0) && GlassFishVersion.ge(version, GlassFishVersion.GF_4),
-                    GlassFishVersion.lt(version, GlassFishVersion.GF_7_0_0) && GlassFishVersion.ge(version, GlassFishVersion.GF_5),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6) && GlassFishVersion.ge(version, GlassFishVersion.GF_3),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6) && GlassFishVersion.ge(version, GlassFishVersion.GF_4),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6) && GlassFishVersion.ge(version, GlassFishVersion.GF_5),
                     GlassFishVersion.lt(version, GlassFishVersion.GF_7_0_0) && GlassFishVersion.ge(version, GlassFishVersion.GF_6),
                     GlassFishVersion.ge(version, GlassFishVersion.GF_7_0_0)
             );

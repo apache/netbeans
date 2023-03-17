@@ -176,6 +176,9 @@ public abstract class Provider {
      * @return names of the property representing JDBC URL, map version-property name
      */
     public String getJdbcUrl() {
+        if(isJakartaNamespace()) {
+            return "jakarta.persistence.jdbc.url";
+        }
         return "javax.persistence.jdbc.url";
     }
     
@@ -184,6 +187,9 @@ public abstract class Provider {
      * @return name of the property representing JDBC driver.
      */
     public String getJdbcDriver() {
+        if(isJakartaNamespace()) {
+            return "jakarta.persistence.jdbc.driver";
+        }
         return "javax.persistence.jdbc.driver";
     }
     
@@ -192,6 +198,9 @@ public abstract class Provider {
      * @return name of the property representing JDBC user name.
      */
     public String getJdbcUsername() {
+        if(isJakartaNamespace()) {
+            return "jakarta.persistence.jdbc.user";
+        }
         return "javax.persistence.jdbc.user";
     }
     
@@ -200,6 +209,9 @@ public abstract class Provider {
      * @return name of the property representing JDBC password.
      */
     public String getJdbcPassword() {
+        if(isJakartaNamespace()) {
+            return "jakarta.persistence.jdbc.password";
+        }
         return "javax.persistence.jdbc.password";
     }
 

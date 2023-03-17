@@ -32,7 +32,9 @@ import org.openide.util.NbBundle;
 public class DefaultProvider extends Provider{
 
     protected DefaultProvider(String version){
-        super("javax.persistence.EntityManager", version);
+        super( (Float.parseFloat(version) < 3.0) 
+                ? "javax.persistence.EntityManager"
+                : "jakarta.persistence.EntityManager", version);
     }
     
     protected DefaultProvider(){

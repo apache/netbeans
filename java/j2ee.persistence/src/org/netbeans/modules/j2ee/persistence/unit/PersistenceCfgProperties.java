@@ -632,7 +632,13 @@ public class PersistenceCfgProperties {
         ArrayList<String> ret = new ArrayList<>();
         String ver = provider == null ? null : ProviderUtil.getVersion(provider);
         if(provider == null || (ver!=null && !Persistence.VERSION_1_0.equals(ver))) {
-            ret.addAll(possiblePropertyValues.get(null).keySet());
+            if (Float.parseFloat(ver) < Float.parseFloat(Persistence.VERSION_3_0)) {
+                ret.addAll(possiblePropertyValues.get(null).keySet());
+            } else {
+                for (String key : possiblePropertyValues.get(null).keySet()) {
+                    ret.add(key.replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE));
+                }
+            }
         }
         if(provider !=null ) {
             Map<String, String[]> props = possiblePropertyValues.get(provider);

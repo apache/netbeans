@@ -191,12 +191,14 @@ public class PersistenceCfgProperties {
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_2).put(PersistenceUnitProperties.SHARED_CACHE_MODE, SHARED_CACHE_MODE);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_2).put(PersistenceUnitProperties.WEAVING_MAPPEDSUPERCLASS, TRUE_FALSE);
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_2).put(ProviderUtil.ECLIPSELINK_PROVIDER2_2.getTableGenerationPropertyName(),possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_0).get(ProviderUtil.ECLIPSELINK_PROVIDER2_0.getTableGenerationPropertyName()));
-        
-        //ECLIPSELINK 3.1 (replace javax to jakarta)
-        possiblePropertyValues.put(ProviderUtil.ECLIPSELINK_PROVIDER3_1, new HashMap<>());
-        for (Map.Entry<String, String[]> entry : possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_1).entrySet()) {
-            possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER3_1).put(entry.getKey().replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE), entry.getValue());
+        //EclipseLink JPA 3.0 (initially just copy of 2.2 and then replace javax to jakarta)
+        possiblePropertyValues.put(ProviderUtil.ECLIPSELINK_PROVIDER3_0, new HashMap<>());
+        for (Map.Entry<String, String[]> entry : possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER2_2).entrySet()) {
+            possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER3_0).put(entry.getKey().replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE), entry.getValue());
         }
+        //EclipseLink JPA 3.1 (initially just copy of 3.0)
+        possiblePropertyValues.put(ProviderUtil.ECLIPSELINK_PROVIDER3_1, new HashMap<>());
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER3_1).putAll(possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER3_0));
 
         //Hibernate JPA 1.0
         possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER1_0, new HashMap<String, String[]>());
@@ -234,6 +236,14 @@ public class PersistenceCfgProperties {
         //Hibernate JPA 2.2 (initially just copy of 2.0)
         possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER2_2, new HashMap<String, String[]>());
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_2).putAll(possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_0));
+        //Hibernate JPA 3.0 (initially just copy of 2.2 and then replace javax to jakarta)
+        possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER3_0, new HashMap<String, String[]>());
+        for (Map.Entry<String, String[]> entry : possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER2_2).entrySet()) {
+            possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER3_0).put(entry.getKey().replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE), entry.getValue());
+        }
+        //Hibernate JPA 3.1 (initially just copy of 3.0)
+        possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER3_1, new HashMap<String, String[]>());
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER3_1).putAll(possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER3_0));
         
         //OpenJPA JPA 1.0
         possiblePropertyValues.put(ProviderUtil.OPENJPA_PROVIDER1_0, new HashMap<String, String[]>());
@@ -580,9 +590,17 @@ public class PersistenceCfgProperties {
         possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER2_1).put("datanucleus.jpa.txnMarkForRollbackOnException", TRUE_FALSE);
         possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER2_1).put(ProviderUtil.DATANUCLEUS_PROVIDER2_1.getTableGenerationPropertyName()
                 ,new String[] {ProviderUtil.DATANUCLEUS_PROVIDER2_1.getTableGenerationCreateValue(),ProviderUtil.DATANUCLEUS_PROVIDER2_1.getTableGenerationDropCreateValue() });
-        ////DataNucleus JPA 2.2 (initially just copy of 2.1)
+        //DataNucleus JPA 2.2 (initially just copy of 2.1)
         possiblePropertyValues.put(ProviderUtil.DATANUCLEUS_PROVIDER2_2, new HashMap<String, String[]>());
         possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER2_2).putAll(possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER2_1));
+        //DataNucleus JPA 3.0 (initially just copy of 2.2 and then replace javax to jakarta)
+        possiblePropertyValues.put(ProviderUtil.DATANUCLEUS_PROVIDER3_0, new HashMap<String, String[]>());
+        for (Map.Entry<String, String[]> entry : possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER2_2).entrySet()) {
+            possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER3_0).put(entry.getKey().replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE), entry.getValue());
+        }
+        //DataNucleus JPA 3.1 (initially just copy of 3.0)
+        possiblePropertyValues.put(ProviderUtil.DATANUCLEUS_PROVIDER3_1, new HashMap<String, String[]>());
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER3_1).putAll(possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER3_0));
         
         //toplink 1.0
         possiblePropertyValues.put(ProviderUtil.TOPLINK_PROVIDER1_0, new HashMap<String, String[]>());
@@ -649,6 +667,10 @@ public class PersistenceCfgProperties {
             if(o1.startsWith("javax.persistence.") && !o2.startsWith("javax.persistence")) {//NOI18N
                 return -11;
             } else if (!o1.startsWith("javax.persistence.") && o2.startsWith("javax.persistence")){//NOI18N
+                return 1;
+            } else if(o1.startsWith("jakarta.persistence.") && !o2.startsWith("jakarta.persistence")) {//NOI18N
+                return -11;
+            } else if (!o1.startsWith("jakarta.persistence.") && o2.startsWith("jakarta.persistence")){//NOI18N
                 return 1;
             }
             return o1.compareTo(o2);

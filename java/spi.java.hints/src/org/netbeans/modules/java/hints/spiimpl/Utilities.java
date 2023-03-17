@@ -166,6 +166,15 @@ import org.openide.util.WeakListeners;
 import org.openide.util.lookup.ServiceProvider;
 
 import static com.sun.source.tree.CaseTree.CaseKind.STATEMENT;
+import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
+import org.netbeans.modules.refactoring.spi.ui.RefactoringUI;
+import org.netbeans.modules.refactoring.spi.ui.UI;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.util.NbBundle;
+import org.openide.util.Parameters;
+import org.openide.windows.TopComponent;
 
 /**
  *
@@ -1516,6 +1525,32 @@ public class Utilities {
             }
         }
 
+        return false;
+    }
+    
+    @NbBundle.Messages({
+        "WARNING_NoRefactoringUI=Cannot start refactoring: no UI implementation is available."
+    })
+    public static void openRefactoringUIOrWarn(@NonNull Map<HintMetadata, Collection<? extends HintDescription>> hintsCollection, @NullAllowed TopComponent parent) {
+        if (openRefactoringUI(hintsCollection, parent)) {
+            return;
+        }
+        NotifyDescriptor d = new NotifyDescriptor.Message(Bundle.WARNING_NoRefactoringUI(), NotifyDescriptor.WARNING_MESSAGE);
+        DialogDisplayer.getDefault().notifyLater(d);
+    }
+    
+    public static boolean openRefactoringUI(@NonNull Map<HintMetadata, Collection<? extends HintDescription>> hintsCollection, @NullAllowed TopComponent parent) {
+        Parameters.notNull("hintsCollection", hintsCollection);
+        if (hintsCollection.isEmpty()) {
+            return true;
+        }
+        for (HintsRefactoringFactory f : Lookup.getDefault().lookupAll(HintsRefactoringFactory.class)) {
+            RefactoringUI ui = f.createRefactoringUI(hintsCollection);
+            if (ui != null) {
+                UI.openRefactoringUI(ui, parent);
+                return true;
+            }
+        }
         return false;
     }
 

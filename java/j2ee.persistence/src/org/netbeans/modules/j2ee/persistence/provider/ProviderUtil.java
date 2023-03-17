@@ -66,6 +66,8 @@ public class ProviderUtil {
     public static final Provider HIBERNATE_PROVIDER2_0 = new HibernateProvider(Persistence.VERSION_2_0);
     public static final Provider HIBERNATE_PROVIDER2_1 = new HibernateProvider(Persistence.VERSION_2_1);
     public static final Provider HIBERNATE_PROVIDER2_2 = new HibernateProvider(Persistence.VERSION_2_2);
+    public static final Provider HIBERNATE_PROVIDER3_0 = new HibernateProvider(Persistence.VERSION_3_0);
+    public static final Provider HIBERNATE_PROVIDER3_1 = new HibernateProvider(Persistence.VERSION_3_1);
     public static final Provider TOPLINK_PROVIDER1_0 = ToplinkProvider.create(Persistence.VERSION_1_0);
     public static final Provider ECLIPSELINK_PROVIDER1_0 = new EclipseLinkProvider(Persistence.VERSION_1_0);
     public static final Provider ECLIPSELINK_PROVIDER2_0 = new EclipseLinkProvider(Persistence.VERSION_2_0);
@@ -78,6 +80,8 @@ public class ProviderUtil {
     public static final Provider DATANUCLEUS_PROVIDER2_0 = new DataNucleusProvider(Persistence.VERSION_2_0);
     public static final Provider DATANUCLEUS_PROVIDER2_1 = new DataNucleusProvider(Persistence.VERSION_2_1);
     public static final Provider DATANUCLEUS_PROVIDER2_2 = new DataNucleusProvider(Persistence.VERSION_2_2);
+    public static final Provider DATANUCLEUS_PROVIDER3_0 = new DataNucleusProvider(Persistence.VERSION_3_0);
+    public static final Provider DATANUCLEUS_PROVIDER3_1 = new DataNucleusProvider(Persistence.VERSION_3_1);
     public static final Provider OPENJPA_PROVIDER1_0 = new OpenJPAProvider(Persistence.VERSION_1_0);
     public static final Provider OPENJPA_PROVIDER2_0 = new OpenJPAProvider(Persistence.VERSION_2_0);
     public static final Provider OPENJPA_PROVIDER2_1 = new OpenJPAProvider(Persistence.VERSION_2_1);
@@ -927,7 +931,7 @@ public class ProviderUtil {
         final FileObject[] dd = new FileObject[1];
         //get max supported version
         String ret = vers == null ? PersistenceUtils.getJPAVersion(project) : vers;
-        final String version = ret != null ? ret : Persistence.VERSION_1_0;
+        final String version = ret != null ? ret : Persistence.VERSION_3_1;
         // must create the file using AtomicAction, see #72058
         persistenceLocation.getFileSystem().runAtomicAction( () -> {
             dd[0] = FileUtil.copyFile(FileUtil.getConfigFile(
@@ -1013,7 +1017,12 @@ public class ProviderUtil {
      */
     public static Provider[] getAllProviders() {
         return new Provider[] {
+                    DATANUCLEUS_PROVIDER3_1,
                     ECLIPSELINK_PROVIDER3_1,
+                    HIBERNATE_PROVIDER3_1,
+                    DATANUCLEUS_PROVIDER3_0,
+                    ECLIPSELINK_PROVIDER3_0,
+                    HIBERNATE_PROVIDER3_0,
                     DATANUCLEUS_PROVIDER2_2, 
                     ECLIPSELINK_PROVIDER2_2, 
                     HIBERNATE_PROVIDER2_2, 
@@ -1089,7 +1098,7 @@ public class ProviderUtil {
         
         if(persistenceUnit.getProperties() != null) {
             for(Property prop:persistenceUnit.getProperties().getProperty2()) {
-                if(prop.getName().startsWith("javax.persistence.")) {//not vendor specific
+                if(prop.getName().startsWith("javax.persistence.") || prop.getName().startsWith("jakarta.persistence.")) {//not vendor specific
                     notPortablePropSize--;
                 }
             }

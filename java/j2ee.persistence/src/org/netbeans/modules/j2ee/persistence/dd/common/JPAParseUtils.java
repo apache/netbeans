@@ -99,7 +99,6 @@ public class JPAParseUtils {
                 resource="/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_3_0.xsd"; //NOI18N
             } else if (systemId!=null && systemId.endsWith("persistence_2_2.xsd")) {
                 resource="/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_2_2.xsd"; //NOI18N
-                LOGGER.log(Level.INFO, "Persistence2_2: " + resource);
             } else if (systemId!=null && systemId.endsWith("persistence_2_1.xsd")) {
                 resource="/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_2_1.xsd"; //NOI18N
             } else if (systemId!=null && systemId.endsWith("persistence_2_0.xsd")) {

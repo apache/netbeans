@@ -1,5 +1,5 @@
 Name: Graal.js Parser
-Version: 1.1
+Version: 1.2
 Description: An ECMAScript 13 (ECMAScript 2022) compatible parser for JavaScript source code. Based on the parser of Graal.js (https://github.com/graalvm/graaljs).
 License: UPL
 Origin: https://github.com/matthiasblaesing/graaljs-nb

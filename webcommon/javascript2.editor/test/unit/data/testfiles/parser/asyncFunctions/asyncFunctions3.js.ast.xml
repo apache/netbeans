@@ -120,6 +120,7 @@
           </IdentNode>
           <!-- PropertyNode Value -->
           <FunctionNode name='ddddd' kind='NORMAL' start='97' end='131'>
+            <isMethod/>
             <isNamedFunctionExpression/>
             <isAsync/>
             <!-- FunctionNode Parameters -->

@@ -217,4 +217,12 @@ public class SemanticAnalyzerTest extends SemanticAnalysisTestBase {
     public void testConstantsInTraits() throws Exception {
         checkSemantic("testfiles/semantic/constantsInTraits.php");
     }
+
+    public void testGH5551_01() throws Exception {
+        checkSemantic("testfiles/semantic/gh5551_01.php");
+    }
+
+    public void testGH5551_02() throws Exception {
+        checkSemantic("testfiles/semantic/gh5551_02.php");
+    }
 }

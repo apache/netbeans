@@ -385,9 +385,6 @@ public class CustomJavac extends Javac {
                 if (args[i].startsWith("-Xbootclasspath/p:")) { // ide/html
                     bootClasspath = true;
                 }
-                if (args[i].startsWith("-J")) {
-                    args[i] = "-Xlint:none"; // webcommon/javascript2.editor
-                }
             }
             for (int i = 0; i < args.length; i++) {
                 if (!bootClasspath) {

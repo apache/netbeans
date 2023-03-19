@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ProxySelector;
@@ -915,8 +916,21 @@ public class MavenProxySupport {
         private ProxyInfo current;
         private int state = UNKNOWN;
 
+        private final Field posStartField;
+        private final Field posEndField;
+
         public XppDelegate(EntityReplacementMap entityReplacementMap) {
             super(entityReplacementMap);
+            
+            try {
+                posEndField = MXParser.class.getDeclaredField("posEnd");
+                posEndField.setAccessible(true);
+
+                posStartField = MXParser.class.getDeclaredField("posStart");
+                posStartField.setAccessible(true);
+            } catch (ReflectiveOperationException ex) {
+                throw new RuntimeException("code changed", ex);
+            }
         }
         
         TextInfo getTextInfo() {
@@ -938,7 +952,11 @@ public class MavenProxySupport {
         private LineAndColumn startPos() {
             int ln = getLineNumber();
             int col = getColumnNumber();
-            col -= (posEnd - posStart);
+            try {
+                col -= (posEndField.getInt(this) - posStartField.getInt(this));
+            } catch (IllegalAccessException ex) {
+                Exceptions.printStackTrace(ex);
+            }
             return new LineAndColumn(ln, col);
         }
 

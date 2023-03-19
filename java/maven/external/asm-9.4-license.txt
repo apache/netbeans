@@ -1,10 +1,10 @@
 Name: ASM
 Description: ASM is an all purpose Java bytecode manipulation and analysis framework
 Origin: https://asm.ow2.io/
-Version: 7.0
+Version: 9.4
 License: ASM
 URL: https://asm.ow2.io/
-Files: asm-7.0.jar, asm-commons-7.0.jar
+Files: asm-9.4.jar, asm-commons-9.4.jar
 Type: compile-time
 Comment: Used to build ueber-jar bundling for simple json library into NbEventSpy
 

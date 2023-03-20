@@ -25,13 +25,18 @@
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
             <code-name-base>org.netbeans.libs.nashorn</code-name-base>
             <module-dependencies/>
+            <test-dependencies>
+                <test-type>
+                    <name>unit</name>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.libs.junit4</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                </test-type>
+            </test-dependencies>
             <public-packages>
                 <subpackages>com.oracle.js.parser</subpackages>
             </public-packages>
-            <class-path-extension>
-                <runtime-relative-path>ext/graaljs-parser-1.2.jar</runtime-relative-path>
-                <binary-origin>external/graaljs-parser-1.2.jar</binary-origin>
-            </class-path-extension>
         </data>
     </configuration>
 </project>

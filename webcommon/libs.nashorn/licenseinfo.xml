@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/com/oracle/js/parser/AbstractParser.java</file>
+        <file>src/com/oracle/js/parser/ECMAErrors.java</file>
+        <file>src/com/oracle/js/parser/ErrorManager.java</file>
+        <file>src/com/oracle/js/parser/JSErrorType.java</file>
+        <file>src/com/oracle/js/parser/JSType.java</file>
+        <file>src/com/oracle/js/parser/Lexer.java</file>
+        <file>src/com/oracle/js/parser/Namespace.java</file>
+        <file>src/com/oracle/js/parser/Parser.java</file>
+        <file>src/com/oracle/js/parser/ParserContext.java</file>
+        <file>src/com/oracle/js/parser/ParserContextBaseNode.java</file>
+        <file>src/com/oracle/js/parser/ParserContextBlockNode.java</file>
+        <file>src/com/oracle/js/parser/ParserContextBreakableNode.java</file>
+        <file>src/com/oracle/js/parser/ParserContextFunctionNode.java</file>
+        <file>src/com/oracle/js/parser/ParserContextLabelNode.java</file>
+        <file>src/com/oracle/js/parser/ParserContextLoopNode.java</file>
+        <file>src/com/oracle/js/parser/ParserContextModuleNode.java</file>
+        <file>src/com/oracle/js/parser/ParserContextNode.java</file>
+        <file>src/com/oracle/js/parser/ParserContextSwitchNode.java</file>
+        <file>src/com/oracle/js/parser/ParserException.java</file>
+        <file>src/com/oracle/js/parser/RecompilableScriptFunctionData.java</file>
+        <file>src/com/oracle/js/parser/Scanner.java</file>
+        <file>src/com/oracle/js/parser/ScriptEnvironment.java</file>
+        <file>src/com/oracle/js/parser/Source.java</file>
+        <file>src/com/oracle/js/parser/Token.java</file>
+        <file>src/com/oracle/js/parser/TokenKind.java</file>
+        <file>src/com/oracle/js/parser/TokenLookup.java</file>
+        <file>src/com/oracle/js/parser/TokenStream.java</file>
+        <file>src/com/oracle/js/parser/TokenType.java</file>
+        <file>src/com/oracle/js/parser/ir/AccessNode.java</file>
+        <file>src/com/oracle/js/parser/ir/Assignment.java</file>
+        <file>src/com/oracle/js/parser/ir/BaseNode.java</file>
+        <file>src/com/oracle/js/parser/ir/BinaryNode.java</file>
+        <file>src/com/oracle/js/parser/ir/Block.java</file>
+        <file>src/com/oracle/js/parser/ir/BlockStatement.java</file>
+        <file>src/com/oracle/js/parser/ir/BreakNode.java</file>
+        <file>src/com/oracle/js/parser/ir/BreakableNode.java</file>
+        <file>src/com/oracle/js/parser/ir/BreakableStatement.java</file>
+        <file>src/com/oracle/js/parser/ir/CallNode.java</file>
+        <file>src/com/oracle/js/parser/ir/CaseNode.java</file>
+        <file>src/com/oracle/js/parser/ir/CatchNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ClassNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ContinueNode.java</file>
+        <file>src/com/oracle/js/parser/ir/DebuggerNode.java</file>
+        <file>src/com/oracle/js/parser/ir/EmptyNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ErrorNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ExportClauseNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ExportNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ExportSpecifierNode.java</file>
+        <file>src/com/oracle/js/parser/ir/Expression.java</file>
+        <file>src/com/oracle/js/parser/ir/ExpressionList.java</file>
+        <file>src/com/oracle/js/parser/ir/ExpressionStatement.java</file>
+        <file>src/com/oracle/js/parser/ir/Flags.java</file>
+        <file>src/com/oracle/js/parser/ir/ForNode.java</file>
+        <file>src/com/oracle/js/parser/ir/FromNode.java</file>
+        <file>src/com/oracle/js/parser/ir/FunctionCall.java</file>
+        <file>src/com/oracle/js/parser/ir/FunctionNode.java</file>
+        <file>src/com/oracle/js/parser/ir/IdentNode.java</file>
+        <file>src/com/oracle/js/parser/ir/IfNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ImportClauseNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ImportNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ImportSpecifierNode.java</file>
+        <file>src/com/oracle/js/parser/ir/IndexNode.java</file>
+        <file>src/com/oracle/js/parser/ir/JoinPredecessorExpression.java</file>
+        <file>src/com/oracle/js/parser/ir/JsxAttributeNode.java</file>
+        <file>src/com/oracle/js/parser/ir/JsxElementNode.java</file>
+        <file>src/com/oracle/js/parser/ir/JumpStatement.java</file>
+        <file>src/com/oracle/js/parser/ir/Label.java</file>
+        <file>src/com/oracle/js/parser/ir/LabelNode.java</file>
+        <file>src/com/oracle/js/parser/ir/Labels.java</file>
+        <file>src/com/oracle/js/parser/ir/LexicalContext.java</file>
+        <file>src/com/oracle/js/parser/ir/LexicalContextExpression.java</file>
+        <file>src/com/oracle/js/parser/ir/LexicalContextNode.java</file>
+        <file>src/com/oracle/js/parser/ir/LexicalContextStatement.java</file>
+        <file>src/com/oracle/js/parser/ir/LiteralNode.java</file>
+        <file>src/com/oracle/js/parser/ir/LoopNode.java</file>
+        <file>src/com/oracle/js/parser/ir/Module.java</file>
+        <file>src/com/oracle/js/parser/ir/NameSpaceImportNode.java</file>
+        <file>src/com/oracle/js/parser/ir/NamedImportsNode.java</file>
+        <file>src/com/oracle/js/parser/ir/Node.java</file>
+        <file>src/com/oracle/js/parser/ir/ObjectNode.java</file>
+        <file>src/com/oracle/js/parser/ir/PropertyKey.java</file>
+        <file>src/com/oracle/js/parser/ir/PropertyNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ReturnNode.java</file>
+        <file>src/com/oracle/js/parser/ir/RuntimeNode.java</file>
+        <file>src/com/oracle/js/parser/ir/Statement.java</file>
+        <file>src/com/oracle/js/parser/ir/SwitchNode.java</file>
+        <file>src/com/oracle/js/parser/ir/Symbol.java</file>
+        <file>src/com/oracle/js/parser/ir/Terminal.java</file>
+        <file>src/com/oracle/js/parser/ir/TernaryNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ThrowNode.java</file>
+        <file>src/com/oracle/js/parser/ir/TryNode.java</file>
+        <file>src/com/oracle/js/parser/ir/UnaryNode.java</file>
+        <file>src/com/oracle/js/parser/ir/VarNode.java</file>
+        <file>src/com/oracle/js/parser/ir/WhileNode.java</file>
+        <file>src/com/oracle/js/parser/ir/WithNode.java</file>
+        <file>src/com/oracle/js/parser/ir/visitor/NodeVisitor.java</file>
+        <file>src/com/oracle/js/parser/ir/visitor/TranslatorNodeVisitor.java</file>
+        <file>src/com/oracle/js/parser/package-info.java</file>
+        <file>src/com/oracle/js/parser/resources/Messages.properties</file>
+        <file>test/unit/src/com/oracle/js/parser/DumpingVisitor.java</file>
+        <file>test/unit/src/com/oracle/js/parser/ManualTest.java</file>
+        <file>test/unit/src/com/oracle/js/parser/ParserTest.java</file>
+        <license ref="UPL" />
+        <comment>This JS parser is a fork from graaljs.</comment>
+    </fileset>
+</licenseinfo>

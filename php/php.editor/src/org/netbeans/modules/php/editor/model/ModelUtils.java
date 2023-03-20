@@ -93,9 +93,22 @@ public final class ModelUtils {
 
     public static NamespaceScope getNamespaceScope(NamespaceDeclaration currenNamespace, FileScope fileScope) {
         NamespaceDeclarationInfo ndi = currenNamespace != null ? NamespaceDeclarationInfo.create(currenNamespace) : null;
-        NamespaceScope currentScope = ndi != null
-                ? ModelUtils.getFirst(ModelUtils.filter(fileScope.getDeclaredNamespaces(), ndi.getName()))
-                : fileScope.getDefaultDeclaredNamespace();
+        NamespaceScope currentScope;
+        if (ndi != null) {
+            // we could have many unnamed namespaces, so should select right one
+            final int currentNamespaceNameStartOffset = ndi.getRange().getStart();
+            currentScope = ndi.isDefaultNamespace() 
+                ? ModelUtils.getFirst(filter(fileScope.getDeclaredNamespaces(), new ElementFilter<NamespaceScope>() {
+                    @Override
+                    public boolean isAccepted(NamespaceScope element) {
+                        return element.getNameRange().getStart() == currentNamespaceNameStartOffset;
+                    }
+                }))
+                : ModelUtils.getFirst(ModelUtils.filter(fileScope.getDeclaredNamespaces(), ndi.getName()));
+        } else {
+            currentScope = fileScope.getDefaultDeclaredNamespace();
+        }
+
         return currentScope;
     }
 
@@ -428,70 +441,6 @@ public final class ModelUtils {
             OffsetRange blockRange = namespaceScope.getBlockRange();
             if (blockRange != null && blockRange.containsInclusive(offset)) {
                 if (retval == null || !namespaceScope.isDefaultNamespace()) {
-                    retval = namespaceScope;
-                }
-            }
-        }
-        return retval;
-    }
-
-    public static NamespaceScope getNamespaceScope(PHPParseResult parserResult, int offset) {
-        // NETBEANS-4978
-        // if the caret position is not in each namespace scope, get the first namespace scope
-        // e.g.
-        // [original]
-        // // caret is here^
-        // declare (strict_types=1);
-        // namespace Foo;
-        // ...
-        // namespace Bar;
-        //
-        // [inserted]
-        // // caret is here
-        // declare (strict_types=1);
-        // namespace Foo;
-        // use ...;
-        // ...
-        // namespace Bar;
-        FileScope fileScope = parserResult.getModel().getFileScope();
-        List<NamespaceDeclaration> namespaceDeclarations = getNamespaceDeclarations(parserResult);
-        boolean isBracketed = false;
-        if (!namespaceDeclarations.isEmpty()) {
-            isBracketed = namespaceDeclarations.get(0).isBracketed();
-        }
-        NamespaceScope retval = ModelUtils.getNamespaceScope(fileScope, offset);
-        assert retval != null;
-        Collection<? extends NamespaceScope> declaredNamespaces = fileScope.getDeclaredNamespaces();
-        if (retval != null && retval.isDefaultNamespace()) {
-            // get the first namespace scope
-            if (isBracketed) {
-                for (NamespaceDeclaration namespaceDeclaration : namespaceDeclarations) {
-                    if (namespaceDeclaration.getName() == null
-                            && namespaceDeclaration.getStartOffset() <= offset && offset <= namespaceDeclaration.getEndOffset()) {
-                        return retval;
-                    }
-                }
-                if (namespaceDeclarations.get(0).getName() == null) {
-                    return retval;
-                }
-                retval = getFirstNamespaceScope(declaredNamespaces, retval);
-            }
-            if (!isBracketed && !namespaceDeclarations.isEmpty()) {
-                // if namespace is not bracketed,
-                // both the global namespace and another namespace don't exist in the same file
-                retval = getFirstNamespaceScope(declaredNamespaces, retval);
-            }
-        }
-        return retval;
-    }
-
-    private static NamespaceScope getFirstNamespaceScope(Collection<? extends NamespaceScope> declaredNamespaces, NamespaceScope namespace) {
-        NamespaceScope retval = namespace;
-        for (NamespaceScope namespaceScope : declaredNamespaces) {
-            if (!namespaceScope.isDefaultNamespace()) {
-                if (retval.isDefaultNamespace()) {
-                    retval = namespaceScope;
-                } else if (retval.getBlockRange().getStart() > namespaceScope.getBlockRange().getStart()) {
                     retval = namespaceScope;
                 }
             }

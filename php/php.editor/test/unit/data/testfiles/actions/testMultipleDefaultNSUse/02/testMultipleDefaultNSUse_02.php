@@ -19,15 +19,34 @@
  */
 
 namespace {
-    class Utils {}
-    function fix() {}
+
+use NS2\B;
+
+    class A {
+        public function fn() {
+            new B;
+        }
+    }
 }
-namespace MyProject {
-    class Connection {}
-    function connect() {}
+
+namespace NS2 {
+    class B {
+        public function fn() {
+            new C;
+        }
+    }
+    class D {
+        public function fn() {
+            new C;
+        }
+    }
 }
+
 namespace {
-    class Connection {}
-    function connect() {}
+    class C {
+        public function fn() {
+            // test
+            new \NS2\D;
+        }
+    }
 }
-?>

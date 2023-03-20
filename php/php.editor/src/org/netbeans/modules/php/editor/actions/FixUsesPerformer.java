@@ -20,11 +20,11 @@ package org.netbeans.modules.php.editor.actions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
@@ -107,37 +107,34 @@ public class FixUsesPerformer {
         if (document instanceof BaseDocument) {
             baseDocument = (BaseDocument) document;
             editList = new EditList(baseDocument);
-            namespaceScope = ModelUtils.getNamespaceScope(parserResult, importData.caretPosition);
+            namespaceScope = ModelUtils.getNamespaceScope(parserResult.getModel().getFileScope(), importData.caretPosition);
             assert namespaceScope != null;
-            processSelections(processExistingUses(importData.caretPosition));
+            processSelections();
             editList.apply();
         }
     }
 
     @NbBundle.Messages("FixUsesPerformer.noChanges=Fix imports: No Changes")
-    private void processSelections(int startOffset) {
+    private void processSelections() {
         final List<ImportData.DataItem> dataItems = resolveDuplicateSelections();
-        List<UsePart> useParts = new ArrayList<>();
-        Collection<? extends GroupUseScope> declaredGroupUses = namespaceScope.getDeclaredGroupUses();
-        for (GroupUseScope groupUseElement : declaredGroupUses) {
-            for (UseScope useElement : groupUseElement.getUseScopes()) {
-                processUseElement(useElement, useParts);
-            }
-        }
-        Collection<? extends UseScope> declaredUses = namespaceScope.getDeclaredSingleUses();
-        for (UseScope useElement : declaredUses) {
-            assert !useElement.isPartOfGroupUse() : useElement;
-            processUseElement(useElement, useParts);
-        }
+        TreeMap<Integer, List<UsePart>> usePartsMap = new TreeMap<>();
+
         for (int i = 0; i < selections.size(); i++) {
             ItemVariant itemVariant = selections.get(i);
-            if (itemVariant.canBeUsed()) {
+            // we shouldn't use itemVariant if there is no any real dataItem related to it
+            if (itemVariant.canBeUsed() && !dataItems.get(i).getUsedNamespaceNames().isEmpty()) {
+                NamespaceScope currentScope = dataItems.get(i).getUsedNamespaceNames().get(0).getInScope();
+                int mapKey = currentScope.getBlockRange().getStart();
+                if (usePartsMap.get(mapKey) == null) {
+                    usePartsMap.put(mapKey, processScopeDeclaredUses(currentScope, new ArrayList<>()));
+                }
+
                 SanitizedUse sanitizedUse = new SanitizedUse(
                         new UsePart(modifyUseName(itemVariant.getName()), UsePart.Type.create(itemVariant.getType()), itemVariant.isFromAliasedElement()),
-                        useParts,
-                        createAliasStrategy(i, useParts, selections));
+                        usePartsMap.get(mapKey),
+                        createAliasStrategy(i, usePartsMap.get(mapKey), selections));
                 if (sanitizedUse.shouldBeUsed()) {
-                    useParts.add(sanitizedUse.getSanitizedUsePart());
+                    usePartsMap.get(mapKey).add(sanitizedUse.getSanitizedUsePart());
                 }
                 for (UsedNamespaceName usedNamespaceName : dataItems.get(i).getUsedNamespaceNames()) {
                     editList.replace(usedNamespaceName.getOffset(), usedNamespaceName.getReplaceLength(), sanitizedUse.getReplaceName(usedNamespaceName), false, 0);
@@ -145,15 +142,159 @@ public class FixUsesPerformer {
             }
         }
         replaceUnimportedItems();
-        String insertString = createInsertString(useParts, shouldAppendLineAfter(startOffset));
-        // avoid being recognized as a modified file
-        if (insertString.isEmpty()) {
-            StatusDisplayer.getDefault().setStatusText(Bundle.FixUsesPerformer_noChanges());
+
+        CheckVisitor visitor = new CheckVisitor();
+        Program program = parserResult.getProgram();
+        if (program != null) {
+            program.accept(visitor);
+        }
+
+        boolean emptyString = true;
+        int lastUsedRangeIndex = 0;
+        int lastDeclareIndex = 0;
+        List<NamespaceScope> declaredNamespaces;
+        if (namespaceScope.isDefaultNamespace()) {
+            declaredNamespaces = new ArrayList(namespaceScope.getFileScope().getDeclaredNamespaces());
+            declaredNamespaces.sort((left, right) -> left.getBlockRange().getStart() - right.getBlockRange().getStart());
         } else {
-            editList.replace(startOffset, 0, insertString, false, 0);
+            declaredNamespaces = new ArrayList();
+            declaredNamespaces.add(namespaceScope);
+        }
+        for (NamespaceScope currentScope : declaredNamespaces) {
+            int mapKey = currentScope.getBlockRange().getStart();
+            if (usePartsMap.get(mapKey) == null) {
+                usePartsMap.put(mapKey, processScopeDeclaredUses(currentScope, new ArrayList<>()));
+            }
+
+            int startOffset = getNamespaceScopeOffset(currentScope);
+            int endOffset = currentScope.isDefaultNamespace() && visitor.getGlobalNamespaceEndOffset() > 0
+                    ? visitor.getGlobalNamespaceEndOffset()
+                    : currentScope.getBlockRange().getEnd();
+
+            int compareStringOffsetStart = 0;
+            List <OffsetRange> replace = new ArrayList();
+            for (int i = lastUsedRangeIndex; i < visitor.getUsedRanges().size(); i++) {
+                OffsetRange offsetRange = visitor.getUsedRanges().get(i);
+                if (endOffset < offsetRange.getStart()) {
+                    break;
+                }
+                lastUsedRangeIndex = i;
+                if (startOffset > offsetRange.getStart()) {
+                    continue;
+                }
+
+                compareStringOffsetStart = compareStringOffsetStart > 0 ? compareStringOffsetStart : offsetRange.getStart();
+                int useStartOffset = getOffsetWithoutLeadingWhitespaces(offsetRange.getStart());
+                replace.add(new OffsetRange(useStartOffset, offsetRange.getEnd()));
+                startOffset = offsetRange.getEnd();
+            }
+
+            // because only declare(strict_types=1) should go first, but declare(ticks=1) could be everywhere
+            // we have to restrict declare start offset to prevent wrong USE placement after declare in cases such
+            // function { declare(ticks=1); } or class A { puclic function fn () { declare(ticks=1); } }
+            // in the feature it would be better to have DeclareStatmentScope for that
+            int maxDeclareOffset = currentScope.getElements().isEmpty() ? endOffset : currentScope.getElements().get(0).getOffset();
+            // NETBEANS-4978 check whether declare statemens exist
+            // e.g. in the following case, insert the code(use statements) after the declare statement
+            // declare (strict_types=1);
+            // class TestClass
+            // {
+            //     public function __construct()
+            //     {
+            //         $test = new Foo();
+            //     }
+            // }
+            for (int j = lastDeclareIndex; j < visitor.getDeclareStatements().size(); j++) {
+                if (maxDeclareOffset < visitor.getDeclareStatements().get(j).getStartOffset()) {
+                    break;
+                }
+                startOffset = Math.max(startOffset, visitor.getDeclareStatements().get(j).getEndOffset());
+                lastDeclareIndex = j;
+            }
+
+            String insertString = createInsertString(usePartsMap.get(mapKey));
+            // avoid being recognized as a modified file
+            if (insertString.isEmpty()) {
+                // remove unused namespaces if exists
+                for (OffsetRange offsetRange : replace) {
+                    editList.replace(offsetRange.getStart(), offsetRange.getLength(), EMPTY_STRING, false, 0);
+                    emptyString = false;
+                }
+                continue;
+            }
+
+            try {
+                // get -2/+2 for new lines before string
+                String replaceString = compareStringOffsetStart > 1 ? baseDocument.getText(compareStringOffsetStart - 2, startOffset - compareStringOffsetStart + 2) : "";
+                if (replaceString.equals(insertString)) {
+                    continue;
+                }
+
+                for (OffsetRange offsetRange : replace) {
+                    editList.replace(offsetRange.getStart(), offsetRange.getLength(), EMPTY_STRING, false, 0);
+                }
+                editList.replace(startOffset, 0, insertString, false, 0);
+                if (shouldAppendLineAfter(startOffset)) {
+                    editList.replace(startOffset, 0, NEW_LINE, false, 0);
+                }
+                emptyString = false;
+            } catch (BadLocationException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
+        if (emptyString) {
+            StatusDisplayer.getDefault().setStatusText(Bundle.FixUsesPerformer_noChanges());
         }
     }
-    
+
+    private List<UsePart> processScopeDeclaredUses(NamespaceScope namespaceScope, List<UsePart> useParts) {
+        for (GroupUseScope groupUseElement : namespaceScope.getDeclaredGroupUses()) {
+            for (UseScope useElement : groupUseElement.getUseScopes()) {
+                processUseElement(useElement, useParts);
+            }
+        }
+        for (UseScope useElement : namespaceScope.getDeclaredSingleUses()) {
+            assert !useElement.isPartOfGroupUse() : useElement;
+            processUseElement(useElement, useParts);
+        }
+        return useParts;
+    }
+
+    private int getNamespaceScopeOffset(NamespaceScope scope) {
+        int useScopeStart = scope.getBlockRange().getStart();
+        if (useScopeStart == 0) {
+            // this is check for case when we don't have namespace declaration in file
+            // such <?php but tag could be not on the first line, also we put statements
+            // after phpdoc blocks due to PSR/PER
+            baseDocument.readLock();
+            try {
+                TokenSequence<? extends PHPTokenId> ts = LexUtilities.getPositionedSequence(baseDocument, scope.getBlockRange().getEnd());
+                if (ts != null) {
+                    LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_OPENTAG, PHPTokenId.PHPDOC_COMMENT_END));
+                    if (ts.token().id().equals(PHPTokenId.PHP_OPENTAG) || ts.token().id().equals(PHPTokenId.PHPDOC_COMMENT_END)) {
+                        useScopeStart = ts.offset() + ts.token().length() + 1;
+                    }
+                }
+            } finally {
+                baseDocument.readUnlock();
+            }
+        } else {
+            //because when semicolon in the end of a namespace, the block starts
+            //after semicolon, but for brace it starts before curly open
+            //we can't just add +1 because of such case <?php namespace NS;?>
+            baseDocument.readLock();
+            try {
+                if (LexUtilities.getTokenChar(baseDocument, useScopeStart) == CURLY_OPEN) {
+                    useScopeStart++;
+                }
+            } finally {
+                baseDocument.readUnlock();
+            }
+        }
+        return useScopeStart;
+    }
+
     private boolean shouldAppendLineAfter(int lineOffset) {
         try {
             return LineDocumentUtils.getNextNonWhitespace(baseDocument, lineOffset, LineDocumentUtils.getLineEnd(baseDocument, lineOffset)) != -1;
@@ -185,6 +326,7 @@ public class FixUsesPerformer {
             for (int j = i + 1; j < selectionsCopy.size(); j++) {
                 ItemVariant testedVariant = selectionsCopy.get(j);
                 if (baseVariant.equals(testedVariant)
+                        && dataItems.get(j).getUsedNamespaceNames().get(0).getInScope() == dataItems.get(i).getUsedNamespaceNames().get(0).getInScope()
                         && itemIndexesToRemove.add(j)) {
                     ImportData.DataItem duplicateItem = dataItems.get(j);
                     usedNamespaceNames.addAll(duplicateItem.getUsedNamespaceNames());
@@ -250,7 +392,7 @@ public class FixUsesPerformer {
         return result;
     }
 
-    private String createInsertString(final List<UsePart> useParts, boolean shouldAppendLineAfter) {
+    private String createInsertString(final List<UsePart> useParts) {
         StringBuilder insertString = new StringBuilder();
         Collections.sort(useParts);
         if (useParts.size() > 0) {
@@ -270,9 +412,6 @@ public class FixUsesPerformer {
             insertString.append(createStringForMultipleUse(useParts, indentString));
         } else {
             insertString.append(createStringForCommonUse(useParts));
-        }
-        if (shouldAppendLineAfter) {
-            insertString.append(NEW_LINE);
         }
         return insertString.toString();
     }
@@ -420,106 +559,6 @@ public class FixUsesPerformer {
         return result.toString();
     }
 
-    private int processExistingUses(int caretPosition) {
-        CheckVisitor visitor = new CheckVisitor();
-        Program program = parserResult.getProgram();
-        if (program != null) {
-            program.accept(visitor);
-        }
-        
-        // import has been working properly only for first default namespace
-        // or for namespace under caret, so we should not remove USES in other
-        // namespaces in the same file and use only current scope
-        int useScopeStart = namespaceScope.getBlockRange().getStart();
-        int useScopeEnd = namespaceScope.getBlockRange().getEnd();
-        
-        List<NamespaceDeclaration> globalNamespaceDeclarations = visitor.getGlobalNamespaceDeclarations();
-        if (namespaceScope.isDefaultNamespace()) {
-            // this is check for case when we don't have namespace declaration in file
-            // such <?php but tag could be not on the first line, also we put statemens
-            // after phpdoc blocks due to PSR/PER
-            if (globalNamespaceDeclarations.isEmpty()) {
-                baseDocument.readLock();
-                try {
-                    TokenSequence<? extends PHPTokenId> ts = LexUtilities.getPositionedSequence(baseDocument, namespaceScope.getBlockRange().getEnd());
-                    if (ts != null) {
-                        LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_OPENTAG, PHPTokenId.PHPDOC_COMMENT_END));
-                        if (ts.token().id().equals(PHPTokenId.PHP_OPENTAG) || ts.token().id().equals(PHPTokenId.PHPDOC_COMMENT_END)) {
-                            useScopeStart = ts.offset() + ts.token().length() + 1;
-                        }
-                    }
-                } finally {
-                    baseDocument.readUnlock();
-                }
-            } else {
-                // only for case when caret outside of global namespace nested
-                // in defalut global namespace such as <?php ^ namespace {}
-                if (!globalNamespaceDeclarations.isEmpty()) {
-                    useScopeStart = globalNamespaceDeclarations.get(0).getBody().getStartOffset() + 1;
-                    useScopeEnd = globalNamespaceDeclarations.get(0).getBody().getEndOffset();
-                }
-                // there is wrong blockRange computing in parserResult for global
-                // namespaces so we need to check carret bounds by ourself,
-                // especially because there is could be more than one global namespace
-                for (NamespaceDeclaration globalNamespace : globalNamespaceDeclarations) {
-                    if (globalNamespace.getStartOffset() <= caretPosition
-                            && caretPosition <= globalNamespace.getEndOffset()) {
-                        useScopeStart = globalNamespace.getBody().getStartOffset() + 1; // +1: {
-                        useScopeEnd = globalNamespace.getBody().getEndOffset();
-                        break;
-                    }
-                }
-            }
-        } else if (useScopeStart > 0) {
-            //because when semicolon in the end of a namespace, the block starts
-            //after semicolon, but for brace it starts before curly open
-            //we can't just add +1 because of such case <?php namespace NS;?>
-            baseDocument.readLock();
-            try {
-                if (LexUtilities.getTokenChar(baseDocument, useScopeStart) == CURLY_OPEN) {
-                    useScopeStart++;
-                }
-            } finally {
-                baseDocument.readUnlock();
-            }
-        }
-       
-        int lastUseOffset = useScopeStart;
-        for (OffsetRange offsetRange : visitor.getUsedRanges()) {
-            if (offsetRange.getStart() < useScopeStart || offsetRange.getEnd() > useScopeEnd) {
-                continue;
-            }
-            int startOffset = getOffsetWithoutLeadingWhitespaces(offsetRange.getStart());
-            editList.replace(startOffset, offsetRange.getEnd() - startOffset, EMPTY_STRING, false, 0);
-            lastUseOffset = offsetRange.getEnd() > lastUseOffset ? offsetRange.getEnd() : lastUseOffset;
-        }
-        
-        // because only declare(strict_types=1) should go first, but declare(ticks=1) could be everywhere
-        // we have to restrict declare start offset to prevent wrong USE placement after declare in cases such
-        // function { declare(ticks=1); } or class A { puclic function fn () { declare(ticks=1); } }
-        // in the feature it would be better to have DeclareStatmentScope for that
-        int maxDeclareOffset = namespaceScope.getElements().isEmpty() ? useScopeEnd : namespaceScope.getElements().get(0).getOffset();
-        // NETBEANS-4978 check whether declare statemens exist
-        // e.g. in the following case, insert the code(use statements) after the declare statement
-        // declare (strict_types=1);
-        // class TestClass
-        // {
-        //     public function __construct()
-        //     {
-        //         $test = new Foo();
-        //     }
-        // }
-        for (DeclareStatement declareStatement : visitor.getDeclareStatements()) {
-            if (maxDeclareOffset < declareStatement.getStartOffset()) {
-                break;
-            }
-            lastUseOffset = Math.max(lastUseOffset, declareStatement.getEndOffset());
-        }
-        
-        
-        return lastUseOffset;
-    }
-
     private int getOffsetWithoutLeadingWhitespaces(final int startOffset) {
         int result = startOffset;
         baseDocument.readLock();
@@ -543,6 +582,7 @@ public class FixUsesPerformer {
         private List<DeclareStatement> declareStatements = new ArrayList<>();
         private List<NamespaceDeclaration> globalNamespaceDeclarations = new ArrayList<>();
         private final List<OffsetRange> usedRanges = new LinkedList<>();
+        private int globalNamespaceEndOffset = 0;
 
         public List<DeclareStatement> getDeclareStatements() {
             return Collections.unmodifiableList(declareStatements);
@@ -554,6 +594,10 @@ public class FixUsesPerformer {
 
         public List<OffsetRange> getUsedRanges() {
             return Collections.unmodifiableList(usedRanges);
+        }
+
+        public int getGlobalNamespaceEndOffset() {
+            return globalNamespaceEndOffset;
         }
 
         @Override
@@ -570,7 +614,7 @@ public class FixUsesPerformer {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            declareStatements.add(node);     
+            declareStatements.add(node);
             super.visit(node);
         }
 
@@ -578,6 +622,9 @@ public class FixUsesPerformer {
         public void visit(NamespaceDeclaration declaration) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
+            }
+            if (globalNamespaceEndOffset == 0 || globalNamespaceEndOffset > declaration.getBody().getEndOffset()) {
+                globalNamespaceEndOffset = declaration.getBody().getStartOffset();
             }
             if (declaration.isBracketed() && declaration.getName() == null) {
                 globalNamespaceDeclarations.add(declaration);

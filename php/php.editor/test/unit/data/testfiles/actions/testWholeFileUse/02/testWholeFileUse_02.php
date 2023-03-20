@@ -18,16 +18,35 @@
  * under the License.
  */
 
+// test
 namespace {
-    class Utils {}
-    function fix() {}
+
+    class A {
+        use NS2\F;
+        public function fn() {}
+    }
 }
-namespace MyProject {
-    class Connection {}
-    function connect() {}
+
+namespace NS2 {
+use C;
+    class B {
+        public function fn() {
+            #new C;
+        }
+    }
+    class D {
+        public function fn() {
+            #new C;
+        }
+    }
+    trait F {}
 }
+
 namespace {
-    class Connection {}
-    function connect() {}
+
+    class C {
+        public function fn() {
+            new \NS2\D;
+        }
+    }
 }
-?>

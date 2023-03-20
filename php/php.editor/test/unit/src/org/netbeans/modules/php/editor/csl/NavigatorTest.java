@@ -35,6 +35,10 @@ public class NavigatorTest extends PhpNavigatorTestBase {
     public void testMultiple_namespaces() throws Exception {
         performTest("structure/php53/multiple_namespaces");
     }
+    
+    public void testMultiple_namespaces_with_elements_from_default() throws Exception {
+        performTest("structure/php53/multiple_namespaces_with_elements_from_default");
+    }
 
     public void testBracketedMultipleNamespaces() throws Exception {
         performTest("structure/php53/bracketed_multiple_namespaces");
@@ -42,6 +46,10 @@ public class NavigatorTest extends PhpNavigatorTestBase {
 
     public void testBracketedMultipleNamespacesWithDefaultOne() throws Exception {
         performTest("structure/php53/bracketed_multiple_namespaces_with_default_one");
+    }
+    
+    public void testBracketedMultipleNamespacesWithMultipleDefault() throws Exception {
+        performTest("structure/php53/bracketed_multiple_namespaces_with_multiple_default");
     }
 
     public void testScan() throws Exception {

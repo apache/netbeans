@@ -1,0 +1,21 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='13'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='13'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='13'>
+      <Block start='0' end='13'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <SwitchNode start='0' end='13'>
+          <IdentNode start='8' end='9'>
+            <name>x</name>
+          </IdentNode>
+        </SwitchNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

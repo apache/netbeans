@@ -1,0 +1,26 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='26'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='26'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <isTerminal/>
+    <!-- Block Statements -->
+    <ThrowNode start='0' end='26'>
+      <ObjectNode start='6' end='26'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='message' start='8' end='23'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='8' end='15'>
+            <name>message</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <StringLiteralNode value='Error' start='18' end='23'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </ThrowNode>
+  </Block>
+</FunctionNode>

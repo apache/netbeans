@@ -1,0 +1,56 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='38'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='38'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='38'>
+      <Block start='0' end='38'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <TryNode start='0' end='38'>
+          <Block start='4' end='17'>
+            <!-- Block Statements -->
+            <ExpressionStatement start='6' end='15'>
+              <CallNode start='6' end='14'>
+                <!-- CallNode Arguments -->
+                <!-- CallNode Function -->
+                <IdentNode start='6' end='12'>
+                  <name>doThat</name>
+                </IdentNode>
+              </CallNode>
+            </ExpressionStatement>
+          </Block>
+          <Block start='28' end='38'>
+            <isCatchBlock/>
+            <isSynthetic/>
+            <!-- Block Statements -->
+            <CatchNode start='18' end='38'>
+              <IdentNode start='25' end='26'>
+                <name>e</name>
+                <isInitializedHere/>
+              </IdentNode>
+              <Block start='28' end='38'>
+                <!-- Block Statements -->
+                <ExpressionStatement start='30' end='36'>
+                  <CallNode start='30' end='36'>
+                    <!-- CallNode Arguments -->
+                    <IdentNode start='34' end='35'>
+                      <name>e</name>
+                    </IdentNode>
+                    <!-- CallNode Function -->
+                    <IdentNode start='30' end='33'>
+                      <name>say</name>
+                    </IdentNode>
+                  </CallNode>
+                </ExpressionStatement>
+              </Block>
+            </CatchNode>
+          </Block>
+        </TryNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

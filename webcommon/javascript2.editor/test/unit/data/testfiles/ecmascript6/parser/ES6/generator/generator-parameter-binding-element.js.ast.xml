@@ -1,0 +1,25 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='47'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='46'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='46'>
+      <FunctionNode name='L:1' kind='GENERATOR' start='1' end='45'>
+        <isAnonymous/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='13' end='43'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='38' end='43'>
+            <ErrorNode start='38' end='43'>
+            </ErrorNode>
+          </ExpressionStatement>
+        </Block>
+      </FunctionNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

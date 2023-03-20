@@ -1,0 +1,58 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='40'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='39'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='g' start='0' end='39'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='10' end='11'>
+        <name>g</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='g' kind='GENERATOR' start='0' end='39'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='14' end='37'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='16' end='37'>
+            <FunctionNode name='g#=>:1' kind='ARROW' start='16' end='36'>
+              <isAnonymous/>
+              <!-- FunctionNode Parameters -->
+              <IdentNode start='17' end='18'>
+                <name>z</name>
+              </IdentNode>
+              <!-- FunctionNode Body -->
+              <Block start='23' end='34'>
+                <isFunctionBody/>
+                <!-- Block Statements -->
+                <ExpressionStatement start='25' end='34'>
+                  <BinaryNode type='ADD' start='25' end='34'>
+                    <!-- BinaryNode lhs -->
+                    <IdentNode start='25' end='30'>
+                      <name>yield</name>
+                      <isFutureStrictName/>
+                    </IdentNode>
+                    <!-- BinaryNode rhs -->
+                    <IdentNode start='33' end='34'>
+                      <name>z</name>
+                    </IdentNode>
+                  </BinaryNode>
+                </ExpressionStatement>
+              </Block>
+            </FunctionNode>
+          </ExpressionStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

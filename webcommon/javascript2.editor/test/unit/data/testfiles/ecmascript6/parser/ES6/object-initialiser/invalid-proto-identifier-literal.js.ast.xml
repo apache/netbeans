@@ -1,0 +1,33 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='41'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='40'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='40'>
+      <ObjectNode start='1' end='39'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='__proto__' start='3' end='18'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='3' end='12'>
+            <name>__proto__</name>
+            <isPropertyName/>
+            <isProtoPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <NullLiteralNode start='14' end='18'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='__proto__' start='21' end='37'>
+          <!-- PropertyNode Key -->
+          <StringLiteralNode value='__proto__' start='21' end='30'/>
+          <!-- PropertyNode Value -->
+          <NullLiteralNode start='33' end='37'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

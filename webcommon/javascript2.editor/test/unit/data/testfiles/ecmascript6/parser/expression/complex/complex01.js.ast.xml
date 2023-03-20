@@ -1,0 +1,98 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='46'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='46'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='46'>
+      <BinaryNode type='OR' start='0' end='46'>
+        <isLogical/>
+        <!-- BinaryNode lhs -->
+        <JoinPredecessorExpression start='0' end='1'>
+          <IdentNode start='0' end='1'>
+            <name>a</name>
+          </IdentNode>
+        </JoinPredecessorExpression>
+        <!-- BinaryNode rhs -->
+        <JoinPredecessorExpression start='5' end='46'>
+          <BinaryNode type='AND' start='5' end='46'>
+            <isLogical/>
+            <!-- BinaryNode lhs -->
+            <JoinPredecessorExpression start='5' end='6'>
+              <IdentNode start='5' end='6'>
+                <name>b</name>
+              </IdentNode>
+            </JoinPredecessorExpression>
+            <!-- BinaryNode rhs -->
+            <JoinPredecessorExpression start='10' end='46'>
+              <BinaryNode type='BIT_OR' start='10' end='46'>
+                <!-- BinaryNode lhs -->
+                <IdentNode start='10' end='11'>
+                  <name>c</name>
+                </IdentNode>
+                <!-- BinaryNode rhs -->
+                <BinaryNode type='BIT_XOR' start='14' end='46'>
+                  <!-- BinaryNode lhs -->
+                  <IdentNode start='14' end='15'>
+                    <name>d</name>
+                  </IdentNode>
+                  <!-- BinaryNode rhs -->
+                  <BinaryNode type='BIT_AND' start='18' end='46'>
+                    <!-- BinaryNode lhs -->
+                    <IdentNode start='18' end='19'>
+                      <name>e</name>
+                    </IdentNode>
+                    <!-- BinaryNode rhs -->
+                    <BinaryNode type='EQ' start='22' end='46'>
+                      <isComparison/>
+                      <!-- BinaryNode lhs -->
+                      <IdentNode start='22' end='23'>
+                        <name>f</name>
+                      </IdentNode>
+                      <!-- BinaryNode rhs -->
+                      <BinaryNode type='LT' start='27' end='46'>
+                        <isComparison/>
+                        <isRelational/>
+                        <!-- BinaryNode lhs -->
+                        <IdentNode start='27' end='28'>
+                          <name>g</name>
+                        </IdentNode>
+                        <!-- BinaryNode rhs -->
+                        <BinaryNode type='SHR' start='31' end='46'>
+                          <!-- BinaryNode lhs -->
+                          <IdentNode start='31' end='32'>
+                            <name>h</name>
+                          </IdentNode>
+                          <!-- BinaryNode rhs -->
+                          <BinaryNode type='ADD' start='37' end='46'>
+                            <!-- BinaryNode lhs -->
+                            <IdentNode start='37' end='38'>
+                              <name>i</name>
+                            </IdentNode>
+                            <!-- BinaryNode rhs -->
+                            <BinaryNode type='MUL' start='41' end='46'>
+                              <!-- BinaryNode lhs -->
+                              <IdentNode start='41' end='42'>
+                                <name>j</name>
+                              </IdentNode>
+                              <!-- BinaryNode rhs -->
+                              <IdentNode start='45' end='46'>
+                                <name>k</name>
+                              </IdentNode>
+                            </BinaryNode>
+                          </BinaryNode>
+                        </BinaryNode>
+                      </BinaryNode>
+                    </BinaryNode>
+                  </BinaryNode>
+                </BinaryNode>
+              </BinaryNode>
+            </JoinPredecessorExpression>
+          </BinaryNode>
+        </JoinPredecessorExpression>
+      </BinaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

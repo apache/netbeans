@@ -1,0 +1,50 @@
+<FunctionNode name='invalid_expression_await.js' kind='MODULE' start='0' end='31'>
+  <isProgram/>
+  <ExportNode start='0' end='30'>
+    <VarNode name='answer' start='11' end='29'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='11' end='17'>
+        <name>answer</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <BinaryNode type='ADD' start='20' end='29'>
+        <!-- BinaryNode lhs -->
+        <IdentNode start='20' end='25'>
+          <name>await</name>
+        </IdentNode>
+        <!-- BinaryNode rhs -->
+        <NumberLiteralNode value='1' start='28' end='29'/>
+      </BinaryNode>
+    </VarNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='30'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='answer' start='11' end='29'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='11' end='17'>
+        <name>answer</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <BinaryNode type='ADD' start='20' end='29'>
+        <!-- BinaryNode lhs -->
+        <IdentNode start='20' end='25'>
+          <name>await</name>
+        </IdentNode>
+        <!-- BinaryNode rhs -->
+        <NumberLiteralNode value='1' start='28' end='29'/>
+      </BinaryNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

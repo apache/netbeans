@@ -1,0 +1,70 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='26'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='25'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='g' start='0' end='25'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='10' end='11'>
+        <name>g</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='g' kind='GENERATOR' start='0' end='25'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='12' end='22'>
+          <name>arguments[0]</name>
+          <isDestructuredParameter/>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='11' end='24'>
+          <isParameterBlock/>
+          <!-- Block Statements -->
+          <VarNode name='y' start='12' end='22'>
+            <isDestructuring/>
+          </VarNode>
+          <ExpressionStatement start='12' end='22'>
+            <BinaryNode type='ASSIGN' start='12' end='22'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <ObjectNode start='12' end='22'>
+                <!-- ObjectNode Elements -->
+                <PropertyNode name='yield' start='13' end='21'>
+                  <!-- PropertyNode Key -->
+                  <IdentNode start='13' end='18'>
+                    <name>yield</name>
+                    <isPropertyName/>
+                  </IdentNode>
+                  <!-- PropertyNode Value -->
+                  <IdentNode start='20' end='21'>
+                    <name>y</name>
+                  </IdentNode>
+                  <!-- PropertyNode Decorators -->
+                </PropertyNode>
+              </ObjectNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='12' end='22'>
+                <name>arguments[0]</name>
+                <isDestructuredParameter/>
+              </IdentNode>
+            </BinaryNode>
+          </ExpressionStatement>
+          <BlockStatement start='23' end='24'>
+            <Block start='23' end='24'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </BlockStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

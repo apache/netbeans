@@ -1,0 +1,41 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='56'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='56'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <isTerminal/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='56'>
+      <Block start='0' end='56'>
+        <isSynthetic/>
+        <isTerminal/>
+        <!-- Block Statements -->
+        <SwitchNode start='0' end='56'>
+          <IdentNode start='8' end='14'>
+            <name>answer</name>
+          </IdentNode>
+          <CaseNode start='18' end='39'>
+            <NumberLiteralNode value='42' start='23' end='25'/>
+            <ExpressionStatement start='27' end='32'>
+              <CallNode start='27' end='31'>
+                <!-- CallNode Arguments -->
+                <!-- CallNode Function -->
+                <IdentNode start='27' end='29'>
+                  <name>hi</name>
+                </IdentNode>
+              </CallNode>
+            </ExpressionStatement>
+            <BreakNode start='33' end='39'>
+            </BreakNode>
+          </CaseNode>
+          <CaseNode start='40' end='54'>
+            <BreakNode start='49' end='54'>
+            </BreakNode>
+          </CaseNode>
+        </SwitchNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

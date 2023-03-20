@@ -1,0 +1,64 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='15'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='14'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='14'>
+      <FunctionNode name='=>:1' kind='ARROW' start='0' end='13'>
+        <isAnonymous/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='1' end='9'>
+          <name>arguments[0]</name>
+          <isDestructuredParameter/>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='12' end='13'>
+          <isParameterBlock/>
+          <isTerminal/>
+          <!-- Block Statements -->
+          <VarNode name='a' start='1' end='9'>
+            <isDestructuring/>
+          </VarNode>
+          <VarNode name='b' start='1' end='9'>
+            <isDestructuring/>
+          </VarNode>
+          <ExpressionStatement start='1' end='9'>
+            <BinaryNode type='ASSIGN' start='1' end='9'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <ArrayLiteralNode start='1' end='9'>
+                <IdentNode start='2' end='3'>
+                  <name>a</name>
+                </IdentNode>
+                <UnaryNode type='SPREAD_ARRAY' start='4' end='8'>
+                  <!-- UnaryNode Expression -->
+                  <IdentNode start='7' end='8'>
+                    <name>b</name>
+                  </IdentNode>
+                </UnaryNode>
+              </ArrayLiteralNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='1' end='9'>
+                <name>arguments[0]</name>
+                <isDestructuredParameter/>
+              </IdentNode>
+            </BinaryNode>
+          </ExpressionStatement>
+          <BlockStatement start='12' end='13'>
+            <Block start='12' end='13'>
+              <isFunctionBody/>
+              <isTerminal/>
+              <!-- Block Statements -->
+              <ReturnNode start='12' end='13'>
+                <NumberLiteralNode value='0' start='12' end='13'/>
+              </ReturnNode>
+            </Block>
+          </BlockStatement>
+        </Block>
+      </FunctionNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

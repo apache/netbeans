@@ -1,0 +1,43 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='31'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='30'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='g' start='0' end='30'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='10' end='11'>
+        <name>g</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='g' kind='GENERATOR' start='0' end='30'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='14' end='28'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='16' end='28'>
+            <CallNode start='16' end='27'>
+              <!-- CallNode Arguments -->
+              <!-- CallNode Function -->
+              <AccessNode property='yield' start='16' end='25'>
+                <!-- AccessNode Base -->
+                <IdentNode start='16' end='19'>
+                  <name>obj</name>
+                </IdentNode>
+              </AccessNode>
+            </CallNode>
+          </ExpressionStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

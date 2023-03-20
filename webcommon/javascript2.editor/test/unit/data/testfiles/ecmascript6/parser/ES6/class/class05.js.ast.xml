@@ -1,0 +1,65 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='15'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='15'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='A' start='0' end='7'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='6' end='7'>
+        <name>A</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='A' start='0' end='15'>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='A' start='0' end='15'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='6' end='7'>
+            <name>A</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='A' kind='NORMAL' start='0' end='15'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='0' end='15'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <PropertyNode name='a' start='9' end='14'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='9' end='10'>
+            <name>a</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='a' kind='NORMAL' start='9' end='14'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='12' end='13'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

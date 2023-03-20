@@ -1,0 +1,27 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='27'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='26'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='26'>
+      <FunctionNode name='L:1' kind='GENERATOR' start='1' end='25'>
+        <isAnonymous/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='13' end='23'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='15' end='23'>
+            <UnaryNode type='YIELD' start='15' end='22'>
+              <!-- UnaryNode Expression -->
+              <NumberLiteralNode value='3' start='21' end='22'/>
+            </UnaryNode>
+          </ExpressionStatement>
+        </Block>
+      </FunctionNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

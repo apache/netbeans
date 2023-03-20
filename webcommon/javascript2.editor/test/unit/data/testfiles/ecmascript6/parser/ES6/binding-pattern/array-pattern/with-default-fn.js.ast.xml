@@ -1,0 +1,66 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='21'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='20'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='a' start='0' end='20'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='10'>
+        <name>a</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='a' kind='NORMAL' start='0' end='20'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='11' end='16'>
+          <name>arguments[0]</name>
+          <isDestructuredParameter/>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='10' end='19'>
+          <isParameterBlock/>
+          <!-- Block Statements -->
+          <VarNode name='a' start='11' end='16'>
+            <isDestructuring/>
+          </VarNode>
+          <ExpressionStatement start='11' end='16'>
+            <BinaryNode type='ASSIGN' start='11' end='16'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <ArrayLiteralNode start='11' end='16'>
+                <BinaryNode type='ASSIGN' start='12' end='15'>
+                  <isAssignment/>
+                  <!-- BinaryNode lhs -->
+                  <IdentNode start='12' end='13'>
+                    <name>a</name>
+                  </IdentNode>
+                  <!-- BinaryNode rhs -->
+                  <NumberLiteralNode value='0' start='14' end='15'/>
+                </BinaryNode>
+              </ArrayLiteralNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='11' end='16'>
+                <name>arguments[0]</name>
+                <isDestructuredParameter/>
+              </IdentNode>
+            </BinaryNode>
+          </ExpressionStatement>
+          <BlockStatement start='18' end='19'>
+            <Block start='18' end='19'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </BlockStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

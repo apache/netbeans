@@ -1,0 +1,40 @@
+<FunctionNode name='export-const-number.js' kind='MODULE' start='0' end='22'>
+  <isProgram/>
+  <ExportNode start='0' end='21'>
+    <VarNode name='foo' start='13' end='20'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='13' end='16'>
+        <name>foo</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <NumberLiteralNode value='1' start='19' end='20'/>
+    </VarNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='21'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='foo' start='13' end='20'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='13' end='16'>
+        <name>foo</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <NumberLiteralNode value='1' start='19' end='20'/>
+    </VarNode>
+  </Block>
+</FunctionNode>

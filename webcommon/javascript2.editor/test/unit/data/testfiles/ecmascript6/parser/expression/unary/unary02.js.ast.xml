@@ -1,0 +1,19 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='3'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='3'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='3'>
+      <UnaryNode type='DECPREFIX' start='0' end='3'>
+        <isAssignment/>
+        <!-- UnaryNode Expression -->
+        <IdentNode start='2' end='3'>
+          <name>x</name>
+        </IdentNode>
+      </UnaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

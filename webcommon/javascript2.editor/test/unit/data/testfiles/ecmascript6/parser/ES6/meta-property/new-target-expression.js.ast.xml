@@ -1,0 +1,35 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='35'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='34'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='f' start='4' end='34'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='4' end='5'>
+        <name>f</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='f' kind='NORMAL' start='8' end='34'>
+        <isAnonymous/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='19' end='32'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='21' end='32'>
+            <IdentNode start='21' end='31'>
+              <name>new.target</name>
+            </IdentNode>
+          </ExpressionStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

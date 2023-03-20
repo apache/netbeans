@@ -1,0 +1,16 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='34'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='34'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='implements' start='4' end='14'>
+    </VarNode>
+    <VarNode name='interface' start='16' end='25'>
+    </VarNode>
+    <VarNode name='package' start='27' end='34'>
+    </VarNode>
+  </Block>
+</FunctionNode>

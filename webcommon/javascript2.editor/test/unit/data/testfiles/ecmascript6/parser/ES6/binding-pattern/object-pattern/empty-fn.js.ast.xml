@@ -1,0 +1,55 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='18'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='17'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='a' start='0' end='17'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='10'>
+        <name>a</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='a' kind='NORMAL' start='0' end='17'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='11' end='13'>
+          <name>arguments[0]</name>
+          <isDestructuredParameter/>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='10' end='16'>
+          <isParameterBlock/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='11' end='13'>
+            <BinaryNode type='ASSIGN' start='11' end='13'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <ObjectNode start='11' end='13'>
+                <!-- ObjectNode Elements -->
+              </ObjectNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='11' end='13'>
+                <name>arguments[0]</name>
+                <isDestructuredParameter/>
+              </IdentNode>
+            </BinaryNode>
+          </ExpressionStatement>
+          <BlockStatement start='15' end='16'>
+            <Block start='15' end='16'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </BlockStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

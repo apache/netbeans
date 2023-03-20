@@ -1,0 +1,57 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='33'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='33'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='33'>
+      <Block start='0' end='33'>
+        <!-- Block Statements -->
+        <VarNode name='x' start='8' end='14'>
+          <hasInit/>
+          <isAssignment/>
+          <isBlockScoped/>
+          <isConst/>
+          <!-- VarNode Assignment Dest -->
+          <IdentNode start='8' end='9'>
+            <name>x</name>
+            <isDeclaredHere/>
+            <isInitializedHere/>
+          </IdentNode>
+          <!-- VarNode Init -->
+          <NumberLiteralNode value='14' start='12' end='14'/>
+        </VarNode>
+        <VarNode name='y' start='16' end='21'>
+          <hasInit/>
+          <isAssignment/>
+          <isBlockScoped/>
+          <isConst/>
+          <!-- VarNode Assignment Dest -->
+          <IdentNode start='16' end='17'>
+            <name>y</name>
+            <isDeclaredHere/>
+            <isInitializedHere/>
+          </IdentNode>
+          <!-- VarNode Init -->
+          <NumberLiteralNode value='3' start='20' end='21'/>
+        </VarNode>
+        <VarNode name='z' start='23' end='31'>
+          <hasInit/>
+          <isAssignment/>
+          <isBlockScoped/>
+          <isConst/>
+          <!-- VarNode Assignment Dest -->
+          <IdentNode start='23' end='24'>
+            <name>z</name>
+            <isDeclaredHere/>
+            <isInitializedHere/>
+          </IdentNode>
+          <!-- VarNode Init -->
+          <NumberLiteralNode value='1977' start='27' end='31'/>
+        </VarNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

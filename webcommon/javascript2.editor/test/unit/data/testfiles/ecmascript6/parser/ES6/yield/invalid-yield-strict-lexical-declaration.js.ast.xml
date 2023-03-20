@@ -1,0 +1,17 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='30'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='29'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='1' end='13'>
+      <StringLiteralNode value='use strict' start='1' end='11'/>
+    </ExpressionStatement>
+    <ExpressionStatement start='14' end='29'>
+      <ErrorNode start='14' end='29'>
+      </ErrorNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

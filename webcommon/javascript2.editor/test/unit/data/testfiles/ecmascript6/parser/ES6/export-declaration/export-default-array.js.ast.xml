@@ -1,0 +1,27 @@
+<FunctionNode name='export-default-array.js' kind='MODULE' start='0' end='19'>
+  <isProgram/>
+  <ExportNode start='0' end='17'>
+    <ArrayLiteralNode start='15' end='17'>
+    </ArrayLiteralNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='18'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='*default*' start='15' end='17'>
+      <hasInit/>
+      <isAssignment/>
+      <isExport/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='15' end='17'>
+        <name>*default*</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ArrayLiteralNode start='15' end='17'>
+      </ArrayLiteralNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

@@ -1,0 +1,30 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='8'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='8'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='8'>
+      <FunctionNode name='=>:1' kind='ARROW' start='1' end='7'>
+        <isAnonymous/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='1' end='2'>
+          <name>x</name>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='6' end='7'>
+          <isFunctionBody/>
+          <isTerminal/>
+          <!-- Block Statements -->
+          <ReturnNode start='6' end='7'>
+            <IdentNode start='6' end='7'>
+              <name>x</name>
+            </IdentNode>
+          </ReturnNode>
+        </Block>
+      </FunctionNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

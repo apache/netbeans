@@ -1,0 +1,48 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='41'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='40'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='f' start='0' end='40'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='10'>
+        <name>f</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='f' kind='NORMAL' start='0' end='40'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='13' end='38'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='19' end='38'>
+            <CallNode start='19' end='37'>
+              <!-- CallNode Arguments -->
+              <!-- CallNode Function -->
+              <UnaryNode type='NEW' start='19' end='35'>
+                <!-- UnaryNode Expression -->
+                <CallNode start='23' end='35'>
+                  <isNew/>
+                  <!-- CallNode Arguments -->
+                  <!-- CallNode Function -->
+                  <IdentNode start='23' end='33'>
+                    <name>new.target</name>
+                  </IdentNode>
+                </CallNode>
+              </UnaryNode>
+            </CallNode>
+          </ExpressionStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

@@ -1,0 +1,60 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='19'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='19'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='19'>
+      <ClassNode start='1' end='18'>
+        <!-- ClassNode Heritage -->
+        <NumberLiteralNode value='0' start='15' end='16'/>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='constructor' start='1' end='18'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='1' end='18'>
+            <name>constructor</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='constructor' kind='NORMAL' start='1' end='18'>
+            <isAnonymous/>
+            <isClassConstructor/>
+            <isMethod/>
+            <isSubclassConstructor/>
+            <!-- FunctionNode Parameters -->
+            <IdentNode start='1' end='18'>
+              <name>args</name>
+              <isRestParameter/>
+            </IdentNode>
+            <!-- FunctionNode Body -->
+            <Block start='1' end='18'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='1' end='18'>
+                <CallNode start='1' end='18'>
+                  <!-- CallNode Arguments -->
+                  <UnaryNode type='SPREAD_ARGUMENT' start='1' end='18'>
+                    <!-- UnaryNode Expression -->
+                    <IdentNode start='1' end='18'>
+                      <name>args</name>
+                      <isRestParameter/>
+                    </IdentNode>
+                  </UnaryNode>
+                  <!-- CallNode Function -->
+                  <IdentNode start='1' end='18'>
+                    <name>super</name>
+                    <isDirectSuppert/>
+                  </IdentNode>
+                </CallNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

@@ -1,0 +1,29 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='14'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='14'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='14'>
+      <Block start='0' end='14'>
+        <!-- Block Statements -->
+        <VarNode name='x' start='6' end='12'>
+          <hasInit/>
+          <isAssignment/>
+          <isBlockScoped/>
+          <isLet/>
+          <!-- VarNode Assignment Dest -->
+          <IdentNode start='6' end='7'>
+            <name>x</name>
+            <isDeclaredHere/>
+            <isInitializedHere/>
+          </IdentNode>
+          <!-- VarNode Init -->
+          <NumberLiteralNode value='42' start='10' end='12'/>
+        </VarNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

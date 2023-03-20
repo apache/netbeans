@@ -1,0 +1,55 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='53'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='53'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='eval' start='0' end='53'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='13'>
+        <name>eval</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='eval' kind='NORMAL' start='0' end='53'>
+        <hasDeclaredFunctions/>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='16' end='51'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <VarNode name='inner' start='18' end='51'>
+            <hasInit/>
+            <isAssignment/>
+            <isFunctionDeclaration/>
+            <!-- VarNode Assignment Dest -->
+            <IdentNode start='27' end='32'>
+              <name>inner</name>
+              <isInitializedHere/>
+            </IdentNode>
+            <!-- VarNode Init -->
+            <FunctionNode name='eval#inner' kind='NORMAL' start='18' end='51'>
+              <isDeclared/>
+              <!-- FunctionNode Parameters -->
+              <!-- FunctionNode Body -->
+              <Block start='35' end='48'>
+                <isFunctionBody/>
+                <!-- Block Statements -->
+                <ExpressionStatement start='38' end='48'>
+                  <StringLiteralNode value='use strict' start='38' end='48'/>
+                </ExpressionStatement>
+              </Block>
+            </FunctionNode>
+          </VarNode>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

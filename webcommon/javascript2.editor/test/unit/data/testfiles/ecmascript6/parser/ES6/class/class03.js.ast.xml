@@ -1,0 +1,46 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='11'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='11'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='A' start='0' end='7'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='6' end='7'>
+        <name>A</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='A' start='0' end='11'>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='A' start='0' end='11'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='6' end='7'>
+            <name>A</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='A' kind='NORMAL' start='0' end='11'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='0' end='11'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

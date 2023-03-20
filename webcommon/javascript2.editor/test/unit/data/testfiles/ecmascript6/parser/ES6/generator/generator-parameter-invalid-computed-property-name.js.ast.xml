@@ -1,0 +1,73 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='51'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='50'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='50'>
+      <FunctionNode name='L:1' kind='GENERATOR' start='1' end='49'>
+        <isAnonymous/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='13' end='47'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='19' end='47'>
+            <FunctionNode name='L:1#L:2' kind='GENERATOR' start='19' end='47'>
+              <isAnonymous/>
+              <isDeclared/>
+              <!-- FunctionNode Parameters -->
+              <IdentNode start='29' end='43'>
+                <name>arguments[0]</name>
+                <isDestructuredParameter/>
+              </IdentNode>
+              <!-- FunctionNode Body -->
+              <Block start='28' end='46'>
+                <isParameterBlock/>
+                <!-- Block Statements -->
+                <VarNode name='y' start='29' end='43'>
+                  <isDestructuring/>
+                </VarNode>
+                <ExpressionStatement start='29' end='43'>
+                  <BinaryNode type='ASSIGN' start='29' end='43'>
+                    <isAssignment/>
+                    <!-- BinaryNode lhs -->
+                    <ObjectNode start='29' end='43'>
+                      <!-- ObjectNode Elements -->
+                      <PropertyNode start='30' end='42'>
+                        <isComputed/>
+                        <!-- PropertyNode Key -->
+                        <UnaryNode type='YIELD' start='31' end='38'>
+                          <!-- UnaryNode Expression -->
+                          <NumberLiteralNode value='3' start='37' end='38'/>
+                        </UnaryNode>
+                        <!-- PropertyNode Value -->
+                        <IdentNode start='41' end='42'>
+                          <name>y</name>
+                        </IdentNode>
+                        <!-- PropertyNode Decorators -->
+                      </PropertyNode>
+                    </ObjectNode>
+                    <!-- BinaryNode rhs -->
+                    <IdentNode start='29' end='43'>
+                      <name>arguments[0]</name>
+                      <isDestructuredParameter/>
+                    </IdentNode>
+                  </BinaryNode>
+                </ExpressionStatement>
+                <BlockStatement start='45' end='46'>
+                  <Block start='45' end='46'>
+                    <isFunctionBody/>
+                    <!-- Block Statements -->
+                  </Block>
+                </BlockStatement>
+              </Block>
+            </FunctionNode>
+          </ExpressionStatement>
+        </Block>
+      </FunctionNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

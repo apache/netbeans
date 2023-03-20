@@ -1,0 +1,89 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='36'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='35'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='g' start='0' end='35'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='10' end='11'>
+        <name>g</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='g' kind='GENERATOR' start='0' end='35'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='14' end='33'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='16' end='33'>
+            <FunctionNode name='g#=>:1' kind='ARROW' start='16' end='33'>
+              <isAnonymous/>
+              <!-- FunctionNode Parameters -->
+              <IdentNode start='17' end='18'>
+                <name>x</name>
+              </IdentNode>
+              <!-- FunctionNode Body -->
+              <Block start='31' end='32'>
+                <isParameterBlock/>
+                <!-- Block Statements -->
+                <ExpressionStatement start='17' end='18'>
+                  <BinaryNode type='ASSIGN' start='17' end='18'>
+                    <isAssignment/>
+                    <!-- BinaryNode lhs -->
+                    <IdentNode start='17' end='18'>
+                      <name>x</name>
+                    </IdentNode>
+                    <!-- BinaryNode rhs -->
+                    <TernaryNode start='17' end='18'>
+                      <BinaryNode type='EQ_STRICT' start='17' end='30'>
+                        <isComparison/>
+                        <!-- BinaryNode lhs -->
+                        <IdentNode start='17' end='18'>
+                          <name>x</name>
+                        </IdentNode>
+                        <!-- BinaryNode rhs -->
+                        <UnaryNode type='VOID' start='17' end='30'>
+                          <!-- UnaryNode Expression -->
+                          <NumberLiteralNode value='0' start='17' end='30'/>
+                        </UnaryNode>
+                      </BinaryNode>
+                      <JoinPredecessorExpression start='21' end='26'>
+                        <UnaryNode type='YIELD' start='21' end='26'>
+                          <!-- UnaryNode Expression -->
+                          <UnaryNode type='VOID' start='21' end='26'>
+                            <!-- UnaryNode Expression -->
+                            <NumberLiteralNode value='0' start='21' end='26'/>
+                          </UnaryNode>
+                        </UnaryNode>
+                      </JoinPredecessorExpression>
+                      <JoinPredecessorExpression start='17' end='18'>
+                        <IdentNode start='17' end='18'>
+                          <name>x</name>
+                        </IdentNode>
+                      </JoinPredecessorExpression>
+                    </TernaryNode>
+                  </BinaryNode>
+                </ExpressionStatement>
+                <BlockStatement start='31' end='32'>
+                  <Block start='31' end='32'>
+                    <isFunctionBody/>
+                    <!-- Block Statements -->
+                  </Block>
+                </BlockStatement>
+              </Block>
+            </FunctionNode>
+          </ExpressionStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

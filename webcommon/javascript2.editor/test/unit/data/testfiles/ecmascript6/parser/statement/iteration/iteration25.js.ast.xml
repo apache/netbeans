@@ -1,0 +1,49 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='21'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='21'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='21'>
+      <Block start='0' end='21'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <ForNode start='0' end='21'>
+          <IndexNode start='5' end='14'>
+            <isIndex/>
+            <!-- IndexNode Base -->
+            <IdentNode start='5' end='6'>
+              <name>a</name>
+            </IdentNode>
+            <!-- IndexNode Index -->
+            <BinaryNode type='IN' start='7' end='13'>
+              <!-- BinaryNode lhs -->
+              <IdentNode start='7' end='8'>
+                <name>b</name>
+              </IdentNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='12' end='13'>
+                <name>c</name>
+              </IdentNode>
+            </BinaryNode>
+          </IndexNode>
+          <JoinPredecessorExpression start='0' end='0'>
+          </JoinPredecessorExpression>
+          <JoinPredecessorExpression start='18' end='19'>
+            <IdentNode start='18' end='19'>
+              <name>d</name>
+            </IdentNode>
+          </JoinPredecessorExpression>
+          <Block start='20' end='21'>
+            <isSynthetic/>
+            <!-- Block Statements -->
+            <EmptyNode start='20' end='21'>
+            </EmptyNode>
+          </Block>
+        </ForNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

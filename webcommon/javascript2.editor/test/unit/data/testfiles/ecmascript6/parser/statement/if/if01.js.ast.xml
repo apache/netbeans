@@ -1,0 +1,28 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='26'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='26'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <IfNode start='0' end='26'>
+      <IdentNode start='4' end='11'>
+        <name>morning</name>
+      </IdentNode>
+      <Block start='13' end='26'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <ExpressionStatement start='13' end='26'>
+          <CallNode start='13' end='26'>
+            <!-- CallNode Arguments -->
+            <!-- CallNode Function -->
+            <IdentNode start='13' end='24'>
+              <name>goodMorning</name>
+            </IdentNode>
+          </CallNode>
+        </ExpressionStatement>
+      </Block>
+    </IfNode>
+  </Block>
+</FunctionNode>

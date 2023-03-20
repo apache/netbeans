@@ -1,0 +1,16 @@
+<FunctionNode name='export-var.js' kind='MODULE' start='0' end='16'>
+  <isProgram/>
+  <ExportNode start='0' end='15'>
+    <VarNode name='bar' start='11' end='14'>
+    </VarNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='15'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='bar' start='11' end='14'>
+    </VarNode>
+  </Block>
+</FunctionNode>

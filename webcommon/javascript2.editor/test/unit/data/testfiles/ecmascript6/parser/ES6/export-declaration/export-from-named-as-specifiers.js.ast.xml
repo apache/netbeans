@@ -1,0 +1,30 @@
+<FunctionNode name='export-from-named-as-specifiers.js' kind='MODULE' start='0' end='41'>
+  <isProgram/>
+  <ExportNode start='0' end='38'>
+    <ExportClauseNode start='7' end='28'>
+      <ExportSpecifierNode start='8' end='22'>
+        <IdentNode start='15' end='22'>
+          <name>default</name>
+        </IdentNode>
+        <IdentNode start='8' end='11'>
+          <name>foo</name>
+        </IdentNode>
+      </ExportSpecifierNode>
+      <ExportSpecifierNode start='24' end='27'>
+        <IdentNode start='24' end='27'>
+          <name>bar</name>
+        </IdentNode>
+      </ExportSpecifierNode>
+    </ExportClauseNode>
+    <FromNode start='29' end='38'>
+      <StringLiteralNode value='foo' start='35' end='33'/>
+    </FromNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='40'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+  </Block>
+</FunctionNode>

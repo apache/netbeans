@@ -1,0 +1,18 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='38'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='38'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='private' start='4' end='11'>
+    </VarNode>
+    <VarNode name='protected' start='13' end='22'>
+    </VarNode>
+    <VarNode name='public' start='24' end='30'>
+    </VarNode>
+    <VarNode name='static' start='32' end='38'>
+    </VarNode>
+  </Block>
+</FunctionNode>

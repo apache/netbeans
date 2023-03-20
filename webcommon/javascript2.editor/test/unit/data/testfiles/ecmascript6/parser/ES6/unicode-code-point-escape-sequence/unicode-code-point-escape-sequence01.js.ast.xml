@@ -1,0 +1,22 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='36'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='36'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='source' start='4' end='34'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='4' end='10'>
+        <name>source</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <StringLiteralNode value='"\u{714E}\u{8336}"' start='14' end='34'/>
+    </VarNode>
+  </Block>
+</FunctionNode>

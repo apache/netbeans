@@ -1,0 +1,23 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='21'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='21'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='21'>
+      <AccessNode property='galaxies' start='0' end='21'>
+        <!-- AccessNode Base -->
+        <CallNode start='0' end='12'>
+          <!-- CallNode Arguments -->
+          <NumberLiteralNode value='42' start='9' end='11'/>
+          <!-- CallNode Function -->
+          <IdentNode start='0' end='8'>
+            <name>universe</name>
+          </IdentNode>
+        </CallNode>
+      </AccessNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

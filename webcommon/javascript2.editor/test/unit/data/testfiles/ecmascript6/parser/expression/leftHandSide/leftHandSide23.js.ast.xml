@@ -1,0 +1,18 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='13'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='13'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='13'>
+      <AccessNode property='null' start='0' end='13'>
+        <!-- AccessNode Base -->
+        <IdentNode start='0' end='8'>
+          <name>universe</name>
+        </IdentNode>
+      </AccessNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

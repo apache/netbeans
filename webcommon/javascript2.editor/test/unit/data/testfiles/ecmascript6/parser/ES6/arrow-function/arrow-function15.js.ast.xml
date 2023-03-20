@@ -1,0 +1,70 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='20'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='20'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='20'>
+      <FunctionNode name='=>:1' kind='ARROW' start='0' end='20'>
+        <isAnonymous/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='1' end='5'>
+          <name>eval</name>
+        </IdentNode>
+        <IdentNode start='7' end='8'>
+          <name>a</name>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='18' end='20'>
+          <isParameterBlock/>
+          <isTerminal/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='7' end='8'>
+            <BinaryNode type='ASSIGN' start='7' end='8'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <IdentNode start='7' end='8'>
+                <name>a</name>
+              </IdentNode>
+              <!-- BinaryNode rhs -->
+              <TernaryNode start='7' end='8'>
+                <BinaryNode type='EQ_STRICT' start='7' end='17'>
+                  <isComparison/>
+                  <!-- BinaryNode lhs -->
+                  <IdentNode start='7' end='8'>
+                    <name>a</name>
+                  </IdentNode>
+                  <!-- BinaryNode rhs -->
+                  <UnaryNode type='VOID' start='7' end='17'>
+                    <!-- UnaryNode Expression -->
+                    <NumberLiteralNode value='0' start='7' end='17'/>
+                  </UnaryNode>
+                </BinaryNode>
+                <JoinPredecessorExpression start='11' end='13'>
+                  <NumberLiteralNode value='10' start='11' end='13'/>
+                </JoinPredecessorExpression>
+                <JoinPredecessorExpression start='7' end='8'>
+                  <IdentNode start='7' end='8'>
+                    <name>a</name>
+                  </IdentNode>
+                </JoinPredecessorExpression>
+              </TernaryNode>
+            </BinaryNode>
+          </ExpressionStatement>
+          <BlockStatement start='18' end='20'>
+            <Block start='18' end='20'>
+              <isFunctionBody/>
+              <isTerminal/>
+              <!-- Block Statements -->
+              <ReturnNode start='18' end='20'>
+                <NumberLiteralNode value='42' start='18' end='20'/>
+              </ReturnNode>
+            </Block>
+          </BlockStatement>
+        </Block>
+      </FunctionNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

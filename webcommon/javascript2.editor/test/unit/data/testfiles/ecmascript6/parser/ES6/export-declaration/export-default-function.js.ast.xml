@@ -1,0 +1,21 @@
+<FunctionNode name='export-default-function.js' kind='MODULE' start='0' end='30'>
+  <isProgram/>
+  <ExportNode start='0' end='29'>
+    <FunctionNode name='L:1' kind='NORMAL' start='15' end='29'>
+      <isAnonymous/>
+      <!-- FunctionNode Parameters -->
+      <!-- FunctionNode Body -->
+      <Block start='27' end='28'>
+        <isFunctionBody/>
+        <!-- Block Statements -->
+      </Block>
+    </FunctionNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='29'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+  </Block>
+</FunctionNode>

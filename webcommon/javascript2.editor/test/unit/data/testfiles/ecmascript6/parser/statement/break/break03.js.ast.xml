@@ -1,0 +1,27 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='34'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='34'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <LabelNode start='0' end='34'>
+      <Block start='6' end='34'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <WhileNode start='6' end='34'>
+          <JoinPredecessorExpression start='13' end='17'>
+            <BooleanLiteralNode value='true' start='13' end='17'/>
+          </JoinPredecessorExpression>
+          <Block start='19' end='34'>
+            <isTerminal/>
+            <!-- Block Statements -->
+            <BreakNode start='21' end='32'>
+            </BreakNode>
+          </Block>
+        </WhileNode>
+      </Block>
+    </LabelNode>
+  </Block>
+</FunctionNode>

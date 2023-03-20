@@ -1,0 +1,23 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='10'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='10'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='10'>
+      <UnaryNode type='NEW' start='0' end='10'>
+        <!-- UnaryNode Expression -->
+        <CallNode start='4' end='10'>
+          <isNew/>
+          <!-- CallNode Arguments -->
+          <!-- CallNode Function -->
+          <IdentNode start='4' end='10'>
+            <name>Button</name>
+          </IdentNode>
+        </CallNode>
+      </UnaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

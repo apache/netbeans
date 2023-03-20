@@ -1,0 +1,32 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='23'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='23'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <IfNode start='0' end='23'>
+      <BooleanLiteralNode value='true' start='4' end='8'/>
+      <Block start='10' end='17'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <ExpressionStatement start='10' end='17'>
+          <CallNode start='10' end='16'>
+            <!-- CallNode Arguments -->
+            <!-- CallNode Function -->
+            <IdentNode start='10' end='14'>
+              <name>that</name>
+            </IdentNode>
+          </CallNode>
+        </ExpressionStatement>
+      </Block>
+      <Block start='22' end='23'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <EmptyNode start='22' end='23'>
+        </EmptyNode>
+      </Block>
+    </IfNode>
+  </Block>
+</FunctionNode>

@@ -1,0 +1,70 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='20'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='20'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='A' start='0' end='7'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='6' end='7'>
+        <name>A</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='A' start='0' end='20'>
+        <!-- ClassNode Heritage -->
+        <NumberLiteralNode value='0' start='16' end='17'/>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='A' start='0' end='20'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='6' end='7'>
+            <name>A</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='A' kind='NORMAL' start='0' end='20'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <isSubclassConstructor/>
+            <!-- FunctionNode Parameters -->
+            <IdentNode start='0' end='20'>
+              <name>args</name>
+              <isRestParameter/>
+            </IdentNode>
+            <!-- FunctionNode Body -->
+            <Block start='0' end='20'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='0' end='20'>
+                <CallNode start='0' end='20'>
+                  <!-- CallNode Arguments -->
+                  <UnaryNode type='SPREAD_ARGUMENT' start='0' end='20'>
+                    <!-- UnaryNode Expression -->
+                    <IdentNode start='0' end='20'>
+                      <name>args</name>
+                      <isRestParameter/>
+                    </IdentNode>
+                  </UnaryNode>
+                  <!-- CallNode Function -->
+                  <IdentNode start='0' end='20'>
+                    <name>super</name>
+                    <isDirectSuppert/>
+                  </IdentNode>
+                </CallNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

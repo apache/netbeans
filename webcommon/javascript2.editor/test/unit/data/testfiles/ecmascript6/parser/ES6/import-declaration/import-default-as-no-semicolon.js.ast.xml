@@ -1,0 +1,27 @@
+<FunctionNode name='import-default-as-no-semicolon.js' kind='MODULE' start='0' end='39'>
+  <isProgram/>
+  <ImportNode start='0' end='37'>
+    <ImportClauseNode start='7' end='23'>
+      <NamedImportsNode start='7' end='23'>
+        <ImportSpecifierNode start='8' end='22'>
+          <IdentNode start='8' end='15'>
+            <name>default</name>
+          </IdentNode>
+          <IdentNode start='19' end='22'>
+            <name>foo</name>
+          </IdentNode>
+        </ImportSpecifierNode>
+      </NamedImportsNode>
+    </ImportClauseNode>
+    <FromNode start='28' end='37'>
+      <StringLiteralNode value='foo' start='34' end='32'/>
+    </FromNode>
+  </ImportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='37'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+  </Block>
+</FunctionNode>

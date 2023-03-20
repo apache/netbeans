@@ -1,0 +1,37 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='31'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='30'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='1' end='13'>
+      <StringLiteralNode value='use strict' start='1' end='11'/>
+    </ExpressionStatement>
+    <ExpressionStatement start='14' end='30'>
+      <ObjectNode start='15' end='29'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='yield' start='17' end='27'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='17' end='22'>
+            <name>yield</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='yield' kind='NORMAL' start='17' end='27'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='25' end='26'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

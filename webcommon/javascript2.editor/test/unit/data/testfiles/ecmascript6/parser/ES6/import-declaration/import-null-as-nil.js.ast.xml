@@ -1,0 +1,27 @@
+<FunctionNode name='import-null-as-nil.js' kind='MODULE' start='0' end='34'>
+  <isProgram/>
+  <ImportNode start='0' end='32'>
+    <ImportClauseNode start='7' end='22'>
+      <NamedImportsNode start='7' end='22'>
+        <ImportSpecifierNode start='9' end='20'>
+          <IdentNode start='9' end='13'>
+            <name>null</name>
+          </IdentNode>
+          <IdentNode start='17' end='20'>
+            <name>nil</name>
+          </IdentNode>
+        </ImportSpecifierNode>
+      </NamedImportsNode>
+    </ImportClauseNode>
+    <FromNode start='23' end='32'>
+      <StringLiteralNode value='bar' start='29' end='27'/>
+    </FromNode>
+  </ImportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='32'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+  </Block>
+</FunctionNode>

@@ -1,0 +1,71 @@
+<FunctionNode name='export-default-class.js' kind='MODULE' start='0' end='24'>
+  <isProgram/>
+  <ExportNode start='0' end='23'>
+    <ClassNode start='15' end='23'>
+      <!-- ClassNode Constructor -->
+      <PropertyNode name='constructor' start='15' end='23'>
+        <!-- PropertyNode Key -->
+        <IdentNode start='15' end='23'>
+          <name>constructor</name>
+        </IdentNode>
+        <!-- PropertyNode Value -->
+        <FunctionNode name='constructor' kind='NORMAL' start='15' end='23'>
+          <isAnonymous/>
+          <isClassConstructor/>
+          <isMethod/>
+          <!-- FunctionNode Parameters -->
+          <!-- FunctionNode Body -->
+          <Block start='15' end='23'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+          </Block>
+        </FunctionNode>
+        <!-- PropertyNode Decorators -->
+      </PropertyNode>
+      <!-- ClassNode Elements -->
+      <!-- ClassNode Decorators -->
+    </ClassNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='23'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='*default*' start='15' end='23'>
+      <hasInit/>
+      <isAssignment/>
+      <isExport/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='15' end='23'>
+        <name>*default*</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode start='15' end='23'>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='constructor' start='15' end='23'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='15' end='23'>
+            <name>constructor</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='constructor' kind='NORMAL' start='15' end='23'>
+            <isAnonymous/>
+            <isClassConstructor/>
+            <isMethod/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='15' end='23'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

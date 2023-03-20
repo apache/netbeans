@@ -1,0 +1,50 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='9'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='8'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='8'>
+      <FunctionNode name='=>:1' kind='ARROW' start='0' end='7'>
+        <isAnonymous/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='1' end='3'>
+          <name>arguments[0]</name>
+          <isDestructuredParameter/>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='6' end='7'>
+          <isParameterBlock/>
+          <isTerminal/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='1' end='3'>
+            <BinaryNode type='ASSIGN' start='1' end='3'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <ObjectNode start='1' end='3'>
+                <!-- ObjectNode Elements -->
+              </ObjectNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='1' end='3'>
+                <name>arguments[0]</name>
+                <isDestructuredParameter/>
+              </IdentNode>
+            </BinaryNode>
+          </ExpressionStatement>
+          <BlockStatement start='6' end='7'>
+            <Block start='6' end='7'>
+              <isFunctionBody/>
+              <isTerminal/>
+              <!-- Block Statements -->
+              <ReturnNode start='6' end='7'>
+                <NumberLiteralNode value='0' start='6' end='7'/>
+              </ReturnNode>
+            </Block>
+          </BlockStatement>
+        </Block>
+      </FunctionNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

@@ -1,0 +1,54 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='24'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='24'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='24'>
+      <Block start='0' end='24'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <ForNode start='0' end='24'>
+          <BinaryNode type='ASSIGN' start='4' end='9'>
+            <isAssignment/>
+            <!-- BinaryNode lhs -->
+            <IdentNode start='4' end='5'>
+              <name>x</name>
+            </IdentNode>
+            <!-- BinaryNode rhs -->
+            <NumberLiteralNode value='0' start='8' end='9'/>
+          </BinaryNode>
+          <JoinPredecessorExpression start='11' end='17'>
+            <BinaryNode type='LT' start='11' end='17'>
+              <isComparison/>
+              <isRelational/>
+              <!-- BinaryNode lhs -->
+              <IdentNode start='11' end='12'>
+                <name>x</name>
+              </IdentNode>
+              <!-- BinaryNode rhs -->
+              <NumberLiteralNode value='42' start='15' end='17'/>
+            </BinaryNode>
+          </JoinPredecessorExpression>
+          <JoinPredecessorExpression start='19' end='22'>
+            <UnaryNode type='INCPOSTFIX' start='19' end='22'>
+              <isAssignment/>
+              <!-- UnaryNode Expression -->
+              <IdentNode start='19' end='20'>
+                <name>x</name>
+              </IdentNode>
+            </UnaryNode>
+          </JoinPredecessorExpression>
+          <Block start='23' end='24'>
+            <isSynthetic/>
+            <!-- Block Statements -->
+            <EmptyNode start='23' end='24'>
+            </EmptyNode>
+          </Block>
+        </ForNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

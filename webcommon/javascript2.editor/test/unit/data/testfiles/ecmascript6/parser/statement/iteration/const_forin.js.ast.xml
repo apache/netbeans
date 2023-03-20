@@ -1,0 +1,48 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='34'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='33'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='33'>
+      <Block start='0' end='33'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <VarNode name='x' start='11' end='12'>
+          <isBlockScoped/>
+          <isConst/>
+        </VarNode>
+        <ForNode start='0' end='33'>
+          <IdentNode start='11' end='12'>
+            <name>x</name>
+          </IdentNode>
+          <JoinPredecessorExpression start='0' end='0'>
+          </JoinPredecessorExpression>
+          <JoinPredecessorExpression start='16' end='20'>
+            <IdentNode start='16' end='20'>
+              <name>list</name>
+            </IdentNode>
+          </JoinPredecessorExpression>
+          <Block start='22' end='33'>
+            <isSynthetic/>
+            <!-- Block Statements -->
+            <ExpressionStatement start='22' end='33'>
+              <CallNode start='22' end='32'>
+                <!-- CallNode Arguments -->
+                <IdentNode start='30' end='31'>
+                  <name>x</name>
+                </IdentNode>
+                <!-- CallNode Function -->
+                <IdentNode start='22' end='29'>
+                  <name>process</name>
+                </IdentNode>
+              </CallNode>
+            </ExpressionStatement>
+          </Block>
+        </ForNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

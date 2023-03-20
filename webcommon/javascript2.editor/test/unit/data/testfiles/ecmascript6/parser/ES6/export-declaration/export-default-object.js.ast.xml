@@ -1,0 +1,49 @@
+<FunctionNode name='export-default-object.js' kind='MODULE' start='0' end='27'>
+  <isProgram/>
+  <ExportNode start='0' end='25'>
+    <ObjectNode start='15' end='25'>
+      <!-- ObjectNode Elements -->
+      <PropertyNode name='foo' start='17' end='23'>
+        <!-- PropertyNode Key -->
+        <IdentNode start='17' end='20'>
+          <name>foo</name>
+          <isPropertyName/>
+        </IdentNode>
+        <!-- PropertyNode Value -->
+        <NumberLiteralNode value='1' start='22' end='23'/>
+        <!-- PropertyNode Decorators -->
+      </PropertyNode>
+    </ObjectNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='26'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='*default*' start='15' end='25'>
+      <hasInit/>
+      <isAssignment/>
+      <isExport/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='15' end='25'>
+        <name>*default*</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ObjectNode start='15' end='25'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='foo' start='17' end='23'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='17' end='20'>
+            <name>foo</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <NumberLiteralNode value='1' start='22' end='23'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

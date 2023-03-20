@@ -1,0 +1,35 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='13'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='13'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <isTerminal/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='13'>
+      <Block start='0' end='13'>
+        <isSynthetic/>
+        <isTerminal/>
+        <!-- Block Statements -->
+        <ForNode start='0' end='13'>
+          <BinaryNode type='ASSIGN' start='4' end='9'>
+            <isAssignment/>
+            <!-- BinaryNode lhs -->
+            <IdentNode start='4' end='5'>
+              <name>x</name>
+            </IdentNode>
+            <!-- BinaryNode rhs -->
+            <NumberLiteralNode value='0' start='8' end='9'/>
+          </BinaryNode>
+          <Block start='12' end='13'>
+            <isSynthetic/>
+            <!-- Block Statements -->
+            <EmptyNode start='12' end='13'>
+            </EmptyNode>
+          </Block>
+        </ForNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

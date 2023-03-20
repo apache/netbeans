@@ -1,0 +1,45 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='31'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='31'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <WhileNode start='0' end='31'>
+      <Block start='3' end='16'>
+        <!-- Block Statements -->
+        <ExpressionStatement start='5' end='9'>
+          <UnaryNode type='INCPOSTFIX' start='5' end='8'>
+            <isAssignment/>
+            <!-- UnaryNode Expression -->
+            <IdentNode start='5' end='6'>
+              <name>x</name>
+            </IdentNode>
+          </UnaryNode>
+        </ExpressionStatement>
+        <ExpressionStatement start='10' end='14'>
+          <UnaryNode type='DECPOSTFIX' start='10' end='13'>
+            <isAssignment/>
+            <!-- UnaryNode Expression -->
+            <IdentNode start='10' end='11'>
+              <name>y</name>
+            </IdentNode>
+          </UnaryNode>
+        </ExpressionStatement>
+      </Block>
+      <JoinPredecessorExpression start='24' end='30'>
+        <BinaryNode type='LT' start='24' end='30'>
+          <isComparison/>
+          <isRelational/>
+          <!-- BinaryNode lhs -->
+          <IdentNode start='24' end='25'>
+            <name>x</name>
+          </IdentNode>
+          <!-- BinaryNode rhs -->
+          <NumberLiteralNode value='10' start='28' end='30'/>
+        </BinaryNode>
+      </JoinPredecessorExpression>
+    </WhileNode>
+  </Block>
+</FunctionNode>

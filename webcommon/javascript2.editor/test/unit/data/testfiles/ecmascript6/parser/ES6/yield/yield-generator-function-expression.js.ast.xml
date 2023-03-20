@@ -1,0 +1,51 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='45'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='44'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='g' start='0' end='44'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='10' end='11'>
+        <name>g</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='g' kind='GENERATOR' start='0' end='44'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='13' end='42'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <VarNode name='y' start='19' end='41'>
+            <hasInit/>
+            <isAssignment/>
+            <!-- VarNode Assignment Dest -->
+            <IdentNode start='19' end='20'>
+              <name>y</name>
+              <isDeclaredHere/>
+              <isInitializedHere/>
+            </IdentNode>
+            <!-- VarNode Init -->
+            <FunctionNode name='g#yield' kind='NORMAL' start='23' end='41'>
+              <isNamedFunctionExpression/>
+              <!-- FunctionNode Parameters -->
+              <!-- FunctionNode Body -->
+              <Block start='39' end='40'>
+                <isFunctionBody/>
+                <!-- Block Statements -->
+              </Block>
+            </FunctionNode>
+          </VarNode>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

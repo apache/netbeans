@@ -1,0 +1,36 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='10'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='10'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='10'>
+      <ClassNode start='1' end='9'>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='constructor' start='1' end='9'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='1' end='9'>
+            <name>constructor</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='constructor' kind='NORMAL' start='1' end='9'>
+            <isAnonymous/>
+            <isClassConstructor/>
+            <isMethod/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='1' end='9'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

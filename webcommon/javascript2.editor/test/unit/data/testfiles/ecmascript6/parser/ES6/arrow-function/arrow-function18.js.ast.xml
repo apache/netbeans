@@ -1,0 +1,62 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='28'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='28'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='28'>
+      <FunctionNode name='=>:1' kind='ARROW' start='0' end='28'>
+        <isAnonymous/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='1' end='2'>
+          <name>x</name>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='7' end='28'>
+          <isFunctionBody/>
+          <isTerminal/>
+          <!-- Block Statements -->
+          <ReturnNode start='18' end='28'>
+            <FunctionNode name='=>:1#=>:1' kind='ARROW' start='8' end='27'>
+              <isAnonymous/>
+              <!-- FunctionNode Parameters -->
+              <IdentNode start='9' end='10'>
+                <name>y</name>
+              </IdentNode>
+              <IdentNode start='12' end='13'>
+                <name>z</name>
+              </IdentNode>
+              <!-- FunctionNode Body -->
+              <Block start='18' end='27'>
+                <isFunctionBody/>
+                <isTerminal/>
+                <!-- Block Statements -->
+                <ReturnNode start='23' end='27'>
+                  <BinaryNode type='COMMARIGHT' start='19' end='26'>
+                    <!-- BinaryNode lhs -->
+                    <BinaryNode type='COMMARIGHT' start='19' end='23'>
+                      <!-- BinaryNode lhs -->
+                      <IdentNode start='19' end='20'>
+                        <name>x</name>
+                      </IdentNode>
+                      <!-- BinaryNode rhs -->
+                      <IdentNode start='22' end='23'>
+                        <name>y</name>
+                      </IdentNode>
+                    </BinaryNode>
+                    <!-- BinaryNode rhs -->
+                    <IdentNode start='25' end='26'>
+                      <name>z</name>
+                    </IdentNode>
+                  </BinaryNode>
+                </ReturnNode>
+              </Block>
+            </FunctionNode>
+          </ReturnNode>
+        </Block>
+      </FunctionNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

@@ -1,0 +1,31 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='22'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='22'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <WithNode start='0' end='22'>
+      <IdentNode start='6' end='7'>
+        <name>x</name>
+      </IdentNode>
+      <Block start='9' end='22'>
+        <!-- Block Statements -->
+        <ExpressionStatement start='11' end='20'>
+          <BinaryNode type='ASSIGN' start='11' end='20'>
+            <isAssignment/>
+            <!-- BinaryNode lhs -->
+            <IdentNode start='11' end='14'>
+              <name>foo</name>
+            </IdentNode>
+            <!-- BinaryNode rhs -->
+            <IdentNode start='17' end='20'>
+              <name>bar</name>
+            </IdentNode>
+          </BinaryNode>
+        </ExpressionStatement>
+      </Block>
+    </WithNode>
+  </Block>
+</FunctionNode>

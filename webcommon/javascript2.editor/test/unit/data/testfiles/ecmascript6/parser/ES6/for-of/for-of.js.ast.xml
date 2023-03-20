@@ -1,0 +1,34 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='14'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='13'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='13'>
+      <Block start='0' end='13'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <ForNode start='0' end='13'>
+          <IdentNode start='5' end='6'>
+            <name>p</name>
+          </IdentNode>
+          <JoinPredecessorExpression start='0' end='0'>
+          </JoinPredecessorExpression>
+          <JoinPredecessorExpression start='10' end='11'>
+            <IdentNode start='10' end='11'>
+              <name>q</name>
+            </IdentNode>
+          </JoinPredecessorExpression>
+          <Block start='12' end='13'>
+            <isSynthetic/>
+            <!-- Block Statements -->
+            <EmptyNode start='12' end='13'>
+            </EmptyNode>
+          </Block>
+        </ForNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

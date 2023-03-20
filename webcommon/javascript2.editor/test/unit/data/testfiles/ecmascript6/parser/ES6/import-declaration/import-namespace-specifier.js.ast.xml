@@ -1,0 +1,22 @@
+<FunctionNode name='import-namespace-specifier.js' kind='MODULE' start='0' end='28'>
+  <isProgram/>
+  <ImportNode start='0' end='25'>
+    <ImportClauseNode start='7' end='15'>
+      <NameSpaceImportNode start='7' end='15'>
+        <IdentNode start='12' end='15'>
+          <name>foo</name>
+        </IdentNode>
+      </NameSpaceImportNode>
+    </ImportClauseNode>
+    <FromNode start='16' end='25'>
+      <StringLiteralNode value='foo' start='22' end='20'/>
+    </FromNode>
+  </ImportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='27'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+  </Block>
+</FunctionNode>

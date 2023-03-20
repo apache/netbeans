@@ -1,0 +1,57 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='14'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='13'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='13'>
+      <FunctionNode name='=>:1' kind='ARROW' start='0' end='12'>
+        <isAnonymous/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='1' end='4'>
+          <name>arguments[0]</name>
+          <isDestructuredParameter/>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='9' end='12'>
+          <isParameterBlock/>
+          <isTerminal/>
+          <!-- Block Statements -->
+          <VarNode name='a' start='1' end='4'>
+            <isDestructuring/>
+          </VarNode>
+          <ExpressionStatement start='1' end='4'>
+            <BinaryNode type='ASSIGN' start='1' end='4'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <ArrayLiteralNode start='1' end='4'>
+                <IdentNode start='2' end='3'>
+                  <name>a</name>
+                </IdentNode>
+              </ArrayLiteralNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='1' end='4'>
+                <name>arguments[0]</name>
+                <isDestructuredParameter/>
+              </IdentNode>
+            </BinaryNode>
+          </ExpressionStatement>
+          <BlockStatement start='9' end='12'>
+            <Block start='9' end='12'>
+              <isFunctionBody/>
+              <isTerminal/>
+              <!-- Block Statements -->
+              <ReturnNode start='9' end='12'>
+                <ArrayLiteralNode start='9' end='12'>
+                  <NumberLiteralNode value='0' start='10' end='11'/>
+                </ArrayLiteralNode>
+              </ReturnNode>
+            </Block>
+          </BlockStatement>
+        </Block>
+      </FunctionNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

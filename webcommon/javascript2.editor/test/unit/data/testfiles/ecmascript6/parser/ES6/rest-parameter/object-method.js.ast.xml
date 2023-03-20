@@ -1,0 +1,48 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='31'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='31'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='31'>
+      <BinaryNode type='ASSIGN' start='0' end='31'>
+        <isAssignment/>
+        <!-- BinaryNode lhs -->
+        <IdentNode start='0' end='1'>
+          <name>o</name>
+        </IdentNode>
+        <!-- BinaryNode rhs -->
+        <ObjectNode start='4' end='31'>
+          <!-- ObjectNode Elements -->
+          <PropertyNode name='f' start='6' end='29'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='6' end='7'>
+              <name>f</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <FunctionNode name='f' kind='NORMAL' start='9' end='29'>
+              <isAnonymous/>
+              <!-- FunctionNode Parameters -->
+              <IdentNode start='18' end='19'>
+                <name>a</name>
+              </IdentNode>
+              <IdentNode start='24' end='25'>
+                <name>b</name>
+                <isRestParameter/>
+              </IdentNode>
+              <!-- FunctionNode Body -->
+              <Block start='27' end='28'>
+                <isFunctionBody/>
+                <!-- Block Statements -->
+              </Block>
+            </FunctionNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+        </ObjectNode>
+      </BinaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

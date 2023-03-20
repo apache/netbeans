@@ -1,0 +1,70 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='25'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='24'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='f' start='0' end='24'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='10'>
+        <name>f</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='f' kind='NORMAL' start='0' end='24'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='11' end='21'>
+          <name>arguments[0]</name>
+          <isDestructuredParameter/>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='10' end='23'>
+          <isParameterBlock/>
+          <!-- Block Statements -->
+          <VarNode name='y' start='11' end='21'>
+            <isDestructuring/>
+          </VarNode>
+          <ExpressionStatement start='11' end='21'>
+            <BinaryNode type='ASSIGN' start='11' end='21'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <ObjectNode start='11' end='21'>
+                <!-- ObjectNode Elements -->
+                <PropertyNode name='yield' start='12' end='20'>
+                  <!-- PropertyNode Key -->
+                  <IdentNode start='12' end='17'>
+                    <name>yield</name>
+                    <isPropertyName/>
+                  </IdentNode>
+                  <!-- PropertyNode Value -->
+                  <IdentNode start='19' end='20'>
+                    <name>y</name>
+                  </IdentNode>
+                  <!-- PropertyNode Decorators -->
+                </PropertyNode>
+              </ObjectNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='11' end='21'>
+                <name>arguments[0]</name>
+                <isDestructuredParameter/>
+              </IdentNode>
+            </BinaryNode>
+          </ExpressionStatement>
+          <BlockStatement start='22' end='23'>
+            <Block start='22' end='23'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </BlockStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

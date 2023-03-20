@@ -1,0 +1,20 @@
+<FunctionNode name='import-default.js' kind='MODULE' start='0' end='23'>
+  <isProgram/>
+  <ImportNode start='0' end='20'>
+    <ImportClauseNode start='7' end='10'>
+      <IdentNode start='7' end='10'>
+        <name>foo</name>
+      </IdentNode>
+    </ImportClauseNode>
+    <FromNode start='11' end='20'>
+      <StringLiteralNode value='foo' start='17' end='15'/>
+    </FromNode>
+  </ImportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='22'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+  </Block>
+</FunctionNode>

@@ -1,0 +1,32 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='15'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='14'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='14'>
+      <BinaryNode type='ASSIGN' start='0' end='13'>
+        <isAssignment/>
+        <!-- BinaryNode lhs -->
+        <ArrayLiteralNode start='0' end='11'>
+          <IdentNode start='1' end='2'>
+            <name>a</name>
+          </IdentNode>
+          <IdentNode start='3' end='4'>
+            <name>a</name>
+          </IdentNode>
+          <UnaryNode type='SPREAD_ARRAY' start='6' end='10'>
+            <!-- UnaryNode Expression -->
+            <IdentNode start='9' end='10'>
+              <name>a</name>
+            </IdentNode>
+          </UnaryNode>
+        </ArrayLiteralNode>
+        <!-- BinaryNode rhs -->
+        <NumberLiteralNode value='0' start='12' end='13'/>
+      </BinaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

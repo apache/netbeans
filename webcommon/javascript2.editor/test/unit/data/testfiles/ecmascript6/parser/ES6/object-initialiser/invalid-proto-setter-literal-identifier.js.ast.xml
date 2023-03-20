@@ -1,0 +1,55 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='62'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='61'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='61'>
+      <ObjectNode start='1' end='60'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='__proto__' start='3' end='21'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='7' end='16'>
+            <name>__proto__</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Setter -->
+          <FunctionNode name='set __proto__' kind='SETTER' start='3' end='21'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <IdentNode start='17' end='18'>
+              <name>x</name>
+            </IdentNode>
+            <!-- FunctionNode Body -->
+            <Block start='19' end='20'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='__proto__' start='24' end='40'>
+          <!-- PropertyNode Key -->
+          <StringLiteralNode value='__proto__' start='24' end='33'/>
+          <!-- PropertyNode Value -->
+          <NullLiteralNode start='36' end='40'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='__proto__' start='42' end='57'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='42' end='51'>
+            <name>__proto__</name>
+            <isPropertyName/>
+            <isProtoPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <NullLiteralNode start='53' end='57'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

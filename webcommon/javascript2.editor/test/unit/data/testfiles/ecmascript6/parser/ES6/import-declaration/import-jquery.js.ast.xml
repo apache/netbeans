@@ -1,0 +1,20 @@
+<FunctionNode name='import-jquery.js' kind='MODULE' start='0' end='23'>
+  <isProgram/>
+  <ImportNode start='0' end='21'>
+    <ImportClauseNode start='7' end='8'>
+      <IdentNode start='7' end='8'>
+        <name>$</name>
+      </IdentNode>
+    </ImportClauseNode>
+    <FromNode start='9' end='21'>
+      <StringLiteralNode value='jquery' start='15' end='13'/>
+    </FromNode>
+  </ImportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='21'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+  </Block>
+</FunctionNode>

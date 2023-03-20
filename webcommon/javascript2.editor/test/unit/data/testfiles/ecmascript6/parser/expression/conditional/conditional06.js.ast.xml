@@ -1,0 +1,45 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='39'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='39'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='1' end='39'>
+      <TernaryNode start='16' end='37'>
+        <BinaryNode type='EQ_STRICT' start='1' end='15'>
+          <isComparison/>
+          <!-- BinaryNode lhs -->
+          <StringLiteralNode value='name' start='1' end='5'/>
+          <!-- BinaryNode rhs -->
+          <IdentNode start='11' end='15'>
+            <name>name</name>
+          </IdentNode>
+        </BinaryNode>
+        <JoinPredecessorExpression start='18' end='26'>
+          <BinaryNode type='ASSIGN' start='18' end='26'>
+            <isAssignment/>
+            <!-- BinaryNode lhs -->
+            <IdentNode start='18' end='19'>
+              <name>c</name>
+            </IdentNode>
+            <!-- BinaryNode rhs -->
+            <StringLiteralNode value='jedna' start='21' end='26'/>
+          </BinaryNode>
+        </JoinPredecessorExpression>
+        <JoinPredecessorExpression start='31' end='37'>
+          <BinaryNode type='ASSIGN' start='31' end='37'>
+            <isAssignment/>
+            <!-- BinaryNode lhs -->
+            <IdentNode start='31' end='32'>
+              <name>c</name>
+            </IdentNode>
+            <!-- BinaryNode rhs -->
+            <StringLiteralNode value='dva' start='34' end='37'/>
+          </BinaryNode>
+        </JoinPredecessorExpression>
+      </TernaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

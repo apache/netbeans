@@ -1,0 +1,32 @@
+<FunctionNode name='import-named-as-specifiers.js' kind='MODULE' start='0' end='37'>
+  <isProgram/>
+  <ImportNode start='0' end='34'>
+    <ImportClauseNode start='7' end='24'>
+      <NamedImportsNode start='7' end='24'>
+        <ImportSpecifierNode start='8' end='18'>
+          <IdentNode start='8' end='11'>
+            <name>bar</name>
+          </IdentNode>
+          <IdentNode start='15' end='18'>
+            <name>baz</name>
+          </IdentNode>
+        </ImportSpecifierNode>
+        <ImportSpecifierNode start='20' end='23'>
+          <IdentNode start='20' end='23'>
+            <name>xyz</name>
+          </IdentNode>
+        </ImportSpecifierNode>
+      </NamedImportsNode>
+    </ImportClauseNode>
+    <FromNode start='25' end='34'>
+      <StringLiteralNode value='foo' start='31' end='29'/>
+    </FromNode>
+  </ImportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='36'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+  </Block>
+</FunctionNode>

@@ -1,0 +1,48 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='42'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='41'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='41'>
+      <ObjectNode start='1' end='40'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='__proto__' start='3' end='18'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='3' end='12'>
+            <name>__proto__</name>
+            <isPropertyName/>
+            <isProtoPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <NullLiteralNode start='14' end='18'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='__proto__' start='20' end='38'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='24' end='33'>
+            <name>__proto__</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Setter -->
+          <FunctionNode name='set __proto__' kind='SETTER' start='20' end='38'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <IdentNode start='34' end='35'>
+              <name>x</name>
+            </IdentNode>
+            <!-- FunctionNode Body -->
+            <Block start='36' end='37'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

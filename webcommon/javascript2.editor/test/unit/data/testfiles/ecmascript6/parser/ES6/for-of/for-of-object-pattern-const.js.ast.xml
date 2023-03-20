@@ -1,0 +1,68 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='25'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='24'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='24'>
+      <Block start='0' end='24'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <VarNode name='x' start='11' end='13'>
+          <isBlockScoped/>
+          <isConst/>
+          <isDestructuring/>
+        </VarNode>
+        <VarNode name='y' start='11' end='16'>
+          <isBlockScoped/>
+          <isConst/>
+          <isDestructuring/>
+        </VarNode>
+        <ForNode start='0' end='24'>
+          <ObjectNode start='11' end='17'>
+            <!-- ObjectNode Elements -->
+            <PropertyNode name='x' start='12' end='13'>
+              <!-- PropertyNode Key -->
+              <IdentNode start='12' end='13'>
+                <name>x</name>
+                <isPropertyName/>
+              </IdentNode>
+              <!-- PropertyNode Value -->
+              <IdentNode start='12' end='13'>
+                <name>x</name>
+              </IdentNode>
+              <!-- PropertyNode Decorators -->
+            </PropertyNode>
+            <PropertyNode name='y' start='15' end='16'>
+              <!-- PropertyNode Key -->
+              <IdentNode start='15' end='16'>
+                <name>y</name>
+                <isPropertyName/>
+              </IdentNode>
+              <!-- PropertyNode Value -->
+              <IdentNode start='15' end='16'>
+                <name>y</name>
+              </IdentNode>
+              <!-- PropertyNode Decorators -->
+            </PropertyNode>
+          </ObjectNode>
+          <JoinPredecessorExpression start='0' end='0'>
+          </JoinPredecessorExpression>
+          <JoinPredecessorExpression start='21' end='22'>
+            <IdentNode start='21' end='22'>
+              <name>z</name>
+            </IdentNode>
+          </JoinPredecessorExpression>
+          <Block start='23' end='24'>
+            <isSynthetic/>
+            <!-- Block Statements -->
+            <EmptyNode start='23' end='24'>
+            </EmptyNode>
+          </Block>
+        </ForNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

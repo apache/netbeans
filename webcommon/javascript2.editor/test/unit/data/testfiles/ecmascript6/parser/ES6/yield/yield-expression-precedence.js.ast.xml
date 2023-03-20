@@ -1,0 +1,72 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='43'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='42'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='g' start='0' end='42'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='10' end='11'>
+        <name>g</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='g' kind='GENERATOR' start='0' end='42'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='14' end='40'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='16' end='40'>
+            <BinaryNode type='COMMARIGHT' start='16' end='40'>
+              <!-- BinaryNode lhs -->
+              <BinaryNode type='COMMARIGHT' start='16' end='37'>
+                <!-- BinaryNode lhs -->
+                <UnaryNode type='YIELD' start='16' end='25'>
+                  <!-- UnaryNode Expression -->
+                  <BinaryNode type='ASSIGN' start='22' end='25'>
+                    <isAssignment/>
+                    <!-- BinaryNode lhs -->
+                    <IdentNode start='22' end='23'>
+                      <name>a</name>
+                    </IdentNode>
+                    <!-- BinaryNode rhs -->
+                    <IdentNode start='24' end='25'>
+                      <name>b</name>
+                    </IdentNode>
+                  </BinaryNode>
+                </UnaryNode>
+                <!-- BinaryNode rhs -->
+                <UnaryNode type='YIELD_STAR' start='27' end='37'>
+                  <!-- UnaryNode Expression -->
+                  <BinaryNode type='ASSIGN' start='34' end='37'>
+                    <isAssignment/>
+                    <!-- BinaryNode lhs -->
+                    <IdentNode start='34' end='35'>
+                      <name>c</name>
+                    </IdentNode>
+                    <!-- BinaryNode rhs -->
+                    <IdentNode start='36' end='37'>
+                      <name>d</name>
+                    </IdentNode>
+                  </BinaryNode>
+                </UnaryNode>
+              </BinaryNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='39' end='40'>
+                <name>e</name>
+              </IdentNode>
+            </BinaryNode>
+          </ExpressionStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

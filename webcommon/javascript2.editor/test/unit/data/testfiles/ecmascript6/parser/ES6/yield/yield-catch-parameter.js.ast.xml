@@ -1,0 +1,36 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='24'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='23'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='23'>
+      <Block start='0' end='23'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <TryNode start='0' end='23'>
+          <Block start='4' end='6'>
+            <!-- Block Statements -->
+          </Block>
+          <Block start='21' end='23'>
+            <isCatchBlock/>
+            <isSynthetic/>
+            <!-- Block Statements -->
+            <CatchNode start='7' end='23'>
+              <IdentNode start='14' end='19'>
+                <name>yield</name>
+                <isFutureStrictName/>
+                <isInitializedHere/>
+              </IdentNode>
+              <Block start='21' end='23'>
+                <!-- Block Statements -->
+              </Block>
+            </CatchNode>
+          </Block>
+        </TryNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

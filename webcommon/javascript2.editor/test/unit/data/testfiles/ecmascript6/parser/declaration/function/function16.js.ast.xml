@@ -1,0 +1,91 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='110'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='110'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='$H' start='0' end='109'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='11'>
+        <name>$H</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='$H' kind='NORMAL' start='0' end='109'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='12' end='18'>
+          <name>object</name>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='20' end='107'>
+          <isFunctionBody/>
+          <isTerminal/>
+          <!-- Block Statements -->
+          <IfNode start='24' end='80'>
+            <BinaryNode type='AND' start='28' end='64'>
+              <isLogical/>
+              <!-- BinaryNode lhs -->
+              <JoinPredecessorExpression start='28' end='34'>
+                <IdentNode start='28' end='34'>
+                  <name>object</name>
+                </IdentNode>
+              </JoinPredecessorExpression>
+              <!-- BinaryNode rhs -->
+              <JoinPredecessorExpression start='38' end='64'>
+                <BinaryNode type='EQ' start='38' end='64'>
+                  <isComparison/>
+                  <!-- BinaryNode lhs -->
+                  <AccessNode property='constructor' start='38' end='56'>
+                    <!-- AccessNode Base -->
+                    <IdentNode start='38' end='44'>
+                      <name>object</name>
+                    </IdentNode>
+                  </AccessNode>
+                  <!-- BinaryNode rhs -->
+                  <IdentNode start='60' end='64'>
+                    <name>Hash</name>
+                  </IdentNode>
+                </BinaryNode>
+              </JoinPredecessorExpression>
+            </BinaryNode>
+            <Block start='66' end='80'>
+              <isSynthetic/>
+              <isTerminal/>
+              <!-- Block Statements -->
+              <ReturnNode start='66' end='80'>
+                <IdentNode start='73' end='79'>
+                  <name>object</name>
+                </IdentNode>
+              </ReturnNode>
+            </Block>
+          </IfNode>
+          <ReturnNode start='83' end='107'>
+            <UnaryNode type='NEW' start='90' end='106'>
+              <!-- UnaryNode Expression -->
+              <CallNode start='94' end='106'>
+                <isNew/>
+                <!-- CallNode Arguments -->
+                <IdentNode start='99' end='105'>
+                  <name>object</name>
+                </IdentNode>
+                <!-- CallNode Function -->
+                <IdentNode start='94' end='98'>
+                  <name>Hash</name>
+                </IdentNode>
+              </CallNode>
+            </UnaryNode>
+          </ReturnNode>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+    <EmptyNode start='109' end='110'>
+    </EmptyNode>
+  </Block>
+</FunctionNode>

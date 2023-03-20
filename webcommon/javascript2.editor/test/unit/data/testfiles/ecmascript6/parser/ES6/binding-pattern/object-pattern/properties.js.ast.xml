@@ -1,0 +1,120 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='32'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='31'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='a' start='4' end='6'>
+      <isBlockScoped/>
+      <isLet/>
+      <isDestructuring/>
+    </VarNode>
+    <VarNode name='b' start='4' end='8'>
+      <isBlockScoped/>
+      <isLet/>
+      <isDestructuring/>
+    </VarNode>
+    <VarNode name='d' start='4' end='14'>
+      <isBlockScoped/>
+      <isLet/>
+      <isDestructuring/>
+    </VarNode>
+    <VarNode name='f' start='4' end='18'>
+      <isBlockScoped/>
+      <isLet/>
+      <isDestructuring/>
+    </VarNode>
+    <VarNode name='h' start='4' end='27'>
+      <isBlockScoped/>
+      <isLet/>
+      <isDestructuring/>
+    </VarNode>
+    <ExpressionStatement start='4' end='31'>
+      <BinaryNode type='ASSIGN' start='4' end='31'>
+        <isAssignment/>
+        <!-- BinaryNode lhs -->
+        <ObjectNode start='4' end='29'>
+          <!-- ObjectNode Elements -->
+          <PropertyNode name='a' start='5' end='6'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='5' end='6'>
+              <name>a</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <IdentNode start='5' end='6'>
+              <name>a</name>
+            </IdentNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+          <PropertyNode name='b' start='7' end='10'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='7' end='8'>
+              <name>b</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <BinaryNode type='ASSIGN' start='7' end='10'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <IdentNode start='7' end='8'>
+                <name>b</name>
+              </IdentNode>
+              <!-- BinaryNode rhs -->
+              <NumberLiteralNode value='0' start='9' end='10'/>
+            </BinaryNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+          <PropertyNode name='c' start='11' end='14'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='11' end='12'>
+              <name>c</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <IdentNode start='13' end='14'>
+              <name>d</name>
+            </IdentNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+          <PropertyNode name='e' start='15' end='20'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='15' end='16'>
+              <name>e</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <BinaryNode type='ASSIGN' start='17' end='20'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <IdentNode start='17' end='18'>
+                <name>f</name>
+              </IdentNode>
+              <!-- BinaryNode rhs -->
+              <NumberLiteralNode value='0' start='19' end='20'/>
+            </BinaryNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+          <PropertyNode name='g' start='21' end='28'>
+            <isComputed/>
+            <!-- PropertyNode Key -->
+            <IdentNode start='22' end='23'>
+              <name>g</name>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <ArrayLiteralNode start='25' end='28'>
+              <IdentNode start='26' end='27'>
+                <name>h</name>
+              </IdentNode>
+            </ArrayLiteralNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+        </ObjectNode>
+        <!-- BinaryNode rhs -->
+        <NumberLiteralNode value='0' start='30' end='31'/>
+      </BinaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

@@ -1,0 +1,101 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='61'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='60'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='A' start='0' end='7'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='6' end='7'>
+        <name>A</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='A' start='0' end='60'>
+        <!-- ClassNode Heritage -->
+        <IdentNode start='16' end='17'>
+          <name>B</name>
+        </IdentNode>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='A' start='0' end='60'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='6' end='7'>
+            <name>A</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='A' kind='NORMAL' start='0' end='60'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <isSubclassConstructor/>
+            <!-- FunctionNode Parameters -->
+            <IdentNode start='0' end='60'>
+              <name>args</name>
+              <isRestParameter/>
+            </IdentNode>
+            <!-- FunctionNode Body -->
+            <Block start='0' end='60'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='0' end='60'>
+                <CallNode start='0' end='60'>
+                  <!-- CallNode Arguments -->
+                  <UnaryNode type='SPREAD_ARGUMENT' start='0' end='60'>
+                    <!-- UnaryNode Expression -->
+                    <IdentNode start='0' end='60'>
+                      <name>args</name>
+                      <isRestParameter/>
+                    </IdentNode>
+                  </UnaryNode>
+                  <!-- CallNode Function -->
+                  <IdentNode start='0' end='60'>
+                    <name>super</name>
+                    <isDirectSuppert/>
+                  </IdentNode>
+                </CallNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <PropertyNode name='X' start='24' end='58'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='24' end='25'>
+            <name>X</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='X' kind='NORMAL' start='24' end='58'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='28' end='52'>
+              <isFunctionBody/>
+              <isTerminal/>
+              <!-- Block Statements -->
+              <ReturnNode start='38' end='52'>
+                <AccessNode property='y' start='45' end='52'>
+                  <isSuper/>
+                  <!-- AccessNode Base -->
+                  <IdentNode start='45' end='50'>
+                    <name>super</name>
+                  </IdentNode>
+                </AccessNode>
+              </ReturnNode>
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

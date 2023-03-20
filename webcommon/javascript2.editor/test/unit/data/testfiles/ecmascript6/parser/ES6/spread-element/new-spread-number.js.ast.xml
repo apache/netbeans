@@ -1,0 +1,27 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='14'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='13'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='13'>
+      <UnaryNode type='NEW' start='0' end='12'>
+        <!-- UnaryNode Expression -->
+        <CallNode start='4' end='12'>
+          <isNew/>
+          <!-- CallNode Arguments -->
+          <UnaryNode type='SPREAD_ARGUMENT' start='6' end='11'>
+            <!-- UnaryNode Expression -->
+            <NumberLiteralNode value='0.5' start='9' end='11'/>
+          </UnaryNode>
+          <!-- CallNode Function -->
+          <IdentNode start='4' end='5'>
+            <name>f</name>
+          </IdentNode>
+        </CallNode>
+      </UnaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

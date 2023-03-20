@@ -1,0 +1,58 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='19'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='18'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='18'>
+      <Block start='0' end='18'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <ForNode start='0' end='18'>
+          <ObjectNode start='5' end='11'>
+            <!-- ObjectNode Elements -->
+            <PropertyNode name='x' start='6' end='7'>
+              <!-- PropertyNode Key -->
+              <IdentNode start='6' end='7'>
+                <name>x</name>
+                <isPropertyName/>
+              </IdentNode>
+              <!-- PropertyNode Value -->
+              <IdentNode start='6' end='7'>
+                <name>x</name>
+              </IdentNode>
+              <!-- PropertyNode Decorators -->
+            </PropertyNode>
+            <PropertyNode name='y' start='9' end='10'>
+              <!-- PropertyNode Key -->
+              <IdentNode start='9' end='10'>
+                <name>y</name>
+                <isPropertyName/>
+              </IdentNode>
+              <!-- PropertyNode Value -->
+              <IdentNode start='9' end='10'>
+                <name>y</name>
+              </IdentNode>
+              <!-- PropertyNode Decorators -->
+            </PropertyNode>
+          </ObjectNode>
+          <JoinPredecessorExpression start='0' end='0'>
+          </JoinPredecessorExpression>
+          <JoinPredecessorExpression start='15' end='16'>
+            <IdentNode start='15' end='16'>
+              <name>z</name>
+            </IdentNode>
+          </JoinPredecessorExpression>
+          <Block start='17' end='18'>
+            <isSynthetic/>
+            <!-- Block Statements -->
+            <EmptyNode start='17' end='18'>
+            </EmptyNode>
+          </Block>
+        </ForNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

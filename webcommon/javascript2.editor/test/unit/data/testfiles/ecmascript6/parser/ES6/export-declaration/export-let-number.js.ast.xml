@@ -1,0 +1,40 @@
+<FunctionNode name='export-let-number.js' kind='MODULE' start='0' end='20'>
+  <isProgram/>
+  <ExportNode start='0' end='19'>
+    <VarNode name='foo' start='11' end='18'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isLet/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='11' end='14'>
+        <name>foo</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <NumberLiteralNode value='1' start='17' end='18'/>
+    </VarNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='19'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='foo' start='11' end='18'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isLet/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='11' end='14'>
+        <name>foo</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <NumberLiteralNode value='1' start='17' end='18'/>
+    </VarNode>
+  </Block>
+</FunctionNode>

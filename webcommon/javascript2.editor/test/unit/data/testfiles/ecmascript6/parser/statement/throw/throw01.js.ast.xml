@@ -1,0 +1,16 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='8'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='8'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <isTerminal/>
+    <!-- Block Statements -->
+    <ThrowNode start='0' end='8'>
+      <IdentNode start='6' end='7'>
+        <name>x</name>
+      </IdentNode>
+    </ThrowNode>
+  </Block>
+</FunctionNode>

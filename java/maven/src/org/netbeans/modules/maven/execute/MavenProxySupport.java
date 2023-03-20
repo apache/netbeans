@@ -871,7 +871,6 @@ public class MavenProxySupport {
     }
     
     static class LineAndColumn {
-        int offset = -1;
         int line;
         int column;
 
@@ -884,7 +883,7 @@ public class MavenProxySupport {
     static class TagInfo {
         String tagName;
         LineAndColumn  startTag;
-        LineAndColumn  content;
+        String  content;
         LineAndColumn  endTag;
 
         public TagInfo(String tagName, LineAndColumn start) {
@@ -920,6 +919,10 @@ public class MavenProxySupport {
             super(entityReplacementMap);
         }
         
+        TextInfo getTextInfo() {
+            return textInfo;
+        }
+        
         @Override
         public int nextTag() throws XmlPullParserException, IOException {
             int t = super.nextTag(); 
@@ -943,9 +946,13 @@ public class MavenProxySupport {
             return new LineAndColumn(getLineNumber(), getColumnNumber());
         }
         
+        private StringBuilder tagText = new StringBuilder();
+        
         private int processToken(int token) {
-            
             switch (token) {
+                case XmlPullParser.TEXT:
+                    tagText.append(getText());
+                    break;
                 case XmlPullParser.END_TAG:
                     String en = getName();
                     if (state >= PROXY) {
@@ -956,8 +963,9 @@ public class MavenProxySupport {
                             break;
                         }
                         if (!tagStack.isEmpty()) {
-                            tagStack.getLast().endTag = startPos();
-                            tagStack.removeLast();
+                            TagInfo ti = tagStack.removeLast();
+                            ti.content = tagText.toString().trim();
+                            ti.endTag = startPos();
                         }
                     } else if (state == PROXIES && TAG_PROXIES.equals(en)) {
                         state = UNKNOWN;
@@ -967,6 +975,7 @@ public class MavenProxySupport {
                     break;
                 case XmlPullParser.START_TAG:
                     String n = getName();
+                    tagText = new StringBuilder();
                     if (state == UNKNOWN) {
                         if (TAG_PROXIES.equals(n)) {
                             state = 1;

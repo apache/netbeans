@@ -300,6 +300,7 @@ public class FormatVisitor extends DefaultVisitor {
             if (formatTokens.get(formatTokens.size() - 1).getId() == FormatToken.Kind.WHITESPACE_INDENT
                     || path.get(1) instanceof ArrayElement
                     || path.get(1) instanceof FormalParameter
+                    || path.get(1) instanceof MatchArm
                     || path.get(1) instanceof CastExpression) {
                 // when the array is on the beginning of the line, indent items in normal way
                 delta = options.indentArrayItems;

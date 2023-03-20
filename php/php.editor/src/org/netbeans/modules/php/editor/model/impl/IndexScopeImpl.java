@@ -128,6 +128,11 @@ class IndexScopeImpl extends ScopeImpl implements IndexScope {
         return indexScope.findClasses(className);
     }
 
+    static List<? extends EnumScope> getEnums(final QualifiedName  enumName, ModelElement elem) {
+        final IndexScope indexScope = ModelUtils.getIndexScope(elem);
+        return indexScope.findEnums(enumName);
+    }
+
     static List<? extends InterfaceScope> getInterfaces(final QualifiedName  ifaceName, ModelElement elem) {
         final IndexScope indexScope = ModelUtils.getIndexScope(elem);
         return indexScope.findInterfaces(ifaceName);

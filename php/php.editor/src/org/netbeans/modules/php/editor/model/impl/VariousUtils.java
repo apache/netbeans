@@ -746,6 +746,9 @@ public final class VariousUtils {
                                     if (inScope instanceof ClassScope) {
                                         String clsName = ((ClassScope) inScope).getName();
                                         newRecentTypes.addAll(IndexScopeImpl.getClasses(QualifiedName.create(clsName), varScope));
+                                    } else if (inScope instanceof EnumScope) {
+                                        String enumName = ((EnumScope) inScope).getName();
+                                        newRecentTypes.addAll(IndexScopeImpl.getEnums(QualifiedName.create(enumName), varScope));
                                     } else if (inScope instanceof TraitScope) {
                                         String traitName = ((TraitScope) inScope).getName();
                                         newRecentTypes.addAll(IndexScopeImpl.getTraits(QualifiedName.create(traitName), varScope));

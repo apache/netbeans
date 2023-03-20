@@ -919,11 +919,11 @@
 				"codeicon": "cloud"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/compartment_nbcode.svg",
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/compartment.svg",
 				"codeicon": "archive"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/database_nbcode.svg",
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/database.svg",
 				"codeicon": "database"
 			},
 			{
@@ -985,16 +985,32 @@
 				"color": "charts.red"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/db/resources/connection_nbcode.svg",
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/connection.gif",
 				"codeicon": "database"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/db/resources/connectionDisconnected_nbcode.svg",
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/connectionDisconnected.gif",
 				"codeicon": "debug-disconnect"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/db/resources/folder_nbcode.svg",
-				"codeicon": ""
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/column.gif",
+				"codeicon": "layout-centered"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/table.gif",
+				"codeicon": "table"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/schema.png",
+				"codeicon": "layers-dot"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/folder.svg",
+				"codeicon": "folder"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/view.gif",
+				"codeicon": "open-preview"
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/yellow_dot.svg",

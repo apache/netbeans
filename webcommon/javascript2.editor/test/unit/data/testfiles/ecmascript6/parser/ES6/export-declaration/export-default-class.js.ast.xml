@@ -24,12 +24,12 @@
   <ExportNode start='0' end='23'>
     <ClassNode start='15' end='23'>
       <!-- ClassNode Constructor -->
-      <PropertyNode name='constructor' start='15' end='23'>
-        <!-- PropertyNode Key -->
+      <ClassElement name='constructor' start='15' end='23'>
+        <!-- ClassElement Key -->
         <IdentNode start='15' end='23'>
           <name>constructor</name>
         </IdentNode>
-        <!-- PropertyNode Value -->
+        <!-- ClassElement Value -->
         <FunctionNode name='constructor' kind='NORMAL' start='15' end='23'>
           <isAnonymous/>
           <isClassConstructor/>
@@ -41,8 +41,8 @@
             <!-- Block Statements -->
           </Block>
         </FunctionNode>
-        <!-- PropertyNode Decorators -->
-      </PropertyNode>
+        <!-- ClassElement Decorators -->
+      </ClassElement>
       <!-- ClassNode Elements -->
       <!-- ClassNode Decorators -->
     </ClassNode>
@@ -65,12 +65,12 @@
       <!-- VarNode Init -->
       <ClassNode start='15' end='23'>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='constructor' start='15' end='23'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='constructor' start='15' end='23'>
+          <!-- ClassElement Key -->
           <IdentNode start='15' end='23'>
             <name>constructor</name>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='constructor' kind='NORMAL' start='15' end='23'>
             <isAnonymous/>
             <isClassConstructor/>
@@ -82,8 +82,8 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
         <!-- ClassNode Decorators -->
       </ClassNode>

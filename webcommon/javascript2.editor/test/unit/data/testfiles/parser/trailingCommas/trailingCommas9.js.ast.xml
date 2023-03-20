@@ -40,12 +40,12 @@
       <!-- VarNode Init -->
       <ClassNode ident='Test' start='0' end='55'>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='Test' start='0' end='55'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='Test' start='0' end='55'>
+          <!-- ClassElement Key -->
           <IdentNode start='6' end='10'>
             <name>Test</name>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='Test' kind='NORMAL' start='0' end='55'>
             <isClassConstructor/>
             <isMethod/>
@@ -57,16 +57,16 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
-        <PropertyNode name='method' start='22' end='53'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='method' start='22' end='53'>
+          <!-- ClassElement Key -->
           <IdentNode start='22' end='28'>
             <name>method</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='method' kind='NORMAL' start='22' end='53'>
             <isMethod/>
             <isNamedFunctionExpression/>
@@ -83,8 +83,8 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Decorators -->
       </ClassNode>
     </VarNode>

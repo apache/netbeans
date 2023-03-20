@@ -39,15 +39,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.oracle.js.parser;
 
 import com.oracle.js.parser.ErrorManager.PrintWriterErrorManager;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.LexicalContext;
-import org.junit.Ignore;
 
-@Ignore
 public class ManualTest {
 
     public static void main(String[] args) {
@@ -62,7 +59,13 @@ public class ManualTest {
 //        Source source = Source.sourceFor("dummy.js", "async (a,b) => { return 'Welt';}");
 //        Source source = Source.sourceFor("dummy.js", "var a = import('test');");
 //        Source source = Source.sourceFor("dummy.js", "try {} catch (e) {}");
-        Source source = Source.sourceFor("dummy.js", "function a() {}; async function b() {}; class x { y(){} async z(){} }");
+//        Source source = Source.sourceFor("dummy.js", "function a() {}; async function b() {}; class x { y(){} async z(){} }");
+        Source source = Source.sourceFor("dummy.js", "class Polygon {\n" +
+"  constructor(height, width) {\n" +
+"    this.height = height;\n" +
+"    this.width = width;\n" +
+"  }\n" +
+"} ");
         ScriptEnvironment.Builder builder = ScriptEnvironment.builder();
         Parser parser = new Parser(
                 builder.emptyStatements(true).ecmacriptEdition(13).jsx(true).build(),

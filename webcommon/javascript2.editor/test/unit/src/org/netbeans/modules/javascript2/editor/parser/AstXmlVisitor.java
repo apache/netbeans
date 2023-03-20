@@ -37,6 +37,7 @@ import com.oracle.js.parser.ir.UnaryNode;
 import com.oracle.js.parser.ir.VarNode;
 import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import com.oracle.js.parser.Token;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.JsxAttributeNode;
 import com.oracle.js.parser.ir.JsxElementNode;
 import java.util.List;
@@ -463,8 +464,6 @@ public class AstXmlVisitor extends NodeVisitor {
         return false;
     }
 
-    
-    
     @Override
     public boolean enterVarNode(VarNode node) {
         createOpenTag(node, createTagAttribute("name", node.getName().getName()));
@@ -486,5 +485,20 @@ public class AstXmlVisitor extends NodeVisitor {
         return false;
     }
 
-    
+
+    @Override
+    public boolean enterClassElement(ClassElement node) {
+        createOpenTag(node, createTagAttribute("name", node.getKeyName()));
+        processAttribute(node.isComputed(), "isComputed");
+        processAttribute(node.isStatic(), "isStatic");
+        processAttribute(node);
+
+        processWithComment(node.getKey(), "ClassElement Key");
+        processWithComment(node.getValue(), "ClassElement Value");
+        processWithComment(node.getGetter(), "ClassElement Getter");
+        processWithComment(node.getSetter(), "ClassElement Setter");
+        processWithComment(node.getDecorators(), "ClassElement Decorators");
+        createCloseTag(node);
+        return false;
+    }
 }

@@ -44,13 +44,13 @@
           <name>B</name>
         </IdentNode>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='constructor' start='24' end='64'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='constructor' start='24' end='64'>
+          <!-- ClassElement Key -->
           <IdentNode start='24' end='35'>
             <name>constructor</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='constructor' kind='NORMAL' start='24' end='64'>
             <isClassConstructor/>
             <isMethod/>
@@ -67,8 +67,8 @@
               </ExpressionStatement>
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
         <!-- ClassNode Decorators -->
       </ClassNode>

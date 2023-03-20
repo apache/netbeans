@@ -78,12 +78,12 @@
       <!-- VarNode Init -->
       <ClassNode ident='MyClass' start='0' end='30'>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='MyClass' start='0' end='30'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='MyClass' start='0' end='30'>
+          <!-- ClassElement Key -->
           <IdentNode start='19' end='26'>
             <name>MyClass</name>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='MyClass' kind='NORMAL' start='0' end='30'>
             <isClassConstructor/>
             <isMethod/>
@@ -95,8 +95,8 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
         <!-- ClassNode Decorators -->
         <IdentNode start='1' end='11'>

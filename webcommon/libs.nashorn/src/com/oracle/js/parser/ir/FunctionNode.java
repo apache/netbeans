@@ -73,6 +73,8 @@ public final class FunctionNode extends LexicalContextExpression implements Flag
         GENERATOR,
         /** a module function */
         MODULE,
+        /** a class field initializer */
+        CLASS_FIELD_INITIALIZER,
     }
 
     /** Source of entity. */

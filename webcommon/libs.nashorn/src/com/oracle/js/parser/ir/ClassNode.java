@@ -53,8 +53,8 @@ import com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor;
 public class ClassNode extends Expression {
     private final IdentNode ident;
     private final Expression classHeritage;
-    private final PropertyNode constructor;
-    private final List<PropertyNode> classElements;
+    private final ClassElement constructor;
+    private final List<ClassElement> classElements;
     private final List<Expression> decorators;
     private final int line;
 
@@ -65,8 +65,8 @@ public class ClassNode extends Expression {
      * @param token token
      * @param finish finish
      */
-    public ClassNode(final int line, final long token, final int finish, final IdentNode ident, final Expression classHeritage, final PropertyNode constructor,
-                    final List<PropertyNode> classElements, final List<Expression> decorators) {
+    public ClassNode(final int line, final long token, final int finish, final IdentNode ident, final Expression classHeritage, final ClassElement constructor,
+                    final List<ClassElement> classElements, final List<Expression> decorators) {
         super(token, finish);
         this.line = line;
         this.ident = ident;
@@ -76,8 +76,8 @@ public class ClassNode extends Expression {
         this.decorators = decorators;
     }
 
-    private ClassNode(final ClassNode classNode, final IdentNode ident, final Expression classHeritage, final PropertyNode constructor,
-                    final List<PropertyNode> classElements, final List<Expression> decorators) {
+    private ClassNode(final ClassNode classNode, final IdentNode ident, final Expression classHeritage, final ClassElement constructor,
+                    final List<ClassElement> classElements, final List<Expression> decorators) {
         super(classNode);
         this.line = classNode.getLineNumber();
         this.ident = ident;
@@ -118,11 +118,11 @@ public class ClassNode extends Expression {
     /**
      * Get the constructor method definition.
      */
-    public PropertyNode getConstructor() {
+    public ClassElement getConstructor() {
         return constructor;
     }
 
-    private ClassNode setConstructor(final PropertyNode constructor) {
+    private ClassNode setConstructor(final ClassElement constructor) {
         if (this.constructor == constructor) {
             return this;
         }
@@ -132,11 +132,11 @@ public class ClassNode extends Expression {
     /**
      * Get method definitions except the constructor.
      */
-    public List<PropertyNode> getClassElements() {
+    public List<ClassElement> getClassElements() {
         return Collections.unmodifiableList(classElements);
     }
 
-    private ClassNode setClassElements(final List<PropertyNode> classElements) {
+    private ClassNode setClassElements(final List<ClassElement> classElements) {
         if (this.classElements == classElements) {
             return this;
         }
@@ -169,7 +169,7 @@ public class ClassNode extends Expression {
         if (visitor.enterClassNode(this)) {
             IdentNode newIdent = ident == null ? null : (IdentNode) ident.accept(visitor);
             Expression newClassHeritage = classHeritage == null ? null : (Expression) classHeritage.accept(visitor);
-            PropertyNode newConstructor = constructor == null ? null : (PropertyNode) constructor.accept(visitor);
+            ClassElement newConstructor = constructor == null ? null : (ClassElement) constructor.accept(visitor);
             return visitor.leaveClassNode(setIdent(newIdent).setClassHeritage(newClassHeritage).setConstructor(newConstructor).setClassElements(Node.accept(visitor, classElements)).setDecorators(Node.accept(visitor, decorators)));
         }
 

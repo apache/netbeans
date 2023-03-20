@@ -3094,6 +3094,10 @@ public class AstTest extends CslTestBase {
     public void testIssue269061() throws Exception {
         checkAstResult("testfiles/parser/issue269061.js");
     }
+
+    public void testGH4262() throws Exception {
+        checkAstResult("testfiles/structure/issueGH4262.js");
+    }
     
     private void checkAstResult(String relFilePath) throws Exception {
         FileObject testFO = getTestFile(relFilePath);

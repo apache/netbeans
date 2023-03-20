@@ -61,6 +61,7 @@
         <file>src/com/oracle/js/parser/ir/CallNode.java</file>
         <file>src/com/oracle/js/parser/ir/CaseNode.java</file>
         <file>src/com/oracle/js/parser/ir/CatchNode.java</file>
+        <file>src/com/oracle/js/parser/ir/ClassElement.java</file>
         <file>src/com/oracle/js/parser/ir/ClassNode.java</file>
         <file>src/com/oracle/js/parser/ir/ContinueNode.java</file>
         <file>src/com/oracle/js/parser/ir/DebuggerNode.java</file>
@@ -123,7 +124,7 @@
         <file>test/unit/src/com/oracle/js/parser/DumpingVisitor.java</file>
         <file>test/unit/src/com/oracle/js/parser/ManualTest.java</file>
         <file>test/unit/src/com/oracle/js/parser/ParserTest.java</file>
-        <license ref="UPL" />
+        <license ref="UPL-graaljs" />
         <comment>This JS parser is a fork from graaljs.</comment>
     </fileset>
 </licenseinfo>

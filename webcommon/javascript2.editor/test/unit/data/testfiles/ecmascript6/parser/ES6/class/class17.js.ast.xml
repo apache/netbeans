@@ -41,12 +41,12 @@
         <!-- ClassNode Heritage -->
         <NumberLiteralNode value='0' start='24' end='25'/>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='A' start='8' end='27'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='A' start='8' end='27'>
+          <!-- ClassElement Key -->
           <IdentNode start='14' end='15'>
             <name>A</name>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='A' kind='NORMAL' start='8' end='27'>
             <isClassConstructor/>
             <isMethod/>
@@ -80,8 +80,8 @@
               </ExpressionStatement>
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
         <!-- ClassNode Decorators -->
       </ClassNode>

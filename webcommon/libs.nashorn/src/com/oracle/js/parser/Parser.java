@@ -117,6 +117,7 @@ import com.oracle.js.parser.ir.BreakNode;
 import com.oracle.js.parser.ir.CallNode;
 import com.oracle.js.parser.ir.CaseNode;
 import com.oracle.js.parser.ir.CatchNode;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.ContinueNode;
 import com.oracle.js.parser.ir.DebuggerNode;
@@ -704,6 +705,10 @@ loop:
         return env.ecmascriptEdition >= 11;
     }
 
+    private boolean isAtLeastES13() {
+        return env.ecmascriptEdition >= 13;
+    }
+
     private static boolean isArguments(final String name) {
         return ARGUMENTS_NAME.equals(name);
     }
@@ -1288,8 +1293,8 @@ loop:
 
             expect(LBRACE);
 
-            PropertyNode constructor = null;
-            ArrayList<PropertyNode> classElements = new ArrayList<>();
+            ClassElement constructor = null;
+            ArrayList<ClassElement> classElements = new ArrayList<>();
             Map<ClassElementKey, Integer> keyToIndexMap = new HashMap<>();
             for (;;) {
                 if (type == SEMICOLON) {
@@ -1323,7 +1328,7 @@ loop:
                     generator = true;
                     next();
                 }
-                PropertyNode classElement = classElement(isStatic, classHeritage != null, generator, async, methodDecorators);
+                ClassElement classElement = classElement(isStatic, classHeritage != null, generator, async, methodDecorators);
                 if (classElement.isComputed()) {
                     classElements.add(classElement);
                 } else if (!classElement.isStatic() && classElement.getKeyName().equals("constructor")) {
@@ -1343,7 +1348,7 @@ loop:
                         keyToIndexMap.put(key, classElements.size());
                         classElements.add(classElement);
                     } else {
-                        final PropertyNode existingProperty = classElements.get(existing);
+                        final ClassElement existingProperty = classElements.get(existing);
 
                         final Expression   value  = classElement.getValue();
                         final FunctionNode getter = classElement.getGetter();
@@ -1377,7 +1382,7 @@ loop:
         }
     }
 
-    private PropertyNode createDefaultClassConstructor(int classLineNumber, long classToken, long lastToken, IdentNode className, boolean subclass) {
+    private ClassElement createDefaultClassConstructor(int classLineNumber, long classToken, long lastToken, IdentNode className, boolean subclass) {
         final int ctorFinish = finish;
         final List<Statement> statements;
         final List<IdentNode> parameters;
@@ -1411,7 +1416,7 @@ loop:
             function.setFlag(FunctionNode.IS_ANONYMOUS);
         }
 
-        PropertyNode constructor = new PropertyNode(classToken, ctorFinish, ctorName, createFunctionNode(
+        ClassElement constructor = ClassElement.createDefaultConstructor(classToken, finish, ctorName, createFunctionNode(
                         function,
                         classToken,
                         ctorName,
@@ -1419,29 +1424,30 @@ loop:
                         FunctionNode.Kind.NORMAL,
                         classLineNumber,
                         body
-                        ), null, null, false, false, Collections.emptyList());
+                        ));
         return constructor;
     }
 
-    private PropertyNode classElement(boolean isStatic, boolean subclass, boolean generator, boolean async, List<Expression> decorators) {
+    private ClassElement classElement(boolean isStatic, boolean subclass, boolean generator, boolean async, List<Expression> decorators) {
         final long methodToken = token;
         final int methodLine = line;
         final boolean computed = type == LBRACKET;
         final boolean isIdent = type == IDENT;
-        Expression propertyName = propertyName();
+        final boolean isBlock = type == LBRACE;
+        Expression propertyName = isBlock ? null : propertyName();
         int flags = FunctionNode.IS_METHOD;
-        if (!computed) {
+        if (!computed && !isBlock) {
             final String name = ((PropertyKey)propertyName).getPropertyName();
             if (!generator && isIdent && type != LPAREN && name.equals("get")
                     && (!isAtLeastES7() || isPropertyName(token))) {
                 PropertyFunction methodDefinition = propertyGetterFunction(methodToken, methodLine, flags);
                 verifyAllowedMethodName(methodDefinition.key, isStatic, methodDefinition.computed, generator, async, true);
-                return new PropertyNode(methodToken, finish, methodDefinition.key, null, methodDefinition.functionNode, null, isStatic, methodDefinition.computed, decorators);
+                return ClassElement.createAccessor(methodToken, finish, methodDefinition.key, methodDefinition.functionNode, null, decorators, isStatic, methodDefinition.computed);
             } else if (!generator && isIdent && type != LPAREN && name.equals("set")
                     && (!isAtLeastES7() || isPropertyName(token))) {
                 PropertyFunction methodDefinition = propertySetterFunction(methodToken, methodLine, flags);
                 verifyAllowedMethodName(methodDefinition.key, isStatic, methodDefinition.computed, generator, async, true);
-                return new PropertyNode(methodToken, finish, methodDefinition.key, null, null, methodDefinition.functionNode, isStatic, methodDefinition.computed, decorators);
+                return ClassElement.createAccessor(methodToken, finish, methodDefinition.key, null,  methodDefinition.functionNode, decorators, isStatic, methodDefinition.computed);
             } else {
                 if (!isStatic && !generator && name.equals("constructor")) {
                     flags |= FunctionNode.IS_CLASS_CONSTRUCTOR;
@@ -1456,7 +1462,9 @@ loop:
             }
         }
         // ClassFieldInitializer
-        if (isAtLeastES7() && type != LPAREN && !async) {
+        if (isAtLeastES13() && type == LBRACE) {
+            return staticInitializer(lineOffset, methodToken);
+        } else if (isAtLeastES13() && type != LPAREN && !async) {
             // XXX decorators on properties
             Expression assignment = null;
             if (type == ASSIGN) {
@@ -1464,10 +1472,14 @@ loop:
                 assignment = assignmentExpression(false);
             }
             endOfLine();
-            return new PropertyNode(methodToken, finish, propertyName, assignment, null, null, isStatic, computed, decorators);
+            return ClassElement.createField(methodToken, finish, propertyName, assignment, decorators, isStatic, computed);
         }
         PropertyFunction methodDefinition = propertyMethodFunction(propertyName, methodToken, methodLine, generator, false, flags, computed);
-        return new PropertyNode(methodToken, finish, methodDefinition.key, methodDefinition.functionNode, null, null, isStatic, computed, decorators);
+        if((flags & FunctionNode.IS_CLASS_CONSTRUCTOR) == FunctionNode.IS_CLASS_CONSTRUCTOR) {
+            return ClassElement.createDefaultConstructor(methodToken, finish, methodDefinition.key, methodDefinition.functionNode);
+        } else {
+            return ClassElement.createMethod(methodToken, finish, methodDefinition.key, methodDefinition.functionNode, decorators, isStatic, computed);
+        }
     }
 
     /**
@@ -1508,6 +1520,30 @@ loop:
                 throw error(AbstractParser.message("static.prototype.method"), key.getToken());
             }
         }
+    }
+
+    /**
+     * Parse <code>{ ClassStaticBlockBody }</code>.
+     */
+    private ClassElement staticInitializer(int lineNumber, long staticToken) {
+        assert type == LBRACE;
+        //int functionFlags = FunctionNode.IS_METHOD | FunctionNode.IS_CLASS_FIELD_INITIALIZER | FunctionNode.IS_ANONYMOUS;
+        final IdentNode ident = new IdentNode(staticToken, Token.descPosition(staticToken), ":initializer");
+        ParserContextFunctionNode functionNode = createParserContextFunctionNode(ident, staticToken, FunctionNode.Kind.CLASS_FIELD_INITIALIZER, lineNumber, Collections.<IdentNode>emptyList());
+        functionNode.setFlag(FunctionNode.IS_ANONYMOUS);
+        lc.push(functionNode);
+        Block bodyBlock;
+        try {
+            bodyBlock = functionBody(functionNode);
+        } finally {
+            lc.pop(functionNode);
+        }
+
+        // It is a Syntax Error if ContainsArguments of Initializer is true.
+        assert functionNode.getFlag(FunctionNode.USES_ARGUMENTS) == 0;
+
+        FunctionNode function = createFunctionNode(functionNode, staticToken, ident, Collections.emptyList(), functionNode.getKind(), lineNumber, bodyBlock);
+        return ClassElement.createStaticInitializer(staticToken, finish, function);
     }
 
     private boolean isPropertyName(long token) {

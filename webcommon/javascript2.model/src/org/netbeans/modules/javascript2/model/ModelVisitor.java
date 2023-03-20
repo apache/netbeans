@@ -45,6 +45,7 @@ import com.oracle.js.parser.ir.UnaryNode;
 import com.oracle.js.parser.ir.VarNode;
 import com.oracle.js.parser.ir.WithNode;
 import com.oracle.js.parser.TokenType;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.ExportClauseNode;
 import com.oracle.js.parser.ir.ExportNode;
 import com.oracle.js.parser.ir.ExportSpecifierNode;
@@ -1002,7 +1003,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         Identifier newIdentifier = null;
         if (decNameOffset.getLength() == 0) {
             // the function name is not between function and (
-            if (lastVisited instanceof PropertyNode && fn.getKind() != FunctionNode.Kind.ARROW) {
+            if (lastVisited instanceof PropertyNode && fn.getKind() != FunctionNode.Kind.ARROW && fn.getKind() != FunctionNode.Kind.CLASS_FIELD_INITIALIZER) {
                 PropertyNode pNode = (PropertyNode)lastVisited;
                 newIdentifier = new Identifier(pNode.getKeyName(), getOffsetRange(pNode.getKey()));
             } else if ((lastVisited instanceof VarNode) && fn.isAnonymous()) {
@@ -2179,6 +2180,148 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         }
         return super.enterPropertyNode(propertyNode);
     }
+
+    @Override
+    public boolean enterClassElement(ClassElement classElement) {
+        final Expression key = classElement.getKey();
+        final Expression value = classElement.getValue();
+        List<Expression> decorators = classElement.getDecorators();
+        if (decorators != null && !decorators.isEmpty()) {
+            for (Expression decorator : decorators) {
+                if (decorator instanceof IdentNode) {
+                    // in such case, this is probaly a function
+                    addOccurence((IdentNode)decorator, false, true);
+                } else {
+                    decorator.accept(this);
+                }
+            }
+        }
+        if ((key instanceof IdentNode || key instanceof LiteralNode)
+                && !(value instanceof ObjectNode
+                || value instanceof FunctionNode)
+                && !classElement.isComputed()) {
+            final JsObjectImpl parent = modelBuilder.getCurrentObject();
+            Identifier name = null;
+            if (key instanceof IdentNode) {
+                name = ModelElementFactory.create(parserResult, (IdentNode)key);
+            } else if (key instanceof LiteralNode) {
+                name = ModelElementFactory.create(parserResult, (LiteralNode)key);
+            }
+            if (name != null) {
+                if (key instanceof IdentNode && value instanceof IdentNode) {
+                    IdentNode iKey = (IdentNode)key;
+                    IdentNode iValue = (IdentNode)value;
+                    if (iKey.getName().equals(iValue.getName()) && iKey.getStart() == iValue.getStart() && iKey.getFinish() == iValue.getFinish()) {
+                        // it's object initializer shorthand property names
+                        // (ES6) var o = { a, b, c }; The variables a, b and c has to exists and properties are references to the orig var
+                        JsObject variable = ModelUtils.getScopeVariable(modelBuilder.getCurrentDeclarationScope(), name.getName());
+                        if (variable != null) {
+                            parent.addProperty(variable.getName(), variable);
+                            variable.addOccurrence(name.getOffsetRange());
+                            // don't continue.
+                            return false;
+                        }
+                    }
+                }
+                JsObjectImpl property = (JsObjectImpl)parent.getProperty(name.getName());
+                if (property == null) {
+                    if (parent.getJSKind() == JsElement.Kind.OBJECT_LITERAL || parent.getJSKind() == JsElement.Kind.ANONYMOUS_OBJECT) {
+                        property = ModelElementFactory.create(parserResult, classElement, name, modelBuilder, true);
+                    } else {
+                        // the object literal was not created before property node,
+                        // so it can be destructive assignment on the left side
+
+                        // find the block node to decide whether's the property node are not
+                        // parameters defined via destructive assignment
+                        // case function drawES6Chart({size = 'big', cords = { x: 0, y: 0 }, radius = 25} = test) {}
+                        int index = 1;
+                        Node node = getPreviousFromPath(index);
+                        BinaryNode bNode = null;
+                        ObjectNode oNode = null;
+                        while (index < getPath().size() && !(node instanceof Block)) {
+                            if (bNode == null && node instanceof BinaryNode) {
+                                bNode = (BinaryNode)node;
+                            } else if (oNode == null && node instanceof ObjectNode) {
+                                oNode = (ObjectNode)node;
+                            }
+                            node = getPreviousFromPath(++index);
+                        }
+                        boolean isDestructiveParam = false;
+                        if (node instanceof Block) {
+                            Block block = (Block)node;
+                            if (block.isParameterBlock() && oNode != null && bNode != null && bNode.lhs().equals(oNode) ) {
+                                // we are in parameters defined via destructive assignment
+                                JsFunction currentFnImpl = modelBuilder.getCurrentDeclarationFunction();
+                                property = (JsObjectImpl)currentFnImpl.getParameter(name.getName());
+                                isDestructiveParam = true;
+                            }
+                        }
+                        if (!isDestructiveParam) {
+                            property = ModelElementFactory.create(parserResult, classElement, name, modelBuilder, true);
+                        }
+                    }
+                } else {
+                    // The property can be already defined, via a usage before declaration (see testfiles/model/simpleObject.js - called property)
+                    JsObjectImpl newProperty = ModelElementFactory.create(parserResult, classElement, name, modelBuilder, true);
+                    if (newProperty != null) {
+                        newProperty.addOccurrence(property.getDeclarationName().getOffsetRange());
+                        for(Occurrence occurrence : property.getOccurrences()) {
+                            newProperty.addOccurrence(occurrence.getOffsetRange());
+                        }
+                        property = newProperty;
+                    }
+                }
+
+                if (property != null) {
+//                    if (propertyNode.getGetter() != null) {
+//                        FunctionNode getter = ((FunctionNode)((ReferenceNode)propertyNode.getGetter()).getReference());
+//                        property.addOccurrence(new OffsetRange(getter.getIdent().getStart(), getter.getIdent().getFinish()));
+//                    }
+//
+//                    if (propertyNode.getSetter() != null) {
+//                        FunctionNode setter = ((FunctionNode)((ReferenceNode)propertyNode.getSetter()).getReference());
+//                        property.addOccurrence(new OffsetRange(setter.getIdent().getStart(), setter.getIdent().getFinish()));
+//                    }
+                    property.getParent().addProperty(name.getName(), property);
+                    property.setDeclared(true);
+                    if(key instanceof IdentNode
+                            && ((IdentNode) key).isPrivate()
+                            && property.getModifiers().contains(Modifier.PUBLIC)) {
+                        property.getModifiers().remove(Modifier.PUBLIC);
+                        property.getModifiers().add(Modifier.PROTECTED);
+                    }
+                    if(classElement.isStatic()) {
+                        property.getModifiers().add(Modifier.STATIC);
+                    }
+                    if(value instanceof CallNode) {
+                        // TODO for now, don't continue. There shoudl be handled cases liek
+                        // in the testFiles/model/property02.js file
+                        //return null;
+                    } else {
+                        Collection<TypeUsage> types = ModelUtils.resolveSemiTypeOfExpression(modelBuilder, value);
+                        if (!types.isEmpty()) {
+                            property.addAssignment(types, name.getOffsetRange().getStart());
+                        }
+                        if (value instanceof IdentNode) {
+                            IdentNode iNode = (IdentNode)value;
+                            if (!iNode.getPropertyName().equals(name.getName())) {
+                                addOccurence((IdentNode)value, false);
+                            } else {
+                                // handling case like property: property
+                                if (parent.getParent() != null) {
+                                    occurrenceBuilder.addOccurrence(name.getName(), getOffsetRange(iNode), modelBuilder.getCurrentDeclarationScope(), parent.getParent(), modelBuilder.getCurrentWith(), false, false);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } if (classElement.isComputed()) {
+            classElement.getKey().accept(this);
+        }
+        return super.enterClassElement(classElement);
+    }
+
 //
 //    @Override
 //    public Node enter(ReferenceNode referenceNode) {

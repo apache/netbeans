@@ -41,7 +41,6 @@
 
 package com.oracle.js.parser.ir;
 
-import com.oracle.js.parser.TokenType;
 import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor;
 import java.util.Collections;
@@ -51,25 +50,25 @@ import java.util.List;
 /**
  * IR representation of an object literal property.
  */
-public final class PropertyNode extends Node {
+public class PropertyNode extends Node {
 
     /** Property key. */
-    private final Expression key;
+    protected final Expression key;
 
     /** Property value. */
-    private final Expression value;
+    protected final Expression value;
 
     /** Property getter. */
-    private final FunctionNode getter;
+    protected final FunctionNode getter;
 
     /** Property setter. */
-    private final FunctionNode setter;
+    protected final FunctionNode setter;
 
-    private final List<Expression> decorators;
+    protected final List<Expression> decorators;
 
-    private final boolean isStatic;
+    protected final boolean isStatic;
 
-    private final boolean computed;
+    protected final boolean computed;
 
     /**
      * Constructor
@@ -94,7 +93,7 @@ public final class PropertyNode extends Node {
         this.decorators = decorators;
     }
 
-    private PropertyNode(final PropertyNode propertyNode, final Expression key,
+    protected PropertyNode(final PropertyNode propertyNode, final Expression key,
             final Expression value, final FunctionNode getter, final FunctionNode setter,
             final boolean isStatic, final boolean computed, final List<Expression> decorators) {
         super(propertyNode);

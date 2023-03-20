@@ -40,12 +40,12 @@
       <!-- VarNode Init -->
       <ClassNode ident='A' start='0' end='58'>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='A' start='0' end='58'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='A' start='0' end='58'>
+          <!-- ClassElement Key -->
           <IdentNode start='6' end='7'>
             <name>A</name>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='A' kind='NORMAL' start='0' end='58'>
             <isClassConstructor/>
             <isMethod/>
@@ -57,17 +57,17 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
-        <PropertyNode name='a' start='16' end='21'>
+        <ClassElement name='a' start='16' end='21'>
           <isStatic/>
-          <!-- PropertyNode Key -->
+          <!-- ClassElement Key -->
           <IdentNode start='16' end='17'>
             <name>a</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='a' kind='NORMAL' start='16' end='21'>
             <isMethod/>
             <isNamedFunctionExpression/>
@@ -78,16 +78,16 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
-        <PropertyNode name='a' start='29' end='38'>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <ClassElement name='a' start='29' end='38'>
           <isStatic/>
-          <!-- PropertyNode Key -->
+          <!-- ClassElement Key -->
           <IdentNode start='33' end='34'>
             <name>a</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Getter -->
+          <!-- ClassElement Getter -->
           <FunctionNode name='get a' kind='GETTER' start='29' end='38'>
             <isMethod/>
             <isNamedFunctionExpression/>
@@ -98,7 +98,7 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Setter -->
+          <!-- ClassElement Setter -->
           <FunctionNode name='set a' kind='SETTER' start='46' end='56'>
             <isMethod/>
             <isNamedFunctionExpression/>
@@ -112,8 +112,8 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Decorators -->
       </ClassNode>
     </VarNode>

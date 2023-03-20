@@ -43,13 +43,13 @@
       <!-- VarNode Init -->
       <ClassNode ident='Animal' start='15' end='147'>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='constructor' start='33' end='78'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='constructor' start='33' end='78'>
+          <!-- ClassElement Key -->
           <IdentNode start='33' end='44'>
             <name>constructor</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='constructor' kind='NORMAL' start='33' end='78'>
             <isClassConstructor/>
             <isMethod/>
@@ -80,16 +80,16 @@
               </ExpressionStatement>
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
-        <PropertyNode name='speak' start='84' end='145'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='speak' start='84' end='145'>
+          <!-- ClassElement Key -->
           <IdentNode start='84' end='89'>
             <name>speak</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='speak' kind='NORMAL' start='84' end='145'>
             <isMethod/>
             <isNamedFunctionExpression/>
@@ -123,8 +123,8 @@
               </ExpressionStatement>
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Decorators -->
       </ClassNode>
     </VarNode>
@@ -145,12 +145,12 @@
           <name>Animal</name>
         </IdentNode>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='Dog' start='149' end='233'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='Dog' start='149' end='233'>
+          <!-- ClassElement Key -->
           <IdentNode start='155' end='158'>
             <name>Dog</name>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='Dog' kind='NORMAL' start='149' end='233'>
             <isClassConstructor/>
             <isMethod/>
@@ -184,16 +184,16 @@
               </ExpressionStatement>
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
-        <PropertyNode name='speak' start='178' end='231'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='speak' start='178' end='231'>
+          <!-- ClassElement Key -->
           <IdentNode start='178' end='183'>
             <name>speak</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='speak-1' kind='NORMAL' start='178' end='231'>
             <isMethod/>
             <isNamedFunctionExpression/>
@@ -227,8 +227,8 @@
               </ExpressionStatement>
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Decorators -->
       </ClassNode>
     </VarNode>

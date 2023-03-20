@@ -38,12 +38,12 @@
   <ExportNode start='59' end='122'>
     <ClassNode ident='Decorators' start='74' end='122'>
       <!-- ClassNode Constructor -->
-      <PropertyNode name='Decorators' start='74' end='122'>
-        <!-- PropertyNode Key -->
+      <ClassElement name='Decorators' start='74' end='122'>
+        <!-- ClassElement Key -->
         <IdentNode start='80' end='90'>
           <name>Decorators</name>
         </IdentNode>
-        <!-- PropertyNode Value -->
+        <!-- ClassElement Value -->
         <FunctionNode name='Decorators' kind='NORMAL' start='74' end='122'>
           <isClassConstructor/>
           <isMethod/>
@@ -55,16 +55,16 @@
             <!-- Block Statements -->
           </Block>
         </FunctionNode>
-        <!-- PropertyNode Decorators -->
-      </PropertyNode>
+        <!-- ClassElement Decorators -->
+      </ClassElement>
       <!-- ClassNode Elements -->
-      <PropertyNode name='test' start='97' end='120'>
-        <!-- PropertyNode Key -->
+      <ClassElement name='test' start='97' end='120'>
+        <!-- ClassElement Key -->
         <IdentNode start='97' end='101'>
           <name>test</name>
           <isPropertyName/>
         </IdentNode>
-        <!-- PropertyNode Value -->
+        <!-- ClassElement Value -->
         <FunctionNode name='test' kind='NORMAL' start='97' end='120'>
           <isMethod/>
           <isNamedFunctionExpression/>
@@ -75,8 +75,8 @@
             <!-- Block Statements -->
           </Block>
         </FunctionNode>
-        <!-- PropertyNode Decorators -->
-      </PropertyNode>
+        <!-- ClassElement Decorators -->
+      </ClassElement>
       <!-- ClassNode Decorators -->
     </ClassNode>
   </ExportNode>

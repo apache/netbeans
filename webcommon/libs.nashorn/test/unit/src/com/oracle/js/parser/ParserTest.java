@@ -277,6 +277,13 @@ public class ParserTest {
         assertTrue(z.isMethod());
     }
 
+    @Test
+    public void testClassElements() {
+        assertParses(11, "class demoClass { static staticMethod(){} instanceMethod(){}}");
+        assertParses(13, "class demoClass { a = 1; #b = 2; static c = 3; static #d = 4}");
+        assertParses(13, "class demoClass { static a = 1; static { a  = 2; } }");
+    }
+
     private Predicate<Node> functionNodeWithName(String name) {
         return n -> n instanceof FunctionNode && name.equals(((FunctionNode) n).getName());
     }

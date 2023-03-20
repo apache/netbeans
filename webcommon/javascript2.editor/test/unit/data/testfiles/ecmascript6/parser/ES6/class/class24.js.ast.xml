@@ -30,12 +30,12 @@
     <ExpressionStatement start='0' end='12'>
       <ClassNode ident='A' start='1' end='11'>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='A' start='1' end='11'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='A' start='1' end='11'>
+          <!-- ClassElement Key -->
           <IdentNode start='7' end='8'>
             <name>A</name>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='A' kind='NORMAL' start='1' end='11'>
             <isClassConstructor/>
             <isMethod/>
@@ -47,8 +47,8 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
         <!-- ClassNode Decorators -->
       </ClassNode>

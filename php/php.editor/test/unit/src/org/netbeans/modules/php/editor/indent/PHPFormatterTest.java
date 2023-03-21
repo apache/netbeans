@@ -943,6 +943,12 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/php80/matchExpression_SameLine_02.php", options);
     }
 
+    // GH-5186
+    public void testMatchExpressionWithArray_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php80/matchExpressionWithArray_01.php", options);
+    }
+
     public void testAttributeSyntax_01() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/php80/attributeSyntax_01.php", options);

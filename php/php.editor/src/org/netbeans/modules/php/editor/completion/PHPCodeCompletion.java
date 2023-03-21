@@ -119,6 +119,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TypeDeclaration;
@@ -1999,10 +2000,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         final ElementFilter forCurrentFile = ElementFilter.forFiles(fileObject);
         completionResult.addAll(getVariableProposals(request, forCurrentFile.reverseFilter(globalVariables)));
 
-        // Special keywords applicable only inside a class or trait
+        // Special keywords applicable only inside a class, enum, or trait
         final EnclosingType enclosingType = findEnclosingType(request.info, lexerToASTOffset(request.result, request.anchor));
         if (enclosingType != null
-                && (enclosingType.isClassDeclaration() || enclosingType.isTraitDeclaration())) {
+                && (enclosingType.isClassDeclaration() || enclosingType.isTraitDeclaration() || enclosingType.isEnumDeclaration())) {
             final String typeName = enclosingType.extractTypeName();
             if (typeName != null) {
                 for (final String keyword : PHP_CLASS_KEYWORDS) {
@@ -2530,6 +2531,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
         boolean isTraitDeclaration();
 
+        boolean isEnumDeclaration();
+
         String extractTypeName();
 
         //~ Factories
@@ -2544,6 +2547,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 @Override
                 public boolean isTraitDeclaration() {
                     return typeDeclaration instanceof TraitDeclaration;
+                }
+
+                @Override
+                public boolean isEnumDeclaration() {
+                    return typeDeclaration instanceof EnumDeclaration;
                 }
 
                 @Override
@@ -2563,6 +2571,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
                 @Override
                 public boolean isTraitDeclaration() {
+                    return false;
+                }
+
+                @Override
+                public boolean isEnumDeclaration() {
                     return false;
                 }
 

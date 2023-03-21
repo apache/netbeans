@@ -963,9 +963,9 @@ public class FormatVisitor extends DefaultVisitor {
                 if (putContinualIndent) {
                     formatTokens.add(new FormatToken.IndentToken(ts.offset(), options.continualIndentSize));
                 }
-                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_IN_TERNARY_OP, ts.offset()));
+                formatTokens.add(new FormatToken(getTokenKindForWhiteSpaceIn(operator), ts.offset()));
                 formatTokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
-                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_TERNARY_OP, ts.offset() + ts.token().length()));
+                formatTokens.add(new FormatToken(getTokenKindForWhiteSpaceAround(operator), ts.offset() + ts.token().length()));
                 // condition part
                 addAllUntilOffset(node.getIfFalse().getStartOffset());
                 formatTokens.add(new FormatToken.UnbreakableSequenceToken(ts.offset(), null, FormatToken.Kind.UNBREAKABLE_SEQUENCE_START));
@@ -975,6 +975,32 @@ public class FormatVisitor extends DefaultVisitor {
                     formatTokens.add(new FormatToken.IndentToken(ts.offset(), -1 * options.continualIndentSize));
                 }
         }
+    }
+
+    private FormatToken.Kind getTokenKindForWhiteSpaceIn(ConditionalExpression.OperatorType operatorType) {
+        FormatToken.Kind kind = FormatToken.Kind.WHITESPACE_IN_TERNARY_OP;
+        switch (operatorType) {
+            case COALESCE:
+                kind = FormatToken.Kind.WHITESPACE_IN_COALESCING_OP;
+                break;
+            default:
+                // no-op
+                break;
+        }
+        return kind;
+    }
+
+    private FormatToken.Kind getTokenKindForWhiteSpaceAround(ConditionalExpression.OperatorType operatorType) {
+        FormatToken.Kind kind = FormatToken.Kind.WHITESPACE_AROUND_TERNARY_OP;
+        switch (operatorType) {
+            case COALESCE:
+                kind = FormatToken.Kind.WHITESPACE_AROUND_COALESCING_OP;
+                break;
+            default:
+                // no-op
+                break;
+        }
+        return kind;
     }
 
     private void visitConditionalExpression(ConditionalExpression node, boolean putContinualIndent) {

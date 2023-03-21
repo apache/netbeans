@@ -118,6 +118,7 @@ public class TokenFormatter {
         public boolean spaceAroundUnaryOps;
         public boolean spaceAroundBinaryOps;
         public boolean spaceAroundTernaryOps;
+        public boolean spaceAroundCoalescingOps;
         public boolean spaceAroundAssignOps;
         public boolean spaceAroundKeyValueOps;
         public boolean spaceWithinArrayDeclParens;
@@ -181,6 +182,7 @@ public class TokenFormatter {
         public CodeStyle.WrapStyle wrapDoWhileStatement;
         public CodeStyle.WrapStyle wrapBinaryOps;
         public CodeStyle.WrapStyle wrapTernaryOps;
+        public CodeStyle.WrapStyle wrapCoalescingOps;
         public CodeStyle.WrapStyle wrapAssignOps;
         public boolean wrapBlockBrace;
         public boolean wrapGroupUseBraces;
@@ -278,6 +280,7 @@ public class TokenFormatter {
             spaceAroundUnaryOps = codeStyle.spaceAroundUnaryOps();
             spaceAroundBinaryOps = codeStyle.spaceAroundBinaryOps();
             spaceAroundTernaryOps = codeStyle.spaceAroundTernaryOps();
+            spaceAroundCoalescingOps = codeStyle.spaceAroundCoalescingOps();
             spaceAroundAssignOps = codeStyle.spaceAroundAssignOps();
             spaceAroundKeyValueOps = codeStyle.spaceAroundKeyValueOps();
 
@@ -353,6 +356,7 @@ public class TokenFormatter {
             wrapDoWhileStatement = codeStyle.wrapDoWhileStatement();
             wrapBinaryOps = codeStyle.wrapBinaryOps();
             wrapTernaryOps = codeStyle.wrapTernaryOps();
+            wrapCoalescingOps = codeStyle.wrapCoalescingOps();
             wrapAssignOps = codeStyle.wrapAssignOps();
             wrapBlockBrace = codeStyle.wrapBlockBrace();
             wrapGroupUseBraces = codeStyle.wrapGroupUseBraces();
@@ -1164,6 +1168,9 @@ public class TokenFormatter {
                                     case WHITESPACE_AROUND_TERNARY_OP:
                                         countSpaces = docOptions.spaceAroundTernaryOps ? 1 : 0;
                                         break;
+                                    case WHITESPACE_AROUND_COALESCING_OP:
+                                        countSpaces = docOptions.spaceAroundCoalescingOps ? 1 : 0;
+                                        break;
                                     case WHITESPACE_WITHIN_SHORT_TERNARY_OP:
                                         countSpaces = 0;
                                         break;
@@ -1616,6 +1623,18 @@ public class TokenFormatter {
                                         ws = countWSBeforeAStatement(
                                                 docOptions.wrapTernaryOps,
                                                 docOptions.spaceAroundTernaryOps,
+                                                column,
+                                                countLengthOfNextSequence(formatTokens, index + 1),
+                                                indent,
+                                                isAfterLineComment(formatTokens, index));
+                                        newLines = ws.lines;
+                                        countSpaces = ws.spaces;
+                                        break;
+                                    case WHITESPACE_IN_COALESCING_OP:
+                                        indentRule = true;
+                                        ws = countWSBeforeAStatement(
+                                                docOptions.wrapCoalescingOps,
+                                                docOptions.spaceAroundCoalescingOps,
                                                 column,
                                                 countLengthOfNextSequence(formatTokens, index + 1),
                                                 indent,

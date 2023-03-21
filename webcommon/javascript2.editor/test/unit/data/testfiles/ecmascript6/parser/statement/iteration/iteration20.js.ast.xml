@@ -44,6 +44,7 @@
           <NumberLiteralNode value='42' start='13' end='15'/>
         </VarNode>
         <ForNode start='0' end='36'>
+          <isForIn/>
           <IdentNode start='9' end='10'>
             <name>x</name>
           </IdentNode>

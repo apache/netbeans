@@ -19,40 +19,42 @@
 
 -->
 
-<FunctionNode name=':program' kind='SCRIPT' start='0' end='21'>
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='32'>
   <isProgram/>
   <!-- FunctionNode Parameters -->
   <!-- FunctionNode Body -->
-  <Block start='0' end='20'>
+  <Block start='0' end='31'>
     <isFunctionBody/>
     <isSynthetic/>
     <!-- Block Statements -->
-    <BlockStatement start='0' end='20'>
-      <Block start='0' end='20'>
+    <BlockStatement start='0' end='31'>
+      <Block start='0' end='31'>
         <isSynthetic/>
         <!-- Block Statements -->
-        <VarNode name='z' start='9' end='10'>
+        <VarNode name='i' start='17' end='18'>
           <isBlockScoped/>
-          <isLet/>
+          <isConst/>
         </VarNode>
-        <ForNode start='0' end='20'>
+        <ForNode start='0' end='31'>
           <hasPerIterationScope/>
+          <isForAwaitOf/>
           <isForOf/>
-          <IdentNode start='9' end='10'>
-            <name>z</name>
+          <IdentNode start='17' end='18'>
+            <name>i</name>
           </IdentNode>
           <JoinPredecessorExpression start='0' end='0'>
           </JoinPredecessorExpression>
-          <JoinPredecessorExpression start='14' end='18'>
-            <IdentNode start='14' end='18'>
-              <name>list</name>
-            </IdentNode>
+          <JoinPredecessorExpression start='22' end='27'>
+            <CallNode start='22' end='27'>
+              <!-- CallNode Arguments -->
+              <!-- CallNode Function -->
+              <IdentNode start='22' end='25'>
+                <name>num</name>
+              </IdentNode>
+            </CallNode>
           </JoinPredecessorExpression>
-          <Block start='19' end='20'>
-            <isSynthetic/>
+          <Block start='29' end='31'>
             <!-- Block Statements -->
-            <EmptyNode start='19' end='20'>
-            </EmptyNode>
           </Block>
         </ForNode>
       </Block>

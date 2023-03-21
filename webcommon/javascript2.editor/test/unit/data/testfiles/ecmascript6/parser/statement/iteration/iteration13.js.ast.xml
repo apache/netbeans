@@ -48,6 +48,7 @@
           <NumberLiteralNode value='0' start='12' end='13'/>
         </VarNode>
         <ForNode start='0' end='17'>
+          <hasPerIterationScope/>
           <Block start='16' end='17'>
             <isSynthetic/>
             <!-- Block Statements -->

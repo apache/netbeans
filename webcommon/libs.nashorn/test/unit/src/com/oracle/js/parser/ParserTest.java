@@ -284,6 +284,11 @@ public class ParserTest {
         assertParses(13, "class demoClass { static a = 1; static { a  = 2; } }");
     }
 
+    @Test
+    public void testFor() {
+        assertParses(13, "async function dummy() { for await (const num of foo()) {}}");
+    }
+
     private Predicate<Node> functionNodeWithName(String name) {
         return n -> n instanceof FunctionNode && name.equals(((FunctionNode) n).getName());
     }

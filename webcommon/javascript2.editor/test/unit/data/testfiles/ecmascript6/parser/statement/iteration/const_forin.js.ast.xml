@@ -36,6 +36,8 @@
           <isConst/>
         </VarNode>
         <ForNode start='0' end='33'>
+          <hasPerIterationScope/>
+          <isForIn/>
           <IdentNode start='11' end='12'>
             <name>x</name>
           </IdentNode>

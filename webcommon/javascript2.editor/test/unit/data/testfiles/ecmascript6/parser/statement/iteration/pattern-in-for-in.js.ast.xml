@@ -32,6 +32,7 @@
         <isSynthetic/>
         <!-- Block Statements -->
         <ForNode start='0' end='55'>
+          <isForIn/>
           <ArrayLiteralNode start='4' end='48'>
             <IdentNode start='5' end='6'>
               <name>a</name>

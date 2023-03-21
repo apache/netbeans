@@ -36,6 +36,8 @@
           <isLet/>
         </VarNode>
         <ForNode start='0' end='31'>
+          <hasPerIterationScope/>
+          <isForIn/>
           <IdentNode start='9' end='10'>
             <name>x</name>
           </IdentNode>

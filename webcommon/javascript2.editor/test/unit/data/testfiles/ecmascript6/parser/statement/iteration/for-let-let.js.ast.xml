@@ -51,6 +51,7 @@
           </IdentNode>
         </VarNode>
         <ForNode start='0' end='22'>
+          <hasPerIterationScope/>
           <Block start='20' end='22'>
             <!-- Block Statements -->
           </Block>

@@ -32,6 +32,7 @@
         <isSynthetic/>
         <!-- Block Statements -->
         <ForNode start='0' end='18'>
+          <isForOf/>
           <ArrayLiteralNode start='5' end='11'>
             <IdentNode start='6' end='7'>
               <name>p</name>

@@ -54,6 +54,7 @@
           </BinaryNode>
         </VarNode>
         <ForNode start='0' end='25'>
+          <isForIn/>
           <IdentNode start='9' end='10'>
             <name>x</name>
           </IdentNode>

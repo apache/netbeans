@@ -46,6 +46,7 @@ package com.oracle.js.parser;
 import com.oracle.js.parser.ir.AccessNode;
 import com.oracle.js.parser.ir.BinaryNode;
 import com.oracle.js.parser.ir.CallNode;
+import com.oracle.js.parser.ir.ForNode;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.IdentNode;
 import com.oracle.js.parser.ir.IndexNode;
@@ -85,6 +86,18 @@ class DumpingVisitor extends NodeVisitor {
                     fn.getKind().name(),
                     fn.isAsync(),
                     fn.isMethod());
+        } else if (node instanceof ForNode) {
+            ForNode fn = (ForNode) node;
+            System.out.printf("%s%s [init: %s-%s, modify: %s-%s, test: %s-%s]%n",
+                    indent(),
+                    node.getClass().getName(),
+                    fn.getInit() != null ? fn.getInit().getStart() : "",
+                    fn.getInit() != null ? fn.getInit().getFinish() : "",
+                    fn.getModify() != null ? fn.getModify().getStart() : "",
+                    fn.getModify() != null ? fn.getModify().getFinish() : "",
+                    fn.getTest() != null ? fn.getTest().getStart() : "",
+                    fn.getTest() != null ? fn.getTest().getFinish() : ""
+            );
         } else if (node instanceof BinaryNode) {
             System.out.println(indent() + node.getClass().getName() + " [" + ((BinaryNode) node).tokenType() + "]");
         } else if (node instanceof AccessNode) {

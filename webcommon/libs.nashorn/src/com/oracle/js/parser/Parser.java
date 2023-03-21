@@ -701,6 +701,10 @@ loop:
         return env.ecmascriptEdition >= 7;
     }
 
+    private boolean isAtLeastES9() {
+        return env.ecmascriptEdition >= 9;
+    }
+
     private boolean isAtLeastES11() {
         return env.ecmascriptEdition >= 11;
     }
@@ -2105,6 +2109,11 @@ loop:
             // iterate property values rather than property names.
             if (env.syntaxExtensions && type == IDENT && "each".equals(getValue())) {
                 flags |= ForNode.IS_FOR_EACH;
+                next();
+            }
+
+            if(isAtLeastES9() && type == IDENT && isAwait(token)) {
+                flags |= ForNode.IS_FOR_AWAIT_OF;
                 next();
             }
 

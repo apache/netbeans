@@ -42,6 +42,8 @@
           <isDestructuring/>
         </VarNode>
         <ForNode start='0' end='24'>
+          <hasPerIterationScope/>
+          <isForOf/>
           <ObjectNode start='11' end='17'>
             <!-- ObjectNode Elements -->
             <PropertyNode name='x' start='12' end='13'>

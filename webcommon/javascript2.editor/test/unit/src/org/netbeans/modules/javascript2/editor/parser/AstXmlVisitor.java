@@ -38,6 +38,7 @@ import com.oracle.js.parser.ir.VarNode;
 import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import com.oracle.js.parser.Token;
 import com.oracle.js.parser.ir.ClassElement;
+import com.oracle.js.parser.ir.ForNode;
 import com.oracle.js.parser.ir.JsxAttributeNode;
 import com.oracle.js.parser.ir.JsxElementNode;
 import java.util.List;
@@ -500,5 +501,16 @@ public class AstXmlVisitor extends NodeVisitor {
         processWithComment(node.getDecorators(), "ClassElement Decorators");
         createCloseTag(node);
         return false;
+    }
+
+    @Override
+    public boolean enterForNode(ForNode forNode) {
+        enterDefault(forNode);
+        processAttribute(forNode.hasPerIterationScope(), "hasPerIterationScope");
+        processAttribute(forNode.isForAwaitOf(), "isForAwaitOf");
+        processAttribute(forNode.isForEach(), "isForEach");
+        processAttribute(forNode.isForIn(), "isForIn");
+        processAttribute(forNode.isForOf(), "isForOf");
+        return true;
     }
 }

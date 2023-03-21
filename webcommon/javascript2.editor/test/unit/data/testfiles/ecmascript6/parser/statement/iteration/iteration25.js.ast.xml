@@ -32,6 +32,7 @@
         <isSynthetic/>
         <!-- Block Statements -->
         <ForNode start='0' end='21'>
+          <isForIn/>
           <IndexNode start='5' end='14'>
             <isIndex/>
             <!-- IndexNode Base -->

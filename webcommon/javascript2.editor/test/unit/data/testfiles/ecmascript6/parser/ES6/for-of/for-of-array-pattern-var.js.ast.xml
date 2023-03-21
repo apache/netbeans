@@ -38,6 +38,7 @@
           <isDestructuring/>
         </VarNode>
         <ForNode start='0' end='22'>
+          <isForOf/>
           <ArrayLiteralNode start='9' end='15'>
             <IdentNode start='10' end='11'>
               <name>p</name>

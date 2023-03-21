@@ -32,6 +32,7 @@
         <isSynthetic/>
         <!-- Block Statements -->
         <ForNode start='0' end='17'>
+          <isForOf/>
           <IdentNode start='5' end='6'>
             <name>x</name>
           </IdentNode>

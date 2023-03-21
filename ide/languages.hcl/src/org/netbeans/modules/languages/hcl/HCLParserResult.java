@@ -33,6 +33,8 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.languages.hcl.ast.ASTBuilderListener;
+import org.netbeans.modules.languages.hcl.ast.HCLDocument;
 import org.netbeans.modules.languages.hcl.grammar.HCLLexer;
 import org.netbeans.modules.languages.hcl.grammar.HCLParser;
 import org.netbeans.modules.languages.hcl.grammar.HCLParserBaseListener;
@@ -48,6 +50,8 @@ public class HCLParserResult  extends ParserResult {
     protected final List<DefaultError> errors = new ArrayList<>();
     protected volatile boolean finished;
     public final List<OffsetRange> folds = new ArrayList<>();
+
+    private HCLDocument document;
 
     public HCLParserResult(Snapshot snapshot) {
         super(snapshot);
@@ -65,9 +69,12 @@ public class HCLParserResult  extends ParserResult {
 
             configureParser(parser);
 
+
             parser.configFile();
             
         }
+        processDocument(document);
+
         finished = true;
         return this;
     }
@@ -91,6 +98,14 @@ public class HCLParserResult  extends ParserResult {
         parser.addErrorListener(createErrorListener());
 
         parser.addParseListener(createFoldListener());
+
+        ASTBuilderListener astListener = new ASTBuilderListener();
+        parser.addParseListener(astListener);
+
+        document = astListener.getDocument();
+    }
+
+    protected void processDocument(HCLDocument doc) {
     }
 
     private void addFold(int start, int stop) {

@@ -105,7 +105,11 @@ public class Css3UtilsTest extends TestBase {
         public CharSequence image() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
-        
+
+        @Override
+        public String unescapedImage() {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
     }
     
 }

@@ -480,8 +480,11 @@ jobs:
       - name: ide/html.editor
         run: ant $OPTS -f ide/html.editor test
 
-#      - name: ide/html.lexer
-#        run: ant $OPTS -f ide/html.lexer test
+      - name: ide/html.editor
+        run: ant $OPTS -f ide/html.editor.lib test
+
+      - name: ide/html.lexer
+        run: ant $OPTS -f ide/html.lexer test
 
       - name: ide/html.parser
         run: ant $OPTS -f ide/html.parser test

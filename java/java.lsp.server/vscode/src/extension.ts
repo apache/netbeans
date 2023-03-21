@@ -303,6 +303,33 @@ class InitialPromise extends Promise<NbLanguageClient> {
     }
 }
 
+/**
+ * Determines the outcome, if there's a conflict betwee RH Java and us: disable java, enable java, ask the user.
+ * @returns false, if java should be disablde; true, if enabled. Undefined if no config is present, ask the user
+ */
+function shouldEnableConflictingJavaSupport() : boolean | undefined {
+    // backwards compatibility; remove in NBLS 19
+    if (vscode.extensions.getExtension('oracle-labs-graalvm.gcn')) {
+        return false;
+    }
+    let r = undefined;
+    for (const ext of vscode.extensions.all) {
+        const services = ext.packageJSON?.contributes && ext.packageJSON?.contributes['netbeans.options'];
+        if (!services) {
+            continue;
+        }
+        if (services['javaSupport.conflict'] !== undefined) {
+            const v = !!services['javaSupport.conflict'];
+            if (!v) {
+                // request to disable wins.
+                return false;
+            }
+            r = v;
+        }
+    }
+    return r;
+}
+
 export function activate(context: ExtensionContext): VSNetBeansAPI {
     let log = vscode.window.createOutputChannel("Apache NetBeans Language Server");
 
@@ -318,8 +345,10 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     function checkConflict(): void {
         let conf = workspace.getConfiguration();
         if (conf.get("netbeans.conflict.check") && conf.get("netbeans.javaSupport.enabled")) {
-            if (vscode.extensions.getExtension('redhat.java')) {
-                if (vscode.extensions.getExtension('oracle-labs-graalvm.gcn')) {
+            const e : boolean | undefined = shouldEnableConflictingJavaSupport();
+            if (!e && vscode.extensions.getExtension('redhat.java')) {
+                if (e === false) {
+                    // do not ask, an extension wants us to disable on conflict
                     conf.update("netbeans.javaSupport.enabled", false, true);
                 } else {
                     const DISABLE_EXTENSION = `Manually disable extension`;

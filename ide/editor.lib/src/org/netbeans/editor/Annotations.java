@@ -513,7 +513,7 @@ public class Annotations implements DocumentListener {
         
     /** 
      * Return list of passive annotations which should be drawn on the background.
-     * @deprecated The method name contains a typo. Use {@link getPassiveAnnotationsForLine} 
+     * @deprecated The method name contains a typo. Use {@link #getPassiveAnnotationsForLine(int) } 
      */
     @Deprecated
     public AnnotationDesc[] getPasiveAnnotations(int line) {
@@ -1026,7 +1026,7 @@ public class Annotations implements DocumentListener {
 
         /** 
          * Gets the array of all passive and visible annotations 
-         * @deprecated The method name contains typo. Use {@link getPassive()} instead.
+         * @deprecated The method name contains typo. Use {@link #getPassive()} instead.
          */
         @Deprecated
         public AnnotationDesc[] getPasive() {

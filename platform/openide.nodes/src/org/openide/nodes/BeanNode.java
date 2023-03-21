@@ -68,7 +68,7 @@ import org.openide.util.actions.SystemAction;
 * </p>
 *
 * @author Jan Jancura, Ian Formanek, Jaroslav Tulach
-* @param T the type of bean to be represented
+* @param <T> the type of bean to be represented
 */
 public class BeanNode<T> extends AbstractNode {
     // static ..................................................................................................................

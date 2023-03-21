@@ -27,11 +27,11 @@ import javax.swing.KeyStroke;
  * this class can be retrieved from <code>MimeLookup</code> as shown on the example
  * below.
  * 
- * <pre>
+ * <pre>{@code
  * Lookup l = MimeLookup.getLookup(MimePath.parse(mimePath));
  * CodeTemplateSettings cds = l.lookup(CodeTemplateSettings.class);
  * List<CodeTemplateDescription> codeTemplates = cds.getCodeTemplateDescriptions();
- * </pre>
+ * }</pre>
  * 
  * <p><b>IMPORTANT</b>: There is a much more powerful API for working with editor
  * code templates in

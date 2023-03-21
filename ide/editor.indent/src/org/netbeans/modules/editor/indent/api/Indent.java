@@ -27,7 +27,7 @@ import org.netbeans.modules.editor.indent.IndentImpl;
  * Reindentation of a single or multiple lines in the document
  * means fixing of the line's indent only but does not do any other
  * code beautification.
- * <br/>
+ * <br>
  * The following pattern should be used:
  * <pre>
  * indent.lock();
@@ -71,7 +71,7 @@ public final class Indent {
     
     /**
      * Clients should call this method before acquiring of document's write lock.
-     * <br/>
+     * <br>
      * The following pattern should be used:
      * <pre>
      * indent.lock();
@@ -93,7 +93,7 @@ public final class Indent {
     
     /**
      * Clients should call this method after releasing of document's write lock.
-     * <br/>
+     * <br>
      * The following pattern should be used:
      * <pre>
      * indent.lock();
@@ -115,10 +115,10 @@ public final class Indent {
     
     /**
      * Correct indentation on a single line determined by the given offset.
-     * <br/>
+     * <br>
      * Typically it is called after newline gets inserted
      * or when a line is reindented explicitly (e.g. by pressing TAB key in emacs mode).
-     * <br/>
+     * <br>
      * This method will fallback to the editor formatting infrastructure
      * in case there are no registered indent or reformat factories.
      * 
@@ -132,7 +132,7 @@ public final class Indent {
 
     /**
      * Correct indentation of all lines in the given offset range.
-     * <br/>
+     * <br>
      * This method will fallback to the editor formatting infrastructure
      * in case there are no registered indent or reformat factories.
      * 

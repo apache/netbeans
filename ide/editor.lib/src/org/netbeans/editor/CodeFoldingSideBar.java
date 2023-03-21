@@ -83,8 +83,8 @@ import org.openide.util.WeakListeners;
  *  on user fold/unfold action.
  *
  *  @author  Martin Roskanin
- *  @deprecated You should use {@link FoldUtilities#createSidebarComponent(javax.swing.text.JTextComponent)} or
- *  {@link FoldUtilities#getFoldingSidebarFactory()} instead. Subclassing CodeFoldingSidebar
+ *  @deprecated You should use {@code FoldUtilities#createSidebarComponent(javax.swing.text.JTextComponent)} or
+ *  {@code FoldUtilities#getFoldingSidebarFactory()} instead. Subclassing CodeFoldingSidebar
  *  is no longer actively supported, though still working.
  */
 @Deprecated
@@ -139,9 +139,10 @@ public class CodeFoldingSideBar extends JComponent implements Accessible {
     private int   mousePoint = -1;
     
     /**
-     * if true, the {@link #mousePoint} has been already used to make a PaintInfo active.
-     * The flag is tested by {@link #traverseForward} and {@link #traverseBackward} after children
-     * of the current fold are processed and cleared if the {@link #mousePoint} falls to the fold area -
+     * if true, the {@code #mousePoint} has been already used to make a PaintInfo active.
+     * The flag is tested by {@code #traverseForward(Fold, BaseDocument, BaseTextUI, int, int, int, NavigableMap) } 
+     * and {@code #traverseBackwards(Fold, BaseDocument, BaseTextUI, int, int, int, NavigableMap) } after children
+     * of the current fold are processed and cleared if the {@code #mousePoint field} falls to the fold area -
      * fields of PaintInfo are set accordingly.
      * It's also used to compute (current) mouseBoundary, so mouse movement does not trigger 
      * refreshes eagerly
@@ -157,8 +158,8 @@ public class CodeFoldingSideBar extends JComponent implements Accessible {
     private Rectangle   mouseBoundary;
     
     /**
-     * Y-end of the nearest fold that ends above the {@link #mousePoint}. Undefined if mousePoint is null.
-     * These two variables are initialized at each level of folds, and help to compute {@link #mouseBoundary} for
+     * Y-end of the nearest fold that ends above the {@code #mousePoint field}. Undefined if mousePoint is null.
+     * These two variables are initialized at each level of folds, and help to compute {@code #mouseBoundary field} for
      * the case the mousePointer is OUTSIDE all children (or outside all folds). 
      */
     private int lowestAboveMouse = -1;

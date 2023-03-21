@@ -315,7 +315,8 @@ cause it to fail.
             <bottom>${javadoc.footer}</bottom>
             <!-- Avoid timestamp comments in _all_ html generated files, to reduce unnecessary git commits -->
             <arg value="-notimestamp" />
-            <arg value="-Xdoclint:html,reference,syntax" />
+            <arg value="-Xdoclint:all" />
+            <arg value="-Xdoclint:-missing" />
         </javadoc>
     </target>
     
@@ -338,7 +339,8 @@ cause it to fail.
             <doctitle>${javadoc.title}&lt;br/&gt;${javadoc.stability.label}</doctitle>
             <header>${javadoc.header}</header>
             <bottom>${javadoc.footer}</bottom>
-            <arg value="-Xdoclint:html,reference,syntax" />
+            <arg value="-Xdoclint:all" />
+            <arg value="-Xdoclint:-missing" />
         </javadoc>
     </target>
 

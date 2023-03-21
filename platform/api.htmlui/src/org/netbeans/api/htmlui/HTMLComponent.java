@@ -57,9 +57,9 @@ public @interface HTMLComponent {
      * two types: <em>Swing</em> and <em>JavaFX</em>. 
      * To request Swing component
      * return {@link JComponent}.<b>class</b>. To request JavaFX 
-     * component, return {@link javafx.scene.Node}.<b>class</b>.
+     * component, return <a href="https://openjfx.io/javadoc/11/javafx.graphics/javafx/scene/Node.html">Node</a>.<b>class</b>.
      * 
-     * @return either {@link JComponent} or {@link javafx.scene.Node} class
+     * @return either {@link JComponent} or <a href="https://openjfx.io/javadoc/11/javafx.graphics/javafx/scene/Node.html">Node</a> class
      */
     Class<?> type();
     

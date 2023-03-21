@@ -1,0 +1,3 @@
+interface |>MARK_OCCURRENCES:TestInterfa^ce<| {
+class TestClass implements |>MARK_OCCURRENCES:TestInterface<| {
+if ($a instanceof |>MARK_OCCURRENCES:TestInterface<|) {

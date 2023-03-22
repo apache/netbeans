@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ProxySelector;
@@ -871,7 +872,6 @@ public class MavenProxySupport {
     }
     
     static class LineAndColumn {
-        int offset = -1;
         int line;
         int column;
 
@@ -884,7 +884,7 @@ public class MavenProxySupport {
     static class TagInfo {
         String tagName;
         LineAndColumn  startTag;
-        LineAndColumn  content;
+        String  content;
         LineAndColumn  endTag;
 
         public TagInfo(String tagName, LineAndColumn start) {
@@ -916,8 +916,25 @@ public class MavenProxySupport {
         private ProxyInfo current;
         private int state = UNKNOWN;
 
+        private final Field posStartField;
+        private final Field posEndField;
+
         public XppDelegate(EntityReplacementMap entityReplacementMap) {
             super(entityReplacementMap);
+            
+            try {
+                posEndField = MXParser.class.getDeclaredField("posEnd");
+                posEndField.setAccessible(true);
+
+                posStartField = MXParser.class.getDeclaredField("posStart");
+                posStartField.setAccessible(true);
+            } catch (ReflectiveOperationException ex) {
+                throw new RuntimeException("code changed", ex);
+            }
+        }
+        
+        TextInfo getTextInfo() {
+            return textInfo;
         }
         
         @Override
@@ -935,7 +952,11 @@ public class MavenProxySupport {
         private LineAndColumn startPos() {
             int ln = getLineNumber();
             int col = getColumnNumber();
-            col -= (posEnd - posStart);
+            try {
+                col -= (posEndField.getInt(this) - posStartField.getInt(this));
+            } catch (IllegalAccessException ex) {
+                Exceptions.printStackTrace(ex);
+            }
             return new LineAndColumn(ln, col);
         }
 
@@ -943,9 +964,13 @@ public class MavenProxySupport {
             return new LineAndColumn(getLineNumber(), getColumnNumber());
         }
         
+        private StringBuilder tagText = new StringBuilder();
+        
         private int processToken(int token) {
-            
             switch (token) {
+                case XmlPullParser.TEXT:
+                    tagText.append(getText());
+                    break;
                 case XmlPullParser.END_TAG:
                     String en = getName();
                     if (state >= PROXY) {
@@ -956,8 +981,9 @@ public class MavenProxySupport {
                             break;
                         }
                         if (!tagStack.isEmpty()) {
-                            tagStack.getLast().endTag = startPos();
-                            tagStack.removeLast();
+                            TagInfo ti = tagStack.removeLast();
+                            ti.content = tagText.toString().trim();
+                            ti.endTag = startPos();
                         }
                     } else if (state == PROXIES && TAG_PROXIES.equals(en)) {
                         state = UNKNOWN;
@@ -967,6 +993,7 @@ public class MavenProxySupport {
                     break;
                 case XmlPullParser.START_TAG:
                     String n = getName();
+                    tagText = new StringBuilder();
                     if (state == UNKNOWN) {
                         if (TAG_PROXIES.equals(n)) {
                             state = 1;

@@ -1,9 +1,9 @@
 Name: slf4j
 Description: Part of Apache Maven Distribution
-Version: 3.8.7
+Version: 3.9.1
 License: MIT-slf4j
 Origin: Apache Software Foundation
-Files: apache-maven-3.8.7-bin.zip!/apache-maven-3.8.7/lib/slf4j-api-1.7.36.jar
+Files: apache-maven-3.9.1-bin.zip!/apache-maven-3.9.1/lib/slf4j-api-1.7.36.jar
 
 Copyright (c) 2004-2017 QOS.ch
 All rights reserved.

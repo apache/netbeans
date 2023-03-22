@@ -136,7 +136,7 @@ public class FixUsesPerformerTest extends PHPTestBase {
     }
 
     public void testIssue238828() throws Exception {
-        String[] selections = new String[] {"\\First\\Second\\Util", CAN_NOT_BE_RESOLVED, CAN_NOT_BE_RESOLVED, CAN_NOT_BE_RESOLVED};
+        String[] selections = new String[] {CAN_NOT_BE_RESOLVED, CAN_NOT_BE_RESOLVED, "\\First\\Second\\Util", CAN_NOT_BE_RESOLVED};
         Options options = new Options(true, false, true, true, false);
         performTest("function functionName3($param) {}^", createSelections(selections, ItemVariant.Type.CLASS), false, options);
     }
@@ -351,19 +351,19 @@ public class FixUsesPerformerTest extends PHPTestBase {
         Options options = new Options(false, false, false, false, true);
         performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
     }
-    
+
     public void testGH5578_01() throws Exception {
         String[] selections = new String[] {"\\NS1\\B"};
         Options options = new Options(false, false, false, false, true);
         performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
     }
-    
+
     public void testGH5578_02() throws Exception {
         String[] selections = new String[] {"\\NS1\\B"};
         Options options = new Options(false, false, false, false, true);
         performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
     }
-    
+
     public void testGH5578_03() throws Exception {
         List<Selection> selections = new ArrayList<>();
         selections.add(new Selection("\\NS2\\A", ItemVariant.Type.CLASS));
@@ -371,35 +371,61 @@ public class FixUsesPerformerTest extends PHPTestBase {
         Options options = new Options(false, false, false, false, true);
         performTest("// test^", selections, true, options);
     }
-    
+
     public void testGH5578_04() throws Exception {
         String[] selections = new String[] {"\\NS2\\B"};
         Options options = new Options(false, false, false, false, true);
         performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
     }
-    
+
     public void testGH5578_05() throws Exception {
         String[] selections = new String[] {"\\NS2\\B"};
         Options options = new Options(false, false, false, false, true);
         performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
     }
-    
+
     public void testGH5578_06() throws Exception {
         String[] selections = new String[] {"\\NS2\\B"};
         Options options = new Options(false, false, false, false, true);
         performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
     }
-    
+
     public void testGH5578_07() throws Exception {
         String[] selections = new String[] {"\\NS2\\B"};
         Options options = new Options(false, false, false, false, true);
         performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
     }
-    
+
     public void testGH5578_08() throws Exception {
         String[] selections = new String[] {"\\NS1\\B"};
         Options options = new Options(false, false, false, false, true);
         performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testMultipleDefaultNSUse_01() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testMultipleDefaultNSUse_02() throws Exception {
+        String[] selections = new String[] {"\\NS2\\D"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testWholeFileUse_01() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B", "\\NS2\\D"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testWholeFileUse_02() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\F", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\D", ItemVariant.Type.CLASS));
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", selections, true, options);
     }
 
     private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final Options options) throws Exception {
@@ -443,6 +469,9 @@ public class FixUsesPerformerTest extends PHPTestBase {
                             namespaceScope.getNamespaceName(),
                             currentOptions).create();
                     final List<ItemVariant> properSelections = new ArrayList<>();
+                    // this logic probably needs refactoring because selections always 
+                    // should be paired with import data items by index and in the feature it
+                    // could be a problem if data items order will change
                     for (Selection selection : selections) {
                         properSelections.add(new ItemVariant(
                                 selection.getSelection(),

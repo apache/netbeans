@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.editor.actions;
 
 import org.netbeans.modules.php.editor.api.QualifiedName;
+import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode;
@@ -29,20 +30,27 @@ import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode;
  */
 public class UsedNamespaceName {
     private final ASTNode node;
+    private final NamespaceScope inScope;
     private final QualifiedName qualifiedName;
 
-    public UsedNamespaceName(NamespaceName node) {
+    public UsedNamespaceName(NamespaceName node, NamespaceScope inScope) {
         this.node = node;
+        this.inScope = inScope;
         this.qualifiedName = QualifiedName.create(node);
     }
 
-    public UsedNamespaceName(PHPDocTypeNode node) {
+    public UsedNamespaceName(PHPDocTypeNode node, NamespaceScope inScope) {
         this.node = node;
+        this.inScope = inScope;
         this.qualifiedName = QualifiedName.create(node.getValue());
     }
 
     public int getOffset() {
         return node.getStartOffset();
+    }
+
+    public NamespaceScope getInScope() {
+        return inScope;
     }
 
     public int getReplaceLength() {

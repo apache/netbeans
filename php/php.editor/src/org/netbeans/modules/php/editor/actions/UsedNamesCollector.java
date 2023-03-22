@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,6 @@ import org.netbeans.modules.php.editor.model.UseScope;
 import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
-import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode;
@@ -65,56 +65,19 @@ public class UsedNamesCollector {
     }
 
     public Map<String, List<UsedNamespaceName>> collectNames() {
-        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult, caretPosition);
+        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult.getModel().getFileScope(), caretPosition);
         assert namespaceScope != null;
         OffsetRange offsetRange = namespaceScope.getBlockRange();
-        // in the following case, avoid being inserted incorrect uses
-        // because default namespace range is whole file...
-        // // caret here^
-        // declare (strict_types=1);
-        //
-        // namespace {
-        //     class GlobalNamespace {}
-        // }
-        //
-        // namespace Test {
-        //     class TestClass {
-        //         public function __construct()
-        //         {
-        //             $test = new Foo();
-        //         }
-        //         public function test(?Foo $foo): ?Foo
-        //         {
-        //             return null;
-        //         }
-        //     }
-        // }
-        if (namespaceScope.isDefaultNamespace()) {
-            NamespaceDeclarationVisitor namespaceDeclarationVisitor = new NamespaceDeclarationVisitor();
-            parserResult.getProgram().accept(namespaceDeclarationVisitor);
-            List<NamespaceDeclaration> globalNamespaces = namespaceDeclarationVisitor.getGlobalNamespaceDeclarations();
-            if (!globalNamespaces.isEmpty()) {
-                Block body = globalNamespaces.get(0).getBody();
-                offsetRange = new OffsetRange(body.getStartOffset(), body.getEndOffset());
-            }
-            for (NamespaceDeclaration globalNamespace : globalNamespaces) {
-                if (globalNamespace.getBody().getStartOffset() <= caretPosition
-                        && caretPosition <= globalNamespace.getBody().getEndOffset()) {
-                    offsetRange = new OffsetRange(globalNamespace.getBody().getStartOffset(), globalNamespace.getBody().getEndOffset());
-                }
-            }
-        }
-        Collection<? extends UseScope> declaredUses = namespaceScope.getAllDeclaredSingleUses();
-        NamespaceNameVisitor namespaceNameVisitor = new NamespaceNameVisitor(offsetRange);
+        NamespaceNameVisitor namespaceNameVisitor = new NamespaceNameVisitor(offsetRange, namespaceScope);
         parserResult.getProgram().accept(namespaceNameVisitor);
         possibleNames = namespaceNameVisitor.getExistingNames();
-        return filterNamesWithoutUses(declaredUses);
+        return filterNamesWithoutUses(namespaceNameVisitor.getScopeMap());
     }
 
-    private Map<String, List<UsedNamespaceName>> filterNamesWithoutUses(final Collection<? extends UseScope> declaredUses) {
-        final Map<String, List<UsedNamespaceName>> result = new HashMap<>();
+    private Map<String, List<UsedNamespaceName>> filterNamesWithoutUses(final Map<String, NamespaceScope> scopeMap) {
+        final Map<String, List<UsedNamespaceName>> result = new LinkedHashMap<>();
         for (Map.Entry<String, List<UsedNamespaceName>> entry : possibleNames.entrySet()) {
-            if (!existsUseForTypeName(declaredUses, QualifiedName.create(entry.getKey()))) {
+            if (!existsUseForTypeName(scopeMap.get(entry.getKey()).getAllDeclaredSingleUses(), QualifiedName.create(entry.getKey()))) {
                 result.put(entry.getKey(), entry.getValue());
             }
         }
@@ -143,10 +106,14 @@ public class UsedNamesCollector {
 
     private static class NamespaceNameVisitor extends DefaultVisitor {
         private final OffsetRange offsetRange;
-        private final Map<String, List<UsedNamespaceName>> existingNames = new HashMap<>();
+        private final Map<String, NamespaceScope> scopeMap = new HashMap<>();
+        private final Map<String, List<UsedNamespaceName>> existingNames = new LinkedHashMap<>();
+        private final NamespaceScope namespaceScope;
+        private NamespaceScope currentScope;
 
-        public NamespaceNameVisitor(OffsetRange offsetRange) {
+        public NamespaceNameVisitor(OffsetRange offsetRange, NamespaceScope namespaceScope) {
             this.offsetRange = offsetRange;
+            this.namespaceScope = namespaceScope;
         }
 
         @Override
@@ -166,18 +133,23 @@ public class UsedNamesCollector {
 
         @Override
         public void visit(Program node) {
+            // just for safety to reset initial scope on a next run
+            currentScope = namespaceScope;
             scan(node.getStatements());
             scan(node.getComments());
         }
 
         @Override
         public void visit(NamespaceDeclaration node) {
+            if (namespaceScope.isDefaultNamespace()) {
+                currentScope = ModelUtils.getNamespaceScope(namespaceScope.getFileScope(), node.getBody().getStartOffset());
+            }
             scan(node.getBody());
         }
 
         @Override
         public void visit(NamespaceName node) {
-            UsedNamespaceName usedName = new UsedNamespaceName(node);
+            UsedNamespaceName usedName = new UsedNamespaceName(node, currentScope);
             if (isValidTypeName(usedName.getName())) {
                 processUsedName(usedName);
             }
@@ -185,7 +157,7 @@ public class UsedNamesCollector {
 
         @Override
         public void visit(PHPDocTypeNode node) {
-            UsedNamespaceName usedName = new UsedNamespaceName(node);
+            UsedNamespaceName usedName = new UsedNamespaceName(node, currentScope);
             if (isValidTypeName(usedName.getName()) && isValidAliasTypeName(usedName.getName())) {
                 processUsedName(usedName);
             }
@@ -194,16 +166,17 @@ public class UsedNamesCollector {
         private boolean isValidTypeName(final String typeName) {
             return !SPECIAL_NAMES.contains(typeName) && !Type.isPrimitive(typeName);
         }
-        
+
         private boolean isValidAliasTypeName(final String typeName) {
             return !SPECIAL_NAMES.contains(typeName) && !Type.isPrimitiveAlias(typeName);
-        }        
+        }
 
         private void processUsedName(final UsedNamespaceName usedName) {
             List<UsedNamespaceName> usedNames = existingNames.get(usedName.getName());
             if (usedNames == null) {
                 usedNames = new LinkedList<>();
                 existingNames.put(usedName.getName(), usedNames);
+                scopeMap.put(usedName.getName(), usedName.getInScope());
             }
             usedNames.add(usedName);
         }
@@ -212,6 +185,9 @@ public class UsedNamesCollector {
             return Collections.unmodifiableMap(existingNames);
         }
 
+        public Map<String, NamespaceScope> getScopeMap() {
+            return Collections.unmodifiableMap(scopeMap);
+        }
     }
 
     private static class NamespaceDeclarationVisitor extends DefaultVisitor {

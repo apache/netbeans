@@ -64,16 +64,26 @@ public class ProjectAuditCommand extends CodeActionsProvider {
     /**
      * Force executes the project audit using the supplied compartment and knowledgebase IDs.
      */
-    private static final String COMMAND_EXECUTE_AUDIT = "nbls.gcn.projectAudit.execute"; // NOI18N
+    private static final String COMMAND_EXECUTE_AUDIT = "nbls.projectAudit.execute"; // NOI18N
+    /**
+     * @deprecated will be removed in NB 19
+     */
+    private static final String COMMAND_EXECUTE_AUDIT_OLD = "nbls.gcn.projectAudit.execute"; // NOI18N
     
     /**
      * Displays the audit from the Knowledgebase and compartment.
      */
-    private static final String COMMAND_LOAD_AUDIT = "nbls.gcn.projectAudit.display"; // NOI18N
+    private static final String COMMAND_LOAD_AUDIT = "nbls.projectAudit.display"; // NOI18N
+    /**
+     * @deprecated will be removed in NB 19
+     */
+    private static final String COMMAND_LOAD_AUDIT_OLD = "nbls.gcn.projectAudit.display"; // NOI18N
     
     public static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
             COMMAND_EXECUTE_AUDIT,
-            COMMAND_LOAD_AUDIT
+            COMMAND_LOAD_AUDIT,
+            COMMAND_EXECUTE_AUDIT_OLD,
+            COMMAND_LOAD_AUDIT_OLD
     ));
     
     @Override
@@ -195,9 +205,11 @@ public class ProjectAuditCommand extends CodeActionsProvider {
             
             switch (command) {
                 case COMMAND_EXECUTE_AUDIT:
+                case COMMAND_EXECUTE_AUDIT_OLD:
                     exec = v.runProjectAudit(kb, auditOpts);
                     break;
-                case COMMAND_LOAD_AUDIT: {
+                case COMMAND_LOAD_AUDIT:
+                case COMMAND_LOAD_AUDIT_OLD: {
                     exec = v.runProjectAudit(kb, auditOpts.setRunIfNotExists(forceAudit).setAuditName(preferredName));
                     break;
                 }

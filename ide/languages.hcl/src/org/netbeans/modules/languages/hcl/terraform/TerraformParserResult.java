@@ -19,24 +19,16 @@
 package org.netbeans.modules.languages.hcl.terraform;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.languages.hcl.HCLParserResult;
-import org.netbeans.modules.languages.hcl.ast.ASTBuilderListener;
 import org.netbeans.modules.languages.hcl.ast.HCLBlock;
 import org.netbeans.modules.languages.hcl.ast.HCLDocument;
 import org.netbeans.modules.languages.hcl.ast.HCLIdentifier;
 import org.netbeans.modules.languages.hcl.ast.SourceRef;
-import org.netbeans.modules.languages.hcl.grammar.HCLParser;
-import org.netbeans.modules.languages.hcl.grammar.HCLParserBaseListener;
 import org.netbeans.modules.parsing.api.Snapshot;
-import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -76,6 +68,7 @@ public class TerraformParserResult extends HCLParserResult {
             return TYPES.get(name);
         }
     }
+
     public TerraformParserResult(Snapshot snapshot) {
         super(snapshot);
     }
@@ -84,7 +77,10 @@ public class TerraformParserResult extends HCLParserResult {
     @Messages({
         "# {0} - Block type name",
         "# {1} - supported declaration",
-        "INVALID_BLOCK_DECLARATION={0} block needs {1} identifiers."
+        "INVALID_BLOCK_DECLARATION=<html><b>{0}</b> block needs {1,choice,0#no identifiers|1#one identifier|1<{1,number,integer} identifiers}.",
+        "# {0} - Block type name",
+        "UNKNOWN_BLOCK=Unknown block: {0}"
+
     })
     protected void processDocument(HCLDocument doc) {
         for (HCLBlock block : doc.getBlocks()) {
@@ -92,12 +88,15 @@ public class TerraformParserResult extends HCLParserResult {
             HCLIdentifier type = decl.get(0);
 
             BlockType bt = BlockType.get(type.id());
+            SourceRef src = type.getSourceRef().get();
             if (bt != null) {
                 if (decl.size() != bt.definitionLength) {
-                    SourceRef src = type.getSourceRef().get();
-                    DefaultError error = new DefaultError(null, Bundle.INVALID_BLOCK_DECLARATION(block, bt.definitionLength - 1), null, getFileObject(), src.startOffset , src.endOffset, Severity.ERROR);
+                    DefaultError error = new DefaultError(null, Bundle.INVALID_BLOCK_DECLARATION(bt.type, bt.definitionLength - 1), null, getFileObject(), src.startOffset , src.endOffset, Severity.ERROR);
                     errors.add(error);
                 }
+            } else {
+                DefaultError error = new DefaultError(null, Bundle.UNKNOWN_BLOCK(type.id()), null, getFileObject(), src.startOffset , src.endOffset, Severity.ERROR);
+                errors.add(error);
             }
         }
     }

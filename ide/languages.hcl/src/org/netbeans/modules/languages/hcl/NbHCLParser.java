@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.languages.hcl;
 
+import java.util.function.Function;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
@@ -29,17 +30,24 @@ import org.netbeans.modules.parsing.spi.SourceModificationEvent;
  *
  * @author Laszlo Kishalmi
  */
-public class NbHCLParser extends Parser {
+public class NbHCLParser <T extends HCLParserResult> extends Parser {
 
-    protected HCLParserResult lastResult;
+    protected T lastResult;
 
-    @Override
-    public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
-        lastResult = new HCLParserResult(snapshot).get();
+    private final Function<Snapshot, T> resultCreator;
+
+    public NbHCLParser(Function<Snapshot, T> resultCreator) {
+        this.resultCreator = resultCreator;
     }
 
     @Override
-    public Result getResult(Task task) throws ParseException {
+    public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
+        lastResult = resultCreator.apply(snapshot);
+        lastResult.compute();
+    }
+
+    @Override
+    public T getResult(Task task) throws ParseException {
         return lastResult;
     }
 

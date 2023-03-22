@@ -137,7 +137,7 @@ public final class TerraformLanguage extends DefaultLanguageConfig {
 
     @Override
     public String getPreferredExtension() {
-        return "tfvars";
+        return "tf";
     }
 
     @Override
@@ -147,7 +147,7 @@ public final class TerraformLanguage extends DefaultLanguageConfig {
 
     @Override
     public Parser getParser() {
-        return new NbHCLParser();
+        return new NbHCLParser<TerraformParserResult>(TerraformParserResult::new);
     }
 
     @Override

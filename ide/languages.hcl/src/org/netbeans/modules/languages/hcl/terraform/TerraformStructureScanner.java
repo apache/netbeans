@@ -18,14 +18,19 @@
  */
 package org.netbeans.modules.languages.hcl.terraform;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import org.netbeans.api.editor.fold.FoldType;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.languages.hcl.HCLParserResult;
+import org.netbeans.spi.editor.fold.FoldTypeProvider;
 
 /**
  *
@@ -39,7 +44,7 @@ public class TerraformStructureScanner implements StructureScanner{
 
     @Override
     public Map<String, List<OffsetRange>> folds(ParserResult info) {
-        return Collections.singletonMap("codeblocks", ((HCLParserResult)info).folds); //NOI18N
+        return Collections.unmodifiableMap(((HCLParserResult)info).folds);
 
     }
 
@@ -48,4 +53,25 @@ public class TerraformStructureScanner implements StructureScanner{
         return new Configuration(true, false);
     }
 
+    @MimeRegistration(mimeType = TerraformLanguage.MIME_TYPE, service = FoldTypeProvider.class, position=230)
+    public static class FoldTypes implements FoldTypeProvider {
+
+        private static final List<FoldType> SUPPORTED = Arrays.asList(
+                FoldType.COMMENT,
+                FoldType.CODE_BLOCK,
+                FoldType.INITIAL_COMMENT,
+                FoldType.TAG
+        );
+
+        @Override
+        public Collection getValues(Class type) {
+            return type == FoldType.class ? SUPPORTED : null;
+        }
+
+        @Override
+        public boolean inheritable() {
+            return true;
+        }
+
+    }
 }

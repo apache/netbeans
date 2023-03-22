@@ -19,15 +19,19 @@
 package org.netbeans.modules.languages.hcl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.netbeans.api.editor.fold.FoldType;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Severity;
@@ -39,6 +43,7 @@ import org.netbeans.modules.languages.hcl.grammar.HCLLexer;
 import org.netbeans.modules.languages.hcl.grammar.HCLParser;
 import org.netbeans.modules.languages.hcl.grammar.HCLParserBaseListener;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.spi.lexer.antlr4.AntlrTokenSequence;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -49,7 +54,8 @@ public class HCLParserResult  extends ParserResult {
 
     protected final List<DefaultError> errors = new ArrayList<>();
     protected volatile boolean finished;
-    public final List<OffsetRange> folds = new ArrayList<>();
+    
+    public final Map<String,List<OffsetRange>> folds = new HashMap<>();
 
     private HCLDocument document;
 
@@ -61,22 +67,42 @@ public class HCLParserResult  extends ParserResult {
         return getSnapshot().getSource().getFileObject();
     }
 
-    public HCLParserResult get() {
+    public void compute() {
         if (!finished) {
-            HCLLexer lexer = new HCLLexer(CharStreams.fromString(getSnapshot().getText().toString()));
+            CodePointCharStream source = CharStreams.fromString(getSnapshot().getText().toString());
+            HCLLexer lexer = new HCLLexer(source);
             lexer.removeErrorListeners();
+            collectCommentFolds(lexer);
+            
             HCLParser parser = new HCLParser(new CommonTokenStream(lexer));
 
             configureParser(parser);
 
 
             parser.configFile();
+            lexer.reset();
             
         }
         processDocument(document);
 
         finished = true;
-        return this;
+    }
+
+    private void collectCommentFolds(HCLLexer lexer) {
+        boolean firstComment = true;
+        AntlrTokenSequence tokens = new AntlrTokenSequence(lexer);
+        while (tokens.hasNext()) {
+            Token token = tokens.next().get();
+            if (token.getChannel() != HCLLexer.HIDDEN) {
+                if (token.getType() == HCLLexer.BLOCK_COMMENT) {
+                    if (token.getText().contains("\n")) {
+                        addFold(firstComment ? FoldType.INITIAL_COMMENT: FoldType.COMMENT, token.getStartIndex(), token.getStopIndex() + 1);
+                    }                    
+                }
+                firstComment = false;
+            }
+        }
+        lexer.reset();
     }
 
     @Override
@@ -108,10 +134,11 @@ public class HCLParserResult  extends ParserResult {
     protected void processDocument(HCLDocument doc) {
     }
 
-    private void addFold(int start, int stop) {
-        OffsetRange range = new OffsetRange(start, stop);
-        if(! folds.contains(range)) {
-            folds.add(range);
+    private void addFold(FoldType ft, int start, int stop) {
+        if (start < stop) {
+            List<OffsetRange> foldBag = folds.computeIfAbsent(ft.code(), (t) ->  new ArrayList<>());
+            OffsetRange range = new OffsetRange(start, stop);
+            foldBag.add(range);
         }
     }
 
@@ -138,14 +165,14 @@ public class HCLParserResult  extends ParserResult {
                 if (ctx.HEREDOC_END() != null) {
                     int start = ctx.HEREDOC_START().getSymbol().getStopIndex();
                     int stop = ctx.HEREDOC_END().getSymbol().getStopIndex() + 1;
-                    addFold(start, stop);
+                    addFold(FoldType.TAG, start, stop);
                 }
             }
 
             @Override
             public void exitBlock(HCLParser.BlockContext ctx) {
                 if (ctx.RBRACE() != null) {
-                    addFold(ctx.LBRACE().getSymbol().getStartIndex(), ctx.RBRACE().getSymbol().getStopIndex() + 1);
+                    addFold(FoldType.CODE_BLOCK, ctx.LBRACE().getSymbol().getStartIndex(), ctx.RBRACE().getSymbol().getStopIndex() + 1);
                 }
             }
 

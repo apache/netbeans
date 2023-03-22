@@ -40,6 +40,10 @@ public class PHP81FeaturesTest extends PHPLexerTestBase {
         performTest("lexer/php81/enumerations_02");
     }
 
+    public void testExplicitOctalIntegerLiteralNotation_01() throws Exception {
+        performTest("lexer/php81/explicitOctalIntegerLiteralNotation_01");
+    }
+
     public void testEnumAsTypeName() throws Exception {
         performTest("lexer/php81/enumAsTypeName");
     }

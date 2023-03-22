@@ -305,6 +305,7 @@ DNUM=({LNUM}?[\.]{LNUM})|({LNUM}[\.]{LNUM}?)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
 HNUM="0x"[0-9a-fA-F]+(_[0-9a-fA-F]+)*
 BNUM="0b"[01]+(_[01]+)*
+ONUM="0o"[0-7]+(_[0-7]+)* // PHP 8.1: Explicit octal integer literal notation
 //LABEL=[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 LABEL=([[:letter:]_]|[\u007f-\u00ff])([[:letter:][:digit:]_]|[\u007f-\u00ff])*
 WHITESPACE=[ \n\r\t]+
@@ -1022,6 +1023,12 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
 }
 
 <ST_PHP_IN_SCRIPTING>{BNUM} {
+    return PHPTokenId.PHP_NUMBER;
+}
+
+<ST_PHP_IN_SCRIPTING>{ONUM} {
+    // PHP 8.1: Explicit octal integer literal notation
+    // https://wiki.php.net/rfc/explicit_octal_notation
     return PHPTokenId.PHP_NUMBER;
 }
 

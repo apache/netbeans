@@ -65,4 +65,10 @@ public abstract class HCLHereDocAdaptor extends Lexer {
         return charAfterDelimiter == EOF ||  Character.isWhitespace(charAfterDelimiter);
     }
 
+    @Override
+    public void reset() {
+        super.reset();
+        currentHereDocVar = null;
+        hereDocStack.clear();
+    }
 }

@@ -330,7 +330,13 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
         PHPCompletionItem.CompletionRequest request = new PHPCompletionItem.CompletionRequest();
         request.context = context;
-        String prefix = getPrefix(info, caretOffset, true, PrefixBreaker.WITH_NS_PARTS);
+        QueryType queryType = completionContext.getQueryType();
+        String prefix;
+        if (queryType == QueryType.DOCUMENTATION) { // GH-4494
+            prefix = getPrefix(info, caretOffset, false, PrefixBreaker.WITH_NS_PARTS);
+        } else {
+            prefix = getPrefix(info, caretOffset, true, PrefixBreaker.WITH_NS_PARTS);
+        }
         if (prefix == null) {
             return CodeCompletionResult.NONE;
         }

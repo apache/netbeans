@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.modules.csl.api.CodeCompletionHandler.QueryType;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -291,6 +292,34 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/issueGH5426.php", "        $this->testMetho^d(null);", false, "");
     }
 
+    public void testIssueGH4494_01() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh44^94_aa_bbb();");
+    }
+
+    public void testIssueGH4494_02() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494_aa^_bbb();");
+    }
+
+    public void testIssueGH4494_03() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494_aa_b^bb();");
+    }
+
+    public void testIssueGH4494_04() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494^_aa_bb_cc();");
+    }
+
+    public void testIssueGH4494_05() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494_aa^_bb_cc();");
+    }
+
+    public void testIssueGH4494_06() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494_aa_bb^_cc();");
+    }
+
+    public void testIssueGH4494_07() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494_aa_bb_cc^();");
+    }
+
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");
@@ -314,6 +343,10 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         if (followPhpdocumentor) {
             DocRenderer.PHPDocExtractor.UNIT_TEST_INHERITDOC_FOR_PHPDOCUMENTER = false;
         }
+    }
+
+    private void checkCompletionOnlyDocumentation(String filePath, String caretLine) throws Exception {
+        checkCompletionDocumentation(filePath, caretLine, false, "", QueryType.DOCUMENTATION);
     }
 
     @Override

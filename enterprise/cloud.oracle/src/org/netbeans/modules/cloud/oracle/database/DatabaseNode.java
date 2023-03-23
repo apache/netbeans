@@ -79,7 +79,7 @@ public class DatabaseNode extends OCINode {
                     .map(d -> {
                         List<DatabaseConnectionStringProfile> profiles = d.getConnectionStrings().getProfiles();
                         DatabaseItem item = new DatabaseItem(
-                                OCID.of(d.getId(), "Database"), //NOI18N
+                                OCID.of(d.getId(), "Databases"), //NOI18N
                                 d.getDbName(),
                                 d.getServiceConsoleUrl(),
                                 getConnectionName(profiles));

@@ -283,6 +283,14 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/issueGH5375.php", "$this->test_with_v^ar_tag", false, "");
     }
 
+    public void testIssueGH5375_03() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5375Intersection.php", "$this->test_without_v^ar_tag", false, "");
+    }
+
+    public void testIssueGH5375_04() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5375Intersection.php", "$this->test_with_v^ar_tag", false, "");
+    }
+
     public void testIssueGH5426_01() throws Exception {
         checkCompletionDocumentation("testfiles/completion/documentation/issueGH5426.php", "        $this->testFi^eld;", false, "");
     }

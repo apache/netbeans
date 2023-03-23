@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -49,8 +48,6 @@ import org.openide.NotifyDescriptor.ComposedInput.Callback;
 import org.openide.NotifyDescriptor.QuickPick;
 import org.openide.NotifyDescriptor.QuickPick.Item;
 import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -68,9 +65,6 @@ import org.openide.util.NbBundle;
         asynchronous = true
 )
 
-@ActionReferences(value = {
-    @ActionReference(path = "Cloud/Oracle/Common/Actions", position = 260)
-})
 @NbBundle.Messages({
     "AddADB=Add Oracle Autonomous DB",
     "SelectProfile=Select OCI Profile",

@@ -1,0 +1,142 @@
+<testresult testFile='explicitOctalIntegerLiteralNotation_01.php'>
+    <scanner>
+        <token id='T_LNUMBER' start='815' end='819'>
+            <text>0o16</text>
+        </token>
+        <token id='T_SEMICOLON' start='819' end='820'>
+            <text>;</text>
+        </token>
+        <token id='T_LNUMBER' start='821' end='826'>
+            <text>0o1_6</text>
+        </token>
+        <token id='T_SEMICOLON' start='826' end='827'>
+            <text>;</text>
+        </token>
+        <token id='T_LNUMBER' start='828' end='835'>
+            <text>0o1_6_7</text>
+        </token>
+        <token id='T_SEMICOLON' start='835' end='836'>
+            <text>;</text>
+        </token>
+        <token id='T_IF' start='838' end='840'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='841' end='842'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='842' end='846'>
+            <text>0O16</text>
+        </token>
+        <token id='T_IS_EQUAL' start='847' end='849'>
+            <text>==</text>
+        </token>
+        <token id='T_LNUMBER' start='850' end='852'>
+            <text>14</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='852' end='853'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='854' end='855'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='856' end='857'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='859' end='865'>
+            <text>$octal</text>
+        </token>
+        <token id='T_EQUAL' start='866' end='867'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='868' end='875'>
+            <text>0O0_016</text>
+        </token>
+        <token id='T_SEMICOLON' start='875' end='876'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='877' end='883'>
+            <text>$octal</text>
+        </token>
+        <token id='T_EQUAL' start='884' end='885'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='886' end='899'>
+            <text>0O0_123_456_7</text>
+        </token>
+        <token id='T_SEMICOLON' start='899' end='900'>
+            <text>;</text>
+        </token>
+        <token id='T_LNUMBER' start='902' end='905'>
+            <text>0o1</text>
+        </token>
+        <token id='T_NEKUDA' start='905' end='906'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='906' end='908'>
+            <text>_6</text>
+        </token>
+        <token id='T_SEMICOLON' start='908' end='909'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='928' end='928'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='910'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='910' end='928' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='910' end='928' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='820'>
+                <Scalar start='815' end='819' type='INT' value='0o16'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='821' end='827'>
+                <Scalar start='821' end='826' type='INT' value='0o1_6'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='828' end='836'>
+                <Scalar start='828' end='835' type='INT' value='0o1_6_7'/>
+            </ExpressionStatement>
+            <IfStatement start='838' end='857'>
+                <Condition>
+                    <InfixExpression start='842' end='852' operator='IS_EQUAL'>
+                        <Scalar start='842' end='846' type='INT' value='0O16'/>
+                        <Scalar start='850' end='852' type='INT' value='14'/>
+                    </InfixExpression>
+                </Condition>
+                <Then>
+                    <Block start='854' end='857' isCurly='true'>
+                    </Block>
+                </Then>
+                <Else>
+                </Else>
+            </IfStatement>
+            <ExpressionStatement start='859' end='876'>
+                <Assignment start='859' end='875' operator='EQUAL'>
+                    <Variable start='859' end='865' isDollared='true'>
+                        <Identifier start='860' end='865' name='octal'/>
+                    </Variable>
+                    <Scalar start='868' end='875' type='INT' value='0O0_016'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='877' end='900'>
+                <Assignment start='877' end='899' operator='EQUAL'>
+                    <Variable start='877' end='883' isDollared='true'>
+                        <Identifier start='878' end='883' name='octal'/>
+                    </Variable>
+                    <Scalar start='886' end='899' type='INT' value='0O0_123_456_7'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='902' end='909'>
+                <InfixExpression start='902' end='908' operator='CONCAT'>
+                    <Scalar start='902' end='905' type='INT' value='0o1'/>
+                    <NamespaceName start='906' end='908' isCurrent='false' isGlobal='false'>
+                        <Identifier start='906' end='908' name='_6'/>
+                    </NamespaceName>
+                </InfixExpression>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

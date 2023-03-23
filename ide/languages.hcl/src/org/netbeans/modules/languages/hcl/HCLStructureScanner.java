@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.languages.hcl.terraform;
+package org.netbeans.modules.languages.hcl;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,7 +36,7 @@ import org.netbeans.spi.editor.fold.FoldTypeProvider;
  *
  * @author Laszlo Kishalmi
  */
-public class TerraformStructureScanner implements StructureScanner{
+public class HCLStructureScanner implements StructureScanner{
     @Override
     public List<? extends StructureItem> scan(ParserResult info) {
         return Collections.emptyList();
@@ -53,25 +53,4 @@ public class TerraformStructureScanner implements StructureScanner{
         return new Configuration(true, false);
     }
 
-    @MimeRegistration(mimeType = TerraformLanguage.MIME_TYPE, service = FoldTypeProvider.class, position=230)
-    public static class FoldTypes implements FoldTypeProvider {
-
-        private static final List<FoldType> SUPPORTED = Arrays.asList(
-                FoldType.COMMENT,
-                FoldType.CODE_BLOCK,
-                FoldType.INITIAL_COMMENT,
-                FoldType.TAG
-        );
-
-        @Override
-        public Collection getValues(Class type) {
-            return type == FoldType.class ? SUPPORTED : null;
-        }
-
-        @Override
-        public boolean inheritable() {
-            return true;
-        }
-
-    }
 }

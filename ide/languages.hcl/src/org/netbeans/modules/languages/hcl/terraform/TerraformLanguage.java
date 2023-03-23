@@ -18,17 +18,17 @@
  */
 package org.netbeans.modules.languages.hcl.terraform;
 
+import org.netbeans.modules.languages.hcl.HCLStructureScanner;
 import java.util.Collection;
 import java.util.EnumSet;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
-import org.netbeans.core.spi.multiview.MultiViewElement;
-import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
+import org.netbeans.modules.languages.hcl.HCLLanguage;
 import org.netbeans.modules.languages.hcl.HCLTokenId;
 import org.netbeans.modules.languages.hcl.NbHCLParser;
 import org.netbeans.modules.parsing.spi.Parser;
@@ -38,9 +38,7 @@ import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.openide.filesystems.MIMEResolver;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
 
 /**
  *
@@ -55,7 +53,7 @@ import org.openide.windows.TopComponent;
         position = 305
 )
 @LanguageRegistration(mimeType = TerraformLanguage.MIME_TYPE, useMultiview = true)
-public final class TerraformLanguage extends DefaultLanguageConfig {
+public final class TerraformLanguage extends HCLLanguage {
 
     public static final String MIME_TYPE = "text/x-terraform+x-hcl";
 
@@ -66,7 +64,7 @@ public final class TerraformLanguage extends DefaultLanguageConfig {
 
     @Override
     public String getDisplayName() {
-        return Bundle.TFVarsResolver();
+        return Bundle.TerraformResolver();
     }
 
     @Override
@@ -75,23 +73,8 @@ public final class TerraformLanguage extends DefaultLanguageConfig {
     }
 
     @Override
-    public String getLineCommentPrefix() {
-        return "#"; // NOI18N
-    }
-
-    @Override
     public Parser getParser() {
         return new NbHCLParser<TerraformParserResult>(TerraformParserResult::new);
-    }
-
-    @Override
-    public StructureScanner getStructureScanner() {
-        return new TerraformStructureScanner();
-    }
-
-    @Override
-    public boolean hasStructureScanner() {
-        return true;
     }
 
     private static final Language<HCLTokenId> language = new LanguageHierarchy<HCLTokenId>() {
@@ -121,17 +104,5 @@ public final class TerraformLanguage extends DefaultLanguageConfig {
             return HCLTokenId.INTERPOLATION == id ? EmbeddingPresence.CACHED_FIRST_QUERY : EmbeddingPresence.NONE;
         }
     }.language();
-
-    @NbBundle.Messages("Source=&Source")
-    @MultiViewElement.Registration(
-            displayName = "#Source",
-            persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
-            mimeType = TerraformLanguage.MIME_TYPE,
-            preferredID = "terraform.source",
-            position = 100
-    )
-    public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
-        return new MultiViewEditorElement(context);
-    }
 
 }

@@ -44,7 +44,7 @@
                 </folder>
             </folder>
             <folder name="x-tfvars+x-hcl">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.languages.hcl.tfvars.BundleTFVarsResolver"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.languages.hcl.tfvars.Bundle#TFVarsResolver"/>
                 <folder name="FontsColors">
                     <folder name="NetBeans">
                         <folder name="Defaults">

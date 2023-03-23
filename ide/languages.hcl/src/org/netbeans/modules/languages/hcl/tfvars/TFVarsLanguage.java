@@ -24,21 +24,17 @@ import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
-import org.netbeans.core.spi.multiview.MultiViewElement;
-import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
-import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.languages.hcl.HCLTokenId;
 import org.netbeans.modules.languages.hcl.BasicHCLLexer;
+import org.netbeans.modules.languages.hcl.HCLLanguage;
 import org.netbeans.spi.lexer.EmbeddingPresence;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.openide.filesystems.MIMEResolver;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
 
 /**
  *
@@ -54,7 +50,7 @@ import org.openide.windows.TopComponent;
 )
 
 @LanguageRegistration(mimeType = TFVarsLanguage.MIME_TYPE, useMultiview = true)
-public final class TFVarsLanguage extends DefaultLanguageConfig {
+public final class TFVarsLanguage extends HCLLanguage {
 
     public static final String MIME_TYPE = "text/x-tfvars+x-hcl";
 
@@ -71,11 +67,6 @@ public final class TFVarsLanguage extends DefaultLanguageConfig {
     @Override
     public String getPreferredExtension() {
         return "tfvars";
-    }
-
-    @Override
-    public String getLineCommentPrefix() {
-        return "#"; // NOI18N
     }
 
     private static final Language<HCLTokenId> language = new LanguageHierarchy<HCLTokenId>() {
@@ -105,17 +96,4 @@ public final class TFVarsLanguage extends DefaultLanguageConfig {
             return HCLTokenId.INTERPOLATION == id ? EmbeddingPresence.CACHED_FIRST_QUERY : EmbeddingPresence.NONE;
         }
     }.language();
-
-    @NbBundle.Messages("Source=&Source")
-    @MultiViewElement.Registration(
-            displayName = "#Source",
-            persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
-            mimeType = TFVarsLanguage.MIME_TYPE,
-            preferredID = "tfvars.source",
-            position = 100
-    )
-    public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
-        return new MultiViewEditorElement(context);
-    }
-
 }

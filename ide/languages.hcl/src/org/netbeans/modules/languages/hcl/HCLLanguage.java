@@ -18,16 +18,26 @@
  */
 package org.netbeans.modules.languages.hcl;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.List;
+import org.netbeans.api.editor.fold.FoldTemplate;
+import org.netbeans.api.editor.fold.FoldType;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
+import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
+import org.netbeans.modules.languages.hcl.terraform.TerraformLanguage;
+import org.netbeans.modules.languages.hcl.terraform.TerraformParserResult;
+import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.spi.editor.fold.FoldTypeProvider;
 import org.netbeans.spi.lexer.EmbeddingPresence;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageHierarchy;
@@ -138,6 +148,22 @@ public class HCLLanguage extends DefaultLanguageConfig {
     public String getLineCommentPrefix() {
         return "#"; // NOI18N
     }
+
+    @Override
+    public Parser getParser() {
+        return new NbHCLParser<HCLParserResult>(HCLParserResult::new);
+    }
+
+    @Override
+    public boolean hasStructureScanner() {
+        return true;
+    }
+
+    @Override
+    public StructureScanner getStructureScanner() {
+        return new HCLStructureScanner();
+    }
+
     private static final Language<HCLTokenId> language = new LanguageHierarchy<HCLTokenId>() {
 
         @Override
@@ -176,5 +202,46 @@ public class HCLLanguage extends DefaultLanguageConfig {
     )
     public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
         return new MultiViewEditorElement(context);
+    }
+
+    @MimeRegistration(mimeType = HCLLanguage.MIME_TYPE, service = FoldTypeProvider.class, position=230)
+    public static class HCLFold implements FoldTypeProvider {
+
+        @NbBundle.Messages({
+            "FT_label_heredoc=Heredocs",
+            "FT_template_heredoc=<<..."
+        })
+        public static final FoldType HEREDOC = FoldType.create("heredoc", Bundle.FT_label_heredoc(), new FoldTemplate(2,0, Bundle.FT_template_heredoc()));
+
+        @NbBundle.Messages({
+            "FT_label_tuple=Tuples (List/Sets)",
+            "FT_template_tuple=[...]"
+        })
+        public static final FoldType TUPLE = FoldType.create("tuple", Bundle.FT_label_tuple(), new FoldTemplate(1,1, Bundle.FT_template_tuple()));
+        @NbBundle.Messages({
+            "FT_label_object=Maps or Objects",
+            "FT_template_object={...}"
+        })
+        public static final FoldType OBJECT = FoldType.create("object", Bundle.FT_label_object(), new FoldTemplate(1,1, Bundle.FT_template_object()));
+
+        private static final List<FoldType> SUPPORTED = Arrays.asList(
+                FoldType.CODE_BLOCK,
+                FoldType.COMMENT,
+                HCLFold.HEREDOC,
+                FoldType.INITIAL_COMMENT,
+                HCLFold.OBJECT,
+                HCLFold.TUPLE
+        );
+
+        @Override
+        public Collection getValues(Class type) {
+            return type == FoldType.class ? SUPPORTED : null;
+        }
+
+        @Override
+        public boolean inheritable() {
+            return true;
+        }
+
     }
 }

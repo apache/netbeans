@@ -31,6 +31,7 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.netbeans.api.editor.fold.FoldType;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -96,7 +97,7 @@ public class HCLParserResult  extends ParserResult {
             if (token.getChannel() != HCLLexer.HIDDEN) {
                 if (token.getType() == HCLLexer.BLOCK_COMMENT) {
                     if (token.getText().contains("\n")) {
-                        addFold(firstComment ? FoldType.INITIAL_COMMENT: FoldType.COMMENT, token.getStartIndex(), token.getStopIndex() + 1);
+                        addFold(firstComment ? FoldType.INITIAL_COMMENT: FoldType.COMMENT, token);
                     }                    
                 }
                 firstComment = false;
@@ -134,11 +135,24 @@ public class HCLParserResult  extends ParserResult {
     protected void processDocument(HCLDocument doc) {
     }
 
-    private void addFold(FoldType ft, int start, int stop) {
-        if (start < stop) {
+    private void addFold(FoldType ft, Token token) {
+        if (token.getText().contains("\n") && (token.getStartIndex() < token.getStopIndex())) {
             List<OffsetRange> foldBag = folds.computeIfAbsent(ft.code(), (t) ->  new ArrayList<>());
-            OffsetRange range = new OffsetRange(start, stop);
+            OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
             foldBag.add(range);
+        }
+    }
+    private void addFold(FoldType ft, Token start, Token stop) {
+        if (start.getLine() < stop.getLine()) {
+            List<OffsetRange> foldBag = folds.computeIfAbsent(ft.code(), (t) ->  new ArrayList<>());
+            OffsetRange range = new OffsetRange(start.getStartIndex(), stop.getStopIndex() + 1);
+            foldBag.add(range);
+        }
+    }
+
+    private void addFold(FoldType ft, TerminalNode start, TerminalNode stop) {
+        if ((start != null) && (stop != null)) {
+            addFold(ft, start.getSymbol(), stop.getSymbol());
         }
     }
 
@@ -162,18 +176,32 @@ public class HCLParserResult  extends ParserResult {
 
             @Override
             public void exitHeredocTemplate(HCLParser.HeredocTemplateContext ctx) {
-                if (ctx.HEREDOC_END() != null) {
-                    int start = ctx.HEREDOC_START().getSymbol().getStopIndex();
-                    int stop = ctx.HEREDOC_END().getSymbol().getStopIndex() + 1;
-                    addFold(FoldType.TAG, start, stop);
-                }
+                addFold(HCLLanguage.HCLFold.HEREDOC, ctx.HEREDOC_START(), ctx.HEREDOC_END());
             }
 
             @Override
             public void exitBlock(HCLParser.BlockContext ctx) {
-                if (ctx.RBRACE() != null) {
-                    addFold(FoldType.CODE_BLOCK, ctx.LBRACE().getSymbol().getStartIndex(), ctx.RBRACE().getSymbol().getStopIndex() + 1);
-                }
+                addFold(FoldType.CODE_BLOCK, ctx.LBRACE(), ctx.RBRACE());
+            }
+
+            @Override
+            public void exitForObjectExpr(HCLParser.ForObjectExprContext ctx) {
+                addFold(HCLLanguage.HCLFold.OBJECT, ctx.LBRACE(), ctx.RBRACE());
+            }
+
+            @Override
+            public void exitForTupleExpr(HCLParser.ForTupleExprContext ctx) {
+                addFold(HCLLanguage.HCLFold.TUPLE, ctx.LBRACK(), ctx.RBRACK());
+            }
+
+            @Override
+            public void exitObject(HCLParser.ObjectContext ctx) {
+                addFold(HCLLanguage.HCLFold.OBJECT, ctx.LBRACE(), ctx.RBRACE());
+            }
+
+            @Override
+            public void exitTuple(HCLParser.TupleContext ctx) {
+                addFold(HCLLanguage.HCLFold.TUPLE, ctx.LBRACK(), ctx.RBRACK());
             }
 
 

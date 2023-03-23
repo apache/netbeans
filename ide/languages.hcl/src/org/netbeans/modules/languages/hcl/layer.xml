@@ -23,8 +23,8 @@
 <filesystem>
     <folder name="Editors">
         <folder name="text">
-            <folder name="x-hcl-tf">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.languages.hcl.terraform.Bundle#Editors/text/x-hcl-tf"/>
+            <folder name="x-terraform+x-hcl">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.languages.hcl.terraform.Bundle#TerraformResolver"/>
                 <folder name="FontsColors">
                     <folder name="NetBeans">
                         <folder name="Defaults">
@@ -43,8 +43,8 @@
                     </folder>
                 </folder>
             </folder>
-            <folder name="x-hcl-tfvars">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.languages.hcl.tfvars.Bundle#Editors/text/x-hcl-tfvars"/>
+            <folder name="x-tfvars+x-hcl">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.languages.hcl.tfvars.BundleTFVarsResolver"/>
                 <folder name="FontsColors">
                     <folder name="NetBeans">
                         <folder name="Defaults">
@@ -64,10 +64,10 @@
     </folder>
     <folder name="Loaders">
         <folder name="text">
-            <folder name="x-hcl-tf">
+            <folder name="x-terraform+x-hcl">
                 <attr name="iconBase" stringvalue="org/netbeans/modules/languages/hcl/resources/terraform.png"/>
             </folder>
-            <folder name="x-hcl-tfvars">
+            <folder name="x-tfvars+x-hcl">
                 <attr name="iconBase" stringvalue="org/netbeans/modules/languages/hcl/resources/terraform.png"/>
             </folder>
         </folder>

@@ -19,8 +19,10 @@
 package org.netbeans.modules.languages.hcl.terraform;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.languages.hcl.HCLParserResult;
@@ -77,12 +79,14 @@ public class TerraformParserResult extends HCLParserResult {
     @Messages({
         "# {0} - Block type name",
         "# {1} - supported declaration",
-        "INVALID_BLOCK_DECLARATION=<html><b>{0}</b> block needs {1,choice,0#no identifiers|1#one identifier|1<{1,number,integer} identifiers}.",
+        "INVALID_BLOCK_DECLARATION={0} block needs {1,choice,0#no identifiers|1#one identifier|1<{1,number,integer} identifiers}.",
         "# {0} - Block type name",
-        "UNKNOWN_BLOCK=Unknown block: {0}"
-
+        "UNKNOWN_BLOCK=Unknown block: {0}",
+        "# {0} - Block ID",
+        "DUPLICATE_BLOCK=Duplicate Block Definition: {0}"
     })
     protected void processDocument(HCLDocument doc) {
+        Set<String> defined = new HashSet<>();
         for (HCLBlock block : doc.getBlocks()) {
             List<HCLIdentifier> decl = block.getDeclaration();
             HCLIdentifier type = decl.get(0);
@@ -93,11 +97,16 @@ public class TerraformParserResult extends HCLParserResult {
                 if (decl.size() != bt.definitionLength) {
                     DefaultError error = new DefaultError(null, Bundle.INVALID_BLOCK_DECLARATION(bt.type, bt.definitionLength - 1), null, getFileObject(), src.startOffset , src.endOffset, Severity.ERROR);
                     errors.add(error);
+                } else {
+                    if ((bt.definitionLength > 1) && !defined.add(block.id())) {
+                        errors.add(new DefaultError(null, Bundle.DUPLICATE_BLOCK(block.id()), null, getFileObject(), src.startOffset , src.endOffset, Severity.ERROR));
+                    }
                 }
             } else {
                 DefaultError error = new DefaultError(null, Bundle.UNKNOWN_BLOCK(type.id()), null, getFileObject(), src.startOffset , src.endOffset, Severity.ERROR);
                 errors.add(error);
             }
+
         }
     }
 

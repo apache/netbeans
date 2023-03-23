@@ -28,6 +28,8 @@ import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.languages.hcl.HCLTokenId;
 import org.netbeans.modules.languages.hcl.BasicHCLLexer;
 import org.netbeans.modules.languages.hcl.HCLLanguage;
+import org.netbeans.modules.languages.hcl.NbHCLParser;
+import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.lexer.EmbeddingPresence;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageHierarchy;
@@ -67,6 +69,11 @@ public final class TFVarsLanguage extends HCLLanguage {
     @Override
     public String getPreferredExtension() {
         return "tfvars";
+    }
+
+    @Override
+    public Parser getParser() {
+        return new NbHCLParser<TFVarsParserResult>(TFVarsParserResult::new);
     }
 
     private static final Language<HCLTokenId> language = new LanguageHierarchy<HCLTokenId>() {

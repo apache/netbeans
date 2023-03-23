@@ -18,15 +18,12 @@
  */
 package org.netbeans.modules.languages.hcl.terraform;
 
-import org.netbeans.modules.languages.hcl.HCLStructureScanner;
 import java.util.Collection;
 import java.util.EnumSet;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
-import org.netbeans.modules.csl.api.StructureScanner;
-import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.languages.hcl.HCLLanguage;
 import org.netbeans.modules.languages.hcl.HCLTokenId;

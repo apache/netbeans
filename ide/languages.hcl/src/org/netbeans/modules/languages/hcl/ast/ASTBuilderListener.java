@@ -50,8 +50,19 @@ public class ASTBuilderListener extends HCLParserBaseListener {
                 decl.add(id);
             }
             for (HCLParser.StringLitContext idn : ctx.stringLit()) {
+                String sid = idn.getText();
+                sid = sid.substring(1, sid.length() - (sid.endsWith("\"") ? 1 : 0));
                 SourceRef src = new SourceRef(null, idn.getStart().getStartIndex(), idn.getStop().getStopIndex());
-                HCLIdentifier id = new HCLIdentifier.StringId(src, idn.getText());
+                /*
+                StringBuilder sb = new StringBuilder(idn.getStop().getStopIndex() - idn.getStart().getStartIndex());
+                for (HCLParser.StringContentContext scontent : idn.stringContent()) {
+                    for (TerminalNode tn : scontent.STRING_CONTENT()) {
+                        sb.append(tn.getText());
+                    }
+                }
+                HCLIdentifier id = new HCLIdentifier.StringId(src, sb.toString());
+                */
+                HCLIdentifier id = new HCLIdentifier.StringId(src, sid);
                 decl.add(id);
             }
             Collections.sort(decl, HCLElement.SOURCE_ORDER);

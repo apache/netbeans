@@ -33,22 +33,22 @@ import java.util.Map;
 public abstract class HCLContainer extends HCLElement {
     final List<HCLElement> elements = new LinkedList<>();
 
-    final Map<String, HCLBlock> blocks = new LinkedHashMap<>();
-    final Map<String, HCLAttribute> attributes = new LinkedHashMap<>();
+    final List<HCLBlock> blocks = new LinkedList<>();
+    final List<HCLAttribute> attributes = new LinkedList<>();
 
     public void add(HCLBlock block) {
         block.parent = this;
         elements.add(block);
-        blocks.put(block.id(), block);
+        blocks.add(block);
     }
 
     public void add(HCLAttribute attr) {
         attr.parent = this;
         elements.add(attr);
-        attributes.put(attr.id(), attr);
+        attributes.add(attr);
     }
 
     public Collection<? extends HCLBlock> getBlocks() {
-        return Collections.unmodifiableCollection(blocks.values());
+        return Collections.unmodifiableCollection(blocks);
     }
 }

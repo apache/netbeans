@@ -204,7 +204,7 @@ public abstract class DataLoader extends SharedClassObject implements DataObject
      * <p>
      * {@link javax.swing.JSeparator} instances may be used to separate items.
      * <p>
-     * Suggested context name: <samp>Loaders/<em>PRIMARY-FILE/MIME-TYPE</em>/Actions</samp>
+     * Suggested context name: <code>Loaders/<em>PRIMARY-FILE/MIME-TYPE</em>/Actions</code>
      *
      * @return the string name of the context on layer files to read/write actions to
      * @since 5.0

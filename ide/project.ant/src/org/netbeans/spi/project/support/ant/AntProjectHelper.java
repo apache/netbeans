@@ -1052,7 +1052,7 @@ public final class AntProjectHelper {
      * A file is considered out of date if there is no file represented by the
      * matching target pattern (which has the same format), or the target file is older
      * than the source file, or the source file is modified as per
-     * {@link org.openide.loaders.DataObject#isModified}.
+     * <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#isModified--" >DataObject#isModified()</a>.
      * An attempt is made to fire changes from the status object whenever the result
      * should change from one call to the next.
      * <p>
@@ -1064,12 +1064,12 @@ public final class AntProjectHelper {
      * A typical set of source and target patterns would be:
      * </p>
      * <ol>
-     * <li><samp>${src.dir}/*.java</samp>
-     * <li><samp>${test.src.dir}/*.java</samp>
+     * <li><em>${src.dir}/*.java</em>
+     * <li><em>${test.src.dir}/*.java</em>
      * </ol>
      * <ol>
-     * <li><samp>${build.classes.dir}/*.class</samp>
-     * <li><samp>${test.build.classes.dir}/*.class</samp>
+     * <li><em>${build.classes.dir}/*.class</em>
+     * <li><em>${test.build.classes.dir}/*.class</em>
      * </ol>
      * </div>
      * @param eval a property evaluator to interpret the patterns with
@@ -1089,12 +1089,12 @@ public final class AntProjectHelper {
      * is in a fixed location under a standard Ant-based project.
      * @param type the type of artifact, e.g. <a href="@org-netbeans-modules-java-project@/org/netbeans/api/java/project/JavaProjectConstants.html#ARTIFACT_TYPE_JAR"><code>JavaProjectConstants.ARTIFACT_TYPE_JAR</code></a>
      * @param locationProperty an Ant property name giving the project-relative
-     *                         location of the artifact, e.g. <samp>dist.jar</samp>
+     *                         location of the artifact, e.g. <em>dist.jar</em>
      * @param eval a way to evaluate the location property (e.g. {@link #getStandardPropertyEvaluator})
      * @param targetName the name of an Ant target which will build the artifact,
-     *                   e.g. <samp>jar</samp>
+     *                   e.g. <em>jar</em>
      * @param cleanTargetName the name of an Ant target which will delete the artifact
-     *                        (and maybe other build products), e.g. <samp>clean</samp>
+     *                        (and maybe other build products), e.g. <em>clean</em>
      * @return an artifact
      */
     public AntArtifact createSimpleAntArtifact(String type, String locationProperty, PropertyEvaluator eval, String targetName, String cleanTargetName) {
@@ -1106,14 +1106,14 @@ public final class AntProjectHelper {
      * is in a fixed location under a standard Ant-based project.
      * @param type the type of artifact, e.g. <a href="@org-netbeans-modules-java-project@/org/netbeans/api/java/project/JavaProjectConstants.html#ARTIFACT_TYPE_JAR"><code>JavaProjectConstants.ARTIFACT_TYPE_JAR</code></a>
      * @param locationProperty an Ant property name giving the project-relative
-     *                         location of the artifact, e.g. <samp>dist.jar</samp>
+     *                         location of the artifact, e.g. <em>dist.jar</em>
      * @param eval a way to evaluate the location property (e.g. {@link #getStandardPropertyEvaluator})
      * @param targetName the name of an Ant target which will build the artifact,
-     *                   e.g. <samp>jar</samp>
+     *                   e.g. <em>jar</em>
      * @param cleanTargetName the name of an Ant target which will delete the artifact
-     *                        (and maybe other build products), e.g. <samp>clean</samp>
+     *                        (and maybe other build products), e.g. <em>clean</em>
      * @param buildScriptProperty an Ant property name giving the project-relative
-     *      location and name of the build.xml or null if default one (<samp>build.xml</samp>) 
+     *      location and name of the build.xml or null if default one (<em>build.xml</em>) 
      *      should be used; default value is also used if property is given but its value is null
      * @return an artifact
      * @since org.netbeans.modules.project.ant/1 1.25
@@ -1172,10 +1172,10 @@ public final class AntProjectHelper {
      * A quick rule of thumb is that the include list should contain any
      * source directories which <em>might</em> reside outside the project directory;
      * and the exclude list should contain any directories which you would want
-     * to add to a <samp>.cvsignore</samp> file if using CVS (for example).
+     * to add to a <em>.cvsignore</em> file if using CVS (for example).
      * </p>
      * <p>
-     * Note that in this case <samp>${src.dir}</samp> and <samp>${test.src.dir}</samp>
+     * Note that in this case <em>${src.dir}</em> and <em>${test.src.dir}</em>
      * may be relative paths inside the project directory; relative paths pointing
      * outside of the project directory; or absolute paths (generally outside of the
      * project directory). If they refer to locations inside the project directory,

@@ -620,7 +620,7 @@ implements java.io.Serializable {
      *   &lt;attr name="iconBase" stringvalue="org/your/pkg/YourDataObject.png"/&gt;
      * &lt;/file&gt;
      * </pre>
-     * @param clazz the class of the data object to create. Must have appropriate
+     * @param dataObjectClass the class of the data object to create. Must have appropriate
      *    constructor.
      * @param mimeType the mime type associated with the object, used for 
      *    example to create the right actions for the object's node

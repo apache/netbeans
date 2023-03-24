@@ -26,7 +26,7 @@ import java.beans.PropertyChangeListener;
  * Library storage is a source of libraries used by LibraryManager.
  * LibraryManager allows existence of multiple LibraryProviders registered in
  * the default lookup.
- * @param L the type of implementation which will be produced by this provider
+ * @param <L> the type of implementation which will be produced by this provider
  */
 public interface LibraryProvider<L extends LibraryImplementation> {
 

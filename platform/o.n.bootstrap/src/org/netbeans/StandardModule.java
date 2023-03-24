@@ -334,7 +334,7 @@ class StandardModule extends Module {
      * as needed.
      * Note: due to #19698, this cache is not usually used; only if you
      * specifically go to look at the display properties of a disabled module.
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=12549">#12549</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=12549">#12549</a>
      */
     private void loadLocalizedProps(JarFile jarFile, Manifest m) throws IOException {
         String locbundle = m.getMainAttributes().getValue("OpenIDE-Module-Localizing-Bundle"); // NOI18N
@@ -557,7 +557,7 @@ class StandardModule extends Module {
         }
         classloader = null;
     }
-    /** Should be called after turning off the classloader of one or more modules & GC'ing. */
+    /** Should be called after turning off the classloader of one or more modules &amp; GC'ing. */
     protected void cleanup() {
         if (isEnabled()) throw new IllegalStateException("cleanup on enabled module: " + this); // NOI18N
         if (classloader != null) throw new IllegalStateException("cleanup on module with classloader: " + this); // NOI18N

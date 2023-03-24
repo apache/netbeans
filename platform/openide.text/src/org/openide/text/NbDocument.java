@@ -176,13 +176,13 @@ public final class NbDocument extends Object {
         return new DocumentRenderer(DocumentRenderer.FIND_LINE_OFFSET, doc, lineNumber).renderToInt();
     }
 
-    /** Creates position with a bias. If the bias is {@link javax.swing.text.Position.Bias#Backward}
+    /** Creates position with a bias. If the bias is {@link javax.swing.text.Position.Bias#Backward Backward}
     * then if an insert occures at the position, the text is inserted
-    * after the position. If the bias is {@link javax.swing.text.Position.Bias#Forward <code>Forward</code>}, then the text is
+    * after the position. If the bias is {@link javax.swing.text.Position.Bias#Forward Forward}, then the text is
     * inserted before the position.
     * <P>
     * The method checks if the document implements {@link PositionBiasable},
-    * and if so, {@link PositionBiasable#createPosition <code>createPosition</code>} is called.
+    * and if so, {@link PositionBiasable#createPosition createPosition} is called.
     * Otherwise an attempt is made to provide a <code>Position</code> with the correct behavior.
     *
     * @param doc document to create position in
@@ -396,7 +396,7 @@ public final class NbDocument extends Object {
     }
     
     /** Locks the document to have exclusive access to it.
-     * Documents implementing {@link Lockable} can specify exactly how to do this.
+     * Documents implementing {@link WriteLockable} can specify exactly how to do this.
     *
     * @param doc document to lock
     * @param run the action to run
@@ -474,7 +474,7 @@ public final class NbDocument extends Object {
     /**
      * Add annotation to the document. For annotation of whole line
      * the length parameter can be ignored (specify value -1).
-     * <br/>
+     * <br>
      * Note: since 6.35 the requests (delegated to document) are no longer replanned to EDT.
      * @param doc the document which will be annotated
      * @param startPos position which represent begining
@@ -495,7 +495,7 @@ public final class NbDocument extends Object {
 
     /**
      * Removal of added annotation.
-     * <br/>
+     * <br>
      * Note: since 6.35 the requests (delegated to document) are no longer replanned to EDT.
      * @param doc the annotated document
      * @param annotation annotation which is going to be removed
@@ -789,9 +789,9 @@ public final class NbDocument extends Object {
     * If not, special support for the position is created.
     */
     public interface PositionBiasable extends Document {
-        /** Creates position with a bias. If the bias is {@link javax.swing.text.Position.Bias#Backward}
+        /** Creates position with a bias. If the bias is {@link javax.swing.text.Position.Bias#Backward Backward}
         * then if an insert occures at the position, the text is inserted
-        * after the position. If the bias is {@link javax.swing.text.Position.Bias#Forward <code>Forward</code>}, then the text is
+        * after the position. If the bias is {@link javax.swing.text.Position.Bias#Forward Forward}, then the text is
         * inserted before the position.
         *
         * @param offset the offset for the position

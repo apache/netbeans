@@ -32,7 +32,7 @@ import org.openide.filesystems.FileObject;
  * An binary indexer with declared constraints on the binary.
  * The subclasses of this indexer are registered by {@link ConstrainedBinaryIndexer.Registration}.
  * @author Tomas Zezula
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 1.48
  */
 public abstract class ConstrainedBinaryIndexer {

@@ -25,11 +25,11 @@ package org.openide.windows;
  * the last-used editor-kind Mode, or the default editor mode if no editor was used.
  * Plugin implementors can hint the Window System to use more appropriate
  * mode than the default to open the TopComppnent. 
- * <p/>
+ * <p>
  * If none of the registered {@code ModeSelector}s return a valid Mode, the TopComponent
  * will open in the mode selected by the default algorithm. Implementation of WindowManager 
  * may ignore the hint, for example if it conflicts with persisted settings or user choices.
- * <p/>
+ * <p>
  * Implementations of {@code ModeSelector} must be registered in the default Lookup.
  * @since 6.77
  */

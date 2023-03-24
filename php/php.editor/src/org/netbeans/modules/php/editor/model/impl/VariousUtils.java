@@ -1666,9 +1666,9 @@ public final class VariousUtils {
             csi = (TypeScope) inScope;
         }
         if (csi != null) {
-            if ("self".equals(staticTypeName)) { //NOI18N
+            if (Type.SELF.equalsIgnoreCase(staticTypeName) || Type.STATIC.equalsIgnoreCase(staticTypeName)) {
                 return Collections.singletonList(csi);
-            } else if ("parent".equals(staticTypeName) && (csi instanceof ClassScope)) { //NOI18N
+            } else if (Type.PARENT.equalsIgnoreCase(staticTypeName) && (csi instanceof ClassScope)) {
                 return ((ClassScope) csi).getSuperClasses();
             }
         }

@@ -64,4 +64,52 @@ public class IntroduceSuggestionTest extends PHPHintsTestBase {
     public void testEnumCaseFix_03b() throws Exception {
         applyHint(new IntroduceSuggestion(), "testEnumCase.php", "BackedEnumString::C^ase3;", "Create Constant");
     }
+
+    public void testEnumMethods_01() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "ExampleEnum::introduceStat^icMethod();");
+    }
+
+    public void testEnumMethods_02() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "        $this->introduceMeth^od();");
+    }
+
+    public void testEnumMethods_03() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "        self::introduceStaticMet^hod();");
+    }
+
+    public void testEnumMethods_04() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "        static::introduceStaticMeth^od();");
+    }
+
+    public void testEnumMethods_05() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "BackedEnumInt::Case1->introduceMet^hod();");
+    }
+
+    public void testEnumMethods_06() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "BackedEnumString::Case2::introdu^ceStaticMethod();");
+    }
+
+    public void testEnumMethodsFix_01() throws Exception {
+        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "ExampleEnum::introduceStat^icMethod();", "Create Method");
+    }
+
+    public void testEnumMethodsFix_02() throws Exception {
+        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "        $this->introduceMeth^od();", "Create Method");
+    }
+
+    public void testEnumMethodsFix_03() throws Exception {
+        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "        self::introduceStaticMet^hod();", "Create Method");
+    }
+
+    public void testEnumMethodsFix_04() throws Exception {
+        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "        static::introduceStaticMeth^od();", "Create Method");
+    }
+
+    public void testEnumMethodsFix_05() throws Exception {
+        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "BackedEnumInt::Case1->introduceMet^hod();", "Create Method");
+    }
+
+    public void testEnumMethodsFix_06() throws Exception {
+        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "BackedEnumString::Case2::introdu^ceStaticMethod();", "Create Method");
+    }
 }

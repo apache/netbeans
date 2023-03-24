@@ -869,6 +869,10 @@ public class IntroduceSuggestion extends SuggestionRule {
                     TraitScope trait = (TraitScope) typeScope;
                     elements.addAll(trait.getDeclaredFields());
                     elements.addAll(trait.getDeclaredMethods());
+                } else if (typeScope instanceof EnumScope) {
+                    EnumScope enumScope = (EnumScope) typeScope;
+                    elements.addAll(enumScope.getDeclaredEnumCases());
+                    elements.addAll(enumScope.getDeclaredMethods());
                 }
                 break;
             case FIELD:

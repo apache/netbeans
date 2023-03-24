@@ -1,6 +1,6 @@
 Name: Validator.nu
 Description: Html/Generic RelaxNG schema validator service
-Version: 20200626-patched
+Version: 20200626-patched2
 License: MIT-validator
 Origin: validator.nu
 

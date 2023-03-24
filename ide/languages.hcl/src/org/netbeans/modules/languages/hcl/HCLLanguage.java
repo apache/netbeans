@@ -160,6 +160,11 @@ public class HCLLanguage extends DefaultLanguageConfig {
     }
 
     @Override
+    public boolean isIdentifierChar(char c) {
+        return Character.isJavaIdentifierPart(c) || (c == '-');
+    }
+
+    @Override
     public StructureScanner getStructureScanner() {
         return new HCLStructureScanner();
     }

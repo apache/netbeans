@@ -1,0 +1,4 @@
+        $this->introduceMeth^od();
+        ------------------------
+HINT:Introduce Hint
+FIX:Create Method " introduceMethod()" in Enum "BackedEnumInt" (testEnumMethods.php)

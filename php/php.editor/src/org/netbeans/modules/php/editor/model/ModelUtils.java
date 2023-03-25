@@ -59,6 +59,7 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticDispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.VariableBase;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
@@ -198,8 +199,13 @@ public final class ModelUtils {
 
     public static Collection<? extends TypeScope> resolveType(Model model, StaticDispatch dispatch) {
         VariableScope variableScope = model.getVariableScope(dispatch.getStartOffset());
+        Expression staticDispatch = dispatch;
+        if (dispatch.getDispatcher() instanceof StaticConstantAccess) {
+            // e.g. EnumName::Case::method();
+            staticDispatch = ((StaticConstantAccess) dispatch.getDispatcher()).getDispatcher();
+        }
         QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(
-                ASTNodeInfo.toQualifiedName(dispatch, true),
+                ASTNodeInfo.toQualifiedName(staticDispatch, true),
                 dispatch.getStartOffset(),
                 variableScope);
         NamespaceIndexFilter filter = new NamespaceIndexFilter(fullyQualifiedName.toString());

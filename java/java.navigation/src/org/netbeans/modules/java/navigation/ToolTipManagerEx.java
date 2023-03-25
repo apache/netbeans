@@ -35,6 +35,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.SwingUtilities;
@@ -44,6 +45,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.SimpleValueNames;
+import org.openide.awt.Actions;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -760,8 +762,10 @@ final class ToolTipManagerEx extends MouseAdapter implements MouseMotionListener
             JScrollPane scroll = new JScrollPane( content );
             scroll.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
             add( scroll, new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,0,0),0,0) );
+            String shownKeyStroke = Actions.keyStrokeToString(KeyStroke.getKeyStroke(
+                KeyEvent.VK_F1, Utilities.isMac() ? KeyEvent.VK_META : KeyEvent.CTRL_DOWN_MASK));
             shortcut = new JLabel( NbBundle.getMessage( ToolTipManagerEx.class, "HINT_EnlargeJavaDocToolip", //NOI18N
-                    Utilities.isMac() ? KeyEvent.getKeyText(KeyEvent.VK_META)+"+F1" : "Ctrl+F1" ) ); //NOI18N //NOI18N
+                    shownKeyStroke ) );
             shortcut.setHorizontalAlignment( JLabel.CENTER );
             shortcut.setBorder( BorderFactory.createLineBorder(Color.black) );
             add( shortcut, new GridBagConstraints(0,1,1,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,0,0),0,0) );

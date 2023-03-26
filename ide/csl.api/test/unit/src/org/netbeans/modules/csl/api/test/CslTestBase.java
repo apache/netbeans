@@ -3062,8 +3062,12 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
     public void checkCompletionDocumentation(final String file, final String caretLine, final boolean includeModifiers, final String itemPrefix) throws Exception {
+        checkCompletionDocumentation(file, caretLine, includeModifiers, itemPrefix, QueryType.COMPLETION);
+    }
+
+    public void checkCompletionDocumentation(final String file, final String caretLine, final boolean includeModifiers, final String itemPrefix, QueryType queryType) throws Exception {
         // TODO call TestCompilationInfo.setCaretOffset!
-        final QueryType type = QueryType.COMPLETION;
+        final QueryType type = queryType;
         final boolean caseSensitive = true;
 
         Source testSource = getTestSource(getTestFile(file));

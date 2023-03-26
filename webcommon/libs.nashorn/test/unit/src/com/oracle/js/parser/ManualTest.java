@@ -38,12 +38,7 @@ public class ManualTest {
 //        Source source = Source.sourceFor("dummy.js", "var a = import('test');");
 //        Source source = Source.sourceFor("dummy.js", "try {} catch (e) {}");
 //        Source source = Source.sourceFor("dummy.js", "function a() {}; async function b() {}; class x { y(){} async z(){} }");
-        Source source = Source.sourceFor("dummy.js", "class Polygon {\n" +
-"  constructor(height, width) {\n" +
-"    this.height = height;\n" +
-"    this.width = width;\n" +
-"  }\n" +
-"} ");
+        Source source = Source.sourceFor("dummy.js", "const a = <></>;");
         ScriptEnvironment.Builder builder = ScriptEnvironment.builder();
         Parser parser = new Parser(
                 builder.emptyStatements(true).ecmacriptEdition(13).jsx(true).build(),

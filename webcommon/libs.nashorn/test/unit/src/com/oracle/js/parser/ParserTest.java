@@ -266,6 +266,13 @@ public class ParserTest {
         assertParses(13, "async function dummy() { for await (const num of foo()) {}}");
     }
 
+    @Test
+    public void testJsx() {
+        // JSX Fragments are parsed as JSX Elements without name and attributes
+        assertParses(13, "const a = <></>;");
+        assertParses(13, "const a = <table style={{ border: '2px solid black', borderRadius: '.5em'}}></table>");
+    }
+
     private Predicate<Node> functionNodeWithName(String name) {
         return n -> n instanceof FunctionNode && name.equals(((FunctionNode) n).getName());
     }

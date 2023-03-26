@@ -27,6 +27,7 @@ import com.oracle.js.parser.ir.ForNode;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.IdentNode;
 import com.oracle.js.parser.ir.IndexNode;
+import com.oracle.js.parser.ir.JsxElementNode;
 import com.oracle.js.parser.ir.LexicalContext;
 import com.oracle.js.parser.ir.LiteralNode;
 import com.oracle.js.parser.ir.Node;
@@ -89,6 +90,9 @@ class DumpingVisitor extends NodeVisitor {
         } else if (node instanceof PropertyNode) {
             PropertyNode pn = (PropertyNode) node;
             System.out.println(indent() + node.getClass().getName() + " [static=" + pn.isStatic() + "]");
+        } else if (node instanceof JsxElementNode) {
+            JsxElementNode jen = (JsxElementNode) node;
+            System.out.println(indent() + node.getClass().getName() + " [name=" + jen.getName() + "]");
         } else {
             System.out.println(indent() + node.getClass().getName());
         }

@@ -5958,6 +5958,9 @@ loop:
     }
 
     private String jsxElementName() {
+        if (type == TokenType.JSX_ELEM_END) {
+            return "";
+        }
         expectDontAdvance(TokenType.JSX_IDENTIFIER);
         StringBuilder name = new StringBuilder((String) getValue(token));
         next();

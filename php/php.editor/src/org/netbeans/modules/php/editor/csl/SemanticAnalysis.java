@@ -663,6 +663,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (node.getBody() != null) {
                 node.getBody().accept(this);
                 scanMethodBodies();
+                addColoringForUnusedPrivateConstants();
             }
             needToScan.remove(typeInfo);
             removeFromPath();
@@ -819,6 +820,12 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                     if (!isPrivate || parentNode instanceof TraitDeclaration) {
                         addColoringForNode(identifier, coloring);
                     } else {
+                        // NOTE: private constants, methods, and fields may be used in traits
+                        // currently, we don't check traits (if there is no performance problem, should check them if possible)
+                        // an enum is handled as a "final" class in PHP
+                        // so, virtually, "protected" is "private"
+                        // however, as written above, it may be used in traits
+                        // don't add protected items of Enum to unused items
                         privateUnusedConstants.put(new UnusedIdentifier(identifier.getName(), typeInfo), new ASTNodeColoring(identifier, coloring));
                     }
                 }

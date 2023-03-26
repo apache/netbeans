@@ -5896,7 +5896,7 @@ loop:
                     }
                     break;
                 case LBRACE:
-                    if (T(k + 1) == TokenType.RBRACE) {
+                    if (! lookaheadIsJsxAssignment()) {
                         next();
                         next();
                     } else {
@@ -5910,6 +5910,19 @@ loop:
             }
         }
         return new JsxElementNode(name, attributes, children, realStart, finish);
+    }
+
+    private boolean lookaheadIsJsxAssignment() {
+        assert type == LBRACE;
+        for (int i = 1;; i++) {
+            TokenType t = T(k + i);
+            switch (t) {
+            case COMMENT:
+                continue;
+            default:
+                return t != TokenType.RBRACE;
+            }
+        }
     }
 
     private Expression jsxAttribute() {

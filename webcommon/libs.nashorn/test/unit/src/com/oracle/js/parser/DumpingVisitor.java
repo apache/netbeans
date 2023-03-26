@@ -52,7 +52,9 @@ class DumpingVisitor extends NodeVisitor {
     @Override
     protected boolean enterDefault(Node node) {
         if (node instanceof IdentNode) {
-            System.out.println(indent() + node.getClass().getName() + " [" + ((IdentNode) node).getName() + "]");
+            System.out.printf("%s%s [%d-%d, name=%s]%n", indent(),
+                    node.getClass().getName(), node.getStart(),
+                    node.getFinish(), ((IdentNode) node).getName());
         } else if (node instanceof LiteralNode) {
             System.out.println(indent() + node.getClass().getName() + " [" + ((LiteralNode) node).getValue() + "]");
         } else if (node instanceof FunctionNode) {
@@ -92,9 +94,13 @@ class DumpingVisitor extends NodeVisitor {
             System.out.println(indent() + node.getClass().getName() + " [static=" + pn.isStatic() + "]");
         } else if (node instanceof JsxElementNode) {
             JsxElementNode jen = (JsxElementNode) node;
-            System.out.println(indent() + node.getClass().getName() + " [name=" + jen.getName() + "]");
+            System.out.printf("%s%s [%d-%d, name=%s]%n", indent(),
+                    node.getClass().getName(), node.getStart(),
+                    node.getFinish(), jen.getName());
         } else {
-            System.out.println(indent() + node.getClass().getName());
+            System.out.printf("%s%s [%d-%d]%n", indent(),
+                    node.getClass().getName(), node.getStart(),
+                    node.getFinish());
         }
         indent += INDENT_PER_LEVEL;
         return super.enterDefault(node);

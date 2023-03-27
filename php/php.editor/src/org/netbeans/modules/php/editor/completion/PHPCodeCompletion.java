@@ -332,11 +332,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         request.context = context;
         QueryType queryType = completionContext.getQueryType();
         String prefix;
-        if (queryType == QueryType.DOCUMENTATION) { // GH-4494
-            prefix = getPrefix(info, caretOffset, false, PrefixBreaker.WITH_NS_PARTS);
-        } else {
-            prefix = getPrefix(info, caretOffset, true, PrefixBreaker.WITH_NS_PARTS);
-        }
+        // GH-4494 if query type is documentation, get a whole identifier as a prefix
+        boolean upToOffset = queryType != QueryType.DOCUMENTATION;
+        prefix = getPrefix(info, caretOffset, upToOffset, PrefixBreaker.WITH_NS_PARTS);
         if (prefix == null
                 || (queryType == QueryType.DOCUMENTATION && prefix.isEmpty())) {
             return CodeCompletionResult.NONE;

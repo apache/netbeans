@@ -337,7 +337,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         } else {
             prefix = getPrefix(info, caretOffset, true, PrefixBreaker.WITH_NS_PARTS);
         }
-        if (prefix == null) {
+        if (prefix == null
+                || (queryType == QueryType.DOCUMENTATION && prefix.isEmpty())) {
             return CodeCompletionResult.NONE;
         }
         prefix = prefix.trim().isEmpty() ? completionContext.getPrefix() : prefix;

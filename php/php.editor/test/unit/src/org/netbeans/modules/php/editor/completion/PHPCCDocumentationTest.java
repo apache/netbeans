@@ -328,6 +328,16 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494_aa_bb_cc^();");
     }
 
+    public void testIssueGH5347_01() throws Exception {
+        // no golden file
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5347.php", "^// test", true);
+    }
+
+    public void testIssueGH5347_02() throws Exception {
+        // no golden file
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5347.php", "un^defined();", true);
+    }
+
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");
@@ -354,7 +364,21 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
     }
 
     private void checkCompletionOnlyDocumentation(String filePath, String caretLine) throws Exception {
-        checkCompletionDocumentation(filePath, caretLine, false, "", QueryType.DOCUMENTATION);
+        checkCompletionOnlyDocumentation(filePath, caretLine, false);
+    }
+
+    private void checkCompletionOnlyDocumentation(String filePath, String caretLine, boolean noDocument) throws Exception {
+        if (!noDocument) {
+            checkCompletionDocumentation(filePath, caretLine, false, "", QueryType.DOCUMENTATION);
+        } else {
+            try {
+                checkCompletionDocumentation(filePath, caretLine, false, "", QueryType.DOCUMENTATION);
+            } catch (AssertionError ex) {
+                // there is no completion item
+                return;
+            }
+            fail("Must not have documentation");
+        }
     }
 
     @Override

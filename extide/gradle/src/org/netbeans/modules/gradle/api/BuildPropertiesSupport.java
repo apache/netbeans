@@ -180,10 +180,12 @@ public final class BuildPropertiesSupport {
     }
     
     /**
-     * Returns keys of map-style properties. Works only for properties of {@link PropertyKind#MAP}.
-     * @param owner
-     * @return 
+     * Returns keys of map-style properties. Works only for properties of {@link PropertyKind#MAP} or
+     * {@link PropertyKind#STRUCTURE}. May return an empty list, if keys cannot be enumerated or represented as Strings.
+     * @param owner the property
+     * @return list of keys, possibly empty. Does not return null
      */
+    @NonNull
     public Collection<String> keys(Property owner) {
         if ((owner.getKind() != PropertyKind.STRUCTURE) && (owner.getKind() != PropertyKind.MAP)) {
             return Collections.emptyList();
@@ -204,8 +206,9 @@ public final class BuildPropertiesSupport {
      * @param base the map property
      * @param key map item's key
      * @param path optional path within an item to the property.
-     * @return map item, or a property of a map item.
+     * @return map item, or a property of a map item. Null, if the item can not be found.
      */
+    @CheckForNull
     public Property get(Property base, String key, String path) {
         if ((base.getKind() != PropertyKind.MAP)) {
             return null;

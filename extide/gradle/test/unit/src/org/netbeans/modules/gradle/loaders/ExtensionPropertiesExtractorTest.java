@@ -20,15 +20,22 @@ package org.netbeans.modules.gradle.loaders;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 import static junit.framework.TestCase.assertNotNull;
+import org.gradle.internal.impldep.com.google.common.collect.Streams;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.BuildPropertiesSupport;
+import org.netbeans.modules.gradle.api.BuildPropertiesSupport.PropertyKind;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.openide.filesystems.FileObject;
@@ -164,6 +171,25 @@ public class ExtensionPropertiesExtractorTest extends NbTestCase {
         item = support.get(prop, "test", null);
         assertNotNull(item);
     }
+    
+    public void testAddedListExtensionProperty() throws Exception {
+        Project p = makeProject("buildprops/micronaut");
+        BuildPropertiesSupport support = BuildPropertiesSupport.get(p);
+        assertNotNull(support);
+        
+        BuildPropertiesSupport.Property prop;
+        
+
+        prop = support.findExtensionProperty("graalvmNative", "binaries.main.buildArgs");
+        assertEquals(BuildPropertiesSupport.PropertyKind.LIST, prop.getKind());
+        Iterable<BuildPropertiesSupport.Property> it = support.items(prop, null);
+        assertNotNull(it);
+        Iterator<BuildPropertiesSupport.Property> iter = it.iterator();
+        assertTrue(iter.hasNext());
+        
+        List<String> l = Streams.stream(iter).map(BuildPropertiesSupport.Property::getStringValue).collect(Collectors.toList());
+        assertEquals(Arrays.asList("x", "y", "z"), l);
+    }
 
     public void testMapExtensionProperty2() throws Exception {
         Project p = makeProject("buildprops/micronaut");
@@ -194,7 +220,33 @@ public class ExtensionPropertiesExtractorTest extends NbTestCase {
         assertNotNull(item);
         assertEquals("value3", item.getStringValue());
     }
-
+    
+    /**
+     * Keys are ;; delimited, check various weird keys that needs to be encoded, if they decode back properly.
+     * @throws Exception 
+     */
+    public void testWeirdKeysMapExtensionProperty() throws Exception {
+        Project p = makeProject("buildprops/micronaut");
+        BuildPropertiesSupport support = BuildPropertiesSupport.get(p);
+        assertNotNull(support);
+        
+        BuildPropertiesSupport.Property prop;
+        prop = support.findExtensionProperty("graalvmNative", "weirdKeys");
+        prop = support.get(prop, "main", null);
+        prop = support.findExtensionProperty("graalvmNative", null);
+        BuildPropertiesSupport.Property prop2 = support.get(prop, "binaries", null);
+        prop = support.findExtensionProperty("graalvmNative", "weirdKeys");
+        
+        
+        Collection<String> keys = support.keys(prop);
+        assertNotNull(keys);
+        
+        List<String> sorted = new ArrayList<>(keys);
+        Collections.sort(sorted);
+        
+        assertEquals(Arrays.asList("normalKey", "semi;;key", "semi;\\;key", "semi;key"), sorted);
+    }
+    
 
     public void testSimpleTaskProperty() throws Exception {
         Project p = makeProject("buildprops/micronaut");
@@ -213,8 +265,8 @@ public class ExtensionPropertiesExtractorTest extends NbTestCase {
         prop = support.findTaskProperty("nativeCompile", "options");
         assertNotNull(prop);
         assertEquals(BuildPropertiesSupport.PropertyKind.STRUCTURE, prop.getKind());
-
-        assertTrue(support.keys(prop).isEmpty());
+        
+        assertFalse(support.keys(prop).isEmpty());
         assertFalse(support.items(prop, null).iterator().hasNext());
 
         prop = support.findTaskProperty("nativeTestCompile", "workingDirectory");
@@ -226,6 +278,23 @@ public class ExtensionPropertiesExtractorTest extends NbTestCase {
 
         assertTrue(support.keys(prop).isEmpty());
         assertFalse(support.items(prop, null).iterator().hasNext());
+    }
+    
+    /**
+     * Checks that a list property of a task is populated
+     * @throws Exception 
+     */
+    public void testTaskListProperty() throws Exception {
+        Project p = makeProject("buildprops/micronaut");
+        BuildPropertiesSupport support = BuildPropertiesSupport.get(p);
+        assertNotNull(support);
+        
+        BuildPropertiesSupport.Property prop = support.findTaskProperty("nativeCompile", "options.runtimeArgs");
+        assertNotNull(prop);
+        assertEquals(PropertyKind.LIST, prop.getKind());
+        
+        assertTrue(support.keys(prop).isEmpty());
+        assertTrue(support.items(prop, null).iterator().hasNext());
     }
     
 }

@@ -61,7 +61,22 @@ micronaut {
 
 graalvmNative.binaries.main.systemProperties = [prop1 : 'value1', 'prop2': 'value2', 'prop;;3': 'value3' ];
 
+graalvmNative.binaries.main.buildArgs.addAll([ 'x', 'y', 'z' ])
+
+// define an extra property using extension mechanism
+graalvmNative.ext.weirdKeys = [ 
+    normalKey: 'Hello!',
+    'semi;key': "There",
+    'semi;;key': "DoubleSemi",
+    'semi;\\;key': "EscapedSemi"
+]
+
+// initialize a List<String>
+tasks.named('nativeCompile')  {
+    options.get().getRuntimeArgs().addAll(['a', 'b'])
+}
 
 println project.group
 println project.name
 println project.version
+println tasks.nativeCompile.options.get().getRuntimeArgs().get()

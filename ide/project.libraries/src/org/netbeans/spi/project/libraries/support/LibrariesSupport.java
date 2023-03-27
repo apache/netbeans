@@ -68,8 +68,8 @@ public final class LibrariesSupport {
 
     /**
      * Policy for handling content items which cannot be converted into the desired format.
-     * @see #convertURIsToURLs(java.util.List)
-     * @see #convertURLsToURIs(java.util.List)
+     * @see #convertURIsToURLs(java.util.List,ConversionMode)
+     * @see #convertURLsToURIs(java.util.List,ConversionMode)
      * @since 1.48
      */
     public enum ConversionMode {
@@ -82,7 +82,7 @@ public final class LibrariesSupport {
          */
         WARN,
         /**
-         * {@link #toString(ClassPath.PathConversionMode)} will fail with an {@link IllegalArgumentException}.
+         * <code>toString(ClassPath.PathConversionMode)</code> will fail with an {@link IllegalArgumentException}.
          * Useful for unit tests.
          */
         FAIL

@@ -104,7 +104,7 @@ public class ExceptionBreakpoint extends JPDABreakpoint {
      *
      * @param exceptionClassName class name filter
      * @param catchType one of constants: {@link #TYPE_EXCEPTION_CAUGHT},
-     *   {@link #TYPE_EXCEPTION_UNCAUGHT, {@link #TYPE_EXCEPTION_CAUGHT_UNCAUGHT}.
+     *   {@link #TYPE_EXCEPTION_UNCAUGHT}, {@link #TYPE_EXCEPTION_CAUGHT_UNCAUGHT}.
      * @return a new breakpoint for given parameters
      */
     public static ExceptionBreakpoint create (

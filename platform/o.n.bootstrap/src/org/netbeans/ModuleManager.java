@@ -954,7 +954,7 @@ public final class ModuleManager extends Modules {
      * `parent'. The parent is identified either by module specification (parent) or by a classloader
      * which should load the package. For system or bootstrap classes, `parent' may be {@code null}, since
      * boostrap classloaders load more modules together.
-     * <p/>
+     * <p>
      * If <b>both</b> `parent' and `ldr' are {@code null}, access to system/application classpath will be checked.
      * 
      * @param m module that attempts to load resources.
@@ -1130,7 +1130,7 @@ public final class ModuleManager extends Modules {
      * Removes a fragment module. Throws an exception if the fragment's
      * host is already enabled and its classloader may have loaded fragment's
      * contents.
-     * <p/>
+     * <p>
      * The method does nothing for non-fragment modules
      * 
      * @param m the module to remove

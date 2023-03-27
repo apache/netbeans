@@ -30,6 +30,7 @@ import org.netbeans.api.autoupdate.InstallSupport;
 import org.netbeans.api.autoupdate.OperationContainer;
 import org.netbeans.api.autoupdate.OperationContainer.OperationInfo;
 import org.netbeans.api.autoupdate.OperationException;
+import org.netbeans.api.autoupdate.PluginInstaller;
 import org.netbeans.api.autoupdate.UpdateManager;
 import org.netbeans.api.autoupdate.UpdateUnit;
 import org.netbeans.modules.autoupdate.ui.ModuleInstallerSupport;
@@ -162,7 +163,11 @@ PluginManager.openInstallWizard(container);
      * and blocks (until the user clicks through), so either call from AWT dispatch
      * thread directly, or be sure you hold no locks and block no progress of other
      * threads to avoid deadlocks.
-     *
+     * <p>
+     * Although the method is not deprecated, modules that <b>only uses PluginManager.install<b> to
+     * install additional plugins should now depend on <code>autoupdate.services</code> directly,
+     * and use {@link PluginInstaller#install} to reduce UI dependencies.
+     * 
      * @param codenamebases the codenamebases of modules to install; must contain at least
      *             one codenamebase
      * @param alternativeOptions alternative options possibly displayed in error

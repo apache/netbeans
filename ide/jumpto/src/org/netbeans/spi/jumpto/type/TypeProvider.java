@@ -32,7 +32,7 @@ import org.openide.util.Parameters;
  *
  * The Type Providers are registered in Lookup.
  *
- * @todo Should we return a Collection rather than a List?
+ * XXX Should we return a Collection rather than a List?
  *
  * @author Tor Norbye
  */
@@ -63,7 +63,7 @@ public interface TypeProvider {
      * up calling {@link #cancel} on the same type provider during the operation, in which
      * case the method can return incomplete results. If there is a "current project",
      * the Go To Type infrastructure will perform the search in two passes; first it
-     * will call {@link #getTypeNames} with the current project, which should be a reasonably
+     * will call {@link TypeDescriptor#getTypeName()} with the current project, which should be a reasonably
      * fast search, and display those types first. It will then call the method again
      * with a null project, which should return all types.
      * <p>
@@ -226,7 +226,7 @@ public interface TypeProvider {
         /**
           * Adds list of result descriptors.
           *
-          * @param  typeDescriptor  type descriptor to be added to result
+          * @param  typeDescriptors  type descriptor to be added to result
           */
         public void addResult(@NonNull final List<? extends TypeDescriptor> typeDescriptors) {
             for (TypeDescriptor typeDescriptor : typeDescriptors) {

@@ -61,7 +61,7 @@ import org.openide.util.Parameters;
 /**                                                                                                                                                                                                                            
  * Represents a handle for {@link TreePath} which can be kept and later resolved                                                                                                                                               
  * by another javac. The Javac {@link Element}s are valid only in the single                                                                                                                                                   
- * {@link javax.tools.CompilationTask} or single run of the                                                                                                                                                                    
+ * {@link javax.tools.JavaCompiler.CompilationTask} or single run of the                                                                                                                                                                    
  * {@link org.netbeans.api.java.source.CancellableTask}. If the client needs to                                                                                                                                                
  * keep a reference to the {@link TreePath} and use it in the other CancellableTask                                                                                                                                            
  * he has to serialize it into the {@link TreePathHandle}.                                                                                                                                                                     
@@ -69,7 +69,7 @@ import org.openide.util.Parameters;
  * <p>                                                                                                                                                                                                                         
  * Typical usage of TreePathHandle enclElIsCorrespondingEl:                                                                                                                                                                    
  * </p>                                                                                                                                                                                                                        
- * <pre>                                                                                                                                                                                                                       
+ * <pre>{@code                                                                                                                                                                                                       
  * final TreePathHandle[] tpHandle = new TreePathHandle[1];                                                                                                                                                                    
  * javaSource.runCompileControlTask(new CancellableTask<CompilationController>() {                                                                                                                                             
  *     public void run(CompilationController compilationController) {                                                                                                                                                          
@@ -79,7 +79,7 @@ import org.openide.util.Parameters;
  *         treePathHandle[0] = TreePathHandle.create (element, compilationController);                                                                                                                                         
  *    }                                                                                                                                                                                                                        
  * },priority);                                                                                                                                                                                                                
- *                                                                                                                                                                                                                             
+ *                                                                                                                                                                                        
  * otherJavaSource.runCompileControlTask(new CancellableTask<CompilationController>() {                                                                                                                                        
  *     public void run(CompilationController compilationController) {                                                                                                                                                          
  *         parameter.toPhase(Phase.RESOLVED);                                                                                                                                                                                  
@@ -87,7 +87,7 @@ import org.openide.util.Parameters;
  *         ....                                                                                                                                                                                                                
  *    }                                                                                                                                                                                                                        
  * },priority);                                                                                                                                                                                                                
- * </pre>                                                                                                                                                                                                                      
+ * }</pre>                                                                                                                                                                                                                      
  * </div>                                                                                                                                                                                                                      
  *                                                                                                                                                                                                                             
  *                                                                                                                                                                                                                             
@@ -117,9 +117,9 @@ public final class TreePathHandle {
                                                                                                                                                                                                                                
     /**                                                                                                                                                                                                                        
      * Resolves an {@link TreePath} from the {@link TreePathHandle}.                                                                                                                                                           
-     * @param compilationInfo representing the {@link javax.tools.CompilationTask}                                                                                                                                             
+     * @param compilationInfo representing the {@link javax.tools.JavaCompiler.CompilationTask}                                                                                                                                             
      * @return resolved subclass of {@link Element} or null if the element does not exist on                                                                                                                                    
-     * the classpath/sourcepath of {@link javax.tools.CompilationTask}.
+     * the classpath/sourcepath of {@link javax.tools.JavaCompiler.CompilationTask}.
      * @throws IllegalArgumentException when this {@link TreePathHandle} is not created for a source
      * represented by the compilationInfo.
      */                                                                                                                                                                                                                        
@@ -151,9 +151,9 @@ public final class TreePathHandle {
                                                                                                                                                                                                                                
     /**                                                                                                                                                                                                                        
      * Resolves an {@link Element} from the {@link TreePathHandle}.                                                                                                                                                            
-     * @param compilationInfo representing the {@link javax.tools.CompilationTask}                                                                                                                                             
+     * @param info representing the {@link javax.tools.JavaCompiler.CompilationTask}                                                                                                                                             
      * @return resolved subclass of {@link Element} or null if the element does not exist on                                                                                                                                    
-     * the classpath/sourcepath of {@link javax.tools.CompilationTask}.                                                                                                                                                        
+     * the classpath/sourcepath of {@link javax.tools.JavaCompiler.CompilationTask}.                                                                                                                                                        
      */                                                                                                                                                                                                                        
     public Element resolveElement(final CompilationInfo info) {
         Parameters.notNull("info", info);
@@ -166,7 +166,7 @@ public final class TreePathHandle {
     }
     
     /**
-     * returns {@link ElemntHandle} corresponding to this {@link TreePathHandle}
+     * returns {@link ElementHandle} corresponding to this {@link TreePathHandle}
      * @return {@link ElementHandle} or null if this {@link TreePathHandle} does
      * not represent any {@link Element}
      * @since 0.93
@@ -177,11 +177,11 @@ public final class TreePathHandle {
     }
                                                                                                                                                                                                                                
     /**                                                                                                                                                                                                                        
-     * Returns the {@link Tree.Kind} of this TreePathHandle,                                                                                                                                                                   
-     * it returns the kind of the {@link Tree} from which the handle                                                                                                                                           
+     * Returns the {@link com.sun.source.tree.Tree.Kind} of this TreePathHandle,                                                                                                                                                                   
+     * it returns the kind of the {@link com.sun.source.tree.Tree} from which the handle                                                                                                                                           
      * was created.                                                                                                                                                                                                            
      *                                                                                                                                                                                                                         
-     * @return {@link Tree.Kind}                                                                                                                                                                                               
+     * @return {@link com.sun.source.tree.Tree.Kind}                                                                                                                                                                                               
      */                                                                                                                                                                                                                        
     public Tree.Kind getKind() {
         return this.delegate.getKind();
@@ -190,7 +190,7 @@ public final class TreePathHandle {
     /**                                                                                                                                                                                                                        
      * Factory method for creating {@link TreePathHandle}.                                                                                                                                                                     
      *                                                                                                                                                                                                                         
-     * @param treePath for which the {@link TrePathHandle} should be created.                                                                                                                                                  
+     * @param treePath for which the {@link TreePathHandle} should be created.                                                                                                                                                  
      * @param info 
      * @return a new {@link TreePathHandle}                                                                                                                                                                                    
      * @throws java.lang.IllegalArgumentException if arguments are not supported
@@ -254,7 +254,7 @@ public final class TreePathHandle {
     /**                                                                                                                                                                                                                        
      * Factory method for creating {@link TreePathHandle}.                                                                                                                                                                     
      *                                                                                                                                                                                                                         
-     * @param element for which the {@link TrePathHandle} should be created.                                                                                                                                                  
+     * @param element for which the {@link TreePathHandle} should be created.                                                                                                                                                  
      * @param info 
      * @return a new {@link TreePathHandle}                                                                                                                                                                                    
      * @throws java.lang.IllegalArgumentException if arguments are not supported
@@ -421,9 +421,9 @@ public final class TreePathHandle {
 
         /**                                                                                                                                                                                                                        
          * Resolves an {@link TreePath} from the {@link TreePathHandle}.                                                                                                                                                           
-         * @param compilationInfo representing the {@link javax.tools.CompilationTask}                                                                                                                                             
+         * @param compilationInfo representing the {@link javax.tools.JavaCompiler.CompilationTask}                                                                                                                                             
          * @return resolved subclass of {@link Element} or null if the element does not exist on                                                                                                                                    
-         * the classpath/sourcepath of {@link javax.tools.CompilationTask}.
+         * the classpath/sourcepath of {@link javax.tools.JavaCompiler.CompilationTask}.
          * @throws IllegalArgumentException when this {@link TreePathHandle} is not created for a source
          * represented by the compilationInfo.
          */
@@ -510,9 +510,9 @@ public final class TreePathHandle {
 
         /**                                                                                                                                                                                                                        
          * Resolves an {@link Element} from the {@link TreePathHandle}.                                                                                                                                                            
-         * @param compilationInfo representing the {@link javax.tools.CompilationTask}                                                                                                                                             
+         * @param compilationInfo representing the {@link javax.tools.JavaCompiler.CompilationTask}                                                                                                                                             
          * @return resolved subclass of {@link Element} or null if the element does not exist on                                                                                                                                    
-         * the classpath/sourcepath of {@link javax.tools.CompilationTask}.                                                                                                                                                        
+         * the classpath/sourcepath of {@link javax.tools.JavaCompiler.CompilationTask}.                                                                                                                                                        
          */
         public Element resolveElement(final CompilationInfo info) {
             if (correspondingEl != null) {

@@ -207,7 +207,7 @@ public class IpAddressUtils {
 
     /**
      * Performs a name service lookup with a timeout. Same as 
-     * {@link #nameResolveArr(java.lang.String, int, org.netbeans.network.IpAddressUtils.IpTypePreference) nameResolveArr()}
+     * {@link #nameResolveArr(java.lang.String, int, IpTypePreference) nameResolveArr()}
      * but only returns a single address. 
      * 
      * @see #nameResolveArr(String, int, IpTypePreference) 
@@ -235,7 +235,7 @@ public class IpAddressUtils {
     
     /**
      * Performs a name service lookup with a timeout. Same as 
-     * {@link #nameResolveArr(java.lang.String, int, org.netbeans.network.IpAddressUtils.IpTypePreference) nameResolveArr()}
+     * {@link #nameResolveArr(java.lang.String, int, IpTypePreference) nameResolveArr()}
      * but only returns a single address and uses 
      * {@link IpTypePreference#ANY_JDK_PREF IpTypePreference.ANY_JDK_PREF}.
      * 

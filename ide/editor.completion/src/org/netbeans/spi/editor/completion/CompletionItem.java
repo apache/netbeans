@@ -44,7 +44,7 @@ public interface CompletionItem {
     /**
      * Gets invoked when user presses <code>VK_ENTER</code> key
      * or when she double-clicks on this item with the mouse cursor.
-     * <br/>
+     * <br>
      * This method gets invoked from AWT thread.
      *
      * @param component non-null text component for which the completion was invoked.
@@ -62,7 +62,7 @@ public interface CompletionItem {
     /**
      * Process the key pressed when this completion item was selected
      * in the completion popup window.
-     * <br/>
+     * <br>
      * This method gets invoked from AWT thread.
      *
      * @param evt non-null key event of the pressed key. It should be consumed
@@ -120,7 +120,7 @@ public interface CompletionItem {
      * <br>
      * The implementation can invoke the {@link #defaultAction(JTextComponent)}
      * if necessary.
-     * <br/>
+     * <br>
      * This method gets invoked from AWT thread.
      *
      * @param component non-null text component for which the completion was invoked.

@@ -58,7 +58,7 @@ public class NodeInfo {
     }
     
     /**
-     * @returns position of removed in the original parent or
+     * @return position of removed in the original parent or
      *          position of the added in the final parent.
      */
     public int getPosition() {
@@ -73,7 +73,7 @@ public class NodeInfo {
     }
     
     /**
-     * @returns document the node is captured in (a node in xdm tree can be in
+     * @return document the node is captured in (a node in xdm tree can be in
      * multiple document roots).
      */
     public Document getDocument() {
@@ -81,14 +81,14 @@ public class NodeInfo {
     }
     
     /**
-     * @returns original path from parent to root.
+     * @return original path from parent to root.
      */
     public List<Node> getOriginalAncestors() {
         return Collections.unmodifiableList(ancestors1);
     }
     
     /**
-     * @returns new path to root from parent of added or removed node.
+     * @return new path to root from parent of added or removed node.
      * Note that this path need to be updated
      */
     public List<Node> getNewAncestors() {

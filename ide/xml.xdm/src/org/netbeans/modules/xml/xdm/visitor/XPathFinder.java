@@ -101,7 +101,7 @@ public class XPathFinder extends ChildVisitor {
     /**
      * @return the nodes correspond to specified xpath.
      * @param root context in which to find the node.
-     * @param xpath location path for the attribute or element.
+     * @param xpathExpression location path for the attribute or element.
      */
     public List<Node> findNodes(Document root, String xpathExpression) {
         if (root == null || root.getDocumentElement() == null) {

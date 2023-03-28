@@ -6,7 +6,6 @@ class VeryLongNameVeryLongNameVeryLongNameVeryLongNameVeryLongNameVer
     public function test() {
         
     }
-
 }
 
 ?>

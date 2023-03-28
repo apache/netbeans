@@ -5,7 +5,6 @@ class Omg {
     public static function stMeth() {
         
     }
-
 }
 $foo = new Omg();
 

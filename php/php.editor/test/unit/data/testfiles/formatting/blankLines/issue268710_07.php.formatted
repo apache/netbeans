@@ -11,5 +11,4 @@ class MyClass {
     public function bar() {
         
     }
-
 }

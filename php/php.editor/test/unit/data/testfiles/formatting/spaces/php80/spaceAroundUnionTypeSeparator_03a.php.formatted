@@ -32,5 +32,4 @@ class UnionTypes {
     public function testNullableType(): self | static | null {
         return new static;
     }
-
 }

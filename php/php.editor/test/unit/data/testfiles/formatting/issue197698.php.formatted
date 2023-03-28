@@ -13,7 +13,6 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess {
     private $test;
 
     const GGGG = 'ff';
-
 }
 
 ?>

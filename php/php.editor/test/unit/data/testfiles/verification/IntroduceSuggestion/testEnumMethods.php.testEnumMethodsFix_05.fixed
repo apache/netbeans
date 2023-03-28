@@ -41,7 +41,6 @@ enum BackedEnumInt: int {
     public function introduceMethod() {
         
     }
-
 }
 
 BackedEnumInt::Case1->introduceMethod();

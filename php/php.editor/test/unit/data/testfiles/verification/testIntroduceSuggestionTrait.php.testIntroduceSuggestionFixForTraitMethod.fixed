@@ -16,7 +16,6 @@ trait TraitA {
     public function method() {
         
     }
-
 }
 
 trait TraitB {

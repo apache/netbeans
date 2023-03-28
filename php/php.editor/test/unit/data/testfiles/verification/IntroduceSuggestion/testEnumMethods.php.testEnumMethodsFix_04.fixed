@@ -41,7 +41,6 @@ enum BackedEnumInt: int {
     public static function introduceStaticMethod() {
         
     }
-
 }
 
 BackedEnumInt::Case1->introduceMethod();

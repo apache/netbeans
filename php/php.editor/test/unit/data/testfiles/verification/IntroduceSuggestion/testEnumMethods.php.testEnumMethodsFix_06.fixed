@@ -50,7 +50,6 @@ enum BackedEnumString: string {
     public static function introduceStaticMethod() {
         
     }
-
 }
 
 BackedEnumString::Case2::introduceStaticMethod();

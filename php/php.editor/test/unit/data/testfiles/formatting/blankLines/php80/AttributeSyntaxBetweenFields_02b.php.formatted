@@ -103,5 +103,4 @@ class AttributeSyntax {
     // comment
     #[A]
     private int|bool $field9 = 1;
-
 }

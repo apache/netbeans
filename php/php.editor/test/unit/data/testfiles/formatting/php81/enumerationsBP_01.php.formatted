@@ -35,7 +35,6 @@ enum Simple
     public static function staticTest(Foo&Bar $param): void {
         
     }
-
 }
 
 #[Attr]
@@ -50,7 +49,6 @@ enum WithAttributes
 
     #[AAA]
     const Bar = 2;
-
 }
 
 enum WithDoc
@@ -70,7 +68,6 @@ enum WithDoc
      * test
      */
     const Bar = 2;
-
 }
 
 enum BackingTypeInt: int
@@ -80,7 +77,6 @@ enum BackingTypeInt: int
 
     case A = self::CONSTANT;
     case B = 2;
-
 }
 
 enum BackingTypeString: string
@@ -98,5 +94,4 @@ enum BackingTypeString: string
      */
     #[AAA]
     case B = "testB";
-
 }

@@ -1013,10 +1013,6 @@
 				"codeicon": "open-preview"
 			},
 			{
-				"uriExpression": "nbres:/org/openide/nodes/wait.gif",
-				"codeicon": "watch"
-			},
-			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/yellow_dot.svg",
 				"codeicon": "circle-large-outline",
 				"color": "charts.yellow"

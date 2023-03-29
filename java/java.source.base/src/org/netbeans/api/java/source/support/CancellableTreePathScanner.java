@@ -60,7 +60,7 @@ public class CancellableTreePathScanner<R,P> extends ErrorAwareTreePathScanner<R
         internalCanceled.set(true);
     }
 
-    /** @inheritDoc
+    /** {@inheritDoc}
      */
     public R scan(Tree tree, P p) {
         if (isCanceled())
@@ -69,7 +69,7 @@ public class CancellableTreePathScanner<R,P> extends ErrorAwareTreePathScanner<R
         return super.scan(tree, p);
     }
 
-    /** @inheritDoc
+    /** {@inheritDoc}
      */
     public R scan(Iterable<? extends Tree> trees, P p) {
         if (isCanceled())

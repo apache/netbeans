@@ -48,7 +48,7 @@ import org.openide.filesystems.FileObject;
  * In most cases, you do not need to create custom implementation. You can 
  * use some factory method in {@link SearchInfoDefinitionFactory}.
  * 
- * <div clas="nonnormative">
+ * <div class="nonnormative">
  * <p>Example:</p>
  * <pre>
  * {@code

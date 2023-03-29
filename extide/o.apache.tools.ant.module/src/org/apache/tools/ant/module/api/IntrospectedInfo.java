@@ -59,10 +59,10 @@ import org.openide.util.WeakListeners;
  * and makes them safely serializable (stores only classnames, etc.).
  * <p>
  * All task and type names may be namespace-qualified for use
- * in Ant 1.6: a name of the form <samp>nsuri:localname</samp> refers to
- * an XML element with namespace <samp>nsuri</samp> and local name <samp>localname</samp>.
+ * in Ant 1.6: a name of the form <code>nsuri:localname</code> refers to
+ * an XML element with namespace <code>nsuri</code> and local name <code>localname</code>.
  * Attribute names could also be similarly qualified, but in practice attributes
- * used in Ant never have a defined namespace. The prefix <samp>antlib:org.apache.tools.ant:</samp>
+ * used in Ant never have a defined namespace. The prefix <code>antlib:org.apache.tools.ant:</code>
  * is implied, not expressed, on Ant core element names (for backwards compatibility).
  * Subelement names are *not* namespace-qualified here, even though in the script
  * they would be - because the namespace used in the script will actually vary

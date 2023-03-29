@@ -47,6 +47,7 @@ public interface PayaraModule {
     public static final String DISPLAY_NAME_ATTR = "displayName"; // NOI18N
     public static final String USERNAME_ATTR = "username"; // NOI18N
     public static final String PASSWORD_ATTR = "password"; // NOI18N
+    public static final String WSL_ATTR = "wsl"; // NOI18N
     public static final String DOCKER_ATTR = "docker"; // NOI18N
     public static final String HOST_PATH_ATTR = "hostPath"; // NOI18N
     public static final String CONTAINER_PATH_ATTR = "containerPath"; // NOI18N

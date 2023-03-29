@@ -82,6 +82,14 @@ public interface PayaraServer {
     public boolean isDocker();
 
     /**
+     * Get information if this Payara server instance is running in WSL container.
+     * <p/>
+     * @return Value of <code>true</code> when this Payara server instance
+     *         is WSL instance or <code>false</code> otherwise.
+     */
+    public boolean isWSL();
+
+    /**
      * Get the docker host path.
      * <p/>
      * @return The dcoker volume host path.

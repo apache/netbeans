@@ -92,6 +92,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
             hostRemoteField.setVisible(false);
             remoteLink.setVisible(false);
             dockerVolumeCheckBox.setVisible(false);
+            wslCheckBox.setVisible(false);
         } else {
             domainLocalLabel.setVisible(false);
             domainLocalField.setVisible(false);
@@ -104,6 +105,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
             hostRemoteField.setVisible(true);
             remoteLink.setVisible(true);
             dockerVolumeCheckBox.setVisible(true);
+            wslCheckBox.setVisible(true);
         }
         hostPathLabel.setVisible(dockerVolumeCheckBox.isSelected());
         hostPathField.setVisible(dockerVolumeCheckBox.isSelected());
@@ -224,6 +226,10 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
      */
     String getUserNameValue() {
         return userNameField.getText().trim();
+    }
+
+    boolean getWSL() {
+        return wslCheckBox.isSelected();
     }
 
     boolean getDockerValue() {
@@ -469,6 +475,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         dockerVolumeCheckBox = new javax.swing.JCheckBox();
         hostPathField = new javax.swing.JTextField();
         containerPathField = new javax.swing.JTextField();
+        wslCheckBox = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(438, 353));
 
@@ -568,6 +575,13 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         containerPathField.setColumns(5);
         containerPathField.setText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.containerPathField.text")); // NOI18N
 
+        wslCheckBox.setText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.wslCheckBox.text")); // NOI18N
+        wslCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wslCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -601,19 +615,23 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
                                     .addComponent(userNameField, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(targetValueField, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(dasPortField, javax.swing.GroupLayout.DEFAULT_SIZE, 7, Short.MAX_VALUE)
+                                        .addComponent(dasPortField, javax.swing.GroupLayout.PREFERRED_SIZE, 7, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(httpPortFieldLabel)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(httpPortField, javax.swing.GroupLayout.DEFAULT_SIZE, 7, Short.MAX_VALUE)
+                                        .addComponent(httpPortField, javax.swing.GroupLayout.PREFERRED_SIZE, 7, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(useDefaultPortsCB))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(112, 112, 112)
                                         .addComponent(remotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                    .addComponent(dockerVolumeCheckBox)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(dockerVolumeCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(wslCheckBox)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(hostPathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -666,7 +684,9 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
                     .addComponent(passwordLabel)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dockerVolumeCheckBox)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dockerVolumeCheckBox)
+                    .addComponent(wslCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(hostPathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -675,7 +695,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
                     .addComponent(containerPathField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(remoteLink)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                 .addComponent(remotePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -700,6 +720,10 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         containerPathLabel.setVisible(dockerVolumeCheckBox.isSelected());
         containerPathField.setVisible(dockerVolumeCheckBox.isSelected());
     }//GEN-LAST:event_dockerVolumeCheckBoxActionPerformed
+
+    private void wslCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wslCheckBoxActionPerformed
+       fireChangeEvent();
+    }//GEN-LAST:event_wslCheckBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField containerPathField;
@@ -729,6 +753,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox useDefaultPortsCB;
     private javax.swing.JTextField userNameField;
     private javax.swing.JLabel userNameLabel;
+    private javax.swing.JCheckBox wslCheckBox;
     // End of variables declaration//GEN-END:variables
 
     class MyKeyListener implements KeyListener {

@@ -1031,7 +1031,7 @@ public class LogViewMgr {
 
     public static void displayOutput(PayaraInstance instance, Lookup lookup) {
         String uri = instance.getProperty(PayaraModule.URL_ATTR);
-        if (null != uri && (uri.contains("pfv3ee6wc") || uri.contains("localhost"))) {
+        if (null != uri) {
                 FetchLog log = getServerLogStream(instance);
                 LogViewMgr mgr = LogViewMgr.getInstance(uri);
                 List<Recognizer> recognizers = new ArrayList<Recognizer>();

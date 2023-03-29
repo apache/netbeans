@@ -116,13 +116,24 @@ public class RunnerHttpDeploy extends RunnerHttp {
                     && !server.getHostPath().isEmpty()
                     && server.getContainerPath() != null
                     && !server.getContainerPath().isEmpty()) {
-                Path relativePath = Paths.get(server.getHostPath()).relativize(deploy.path.toPath());
-                path = Paths.get(server.getContainerPath(), relativePath.toString()).toString();
-                if (server.getContainerPath().startsWith("/")) {
-                    path = path.replace("\\", "/");
+                try {
+                    Path relativePath = Paths.get(server.getHostPath()).relativize(deploy.path.toPath());
+                    path = Paths.get(server.getContainerPath(), relativePath.toString()).toString();
+                    if (server.getContainerPath().startsWith("/")) {
+                        path = path.replace("\\", "/");
+                    }
+                } catch (IllegalArgumentException ex) {
+                    throw new CommandException(
+                            CommandException.DOCKER_HOST_APPLICATION_PATH);
                 }
             }
-            target =deploy.target;
+            if (server.isWSL()) {
+                // Replace backslashes with forward slashes
+                path = path.replace("\\", "/");
+                // Add "mnt" prefix and drive letter
+                path = "/mnt/" + path.substring(0, 1).toLowerCase() + path.substring(2);
+            }
+            target = deploy.target;
             ctxRoot = deploy.contextRoot;
             hotDeploy = Boolean.toString(deploy.hotDeploy);
         }

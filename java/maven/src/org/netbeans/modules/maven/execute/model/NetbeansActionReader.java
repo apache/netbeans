@@ -33,7 +33,7 @@ import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3R
 
 /**
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 public abstract class NetbeansActionReader {
     protected abstract String getRawMappingsAsString();

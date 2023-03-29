@@ -100,7 +100,7 @@ public final class PluginInstaller {
      * retry the process or cancel the operation. `alternativeOptions` are presented as other alternative solutions. If the user
      * chooses to cancel, operation ends with {@link NotifyDescriptor#CANCEL_OPTION}. The user can choose to retry the operation.
      * The user can also select one of the `alternativeOptions`, which will terminate the operation with the chosen option as a result.
-     * During the download, the operation can be cancelled resulting in {@link NotifyDescriptor#CANCEL}.
+     * During the download, the operation can be cancelled resulting in {@link NotifyDescriptor#CANCEL_OPTION}.
      * <p>
      * If the operation completes successfully, the method returns {@code null}.
      * <p>

@@ -59,8 +59,8 @@ public final class PluginManager {
      * <p>
      * Single module installation can be handled easily by
      * {@link #installSingle(java.lang.String, java.lang.String, java.lang.Object[])}.
-<pre>
-{@link OperationContainer}<InstallSupport> container = OperationContainer.createForInstall();
+<pre><code>
+{@link OperationContainer}&lt;InstallSupport&gt; container = OperationContainer.createForInstall();
 for ({@link UpdateUnit} u : {@link UpdateManager#getUpdateUnits(org.netbeans.api.autoupdate.UpdateManager.TYPE[]) UpdateManager.getDefault().getUpdateUnits(UpdateManager.TYPE.MODULE)}) {
     if (u.getCodeName().matches("org.my.favorite.module")) {
         if (u.getAvailableUpdates().isEmpty()) {
@@ -70,7 +70,7 @@ for ({@link UpdateUnit} u : {@link UpdateManager#getUpdateUnits(org.netbeans.api
     }
 }
 PluginManager.openInstallWizard(container);
-</pre>
+</code></pre>
      *
      * @param container the container with list of modules for install
      * @return true if all the requested modules were successfully installed,
@@ -164,7 +164,7 @@ PluginManager.openInstallWizard(container);
      * thread directly, or be sure you hold no locks and block no progress of other
      * threads to avoid deadlocks.
      * <p>
-     * Although the method is not deprecated, modules that <b>only uses PluginManager.install<b> to
+     * Although the method is not deprecated, modules that <b>only uses PluginManager.install</b> to
      * install additional plugins should now depend on <code>autoupdate.services</code> directly,
      * and use {@link PluginInstaller#install} to reduce UI dependencies.
      * 

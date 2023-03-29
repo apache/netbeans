@@ -171,7 +171,7 @@ public final class TemplateOperation implements Runnable {
 
     /** Builder to specify additional parameters for the {@link #createGradleInit(java.io.File, java.lang.String)}
      * operation. At the end call {@link #add()} to finish the operation and 
-     * add it to the list of {@link OperationStep}s to perform.
+     * add it to the list of {@link TemplateOperation.OperationStep}s to perform.
      * 
      * @since 2.20
      */
@@ -179,7 +179,7 @@ public final class TemplateOperation implements Runnable {
         InitOperation() {
         }
 
-        /** Add the operation to the list of {@link OperationStep}s to perform.
+        /** Add the operation to the list of {@link TemplateOperation.OperationStep}s to perform.
          * @since 2.20
          */
         public final void add() {

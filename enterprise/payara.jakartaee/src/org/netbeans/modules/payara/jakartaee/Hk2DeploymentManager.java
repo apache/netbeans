@@ -621,6 +621,16 @@ public class Hk2DeploymentManager implements DeploymentManager2 {
         }
         return result;
     }
+    
+    public boolean isWSL() {
+        boolean result = true;
+        PayaraModule commonSupport = getCommonServerSupport();
+        if (commonSupport != null
+                && !commonSupport.getInstance().isWSL()) {
+            result = false;
+        }
+        return result;
+    }
 
     public static String getTargetFromUri(String uri) {
         String target = null;

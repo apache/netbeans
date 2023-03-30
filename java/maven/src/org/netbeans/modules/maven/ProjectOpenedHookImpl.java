@@ -203,7 +203,7 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
                                 LOGGER.log(Level.FINER, "Index once a Week :{0}", ri.getId());//NOI18N
                                 run = true;
                             }
-                            if (run && ri.isRemoteDownloadable() && RepositoryPreferences.isIndexDownloadEnabled()) {
+                            if (run && ri.isRemoteDownloadable()) {
                                 RepositoryIndexer.indexRepo(ri);
                             }
                         }

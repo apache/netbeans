@@ -742,7 +742,7 @@ public class TokenFormatter {
                                         indentRule = true;
                                         ws = countWhiteSpaceBeforeRightBrace(
                                                 docOptions.classDeclBracePlacement,
-                                                newLines,
+                                                docOptions.blankLinesBeforeClassEnd + 1, // GH-46111 ignore existing newLines to prioritize this option
                                                 docOptions.blankLinesBeforeClassEnd,
                                                 indent,
                                                 formatTokens,

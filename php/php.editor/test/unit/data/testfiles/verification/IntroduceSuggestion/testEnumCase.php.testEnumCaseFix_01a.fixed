@@ -23,7 +23,6 @@ enum ExampleEnum {
     case Case1 = 100;
     case Case2 = 'C';
     case Case3;
-
 }
 
 ExampleEnum::Case3;

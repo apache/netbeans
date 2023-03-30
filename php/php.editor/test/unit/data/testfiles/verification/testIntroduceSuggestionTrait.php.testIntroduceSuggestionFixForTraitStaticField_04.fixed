@@ -24,7 +24,6 @@ trait TraitB {
 trait TraitC {
 
     static $staticTraitCField = "";
-
 }
 
 TraitA::$staticField2;

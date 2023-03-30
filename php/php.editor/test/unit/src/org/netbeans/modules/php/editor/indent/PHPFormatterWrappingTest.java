@@ -686,6 +686,12 @@ public class PHPFormatterWrappingTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/wrapping/coalescingOp03a.php", options);
     }
 
+    public void testCoalescingOp03b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_COALESCING_OPS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        reformatFileContents("testfiles/formatting/wrapping/coalescingOp03b.php", options);
+    }
+
     public void testCoalescingOp04a() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_COALESCING_OPS, CodeStyle.WrapStyle.WRAP_IF_LONG);

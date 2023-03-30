@@ -26,7 +26,6 @@ enum ExampleEnum {
     public static function introduceStaticMethod() {
         
     }
-
 }
 
 ExampleEnum::introduceStaticMethod();

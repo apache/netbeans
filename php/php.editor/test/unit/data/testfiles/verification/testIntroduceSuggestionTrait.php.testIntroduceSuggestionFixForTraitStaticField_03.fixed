@@ -20,7 +20,6 @@ trait TraitB {
     use BaseTrait;
 
     static $staticTraitBField = "";
-
 }
 
 trait TraitC {

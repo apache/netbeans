@@ -16,5 +16,4 @@ class SimplyClass {
      * Another docblock for another constant.
      */
     const B_CONSTANT = "Set in stone.";
-
 }

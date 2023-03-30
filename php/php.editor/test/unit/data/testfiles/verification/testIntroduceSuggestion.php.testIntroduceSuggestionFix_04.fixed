@@ -3,7 +3,6 @@
 class Omg {
 
     const CON = "";
-
 }
 $foo = new Omg();
 

@@ -96,7 +96,7 @@ import org.openide.util.NbBundle;
  * The {@link ProxyResult#configure(org.netbeans.modules.maven.execute.BeanRunConfig)} should be run before each maven online invocation to potentially replace the global settings file with a customized one,
  * that specifies the correct proxy.
  * <p>
- * When creating customized settings.xml files, the files are named like <code>settings-[hashcode of the oroginal]-[sanitized proxy host].xml. If the settings.xml file does not exist at all, "new" is used
+ * When creating customized settings.xml files, the files are named like <code>settings-[hashcode of the oroginal]-[sanitized proxy host].xml</code>. If the settings.xml file does not exist at all, "new" is used
  * instead of the hashcode. Proxy host sanitization just replaces weird characters by "_".
  * 
  * @author sdedic

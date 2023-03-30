@@ -247,7 +247,6 @@ public final class ModelUtils {
      *
      * @param mdl
      * @param url of the repository
-     * @param add true == add to model, will not add if the repo is in project but not in model (eg. central repo)
      * @return null if repository with given url exists, otherwise a returned newly created item.
      */
     public static Repository addModelRepository(MavenProject project, POMModel mdl, String url) {
@@ -307,7 +306,7 @@ public final class ModelUtils {
     
     /**
      * Sets the Java source level of a project.
-     * Use {@link PluginPropertyUtils#getPluginProperty(Project,String,String,String,String)} first
+     * Use {@link PluginPropertyUtils#getPluginProperty(org.netbeans.api.project.Project,String,String,String,String,String)} first
      * ({@link Constants#GROUP_APACHE_PLUGINS}, {@link Constants#PLUGIN_COMPILER}, {@link Constants#SOURCE_PARAM}, {@code "compile"})
      * to make sure that the current level is actually not what you want.
      * 

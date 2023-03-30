@@ -274,7 +274,7 @@ public abstract class SearchGroup {
      * to all search types) is computed. Then a search group is created
      * for each of the <code>Class</code>s.
      *
-     * @param  search types to create search groups for
+     * @param items search types to create search groups for
      * @return  created search groups
      * @see  SearchType#getSearchTypeClasses()
      */

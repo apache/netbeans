@@ -45,11 +45,11 @@ import org.netbeans.modules.gradle.loaders.BuildPropertiesImplementation;
  * then use
  * <ul>
  * <li>{@link BuildPropertiesSupport#findExtensionProperty(java.lang.String, java.lang.String)}, or
- * <li>{@link BuildPropertiesSupport#findTaskProperty(java.lang.String, java.lang.String)
+ * <li>{@link BuildPropertiesSupport#findTaskProperty(java.lang.String, java.lang.String)}
  * </ul>
  * <p>
  * There's a limited support for maps and lists. If a {@link Property} indicates a {@link BuildPropertiesSupport.PropertyKind#MAP} type, it is
- * possible to use {@link #keys} to enumerate keys of the map. For {@link PropertyKidn#LIST}s, {@link #items} enumerate items of the list.
+ * possible to use {@link #keys} to enumerate keys of the map. For {@link PropertyKind#LIST}s, {@link #items} enumerate items of the list.
  * @author sdedic
  * @since 2.28
  */

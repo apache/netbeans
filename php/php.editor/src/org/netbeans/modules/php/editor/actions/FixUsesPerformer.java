@@ -84,6 +84,7 @@ public class FixUsesPerformer {
     private final ImportData importData;
     private final List<ItemVariant> selections;
     private final boolean removeUnusedUses;
+    private final boolean putInPSR12Order;
     private final Options options;
     private EditList editList;
     private BaseDocument baseDocument;
@@ -94,11 +95,13 @@ public class FixUsesPerformer {
             final ImportData importData,
             final List<ItemVariant> selections,
             final boolean removeUnusedUses,
+            final boolean putInPSR12Order,
             final Options options) {
         this.parserResult = parserResult;
         this.importData = importData;
         this.selections = selections;
         this.removeUnusedUses = removeUnusedUses;
+        this.putInPSR12Order = putInPSR12Order;
         this.options = options;
     }
 
@@ -118,7 +121,8 @@ public class FixUsesPerformer {
     private void processSelections() {
         final List<ImportData.DataItem> dataItems = resolveDuplicateSelections();
         TreeMap<Integer, List<UsePart>> usePartsMap = new TreeMap<>();
-
+        assert selections.size() <= dataItems.size()
+                : "The selections size must not be larger than the dataItems size. selections size: " + selections.size() + " > dataItems size: " + dataItems.size(); // NOI18N
         for (int i = 0; i < selections.size(); i++) {
             ItemVariant itemVariant = selections.get(i);
             // we shouldn't use itemVariant if there is no any real dataItem related to it
@@ -394,8 +398,34 @@ public class FixUsesPerformer {
 
     private String createInsertString(final List<UsePart> useParts) {
         StringBuilder insertString = new StringBuilder();
-        Collections.sort(useParts);
-        if (useParts.size() > 0) {
+        if (putInPSR12Order) {
+            Collections.sort(useParts, (u1, u2) -> {
+                int result = 0;
+                if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
+                    result = 0;
+                } else if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
+                    result = -1;
+                } else if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
+                    result = -1;
+                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
+                    result = 1;
+                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
+                    result = 0;
+                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
+                    result = 1;
+                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
+                    result = 1;
+                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
+                    result = -1;
+                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
+                    result = 0;
+                }
+                return result == 0 ? u1.getTextPart().compareToIgnoreCase(u2.getTextPart()) : result;
+            });
+        } else {
+            Collections.sort(useParts);
+        }
+        if (!useParts.isEmpty()) {
             insertString.append(NEW_LINE);
         }
         String indentString = null;
@@ -438,11 +468,31 @@ public class FixUsesPerformer {
         StringBuilder insertString = new StringBuilder();
         // types
         createStringForGroupUse(insertString, indentString, USE_PREFIX, typeUseParts);
-        // constants
-        createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, constUseParts);
-        // functions
-        createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, functionUseParts);
+        if (putInPSR12Order) {
+            if (!functionUseParts.isEmpty()) {
+                appendNewLine(insertString);
+            }
+            // functions
+            createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, functionUseParts);
+
+            if (!constUseParts.isEmpty()) {
+                appendNewLine(insertString);
+            }
+            // constants
+            createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, constUseParts);
+        } else {
+            // constants
+            createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, constUseParts);
+            // functions
+            createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, functionUseParts);
+        }
         return insertString.toString();
+    }
+
+    private void appendNewLine(StringBuilder insertString) {
+        if (insertString.length() > 0) {
+            insertString.append(NEW_LINE);
+        }
     }
 
     private List<String> usePartsToNamespaces(List<UsePart> useParts) {
@@ -553,8 +603,13 @@ public class FixUsesPerformer {
 
     private String createStringForCommonUse(List<UsePart> useParts) {
         StringBuilder result = new StringBuilder();
+        UsePart.Type lastUseType = null;
         for (UsePart usePart : useParts) {
+            if (putInPSR12Order && lastUseType != null && lastUseType != usePart.getType()) {
+                appendNewLine(result);
+            }
             result.append(usePart.getUsePrefix()).append(usePart.getTextPart()).append(SEMICOLON);
+            lastUseType = usePart.getType();
         }
         return result.toString();
     }

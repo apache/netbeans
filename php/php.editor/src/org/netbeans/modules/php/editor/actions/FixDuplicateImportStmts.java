@@ -16,10 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.actions;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -28,28 +26,22 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
-import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.InputMap;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 import org.netbeans.modules.php.editor.actions.ImportData.DataItem;
 import org.netbeans.modules.php.editor.actions.ImportData.ItemVariant;
-import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
 
 /**
@@ -59,22 +51,21 @@ import org.openide.util.NbBundle;
  * @author  eakle, Martin Roskanin
  */
 public class FixDuplicateImportStmts extends javax.swing.JPanel {
+
     private JComboBox[] combos;
-    private JCheckBox checkUnusedImports;
-    private ItemVariant[] defaultVariants;
-    private ItemVariant[] dontUseVariants;
+    private FixImportsBottomPanel fixImportsBottomPanel;
+    private static final long serialVersionUID = 7865344850303958108L;
 
     public FixDuplicateImportStmts() {
         initComponents();
     }
 
-    public void initPanel(ImportData importData, boolean removeUnusedImports) {
-        initComponentsMore(importData, removeUnusedImports);
-        initButtons(importData);
+    public void initPanel(ImportData importData, boolean removeUnusedImports, boolean putInPSR12Order) {
+        initComponentsMore(importData, removeUnusedImports, putInPSR12Order);
         setAccessible();
     }
 
-    private void initComponentsMore(ImportData importData, boolean removeUnusedImports) {
+    private void initComponentsMore(ImportData importData, boolean removeUnusedImports, boolean putInPSR12Order) {
         contentPanel.setLayout(new GridBagLayout());
         contentPanel.setBackground(UIManager.getColor("Table.background")); //NOI18N
         jScrollPane1.setBorder(UIManager.getBorder("ScrollPane.border")); //NOI18N
@@ -121,12 +112,10 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
         // load localized text into widgets:
         lblTitle.setText(getBundleString("FixDupImportStmts_IntroLbl")); //NOI18N
         lblHeader.setText(getBundleString("FixDupImportStmts_Header")); //NOI18N
-
-        checkUnusedImports = new JCheckBox();
-        Mnemonics.setLocalizedText(checkUnusedImports, getBundleString("FixDupImportStmts_UnusedImports")); //NOI18N
-        bottomPanel.add(checkUnusedImports, BorderLayout.WEST);
-        checkUnusedImports.setEnabled(true);
-        checkUnusedImports.setSelected(removeUnusedImports);
+        fixImportsBottomPanel = new FixImportsBottomPanel(combos, importData);
+        fixImportsBottomPanel.setRemoveUnusedImports(removeUnusedImports);
+        fixImportsBottomPanel.setPSR12Order(putInPSR12Order);
+        bottomPanel.add(fixImportsBottomPanel);
     }
 
     private JComboBox createComboBox(DataItem item, Font font, FocusListener listener) {
@@ -154,64 +143,8 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
         return NbBundle.getMessage(FixDuplicateImportStmts.class, s);
     }
 
-    @NbBundle.Messages({
-        "ClearSuggestionsButton=&Clear Suggestions",
-        "RestoreDefaultsButton=Restore &Defaults"
-    })
-    private void initButtons(ImportData importData) {
-        int numberOfItems = importData.getItems().size();
-        defaultVariants = new ItemVariant[numberOfItems];
-        dontUseVariants = new ItemVariant[numberOfItems];
-        for (int i = 0; i < numberOfItems; i++) {
-            DataItem dataItem = importData.getItems().get(i);
-            defaultVariants[i] = dataItem.getDefaultVariant();
-            dontUseVariants[i] = dataItem.getDefaultVariant();
-            for (ItemVariant variant : dataItem.getVariants()) {
-                if (!variant.canBeUsed()) {
-                    dontUseVariants[i] = variant;
-                }
-            }
-        }
-
-        bottomPanel.add(Box.createHorizontalStrut(150));
-
-        JPanel buttonsPanel = new JPanel(new BorderLayout(5, 3));
-        bottomPanel.add(buttonsPanel, BorderLayout.LINE_END);
-
-        JButton changeNothingButton = new JButton();
-        Mnemonics.setLocalizedText(changeNothingButton, Bundle.ClearSuggestionsButton());
-        changeNothingButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                deselectAllButtonActionPerformed(evt);
-            }
-        });
-        buttonsPanel.add(changeNothingButton, BorderLayout.LINE_START);
-
-        JButton restoreDefaultsButton = new JButton();
-        Mnemonics.setLocalizedText(restoreDefaultsButton, Bundle.RestoreDefaultsButton());
-        restoreDefaultsButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                restoreDefaultsButtonActionPerformed(evt);
-            }
-        });
-        buttonsPanel.add(restoreDefaultsButton, BorderLayout.LINE_END);
-    }
-
-    private void deselectAllButtonActionPerformed(ActionEvent evt) {
-        for (int i = 0; i < combos.length; i++) {
-            combos[i].setSelectedItem(dontUseVariants[i]);
-        }
-    }
-
-    private void restoreDefaultsButtonActionPerformed(ActionEvent evt) {
-        for (int i = 0; i < combos.length; i++) {
-            combos[i].setSelectedItem(defaultVariants[i]);
-        }
-    }
-
     private void setAccessible() {
         getAccessibleContext().setAccessibleDescription(getBundleString("FixDupImportStmts_IntroLbl")); // NOI18N
-        checkUnusedImports.getAccessibleContext().setAccessibleDescription(getBundleString("FixDupImportStmts_checkUnusedImports_a11y")); // NOI18N
     }
 
     public List<ItemVariant> getSelections() {
@@ -226,7 +159,11 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
     }
 
     public boolean getRemoveUnusedImports() {
-        return checkUnusedImports.isSelected();
+        return fixImportsBottomPanel.removeUnusedImports();
+    }
+
+    public boolean isPSR12Order() {
+        return fixImportsBottomPanel.isPSR12Order();
     }
 
     /** This method is called from within the constructor to

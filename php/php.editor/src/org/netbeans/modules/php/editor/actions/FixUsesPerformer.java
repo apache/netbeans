@@ -550,7 +550,7 @@ public class FixUsesPerformer {
         }
         assert groupUsePrefix != null : groupedUseParts;
         String properGroupUsePrefix = modifyUseName(groupUsePrefix);
-        insertString.append(usePrefix).append(properGroupUsePrefix).append(SPACE).append(CURLY_OPEN).append(NEW_LINE);
+        insertString.append(usePrefix).append(properGroupUsePrefix).append(CURLY_OPEN).append(NEW_LINE);
         boolean first = true;
         int prefixLength = properGroupUsePrefix.length();
         for (UsePart groupUsePart : groupedUseParts) {

@@ -66,12 +66,12 @@ public final class J2SEPlatformDefaultJavadocImpl implements J2SEPlatformDefault
         LocalDate now = LocalDate.now();
 
         if (now.isAfter(jdk9)) { // time traveler -> only java 8 doc for you
-            int[] jdk = new int[] {9};
-            jdk9.datesUntil(now, Period.ofMonths(6)).forEach((t) -> {
-                OFFICIAL_JAVADOC.put(String.valueOf(jdk[0]), "https://docs.oracle.com/javase/"+jdk[0]+"/docs/api/"); // NOI18N
-                jdk[0]++;
-            });
-            OFFICIAL_JAVADOC.put(String.valueOf(jdk[0]), "https://download.java.net/java/early_access/jdk"+jdk[0]+"/docs/api/"); // NOI18N Early access
+            int jdk = 9;
+            for (LocalDate t = jdk9; t.isBefore(now); t = t.plusMonths(6)) {
+                OFFICIAL_JAVADOC.put(String.valueOf(jdk), "https://docs.oracle.com/javase/" + jdk + "/docs/api/"); // NOI18N
+                jdk++;
+            }
+            OFFICIAL_JAVADOC.put(String.valueOf(jdk), "https://download.java.net/java/early_access/jdk" + jdk + "/docs/api/"); // NOI18N Early access
         }
     }
 

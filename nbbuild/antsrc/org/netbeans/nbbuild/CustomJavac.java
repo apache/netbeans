@@ -30,9 +30,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.tools.StandardLocation;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -276,6 +276,21 @@ public class CustomJavac extends Javac {
         return false;
     }
 
+    /**
+     * Helper class to allow using derivates of the JDK javac to be used to
+     * compile modules. The primary use-case is to test building with nbjavac.
+     * It setups a special classloader, that loads the compiler (and related)
+     * classes from the classpath defined by the system property
+     * {@code nbjavac.class.path}.
+     *
+     * <p><em>Warning/implementation note:</em> The compiler class is cached in
+     * the system properties to improve performance. This results in system
+     * properties, that can't be serialized anymore and might be problematic
+     * for code not prepared for non-string values in Properties.</p>
+     *
+     * <p>A build failure with {@code nbjavac.class.path} is only a real problem
+     * if it can be reproduced with the JDK itself.</p>
+     */
     private static final class NbJavacLoader extends URLClassLoader {
         private static final String MAIN_COMPILER_CP = "nbjavac.class.path";
         private static final String MAIN_COMPILER_CLASS = "com.sun.tools.javac.Main";
@@ -283,7 +298,7 @@ public class CustomJavac extends Javac {
 
         private NbJavacLoader(URL[] urls, ClassLoader parent) {
             super(urls, parent);
-            this.priorityLoaded = new HashMap<>();
+            this.priorityLoaded = new ConcurrentHashMap<>();
         }
 
         private static synchronized Class<?> findMainCompilerClass(
@@ -395,16 +410,20 @@ public class CustomJavac extends Javac {
                         }
                     }
                 }
-                if ("-Werror".equals(args[i])) {
-                    args[i] = "-Xlint:none";
-                }
             }
+            // nbjavac in version 19 contains invalid ct.sym files, which cause
+            // warnings from build. Some of the modules are compiled with
+            // -Werror and thus this breaks the build
+            // Ater the update to version 20 this should be removed.
+            String[] args2 = new String[args.length + 1];
+            args2[0] = "-Xlint:-classfile";
+            System.arraycopy(args, 0, args2, 1, args.length);
             try {
                 Method compile = mainClazz.getMethod("compile", String[].class);
-                int result = (Integer) compile.invoke(null, (Object) args);
+                int result = (Integer) compile.invoke(null, (Object) args2);
                 return result == 0;
             } catch (Exception ex) {
-                attributes.log("Compiler arguments: " + Arrays.toString(args), Project.MSG_ERR);
+                attributes.log("Compiler arguments: " + Arrays.toString(args2), Project.MSG_ERR);
                 if (ex instanceof BuildException) {
                     throw (BuildException) ex;
                 }

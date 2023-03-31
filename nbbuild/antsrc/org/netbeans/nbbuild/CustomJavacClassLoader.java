@@ -179,10 +179,10 @@ final class CustomJavacClassLoader extends URLClassLoader {
                     }
                 }
             }
-            // nbjavac in version 19 contains invalid ct.sym files, which cause
+            // nbjavac in version 20 contains invalid ct.sym files, which cause
             // warnings from build. Some of the modules are compiled with
             // -Werror and thus this breaks the build
-            // Ater the update to version 20 this should be removed.
+            // Ater the update to version 20+ this should be removed.
             String[] args2 = new String[args.length + 1];
             args2[0] = "-Xlint:-classfile";
             System.arraycopy(args, 0, args2, 1, args.length);

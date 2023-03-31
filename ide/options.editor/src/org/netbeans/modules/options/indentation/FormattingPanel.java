@@ -204,7 +204,9 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
             jSplitPane1.resetToPreferredSizes();
             
             // parent might need a scrollbar now due to category panel change
-            getParent().validate();
+            if (getParent() != null) {
+                getParent().validate();
+            }
         }
     }
     

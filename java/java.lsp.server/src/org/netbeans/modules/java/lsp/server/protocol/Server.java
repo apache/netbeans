@@ -158,7 +158,7 @@ public final class Server {
     }
 
     public static NbLspServer launchServer(Pair<InputStream, OutputStream> io, LspSession session) {
-        LanguageServerImpl server = new LanguageServerImpl();
+        LanguageServerImpl server = new LanguageServerImpl(session);
         ConsumeWithLookup msgProcessor = new ConsumeWithLookup(server.getSessionLookup());
         Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup);
         NbCodeLanguageClient remote = serverLauncher.getRemoteProxy();
@@ -357,8 +357,9 @@ public final class Server {
         private final TextDocumentServiceImpl textDocumentService = new TextDocumentServiceImpl(this);
         private final WorkspaceServiceImpl workspaceService = new WorkspaceServiceImpl(this);
         private final InstanceContent   sessionServices = new InstanceContent();
+        private final AbstractLookup sessionOnly = new AbstractLookup(sessionServices);
         private final Lookup sessionLookup = new ProxyLookup(
-                new AbstractLookup(sessionServices),
+                sessionOnly,
                 Lookup.getDefault()
         );
 
@@ -401,9 +402,24 @@ public final class Server {
         private final List<FileObject> acceptedWorkspaceFolders = new ArrayList<>();
 
         private final OpenedDocuments openedDocuments = new OpenedDocuments();
+        
+        private final LspSession lspSession;
+        
+        LanguageServerImpl(LspSession session) {
+            this.lspSession = session;
+        }
 
-        Lookup getSessionLookup() {
-            return sessionLookup;
+        private Lookup getSessionLookup() {
+            return lspSession.getLookup();
+        }
+        
+        /**
+         * Returns a Lookup specific for this LSP server's session. Does not include the default Lookup contents,
+         * it is suitable for composing into a ProxyLookup with other parts + the default one.
+         * @return 
+         */
+        Lookup getSessionOnlyLookup() {
+            return sessionOnly;
         }
 
         /**

@@ -157,7 +157,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
     /** Factory method to create a bit more complicated CloneableEditorSupport for a given
      * entry of a given DataObject. The common use inside DataObject looks like
      * this:
-     * <pre>
+     * <pre>{@code
      *  getCookieSet().add((Node.Cookie) DataEditorSupport.create(
      *    this, getPrimaryEntry(), getCookieSet(),
      *    new Callable<Pane>() { 
@@ -166,7 +166,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
      *      }
      *    }
      *  ));
-     * </pre>
+     * }</pre>
      * The method can be used to instantiate <b>multi view</b> editor by returning
      * <a href="@org-netbeans-core-multiview@/org/netbeans/core/api/multiview/MultiViews.html">
      * MultiViews.createCloneableMultiView("text/yourmime", this)</a>.
@@ -435,7 +435,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
     }
     
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     protected void loadFromStreamToKit(StyledDocument doc, InputStream stream, EditorKit kit) throws IOException, BadLocationException {
@@ -512,7 +512,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     protected void saveFromKitToStream(StyledDocument doc, EditorKit kit, OutputStream stream) throws IOException, BadLocationException {

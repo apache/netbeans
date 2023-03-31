@@ -314,7 +314,6 @@ public class JUnitTestUtil extends CommonTestUtil {
      * Finds a main class.
      *
      * @param  compInfo  defines scope in which the class is to be found
-     * @param  className  name of the class to be found
      * @return  the found class; or <code>null</code> if the class was not
      *          found (e.g. because of a broken source file)
      */
@@ -356,7 +355,7 @@ public class JUnitTestUtil extends CommonTestUtil {
      * withing the specified folder (non-recursive).
      *
      * @param  packageFolder  folder to search
-     * @param  classPath  classpath to be used for the search
+     * @param  cpInfo  classpath to be used for the search
      * @return  list of full names of all primary Java classes
      *          within the specified package
      */

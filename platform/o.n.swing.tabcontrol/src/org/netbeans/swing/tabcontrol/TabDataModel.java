@@ -208,7 +208,7 @@ public interface TabDataModel {
      * The model will fire a change event whenever a modification occurs that
      * could require a repaint. <strong>This method is only here for the
      * prototype - eventually the UI delegate should listen for ComplexDataNN
-     * events and optimize repaints based on the actual areas affected.
+     * events and optimize repaints based on the actual areas affected.</strong>
      */
     public void addChangeListener(ChangeListener listener);
 
@@ -216,7 +216,7 @@ public interface TabDataModel {
      * The model will fire a change event whenever a modification occurs that
      * could require a repaint. <strong>This method is only here for the
      * prototype - eventually the UI delegate should listen for ComplexDataNN
-     * events and optimize repaints based on the actual areas affected.
+     * events and optimize repaints based on the actual areas affected.</strong>
      */
     public void removeChangeListener(ChangeListener listener);
 }

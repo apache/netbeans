@@ -73,8 +73,10 @@ public final class RustProjectActionProvider implements ActionProvider {
                     break;
                 case COMMAND_RUN:
                     commands = new CargoCommand[]{CargoCommand.CARGO_RUN};
+                    break;
                 default:
                     LOG.log(Level.WARNING, String.format("Invoked action %s but cannot find a CargoBuild mode for it", command));
+                    return;
             }
             try {
                 build.cargo(project.getCargoTOML(), commands);

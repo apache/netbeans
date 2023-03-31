@@ -34,12 +34,12 @@ import java.io.Serializable;
  * Modules can add their own modes by declaring them using XML.
  * <P>
  * Modules can get a set of current modes by calling
- * {@link WindowManager#getModes}.<p>
+ * {@link WindowManager#getModes}.
  *
  * <p>
  * Each mode must have a unique name.
  *
- * <p><p>
+ * <p>
  * <b><font color="red"><em>Important note: Do not provide implementation of this interface unless you are window system provider!</em></font></b>
  */
 public interface Mode extends Serializable {
@@ -134,7 +134,7 @@ public interface Mode extends Serializable {
     /**
      * Extension to provide exposure of XML configuration.
      * 
-     * @see http://wiki.apidesign.org/wiki/ExtendingInterfaces
+     * @see <a href="http://wiki.apidesign.org/wiki/ExtendingInterfaces">ExtendingInterfaces</a>
      * @since 6.82
      */
     public interface Xml extends Mode {

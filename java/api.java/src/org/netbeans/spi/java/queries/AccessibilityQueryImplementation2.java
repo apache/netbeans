@@ -37,8 +37,8 @@ import org.openide.filesystems.FileObject;
  * this query, if it depends on the Java Project module and uses this style.
  * </p>
  * @see org.netbeans.api.java.queries.AccessibilityQuery
- * @see org.netbeans.api.queries.FileOwnerQuery
- * @see org.netbeans.api.project.Project#getLookup
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/FileOwnerQuery.html">FileOwnerQuery</a>
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--">Project#getLookup</a>
  * @author Tomas Zezula
  * @since 1.64
  */
@@ -61,7 +61,7 @@ public interface AccessibilityQueryImplementation2 {
     interface Result {
         /**
          * Returns the accessibility.
-         * @return the {@link Accessibility}
+         * @return the {@link AccessibilityQuery.Accessibility}
          */
         @NonNull
         AccessibilityQuery.Accessibility getAccessibility();

@@ -53,7 +53,7 @@ import org.netbeans.modules.autoupdate.services.InstallSupportImpl;
  *      support.doRestart(r, null);
  * }
  * </pre>
- * </p>
+ *
  * @author Radek Matous, Jiri Rechtacek
  */
 public final class InstallSupport {

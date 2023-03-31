@@ -50,7 +50,7 @@ public abstract class Tabbed {
 
     /**
      * Turn tab highlight on/off
-     * @param tab
+     * @param tc
      * @since 1.38
      */
     public void setAttentionHighlight(TopComponent tc, boolean highlight) {

@@ -35,11 +35,10 @@ import org.openide.util.Lookup;
  * ScopeProvider is used to add a scope to the {@link ScopePanel}.
  *
  * @see ScopePanel
- * @see ScopeDescription
  * @see ScopeReference
  *
  * @author Jan Lahoda
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  *
  * @since 1.30
  */
@@ -72,7 +71,6 @@ public abstract class ScopeProvider {
      *
      * @see ScopeProvider#initialize(org.openide.util.Lookup,
      * java.util.concurrent.atomic.AtomicBoolean)
-     * @see ScopeDescription
      * @return an icon for the Scope, or null if the default should be used.
      */
     @CheckForNull
@@ -110,11 +108,10 @@ public abstract class ScopeProvider {
      * scopes which can be customized by the user.
      *
      * @see ScopePanel
-     * @see ScopeDescription
      * @see ScopeReference
      *
      * @author Jan Lahoda
-     * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+     * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
      *
      * @since 1.30
      */
@@ -146,7 +143,7 @@ public abstract class ScopeProvider {
      * no arguments.
      * 
      * @author Jan Lahoda
-     * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+     * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
      * @since 1.30
      */
     @Target({ElementType.TYPE})

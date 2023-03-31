@@ -142,7 +142,6 @@ class MatchExpression {
     public function match(): void {
         echo "Context Sensitive Lexer" . PHP_EOL;
     }
-
 }
 
 $instance = new MatchExpression();

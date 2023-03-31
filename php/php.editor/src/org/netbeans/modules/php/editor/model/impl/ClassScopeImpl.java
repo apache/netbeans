@@ -39,6 +39,7 @@ import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.TraitElement;
 import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
+import org.netbeans.modules.php.editor.api.elements.TypeMemberElement;
 import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
 import org.netbeans.modules.php.editor.model.CaseElement;
@@ -333,6 +334,13 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             Set<org.netbeans.modules.php.editor.api.elements.FieldElement> indexedFields = index.getAlllFields(traitScope);
             for (org.netbeans.modules.php.editor.api.elements.FieldElement field : indexedFields) {
                 allFields.add(new FieldElementImpl(traitScope, field));
+            }
+        }
+        // GH-4683 get fields of mixin
+        Set<TypeMemberElement> mixinTypeMembers = index.getAccessibleMixinTypeMembers(this, this);
+        for (TypeMemberElement mixinTypeMember : mixinTypeMembers) {
+            if (mixinTypeMember instanceof org.netbeans.modules.php.editor.api.elements.FieldElement) {
+                allFields.add((new FieldElementImpl(this, (org.netbeans.modules.php.editor.api.elements.FieldElement) mixinTypeMember)));
             }
         }
         return allFields;

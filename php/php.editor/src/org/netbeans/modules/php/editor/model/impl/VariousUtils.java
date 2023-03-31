@@ -1411,6 +1411,11 @@ public final class VariousUtils {
                                 }
                                 metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.TYPE_TYPE_PREFIX);
                             }
+                        } else if (isReference(token)) {
+                            // ->fieldName
+                            metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.FIELD_TYPE_PREFIX);
+                            state = State.REFERENCE;
+                            break;
                         } else {
                             metaAll = transformToFullyQualifiedType(metaAll, tokenSequence, varScope);
                             metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.TYPE_TYPE_PREFIX);
@@ -1666,9 +1671,9 @@ public final class VariousUtils {
             csi = (TypeScope) inScope;
         }
         if (csi != null) {
-            if ("self".equals(staticTypeName)) { //NOI18N
+            if (Type.SELF.equalsIgnoreCase(staticTypeName) || Type.STATIC.equalsIgnoreCase(staticTypeName)) {
                 return Collections.singletonList(csi);
-            } else if ("parent".equals(staticTypeName) && (csi instanceof ClassScope)) { //NOI18N
+            } else if (Type.PARENT.equalsIgnoreCase(staticTypeName) && (csi instanceof ClassScope)) {
                 return ((ClassScope) csi).getSuperClasses();
             }
         }

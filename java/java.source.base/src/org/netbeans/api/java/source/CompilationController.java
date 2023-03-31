@@ -51,7 +51,7 @@ public class CompilationController extends CompilationInfo {
 
     /**
      * Returns an instance of the {@link CompilationController} for
-     * given {@link Parser.Result} if it is a result
+     * given {@link org.netbeans.modules.parsing.spi.Parser.Result} if it is a result
      * of a java parser.
      * @param result for which the {@link CompilationController} should be
      * returned.
@@ -74,10 +74,12 @@ public class CompilationController extends CompilationInfo {
     /** Moves the state to required phase. If given state was already reached 
      * the state is not changed. The method will throw exception if a state is 
      * illegal required. Acceptable parameters for thid method are <BR>
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.PARSED}
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.ELEMENTS_RESOLVED}
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.RESOLVED}
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.UP_TO_DATE}   
+     * <UL>
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase#PARSED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase#ELEMENTS_RESOLVED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase#RESOLVED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase#UP_TO_DATE}   
+     * </UL>
      * @param phase The required phase
      * @return the reached state
      * @throws IllegalArgumentException in case that given state can not be 

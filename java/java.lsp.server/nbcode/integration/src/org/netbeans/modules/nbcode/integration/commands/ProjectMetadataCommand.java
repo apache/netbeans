@@ -51,10 +51,15 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = CodeActionsProvider.class)
 public class ProjectMetadataCommand extends CodeActionsProvider {
-    private static final String COMMAND_ARTIFACTS = "nbls.gcn.project.artifacts"; // NOI18N
+    private static final String COMMAND_ARTIFACTS = "nbls.project.artifacts"; // NOI18N
+    /**
+     * @deprecated will be removed in NB 19
+     */
+    private static final String COMMAND_ARTIFACTS_OLD = "nbls.gcn.project.artifacts"; // NOI18N
 
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
-            COMMAND_ARTIFACTS
+            COMMAND_ARTIFACTS,
+            COMMAND_ARTIFACTS_OLD
     ));
     private static final Set<String> ARTIFACT_BLOCK_FIELDS = new HashSet<>(Arrays.asList(
         "data" // NOI18N

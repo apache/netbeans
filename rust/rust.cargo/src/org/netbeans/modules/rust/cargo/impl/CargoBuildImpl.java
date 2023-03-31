@@ -22,8 +22,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -41,7 +43,10 @@ import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
 import org.netbeans.modules.rust.cargo.api.Cargo;
 import org.netbeans.modules.rust.cargo.api.RustPackage;
+import org.netbeans.modules.rust.options.api.CargoOptions;
 import org.openide.LifecycleManager;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  * CargoBuildImpl is used to invoke a set of predefined "cargo" commands.
@@ -84,8 +89,8 @@ public class CargoBuildImpl implements Cargo {
             File workingDirectory = FileUtil.toFile(cargotoml.getFileObject()).getParentFile();
             pb.setWorkingDirectory(workingDirectory.getAbsolutePath());
             pb.setRedirectErrorStream(false);
-            // TODO: Parametrize the "cargo" path
-            pb.setExecutable("cargo"); // NOI18N
+            Path cargo = CargoOptions.getCargoLocation(false);
+            pb.setExecutable(cargo.toString());
             pb.setArguments(arguments);
 
             console.getOut().println(String.format("%n$ cargo %s", String.join(" ", arguments))); // NOI18N
@@ -97,6 +102,10 @@ public class CargoBuildImpl implements Cargo {
     /**
      * A Callable used to invoke an array of commands.
      */
+    @NbBundle.Messages({
+        "MSG_WORKING_DIRECTORY=Working directory:",
+        "MSG_CARGO_PATH=Cargo: "
+    })
     public static class SequentialCargoProcesses implements Callable<Integer> {
 
         private final CargoTOML cargotoml;
@@ -111,12 +120,24 @@ public class CargoBuildImpl implements Cargo {
 
         @Override
         public Integer call() throws Exception {
+            Path cargo = CargoOptions.getCargoLocation(true);
+            if (cargo == null) {
+                return -1;
+            }
             // Get a proper console for the input/output
             String projectName = cargotoml.getPackageName();
             String commandNames = Arrays.stream(commands).map(CargoCommand::getDisplayName).collect(Collectors.joining(",")); // NOI18N
             String ioName = String.format("%s (%s)", projectName, commandNames); // NOI18N
             InputOutput console = IOProvider.getDefault().getIO(ioName, false);
             console.select();
+
+            File workingDirectory = FileUtil.toFile(cargotoml.getFileObject()).getParentFile();
+            console.getOut().format("# %s %s%n", // NOI18N
+                    NbBundle.getMessage(CargoBuildImpl.class, "MSG_WORKING_DIRECTORY"), 
+                    workingDirectory.getAbsolutePath()); 
+            console.getOut().format("# %s %s%n",  // NOI18N
+                    NbBundle.getMessage(CargoBuildImpl.class, "MSG_CARGO_PATH"), 
+                    cargo); 
 
             ExecutionDescriptor ed = new ExecutionDescriptor()
                     .inputOutput(IOProvider.getDefault().getIO(ioName, false))
@@ -133,7 +154,12 @@ public class CargoBuildImpl implements Cargo {
                 CargoProcess process = new CargoProcess(cargotoml, command, options, console);
                 ExecutionService service = ExecutionService.newService(process, ed, ioName);
                 Future<Integer> resultCodeFuture = service.run();
-                resultCode = resultCodeFuture.get();
+                try {
+                    resultCode = resultCodeFuture.get();
+                } catch (Exception e) {
+                    console.getErr().println(String.format("Cargo execution failed: %s%n", e.getMessage()));
+                    Exceptions.printStackTrace(e);
+                }
                 if (resultCode != 0) {
                     console.getErr().println(String.format("Command \"cargo %s\" failed with exit status %d", // NOI18N
                             String.join(" ", command.arguments),
@@ -155,9 +181,13 @@ public class CargoBuildImpl implements Cargo {
     @Override
     public void cargo(CargoTOML cargotoml, CargoCommand[] commands, String... options) throws IOException {
         if (cargotoml == null) {
-            throw new NullPointerException("Missing Cargo.tomml file"); // NOI18N
+            throw new NullPointerException("Missing Cargo.toml file"); // NOI18N
         }
         if (commands.length == 0) {
+            return;
+        }
+        Path cargo = CargoOptions.getCargoLocation(true);
+        if (cargo == null) {
             return;
         }
         // Let's save stuff just in case
@@ -180,17 +210,20 @@ public class CargoBuildImpl implements Cargo {
 
         @Override
         public List<RustPackage> call() throws Exception {
+            Path cargo = CargoOptions.getCargoLocation(true);
+            if (cargo == null) {
+                return Collections.emptyList();
+            }
             org.netbeans.api.extexecution.base.ProcessBuilder pb = org.netbeans.api.extexecution.base.ProcessBuilder.getLocal();
             File workingDirectory = new File(System.getProperty("user.home")); // NOI18N
             pb.setWorkingDirectory(workingDirectory.getAbsolutePath());
             pb.setRedirectErrorStream(false);
-            // TODO: Parametrize the "cargo" path
-            pb.setExecutable("cargo"); // NOI18N
+            pb.setExecutable(cargo.toString());
             String[] arguments = {
                 "search", // NOI18N
                 text, // TODO: What happens with spaces?
                 "--limit", // NOI18N
-                "15", // NOI18N
+                "30", // NOI18N
                 "--color", // NOI18N
                 "never", // NOI18N
             };

@@ -562,6 +562,7 @@ public final class MavenEmbedder {
         }
         session.setAuthenticationSelector(authenticationSelector);
         DefaultMavenExecutionRequest mavenExecutionRequest = new DefaultMavenExecutionRequest();
+        mavenExecutionRequest.setSystemProperties(embedderConfiguration.getSystemProperties());
         mavenExecutionRequest.setOffline(isOffline());
         mavenExecutionRequest.setTransferListener(ProgressTransferListener.activeListener());
         session.setTransferListener(ProgressTransferListener.activeListener());

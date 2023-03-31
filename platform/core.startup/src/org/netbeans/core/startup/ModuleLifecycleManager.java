@@ -33,7 +33,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Rudimentary manager useful for non-GUI platform applications.
  * Superseded by NbLifecycleManager.
- * @see #158525
+ * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=158525">158525</a>
  */
 @ServiceProvider(service=LifecycleManager.class)
 public class ModuleLifecycleManager extends LifecycleManager {

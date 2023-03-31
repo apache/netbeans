@@ -653,7 +653,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     //spawn the indexing into a separate thread..
     private boolean spawnIndexLoadedRepo(final RepositoryInfo repo) {
 
-        if (!RepositoryPreferences.isIndexDownloadEnabled() && repo.isRemoteDownloadable()) {
+        if (!RepositoryPreferences.isIndexDownloadEnabledEffective() && repo.isRemoteDownloadable()) {
             LOGGER.log(Level.FINE, "Skipping remote index request for {0}", repo);
             return false;
         }
@@ -678,7 +678,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     @Override
     public void indexRepo(final RepositoryInfo repo) {
         
-        if (!RepositoryPreferences.isIndexDownloadEnabled() && repo.isRemoteDownloadable()) {
+        if (!RepositoryPreferences.isIndexDownloadEnabledEffective() && repo.isRemoteDownloadable()) {
             LOGGER.log(Level.FINE, "Skipping remote index request for {0}", repo);
             return;
         }

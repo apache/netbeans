@@ -225,7 +225,7 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
 
     /** Sets value. Implements <code>PropertyEditor</code> interface.
      * @param object object to set, accepts <code>Color</code> 
-     * or <code>SuperColor<code> types */
+     * or <code>SuperColor</code> types */
     public void setValue (Object object) {
         if(object != null) {
             if (object instanceof SuperColor) {

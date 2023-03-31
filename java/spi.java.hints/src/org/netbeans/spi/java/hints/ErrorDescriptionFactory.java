@@ -127,7 +127,7 @@ public class ErrorDescriptionFactory {
      * and the {@link ErrorDescription} is created to be consistent with {@link ErrorDescription}s created
      * by the other factory methods in this class.
      * 
-     * @param context from which the {@link Severity} and other properties are inferred.
+     * @param context from which the {@link org.netbeans.spi.editor.hints.Severity} and other properties are inferred.
      * @param start start of the warning
      * @param end end of the warning
      * @param text the warning text

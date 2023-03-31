@@ -207,7 +207,7 @@ public final class LibrariesNode extends AbstractNode {
     }
 
     /**
-     * Builder for {@Link LibrariesNode}.
+     * Builder for {@link LibrariesNode}.
      * @since 1.63
      */
     public static final class Builder {

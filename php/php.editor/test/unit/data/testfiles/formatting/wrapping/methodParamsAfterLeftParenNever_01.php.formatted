@@ -53,7 +53,6 @@ class Test {
     private function testParams3($param1, int $param2, string $param3,): int {
         
     }
-
 }
 
 $labmda = function () {

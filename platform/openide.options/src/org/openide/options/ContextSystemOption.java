@@ -190,7 +190,7 @@ public abstract class ContextSystemOption extends SystemOption implements BeanCo
 
     /** A hierarchy of SystemOptions.
     * Allows add/remove SystemOption beans only.
-    * @warning many methods throws UnsupportedOperationException like BeanContextSupport does.
+    * <strong>warning</strong> many methods throws UnsupportedOperationException like BeanContextSupport does.
     */
     private static class OptionBeanContext extends BeanContextSupport implements PropertyChangeListener {
         private static final long serialVersionUID = 3532434266136225440L;

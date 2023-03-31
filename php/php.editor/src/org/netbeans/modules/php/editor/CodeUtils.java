@@ -320,6 +320,10 @@ public final class CodeUtils {
     public static String extractUnqualifiedClassName(StaticDispatch dispatch) {
         Parameters.notNull("dispatch", dispatch);
         Expression dispatcher = dispatch.getDispatcher();
+        if (dispatcher instanceof StaticConstantAccess) {
+            // e.g. EnumName::Case::staticMethod();
+            dispatcher = ((StaticConstantAccess) dispatcher).getDispatcher();
+        }
         return extractUnqualifiedName(dispatcher);
     }
 

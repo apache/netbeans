@@ -664,6 +664,7 @@
                 <package>org.netbeans.modules.maven.api.output</package>
                 <package>org.netbeans.modules.maven.api.problem</package>
                 <package>org.netbeans.modules.maven.execute</package>
+                <package>org.netbeans.modules.maven.options</package>
                 <package>org.netbeans.modules.maven.execute.model</package>
                 <package>org.netbeans.modules.maven.execute.model.io.jdom</package>
                 <package>org.netbeans.modules.maven.execute.model.io.xpp3</package>

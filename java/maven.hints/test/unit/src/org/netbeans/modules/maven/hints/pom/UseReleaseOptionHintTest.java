@@ -19,6 +19,7 @@
 package org.netbeans.modules.maven.hints.pom;
 
 import java.util.List;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
@@ -38,6 +39,12 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class UseReleaseOptionHintTest extends NbTestCase {
 
+    // contains JDK 9+ compatible compiler plugin (3.10.1)
+    private static final ComparableVersion JDK_9_PLUS_COMPATIBLE = new ComparableVersion("3.9.1");
+
+    // contains old default compiler plugin, not supporting the release javac option
+    private static final ComparableVersion JDK_8_COMPATIBLE = new ComparableVersion("3.8.0");
+
     private FileObject work;
 
     public UseReleaseOptionHintTest(String name) {
@@ -48,9 +55,10 @@ public class UseReleaseOptionHintTest extends NbTestCase {
     protected void setUp() throws Exception {
         clearWorkDir();
         work = FileUtil.toFileObject(getWorkDir());
+        PomModelUtils.activeMavenVersion = JDK_9_PLUS_COMPATIBLE;
     }
 
-    public void testNoPluginNegative() throws Exception {
+    public void testImplicitCompilerPlugin() throws Exception {
         FileObject pom = TestFileUtils.writeFile(work, "pom.xml",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
@@ -70,8 +78,13 @@ public class UseReleaseOptionHintTest extends NbTestCase {
         POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
         Project project = ProjectManager.getDefault().findProject(pom.getParent());
 
+        PomModelUtils.activeMavenVersion = JDK_8_COMPATIBLE;
         List<ErrorDescription> hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
         assertEquals(0, hints.size());
+        
+        PomModelUtils.activeMavenVersion = JDK_9_PLUS_COMPATIBLE;
+        hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
+        assertEquals(2, hints.size());
     }
 
     private static final String COMPILER_POM =
@@ -128,7 +141,7 @@ public class UseReleaseOptionHintTest extends NbTestCase {
         assertEquals(6, hints.size());
     }
 
-    public void testOldCompilerPluginNegative() throws Exception {
+    public void testOldCompilerPlugin() throws Exception {
         FileObject pom = TestFileUtils.writeFile(work, "pom.xml", COMPILER_POM.replaceFirst("3.10.1", "3.5"));
 
         POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
@@ -138,7 +151,7 @@ public class UseReleaseOptionHintTest extends NbTestCase {
         assertEquals(0, hints.size());
     }
 
-    public void testCompilerPluginButOldTargetNegative() throws Exception {
+    public void testCompilerPluginWithOldTarget() throws Exception {
         FileObject pom = TestFileUtils.writeFile(work, "pom.xml", COMPILER_POM.replace("11", "5").replace("17", "1.4"));
 
         POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));

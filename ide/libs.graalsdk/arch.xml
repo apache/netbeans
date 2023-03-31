@@ -51,7 +51,7 @@
  <answer id="arch-overall">
   <p>
     Bridge that plugs
-    <a href="http://graalvm.org">GraalVM</a> languages
+    <a href="https://graalvm.org">GraalVM</a> languages
     into
     <a href="@org-netbeans-api-scripting@/org/netbeans/api/scripting/Scripting.html">Scripting.createManager()</a>
     to obtain enhanced version of
@@ -123,7 +123,7 @@
  <answer id="arch-usecases">
   <p>
       <usecase id="createScriptEngineManager" name="Create ScriptEngineManager">
-          To access <a href="http://graalvm.org">GraalVM</a> languages
+          To access <a href="https://graalvm.org">GraalVM</a> languages
           use
           To create new instance script engine manager ready for the NetBeans
           execution environment use
@@ -172,7 +172,7 @@
  <answer id="arch-what">
   <p>
       Bridge that plugs
-      <a href="http://graalvm.org">GraalVM</a> languages
+      <a href="https://graalvm.org">GraalVM</a> languages
       into
       <a href="@org-netbeans-api-scripting@/org/netbeans/api/scripting/Scripting.html">Scripting.createManager()</a>
       can be found in this module.
@@ -542,7 +542,7 @@
  <answer id="exec-component">
   <p>
       <api name="GraalVM:Engine" type="export" group="property" category="stable">
-        When this module is used (on <a href="http://graalvm.org">GraalVM</a> or
+        When this module is used (on <a href="https://graalvm.org">GraalVM</a> or
         without)
         it automatically exports all available languages (obtained via
         <code>org.graalvm.polyglot.Engine</code>) as
@@ -552,13 +552,13 @@
         name.
       </api>
       <api name="allowAllAccess" type="export" group="property" category="stable">
-        By default all the <a href="http://graalvm.org">GraalVM</a> engines
+        By default all the <a href="https://graalvm.org">GraalVM</a> engines
         (named <code>GraalVM:something</code>)
         run in a very restricted, secure sandbox. See
         <a href="@TOP@/org/netbeans/libs/graalsdk/GraalSDK.html">GraalSDK</a>
         for details. That means the languages cannot
         access local files, ports, etc. Some languages (like
-        <a href="https://gihub.com/graalvm/fastr">>FastR</a>
+        <a href="https://github.com/graalvm/fastr">>FastR</a>
         implementation of the <b>R</b> language) need such access. In such
         case one has to allow such access. This can be done by
         <pre>

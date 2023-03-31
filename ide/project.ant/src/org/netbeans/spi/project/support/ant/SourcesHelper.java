@@ -405,7 +405,7 @@ public final class SourcesHelper {
          * </p>
          * @param value Ant-style includes; may contain Ant property substitutions;
          *                 Only files and folders matching the pattern (or patterns),
-         *                 and not specified in the {@link #excludes} list,
+         *                 and not specified in the {@link SourcesHelper.SourceRootConfig#excludes(String)} list,
          *                 will be {@link SourceGroup#contains included}.
          *                 Must not be <code>null</code>.
          * @return <code>this</code>
@@ -520,7 +520,7 @@ public final class SourcesHelper {
      * contain sources that should be considered part of the project.
      * <p>
      * If the actual value of the <code>location</code> parameter is inside the project directory
-     * and the root is not {@link SourceRootConfig#type typed},
+     * and the root is not {@link SourceRootConfig#type(String) typed},
      * this is simply ignored; so it safe to configure source roots
      * for any source directory which might be set to use an external path, even
      * if the common location is internal.
@@ -614,7 +614,7 @@ public final class SourcesHelper {
      * Useful for project type providers which have external paths holding build
      * products. These should not appear in {@link Sources}, yet it may be useful
      * for {@link FileOwnerQuery} to know the owning project (for example, in order
-     * for a project-specific <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceForBinaryQueryImplementation.html"><code>SourceForBinaryQueryImplementation</code></a> to work).
+     * for a project-specific <a href="@org-netbeans-api-java-classpath@/org/netbeans/spi/java/queries/SourceForBinaryQueryImplementation.html"><code>SourceForBinaryQueryImplementation</code></a> to work).
      * </p>
      * @param location a project-relative or absolute path giving the location
      *                 of a non-source tree; may contain Ant property substitutions
@@ -636,7 +636,7 @@ public final class SourcesHelper {
      * Useful for project type providers which have external paths holding build
      * products. These should not appear in {@link Sources}, yet it may be useful
      * for {@link FileOwnerQuery} to know the owning project (for example, in order
-     * for a project-specific <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceForBinaryQueryImplementation.html"><code>SourceForBinaryQueryImplementation</code></a> to work).
+     * for a project-specific <a href="@org-netbeans-api-java-classpath@/org/netbeans/spi/java/queries/SourceForBinaryQueryImplementation.html"><code>SourceForBinaryQueryImplementation</code></a> to work).
      * </p>
      * @param location a project-relative or absolute path giving the location
      *                 of a file; may contain Ant property substitutions

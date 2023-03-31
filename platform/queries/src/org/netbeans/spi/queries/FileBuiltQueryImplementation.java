@@ -33,7 +33,7 @@ import org.openide.filesystems.FileObject;
  * the <code>org.netbeans.modules.projectapi</code> module.
  * </p>
  * @see FileBuiltQuery
- * @see <a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/AntProjectHelper.html#createGlobFileBuiltQuery(java.lang.String[],%20java.lang.String[])"><code>AntProjectHelper.createGlobFileBuiltQuery(...)</code></a>
+ * @see <a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/AntProjectHelper.html#createGlobFileBuiltQuery-org.netbeans.spi.project.support.ant.PropertyEvaluator-java.lang.String:A-java.lang.String:A-"><code>AntProjectHelper.createGlobFileBuiltQuery(...)</code></a>
  * @author Jesse Glick
  */
 public interface FileBuiltQueryImplementation {

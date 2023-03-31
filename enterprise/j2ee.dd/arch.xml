@@ -256,47 +256,47 @@ It uses these API's:
         </api>
     </li>
     <li>
-        <api group="dtd" category="standard" name="web-app_2_2.dtd" type="import" url="http://java.sun.com/products/servlet/2.2/">
+        <api group="dtd" category="standard" name="web-app_2_2.dtd" type="import" url="https://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
         DTD for web.xml in Servlet API 2.2
         </api>
     </li>
     <li>
-        <api group="dtd" category="standard" name="web-app_2_3.dtd" type="import" url="http://java.sun.com/products/servlet/download.html">
+        <api group="dtd" category="standard" name="web-app_2_3.dtd" type="import" url="https://www.oracle.com/webfolder/technetwork/jsc/dtd/web-app_2_3.dtd">
         DTD for web.xml in Servlet API 2.3
         </api>
     </li>
     <li>
-        <api group="dtd" category="standard" name="web-app_2_4.xsd" type="import" url="http://java.sun.com/products/servlet/download.html">
+        <api group="dtd" category="standard" name="web-app_2_4.xsd" type="import" url="https://www.oracle.com/webfolder/technetwork/jsc/xml/ns/j2ee/web-app_2_4.xsd">
         Schema for web.xml in Servlet API 2.4
         </api>
     </li>
     <li>
-        <api group="dtd" category="standard" name="appplication_1_3.dtd" type="import" url="http://java.sun.com/j2ee/download.html">
+        <api group="dtd" category="standard" name="appplication_1_3.dtd" type="import" url="https://www.oracle.com/webfolder/technetwork/jsc/dtd/application-client_1_3.dtd">
         DTD for application.xml in J2EE 1.3
         </api>
     </li>
     <li>
-        <api group="dtd" category="standard" name="application_1_4.xsd" type="import" url="http://java.sun.com/j2ee/download.html">
+        <api group="dtd" category="standard" name="application_1_4.xsd" type="import" url="https://www.oracle.com/webfolder/technetwork/jsc/xml/ns/j2ee/application_1_4.xsd">
         Schema for application.xml in J2EE 1.4
         </api>
     </li>
     <li>
-        <api group="dtd" category="standard" name="ejb-jar_1_1.dtd" type="import" url="http://java.sun.com/products/ejb/docs.html">
+        <api group="dtd" category="standard" name="ejb-jar_1_1.dtd" type="import" url="https://java.sun.com/j2ee/dtds/ejb-jar_1_1.dtd">
         DTD for ejb-jar.xml in EJB 1.1
         </api>
     </li>
     <li>
-        <api group="dtd" category="standard" name="ejb-jar_2_0.dtd" type="import" url="http://java.sun.com/products/ejb/docs.html">
+        <api group="dtd" category="standard" name="ejb-jar_2_0.dtd" type="import" url="https://java.sun.com/dtd/ejb-jar_2_0.dtd">
         DTD for ejb-jar.xml in EJB 2.0
         </api>
     </li>
     <li>
-        <api group="dtd" category="standard" name="ejb-jar_2_1.xsd" type="import" url="http://java.sun.com/products/ejb/docs.html">
+        <api group="dtd" category="standard" name="ejb-jar_2_1.xsd" type="import" url="https://www.oracle.com/webfolder/technetwork/jsc/xml/ns/j2ee/ejb-jar_2_1.xsd">
         Schema for ejb-jar.xml in EJB 2.1
         </api>
     </li>
     <li>
-        <api group="dtd" category="standard" name="j2ee_1_4.xsd" type="import" url="http://java.sun.com/j2ee/download.html">
+        <api group="dtd" category="standard" name="j2ee_1_4.xsd" type="import" url="https://www.oracle.com/webfolder/technetwork/jsc/xml/ns/j2ee/j2ee_1_4.xsd">
         Schema for deployment descriptors in J2EE 1.4
         </api>
     </li>
@@ -791,7 +791,7 @@ The size of ejb-jar.xml or application.xml files, the performance of schema2bean
 </ul>
 The reading/parsing and writing the web.xml is the bottleneck of the DD API performance. Than the schema2beans root object is <b>weakly</b> cached in memmory.
 However, those operations have no visible impact while working with web modules with standard-sized deployment descriptors.<br/>
-The measurements were not provided for DD API specifically, but there may have been some measurements made in <a href="http://schema2beans.netbeans.org">schema2beans infrastructure</a> that is used for DD API implementation. There should be no additional deficites added by DD API. 
+The measurements were not provided for DD API specifically, but there may have been some measurements made in <a href="https://netbeans.apache.org/projects/schema2beans/">schema2beans infrastructure</a> that is used for DD API implementation. There should be no additional deficites added by DD API. 
 </answer>
 <!--
         <question id="perf-limit" when="init">

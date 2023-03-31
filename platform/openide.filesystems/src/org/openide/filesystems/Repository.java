@@ -1040,7 +1040,7 @@ public class Repository implements Serializable {
          * Repository instance even after the execution context shuts down; the contents of Repository and
          * its FileSystems may be limited in that case.
          * <p>
-         * Implementations must be reentrant (a call to {@link #getLocalRepository} can be made during 
+         * Implementations must be reentrant (a call to {@code getLocalRepository} can be made during 
          * construction of the Repository instance) and must not recurse infinitely.
          * 
          * @return local repository instance.
@@ -1051,7 +1051,7 @@ public class Repository implements Serializable {
          * Allows to delay attaching filesystems to the Repository. For backwards compatibility, the Repository
          * constructor still takes the default FileSystem instance. However it is better to actually publish the
          * FileSystem in the repository only after it is registered, and can be obtained using {@link #getDefault()} or
-         * {@link #getLocalRepository()}.
+         * {@code getLocalRepository()}.
          * <p>
          * This method wraps the Repository creation so that the default FileSystem is attached after the repository
          * is fully constructed. The `init' callable must create a new Repository instance.

@@ -137,10 +137,9 @@
     <filter pattern="http://www\.netbeans\.org/ns/j2se-project/2\.xsd" accept="true"/>
     
     <!-- j2ee dtd-->
-    <filter pattern="http://java\.sun\.com/dtd/.*" accept="true"/>
-    <filter pattern="http://java\.sun\.com/j2ee/dtds/.*" accept="true"/>
+    <filter pattern="https://java\.sun\.com/dtd/.*" accept="true"/>
+    <filter pattern="https://java\.sun\.com/j2ee/dtds/.*" accept="true"/>
     <filter pattern="https://www\.oracle\.com/webfolder/technetwork/.*" accept="true"/>
-    <filter pattern="http://www\.oracle\.com/webfolder/technetwork/.*" accept="true"/>
     <filter pattern="https://jcp\.org/aboutJava/communityprocess/.*" accept="true"/>
     
     

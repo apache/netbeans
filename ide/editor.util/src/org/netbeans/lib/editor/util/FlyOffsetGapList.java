@@ -50,7 +50,7 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
      *
      * @param elem element currently stored in the list.
      * @return raw offset of the element. It needs to be preprocessed
-     * by {@link #raw2RelOffset(int)} to become the real offset.
+     * by {@code #raw2RelOffset(int)} to become the real offset.
      */
     protected abstract int elementRawOffset(E elem);
 

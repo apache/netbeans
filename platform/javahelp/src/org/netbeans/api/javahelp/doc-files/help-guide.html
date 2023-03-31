@@ -296,7 +296,7 @@ NetBeans IDE uses the Unite-Append merge type for the table of contents and the 
 merge type for the index. These merge types are set in the master help set and 
 propogate to any help sets that merge into the product, unless those help sets 
 override them with other merge types. For more information on merge types, see the 
-<a href="http://java.sun.com/products/javahelp/README.html">JavaHelp release 
+<a href="https://docs.oracle.com/cd/E19253-01/819-0913/819-0913.pdf">JavaHelp release 
 notes.</a></p>
 
 <p>The biggest resulting impact for module authors is the need to more carefully 
@@ -304,13 +304,13 @@ notes.</a></p>
  comprehensibly for users. Here are some general tips and rules of thumb:</p>
 <ul>
  <li>Use the most recent revision of 
-<a href="http://www.netbeans.org/source/browse/usersguide/javahelp/org/netbeans/modules/usersguide/ide-idx.xml">
+<a href="https://github.com/emilianbold/netbeans-releases/tree/master/usersguide/javahelp/org/netbeans/modules/usersguide/ide-idx.xml">
  the usersguide module index</a> as a guide for your indexing conventions to make your entries fit in 
  seamlessly.</li>
 <li><i>DO NOT</i> use manual separators in your indexes, 
 (e.g. &lt;indexitem text="-A-"&gt;&lt;/indexitem&gt;). These are superfluous 
 with merged indexes are suspected of triggering a bug in JH that crashes the 
-help system - see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=39966"> 
+help system - see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=39966">
 Issuezilla bug 39966</a>.</li>
 <li>Any TOC or index entry that contains sub-entries should have no 
 <samp>target</samp> attribute. This rule has been adopted because it is not 
@@ -321,7 +321,7 @@ consistent experience as to when to expect a topic to display. If you feel that
 
   <li>If you would like to insert entries into an existing TOC bucket, check 
   the most recent revision of the 
-<a href="http://www.netbeans.org/source/browse/usersguide/javahelp/org/netbeans/modules/usersguide/ide-toc.xml">
+<a href="https://github.com/emilianbold/netbeans-releases/tree/master/usersguide/javahelp/org/netbeans/modules/usersguide/ide-toc.xml">
  the usersguide module TOC</a>.</li>
  <li>If you organize your table of contents so that "Core IDE Help" is your 
 first-level TOC item, your help set will be slotted in under second level buckets 

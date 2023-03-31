@@ -134,7 +134,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
     private final DataLoader loader;
 
     /** property change listener support.
-     * Threading: lock free, changes HAS to go through {@link DataObject#changeSupportUpdater}.
+     * Threading: lock free, changes HAS to go through {@code DataObject#changeSupportUpdater}.
      */
     private volatile PropertyChangeSupport changeSupport;
 

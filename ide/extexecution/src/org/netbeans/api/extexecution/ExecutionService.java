@@ -65,7 +65,7 @@ import org.openide.windows.OutputWriter;
  * <p>
  * Note that once service is run for the first time, subsequents runs can be
  * invoked by the user (rerun button) if it is allowed to do so
- * ({@link ExecutionDescriptor#isControllable()}).
+ * ({@code ExecutionDescriptor#isControllable()}).
  *
  * <div class="nonnormative">
  * <p>
@@ -133,7 +133,7 @@ public final class ExecutionService {
      * as a result of the {@link Future} is exit code of the process.
      * <p>
      * The output tabs are reused (if caller does not use the custom one,
-     * see {@link ExecutionDescriptor#getInputOutput()}) - the tab to reuse
+     * see {@code ExecutionDescriptor#getInputOutput()}) - the tab to reuse
      * (if any) is selected by having the same name and same buttons
      * (control and option). If there is no output tab to reuse new one
      * is opened.

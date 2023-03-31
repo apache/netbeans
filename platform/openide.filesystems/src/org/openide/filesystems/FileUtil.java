@@ -1403,7 +1403,7 @@ public final class FileUtil extends Object {
      * </code>
      * @param fo whose MIME type should be recognized
      * @param withinMIMETypes an array of MIME types. Only resolvers whose
-     * {@link MIMEResolver#getMIMETypes} contain one or more of the requested
+     * {@code MIMEResolver#getMIMETypes()} contain one or more of the requested
      * MIME types will be asked if they recognize the file. It is possible for
      * the resulting MIME type to not be a member of this list.
      * @return the MIME type for the FileObject, or <code>null</code> if

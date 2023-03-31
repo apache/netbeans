@@ -43,10 +43,6 @@ import org.openide.util.Lookup;
  *  <br>
  *  This process can be arbitrarily nested for embedded mime-types.
  *  
- * <p> 
- *  An example implementation of MimeLookupInitializer
- *  that works over xml layer file system can be found at mime lookup module
- *  implementation <a href="http://editor.netbeans.org/source/browse/editor/mimelookup/src/org/netbeans/modules/editor/mimelookup/Attic/LayerMimeLookupImplementation.java">LayerMimeLookupInitializer</a>
  *
  *  @author Miloslav Metelka, Martin Roskanin
  *  @deprecated Use {@link MimeDataProvider} instead.

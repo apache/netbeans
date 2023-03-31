@@ -165,7 +165,7 @@ public class CodeFoldingSideBar extends JComponent implements Accessible {
     private int lowestAboveMouse = -1;
 
     /**
-     * Y-begin of the nearest fold, which starts below the {@link #mousePoint}. Undefined if mousePoint is null
+     * Y-begin of the nearest fold, which starts below the {@code #mousePoint}. Undefined if mousePoint is null
      */
     private int topmostBelowMouse = Integer.MAX_VALUE;
     
@@ -192,7 +192,7 @@ public class CodeFoldingSideBar extends JComponent implements Accessible {
     public static final int SINGLE_PAINT_MARK      = 4;
     
     /**
-     * Marker value for {@link #mousePoint} indicating that mouse is outside the Component.
+     * Marker value for {@code #mousePoint} indicating that mouse is outside the Component.
      */
     private static final int NO_MOUSE_POINT = -1;
     

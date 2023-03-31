@@ -53,7 +53,7 @@ import org.openide.util.Lookup;
  * </div>
  * <p>
  * GradleExecConfigurations can be also declared by a Plugin that implements a
- * <a href="@TOP@/org/netbeans/spi/GradleActionsProvider.html#define-configuration">GradleActionsProvider</a>,
+ * {@link org.netbeans.modules.gradle.spi.actions.GradleActionsProvider },
  * or which uses {@link DefaultGradleActionsProvider#forProjectLayer(org.openide.filesystems.FileObject)}.
  * 
  * @since 2.13

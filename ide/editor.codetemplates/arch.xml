@@ -134,14 +134,14 @@ arrays of primitive data types).
 <answer id="arch-overall">
 
 <p>
-It is a module located under <a href="http://www.netbeans.org/source/browse/editor/codetemplates/#dirlist">/cvs/editor/codetemplates</a> directory.
+It is a module located under <a href="https://github.com/apache/netbeans/tree/master/ide/editor.codetemplates">ide/editor.codetemplates</a> directory.
 </p>
 
 It consists of
 <ul>
-    <li>API in <a href="http://www.netbeans.org/source/browse/editor/codetemplates/src/org/netbeans/lib/editor/codetemplates/api/Attic/">org.netbeans.lib.editor.codetemplates.api</a></li>
-    <li>SPI in <a href="http://www.netbeans.org/source/browse/editor/codetemplates/src/org/netbeans/lib/editor/codetemplates/spi/Attic/">org.netbeans.lib.editor.codetemplates.spi</a></li>
-    <li>Implementation in <a href="http://www.netbeans.org/source/browse/editor/codetemplates/src/org/netbeans/lib/editor/codetemplates/Attic/">org.netbeans.lib.editor.codetemplates</a></li>
+    <li>API in <a href="https://github.com/apache/netbeans/tree/master/ide/editor.codetemplates/src/org/netbeans/lib/editor/codetemplates/api">org.netbeans.lib.editor.codetemplates.api</a></li>
+    <li>SPI in <a href="https://github.com/apache/netbeans/tree/master/ide/editor.codetemplates/src/org/netbeans/lib/editor/codetemplates/spi">org.netbeans.lib.editor.codetemplates.spi</a></li>
+    <li>Implementation in <a href="https://github.com/apache/netbeans/tree/master/ide/editor.codetemplates/src/org/netbeans/lib/editor/codetemplates/">org.netbeans.lib.editor.codetemplates</a></li>
 </ul>
 
 <p>
@@ -165,7 +165,7 @@ Code Templates define <api name="CodeTemplatesAPI" group="java" type="export" ca
         </question>
 -->
 <answer id="arch-quality">
-The unit tests are available in <a href="http://www.netbeans.org/source/browse/editor/codetemplates/test/">cvs/editor/codetemplates/test</a>.
+The unit tests are available in <a href="https://github.com/apache/netbeans/tree/master/ide/editor.codetemplates/test">ide/editor.codetemplates/test</a>.
 <p/>
 The following scenarios are tested:
 <ul>

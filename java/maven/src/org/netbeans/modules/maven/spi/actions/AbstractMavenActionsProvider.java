@@ -347,7 +347,7 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
      * from multiple {@link MavenActionsProvider}s. 
      * <p>
      * <b>This is a part of Maven module's friend API.</b> If possible, use se  
-     * <a href="@org-netbeans-api-maven@/org/netbeans/spi/maven/MavenActions.html">MavenActions</a> to register
+     * <a href="@org-netbeans-api-maven@/org/netbeans/api/maven/MavenActions.html">MavenActions</a> to register
      * actions declaratively, using module layers.
      * 
      * @param mavenProject the maven project. 

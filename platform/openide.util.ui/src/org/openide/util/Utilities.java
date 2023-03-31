@@ -1902,7 +1902,7 @@ public final class Utilities {
      * this method; instead see {@link ContextAwareAction}.
      * @see ContextGlobalProvider
      * @see ContextAwareAction
-     * @see <a href="http://wiki.netbeans.org/DevFaqActionContextSensitive">NetBeans FAQ</a>
+     * @see <a href="https://netbeans.apache.org/wiki/DevFaqActionContextSensitive">NetBeans FAQ</a>
      * @return the context for actions
      * @since 4.10
      */

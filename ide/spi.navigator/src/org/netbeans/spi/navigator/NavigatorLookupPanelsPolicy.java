@@ -23,7 +23,7 @@ package org.netbeans.spi.navigator;
  * available NavigatorPanel implementations.<p>
  * 
  * Navigator infrastructure searches for instance of this interface in
- * <a href="@org-openide-util@/org/openide/util/Utilities.html#actionsGlobalContext()">Utilities.actionsGlobalContext()</a>
+ * <a href="@org-openide-util-ui@/org/openide/util/Utilities.html#actionsGlobalContext--">Utilities.actionsGlobalContext()</a>
  * lookup and then applies found policy on set of available 
  * <a href="@TOP@/org/netbeans/spi/navigator/NavigatorPanel.html">NavigatorPanel</a>
  * implementations.<p>
@@ -37,7 +37,7 @@ package org.netbeans.spi.navigator;
  *      <li>Implement this interface, return kind of policy that suits you from
  *          <code>getPanelsPolicy()</code> method.</li>
  *      <li>Put implementation instance into your TopComponent's subclass lookup,
- *          see <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup()">TopComponent.getLookup()</a>
+ *          see <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup--">TopComponent.getLookup()</a>
  *          for details.</li>
  *      <li>Now when your TopComponent becomes active in the system, found
  *          panels policy is used to limit/affect set of available NavigatorPanel

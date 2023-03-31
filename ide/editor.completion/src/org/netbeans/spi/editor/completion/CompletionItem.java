@@ -31,7 +31,7 @@ import javax.swing.text.JTextComponent;
  *
  * <p><b>Related documentation</b></p>
  * <ul>
- *   <li><a href="http://platform.netbeans.org/tutorials/nbm-code-completion.html">NetBeans Code Completion Tutorial</a></li>
+ *   <li><a href="https://netbeans.apache.org/tutorials/nbm-code-completion.html">NetBeans Code Completion Tutorial</a></li>
  * </ul>
  *
  *

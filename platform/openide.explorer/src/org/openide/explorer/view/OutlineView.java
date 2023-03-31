@@ -135,8 +135,8 @@ import org.openide.util.WeakListeners;
  * 
  * <p>Related documentation:
  * <ul>
- * <li><a href="http://weblogs.java.net/blog/timboudreau/archive/2008/06/egads_an_actual.html">Egads! An actual Swing Tree-Table!</a>
- * <li><a href="http://blogs.oracle.com/geertjan/entry/swing_outline_component">Swing Outline Component</a>
+ * <li><a href="https://netbeans.apache.org/blogs/timboudreau/egads_an_actual.html">Egads! An actual Swing Tree-Table!</a>
+ * <li><a href="https://netbeans.apache.org/blogs/geertjan/swing_outline_component.html">Swing Outline Component</a>
  * </ul>
  * 
  * 

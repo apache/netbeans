@@ -36,7 +36,7 @@ import org.openide.filesystems.FileObject;
  * <code>SearchInfoDefinition</code> objects are used in
  * action <em>Find in Projects</em>. Action obtains
  * <code>SearchInfoDefinition</code> from 
- * <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getLookup()"><code>Lookup</code>
+ * <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getLookup--"><code>Lookup</code>
  * of nodes or projects</a> the action was invoked on.
  * </p>
  *
@@ -77,8 +77,8 @@ import org.openide.filesystems.FileObject;
  * 
  * @see SearchInfoDefinitionFactory
  * @see FileObject
- * @see <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getLookup()"><code>Node.getLookup()</code></a>
- * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup()"><code>Project.getLookup()</code></a>
+ * @see <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getLookup--"><code>Node.getLookup()</code></a>
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--"><code>Project.getLookup()</code></a>
  *
  * @author Marian Petras
  */

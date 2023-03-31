@@ -911,7 +911,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
          * <p><b>Note: There is a contract (better saying a curse)
          * that this method has to call {@link #takeLock} method
          * in order to keep working some special filesystem's feature.
-         * See <a href="http://www.netbeans.org/issues/show_bug.cgi?id=28212">issue #28212</a></b>.
+         * See <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=28212">issue #28212</a></b>.
         *
         * @exception IOException if the environment cannot be marked modified
         *   (for example when the file is readonly), when such exception

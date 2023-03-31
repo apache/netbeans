@@ -30,10 +30,10 @@ import org.openide.util.NbBundle;
  * Node.  Usage is to write a class that extends ChildFactory and
  * pass that to Children.create().  When the Node is expanded or its
  * children are programmatically requested, the
- * <a href="#createKeys(java.util.List)">createKeys(List &lt;T&gt;)</a> method
+ * {@link #createKeys(java.util.List) } method
  * will be invoked to create the List of objects to be modelled as Nodes.
  * Later, on demand, each object from the List will be passed in turn to
- * <a href="#createNodesForKey(java.lang.Object)">createNodesForKey(T)</a>,
+ * {@link #createNodesForKey(java.lang.Object)},
  * which may return an array of zero or more Nodes for the object.
  * <p>
  * A ChildFactory can be used either to create typical Children object, or

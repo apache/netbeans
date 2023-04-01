@@ -153,6 +153,7 @@ public class TokenFormatter {
         public int blankLinesBeforeUse;
         public int blankLinesBeforeUseTrait;
         public int blankLinesAfterUse;
+        public int blankLinesBetweenUseTypes;
         public int blankLinesBeforeClass;
         public int blankLinesBeforeClassEnd;
         public int blankLinesAfterClass;
@@ -319,6 +320,7 @@ public class TokenFormatter {
             blankLinesBeforeUse = codeStyle.getBlankLinesBeforeUse();
             blankLinesBeforeUseTrait = codeStyle.getBlankLinesBeforeUseTrait();
             blankLinesAfterUse = codeStyle.getBlankLinesAfterUse();
+            blankLinesBetweenUseTypes = codeStyle.getBlankLinesBetweenUseTypes();
             blankLinesBeforeClass = codeStyle.getBlankLinesBeforeClass();
             blankLinesBeforeClassEnd = codeStyle.getBlankLinesBeforeClassEnd();
             blankLinesAfterClass = codeStyle.getBlankLinesAfterClass();
@@ -846,6 +848,10 @@ public class TokenFormatter {
                                         indentRule = true;
                                         newLines = 1;
                                         countSpaces = indent;
+                                        break;
+                                    case WHITESPACE_BETWEEN_USE_TYPES:
+                                        indentRule = true;
+                                        newLines = docOptions.blankLinesBetweenUseTypes + 1 > newLines ? docOptions.blankLinesBetweenUseTypes + 1 : newLines;
                                         break;
                                     case WHITESPACE_AFTER_USE:
                                         indentRule = true;

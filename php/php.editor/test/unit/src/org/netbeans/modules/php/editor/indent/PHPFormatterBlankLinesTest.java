@@ -1959,4 +1959,40 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
     }
 
+    public void testIssueGH4609BetweenUseTypes_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 0);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_01.php", options, false, true);
+    }
+
+    public void testIssueGH4609BetweenUseTypes_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_01.php", options, false, true);
+    }
+
+    public void testIssueGH4609BetweenUseTypes_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 0);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_02.php", options, false, true);
+    }
+
+    public void testIssueGH4609BetweenUseTypes_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_02.php", options, false, true);
+    }
+
+    public void testIssueGH4609BetweenUseTypes_03a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 0);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_03.php", options, false, true);
+    }
+
+    public void testIssueGH4609BetweenUseTypes_03b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_03.php", options, false, true);
+    }
+
 }

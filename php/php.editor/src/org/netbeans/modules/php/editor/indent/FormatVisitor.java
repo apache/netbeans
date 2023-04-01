@@ -134,6 +134,7 @@ public class FormatVisitor extends DefaultVisitor {
     private boolean isFirstUseTraitStatementPart;
     private boolean isAttributeCloseBracket;
     private int inArrayBalance;
+    private UseStatement lastUseStatement;
 
     public FormatVisitor(BaseDocument document, DocumentOptions documentOptions, final int caretOffset, final int startOffset, final int endOffset) {
         this.document = document;
@@ -216,10 +217,16 @@ public class FormatVisitor extends DefaultVisitor {
             } else if (node instanceof UseStatement) {
                 if (isPreviousNodeTheSameInBlock(path.get(0), (Statement) node)) {
                     formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_USE, ts.offset()));
+                    assert lastUseStatement != null;
+                    if (((UseStatement) node).getType() != lastUseStatement.getType()) {
+                        // PSR-12: https://www.php-fig.org/psr/psr-12/#3-declare-statements-namespace-and-import-statements
+                        formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_USE_TYPES, ts.offset()));
+                    }
                 } else {
                     formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_USE, ts.offset()));
                 }
                 includeWSBeforePHPDoc = false;
+                lastUseStatement = (UseStatement) node;
             } else if (node instanceof UseTraitStatement) {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_USE_TRAIT, ts.offset()));
                 includeWSBeforePHPDoc = false;
@@ -2325,7 +2332,12 @@ public class FormatVisitor extends DefaultVisitor {
     public void visit(UseStatement node) {
 
         if (isPreviousNodeTheSameInBlock(path.get(1), node)) {
+            assert lastUseStatement != null;
             formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_USE, ts.offset()));
+            if (node.getType() != lastUseStatement.getType()) {
+                // PSR-12: https://www.php-fig.org/psr/psr-12/#3-declare-statements-namespace-and-import-statements
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_USE_TYPES, ts.offset()));
+            }
         } else {
             if (includeWSBeforePHPDoc) {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_USE, ts.offset()));
@@ -2339,6 +2351,7 @@ public class FormatVisitor extends DefaultVisitor {
             addRestOfLine();
             formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_USE, ts.offset() + ts.token().length()));
         }
+        lastUseStatement = node;
     }
 
     @Override

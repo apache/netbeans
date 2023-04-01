@@ -176,6 +176,10 @@ public final class CodeStyle {
         return preferences.getInt(BLANK_LINES_AFTER_USE, getDefaultAsInt(BLANK_LINES_AFTER_USE));
     }
 
+    public int getBlankLinesBetweenUseTypes() {
+        return preferences.getInt(BLANK_LINES_BETWEEN_USE_TYPES, getDefaultAsInt(BLANK_LINES_BETWEEN_USE_TYPES));
+    }
+
     public int getBlankLinesBeforeClass() {
         return preferences.getInt(BLANK_LINES_BEFORE_CLASS, getDefaultAsInt(BLANK_LINES_BEFORE_CLASS));
     }

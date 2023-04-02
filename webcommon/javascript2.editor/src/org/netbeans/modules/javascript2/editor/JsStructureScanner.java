@@ -156,7 +156,7 @@ public class JsStructureScanner implements StructureScanner {
                 }
             } else if (child.getJSKind() == JsElement.Kind.PROPERTY) {
                 if(child.isDeclared() && (child.getModifiers().contains(Modifier.PUBLIC)
-                        || !(jsObject.getParent() instanceof JsFunction)))
+                        || !(jsObject.getParent() instanceof JsFunction) || jsObject.getJSKind() == JsElement.Kind.CLASS))
                     collectedItems.add(new JsSimpleStructureItem(child, children.isEmpty() ? null : children, "prop-", result)); //NOI18N
             } else if ((child.getJSKind() == JsElement.Kind.VARIABLE || child.getJSKind() == JsElement.Kind.CONSTANT)&& child.isDeclared()
                 && (!jsObject.isAnonymous() || (jsObject.isAnonymous() && jsObject.getFullyQualifiedName().indexOf('.') == -1))) {

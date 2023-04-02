@@ -2148,6 +2148,9 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                         property.getModifiers().remove(Modifier.PUBLIC);
                         property.getModifiers().add(Modifier.PROTECTED);
                     }
+                    if(propertyNode.isStatic()) {
+                        property.getModifiers().add(Modifier.STATIC);
+                    }
                     if(value instanceof CallNode) {
                         // TODO for now, don't continue. There shoudl be handled cases liek
                         // in the testFiles/model/property02.js file

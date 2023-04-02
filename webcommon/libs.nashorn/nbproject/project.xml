@@ -29,8 +29,8 @@
                 <subpackages>com.oracle.js.parser</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/graaljs-parser-1.1.jar</runtime-relative-path>
-                <binary-origin>external/graaljs-parser-1.1.jar</binary-origin>
+                <runtime-relative-path>ext/graaljs-parser-1.2.jar</runtime-relative-path>
+                <binary-origin>external/graaljs-parser-1.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

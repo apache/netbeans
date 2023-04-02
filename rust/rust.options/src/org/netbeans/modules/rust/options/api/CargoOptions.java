@@ -38,4 +38,11 @@ public final class CargoOptions {
         return CargoOptionsImpl.getCargoLocation(verifying);
     }
 
+    /**
+     * Opens the Cargo options panel.
+     */
+    public static void showRustCargoOptions() {
+        CargoOptionsImpl.showRustCargoOptions();
+    }
+
 }

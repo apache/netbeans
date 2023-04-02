@@ -164,7 +164,10 @@ public class UsedNamesCollector {
         }
 
         private boolean isValidTypeName(final String typeName) {
-            return !SPECIAL_NAMES.contains(typeName) && !Type.isPrimitive(typeName);
+            return !SPECIAL_NAMES.contains(typeName)
+                    && !Type.isPrimitive(typeName)
+                    && !typeName.contains("<") // NOI18N e.g. array<int, ClassName>
+                    && !typeName.contains("{"); // NOI18N e.g. array{'foo': int, "bar": string}
         }
 
         private boolean isValidAliasTypeName(final String typeName) {

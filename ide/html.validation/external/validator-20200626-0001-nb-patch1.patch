@@ -1,22 +1,41 @@
-#   Licensed to the Apache Software Foundation (ASF) under one
-#   or more contributor license agreements.  See the NOTICE file
-#   distributed with this work for additional information
-#   regarding copyright ownership.  The ASF licenses this file
-#   to you under the Apache License, Version 2.0 (the
-#   "License"); you may not use this file except in compliance
-#   with the License.  You may obtain a copy of the License at
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
-#   Unless required by applicable law or agreed to in writing,
-#   software distributed under the License is distributed on an
-#   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-#   KIND, either express or implied.  See the License for the
-#   specific language governing permissions and limitations
-#   under the License.
-#
-# https://github.com/validator/validator
-# parent 787a7a7e972719edf7a79009d768f5111e1d93bc
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+# Base commit: 787a7a7e972719edf7a79009d768f5111e1d93bc
+
+---
+ build/build.py                                |   1 +
+ .../checker/schematronequiv/Assertions.java   | 152 +-----
+ src/nu/validator/datatype/IriRef.java         |  93 ----
+ src/nu/validator/datatype/Language.java       |   2 +-
+ src/nu/validator/datatype/MediaQuery.java     |  55 --
+ src/nu/validator/io/DataUri.java              |  28 +-
+ .../LocalCacheEntityResolver.java             |   9 +-
+ src/nu/validator/localentities/presets        |  10 +
+ .../BufferingRootNamespaceSniffer.java        | 171 +++++++
+ .../messages/RootNamespaceSniffer.java        | 124 +++++
+ .../messages/ValidationTransaction.java       | 471 ++++++++++++++++++
+ src/nu/validator/xml/BaseUriTracker.java      |  70 ++-
+ .../validator/xml/DataUriEntityResolver.java  |  18 +-
+ 13 files changed, 864 insertions(+), 340 deletions(-)
+ create mode 100644 src/nu/validator/localentities/presets
+ create mode 100644 src/nu/validator/messages/BufferingRootNamespaceSniffer.java
+ create mode 100644 src/nu/validator/messages/RootNamespaceSniffer.java
+ create mode 100644 src/nu/validator/messages/ValidationTransaction.java
 
 diff --git a/build/build.py b/build/build.py
 index 72145331..76d57d1e 100755
@@ -1521,3 +1540,6 @@ index ac905052..d9febbb5 100644
              DataUri du = new DataUri(systemId);
              TypedInputSource is = contentTypeParser.buildTypedInputSource(systemId, publicId,
                      du.getContentType());
+-- 
+2.37.2
+

@@ -26,6 +26,7 @@ import com.oracle.js.parser.ir.BreakNode;
 import com.oracle.js.parser.ir.CallNode;
 import com.oracle.js.parser.ir.CaseNode;
 import com.oracle.js.parser.ir.CatchNode;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.ContinueNode;
 import com.oracle.js.parser.ir.DebuggerNode;
@@ -619,5 +620,16 @@ public class PathNodeVisitor extends NodeVisitor {
         removeFromPathTheLast();
         return super.leaveNamedImportsNode(namedImportsNode); 
     }
-    
+
+    @Override
+    public Node leaveClassElement(ClassElement classElement) {
+        removeFromPathTheLast();
+        return super.leaveClassElement(classElement);
+    }
+
+    @Override
+    public boolean enterClassElement(ClassElement classElement) {
+        addToPath(classElement);
+        return super.enterClassElement(classElement);
+    }
 }

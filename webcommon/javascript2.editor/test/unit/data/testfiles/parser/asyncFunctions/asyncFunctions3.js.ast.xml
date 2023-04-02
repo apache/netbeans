@@ -1,3 +1,24 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
 <FunctionNode name=':program' kind='SCRIPT' start='0' end='171'>
   <hasDeclaredFunctions/>
   <isProgram/>
@@ -91,12 +112,12 @@
       <!-- VarNode Init -->
       <ClassNode ident='X' start='69' end='134'>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='X' start='69' end='134'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='X' start='69' end='134'>
+          <!-- ClassElement Key -->
           <IdentNode start='75' end='76'>
             <name>X</name>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='X' kind='NORMAL' start='69' end='134'>
             <isClassConstructor/>
             <isMethod/>
@@ -108,17 +129,17 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
-        <PropertyNode name='ddddd' start='97' end='131'>
+        <ClassElement name='ddddd' start='97' end='131'>
           <isStatic/>
-          <!-- PropertyNode Key -->
+          <!-- ClassElement Key -->
           <IdentNode start='97' end='102'>
             <name>ddddd</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='ddddd' kind='NORMAL' start='97' end='131'>
             <isMethod/>
             <isNamedFunctionExpression/>
@@ -138,8 +159,8 @@
               </ExpressionStatement>
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Decorators -->
       </ClassNode>
     </VarNode>

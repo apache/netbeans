@@ -20,6 +20,7 @@ package org.netbeans.modules.javascript2.editor.doc;
 
 import com.oracle.js.parser.ir.AccessNode;
 import com.oracle.js.parser.ir.BinaryNode;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.IdentNode;
 import com.oracle.js.parser.ir.Node;
@@ -397,6 +398,12 @@ public class JsDocumentationCompleter {
         public boolean enterPropertyNode(PropertyNode propertyNode) {
             processNode(propertyNode);
             return super.enterPropertyNode(propertyNode);
+        }
+
+        @Override
+        public boolean enterClassElement(ClassElement classElement) {
+            processNode(classElement);
+            return super.enterClassElement(classElement);
         }
 
         @Override

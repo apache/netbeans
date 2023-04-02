@@ -21,6 +21,7 @@ package org.netbeans.modules.javascript2.editor;
 import com.oracle.js.parser.TokenType;
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.ExportSpecifierNode;
+import com.oracle.js.parser.ir.ForNode;
 import com.oracle.js.parser.ir.FromNode;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.ImportSpecifierNode;
@@ -421,6 +422,24 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                     }
                 }
                 return super.enterUnaryNode(unaryNode);
+            }
+
+            @Override
+            public boolean enterForNode(ForNode forNode) {
+                if (forNode.isForAwaitOf()) {
+                    TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsPositionedSequence(result.getSnapshot(), forNode.getStart());
+                    if (ts != null) {
+                        while(ts.moveNext()) {
+                            Token<? extends JsTokenId> token = ts.token();
+                            if (token != null && token.id() == JsTokenId.RESERVED_AWAIT) {
+                                highlights.put(LexUtilities.getLexerOffsets(result,
+                                        new OffsetRange(ts.offset(), ts.offset() + token.length())), SEMANTIC_KEYWORD);
+                                break;
+                            }
+                        }
+                    }
+                }
+                return super.enterForNode(forNode);
             }
 
             private void handleProperty(PropertyNode p, boolean classElement) {

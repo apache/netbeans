@@ -792,14 +792,14 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
 
                 case ISP_TAG_X_ERROR:
                     if(isWS(actChar)) {
-                        lexerState = ISP_TAG_X;
+                        lexerState = tag == null ? INIT : ISP_TAG_X;
                         input.backup(1); //backup the WS
                         return token(HTMLTokenId.ERROR);
                     }
                     switch(actChar) {
                         case '/':
                         case '>':
-                            lexerState = ISP_TAG_X;
+                            lexerState = tag == null ? INIT : ISP_TAG_X;
                             input.backup(1); //lets reread the token again
                             return token(HTMLTokenId.ERROR);
                     }
@@ -822,7 +822,7 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
                             lexerState = INIT;
                             return token(HTMLTokenId.TAG_CLOSE_SYMBOL);
                         default:
-                            lexerState = ISP_TAG_X;
+                            lexerState = tag == null ? INIT : ISP_TAG_X;
                             input.backup(1);
                             return token(HTMLTokenId.ERROR);
                     }

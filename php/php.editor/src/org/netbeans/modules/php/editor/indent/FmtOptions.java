@@ -44,6 +44,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -543,6 +544,10 @@ public final class FmtOptions {
                 // Ignore it
             }
 
+            // keep the caret position
+            // to avoid being scrolled to the end of the editor
+            int caretPosition = pane.getCaretPosition();
+
             Rectangle visibleRectangle = pane.getVisibleRect();
             pane.setText(previewText);
             pane.setIgnoreRepaint(true);
@@ -569,8 +574,10 @@ public final class FmtOptions {
             } else {
                 LOGGER.warning(String.format("Can't format %s; it's not BaseDocument.", doc)); //NOI18N
             }
+            pane.setCaretPosition(caretPosition);
             pane.setIgnoreRepaint(false);
-            pane.scrollRectToVisible(visibleRectangle);
+            // invoke later because the preview pane is scrolled to the caret position when we change options after we scroll it anywhere
+            SwingUtilities.invokeLater(() -> pane.scrollRectToVisible(visibleRectangle));
             pane.repaint(100);
 
         }

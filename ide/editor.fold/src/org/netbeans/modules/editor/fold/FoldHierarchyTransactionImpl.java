@@ -1244,7 +1244,7 @@ public final class FoldHierarchyTransactionImpl {
     /**
      * Removes the fold from the hierarchy temporarily, and re-adds it at the end of the transaction at the appropriate
      * position in the tree. This operation preserves Fold identity and could cause less unexpected collapsing when
-     * folds are recomputed.<p/>
+     * folds are recomputed.<p>
      * The entire fold subtree will be removed from the hierarchy and put to the reinsert set (linked) in the 
      * 
      * @param f fold

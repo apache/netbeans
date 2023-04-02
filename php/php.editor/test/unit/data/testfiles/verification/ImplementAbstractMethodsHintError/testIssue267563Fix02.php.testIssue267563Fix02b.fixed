@@ -10,5 +10,4 @@ class Foo implements FooInterface
     public function someMethod(\FooInterface $baz) {
         
     }
-
 }

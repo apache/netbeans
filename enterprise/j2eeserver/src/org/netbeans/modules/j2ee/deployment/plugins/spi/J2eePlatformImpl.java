@@ -131,7 +131,7 @@ public abstract class J2eePlatformImpl {
      * class.
      *
      * @return list of supported J2EE specification versions.
-     * @deprecated override {@link #getSupportedProfiles()} and {@link #getSupportedProfiles(java.lang.Object)}
+     * @deprecated override {@link #getSupportedProfiles()} and {@link #getSupportedProfiles(Type)}
      */
     @Deprecated
     public Set<String> getSupportedSpecVersions() {
@@ -151,7 +151,7 @@ public abstract class J2eePlatformImpl {
      * @param moduleType one of the constants defined in 
      *   {@link org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule}
      * @return list of supported J2EE specification versions.
-     * @deprecated override {@link #getSupportedProfiles()} and {@link #getSupportedProfiles(java.lang.Object)}
+     * @deprecated override {@link #getSupportedProfiles()} and {@link #getSupportedProfiles(Type)}
      */
     @Deprecated
     public Set <String> getSupportedSpecVersions(Object moduleType) {
@@ -181,7 +181,7 @@ public abstract class J2eePlatformImpl {
     /**
      * Returns a set of supported profiles for the given module type
      * (one of {@link J2eeModule#EAR}, {@link J2eeModule#EJB},
-     * {@link J2eeModule#WAR}, {@link J2eeModule#RAR} and {@link J2eeModule#CAR}).
+     * {@link J2eeModule#WAR}, {@link org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule.Type#RAR} and {@link org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule.Type#CAR}).
      * By default method converts specification version returned by
      * {@link #getSupportedSpecVersions(java.lang.Object)} to profiles.
      *
@@ -316,7 +316,6 @@ public abstract class J2eePlatformImpl {
     /**
      * Lookup providing a way to find non mandatory technologies supported
      * by the platform.
-     * <p>
      * <div class="nonnormative">
      * The typical example of such support is a webservice stack.
      * </div>

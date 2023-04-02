@@ -176,6 +176,10 @@ public final class CodeStyle {
         return preferences.getInt(BLANK_LINES_AFTER_USE, getDefaultAsInt(BLANK_LINES_AFTER_USE));
     }
 
+    public int getBlankLinesBetweenUseTypes() {
+        return preferences.getInt(BLANK_LINES_BETWEEN_USE_TYPES, getDefaultAsInt(BLANK_LINES_BETWEEN_USE_TYPES));
+    }
+
     public int getBlankLinesBeforeClass() {
         return preferences.getInt(BLANK_LINES_BEFORE_CLASS, getDefaultAsInt(BLANK_LINES_BEFORE_CLASS));
     }
@@ -320,6 +324,10 @@ public final class CodeStyle {
 
     public boolean spaceAroundTernaryOps() {
         return preferences.getBoolean(SPACE_AROUND_TERNARY_OPS, getDefaultAsBoolean(SPACE_AROUND_TERNARY_OPS));
+    }
+
+    public boolean spaceAroundCoalescingOps() {
+        return preferences.getBoolean(SPACE_AROUND_COALESCING_OPS, getDefaultAsBoolean(SPACE_AROUND_COALESCING_OPS));
     }
 
     public boolean spaceAroundKeyValueOps() {
@@ -682,6 +690,11 @@ public final class CodeStyle {
 
     public WrapStyle wrapTernaryOps() {
         String wrap = preferences.get(WRAP_TERNARY_OPS, getDefaultAsString(WRAP_TERNARY_OPS));
+        return WrapStyle.valueOf(wrap);
+    }
+
+    public WrapStyle wrapCoalescingOps() {
+        String wrap = preferences.get(WRAP_COALESCING_OPS, getDefaultAsString(WRAP_COALESCING_OPS));
         return WrapStyle.valueOf(wrap);
     }
 

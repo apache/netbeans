@@ -287,7 +287,7 @@ public class FilterNode extends Node {
     * node a distinctive display name and tooltip, and performing some special
     * action upon deletion, you may do so without risk of affecting the original
     * node as follows:
-    * <br><code><pre>
+    * <br><pre>{@code
     * public MyNode extends FilterNode {
     *   public MyNode (Node orig) {
     *     super (orig, new MyChildren (orig));
@@ -304,7 +304,7 @@ public class FilterNode extends Node {
     *     super.destroy (); // calls Node.destroy(), not orig.destroy()
     *   }
     * }
-    * </pre></code>
+    * }</pre>
     * <br>You may still manually delegate where desired using {@link #getOriginal}.
     * Other methods abstract in <code>Node</code> may simply be overridden without
     * any special handling.

@@ -62,7 +62,7 @@ import org.openide.util.NbBundle;
  * Support for optimal checking of time stamps of certain files in
  * NetBeans directory structure. 
  *
- * @author Jaroslav Tulach <jaroslav.tulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jaroslav.tulach@netbeans.org&gt;
  * @since 2.9
  */
 public final class Stamps {
@@ -133,7 +133,7 @@ public final class Stamps {
     }
     
     /** Opens the access to cache object as a stream.
-     * @param name name of the cache
+     * @param cache name of the cache
      * @return stream to read from the cache or null if the cache is not valid
      */
     public InputStream asStream(String cache) {
@@ -157,7 +157,7 @@ public final class Stamps {
      */
    
     /** Opens the access to cache object as a stream.
-     * @param name name of the cache
+     * @param cache name of the cache
      * @return stream to read from the cache or null if the cache is not valid
      */
     public ByteBuffer asByteBuffer(String cache) {
@@ -213,7 +213,7 @@ public final class Stamps {
     
     /** Method for registering updates to caches.
      * @param updater the callback to start when flushing caches
-     * @param file name of the file to store the cache into
+     * @param cache name of the file to store the cache into
      * @param append write from scratch or append?
      */
     public void scheduleSave(Updater updater, String cache, boolean append) {

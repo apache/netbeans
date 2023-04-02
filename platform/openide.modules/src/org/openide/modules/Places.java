@@ -45,7 +45,7 @@ public abstract class Places {
      * This may be used to persist valuable files for which the system filesystem
      * ({@code FileUtil.getConfigFile}) is inappropriate due its being virtual.
      * Each module is responsible for using sufficiently unique filenames within this directory.
-     * The system property {@link #USER_DIR_PROP} is used for compatibility.
+     * The system property {@code netbeans.user} is used for compatibility.
      * @return a directory location (need not yet exist), or null if unconfigured
      */
     public static synchronized /*@CheckForNull*/ File getUserDirectory() {
@@ -116,7 +116,7 @@ public abstract class Places {
     /** Constructor for those who believe to know 
      * where {@link #getCacheDirectory} or
      * {@link #getUserDirectory()} is. Register your subclass via
-     * {@link ServiceProvider} annotation. 
+     * {@link org.openide.util.lookup.ServiceProvider} annotation. 
      */
     protected Places() {
     }

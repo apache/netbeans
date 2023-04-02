@@ -44,6 +44,10 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/php53/bracketed_multiple_namespaces_with_default_one");
     }
 
+    public void testBracketedMultipleNamespacesWithMultipleDefault() throws Exception {
+        performTest("structure/php53/bracketed_multiple_namespaces_with_multiple_default");
+    }
+
     public void testScan() throws Exception {
         performTest("structure/interface_001");
     }

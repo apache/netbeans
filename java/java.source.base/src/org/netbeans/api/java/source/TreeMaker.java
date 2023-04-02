@@ -92,7 +92,7 @@ import org.openide.util.Parameters;
  * You can obtain appropriate instance of this class by getting it from working
  * copy:
  *
- * <pre>
+ * <pre>{@code
  * CancellableTask task = new CancellableTask<WorkingCopy>() {
  *
  *        public void run(WorkingCopy workingCopy) throws Exception {
@@ -101,9 +101,9 @@ import org.openide.util.Parameters;
  *        }
  *        ...
  *    }; 
- * </pre>
+ * }</pre>
  *
- * @see <a href="http://wiki.netbeans.org/wiki/view/JavaHT_Modification">How do I do modification to a source file?</a> 
+ * @see <a href="https://netbeans.apache.org/wiki/JavaHT_Modification">How do I do modification to a source file?</a>
  *
  * @author Tom Ball
  * @author Pavel Flaska
@@ -1134,7 +1134,7 @@ public final class TreeMaker {
     /**
      * Creates a new TryTree.
      *
-     * @param resource     the resources of the try clause. The elements of the list
+     * @param resources     the resources of the try clause. The elements of the list
      *                     should either be {@link VariableTree}s or {@link ExpressionTree}s.
      * @param tryBlock     the statement block in the try clause.
      * @param catches      the list of catch clauses, or an empty list.
@@ -1257,8 +1257,6 @@ public final class TreeMaker {
      * @param name name of the binding variable
      * @param type the type of the pattern
      * @return the newly created BindingPatternTree
-     * @throws NoSuchMethodException if the used javac does not support
-     *                               BindingPatternTree.
      */
     @Deprecated
     public Tree BindingPattern(CharSequence name,
@@ -1268,7 +1266,7 @@ public final class TreeMaker {
     
       /**
      * Creates a new Tree for a given VariableTree
-     * @specication : 15.20.2
+     * specication : 15.20.2
      * @param vt the VariableTree of the pattern
      * @see com.sun.source.tree.BindingPatternTree
      * @return the newly created BindingPatternTree
@@ -1282,13 +1280,14 @@ public final class TreeMaker {
      * Creates a new Tree for a given DeconstructionPatternTree
      * @param deconstructor deconstructor of record pattern
      * @param nested list of nested patterns
-     * @param vt the variable of record pattern
+     * @param vt the variable of record pattern. This parameter is currently ignored.
      * @see com.sun.source.tree.DeconstructionPatternTree
      * @return the newly created RecordPatternTree
      * @since 19
      */
+    //TODO: overload without VariableTree?
     public DeconstructionPatternTree RecordPattern(ExpressionTree deconstructor, List<PatternTree> nested, VariableTree vt) {
-        return delegate.DeconstructionPattern(deconstructor, nested, vt);
+        return delegate.DeconstructionPattern(deconstructor, nested);
     }
 
     /**
@@ -1568,7 +1567,7 @@ public final class TreeMaker {
      * </pre>
      *
      * You can get it e.g. with this code:
-     * <pre>
+     * <pre>{@code
      *   TreeMaker make = workingCopy.getTreeMaker();
      *   ClassTree node = ...;
      *   // create method modifiers
@@ -1595,7 +1594,7 @@ public final class TreeMaker {
      *   );
      *   // rewrite the original class node with the new one containing newMethod
      *   workingCopy.rewrite(node, <b>make.addClassMember(node, newMethod)</b>);
-     * </pre>
+     * }</pre>
      *
      * @param   clazz    class tree containing members list.
      * @param   member   element to be appended to members list.
@@ -3304,7 +3303,7 @@ public final class TreeMaker {
      * Marks a tree as a replacement of some old one. The hint may cause surrounding whitespace to be 
      * carried over to the new tree and comments to be attached to the same (similar) positions
      * as in the old tree. 
-     * <p/>
+     * <p>
      * If 'defaultOnly' is true, the hint is only added if no previous hint exists. You generally want
      * to force the hint, in code manipulation operations. Bulk tree transformers should preserve existing
      * hints - the {@link TreeUtilities#translate} preserves existing relationships.

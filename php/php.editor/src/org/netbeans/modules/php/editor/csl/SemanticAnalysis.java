@@ -227,7 +227,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
         // for unsed private method: name, identifier
         private final Map<UnusedIdentifier, ASTNodeColoring> privateUnusedMethods;
         // this is holder of blocks, which has to be scanned for usages in the class.
-        private List<Block> needToScan = new ArrayList<>();
+        private final Map<TypeInfo, List<Block>> needToScan = new HashMap<>();
 
         private final Snapshot snapshot;
 
@@ -409,18 +409,16 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             scan(cldec.getInterfaes());
             Identifier name = cldec.getName();
             addColoringForNode(name, createTypeNameColoring(name));
-            needToScan = new ArrayList<>();
+            needToScan.put(typeInfo, new ArrayList<>());
             if (cldec.getBody() != null) {
                 cldec.getBody().accept(this);
 
                 // find all usages in the method bodies
-                while (!needToScan.isEmpty()) {
-                    Block block = needToScan.remove(0);
-                    block.accept(this);
-                }
+                scanMethodBodies();
                 addColoringForUnusedPrivateConstants();
                 addColoringForUnusedPrivateFields();
             }
+            needToScan.remove(typeInfo);
             removeFromPath();
         }
 
@@ -515,8 +513,8 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 // don't scan the body now. It should be scanned after all declarations
                 // are known
                 Block body = md.getFunction().getBody();
-                if (body != null) {
-                    needToScan.add(body);
+                if (body != null && needToScan.get(typeInfo) != null) {
+                    needToScan.get(typeInfo).add(body);
                 }
             }
         }
@@ -595,23 +593,24 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 // to avoid recognizing $this as an instance of an anonymous class
                 scan(node.ctorParams());
                 addToPath(node);
+                // GH-5551 keep original type info to scan parent blocks
+                TypeInfo originalTypeInfo = typeInfo;
                 typeInfo = new ClassInstanceCreationTypeInfo(node);
                 scan(node.getAttributes());
                 scan(node.getSuperClass());
                 scan(node.getInterfaces());
-                needToScan = new ArrayList<>();
+                needToScan.put(typeInfo, new ArrayList<>());
                 Block body = node.getBody();
                 if (body != null) {
                     body.accept(this);
 
                     // find all usages in the method bodies
-                    while (!needToScan.isEmpty()) {
-                        Block block = needToScan.remove(0);
-                        block.accept(this);
-                    }
+                    scanMethodBodies();
                     addColoringForUnusedPrivateConstants();
                     addColoringForUnusedPrivateFields();
                 }
+                needToScan.remove(typeInfo);
+                typeInfo = originalTypeInfo;
                 removeFromPath();
             } else {
                 super.visit(node);
@@ -639,14 +638,13 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             typeInfo = new TypeDeclarationTypeInfo(node);
             Identifier name = node.getName();
             addColoringForNode(name, createTypeNameColoring(name));
-            needToScan = new ArrayList<>();
+            needToScan.put(typeInfo, new ArrayList<>());
             if (node.getBody() != null) {
                 node.getBody().accept(this);
-                for (Block block : needToScan) {
-                    block.accept(this);
-                }
+                scanMethodBodies();
                 addColoringForUnusedPrivateFields();
             }
+            needToScan.remove(typeInfo);
             removeFromPath();
         }
 
@@ -661,13 +659,13 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             typeInfo = new TypeDeclarationTypeInfo(node);
             Identifier name = node.getName();
             addColoringForNode(name, createTypeNameColoring(name));
-            needToScan = new ArrayList<>();
+            needToScan.put(typeInfo, new ArrayList<>());
             if (node.getBody() != null) {
                 node.getBody().accept(this);
-                for (Block block : needToScan) {
-                    block.accept(this);
-                }
+                scanMethodBodies();
+                addColoringForUnusedPrivateConstants();
             }
+            needToScan.remove(typeInfo);
             removeFromPath();
         }
 
@@ -822,6 +820,12 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                     if (!isPrivate || parentNode instanceof TraitDeclaration) {
                         addColoringForNode(identifier, coloring);
                     } else {
+                        // NOTE: private constants, methods, and fields may be used in traits
+                        // currently, we don't check traits (if there is no performance problem, should check them if possible)
+                        // an enum is handled as a "final" class in PHP
+                        // so, virtually, "protected" is "private"
+                        // however, as written above, it may be used in traits
+                        // don't add protected items of Enum to unused items
                         privateUnusedConstants.put(new UnusedIdentifier(identifier.getName(), typeInfo), new ASTNodeColoring(identifier, coloring));
                     }
                 }
@@ -989,6 +993,19 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
             addColoringForNamedArgument(node, PARAMETER_NAME_SET);
             super.visit(node);
+        }
+
+        /**
+         * Find all usages in the method bodies.
+         */
+        private void scanMethodBodies() {
+            if (needToScan.get(typeInfo) == null) {
+                return;
+            }
+            for (Block block : needToScan.get(typeInfo)) {
+                block.accept(this);
+            }
+            needToScan.get(typeInfo).clear();
         }
 
         private class FieldAccessVisitor extends DefaultVisitor {

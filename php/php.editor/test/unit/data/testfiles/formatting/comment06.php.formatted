@@ -20,7 +20,6 @@ class ClassName {
     function fasdfa($param) {
         
     }
-
 }
 
 /*
@@ -33,7 +32,6 @@ class Bla {
     function __construct() {
         
     }
-
 }
 
 /**

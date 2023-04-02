@@ -248,7 +248,7 @@ public interface CompletionCollector {
         /**
          * The format of the insert text. The format applies to both the
          * {@code insertText} property and the {@code newText} property of a provided
-         * {@code textEdit}. If omitted defaults to {@link TextFormat#PlainText}.
+         * {@code textEdit}. If omitted defaults to {@link org.netbeans.api.lsp.Completion.TextFormat#PlainText}.
          *
          * @since 1.0
          */

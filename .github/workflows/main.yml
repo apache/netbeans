@@ -36,6 +36,9 @@ env:
     -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     -Dtest-unit-sys-prop.ignore.random.failures=true
 
+  # what to build and test, see nbbuild/cluster.properties
+  CLUSTER_CONFIG: 'full'
+
   # flags for conditional, long running steps or jobs configurable with labels. If this is not a PR, everything will run.
   # 'Java' label
   test_java: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
@@ -51,6 +54,9 @@ env:
 
   # 'Groovy' label
   test_groovy: ${{ contains(github.event.pull_request.labels.*.name, 'Groovy') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'Rust' label
+  test_rust: ${{ contains(github.event.pull_request.labels.*.name, 'Rust') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
   # 'Platform' label
   test_platform: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
@@ -122,7 +128,7 @@ jobs:
           echo "org.gradle.java.home=$JAVA_HOME_11_X64" >> ~/.gradle/gradle.properties
 
       - name: Build NetBeans
-        run: ant -quiet -Dcluster.config=release build-nozip
+        run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG build-nozip
 
       - name: Prepare Artifact
         if: ${{ matrix.java == '11' }}
@@ -139,7 +145,7 @@ jobs:
           
       - name: Create Dev Build
         if: ${{ matrix.java == '11' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
-        run: ant -quiet zip-cluster-config -Dcluster.config=release
+        run: ant -quiet zip-cluster-config -Dcluster.config=$CLUSTER_CONFIG
 
       - name: Upload Dev Build
         if: ${{ matrix.java == '11' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
@@ -183,7 +189,7 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Commit Validation tests
-        run: ant $OPTS -Dcluster.config=release commit-validation
+        run: ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
 
       - name: Create Test Summary
         uses: test-summary/action@v2
@@ -285,12 +291,12 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Test Netbeans Build System
-        run: ant $OPTS -Dcluster.config=release localtest
+        run: ant $OPTS -Dcluster.config=$CLUSTER_CONFIG localtest
 
       - name: Build all Tests
         # runs only in PRs if requested, nowhere else (~18 min)
         if: env.test_tests == 'true' && github.event_name == 'pull_request' && success()
-        run: ant -quiet -Dcluster.config=release test -Dtest.includes=NoTestsJustBuild
+        run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG test -Dtest.includes=NoTestsJustBuild
 
 
   build-nbms:
@@ -474,14 +480,20 @@ jobs:
       - name: ide/html.editor
         run: ant $OPTS -f ide/html.editor test
 
-#      - name: ide/html.lexer
-#        run: ant $OPTS -f ide/html.lexer test
+      - name: ide/html.editor
+        run: ant $OPTS -f ide/html.editor.lib test
+
+      - name: ide/html.lexer
+        run: ant $OPTS -f ide/html.lexer test
 
       - name: ide/html.parser
         run: ant $OPTS -f ide/html.parser test
 
       - name: ide/html.validation
         run: ant $OPTS -f ide/html.validation test
+
+      - name: ide/httpserver
+        run: ant $OPTS -f ide/httpserver test
 
       - name: ide/hudson
         run: ant $OPTS -f ide/hudson test
@@ -1719,7 +1731,7 @@ jobs:
         run: ant $OPTS -f platform/core.network test
 
       - name: Commit Validation tests
-        run: ant $OPTS -Dcluster.config=release commit-validation
+        run: ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
 
       - name: Create Test Summary
         uses: test-summary/action@v2
@@ -1820,6 +1832,53 @@ jobs:
 
 #      - name: groovy/groovy.kit
 #        run: ant $OPTS -f groovy/groovy.kit test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  rust-test:
+    name: Rust on Linux/JDK ${{ matrix.java }}
+    # equals env.test_rust == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Rust') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: rust/rust.cargo
+        run: ant $OPTS -f rust/rust.cargo test
+
+      - name: rust/rust.grammar
+        run: ant $OPTS -f rust/rust.grammar test
+
+      - name: rust/rust.options
+        run: ant $OPTS -f rust/rust.options test
 
       - name: Create Test Summary
         uses: test-summary/action@v2
@@ -2016,7 +2075,7 @@ jobs:
       DISPLAY: ":99.0"
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '11' ]
         os: [ 'windows-2022', 'ubuntu-20.04' ]
       fail-fast: false
     steps:
@@ -2326,6 +2385,7 @@ jobs:
       - php
       - javafx-test
       - groovy-test
+      - rust-test
       - enterprise-test
       - versioning-test
       - lsp-test

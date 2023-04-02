@@ -366,7 +366,6 @@ public final class SourcesHelper {
      * .add()  // adding as principal root, continuing configuration
      * .type("java").add(); // adding as typed root
      * </pre>
-     * </p>
      * @since org.netbeans.modules.project.ant/1 1.33
      */
     public final class SourceRootConfig {
@@ -399,7 +398,7 @@ public final class SourcesHelper {
          * Value is evaluated and then treated as a comma- or space-separated pattern list,
          * as detailed in the Javadoc for {@link PathMatcher}.
          * (As a special convenience, a value consisting solely of an Ant property reference
-         * which cannot be evaluated, e.g. <samp>${undefined}</samp>, is ignored.)
+         * which cannot be evaluated, e.g. <em>${undefined}</em>, is ignored.)
          * {@link SourceGroup#contains} will then reflect the includes and excludes for files, but note that the
          * semantics of that method requires that a folder be "contained" in case any folder or file
          * beneath it is contained, and in particular the root folder is always contained.
@@ -527,7 +526,7 @@ public final class SourcesHelper {
      * if the common location is internal.
      * </p>
      * <p>
-     * Source location need not to exist physically, when {@link #hint(String) hint} is specified
+     * Source location need not to exist physically, when {@link SourceRootConfig#hint(String) hint} is specified
      * and {@link SourceGroupModifier} created by this helper is added to project
      * lookup, source root can be created on demand.
      * </p>
@@ -540,7 +539,6 @@ public final class SourcesHelper {
      * @param location a project-relative or absolute path giving the location
      *                 of a source tree; may contain Ant property substitutions
      * @return source root configuration, that may be added to <code>SourcesHelper</code>
-     * @see SourceRootConfig#location(String) for details about location parameter
      */
     public SourceRootConfig sourceRoot(String location) {
         return new SourceRootConfig(location);

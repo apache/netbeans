@@ -6,6 +6,9 @@ function invalidNeverReturnType2(): ?never { // invalidNeverReturnType2 func
 HINT:"never" cannot be used with "?"
     return;
     -------
+HINT:Return statement must be filled with the value
+    return;
+    -------
 HINT:"never" cannot return anything
     return true; // neverReturnType3 func
     ------------
@@ -61,6 +64,9 @@ HINT:"never" cannot be used with "?"
         $anon = function(): ?never { // anon2 trait
                              -----
 HINT:"never" cannot be used with "?"
+            return;
+            -------
+HINT:Return statement must be filled with the value
     public function neverReturnType2(): ?never; // neverReturnType2 interface
                                          -----
 HINT:"never" cannot be used with "?"

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.92
+#Version 1.93
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1392,10 +1392,10 @@ fld public final static java.lang.String EE6_DEPLOYER_FRAGMENT = "deployer:gfv3e
 fld public final static java.lang.String EE7_DEPLOYER_FRAGMENT = "deployer:gfv4ee7"
 fld public final static java.lang.String EE8_DEPLOYER_FRAGMENT = "deployer:gfv5ee8"
 fld public final static java.lang.String GLASSFISH_AUTOREGISTERED_INSTANCE = "glassfish_autoregistered_instance"
-fld public final static java.lang.String JAKARTAEE8_DEPLOYER_FRAGMENT = "deployer:gfv510ee8"
-fld public final static java.lang.String JAKARTAEE9_DEPLOYER_FRAGMENT = "deployer:gfv6ee9"
-fld public final static java.lang.String JAKARTAEE91_DEPLOYER_FRAGMENT = "deployer:gfv610ee9"
 fld public final static java.lang.String JAKARTAEE10_DEPLOYER_FRAGMENT = "deployer:gfv700ee10"
+fld public final static java.lang.String JAKARTAEE8_DEPLOYER_FRAGMENT = "deployer:gfv510ee8"
+fld public final static java.lang.String JAKARTAEE91_DEPLOYER_FRAGMENT = "deployer:gfv610ee9"
+fld public final static java.lang.String JAKARTAEE9_DEPLOYER_FRAGMENT = "deployer:gfv6ee9"
 fld public final static java.lang.String PRELUDE_DEPLOYER_FRAGMENT = "deployer:gfv3"
 fld public final static java.util.Set<java.lang.String> activeRegistrationSet
 fld public static java.lang.String EE6WC_DEFAULT_NAME
@@ -1421,7 +1421,7 @@ meth public void addServerInstance(org.netbeans.modules.glassfish.common.Glassfi
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void resultChanged(org.openide.util.LookupEvent)
 supr java.lang.Object
-hfds AUTOINSTANCECOPIED,EE6WC_INSTANCES_PATH,EE6_INSTANCES_PATH,EE7_INSTANCES_PATH,EE8_INSTANCES_PATH,JAKARTAEE8_INSTANCES_PATH,JAKARTAEE91_INSTANCES_PATH,JAKARTAEE9_INSTANCES_PATH,JAKARTAEE10_INSTANCES_PATH,LOGGER,activeDisplayNames,cf,displayName,glassFishProvider,instanceMap,instancesDirNames,lookupResult,needsJdk6,noPasswordOptions,support,uriFragments
+hfds AUTOINSTANCECOPIED,EE6WC_INSTANCES_PATH,EE6_INSTANCES_PATH,EE7_INSTANCES_PATH,EE8_INSTANCES_PATH,JAKARTAEE10_INSTANCES_PATH,JAKARTAEE8_INSTANCES_PATH,JAKARTAEE91_INSTANCES_PATH,JAKARTAEE9_INSTANCES_PATH,LOGGER,activeDisplayNames,cf,displayName,glassFishProvider,instanceMap,instancesDirNames,lookupResult,needsJdk6,noPasswordOptions,support,uriFragments
 
 CLSS public org.netbeans.modules.glassfish.common.Installer
 cons public init()
@@ -2233,10 +2233,10 @@ meth public static java.util.List<java.lang.String> filterByManifest(java.util.L
 meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getEe6Utilities()
 meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getEe7Utilities()
 meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getEe8Utilities()
+meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getJakartaEe10Utilities()
 meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getJakartaEe8Utilities()
 meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getJakartaEe91Utilities()
 meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getJakartaEe9Utilities()
-meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getJakartaEe10Utilities()
 meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
 supr java.lang.Object
 hfds gip,gwp

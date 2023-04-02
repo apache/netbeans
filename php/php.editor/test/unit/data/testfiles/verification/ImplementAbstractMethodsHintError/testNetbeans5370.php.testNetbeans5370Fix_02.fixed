@@ -37,7 +37,6 @@ class TestClass2 implements TestInterface
     public function test(): array {
         
     }
-
 }
 
 interface TestInterface

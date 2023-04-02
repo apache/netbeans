@@ -19,19 +19,18 @@
 
 package org.netbeans.modules.java.source;
 
-import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.util.logging.Level;
 import java.util.prefs.Preferences;
 import org.netbeans.api.annotations.common.StaticResource;
-import org.netbeans.modules.autoupdate.ui.api.PluginManager;
+import org.netbeans.api.autoupdate.PluginInstaller;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.Exceptions;
-import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
@@ -80,15 +79,12 @@ public class JBrowseModule extends ModuleInstall {
                 if (!NoJavacHelper.hasWorkingJavac() && !prefs.getBoolean(KEY_WARNING_SHOWN, false)) {
                     String install = Bundle.BN_Install();
                     try {
-                        Dialog[] d = new Dialog[1];
-                        DialogDescriptor dd = new DialogDescriptor(Bundle.DESC_FeaturesLimited(), Bundle.TITLE_FeaturesLimited(), true, new Object[] {install, DialogDescriptor.CANCEL_OPTION}, install, DialogDescriptor.DEFAULT_ALIGN, HelpCtx.DEFAULT_HELP, evt -> {
-                            if (install.equals(evt.getActionCommand())) {
-                                PluginManager.installSingle("org.netbeans.libs.nbjavacapi", Bundle.DN_nbjavac());
-                            }
-                            d[0].setVisible(false);
-                        });
-                        d[0] = DialogDisplayer.getDefault().createDialog(dd);
-                        d[0].setVisible(true);
+                        NotifyDescriptor msg = new NotifyDescriptor(Bundle.DESC_FeaturesLimited(), Bundle.TITLE_FeaturesLimited(), 
+                            NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.WARNING_MESSAGE, new Object[] {install, DialogDescriptor.CANCEL_OPTION}, install);
+                        Object r = DialogDisplayer.getDefault().notify(msg);
+                        if (r == install) {
+                            PluginInstaller.getDefault().install("org.netbeans.libs.nbjavacapi", null, null, Bundle.DN_nbjavac()); // NOI18N
+                        }
                     } catch (HeadlessException ex) {
                         Exceptions.printStackTrace(Exceptions.attachSeverity(ex, Level.FINE));
                     }

@@ -359,6 +359,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                                     switch (usedElement.getKind()) {
                                         case CLASS:
                                         case INTERFACE:
+                                        case RECORD:
                                         case ENUM:
                                         case ANNOTATION_TYPE:
                                             toRemove.remove(((TypeElement)usedElement).getQualifiedName().toString());

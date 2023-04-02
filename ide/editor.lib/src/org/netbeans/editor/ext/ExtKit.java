@@ -201,7 +201,7 @@ public class ExtKit extends BaseKit {
     
     /**
      * Action that is localized in org.netbeans.editor package.
-     * <br/>
+     * <br>
      * <code>BaseKit.class</code> is used as a bundle class.
      */
     private abstract static class BaseKitLocalizedAction extends BaseAction {

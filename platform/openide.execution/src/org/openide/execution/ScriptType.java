@@ -92,7 +92,6 @@ public abstract class ScriptType extends org.openide.ServiceType {
      * Execute the script given in the form of a string.
      * @param script
      * @param context
-     * @return whatever is the result of the script. It can be null.
      */
     public abstract void exec(String script, Context context) throws InvocationTargetException;
     

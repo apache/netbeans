@@ -120,11 +120,11 @@
 <p>
 This is the code to register a sample <a href="@TOP@/org/netbeans/spi/knockout/BindingsProvider.html">provider</a>:
 </p>
-<pre>
-{@code @}ServiceProvider(service = BindingsProvider.class)
-public class SampleBindingsProvider implements {@link org.netbeans.spi.knockout.BindingsProvider} {
-    {@code @Override}
-    public void findBindings(FileObject htmlFile, Response r) {
+<pre><code style="background-color:#fafafb">
+<span>@</span>ServiceProvider(service = BindingsProvider.class)
+public class SampleBindingsProvider implements <a href="@TOP@/org/netbeans/spi/knockout/BindingsProvider.html">org.netbeans.spi.knockout.BindingsProvider</a> {
+    <span>@</span>Override
+    public void findBindings(FileObject htmlFile) {
         Bindings tweet = Bindings.create("Tweet").
                 stringProperty("from_user", false).
                 intProperty("from_user_id", false);
@@ -142,10 +142,10 @@ public class SampleBindingsProvider implements {@link org.netbeans.spi.knockout.
                 modelProperty("currentTweets", tweet, true).
                 modelProperty("savedLists", tweeters, true);
 
-        r.applyBindings(twitterClient);
+        return Response.create(twitterClient);
     }
 }
-</pre>
+</code></pre>
 
 <p>
 This sample has been used when testing the module.

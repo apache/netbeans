@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.75.0
+#Version 2.76.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -11,6 +11,12 @@ CLSS public abstract interface java.lang.Cloneable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -250,6 +256,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,int)
 fld protected int updateMask
 fld public final static int ABBREV_RESET = 4
+ anno 0 java.lang.Deprecated()
 fld public final static int CLEAR_STATUS_TEXT = 32
 fld public final static int MAGIC_POSITION_RESET = 2
 fld public final static int NO_RECORDING = 64
@@ -266,6 +273,7 @@ meth protected boolean asynchonous()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth protected java.lang.Object createDefaultValue(java.lang.String)
 meth protected java.lang.Object findValue(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth protected java.lang.Object getDefaultShortDescription()
 meth protected void actionNameUpdate(java.lang.String)
 meth public abstract void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -389,9 +397,11 @@ meth protected javax.swing.Action[] createActions()
 meth protected javax.swing.Action[] getCustomActions()
 meth protected javax.swing.Action[] getDeclaredActions()
 meth protected javax.swing.Action[] getMacroActions()
+ anno 0 java.lang.Deprecated()
 meth protected org.netbeans.editor.BaseTextUI createTextUI()
 meth protected org.netbeans.editor.EditorUI createEditorUI()
 meth protected org.netbeans.editor.EditorUI createPrintEditorUI(org.netbeans.editor.BaseDocument)
+ anno 0 java.lang.Deprecated()
 meth protected org.netbeans.editor.EditorUI createPrintEditorUI(org.netbeans.editor.BaseDocument,boolean,boolean)
 meth protected void executeDeinstallActions(javax.swing.JEditorPane)
 meth protected void executeInstallActions(javax.swing.JEditorPane)
@@ -406,10 +416,14 @@ meth public javax.swing.text.Document createDefaultDocument()
 meth public javax.swing.text.ViewFactory getViewFactory()
 meth public org.netbeans.editor.MultiKeymap getKeymap()
 meth public org.netbeans.editor.Syntax createFormatSyntax(javax.swing.text.Document)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.editor.Syntax createSyntax(javax.swing.text.Document)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.editor.SyntaxSupport createSyntaxSupport(org.netbeans.editor.BaseDocument)
+ anno 0 java.lang.Deprecated()
 meth public static javax.swing.Action[] mapToActions(java.util.Map)
 meth public static org.netbeans.editor.BaseKit getKit(java.lang.Class)
+ anno 0 java.lang.Deprecated()
 meth public static void addActionsToMap(java.util.Map<java.lang.String,javax.swing.Action>,javax.swing.Action[],java.lang.String)
 meth public void deinstall(javax.swing.JEditorPane)
 meth public void install(javax.swing.JEditorPane)
@@ -426,12 +440,15 @@ fld public final static java.lang.String allCompletionShowAction = "all-completi
 fld public final static java.lang.String buildPopupMenuAction = "build-popup-menu"
 fld public final static java.lang.String buildToolTipAction = "build-tool-tip"
 fld public final static java.lang.String codeSelectAction = "code-select"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String commentAction = "comment"
 fld public final static java.lang.String completionShowAction = "completion-show"
 fld public final static java.lang.String completionTooltipShowAction = "tooltip-show"
 fld public final static java.lang.String documentationShowAction = "documentation-show"
 fld public final static java.lang.String escapeAction = "escape"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String findAction = "find"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String gotoAction = "goto"
 fld public final static java.lang.String gotoDeclarationAction = "goto-declaration"
 fld public final static java.lang.String gotoHelpAction = "goto-help"
@@ -473,6 +490,7 @@ hcls BaseKitLocalizedAction
 
 CLSS public static org.netbeans.editor.ext.ExtKit$GotoDeclarationAction
  outer org.netbeans.editor.ext.ExtKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public boolean gotoDeclaration(javax.swing.text.JTextComponent)
@@ -668,11 +686,14 @@ meth public abstract org.netbeans.modules.csl.api.ElementKind getKind()
 
 CLSS public final org.netbeans.modules.csl.api.CslActions
 meth public static javax.swing.Action createCamelCasePositionAction(javax.swing.Action,boolean)
+ anno 0 java.lang.Deprecated()
 meth public static javax.swing.Action createDeleteToCamelCasePositionAction(javax.swing.Action,boolean)
+ anno 0 java.lang.Deprecated()
 meth public static javax.swing.Action createGoToDeclarationAction()
 meth public static javax.swing.Action createGoToMarkOccurrencesAction(boolean)
 meth public static javax.swing.Action createInstantRenameAction()
 meth public static javax.swing.Action createSelectCamelCasePositionAction(javax.swing.Action,boolean)
+ anno 0 java.lang.Deprecated()
 meth public static javax.swing.Action createSelectCodeElementAction(boolean)
 meth public static javax.swing.Action createToggleBlockCommentAction()
 supr java.lang.Object
@@ -742,12 +763,14 @@ supr java.lang.Object
 hfds alternatives,element,fileObject,invalidMessage,offset,url
 
 CLSS public final org.netbeans.modules.csl.api.DeleteToNextCamelCasePosition
+ anno 0 java.lang.Deprecated()
 cons public init(javax.swing.Action)
 fld public final static java.lang.String deleteNextCamelCasePosition = "delete-next-camel-case-position"
 meth protected void moveToNewOffset(javax.swing.text.JTextComponent,int) throws javax.swing.text.BadLocationException
 supr org.netbeans.modules.csl.api.SelectNextCamelCasePosition
 
 CLSS public final org.netbeans.modules.csl.api.DeleteToPreviousCamelCasePosition
+ anno 0 java.lang.Deprecated()
 cons public init(javax.swing.Action)
 fld public final static java.lang.String deletePreviousCamelCasePosition = "delete-previous-camel-case-position"
 meth protected void moveToNewOffset(javax.swing.text.JTextComponent,int) throws javax.swing.text.BadLocationException
@@ -808,6 +831,7 @@ cons public init(org.netbeans.editor.BaseDocument)
 innr public final static Edit
 meth public int firstEditLine(javax.swing.text.Document)
 meth public int firstLine(org.netbeans.editor.BaseDocument)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String toString()
 meth public javax.swing.text.Position createPosition(int)
 meth public javax.swing.text.Position createPosition(int,javax.swing.text.Position$Bias)
@@ -816,6 +840,7 @@ meth public org.netbeans.modules.csl.api.OffsetRange getRange()
 meth public void apply()
 meth public void applyTo(javax.swing.text.Document)
 meth public void applyToDocument(org.netbeans.editor.BaseDocument)
+ anno 0 java.lang.Deprecated()
 meth public void setFormatAll(boolean)
 supr java.lang.Object
 hfds LOG,doc,edits,formatAll,positions
@@ -957,6 +982,7 @@ meth public boolean gotoDeclaration(javax.swing.text.JTextComponent)
 supr org.netbeans.editor.ext.ExtKit$GotoDeclarationAction
 
 CLSS public final org.netbeans.modules.csl.api.GoToMarkOccurrencesAction
+ anno 0 java.lang.Deprecated()
 cons public init(boolean)
 meth protected java.lang.Object getDefaultShortDescription()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -972,8 +998,11 @@ meth public abstract java.lang.String getLineCommentPrefix()
 meth public abstract java.lang.String getPreferredExtension()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public abstract java.util.Set<java.lang.String> getBinaryLibraryPathIds()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Set<java.lang.String> getLibraryPathIds()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Set<java.lang.String> getSourcePathIds()
+ anno 0 java.lang.Deprecated()
 meth public abstract org.netbeans.api.lexer.Language getLexerLanguage()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 
@@ -1126,6 +1155,7 @@ meth public abstract void open(org.openide.filesystems.FileObject,org.netbeans.m
  anno 2 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public org.netbeans.modules.csl.api.InstantRenameAction
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -1141,23 +1171,28 @@ meth public abstract java.util.Set<org.netbeans.modules.csl.api.OffsetRange> get
 
 CLSS public abstract interface org.netbeans.modules.csl.api.KeystrokeHandler
 meth public abstract boolean afterCharInserted(javax.swing.text.Document,int,javax.swing.text.JTextComponent,char) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
 meth public abstract boolean beforeCharInserted(javax.swing.text.Document,int,javax.swing.text.JTextComponent,char) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
 meth public abstract boolean charBackspaced(javax.swing.text.Document,int,javax.swing.text.JTextComponent,char) throws javax.swing.text.BadLocationException
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
 meth public abstract int beforeBreak(javax.swing.text.Document,int,javax.swing.text.JTextComponent) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
 meth public abstract int getNextWordOffset(javax.swing.text.Document,int,boolean)
+ anno 0 java.lang.Deprecated()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public abstract java.util.List<org.netbeans.modules.csl.api.OffsetRange> findLogicalRanges(org.netbeans.modules.csl.spi.ParserResult,int)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public abstract org.netbeans.modules.csl.api.OffsetRange findMatching(javax.swing.text.Document,int)
+ anno 0 java.lang.Deprecated()
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 
@@ -1173,6 +1208,7 @@ meth public static org.netbeans.modules.csl.api.Modifier[] values()
 supr java.lang.Enum<org.netbeans.modules.csl.api.Modifier>
 
 CLSS public org.netbeans.modules.csl.api.NextCamelCasePosition
+ anno 0 java.lang.Deprecated()
 cons protected init(java.lang.String,javax.swing.Action)
 cons public init(javax.swing.Action)
 fld public final static java.lang.String nextCamelCasePosition = "next-camel-case-position"
@@ -1235,6 +1271,7 @@ meth public abstract boolean canPreview()
 meth public abstract org.netbeans.modules.csl.api.EditList getEditList() throws java.lang.Exception
 
 CLSS public org.netbeans.modules.csl.api.PreviousCamelCasePosition
+ anno 0 java.lang.Deprecated()
 cons protected init(java.lang.String,javax.swing.Action)
 cons public init(javax.swing.Action)
 fld public final static java.lang.String previousCamelCasePosition = "previous-camel-case-position"
@@ -1290,6 +1327,7 @@ fld public org.netbeans.modules.csl.spi.ParserResult parserResult
 supr java.lang.Object
 
 CLSS public final org.netbeans.modules.csl.api.SelectCodeElementAction
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String,boolean)
 fld public final static java.lang.String selectNextElementAction = "select-element-next"
 fld public final static java.lang.String selectPreviousElementAction = "select-element-previous"
@@ -1300,6 +1338,7 @@ hfds selectNext
 hcls SelectionHandler,SelectionInfo
 
 CLSS public org.netbeans.modules.csl.api.SelectNextCamelCasePosition
+ anno 0 java.lang.Deprecated()
 cons protected init(java.lang.String,javax.swing.Action)
 cons public init(javax.swing.Action)
 fld public final static java.lang.String selectNextCamelCasePosition = "select-next-camel-case-position"
@@ -1307,6 +1346,7 @@ meth protected void moveToNewOffset(javax.swing.text.JTextComponent,int) throws 
 supr org.netbeans.modules.csl.api.NextCamelCasePosition
 
 CLSS public org.netbeans.modules.csl.api.SelectPreviousCamelCasePosition
+ anno 0 java.lang.Deprecated()
 cons protected init(java.lang.String,javax.swing.Action)
 cons public init(javax.swing.Action)
 fld public final static java.lang.String selectPreviousCamelCasePosition = "select-previous-camel-case-position"
@@ -1392,6 +1432,7 @@ supr java.lang.Object
 hfds customFilter,expandDepth,filterable,sortable
 
 CLSS public org.netbeans.modules.csl.api.ToggleBlockCommentAction
+ anno 0 java.lang.Deprecated()
 cons public init()
 cons public init(org.netbeans.modules.csl.spi.CommentHandler)
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -1584,12 +1625,14 @@ meth public static boolean open(org.openide.filesystems.FileObject,int,java.lang
 meth public static int getLastKnownCaretOffset(org.netbeans.modules.parsing.api.Snapshot,java.util.EventObject)
 meth public static int getLineIndent(javax.swing.text.Document,int)
 meth public static int getLineIndent(org.netbeans.editor.BaseDocument,int)
+ anno 0 java.lang.Deprecated()
 meth public static int getRowEnd(java.lang.CharSequence,int) throws javax.swing.text.BadLocationException
 meth public static int getRowFirstNonWhite(java.lang.CharSequence,int) throws javax.swing.text.BadLocationException
 meth public static int getRowLastNonWhite(java.lang.CharSequence,int) throws javax.swing.text.BadLocationException
 meth public static int getRowStart(java.lang.CharSequence,int) throws javax.swing.text.BadLocationException
 meth public static int setLineIndentation(javax.swing.text.Document,int,int) throws javax.swing.text.BadLocationException
 meth public static int setLineIndentation(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String truncate(java.lang.String,int)
 meth public static javax.swing.text.Document getADocument(org.openide.filesystems.FileObject,boolean)
 meth public static javax.swing.text.Document getADocument(org.openide.filesystems.FileObject,boolean,boolean)
@@ -1598,13 +1641,15 @@ meth public static javax.swing.text.JTextComponent getPaneFor(org.openide.filesy
 meth public static org.netbeans.editor.BaseDocument getBaseDocument(org.openide.filesystems.FileObject,boolean)
  anno 0 java.lang.Deprecated()
 meth public static org.netbeans.editor.BaseDocument getDocument(org.openide.filesystems.FileObject,boolean)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.editor.BaseDocument getDocument(org.openide.filesystems.FileObject,boolean,boolean)
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.filesystems.FileObject findFileObject(javax.swing.text.Document)
 meth public static org.openide.filesystems.FileObject findFileObject(javax.swing.text.JTextComponent)
 meth public static org.openide.text.CloneableEditorSupport findCloneableEditorSupport(org.openide.filesystems.FileObject)
 meth public static void extractZip(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject) throws java.io.IOException
 supr java.lang.Object
-hfds LOG,enforcedCaretOffsets
+hfds BIG_FILE_THRESHOLD_MB,LOG,enforcedCaretOffsets
 
 CLSS public abstract interface !annotation org.netbeans.modules.csl.spi.LanguageRegistration
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)

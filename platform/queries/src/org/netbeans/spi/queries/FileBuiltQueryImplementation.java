@@ -28,7 +28,7 @@ import org.openide.filesystems.FileObject;
  * <p class="nonnormative">
  * Rather than registering a global instance, if your implementation
  * is applicable only to project-owned files, you should add it to
- * <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup"><code>Project.getLookup()</code></a>
+ * <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--"><code>Project.getLookup()</code></a>
  * and depend on
  * the <code>org.netbeans.modules.projectapi</code> module.
  * </p>
@@ -44,8 +44,8 @@ public interface FileBuiltQueryImplementation {
      * This would typically mean that at least its syntax has been
      * validated by a build system, some conventional output file exists
      * and is at least as new as the source file, etc.
-     * For example, for a <samp>Foo.java</samp> source file, this could
-     * check whether <samp>Foo.class</samp> exists (in the appropriate
+     * For example, for a <code>Foo.java</code> source file, this could
+     * check whether <code>Foo.class</code> exists (in the appropriate
      * build directory) with at least as new a timestamp.
      * @param file a source file which can be built to a direct product
      * @return a status object that can be queries and listened to,

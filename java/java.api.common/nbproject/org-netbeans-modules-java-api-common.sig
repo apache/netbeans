@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.141
+#Version 1.142
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1150,7 +1150,7 @@ meth public org.netbeans.api.java.classpath.ClassPath findClassPath(org.openide.
 meth public org.netbeans.api.java.classpath.ClassPath getProjectSourcesClassPath(java.lang.String)
 meth public org.netbeans.api.java.classpath.ClassPath[] getProjectClassPaths(java.lang.String)
 supr org.netbeans.modules.java.api.common.classpath.AbstractClassPathProvider
-hfds INTERNAL_MOUDLE_BINARIES_PATH,LOG,buildModulesDirProperty,dirCache,eval,executeClassPath,executeModulePath,helper,javacClassPath,modSensitivePrjPathFcts,modulePath,platformType,processorClassPath,processorModulePath,projectDirectory,sourceCache,testCache,testExecuteClassPath,testExecuteModulePath,testJavacClassPath,testModulePath,testProcessorClassPath,testProcessorModulePath,urlCache
+hfds INTERNAL_MODULE_BINARIES_PATH,LOG,buildModulesDirProperty,dirCache,eval,executeClassPath,executeModulePath,helper,javacClassPath,modSensitivePrjPathFcts,modulePath,platformType,processorClassPath,processorModulePath,projectDirectory,sourceCache,testCache,testExecuteClassPath,testExecuteModulePath,testJavacClassPath,testModulePath,testProcessorClassPath,testProcessorModulePath,urlCache
 hcls Cache,Filter,Location,Owner,TranslateBuildModules
 
 CLSS public final static org.netbeans.modules.java.api.common.classpath.MultiModuleClassPathProvider$Builder

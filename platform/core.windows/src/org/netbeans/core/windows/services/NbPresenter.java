@@ -832,7 +832,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             // add final button panel to the dialog
             if ((currentButtonsPanel != null)&&(currentButtonsPanel.getComponentCount() != 0)) {
                 if (currentButtonsPanel.getBorder() == null) {
-                    currentButtonsPanel.setBorder(new javax.swing.border.EmptyBorder(new java.awt.Insets(11, 6, 5, 5)));
+                    currentButtonsPanel.setBorder(new javax.swing.border.EmptyBorder(new java.awt.Insets(5, 0, 5, 5)));
                 }
                 getContentPane().add(currentButtonsPanel, BorderLayout.SOUTH);
             }
@@ -871,7 +871,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             // add final button panel to the dialog
             if (currentButtonsPanel != null) {
                 if (currentButtonsPanel.getBorder() == null) {
-                    currentButtonsPanel.setBorder(new javax.swing.border.EmptyBorder(new java.awt.Insets(6, 7, 5, 5)));
+                    currentButtonsPanel.setBorder(new javax.swing.border.EmptyBorder(new java.awt.Insets(5, 5, 5, 5)));
                 }
                 getContentPane().add(currentButtonsPanel, BorderLayout.EAST);
             }

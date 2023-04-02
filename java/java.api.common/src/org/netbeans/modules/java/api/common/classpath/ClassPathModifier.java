@@ -182,7 +182,7 @@ public final class ClassPathModifier extends ProjectClassPathModifierImplementat
         
         /**
          * Returns project XML element under which extra classpath related information
-         * is stored. See also {@link ClassPathSupport#Callback}
+         * is stored. See also {@link ClassPathSupport.Callback}
          * @return can return null if not applicable
          */
         String getElementName(String classpathProperty);

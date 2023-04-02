@@ -41,8 +41,10 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
     
     private static final String PERSISTENCE_OLD_NS = "http://java.sun.com/xml/ns/persistence"; // NOI18N
     private static final String PERSISTENCE_NS = "http://xmlns.jcp.org/xml/ns/persistence"; // NOI18N
+    private static final String PERSISTENCE_JAKARTA_NS = "https://jakarta.ee/xml/ns/persistence"; // NOI18N
     private static final String ORM_OLD_NS = PERSISTENCE_OLD_NS +  "/orm"; // NOI18N
     private static final String ORM_NS = PERSISTENCE_NS +  "/orm"; // NOI18N
+    private static final String ORM_JAKARTA_NS = PERSISTENCE_JAKARTA_NS +  "/orm"; // NOI18N
     private static final String RESOURCE_PATH = "nbres:/org/netbeans/modules/j2ee/persistence/dd/resources/"; //NOI18N 
     
     private List<SchemaInfo> schemas = new ArrayList<>();
@@ -56,10 +58,15 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         schemas.add(new SchemaInfo("persistence_1_0.xsd", RESOURCE_PATH, PERSISTENCE_OLD_NS));
         schemas.add(new SchemaInfo("persistence_2_0.xsd", RESOURCE_PATH, PERSISTENCE_OLD_NS));
         schemas.add(new SchemaInfo("persistence_2_1.xsd", RESOURCE_PATH, PERSISTENCE_NS));
+        schemas.add(new SchemaInfo("persistence_2_2.xsd", RESOURCE_PATH, PERSISTENCE_NS));
+        schemas.add(new SchemaInfo("persistence_3_0.xsd", RESOURCE_PATH, PERSISTENCE_JAKARTA_NS));
         // orm
         schemas.add(new SchemaInfo("orm_1_0.xsd", RESOURCE_PATH, ORM_OLD_NS));
         schemas.add(new SchemaInfo("orm_2_0.xsd", RESOURCE_PATH, ORM_OLD_NS));
         schemas.add(new SchemaInfo("orm_2_1.xsd", RESOURCE_PATH, ORM_NS));
+        schemas.add(new SchemaInfo("orm_2_2.xsd", RESOURCE_PATH, ORM_NS));
+        schemas.add(new SchemaInfo("orm_3_0.xsd", RESOURCE_PATH, ORM_JAKARTA_NS));
+        schemas.add(new SchemaInfo("orm_3_1.xsd", RESOURCE_PATH, ORM_JAKARTA_NS));
     }
     
     @Override

@@ -193,8 +193,7 @@ public class LeafView extends BaseView {
     * it returns start position. If it's beyond the end of view it returns
     * end position.
     * @param y y-coord to inspect
-    *   always returns startOffset for y < start of main area
-    * @param eol means to return end of specified line instead of begining
+    *   always returns startOffset for y &lt; start of main area
     * @return position in the document
     */
     protected int getPosFromY(int y) {
@@ -391,7 +390,7 @@ public class LeafView extends BaseView {
     /** Gives notification that something was inserted into the document
     * in a location that this view is responsible for.
     *
-    * @param e the change information from the associated document
+    * @param evt the change information from the associated document
     * @param a the current allocation of the view
     * @param f the factory to use to rebuild if the view has children
     */
@@ -427,7 +426,7 @@ public class LeafView extends BaseView {
     /** Gives notification from the document that attributes were removed
     * in a location that this view is responsible for.
     *
-    * @param e the change information from the associated document
+    * @param evt the change information from the associated document
     * @param a the current allocation of the view
     * @param f the factory to use to rebuild if the view has children
     */
@@ -460,7 +459,7 @@ public class LeafView extends BaseView {
     }
 
     /** Attributes were changed in the are this view is responsible for.
-    * @param e the change information from the associated document
+    * @param evt the change information from the associated document
     * @param a the current allocation of the view
     * @param f the factory to use to rebuild if the view has children
     */

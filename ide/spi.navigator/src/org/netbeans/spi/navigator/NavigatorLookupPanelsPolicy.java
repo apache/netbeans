@@ -20,22 +20,22 @@
 package org.netbeans.spi.navigator;
 
 /** Interface for SPI clients who want to affect searching mechanism for
- * available NavigatorPanel implementations.<p></p>
+ * available NavigatorPanel implementations.<p>
  * 
  * Navigator infrastructure searches for instance of this interface in
  * <a href="@org-openide-util@/org/openide/util/Utilities.html#actionsGlobalContext()">Utilities.actionsGlobalContext()</a>
  * lookup and then applies found policy on set of available 
  * <a href="@TOP@/org/netbeans/spi/navigator/NavigatorPanel.html">NavigatorPanel</a>
- * implementations.<p></p>
+ * implementations.<p>
  * 
  * Note that multiple instances of this interface are not supported in
  * Utilities.actionsGlobalContext() lookup, one instance is chosen randomly
- * in this case.<p></p>
+ * in this case.<p>
  * 
  * Common Usage: 
  *  <ul>
  *      <li>Implement this interface, return kind of policy that suits you from
- *          <code>getPanelsPolicy()</code></li> method.
+ *          <code>getPanelsPolicy()</code> method.</li>
  *      <li>Put implementation instance into your TopComponent's subclass lookup,
  *          see <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup()">TopComponent.getLookup()</a>
  *          for details.</li>
@@ -53,7 +53,7 @@ public interface NavigatorLookupPanelsPolicy {
     /** Shows only NavigatorPanel implementations available through
      * <a href="@TOP@/org/netbeans/spi/navigator/NavigatorLookupHint.html">NavigatorLookupHint</a>
      * in Navigator window, hides NavigatorPanels
-     * available from DataObject of active Node.<br></br>
+     * available from DataObject of active Node.<br>
      * 
      * Use when you want to remove NavigatorPanels of active Node from Navigator
      * window. 

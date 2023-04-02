@@ -79,7 +79,9 @@ import org.openide.util.WeakListeners;
  * <p>The EditorContextDispatcher provides convenient access to currently selected
  * elements and recently selected elements in the GUI.
  * 
- * <H2>Typical usage:</H2>
+ * <p>
+ * <strong>Typical usage:</strong>
+ * </p>
  * Attach a listener based on file MIME type. The usage of WeakListeners is
  * preferred, unless the listener can be removed explicitely.
  * <pre>

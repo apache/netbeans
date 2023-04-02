@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.43
+#Version 1.44
 
 CLSS public java.lang.Object
 cons public init()
@@ -19,6 +19,14 @@ CLSS public final org.netbeans.api.j2ee.core.Profile
 fld public final static java.util.Comparator<org.netbeans.api.j2ee.core.Profile> UI_COMPARATOR
 fld public final static org.netbeans.api.j2ee.core.Profile J2EE_13
 fld public final static org.netbeans.api.j2ee.core.Profile J2EE_14
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_10_FULL
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_10_WEB
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_8_FULL
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_8_WEB
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_1_FULL
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_1_WEB
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_FULL
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_WEB
 fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_5
 fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_6_FULL
 fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_6_WEB
@@ -26,14 +34,6 @@ fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_7_FULL
 fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_7_WEB
 fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_8_FULL
 fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_8_WEB
-fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_8_FULL
-fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_8_WEB
-fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_FULL
-fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_WEB
-fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_1_FULL
-fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_1_WEB
-fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_10_FULL
-fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_10_WEB
 meth public boolean isAtLeast(org.netbeans.api.j2ee.core.Profile)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String getDisplayName()

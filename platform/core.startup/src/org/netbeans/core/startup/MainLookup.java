@@ -107,8 +107,8 @@ public final class MainLookup extends ProxyLookup {
         l.changeLookups(newDelegates);
     }
 
-    /** Called when Lookup<ModuleInfo> is ready from the ModuleManager.
-     * @see "#28465"
+    /** Called when Lookup&lt;ModuleInfo&gt; is ready from the ModuleManager.
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=28465">28465</a>
      */
     public static final void moduleLookupReady(Lookup moduleLookup) {
         if (Lookup.getDefault() instanceof MainLookup) {

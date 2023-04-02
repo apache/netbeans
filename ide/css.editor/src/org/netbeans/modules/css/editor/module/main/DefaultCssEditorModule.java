@@ -256,7 +256,7 @@ public class DefaultCssEditorModule extends CssEditorModule {
                             //check vendor speficic property
                             OffsetRange range = new OffsetRange(dso, deo);
 
-                            CharSequence propertyName = node.image();
+                            CharSequence propertyName = node.unescapedImage();
                             if (Css3Utils.containsGeneratedCode(propertyName)) {
                                 return false;
                             }
@@ -584,35 +584,35 @@ public class DefaultCssEditorModule extends CssEditorModule {
                             int eo = snapshot.getOriginalOffset(ruleNode.to());
                             if (eo > so) {
                                 //todo: filter out virtual selectors
-                                StructureItem item = new CssRuleStructureItem(node.image(), CssNodeElement.createElement(file, ruleNode), snapshot);
+                                StructureItem item = new CssRuleStructureItem(node.unescapedImage(), CssNodeElement.createElement(file, ruleNode), snapshot);
                                 addRule(item);
                             }
                         }
                         break;
                     case elementName: //element
-                        addElement(new CssRuleStructureItemHashableByName(node.image(), CssNodeElement.createElement(file, node), snapshot));
+                        addElement(new CssRuleStructureItemHashableByName(node.unescapedImage(), CssNodeElement.createElement(file, node), snapshot));
                         break;
                     case cssClass:
-                        addClass(new CssRuleStructureItemHashableByName(node.image(), CssNodeElement.createElement(file, node), snapshot));
+                        addClass(new CssRuleStructureItemHashableByName(node.unescapedImage(), CssNodeElement.createElement(file, node), snapshot));
                         break;
                     case cssId:
-                        addId(new CssRuleStructureItemHashableByName(node.image(), CssNodeElement.createElement(file, node), snapshot));
+                        addId(new CssRuleStructureItemHashableByName(node.unescapedImage(), CssNodeElement.createElement(file, node), snapshot));
                         break;
                     case charSet:
                     case imports:
                     case namespace:
-                        addAtRule(new CssRuleStructureItem(node.image(), CssNodeElement.createElement(file, node), snapshot));
+                        addAtRule(new CssRuleStructureItem(node.unescapedImage(), CssNodeElement.createElement(file, node), snapshot));
                         break;
                     case fontFace:
                         Node tokenNode = NodeUtil.getChildTokenNode(node, CssTokenId.FONT_FACE_SYM);
-                        addAtRule(new CssRuleStructureItem(tokenNode.image(), CssNodeElement.createElement(file, node), snapshot));
+                        addAtRule(new CssRuleStructureItem(tokenNode.unescapedImage(), CssNodeElement.createElement(file, node), snapshot));
                         break;
                     case mediaQueryList:
                         Node mediaNode = node.parent();
                         StringBuilder image = new StringBuilder();
                         if (mediaNode.type() == NodeType.media) {
                             image.append("@media "); //NOI18N
-                            image.append(node.image());
+                            image.append(node.unescapedImage());
                             addAtRule(new CssRuleStructureItem(image, CssNodeElement.createElement(file, mediaNode), snapshot));
                         }
                         break;
@@ -629,14 +629,14 @@ public class DefaultCssEditorModule extends CssEditorModule {
                         if (identNode != null) {
                             image = new StringBuilder();
                             image.append("@counter-style "); //NOI18N
-                            image.append(identNode.image());
+                            image.append(identNode.unescapedImage());
                             addAtRule(new CssRuleStructureItem(image, CssNodeElement.createElement(file, node), snapshot));
                         }
                         break;
                     case importItem:
                         Node[] resourceIdentifiers = NodeUtil.getChildrenByType(node, NodeType.resourceIdentifier);
                         for (Node ri : resourceIdentifiers) {
-                            addImport(new CssRuleStructureItem(WebUtils.unquotedValue(ri.image()), CssNodeElement.createElement(file, ri), snapshot));
+                            addImport(new CssRuleStructureItem(WebUtils.unquotedValue(ri.unescapedImage()), CssNodeElement.createElement(file, ri), snapshot));
                         }
                         break;
 

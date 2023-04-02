@@ -1182,7 +1182,6 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * @param ret destination array
      * @param offset offset in the destination array.
      * @param len number of characters to obtain.
-     * @return array with the requested characters.
      */
     public void getChars(int pos, char ret[], int offset, int len)
     throws BadLocationException {
@@ -1564,7 +1563,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * The algorithm first checks whether there's a value for the INDENT_SHIFT_WIDTH
      * setting. If so it uses it, otherwise it uses <code>formatter.getSpacesPerTab()</code>.
      *
-     * @see getTabSize()
+     * @see #getTabSize()
      * @deprecated Please use Editor Indentation API instead, for details see
      *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
      */
@@ -1704,7 +1703,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
     }
 
     /** Extended write unlocking.
-    * @see extWriteLock()
+    * @see #extWriteLock()
     */
     public final void extWriteUnlock() {
         super.writeUnlock(); // AD.writeUnlock() already reentrant for several JDK releases
@@ -2070,7 +2069,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /**
      * Add a custom undoable edit during atomic lock of the document.
-     * <br/>
+     * <br>
      * For example code templates use this method to mark an insertion of a code template
      * skeleton into the document. Once the edit gets undone the CT editing will be cancelled.
      *
@@ -2451,7 +2450,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /** Property evaluator is useful for lazy evaluation
      * of properties of the document when
-     * {@link javax.swing.text.Document#getProperty(java.lang.String)}
+     * {@link javax.swing.text.Document#getProperty(Object)}
      * is called.
      */
     public static interface PropertyEvaluator {

@@ -279,11 +279,13 @@ export class TreeViewService extends vscode.Disposable {
 
 export interface TreeItemDecorator<T> extends vscode.Disposable {
   decorateTreeItem(element: T, item : vscode.TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem>;
+  decorateChildren(element: T, children: Visualizer[]): Visualizer[] | Thenable<Visualizer[]>;
 }
 
 export interface CustomizableTreeDataProvider<T> extends vscode.TreeDataProvider<T> {
   fireItemChange(item? : T) : void;
   addItemDecorator(deco : TreeItemDecorator<T>) : vscode.Disposable;
+  getRoot() : T;
 }
 
 class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDataProvider<Visualizer> {
@@ -583,6 +585,8 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
       this.log.appendLine(`Doing getChildren on ${e?.idstring()}`);
     }
 
+    let decos : TreeItemDecorator<Visualizer>[] = [...this.decorators];
+    const parent = e || this.root;
     async function collectResults(list : Visualizer[], arr: any, element: Visualizer): Promise<Visualizer[]> {
       let res : Visualizer[] = [];
       let now : Visualizer[] | undefined;
@@ -594,6 +598,25 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
           res.push(v);
         }
       }
+
+      if (decos.length > 0) {
+        async function f(orig: Visualizer[]) : Promise<Visualizer[]> {
+          const deco = decos.shift();
+          if (!deco) {
+            return orig;
+          }
+          // decorateChildren(element: T, item : Visualizer, children: Visualizer[]): Visualizer[] | Thenable<Visualizer[]>;
+          const decorated = deco.decorateChildren(parent, orig);
+          if (Array.isArray(decorated)) {
+              return f(decorated);
+          } else {
+              return (decorated as Thenable<Visualizer[]>).then(f);
+          }
+        }
+
+        res = await f(res);
+      }
+
       now = element.updateChildren(res, self);
       for (let i = 0; i < now.length; i++) {
         const v = now[i];
@@ -605,15 +628,9 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     }
 
     return self.wrap((list) => self.queryVisualizer(e, list, () => {
-        if (e) {
-          return this.client.sendRequest(NodeInfoRequest.children, { nodeId : e.data.id}).then(async (arr) => {
-            return collectResults(list, arr, e);
-          });
-        } else {
-          return this.client.sendRequest(NodeInfoRequest.children, { nodeId: this.root.data.id}).then(async (arr) => {
-            return collectResults(list, arr, this.root);
-          });
-        }
+        return this.client.sendRequest(NodeInfoRequest.children, { nodeId : parent.data.id}).then(async (arr) => {
+          return collectResults(list, arr, parent);
+        });
       }
     ));
   }

@@ -787,10 +787,10 @@ public class WizardDescriptor extends DialogDescriptor {
     /** Updates buttons to reflect the current state of the panels.
     * Can be overridden by subclasses
     * to change the options to special values. In such a case use:
-    * <p><code><PRE>
+    * <PRE>{@code
     *   super.updateState ();
     *   setOptions (...);
-    * </PRE></code>
+    * }</PRE>
     */
     protected synchronized void updateState() {
         assert SwingUtilities.isEventDispatchThread();

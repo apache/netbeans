@@ -39,6 +39,7 @@ import com.sun.source.doctree.SinceTree;
 import com.sun.source.doctree.SnippetTree;
 import com.sun.source.doctree.StartElementTree;
 import com.sun.source.doctree.SummaryTree;
+import com.sun.source.doctree.SystemPropertyTree;
 import com.sun.source.doctree.TextTree;
 import com.sun.source.doctree.ThrowsTree;
 import com.sun.source.doctree.UnknownBlockTagTree;
@@ -1331,6 +1332,19 @@ public class ElementJavadoc {
                     SummaryTree summaryTag = (SummaryTree)tag;
                     List<? extends DocTree> summary = summaryTag.getSummary();
                     sb.append(inlineTags(summary, docPath, doc, trees, null));
+                    break;
+                case SYSTEM_PROPERTY:
+                    SystemPropertyTree systemPropTag = (SystemPropertyTree) tag;
+                    sb.append("<code>"); //NOI18N
+                    sb.append(systemPropTag.getPropertyName());
+                    sb.append("</code>"); //NOI18N
+                    break;
+                default:
+                    sb.append("<code>"); //NOI18N
+                    try {
+                        sb.append(XMLUtil.toElementContent(tag.toString()));
+                    } catch (IOException ioe) {}
+                    sb.append("</code>"); //NOI18N
                     break;
             }
         }

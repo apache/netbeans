@@ -79,9 +79,9 @@ public class DatabaseNode extends OCINode {
                     .map(d -> {
                         List<DatabaseConnectionStringProfile> profiles = d.getConnectionStrings().getProfiles();
                         DatabaseItem item = new DatabaseItem(
-                                OCID.of(d.getId(), "Database"), //NOI18N
+                                OCID.of(d.getId(), "Databases"), //NOI18N
                                 d.getDbName(),
-                                d.getServiceConsoleUrl(),
+                                d.getConnectionUrls().getApexUrl().replace("apex", "admin/_sdw"),
                                 getConnectionName(profiles));
                         StringBuilder sb = new StringBuilder();
                         sb.append(Bundle.LBL_WorkloadType(d.getDbWorkload().getValue()));

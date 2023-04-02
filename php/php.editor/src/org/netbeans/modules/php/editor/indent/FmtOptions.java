@@ -94,6 +94,7 @@ public final class FmtOptions {
     public static final String BLANK_LINES_BEFORE_USE = "blankLinesBeforeUse"; //NOI18N
     public static final String BLANK_LINES_BEFORE_USE_TRAIT = "blankLinesBeforeUseTrait"; //NOI18N
     public static final String BLANK_LINES_AFTER_USE = "blankLinesAfterUse"; //NOI18N
+    public static final String BLANK_LINES_BETWEEN_USE_TYPES = "blankLinesBetweenUseType"; //NOI18N
     public static final String BLANK_LINES_BEFORE_CLASS = "blankLinesBeforeClass"; //NOI18N
     public static final String BLANK_LINES_BEFORE_CLASS_END = "blankLinesBeforeClassEnd"; //NOI18N
     public static final String BLANK_LINES_AFTER_CLASS = "blankLinesAfterClass"; //NOI18N
@@ -128,6 +129,7 @@ public final class FmtOptions {
     public static final String SPACE_AROUND_UNARY_OPS = "spaceAroundUnaryOps"; //NOI18N
     public static final String SPACE_AROUND_BINARY_OPS = "spaceAroundBinaryOps"; //NOI18N
     public static final String SPACE_AROUND_TERNARY_OPS = "spaceAroundTernaryOps"; //NOI18N
+    public static final String SPACE_AROUND_COALESCING_OPS = "spaceAroundCoalescingOps"; //NOI18N
     public static final String SPACE_AROUND_STRING_CONCAT_OPS = "spaceAroundStringConcatOps"; //NOI18N
     public static final String SPACE_AROUND_ASSIGN_OPS = "spaceAroundAssignOps"; //NOI18N
     public static final String SPACE_AROUND_KEY_VALUE_OPS = "spaceAroundKeyValueOps"; //NOI18N
@@ -210,6 +212,7 @@ public final class FmtOptions {
     public static final String WRAP_DO_WHILE_STATEMENT = "wrapDoWhileStatement"; //NOI18N
     public static final String WRAP_BINARY_OPS = "wrapBinaryOps"; //NOI18N
     public static final String WRAP_TERNARY_OPS = "wrapTernaryOps"; //NOI18N
+    public static final String WRAP_COALESCING_OPS = "wrapCoalescingOps"; //NOI18N
     public static final String WRAP_ASSIGN_OPS = "wrapAssignOps"; //NOI18N
     public static final String WRAP_BLOCK_BRACES = "wrapBlockBraces";  //NOI18N
     public static final String WRAP_GROUP_USE_BRACES = "wrapGroupUseBraces"; // NOI18N
@@ -283,6 +286,7 @@ public final class FmtOptions {
             {BLANK_LINES_BEFORE_USE, "1"}, //NOI18N
             {BLANK_LINES_BEFORE_USE_TRAIT, "1"}, //NOI18N
             {BLANK_LINES_AFTER_USE, "1"}, //NOI18N
+            {BLANK_LINES_BETWEEN_USE_TYPES, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_CLASS, "1"}, //NOI18N
             {BLANK_LINES_AFTER_CLASS, "1"}, //NOI18N
             {BLANK_LINES_AFTER_CLASS_HEADER, "0"}, //NOI18N
@@ -318,6 +322,7 @@ public final class FmtOptions {
             {SPACE_AROUND_UNARY_OPS, FALSE},
             {SPACE_AROUND_BINARY_OPS, TRUE},
             {SPACE_AROUND_TERNARY_OPS, TRUE},
+            {SPACE_AROUND_COALESCING_OPS, TRUE},
             {SPACE_AROUND_STRING_CONCAT_OPS, TRUE},
             {SPACE_AROUND_KEY_VALUE_OPS, TRUE},
             {SPACE_AROUND_ASSIGN_OPS, TRUE},
@@ -400,6 +405,7 @@ public final class FmtOptions {
             {WRAP_DO_WHILE_STATEMENT, WRAP_ALWAYS}, //NOI18N
             {WRAP_BINARY_OPS, WRAP_NEVER}, //NOI18N
             {WRAP_TERNARY_OPS, WRAP_NEVER},
+            {WRAP_COALESCING_OPS, WRAP_NEVER},
             {WRAP_ASSIGN_OPS, WRAP_NEVER},
             {WRAP_BLOCK_BRACES, TRUE},
             {WRAP_GROUP_USE_BRACES, TRUE},

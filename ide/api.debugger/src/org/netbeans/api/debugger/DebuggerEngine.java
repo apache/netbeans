@@ -30,9 +30,10 @@ import org.netbeans.spi.debugger.ContextProvider;
  * It provides root of threads hierarchy (call stacks, locals)
  * and manages debugger actions.
  *
- * <p><br><table border="1" cellpadding="3" cellspacing="0" width="100%">
- * <tbody><tr bgcolor="#ccccff">
- * <td colspan="2"><font size="+2"><b>Description </b></font></td>
+ * <table>
+ * <caption>Description of DebuggerEngine</caption>
+ * <tbody><tr>
+ * <td colspan="2" style="background-color:#4D7A97"><font size="+2"><b>Description </b></font></td>
  * </tr><tr><td align="left" valign="top" width="1%"><font size="+1">
  * <b>Functionality</b></font></td><td>
  *
@@ -52,8 +53,8 @@ import org.netbeans.spi.debugger.ContextProvider;
  * <br>
  * <b>Support for aditional services:</b>
  *    DebuggerEngine is final class. That is why the standard method how to 
- *    extend its functionality is using lookup methods ({@link #lookup} and 
- *    {@link #lookupFirst}).
+ *    extend its functionality is using lookup methods ({@link #lookup(String,Class)} and 
+ *    {@link #lookupFirst(String,Class)}).
  *    There are two ways how to register some service provider for some
  *    type of DebuggerEngine:
  *    <ul>

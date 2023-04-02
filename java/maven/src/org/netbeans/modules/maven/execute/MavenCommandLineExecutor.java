@@ -141,7 +141,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private String processUUID;
     private Process preProcess;
     private String preProcessUUID;
-    private static final SpecificationVersion VER17 = new SpecificationVersion("1.7"); //NOI18N
+    private static final SpecificationVersion VER18 = new SpecificationVersion("1.8"); //NOI18N
     private static final Logger LOGGER = Logger.getLogger(MavenCommandLineExecutor.class.getName());
 
     private static final RequestProcessor RP = new RequestProcessor(MavenCommandLineExecutor.class.getName(),1);
@@ -397,11 +397,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     }
 
     private boolean isEventSpyCompatible(final BeanRunConfig clonedConfig) {
-        // EventSpy cannot work on jdk < 7
+        // EventSpy cannot work on jdk < 8
         if (clonedConfig.getProject() != null) {
             ActiveJ2SEPlatformProvider javaprov = clonedConfig.getProject().getLookup().lookup(ActiveJ2SEPlatformProvider.class);
             JavaPlatform platform = javaprov.getJavaPlatform();
-            return (platform.getSpecification().getVersion().compareTo(VER17) >= 0);
+            return (platform.getSpecification().getVersion().compareTo(VER18) >= 0);
         } else {
             return true;
         }

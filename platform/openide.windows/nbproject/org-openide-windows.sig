@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.95
+#Version 6.96
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -744,6 +744,7 @@ intf java.io.Serializable
 meth public boolean isEmpty()
 meth public java.util.Enumeration<org.openide.windows.CloneableTopComponent> getComponents()
 meth public org.openide.windows.CloneableTopComponent getAnyComponent()
+ anno 0 java.lang.Deprecated()
 meth public org.openide.windows.CloneableTopComponent getArbitraryComponent()
 supr java.lang.Object
 hfds LOCK,componentSet,myComponentSetListener,serialVersionUID
@@ -758,19 +759,25 @@ supr java.lang.Object
 CLSS public abstract interface org.openide.windows.Mode
 fld public final static java.lang.String PROP_BOUNDS = "bounds"
 fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_NAME = "name"
+ anno 0 java.lang.Deprecated()
 fld public final static long serialVersionUID = -2650968323666215654
+ anno 0 java.lang.Deprecated()
 innr public abstract interface static Xml
 intf java.io.Serializable
 meth public abstract boolean canDock(org.openide.windows.TopComponent)
 meth public abstract boolean dockInto(org.openide.windows.TopComponent)
 meth public abstract java.awt.Image getIcon()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.awt.Rectangle getBounds()
 meth public abstract java.lang.String getDisplayName()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.lang.String getName()
 meth public abstract org.openide.windows.TopComponent getSelectedTopComponent()
 meth public abstract org.openide.windows.TopComponent[] getTopComponents()
 meth public abstract org.openide.windows.Workspace getWorkspace()
+ anno 0 java.lang.Deprecated()
 meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setBounds(java.awt.Rectangle)
@@ -1083,6 +1090,7 @@ meth public abstract void beforeLoad(org.openide.windows.WindowSystemEvent)
 meth public abstract void beforeSave(org.openide.windows.WindowSystemEvent)
 
 CLSS public abstract interface org.openide.windows.Workspace
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
 fld public final static java.lang.String PROP_MODES = "modes"
 fld public final static java.lang.String PROP_NAME = "name"

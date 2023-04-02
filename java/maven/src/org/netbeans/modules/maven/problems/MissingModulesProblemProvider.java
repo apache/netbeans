@@ -34,8 +34,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.autoupdate.PluginInstaller;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import static org.netbeans.modules.maven.problems.Bundle.*;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -230,7 +230,7 @@ public class MissingModulesProblemProvider implements ProjectProblemsProvider {
                         SwingUtilities.invokeAndWait(new Runnable() {
                             @Override
                             public void run() {
-                                Object retval = PluginManager.install(Collections.singleton(codenamebase));
+                                Object retval = PluginInstaller.getDefault().install(codenamebase);
                                 res[0] = retval == null ? Result.create(Status.RESOLVED) : Result.create(Status.UNRESOLVED);
                             }
                         });

@@ -922,7 +922,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
      * other useful components.
      * <br>
      * The component no longer includes toolbar - it's returned
-     * by a separate method {@link #getToolbarComponent()}.
+     * by a separate method {@link #getToolBarComponent()}.
      * <br>
      * The getExtComponent() should not be used when
      * the JEditorPane is included in dialog.

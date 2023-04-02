@@ -247,7 +247,7 @@ public final class FileUtil extends Object {
     /**
      * Adds a listener to changes in a given path. It permits you to listen to a file
      * which does not yet exist, or continue listening to it after it is deleted and recreated, etc.
-     * <br/>
+     * <br>
      * When given path represents a file ({@code path.isDirectory() == false})
      * <ul>
      * <li>fileDataCreated event is fired when the file is created</li>
@@ -323,7 +323,7 @@ public final class FileUtil extends Object {
     /** 
      * Adds a listener to changes under given path. It permits you to listen to a file
      * which does not yet exist, or continue listening to it after it is deleted and recreated, etc.
-     * <br/>
+     * <br>
      * When given path represents a file ({@code path.isDirectory() == false}), this
      * code behaves exactly like {@link #addFileChangeListener(org.openide.filesystems.FileChangeListener, java.io.File)}.
      * Usually the path shall represent a folder ({@code path.isDirectory() == true})
@@ -1070,7 +1070,7 @@ public final class FileUtil extends Object {
     * @param is input stream of jar file
     * @exception IOException if the extraction fails
     * @deprecated Use of XML filesystem layers generally obsoletes this method.
-    *             For tests, use {@link org.openide.util.test.TestFileUtils#unpackZipFile}.
+    *             For tests, use {@code org.openide.util.test.TestFileUtils#unpackZipFile}.
     */
     @Deprecated
     public static void extractJar(final FileObject fo, final InputStream is)
@@ -2059,7 +2059,7 @@ public final class FileUtil extends Object {
      * If the file looks to represent a directory, a <code>file</code> URL will be created.
      * If it looks to represent a ZIP archive, a <code>jar</code> URL will be created.
      * @param entry a file or directory name
-     * @return an appropriate classpath URL which will always end in a slash (<samp>/</samp>),
+     * @return an appropriate classpath URL which will always end in a slash (<code>/</code>),
      *         or null for an existing file which does not look like a valid archive
      * @since org.openide.filesystems 7.8
      */
@@ -2133,7 +2133,7 @@ public final class FileUtil extends Object {
      * @param chooser a file chooser
      * @param currentDirectory if not null, a file to set as the current directory
      *                         using {@link javax.swing.JFileChooser#setCurrentDirectory} without canonicalizing
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=46459">Issue #46459</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=46459">Issue #46459</a>
      * @see <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4906607">JRE bug #4906607</a>
      * @since org.openide/1 4.42
      * @deprecated Just use {@link javax.swing.JFileChooser#setCurrentDirectory}. JDK 6 does not have this bug.
@@ -2159,7 +2159,7 @@ public final class FileUtil extends Object {
      * @throws IllegalArgumentException in case there are duplicates, or nulls, or the files do not have a common parent
      * @since org.openide.filesystems 7.2
      * @see #setOrder
-     * @see <a href="http://wiki.netbeans.org/wiki/view/FolderOrdering103187">Specification</a>
+     * @see <a href="https://netbeans.apache.org/wiki/FolderOrdering103187">Specification</a>
      */
     public static List<FileObject> getOrder(Collection<FileObject> children, boolean logWarnings) throws IllegalArgumentException {
         return Ordering.getOrder(children, logWarnings);
@@ -2197,7 +2197,7 @@ public final class FileUtil extends Object {
      * If you wish to create the file/folder when it does not already exist,
      * start with {@link #getConfigRoot} and use {@link #createData(FileObject, String)}
      * or {@link #createFolder(FileObject, String)} methods.
-     * <p/>
+     * <p>
      * In environment with multiple contextual Lookups, the method may return different FileObject depending
      * on what Lookup serves the executing thread. If the system-wide (user-independent) configuration
      * is required instead, {@link #getSystemConfigFile} should be called instead. If an service instance is created based
@@ -2227,7 +2227,7 @@ public final class FileUtil extends Object {
      * Because default/config filesystem is used both for configuration and services, Lookup or service providers
      * should use this method in preference to {@link #getConfigFile} to produce singleton services even
      * in multiple context environment.
-     * <p/>
+     * <p>
      * With the default Lookup implementation, behaviour of {@code getSystemConfigFile} and {@link #getConfigFile}
      * is identical.
      * 
@@ -2250,7 +2250,7 @@ public final class FileUtil extends Object {
      * Actions/Edit/org-openide-actions-CopyAction.instance
      * Services/Browsers/swing-browser.settings
      * </pre>
-     * <p/>
+     * <p>
      * In multi-user setup, this method returns instance specific for the executing user.
      * <b>Important</b>: it returns user-specific instance even though the object is configured in
      * a XML layer, or system-wide configuration; still, the instance will be tied to the user-specific

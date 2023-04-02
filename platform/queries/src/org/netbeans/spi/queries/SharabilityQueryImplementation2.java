@@ -27,8 +27,8 @@ import org.netbeans.api.queries.SharabilityQuery.Sharability;
  * <div class="nonnormative">
  * <p>
  * Could be implemented e.g. by project types which know that certain files or folders in
- * a project (e.g. <samp>src/</samp>) are intended for VCS sharing while others
- * (e.g. <samp>build/</samp>) are not.
+ * a project (e.g. <code>src/</code>) are intended for VCS sharing while others
+ * (e.g. <code>build/</code>) are not.
  * </p>
  * <p>
  * Note that the Project API module registers a default implementation of this query

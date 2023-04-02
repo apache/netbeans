@@ -75,13 +75,16 @@ import org.openide.util.NbBundle;
  * fade or sliding effect when displayed.  For this style, a second click on the selected
  * tab will hide the selected tab (setting the selection model's selected index to -1).</li></ul>
  * <p>
- * <h4>Customizing the appearance of tabs</h4>
+ * <strong>Customizing the appearance of tabs</strong>
+ * <p>
  * Tabs are customized by providing a different UI delegate for the tab displayer component,
  * via UIManager, in the same manner as any standard Swing component; for <code>TYPE_SLIDING</code>
  * tabs, simply implementing an alternate UI delegate for the buttons used to represent tabs
  * is all that is needed.
  *
- * <h4>Managing user events on tabs</h4>
+ * <p>
+ * <strong>Managing user events on tabs</strong>
+ * <p>
  * When a user clicks a tab, the TabbedContainer will fire an action event to all of its listeners.
  * This action event will always be an instance of <code>TabActionEvent</code>, which can provide
  * the index of the tab that was pressed, and the command name of the action that was performed.
@@ -89,7 +92,9 @@ import org.openide.util.NbBundle;
  * to save data, and possibly vetoing the closing of a tab) may veto (or take full responsibility
  * for performing) the action by consuming the TabActionEvent.
  *
- *<h4>Indication of focus and the &quot;activated&quot; state</h4>
+ * <p>
+ * <strong>Indication of focus and the &quot;activated&quot; state</strong>
+ * <p>
  * The property <code>active</code> is provided to allow a tabbed container to indicate that it
  * contains the currently focused component. However, no effort is made to track focus on the
  * part of the tabbed control - there is too much variability possible (for example, if
@@ -571,7 +576,7 @@ public class TabbedContainer extends JComponent implements Accessible {
      * TabbedContainer. While one would expect a component gaining keyboard
      * focus to be a good determinant, it actually turns out to be a potent
      * source of subtle and hard-to-fix bugs.
-     * <p/>
+     * <p>
      * NetBeans uses an AWTEventListener to track mouse clicks, and allows
      * components to become activated only via a mouse click or via a keyboard
      * action or menu item which activates the component.  This approach is far

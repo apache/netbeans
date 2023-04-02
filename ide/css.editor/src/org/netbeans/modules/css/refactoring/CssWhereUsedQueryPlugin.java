@@ -28,9 +28,9 @@ import org.netbeans.modules.css.editor.Css3Utils;
 import org.netbeans.modules.css.editor.CssProjectSupport;
 import org.netbeans.modules.css.indexing.CssFileModel;
 import org.netbeans.modules.css.indexing.api.CssIndex;
-import org.netbeans.modules.css.lib.api.CssTokenId;
-import org.netbeans.modules.css.lib.api.Node;
-import org.netbeans.modules.css.lib.api.NodeUtil;
+import org.netbeans.modules.css.refactoring.api.CssRefactoringExtraInfo;
+import org.netbeans.modules.css.refactoring.api.CssRefactoringInfo;
+import org.netbeans.modules.css.refactoring.api.CssRefactoringInfo.Type;
 import org.netbeans.modules.css.refactoring.api.Entry;
 import org.netbeans.modules.css.refactoring.api.RefactoringElementType;
 import org.netbeans.modules.parsing.api.Source;
@@ -75,17 +75,17 @@ public class CssWhereUsedQueryPlugin implements RefactoringPlugin {
         }
 
         Lookup lookup = refactoring.getRefactoringSource();
-        CssElementContext context = lookup.lookup(CssElementContext.class);
+        CssRefactoringInfo context = lookup.lookup(CssRefactoringInfo.class);
 
-        if (context instanceof CssElementContext.Editor) {
-            CssElementContext.Editor econtext = (CssElementContext.Editor) context;
+        if (context != null) {
+            CssRefactoringInfo econtext = (CssRefactoringInfo) context;
             CssProjectSupport sup = CssProjectSupport.findFor(context.getFileObject());
             if (sup == null) {
                 return null;
             }
             CssIndex index = sup.getIndex();
 
-            Node element = econtext.getElement();
+            Type cssType = econtext.getType();
 
             //find usages of: 
             //1.class or id selector
@@ -94,46 +94,39 @@ public class CssWhereUsedQueryPlugin implements RefactoringPlugin {
             ElementKind kind;
             String elementImage = econtext.getElementName();
             RefactoringElementType type;
-            switch (element.type()) {
-                case cssClass:
-                    elementImage = elementImage.substring(1); //cut off the dot
+            switch (cssType) {
+                case CLASS:
                     files = index.findClasses(elementImage);
                     kind = ElementKind.CLASS;
                     type = RefactoringElementType.CLASS;
                     break;
-                case cssId:
-                    elementImage = elementImage.substring(1); //cut off the hash
+                case ID:
                     files = index.findIds(elementImage);
                     kind = ElementKind.ATTRIBUTE;
                     type = RefactoringElementType.ID;
                     break;
-                case hexColor:
+                case HEX_COLOR:
                     files = index.findColor(elementImage);
                     kind = ElementKind.FIELD;
                     type = RefactoringElementType.COLOR;
                     break;
-                case resourceIdentifier:
-                    Node token = NodeUtil.getChildTokenNode(element, CssTokenId.STRING);
-                    if (token != null) {
-                        String unquoted = WebUtils.unquotedValue(token.image());
-                        FileObject resolved = WebUtils.resolve(context.getFileObject(), unquoted);
+                case RESOURCE_IDENTIFIER:
+                    {
+                        FileObject resolved = WebUtils.resolve(context.getFileObject(), elementImage);
                         if (resolved != null) {
                             refactorFile(resolved, elements);
                         }
-                        return null;
                     }
+                    return null;
                 //fallback if the resourceIdentifier contains URI (no STRING) token
-                case term:
-                    //uri in term
-                    token = NodeUtil.getChildTokenNode(element, CssTokenId.URI);
-                    if (token != null) {
-                        CharSequence image = token.image();
-                        Matcher m = Css3Utils.URI_PATTERN.matcher(image);
+                case URI:
+                    {
+                        Matcher m = Css3Utils.URI_PATTERN.matcher(elementImage);
                         if (m.matches()) {
                             int groupIndex = 1;
                             String content = m.group(groupIndex);
                             String unquoted = WebUtils.unquotedValue(content);
-                            FileObject resolved = WebUtils.resolve(context.getFileObject(), unquoted);
+                            FileObject resolved = WebUtils.resolve(context.getFileObject(), elementImage);
                             if (resolved != null) {
                                 refactorFile(resolved, elements);
                             }
@@ -197,9 +190,12 @@ public class CssWhereUsedQueryPlugin implements RefactoringPlugin {
                 }
             }
 
-        } else if (context instanceof CssElementContext.File) {
-            //css file where used query
-            refactorFile(context.getFileObject(), elements);
+        } else {
+            FileObject fileObject = refactoring.getRefactoringSource().lookup(FileObject.class);
+            if (fileObject != null && fileObject.isData()) {
+                //css file where used query
+                refactorFile(fileObject, elements);
+            }
         }
 
         return null;

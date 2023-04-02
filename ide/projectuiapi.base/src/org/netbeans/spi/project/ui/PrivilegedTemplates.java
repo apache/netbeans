@@ -31,15 +31,15 @@ package org.netbeans.spi.project.ui;
  * 
  * <p>
  * For more information about registering templates see overview of
- * {@link org.netbeans.spi.project.ui.templates.support} package.
- * @see org.netbeans.spi.project.ui.support.CommonProjectActions
+ * <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/templates/support/package-summary.html">org.netbeans.spi.project.ui.templates.support</a> package.
+ * @see <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/CommonProjectActions.html">CommonProjectActions</a>
  * @author Petr Hrebejk
  */
 public interface PrivilegedTemplates {
     
     /**
      * Lists privileged templates.
-     * @return full paths to privileged templates, e.g. <samp>Templates/Other/XmlFile.xml</samp>
+     * @return full paths to privileged templates, e.g. <code>Templates/Other/XmlFile.xml</code>
      * @see <code>org.netbeans.api.templates.TemplateRegistration#folder</code>
      * @see <code>org.netbeans.api.templates.TemplateRegistration#content</code>
      * @see <code>org.netbeans.api.templates.TemplateRegistration#id</code>

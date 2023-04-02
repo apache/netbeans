@@ -29,6 +29,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionName;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
@@ -105,7 +106,8 @@ public final class Utils {
             ASTNode next = nodes.iterator().next();
             if (next instanceof NamespaceName
                     || next instanceof NullableType
-                    || next instanceof UnionType) {
+                    || next instanceof UnionType
+                    || next instanceof IntersectionType) {
                 isFieldDeclaration = true;
             }
         }

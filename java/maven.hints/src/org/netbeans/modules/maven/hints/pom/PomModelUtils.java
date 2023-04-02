@@ -37,6 +37,7 @@ import javax.swing.text.Document;
 import org.apache.maven.DefaultMaven;
 import org.apache.maven.Maven;
 import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.building.Source;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.model.building.ModelBuildingException;
@@ -60,6 +61,7 @@ import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
 import org.netbeans.modules.maven.model.pom.POMComponent;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.Properties;
+import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.modules.xml.xam.Model;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.ErrorDescriptionFactory;
@@ -314,6 +316,21 @@ public final class PomModelUtils {
             }
         }
         return null;
+    }
+        
+    /*tests*/ static ComparableVersion activeMavenVersion = null;
+    private static File lastHome = null;
+    
+    static ComparableVersion getActiveMavenVersion() {
+        File home = EmbedderFactory.getMavenHome();
+        if (home != null && !home.equals(lastHome)) {
+            lastHome = home;
+            String version = MavenSettings.getCommandLineMavenVersion(home);
+            if (version != null) {
+                activeMavenVersion = new ComparableVersion(version);
+            }
+        }
+        return activeMavenVersion;
     }
 
 }

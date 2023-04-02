@@ -75,7 +75,7 @@ public final class TokenHierarchyControl<I> {
      * Making the token hierarchy inactive will release all the tokens in the hierarchy
      * so that there will be no tokens. The hierarchy can be made active again
      * later.
-     * <br/>
+     * <br>
      * Making the hierarchy inactive will free memory occupied by tokens. It can be done
      * e.g. once a document is not edited for a long time (and is not showing on screen).
      * 
@@ -107,12 +107,12 @@ public final class TokenHierarchyControl<I> {
 
     /**
      * Rebuild token hierarchy completely.
-     * <br/>
+     * <br>
      * This may be necessary if lexing depends on some input properties
      * that get changed.
-     * <br/>
+     * <br>
      * This method will drop all present tokens and let them to be lazily recreated.
-     * <br/>
+     * <br>
      * This method should only be invoked under modification lock over the mutable
      * input source (e.g. a document's write-lock).
      * Otherwise all the active token sequences would fail with 

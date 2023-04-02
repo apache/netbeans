@@ -26,12 +26,12 @@ import java.util.Map;
 import org.netbeans.api.templates.CreateDescriptor;
 import org.openide.filesystems.FileObject;
 
-/** This is an interface for <q>smart templating</q> that allows
+/** This is an interface for <em>smart templating</em> that allows
  * any module to intercept calls to {@link DataObject#createFromTemplate} 
  * and handle them themselves. The NetBeans IDE provides default
  * implementation that allows use of Freemarker templating engine.
- * Read more in the <a href="@TOP@/architecture-summary.html#script">howto document</a>.
- * <p/>
+ * Read more in the <a href="@TOP@/architecture-summary.html#loaders-script">howto document</a>.
+ * <p>
  * This SPI is now <b>deprecated</b> and serves just a backward compatilibity SPI adapter
  * which allows the template API to work with legacy handlers. The templating SPI is delegated
  * to the original handler methods.
@@ -91,7 +91,7 @@ public abstract class CreateFromTemplateHandler extends org.netbeans.api.templat
      * parameter set to {@link Boolean#TRUE}
      * (such as from {@link DataObject#createFromTemplate(DataFolder,String,Map)}),
      * and the file name already seems to
-     * include an extension (<samp>*.*</samp>), the handler should not append
+     * include an extension (<em>*.*</em>), the handler should not append
      * any extension from the template.
      * @since org.openide.loaders 7.16
      * @see <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/templates/support/Templates.SimpleTargetChooserBuilder.html#freeFileExtension()"><code>Templates.SimpleTargetChooserBuilder.freeFileExtension</code></a>

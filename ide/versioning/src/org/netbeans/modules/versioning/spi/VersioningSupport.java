@@ -113,8 +113,8 @@ public final class VersioningSupport {
      * <p>Versioning systems <strong>must NOT</strong> scan a folder if this method returns true and should consider it as unversioned.</p>
      *
      * @param folder a folder to query
-     * @link http://www.netbeans.org/bugzilla/show_bug.cgi?id=105161
-     * @link http://www.netbeans.org/bugzilla/show_bug.cgi?id=195284
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=105161">#105161</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=195284">#195284</a>
      * @since 1.25
      * @return true if the given folder is excluded from version control, false otherwise
      */

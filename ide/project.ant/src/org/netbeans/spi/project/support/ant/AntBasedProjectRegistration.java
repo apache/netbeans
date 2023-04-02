@@ -58,7 +58,7 @@ public @interface AntBasedProjectRegistration {
      * the project's specific configuration data in <code>nbproject/project.xml</code>
      * (inside <code>&lt;configuration&gt;</code>).
      * 
-     * @return a simple name; <samp>data</samp> is recommended but not required
+     * @return a simple name; <em>data</em> is recommended but not required
      */
     String sharedName() default "data";
 
@@ -67,8 +67,8 @@ public @interface AntBasedProjectRegistration {
      * the project's specific configuration data in <code>nbproject/project.xml</code>
      * (inside <code>&lt;configuration&gt;</code>).
      * 
-     * @return an XML namespace, e.g. <samp>http://www.netbeans.org/ns/j2se-project</samp>
-     *         or <samp>http://www.netbeans.org/ns/j2se-project-private</samp>
+     * @return an XML namespace, e.g. <em>http://www.netbeans.org/ns/j2se-project</em>
+     *         or <em>http://www.netbeans.org/ns/j2se-project-private</em>
      */
     String sharedNamespace();
 
@@ -77,7 +77,7 @@ public @interface AntBasedProjectRegistration {
      * the project's specific configuration data in <code>nbproject/private/private.xml</code>
      * (inside <code>&lt;project-private&gt;</code>).
      * 
-     * @return a simple name; <samp>data</samp> is recommended but not required
+     * @return a simple name; <em>data</em> is recommended but not required
      */
     String privateName() default "data";
 
@@ -86,8 +86,8 @@ public @interface AntBasedProjectRegistration {
      * the project's specific configuration data in <code>nbproject/private/private.xml</code>
      * (inside <code>&lt;project-private&gt;</code>).
      * 
-     * @return an XML namespace, e.g. <samp>http://www.netbeans.org/ns/j2se-project</samp>
-     *         or <samp>http://www.netbeans.org/ns/j2se-project-private</samp>
+     * @return an XML namespace, e.g. <em>http://www.netbeans.org/ns/j2se-project</em>
+     *         or <em>http://www.netbeans.org/ns/j2se-project-private</em>
      */
     String privateNamespace();
 }

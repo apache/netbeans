@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.openide.util.NbBundle;
 import org.netbeans.modules.cloud.oracle.OCINode;

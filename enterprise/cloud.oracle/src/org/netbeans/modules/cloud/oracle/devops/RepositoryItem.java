@@ -21,7 +21,6 @@ package org.netbeans.modules.cloud.oracle.devops;
 import java.util.List;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import org.openide.util.NbBundle;
 
 /**
  *

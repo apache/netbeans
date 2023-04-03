@@ -481,13 +481,12 @@ final class RendererFactory {
             f = new JLabel().getFont();
         }
 
-        StringBuffer buf = new StringBuffer(str.length() * 6); // x -> \u1234
-        char[] chars = str.toCharArray();
+        StringBuilder buf = new StringBuilder(str.length() * 6); // x -> \u1234
+        final int length = str.length();
+        for (int offset = 0; offset < length; ) {
+            final int cp = str.codePointAt(offset);
 
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-
-            switch (c) {
+            switch (cp) {
             // label doesn't interpret tab correctly
             case '\t':
                 buf.append("        "); // NOI18N
@@ -511,19 +510,22 @@ final class RendererFactory {
 
             default:
 
-                if ((null == f) || f.canDisplay(c)) {
-                    buf.append(c);
+                if ((null == f) || f.canDisplay(cp)) {
+                    buf.appendCodePoint(cp);
                 } else {
-                    buf.append("\\u"); // NOI18N
+                    for (char c : Character.toChars(cp)) {
+                        buf.append("\\u"); // NOI18N
 
-                    String hex = Integer.toHexString(c);
+                        String hex = Integer.toHexString(c);
 
-                    for (int j = 0; j < (4 - hex.length()); j++)
-                        buf.append('0');
+                        for (int j = 0; j < (4 - hex.length()); j++)
+                            buf.append('0');
 
-                    buf.append(hex);
+                        buf.append(hex);
+                    }
                 }
             }
+            offset += Character.charCount(cp);
         }
 
         return buf.toString();

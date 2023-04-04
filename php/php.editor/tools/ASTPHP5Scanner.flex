@@ -1289,11 +1289,18 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 
 <ST_NOWDOC> {
-    {NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
-        /* <ST_NOWDOC>{NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
+    {NEWLINE}+{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
+        /* <ST_NOWDOC>{NEWLINE}+{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
         if (isEndHereOrNowdoc(nowdoc)) {
             String yytext = yytext();
-            int newlineLength = yytext.startsWith("\r\n") ? 2 : 1;
+            int newlineLength = 0;
+            for (int i = 0; i < yylength(); i++) {
+                char c = yytext.charAt(i);
+                if (c != '\n' && c != '\r') {
+                    break;
+                }
+                newlineLength++;
+            }
             int back = yylength() - newlineLength;
             yypushback(back);
             updateNowdocBodyInfo();

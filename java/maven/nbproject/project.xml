@@ -648,6 +648,7 @@
                 <!-- danis@netbeans.org -->
                 <friend>org.vaadin.netbeans.maven</friend>
                 <friend>org.netbeans.modules.payara.micro</friend>
+                <friend>org.netbeans.modules.jakarta.transformer</friend>
                 <!-- NetBeans support for Google App Engine -->
                 <friend>org.netbeans.modules.j2ee.appengine</friend>
                 <friend>org.netbeans.modules.maven.util</friend>

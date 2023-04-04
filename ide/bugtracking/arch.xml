@@ -75,7 +75,7 @@
   <p>
       <b>Cookbook and sample implementation:</b><br/>
       For a more detailed description on how to start writting a bugtracking plugin for NetBeans see also the 
-      <a href="http://wiki.netbeans.org/BugtrackingCookbook">Bugtracking Cookbook</a> (sample module attached).
+      <a href="https://netbeans.apache.org/wiki/BugtrackingCookbook">Bugtracking Cookbook</a> (sample module attached).
   </p>
  </answer>
 
@@ -140,9 +140,9 @@
  <answer id="arch-usecases">
   <p>
       The main Bugtracking SPI and API Use Cases are based on:<br/>
-      - the <a href="http://xdesign-tools.cz.oracle.com/projects/netbeans/IssueTracking/">Bugtracking UI spec.</a><br/>      
-      - the <a href="http://wiki.netbeans.org/TaskManagementUseCases">Issue Management Use Cases</a>. 
-      For additional information see also <a href="http://wiki.netbeans.org/TaskDashboardDesignSpec">Tasks Dashboard UI spec</a><br/>
+  <!--     - the <a href="http://xdesign-tools.cz.oracle.com/projects/netbeans/IssueTracking/">Bugtracking UI spec.</a><br/>     --> 
+      - the <a href="https://netbeans.apache.org/wiki/TaskManagementUseCases">Issue Management Use Cases</a>. 
+      For additional information see also <a href="https://netbeans.apache.org/wiki/TaskDashboardDesignSpec">Tasks Dashboard UI spec</a><br/>
   </p>    
       
     <usecase id="1" name="Registration and setup">
@@ -170,7 +170,7 @@
     </usecase>
     
     <p>    
-        See also the more detailed <a href="http://wiki.netbeans.org/BugtrackingAPISPIUseCases">API/SPI requirements.</a>      
+        See also the more detailed <a href="https://netbeans.apache.org/wiki/BugtrackingAPISPIUseCases">API/SPI requirements.</a>      
     </p>
     
  </answer>

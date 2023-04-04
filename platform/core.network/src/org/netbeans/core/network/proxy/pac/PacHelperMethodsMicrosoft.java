@@ -123,7 +123,7 @@ public interface PacHelperMethodsMicrosoft {
      *       </li>
      *   <li>IPv4-mapped IPv6 address (e.g. {@code fe80::5efe:157.59.139.22} 
      *       doesn't seem to be working. This is strange as it is used in the 
-     *       example in <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/gg308482(v=vs.85).aspx">Microsoft's own documentation</a>. 
+     *       example in <a href="https://docs.microsoft.com/windows/win32/winhttp/sortipaddresslist?redirectedfrom=MSDN">Microsoft's own documentation</a>. 
      *       Such an IP literal seems to throw an error which means
      *       the PAC script will not return a result, which means IE will choose 
      *       its default option, namely "DIRECT".

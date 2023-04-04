@@ -558,7 +558,7 @@ public abstract class DataLoader extends SharedClassObject implements DataObject
     /** Get a registered loader from the pool.
      * @param loaderClass exact class of the loader (<em>not</em> its data object representation class)
      * @return the loader instance, or <code>null</code> if there is no such loader registered
-     * @see DataLoaderPool#allLoaders
+     * @see DataLoaderPool#allLoaders()
      */
     public static <T extends DataLoader> T getLoader(Class<T> loaderClass) {
         return findObject(loaderClass, true);

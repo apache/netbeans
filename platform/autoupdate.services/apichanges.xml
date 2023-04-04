@@ -44,8 +44,8 @@
                 <a href="@TOP@/org/netbeans/api/autoupdate/PluginInstaller.html">Simplified API to install</a> additional plugins to avoid dependencies on UI part of the AutoUpdate. CLI and UI implementations
                 for the autoupdate plugs provides their implementations, UI is preferred.
             </description>
-            <class package="org.netbeans.api.autoupdate" name="Plugininstaller"/>
-            <class package="org.netbeans.spi.autoupdate" name="PlugininstallerImplementation"/>
+            <class package="org.netbeans.api.autoupdate" name="PluginInstaller"/>
+            <class package="org.netbeans.spi.autoupdate" name="PluginInstallerImplementation"/>
         </change>
         <change id="unpack200">
             <api name="general"/>

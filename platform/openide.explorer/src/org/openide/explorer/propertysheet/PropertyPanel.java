@@ -1153,7 +1153,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     /*
      * Overridden to fill in the background color, since Synth/GTKLookAndFeel ignores
      * setOpaque(true).
-     * @see http://www.netbeans.org/issues/show_bug.cgi?id=43024
+     * @see https://bz.apache.org/netbeans/show_bug.cgi?id=43024
      */
     @Override
     public void paint(Graphics g) {

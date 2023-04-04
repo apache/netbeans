@@ -27,7 +27,7 @@ import java.io.IOException;
 
 
 /** Clipboard operation providing one kind of paste action. Used by
-* <a href="@org-openide-nodes/org/openide/nodes.Node#getPasteTypes">Node.getPasteTypes</a>.
+* <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getPasteTypes-java.awt.datatransfer.Transferable-">Node.getPasteTypes</a>.
 *
 * @author Petr Hamernik
 */

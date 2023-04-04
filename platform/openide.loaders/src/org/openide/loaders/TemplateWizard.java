@@ -872,7 +872,7 @@ public class TemplateWizard extends WizardDescriptor {
             throws IOException;
         
         /** Initializes the iterator after it is constructed.
-         * The iterator can for example obtain the {@link #targetChooser target chooser}
+         * The iterator can for example obtain the {@link #targetChooser() target chooser}
          * from the wizard if it does not wish to provide its own.
          * @param wiz template wizard that wishes to use the iterator
          */

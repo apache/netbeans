@@ -44,7 +44,7 @@ import org.openide.util.LookupListener;
  * other implementations can be registered to lookup as well.
  * <p>
  * Warning: This class and it's methods may not be used within DataObject recognition in DataLoaders.
- * eg. in <a href="@org-openide-loaders@/org/openide/loaders/MultiFileLoader.html#findPrimaryFile-org-openide.fileystesm.FileObject-">MultiFileLoader</a>
+ * eg. in <a href="@org-openide-loaders@/org/openide/loaders/MultiFileLoader.html#findPrimaryFile-org.openide.filesystems.FileObject-">MultiFileLoader</a>
  *  
  * @author Jesse Glick
  */

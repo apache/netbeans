@@ -513,7 +513,7 @@ public final class NbDocument extends Object {
      * at this time for an editor cookie.
      * <br>
      * The edit to be undone may be composed from instances of various undoable edit types
-     * (see <a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/document/UndoableEditWrapper.html">UndoableEditWrapper</a>).
+     * (see <a href="https://github.com/apache/netbeans/tree/master/ide/editor.document/src/org/netbeans/spi/editor/document/UndoableEditWrapper.java">UndoableEditWrapper</a>).
      *
      * @param <T> type of undoable edit to be retrieved.
      * @param ec editor cookie providing an undo/redo manager.
@@ -531,7 +531,7 @@ public final class NbDocument extends Object {
      * at this time for an editor cookie.
      * <br>
      * The edit to be undone may be composed from instances of various undoable edit types
-     * (see <a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/document/UndoableEditWrapper.html">UndoableEditWrapper</a>).
+     * (see <a href="https://github.com/apache/netbeans/tree/master/ide/editor.document/src/org/netbeans/spi/editor/document/UndoableEditWrapper.java">UndoableEditWrapper</a>).
      *
      * @param <T> type of undoable edit to be retrieved.
      * @param ec editor cookie providing an undo/redo manager.

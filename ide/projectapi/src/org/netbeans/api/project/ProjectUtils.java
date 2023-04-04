@@ -190,7 +190,7 @@ public class ProjectUtils {
      *         subproject graph, regardless of the candidate parameter, or if the
      *         candidate is not null and the master project does not currently have
      *         a cycle but would have one if the candidate were added as a subproject
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=43845">Issue #43845</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=43845">Issue #43845</a>
      */
     public static boolean hasSubprojectCycles(final Project master, final Project candidate) {
         return ProjectManager.mutex().readAccess(new Mutex.Action<Boolean>() {

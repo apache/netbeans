@@ -300,7 +300,7 @@
  <answer id="exec-property">
      <ul>
          <li>
-             <api type="export" group="property" name="url" category="private">Images loaded by <a href="@TOP@/org/openide/util/ImageUtilities.html#loadImage__">ImageUtilities.loadImage</a>
+             <api type="export" group="property" name="url" category="private">Images loaded by <a href="@TOP@/org/openide/util/ImageUtilities.html#loadImage-java.lang.String-">ImageUtilities.loadImage</a>
              defines <code>"url"</code> image property for the loaded image.
              </api>
          </li>

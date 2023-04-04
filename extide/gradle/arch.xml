@@ -291,7 +291,7 @@ publishPlugins&lt;/args&gt;
          </api>
          <api category="devel" group="java.io.File" name="nb-actions-config.xml" type="export">
              <p>
-                 An extension of <a href="#nb-actions-config.xml">nb-actions.config</a> is a per-Configuration action mapping.
+                 An extension of <a href="#java.io.File-nb-actions-config.xml">nb-actions.config</a> is a per-Configuration action mapping.
                  It can be placed in <b>nb-actions-</b><i>configurationID</i><b>.xml</b> with the same format and will apply only
                  if that specific Project Configuration is in effect.
              </p>

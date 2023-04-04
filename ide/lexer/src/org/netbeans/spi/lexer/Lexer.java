@@ -47,16 +47,16 @@ import org.netbeans.api.lexer.Token;
  * Testing of newly written lexers can be performed in several ways.
  * The most simple way is to test batch lexing first
  * (see e.g.
- * <a href="http://www.netbeans.org/source/browse/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/Attic/SimpleLexerBatchTest.java">
+ * <a href="https://github.com/apache/netbeans/tree/master/ide/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/SimpleLexerBatchTest.java">
  * org.netbeans.lib.lexer.test.simple.SimpleLexerBatchTest</a> in lexer module tests).
  * <br>
  * Then an "incremental" behavior of the new lexer can be tested
- * (see e.g. <a href="http://www.netbeans.org/source/browse/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/Attic/SimpleLexerIncTest.java">
+ * (see e.g. <a href="https://github.com/apache/netbeans/tree/master/ide/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/SimpleLexerIncTest.java">
  * org.netbeans.lib.lexer.test.simple.SimpleLexerIncTest</a>).
  * <br>
  * Finally the lexer can be tested by random tests that randomly insert and remove
  * characters from the document
- * (see e.g. <a href="http://www.netbeans.org/source/browse/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/Attic/SimpleLexerRandomTest.java">
+ * (see e.g. <a href="https://github.com/apache/netbeans/tree/master/ide/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/SimpleLexerRandomTest.java">
  * org.netbeans.lib.lexer.test.simple.SimpleLexerRandomTest</a>).
  * <br>
  * Once these tests pass the lexer can be considered stable.

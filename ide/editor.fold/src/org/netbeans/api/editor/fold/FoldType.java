@@ -268,7 +268,7 @@ public final class FoldType {
     
     /**
      * Checks whether the fold can act as the 'other' type.
-     * This check respect parent relationship (see {@link #parent}). The method returns true,
+     * This check respect parent relationship (see {@link #parent()}). The method returns true,
      * if semantics, operations, settings,... applicable to 'other' could be also applied on
      * this FoldType.
      * 

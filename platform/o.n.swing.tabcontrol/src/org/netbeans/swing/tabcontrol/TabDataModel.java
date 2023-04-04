@@ -183,7 +183,7 @@ public interface TabDataModel {
      * the tooltip property of the passed TabData object is not used to test
      * equality.
      *
-     * See also <a href="@org-netbeans-core-windows@/org/netbeans/core/windows/ui/TabData.html#equals()">org.netbeans.core.windows.ui.TabData.equals()</a><BR>
+     * @see TabData#equals(java.lang.Object)
      */
     public int indexOf(TabData td);
 

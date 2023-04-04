@@ -28,7 +28,7 @@ import org.openide.util.Lookup;
  * Provides access to standard file locations.
  * <div class="nonnormative">
  * This class should be used for limited purposes only. You might instead want to use:<ul>
- * <li><a href="@org-openide-filesystems@/org/openide/filesystems/FileUtil.html#getConfigFile(java.lang.String)"><code>FileUtil.getConfigFile</code></a>
+ * <li><a href="@org-openide-filesystems@/org/openide/filesystems/FileUtil.html#getConfigFile-java.lang.String-"><code>FileUtil.getConfigFile</code></a>
  * to find a file declared in an XML layer or created or overridden in the {@code config} subdirectory of the user directory.
  * <li>{@link InstalledFileLocator} to find modules installed as part of an NBM.
  * <li>{@code someClass.getProtectionDomain().getCodeSource().getLocation()} to find resources inside a module class loader.

@@ -108,7 +108,7 @@ import org.openide.util.NbBundle;
  *       <td>???</td>
  *   </tr>
  *   <tr>
- *       <td class="tablersh">Support for <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/gg308476(v=vs.85).aspx">getClientVersion()</a></td>
+ *       <td class="tablersh">Support for <a href="https://docs.microsoft.com/windows/win32/winhttp/getclientversion?redirectedfrom=MSDN">getClientVersion()</a></td>
  *       <td>Yes<br>(returns "1.0")</td>
  *       <td>No</td>
  *       <td>No</td>

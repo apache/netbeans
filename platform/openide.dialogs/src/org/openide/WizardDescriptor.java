@@ -58,7 +58,7 @@ import org.openide.util.*;
  * <p><b>Related Tutorial</b>
  *
  * <ul>
- * <li><a href="http://platform.netbeans.org/tutorials/nbm-wizard.html">NetBeans Wizard Module Tutorial</a>
+ * <li><a href="https://netbeans.apache.org/tutorials/nbm-wizard.html">NetBeans Wizard Module Tutorial</a>
  * <li><a href="doc-files/wizard-guidebook.html">Wizard Guide</a>
  * </ul>
  *

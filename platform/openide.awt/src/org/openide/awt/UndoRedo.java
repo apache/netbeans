@@ -38,7 +38,7 @@ import org.openide.util.Utilities;
  * <ul>
  *   <li><a href="@org-openide-actions@/org/openide/actions/UndoAction.html">org.openide.actions.UndoAction</a></li>
  *   <li><a href="@org-openide-actions@/org/openide/actions/RedoAction.html">org.openide.actions.RedoAction</a></li>
- *   <li><a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getUndoRedo()">org.openide.windows.TopComponent.getUndoRedo()</a></li>
+ *   <li><a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getUndoRedo--">org.openide.windows.TopComponent.getUndoRedo()</a></li>
  * </ul> 
  *
  * @author Jaroslav Tulach

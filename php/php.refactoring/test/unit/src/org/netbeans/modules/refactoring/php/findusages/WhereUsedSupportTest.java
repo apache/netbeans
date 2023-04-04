@@ -372,4 +372,16 @@ public class WhereUsedSupportTest extends FindUsagesTestBase {
         findUsages("enum EnumB: string implements Inter^faceB {");
     }
 
+    public void testGH4382_01() throws Exception {
+        findUsages("    public function __constr^uct() {");
+    }
+
+    public void testGH4382_02() throws Exception {
+        findUsages("$alias = new ExampleAli^as();");
+    }
+
+    public void testGH4382_03() throws Exception {
+        findUsages("$example = new Examp^le();");
+    }
+
 }

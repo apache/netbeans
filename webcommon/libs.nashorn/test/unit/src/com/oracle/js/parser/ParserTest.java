@@ -274,6 +274,15 @@ public class ParserTest {
         assertParses(13, "const a = <table>{/* Test */ /* Test */ /* Test */}{ a = 3 }</table>");
     }
 
+    @Test
+    public void testBindingPattern() {
+        assertParses(13, "const buildTerserOptions = ({\n"
+                + "  ecma\n"
+                + "} = {}) => ({\n"
+                + "  ecma\n"
+                + "});");
+    }
+
     private Predicate<Node> functionNodeWithName(String name) {
         return n -> n instanceof FunctionNode && name.equals(((FunctionNode) n).getName());
     }

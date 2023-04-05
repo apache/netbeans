@@ -236,6 +236,14 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/nowdoc_06.php");
     }
 
+    public void testIssueGH4345_01() throws Exception {
+        checkErrors("testfiles/parser/issueGH4345_01.php");
+    }
+
+    public void testIssueGH4345_02() throws Exception {
+        checkErrors("testfiles/parser/issueGH4345_02.php");
+    }
+
     // HEREDOC
     public void testNetBeans1563_01() throws Exception {
         checkErrors("testfiles/parser/netbeans1563_01.php");

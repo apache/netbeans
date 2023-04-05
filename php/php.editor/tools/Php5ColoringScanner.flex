@@ -1292,8 +1292,8 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
 }
 
 <ST_PHP_NOWDOC> {
-    {NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
-        /* <ST_PHP_NOWDOC>{NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
+    {NEWLINE}+{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
+        /* <ST_PHP_NOWDOC>{NEWLINE}+{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
         if (isEndNowdoc()) {
             String yytext = yytext();
             int trailingNewlineOffset = (yytext.endsWith("\n") || yytext.endsWith("\r")) ? 2 : 0;

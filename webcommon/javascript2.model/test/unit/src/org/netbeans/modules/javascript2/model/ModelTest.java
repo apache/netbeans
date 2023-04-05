@@ -277,4 +277,8 @@ public class ModelTest extends ModelTestBase {
         // and regenerated.
         checkModel("testfiles/model/complexPrototype.js");
     }
+
+    public void testObjectNameMatchingNestedFunction() throws Exception {
+        checkModel("testfiles/model/objectNameMatchingNestedFunction.js");
+    }
 }

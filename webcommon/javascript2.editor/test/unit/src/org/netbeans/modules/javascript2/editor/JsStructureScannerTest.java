@@ -763,4 +763,7 @@ public class JsStructureScannerTest extends JsTestBase {
         checkStructure("testfiles/structure/issueGH4262.js");
     }
 
+    public void testObjectNameMatchingNestedFunction() throws Exception {
+        checkStructure("testfiles/structure/objectNameMatchingNestedFunction.js");
+    }
 }

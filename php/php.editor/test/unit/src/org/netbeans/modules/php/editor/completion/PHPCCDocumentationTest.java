@@ -338,6 +338,14 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5347.php", "un^defined();", true);
     }
 
+    public void testIssueGH5355_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5355.php", "$this->testMetho^d(null);", false, "");
+    }
+
+    public void testIssueGH5355_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5355.php", "testFunctio^n(null);", false, "");
+    }
+
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");

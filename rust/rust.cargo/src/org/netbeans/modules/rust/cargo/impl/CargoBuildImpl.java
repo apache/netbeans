@@ -39,10 +39,10 @@ import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.IOProvider;
-import org.openide.windows.InputOutput;
 import org.netbeans.modules.rust.cargo.api.Cargo;
 import org.netbeans.modules.rust.cargo.api.RustPackage;
+import org.netbeans.modules.rust.cargo.output.RustConsole;
+import org.netbeans.modules.rust.cargo.output.RustErrorHyperlinkConvertorFactory;
 import org.netbeans.modules.rust.options.api.CargoOptions;
 import org.openide.LifecycleManager;
 import org.openide.util.Exceptions;
@@ -66,10 +66,10 @@ public class CargoBuildImpl implements Cargo {
 
         private final CargoTOML cargotoml;
         private final CargoCommand command;
-        private final InputOutput console;
+        private final RustConsole console;
         private final String[] options;
 
-        CargoProcess(CargoTOML cargotoml, CargoCommand command, String[] options, InputOutput console) {
+        CargoProcess(CargoTOML cargotoml, CargoCommand command, String[] options, RustConsole console) {
             this.cargotoml = cargotoml;
             this.command = command;
             this.console = console;
@@ -93,7 +93,7 @@ public class CargoBuildImpl implements Cargo {
             pb.setExecutable(cargo.toString());
             pb.setArguments(arguments);
 
-            console.getOut().println(String.format("%n$ cargo %s", String.join(" ", arguments))); // NOI18N
+            console.printInformationMessage(String.format("%n$ cargo %s", String.join(" ", arguments))); // NOI18N
 
             return pb.call();
         }
@@ -111,11 +111,14 @@ public class CargoBuildImpl implements Cargo {
         private final CargoTOML cargotoml;
         private final CargoCommand[] commands;
         private final String[] options;
+        private final RequestProcessor requestProcessor;
+        private RustConsole console;
 
-        SequentialCargoProcesses(CargoTOML cargotoml, CargoCommand[] commands, String[] options) {
+        SequentialCargoProcesses(RequestProcessor requestProcessor, CargoTOML cargotoml, CargoCommand[] commands, String[] options) {
             this.cargotoml = cargotoml;
             this.commands = commands;
             this.options = options;
+            this.requestProcessor = requestProcessor;
         }
 
         @Override
@@ -127,47 +130,46 @@ public class CargoBuildImpl implements Cargo {
             // Get a proper console for the input/output
             String projectName = cargotoml.getPackageName();
             String commandNames = Arrays.stream(commands).map(CargoCommand::getDisplayName).collect(Collectors.joining(",")); // NOI18N
-            String ioName = String.format("%s (%s)", projectName, commandNames); // NOI18N
-            InputOutput console = IOProvider.getDefault().getIO(ioName, false);
-            console.select();
+            String consoleTabName = String.format("%s (%s)", projectName, commandNames); // NOI18N
 
-            File workingDirectory = FileUtil.toFile(cargotoml.getFileObject()).getParentFile();
-            console.getOut().format("# %s %s%n", // NOI18N
-                    NbBundle.getMessage(CargoBuildImpl.class, "MSG_WORKING_DIRECTORY"), 
-                    workingDirectory.getAbsolutePath()); 
-            console.getOut().format("# %s %s%n",  // NOI18N
-                    NbBundle.getMessage(CargoBuildImpl.class, "MSG_CARGO_PATH"), 
-                    cargo); 
+            console = new RustConsole(cargotoml, consoleTabName, this::run);
 
             ExecutionDescriptor ed = new ExecutionDescriptor()
-                    .inputOutput(IOProvider.getDefault().getIO(ioName, false))
+                    .controllable(false)
+                    .inputOutput(console.getInputOutput())
                     .inputVisible(true)
                     .frontWindow(false)
                     .frontWindowOnError(true)
-                    .noReset(true)
                     .showProgress(false)
-                    .controllable(true);
+                    .noReset(true)
+                    .errConvertorFactory(new RustErrorHyperlinkConvertorFactory(cargotoml, console.getInputOutput()))
+                    ;
 
             int resultCode = 0;
 
             for (CargoCommand command : commands) {
                 CargoProcess process = new CargoProcess(cargotoml, command, options, console);
-                ExecutionService service = ExecutionService.newService(process, ed, ioName);
+                ExecutionService service = ExecutionService.newService(process, ed, consoleTabName);
                 Future<Integer> resultCodeFuture = service.run();
                 try {
                     resultCode = resultCodeFuture.get();
                 } catch (Exception e) {
-                    console.getErr().println(String.format("Cargo execution failed: %s%n", e.getMessage()));
+                    console.printErrorMessage(String.format("Cargo execution failed: %s%n", e.getMessage()));
                     Exceptions.printStackTrace(e);
                 }
                 if (resultCode != 0) {
-                    console.getErr().println(String.format("Command \"cargo %s\" failed with exit status %d", // NOI18N
+                    console.printErrorMessage(String.format("Command \"cargo %s\" failed with exit status %d", // NOI18N
                             String.join(" ", command.arguments),
                             resultCode));
                     break;
                 }
             }
             return resultCode;
+        }
+
+        public void run() {
+            LifecycleManager.getDefault().saveAll();
+            requestProcessor.submit(this);
         }
 
     }
@@ -190,10 +192,10 @@ public class CargoBuildImpl implements Cargo {
         if (cargo == null) {
             return;
         }
-        // Let's save stuff just in case
-        LifecycleManager.getDefault().saveAll();
-        requestProcessor.submit(new SequentialCargoProcesses(cargotoml, commands, options));
+        SequentialCargoProcesses sequentialCommands = new SequentialCargoProcesses(requestProcessor, cargotoml, commands, options);
+        sequentialCommands.run();
     }
+
 
     /**
      * Runs `cargo search [text] --limit 15 --color never`

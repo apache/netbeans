@@ -36,6 +36,7 @@ public interface Cargo {
      * @param cargotoml The Cargo.toml affected by the cargo.
      * @param commands The array of cargo commands, to be executed one after
      * another.
+     * @param options optional list of options (verbose, for instance).
      * @throws IOException If a problem happens.
      */
     public void cargo(CargoTOML cargotoml, CargoCommand[] commands, String... options) throws IOException;

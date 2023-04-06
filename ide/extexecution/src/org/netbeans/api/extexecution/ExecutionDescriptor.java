@@ -135,7 +135,7 @@ public final class ExecutionDescriptor {
      * <p>
      * If configured value is not <code>null</code> values configured via
      * methods {@link #controllable(boolean)}, {@link #rerunCondition(RerunCondition)}
-     * and {@link #getOptionsPath()} are ignored by {@link ExecutionService}.
+     * and {@code #getOptionsPath()} are ignored by {@link ExecutionService}.
      * <p>
      * The default (not configured) value is <code>null</code>.
      * <p>

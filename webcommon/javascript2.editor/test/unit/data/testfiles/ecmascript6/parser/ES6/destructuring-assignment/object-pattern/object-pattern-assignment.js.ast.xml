@@ -1,0 +1,149 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='86'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='85'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='85'>
+      <BinaryNode type='ASSIGN' start='1' end='83'>
+        <isAssignment/>
+        <!-- BinaryNode lhs -->
+        <ObjectNode start='1' end='79'>
+          <!-- ObjectNode Elements -->
+          <PropertyNode name='a' start='7' end='8'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='7' end='8'>
+              <name>a</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <IdentNode start='7' end='8'>
+              <name>a</name>
+            </IdentNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+          <PropertyNode name='a' start='14' end='17'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='14' end='15'>
+              <name>a</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <IdentNode start='16' end='17'>
+              <name>a</name>
+            </IdentNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+          <PropertyNode name='a' start='23' end='28'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='23' end='24'>
+              <name>a</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <BinaryNode type='ASSIGN' start='25' end='28'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <IdentNode start='25' end='26'>
+                <name>a</name>
+              </IdentNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='27' end='28'>
+                <name>a</name>
+              </IdentNode>
+            </BinaryNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+          <PropertyNode name='a' start='34' end='41'>
+            <isComputed/>
+            <!-- PropertyNode Key -->
+            <IdentNode start='35' end='36'>
+              <name>a</name>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <ObjectNode start='38' end='41'>
+              <!-- ObjectNode Elements -->
+              <PropertyNode name='a' start='39' end='40'>
+                <!-- PropertyNode Key -->
+                <IdentNode start='39' end='40'>
+                  <name>a</name>
+                  <isPropertyName/>
+                </IdentNode>
+                <!-- PropertyNode Value -->
+                <IdentNode start='39' end='40'>
+                  <name>a</name>
+                </IdentNode>
+                <!-- PropertyNode Decorators -->
+              </PropertyNode>
+            </ObjectNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+          <PropertyNode name='a' start='47' end='63'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='47' end='48'>
+              <name>a</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <IndexNode start='49' end='63'>
+              <isIndex/>
+              <!-- IndexNode Base -->
+              <CallNode start='49' end='60'>
+                <!-- CallNode Arguments -->
+                <!-- CallNode Function -->
+                <IdentNode start='49' end='58'>
+                  <name>some_call</name>
+                </IdentNode>
+              </CallNode>
+              <!-- IndexNode Index -->
+              <IdentNode start='61' end='62'>
+                <name>a</name>
+              </IdentNode>
+            </IndexNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+          <PropertyNode name='a' start='69' end='77'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='69' end='70'>
+              <name>a</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <AccessNode property='a' start='71' end='77'>
+              <!-- AccessNode Base -->
+              <IdentNode start='71' end='75'>
+                <name>this</name>
+              </IdentNode>
+            </AccessNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+        </ObjectNode>
+        <!-- BinaryNode rhs -->
+        <NumberLiteralNode value='0' start='82' end='83'/>
+      </BinaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

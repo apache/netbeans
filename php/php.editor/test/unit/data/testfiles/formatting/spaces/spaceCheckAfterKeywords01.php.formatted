@@ -13,7 +13,6 @@ class /* fjlajdfla */ ClassName {
     public function test() {
         return "test";
     }
-
 }
 
 $lambda = function ($param) use ($parent) {

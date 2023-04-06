@@ -43,9 +43,9 @@ import org.netbeans.spi.lexer.LanguageHierarchy;
 /**
  * Language describes a set of token ids
  * that comprise the given language.
- * <br/>
+ * <br>
  * Each language corresponds to a certain mime-type.
- * <br/>
+ * <br>
  * An input source may be lexed by using an existing language
  * - see {@link TokenHierarchy} which is an entry point into the Lexer API.
  * <br>
@@ -55,7 +55,7 @@ import org.netbeans.spi.lexer.LanguageHierarchy;
  *
  * <p>
  * The language cannot be instantiated directly.
- * <br/>
+ * <br>
  * Instead it should be obtained from {@link LanguageHierarchy#language()}
  * on an existing language hierarchy.
  *
@@ -106,14 +106,14 @@ public final class Language<T extends TokenId> {
     
     /**
      * Lists of token categories for particular id.
-     * <br/>
+     * <br>
      * It's a list because it is ordered (primary category is first).
      */
     private List<String>[] id2cats;
     
     /**
      * Lists of non-primary token categories for particular id.
-     * <br/>
+     * <br>
      * It's a list because the order might be important
      * (e.g. for syntax coloring information resolving) although
      * the present SPI does not utilize that.
@@ -132,7 +132,7 @@ public final class Language<T extends TokenId> {
      * that reads data from the <code>Editors</code> folder on the system filesystem.
      * Therefore Netbeans modules can register their <code>Language</code>s
      * in MimeLookup as any other mime-type related service.
-     * 
+     * </div>
      * @param mimeType The mime type of a language that you want to find.
      * @return The <code>Language</code> registered
      *         for the given <code>mimeType</code>. Null is returned for null mimeType.
@@ -229,7 +229,7 @@ public final class Language<T extends TokenId> {
     
     /**
      * Get unmodifiable set of ids contained in this language.
-     * <br/>
+     * <br>
      * An iterator over the set returns the ids sorted by their ordinals.
      *
      * @return unmodifiable set of ids contained in this language.
@@ -362,7 +362,7 @@ public final class Language<T extends TokenId> {
     /**
      * Get list of non-primary token categories (not containing the primary category)
      * for the particular token id.
-     * <br/>
+     * <br>
      * If the token id has no primary category defined then the result
      * of this method is equal to {@link #tokenCategories(TokenId)}.
      *
@@ -455,11 +455,11 @@ public final class Language<T extends TokenId> {
      * for the particular temporarily collected list of categories.
      *
      * @param catMapsList non-null list of cached maps.
-     *  <br/>
+     *  <br>
      *  List.get(0) is a Map[category, list-containing-[category]].
-     *  <br/>
+     *  <br>
      *  List.get(1) is a Map[category1, Map[category2, list-containing-[category1;category2]]].
-     *  <br/>
+     *  <br>
      *  etc.
      *
      * @param idCats non-null temporarily collected list of categories for the particular id.

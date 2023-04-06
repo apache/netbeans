@@ -136,6 +136,5 @@ class Https_Institution_Get_Recruiters extends Subject implements IBuilder, IXHT
     public function toXHTML() {
         $this->mode->modeToXHTML();
     }
-
 }
 ?>

@@ -126,7 +126,6 @@ public interface BracesMatcher {
      * <p>It is essential for all implementations to respond when thread running
      * this method is interrupted and abort the task and return immediately. This can
      * be done simply by checking the thread's status like in the code below.
-     * <p>
      * 
      * <pre>
      * if (MatcherContext.isTaskCanceled()) {
@@ -158,7 +157,7 @@ public interface BracesMatcher {
          * of the origin will be passed in, but the implementation should be prepared to
          * handle (or ignore) each of the starting offsets reported by {@link #findOrigin()} or 
          * {@link #findMatches()}.
-         * <p/>
+         * <p>
          * Note: the document is <b>not read locked</b> by the caller. If the passed position does
          * not exist in the document, or seems obsolete, the SPI should return {@code null}.
          * 

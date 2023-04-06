@@ -41,11 +41,11 @@ import org.openide.util.NbBundle;
  *
  * <br><br>
  * <b>How to use it:</b>
- * <pre style="background-color: rgb(255, 255, 153);">
+ * <pre style="background-color: rgb(255, 255, 153);"><code>
  *    DebuggerManager.addBreakpoint (MethodBreakpoint.create (
  *        "examples.texteditor.Ted*",
- *        "<init>
- *    ));</pre>
+ *        "&lt;init&gt;
+ *    ));</code></pre>
  * This breakpoint stops when some initializer of class Ted or innercalsses is
  * called.
  *

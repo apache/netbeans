@@ -65,7 +65,7 @@ public class JavadocAndSourceRootDetection {
     /**
      * Finds Javadoc root inside of given folder.
      *
-     * @param fo base folder to start search in; routine will traverse 5 folders
+     * @param baseFolder base folder to start search in; routine will traverse 5 folders
      *  deep before giving up; cannot be null; must be folder
      * @return found Javadoc root or null if none found
      */

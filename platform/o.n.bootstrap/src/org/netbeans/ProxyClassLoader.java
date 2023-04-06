@@ -106,7 +106,7 @@ public class ProxyClassLoader extends ClassLoader {
          
     /**
      * Loads the class with the specified name.  The implementation of
-     * this method searches for classes in the following order:<p>
+     * this method searches for classes in the following order:
      * <ol>
      * <li> Looks for a known package and pass the loading to the ClassLoader 
             for that package. 
@@ -450,7 +450,6 @@ public class ProxyClassLoader extends ClassLoader {
     /**
      * Faster way to find a package.
      * @param name package name in org.netbeans.modules.foo format
-     * @param sname package name in org/netbeans/modules/foo/ format
      * @param recurse whether to also ask parents
      * @return located package, or null
      */

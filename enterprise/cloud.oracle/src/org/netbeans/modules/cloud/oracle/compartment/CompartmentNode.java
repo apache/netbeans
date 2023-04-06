@@ -25,7 +25,6 @@ import com.oracle.bmc.identity.responses.ListCompartmentsResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import static org.netbeans.modules.cloud.oracle.OCIManager.getDefault;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;

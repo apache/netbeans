@@ -55,6 +55,8 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import org.openide.util.lookup.ServiceProvider;
 
+import static javax.lang.model.element.ElementKind.PACKAGE;
+
 @ServiceProvider(service = Processor.class)
 public class NbBundleProcessor extends AbstractProcessor {
 
@@ -294,23 +296,27 @@ public class NbBundleProcessor extends AbstractProcessor {
 
     private String findPackage(Element e) {
         switch (e.getKind()) {
-        case PACKAGE:
-            return ((PackageElement) e).getQualifiedName().toString();
-        default:
-            return findPackage(e.getEnclosingElement());
+            case PACKAGE:
+                return ((PackageElement) e).getQualifiedName().toString();
+            default:
+                return findPackage(e.getEnclosingElement());
         }
     }
 
     private String findCompilationUnitName(Element e) {
         switch (e.getKind()) {
-        case PACKAGE:
-            return "package-info";
-        case CLASS:
-        case INTERFACE:
-        case ENUM:
-        case ANNOTATION_TYPE:
-            switch (e.getEnclosingElement().getKind()) {
             case PACKAGE:
+                return "package-info";
+            case CLASS:
+            case INTERFACE:
+            case ENUM:
+            case ANNOTATION_TYPE:
+                if (e.getEnclosingElement().getKind() == PACKAGE) {
+                    return e.getSimpleName().toString();
+                }
+        }
+        if ("RECORD".equals(e.getKind().name())) {  //TODO JDK 11 migration -> merge with switch above
+            if (e.getEnclosingElement().getKind() == PACKAGE) {
                 return e.getSimpleName().toString();
             }
         }

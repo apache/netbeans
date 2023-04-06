@@ -218,12 +218,12 @@ public abstract class Line extends Annotatable implements Serializable {
 
     /** Get the line number. The last condition in following should
     * always be true:
-    * <PRE>
+    * <PRE>{@code 
     *   Line.Set lineSet = <line set>
     *   Line l = <some line from line set lineSet>
     *
     *   l.equals (lineSet.getCurrent (l.getLineNumber ()))
-    * </PRE>
+    * }</PRE>
     *
     * @return current line number (may change as text is edited) (starting at 0)
     */

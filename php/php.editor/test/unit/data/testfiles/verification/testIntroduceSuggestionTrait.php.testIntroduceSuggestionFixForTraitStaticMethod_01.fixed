@@ -16,7 +16,6 @@ trait TraitA {
     public static function staticMethod1() {
         
     }
-
 }
 
 trait TraitB {

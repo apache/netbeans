@@ -35,7 +35,7 @@ import java.util.Set;
  * When serialized only keeps "weak" reference to this workspace does not
  * stores the content of the workspace (it is responsibility of window manager).
  *
- * <p><p>
+ * <p>
  * <b><font color="red"><em>Important note: Do not provide implementation of this interface unless you are window system provider!</em></font></b>
  *
  * @author Jaroslav Tulach

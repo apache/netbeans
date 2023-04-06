@@ -270,7 +270,7 @@ public class CssFileModel {
                                 throw new IllegalStateException();
                         }
 
-                        image = node.image().subSequence(start_offset_diff, node.image().length());
+                        image = node.unescapedImage().substring(start_offset_diff);
                         range = new OffsetRange(node.from() + start_offset_diff, node.to());
 
                         //check if the real start offset can be translated to the original offset
@@ -296,7 +296,7 @@ public class CssFileModel {
 
             Node token = NodeUtil.getChildTokenNode(resourceIdentifier, CssTokenId.STRING);
             if (token != null) {
-                CharSequence image = token.image();
+                CharSequence image = token.unescapedImage();
                 boolean quoted = WebUtils.isValueQuoted(image);
                 files.add(createEntry(WebUtils.unquotedValue(image),
                         new OffsetRange(token.from() + (quoted ? 1 : 0),
@@ -311,7 +311,7 @@ public class CssFileModel {
             //@import url("another.css");
             Node token = NodeUtil.getChildTokenNode(resourceIdentifier, CssTokenId.URI);
             if (token != null) {
-                Matcher m = Css3Utils.URI_PATTERN.matcher(token.image());
+                Matcher m = Css3Utils.URI_PATTERN.matcher(token.unescapedImage());
                 if (m.matches()) {
                     int groupIndex = 1;
                     String content = m.group(groupIndex);

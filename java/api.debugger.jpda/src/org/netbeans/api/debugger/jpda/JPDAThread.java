@@ -109,7 +109,7 @@ public interface JPDAThread {
     /**
      * Returns the operation that is being currently executed on this thread.
      * @return The current operation, or <CODE>null</CODE>.
-     * @see {@link CallStackFrame#getCurrentOperation}
+     * @see CallStackFrame#getCurrentOperation(String)
      */
     public abstract Operation getCurrentOperation();
     

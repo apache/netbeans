@@ -2108,10 +2108,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 print(", ");
             }
         }
-        print(") ");
-        if (tree.var != null) {
-            print(tree.var.name.toString());
-        }
+        print(")");
     }
 
     /**************************************************************************

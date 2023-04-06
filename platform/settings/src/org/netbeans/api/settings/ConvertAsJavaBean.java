@@ -47,7 +47,7 @@ import java.lang.annotation.Target;
  * starts to listen on existing objects and in case a property change
  * is delivered, the new state of the object is persisted again.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 1.20
  */
 @Retention(RetentionPolicy.SOURCE)

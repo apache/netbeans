@@ -38,7 +38,7 @@ public @interface TriggerOptions {
      * Causes the trigger even on code which is locked for the user. Specifically
      * will trigger the hint on guarded block code, which the user can not modify.
      * However some supplemental information can be collected this way by the hint.
-     * <p/>
+     * <p>
      * Hint do not act on guarded blocks by default.
      */
     public static final String PROCESS_GUARDED = "processGuarded"; // NOI18N

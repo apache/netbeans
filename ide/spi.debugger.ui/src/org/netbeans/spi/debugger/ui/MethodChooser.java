@@ -82,7 +82,7 @@ import org.openide.windows.TopComponent;
  *
  * <p>Method chooser does not use any special highlighting for the background of the
  * area where the selection takes place. If it is required it can be done by attaching
- * instances of {@link Annotation} to the proper source file's lines. These annotation should
+ * instances of {@link org.openide.text.Annotation} to the proper source file's lines. These annotation should
  * be added before calling {@link #showUI} and removed after calling {@link #releaseUI}.
  *
  * <p>To display the method chooser's ui correctly, it is required to register

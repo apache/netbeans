@@ -28,10 +28,10 @@ import org.netbeans.spi.editor.mimelookup.MimeLocation;
  * There can be multiple providers for a MIME type - some advanced constructions in
  * the language can be recognized / folded by extension modules. Consider Java vs.
  * Bean Patterns, or XML vs. Spring bean config.
- * <p/>
+ * <p>
  * FoldTypes will be collected and some pieces of UI can present the folds, such 
  * as Auto-folding options.
- * <p/>
+ * <p>
  * The Provider may specify inheritable=true; in that case the contributed FoldTypes
  * will become available for more specific MIME types, too. For example, if a FoldTypeProvider
  * for text/xml registers FoldTypes TAG and COMMENT with inheritable=true,

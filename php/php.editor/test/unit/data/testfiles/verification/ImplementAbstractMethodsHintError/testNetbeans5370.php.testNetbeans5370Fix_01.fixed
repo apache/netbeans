@@ -24,7 +24,6 @@ class TestClass1 extends TestAbstractClass
     public function test(): array {
         
     }
-
 }
 
 abstract class TestAbstractClass

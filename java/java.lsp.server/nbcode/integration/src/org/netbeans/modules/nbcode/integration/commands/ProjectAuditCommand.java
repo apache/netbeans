@@ -40,6 +40,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCIProfile;
 import org.netbeans.modules.cloud.oracle.adm.AuditOptions;
+import org.netbeans.modules.cloud.oracle.adm.AuditResult;
 import org.netbeans.modules.cloud.oracle.adm.ProjectVulnerability;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
@@ -63,16 +64,26 @@ public class ProjectAuditCommand extends CodeActionsProvider {
     /**
      * Force executes the project audit using the supplied compartment and knowledgebase IDs.
      */
-    private static final String COMMAND_EXECUTE_AUDIT = "nbls.gcn.projectAudit.execute"; // NOI18N
+    private static final String COMMAND_EXECUTE_AUDIT = "nbls.projectAudit.execute"; // NOI18N
+    /**
+     * @deprecated will be removed in NB 19
+     */
+    private static final String COMMAND_EXECUTE_AUDIT_OLD = "nbls.gcn.projectAudit.execute"; // NOI18N
     
     /**
      * Displays the audit from the Knowledgebase and compartment.
      */
-    private static final String COMMAND_LOAD_AUDIT = "nbls.gcn.projectAudit.display"; // NOI18N
+    private static final String COMMAND_LOAD_AUDIT = "nbls.projectAudit.display"; // NOI18N
+    /**
+     * @deprecated will be removed in NB 19
+     */
+    private static final String COMMAND_LOAD_AUDIT_OLD = "nbls.gcn.projectAudit.display"; // NOI18N
     
     public static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
             COMMAND_EXECUTE_AUDIT,
-            COMMAND_LOAD_AUDIT
+            COMMAND_LOAD_AUDIT,
+            COMMAND_EXECUTE_AUDIT_OLD,
+            COMMAND_LOAD_AUDIT_OLD
     ));
     
     @Override
@@ -80,7 +91,11 @@ public class ProjectAuditCommand extends CodeActionsProvider {
         return Collections.emptyList();
     }
     
-    private final Gson gson = new Gson();
+    private final Gson gson;
+
+    public ProjectAuditCommand() {
+        gson = new Gson();
+    }
 
     @NbBundle.Messages({
         "# {0} - project name",
@@ -94,7 +109,7 @@ public class ProjectAuditCommand extends CodeActionsProvider {
         }
         
         FileObject f = Utils.extractFileObject(arguments.get(0), gson);
-        Project p = FileOwnerQuery.getOwner(f);
+        final Project p = FileOwnerQuery.getOwner(f);
         if (p == null) {
             throw new IllegalArgumentException("Not part of a project " + f);
         }
@@ -146,31 +161,70 @@ public class ProjectAuditCommand extends CodeActionsProvider {
             auditWithProfile = OCIManager.getDefault().getActiveProfile();
         }
         
+        AuditOptions auditOpts = AuditOptions.makeNewAudit().useSession(auditWithProfile).setAuditName(preferredName);
+        
+        if (options.has("returnData") && options.get("returnData").isJsonPrimitive()) {
+            auditOpts.setReturnData(options.getAsJsonPrimitive("returnData").getAsBoolean());
+        }
+        if (options.has("displaySummary") && options.get("displaySummary").isJsonPrimitive()) {
+            auditOpts.setDisplaySummary(options.getAsJsonPrimitive("displaySummary").getAsBoolean());
+        }
+        
+        if (options.has("suppressErrors") && options.get("suppressErrors").isJsonPrimitive()) {
+            auditOpts.setSupressErrors(options.getAsJsonPrimitive("suppressErrors").getAsBoolean());
+        }
+        
+        AuditResult[] refR = { null };
+        Throwable[] exc = { null };
         return OCIManager.usingSession(auditWithProfile, () -> v.findKnowledgeBase(knowledgeBase).
                 exceptionally(th -> {
-                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.ERR_KnowledgeBaseSearchFailed(fn, th.getMessage()),
-                            NotifyDescriptor.ERROR_MESSAGE));
+                    if (!auditOpts.isSupressErrors()) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.ERR_KnowledgeBaseSearchFailed(fn, th.getMessage()),
+                                NotifyDescriptor.ERROR_MESSAGE));
+                    } else {
+                        exc[0] = th;
+                    }
                     return null;
+                    /*
+                    if (auditOpts.isReturnData()) {
+                        
+                        //refR[0] = new AuditResult(p, fn, th.getMessage(), (Exception)th);
+                    }
+                    return null;
+                    */
                 }).thenCompose((kb) -> {
-            if (kb == null) {
-                return CompletableFuture.completedFuture(null);
+            if (exc[0] != null) {
+                CompletableFuture r = new CompletableFuture();
+                r.completeExceptionally(exc[0]);
+                return r;
             }
-            CompletableFuture<String> exec;
+            if (kb == null) {
+                return CompletableFuture.completedFuture(/* gson.toJsonTree( */ refR[0] /* ) */);
+            }
+            CompletableFuture<AuditResult> exec;
             
             switch (command) {
                 case COMMAND_EXECUTE_AUDIT:
-                    exec = v.runProjectAudit(kb, AuditOptions.makeNewAudit().useSession(auditWithProfile).setAuditName(preferredName));
+                case COMMAND_EXECUTE_AUDIT_OLD:
+                    exec = v.runProjectAudit(kb, auditOpts);
                     break;
-                case COMMAND_LOAD_AUDIT: {
-                    exec = v.runProjectAudit(kb, new AuditOptions().useSession(auditWithProfile).setRunIfNotExists(forceAudit).setAuditName(preferredName));
+                case COMMAND_LOAD_AUDIT:
+                case COMMAND_LOAD_AUDIT_OLD: {
+                    exec = v.runProjectAudit(kb, auditOpts.setRunIfNotExists(forceAudit).setAuditName(preferredName));
+                    break;
                 }
                 default:
                     return CompletableFuture.completedFuture(null);
-                    
             }
-            return (CompletableFuture<Object>)(CompletableFuture)exec;
+            if (auditOpts.isReturnData()) {
+                return (CompletableFuture<Object>)(CompletableFuture)/* exec.thenApply((r) -> gson.toJsonTree(r)) */exec.thenApply(r -> {
+                   return r; 
+                });
+            } else {
+                return exec.thenApply(r -> r.getAuditId());
+            }
         }));
-    } 
+    }
 
     @Override
     public Set<String> getCommands() {

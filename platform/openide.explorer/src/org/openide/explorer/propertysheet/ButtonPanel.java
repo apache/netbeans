@@ -457,7 +457,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
      * custom editor button.
      * <p>
      * This class also contains the ability to create an image buffer of itself
-     * and use it for its lifetime.  On XP and Aqua L&Fs, button painting is
+     * and use it for its lifetime.  On XP and Aqua L&amp;Fs, button painting is
      * expensive, and a huge amount of a treetable or property sheet's painting
      * cycle gets spent scaling the backing bitmap for a button that will
      * always be painted exactly the same size.

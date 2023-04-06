@@ -118,6 +118,7 @@ public class TokenFormatter {
         public boolean spaceAroundUnaryOps;
         public boolean spaceAroundBinaryOps;
         public boolean spaceAroundTernaryOps;
+        public boolean spaceAroundCoalescingOps;
         public boolean spaceAroundAssignOps;
         public boolean spaceAroundKeyValueOps;
         public boolean spaceWithinArrayDeclParens;
@@ -152,6 +153,7 @@ public class TokenFormatter {
         public int blankLinesBeforeUse;
         public int blankLinesBeforeUseTrait;
         public int blankLinesAfterUse;
+        public int blankLinesBetweenUseTypes;
         public int blankLinesBeforeClass;
         public int blankLinesBeforeClassEnd;
         public int blankLinesAfterClass;
@@ -181,6 +183,7 @@ public class TokenFormatter {
         public CodeStyle.WrapStyle wrapDoWhileStatement;
         public CodeStyle.WrapStyle wrapBinaryOps;
         public CodeStyle.WrapStyle wrapTernaryOps;
+        public CodeStyle.WrapStyle wrapCoalescingOps;
         public CodeStyle.WrapStyle wrapAssignOps;
         public boolean wrapBlockBrace;
         public boolean wrapGroupUseBraces;
@@ -278,6 +281,7 @@ public class TokenFormatter {
             spaceAroundUnaryOps = codeStyle.spaceAroundUnaryOps();
             spaceAroundBinaryOps = codeStyle.spaceAroundBinaryOps();
             spaceAroundTernaryOps = codeStyle.spaceAroundTernaryOps();
+            spaceAroundCoalescingOps = codeStyle.spaceAroundCoalescingOps();
             spaceAroundAssignOps = codeStyle.spaceAroundAssignOps();
             spaceAroundKeyValueOps = codeStyle.spaceAroundKeyValueOps();
 
@@ -316,6 +320,7 @@ public class TokenFormatter {
             blankLinesBeforeUse = codeStyle.getBlankLinesBeforeUse();
             blankLinesBeforeUseTrait = codeStyle.getBlankLinesBeforeUseTrait();
             blankLinesAfterUse = codeStyle.getBlankLinesAfterUse();
+            blankLinesBetweenUseTypes = codeStyle.getBlankLinesBetweenUseTypes();
             blankLinesBeforeClass = codeStyle.getBlankLinesBeforeClass();
             blankLinesBeforeClassEnd = codeStyle.getBlankLinesBeforeClassEnd();
             blankLinesAfterClass = codeStyle.getBlankLinesAfterClass();
@@ -353,6 +358,7 @@ public class TokenFormatter {
             wrapDoWhileStatement = codeStyle.wrapDoWhileStatement();
             wrapBinaryOps = codeStyle.wrapBinaryOps();
             wrapTernaryOps = codeStyle.wrapTernaryOps();
+            wrapCoalescingOps = codeStyle.wrapCoalescingOps();
             wrapAssignOps = codeStyle.wrapAssignOps();
             wrapBlockBrace = codeStyle.wrapBlockBrace();
             wrapGroupUseBraces = codeStyle.wrapGroupUseBraces();
@@ -738,7 +744,7 @@ public class TokenFormatter {
                                         indentRule = true;
                                         ws = countWhiteSpaceBeforeRightBrace(
                                                 docOptions.classDeclBracePlacement,
-                                                newLines,
+                                                docOptions.blankLinesBeforeClassEnd + 1, // GH-46111 ignore existing newLines to prioritize this option
                                                 docOptions.blankLinesBeforeClassEnd,
                                                 indent,
                                                 formatTokens,
@@ -842,6 +848,10 @@ public class TokenFormatter {
                                         indentRule = true;
                                         newLines = 1;
                                         countSpaces = indent;
+                                        break;
+                                    case WHITESPACE_BETWEEN_USE_TYPES:
+                                        indentRule = true;
+                                        newLines = docOptions.blankLinesBetweenUseTypes + 1 > newLines ? docOptions.blankLinesBetweenUseTypes + 1 : newLines;
                                         break;
                                     case WHITESPACE_AFTER_USE:
                                         indentRule = true;
@@ -1163,6 +1173,9 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_AROUND_TERNARY_OP:
                                         countSpaces = docOptions.spaceAroundTernaryOps ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_AROUND_COALESCING_OP:
+                                        countSpaces = docOptions.spaceAroundCoalescingOps ? 1 : 0;
                                         break;
                                     case WHITESPACE_WITHIN_SHORT_TERNARY_OP:
                                         countSpaces = 0;
@@ -1616,6 +1629,18 @@ public class TokenFormatter {
                                         ws = countWSBeforeAStatement(
                                                 docOptions.wrapTernaryOps,
                                                 docOptions.spaceAroundTernaryOps,
+                                                column,
+                                                countLengthOfNextSequence(formatTokens, index + 1),
+                                                indent,
+                                                isAfterLineComment(formatTokens, index));
+                                        newLines = ws.lines;
+                                        countSpaces = ws.spaces;
+                                        break;
+                                    case WHITESPACE_IN_COALESCING_OP:
+                                        indentRule = true;
+                                        ws = countWSBeforeAStatement(
+                                                docOptions.wrapCoalescingOps,
+                                                docOptions.spaceAroundCoalescingOps,
                                                 column,
                                                 countLengthOfNextSequence(formatTokens, index + 1),
                                                 indent,

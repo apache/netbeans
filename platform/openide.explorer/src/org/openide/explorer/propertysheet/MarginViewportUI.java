@@ -36,7 +36,7 @@ import javax.swing.JViewport;
 import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.ViewportUI;
-import javax.swing.plaf.basic.BasicViewportUI;
+import org.openide.awt.GraphicsUtils;
 
 
 /** Viewport UI which will paint a margin if the contained
@@ -151,6 +151,7 @@ class MarginViewportUI extends ViewportUI implements ComponentListener, Containe
     /** Overridden to draw "no properties" if necessary */
     @Override
     public void paint(Graphics g, JComponent c) {
+        GraphicsUtils.configureDefaultRenderingHints(g);
         Component view = ((JViewport) c).getView();
 
         if (view != null) {

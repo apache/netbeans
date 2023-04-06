@@ -138,7 +138,7 @@ public final class Log extends Handler {
      * the use of additional log messages inserted into the code.
      * <p>
      * The best example showing usage of this method is real life test.
-     * Read <a href="http://hg.netbeans.org/main/raw-file/tip/nbjunit/test/unit/src/org/netbeans/junit/FlowControlTest.java">FlowControlTest.java</a> to know everything
+     * Read <a href="https://github.com/apache/netbeans/tree/master/harness/nbjunit/test/unit/src/org/netbeans/junit/FlowControlTest.java">FlowControlTest.java</a> to know everything
      * about the expected usage of this method.
      * <p>
      * The method does listen on output send to a logger <code>listenTo</code>
@@ -156,7 +156,7 @@ public final class Log extends Handler {
      * </pre>
      * which define the order saying that at this time a thread with a given name
      * is expected to send given message. Both the name of the thread and
-     * the message are regular expressions so one can shorten them by using <q>.*</q>
+     * the message are regular expressions so one can shorten them by using <code>.*</code>
      * or any other trick. Btw. the format of the <code>order</code> is similar
      * to the one logged by the {@link Log#enable} or {@link NbTestCase#logLevel} methods,
      * so when one gets a test failure with enabled logging,
@@ -179,7 +179,7 @@ public final class Log extends Handler {
     /** Starts to listen on given log and collect parameters of messages that
      * were send to it. This is supposed to be called at the beginning of a test,
      * to get messages from the programs that use 
-     * <a href="http://wiki.netbeans.org/wiki/view/FitnessViaTimersCounters">timers/counters</a>
+     * <a href="https://netbeans.apache.org/wiki/FitnessViaTimersCounter">timers/counters</a>
      * infrastructure. At the end one should call {@link #assertInstances}.
      * 
      * 

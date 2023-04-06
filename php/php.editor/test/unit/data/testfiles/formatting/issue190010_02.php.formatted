@@ -13,7 +13,6 @@ class BlockedItemsDataSink extends ItemDataSink {
             'items_item_comment' => array('_type' => G_CreoleDataFlow::TYPE_STRING),
         )));
     }
-
 }
 
 ?>

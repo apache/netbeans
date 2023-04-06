@@ -183,8 +183,6 @@ public class GuardedDocument extends BaseDocument
     * is updated as result of removal. This function can throw
     * BadLocationException or its descendants to stop the ongoing
     * insert from being actually done.
-    * @param evt document event containing the change including array
-    *  of characters that will be inserted
     */
     protected @Override void preInsertCheck(int offset, String text, AttributeSet a)
     throws BadLocationException {

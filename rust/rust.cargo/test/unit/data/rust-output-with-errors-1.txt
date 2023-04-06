@@ -1,0 +1,108 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// This file used to detect errors in Rust build output
+
+$ cargo run
+Hello, world!: Another thing!!
+warning: unused variable: `z`
+ --> src/main.rs:8:17
+  |
+8 |             let z="Hello, world!";
+  |                 ^ help: if this is intentional, prefix it with an underscore: `_z`
+  |
+  = note: `#[warn(unused_variables)]` on by default
+
+warning: struct `Val` is never constructed
+  --> src/main.rs:17:12
+   |
+17 |     struct Val {
+   |            ^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: function `private_function` is never used
+  --> src/main.rs:29:8
+   |
+29 |     fn private_function() {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: function `function` is never used
+  --> src/main.rs:34:12
+   |
+34 |     pub fn function() {
+   |            ^^^^^^^^
+
+warning: function `indirect_access` is never used
+  --> src/main.rs:40:12
+   |
+40 |     pub fn indirect_access() {
+   |            ^^^^^^^^^^^^^^^
+
+warning: function `call_public_function_in_my_mod` is never used
+  --> src/main.rs:76:12
+   |
+76 |     pub fn call_public_function_in_my_mod() {
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `public_function_in_crate` is never used
+  --> src/main.rs:84:19
+   |
+84 |     pub(crate) fn public_function_in_crate() {
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: associated function `value` is never used
+  --> src/main.rs:22:12
+   |
+22 |         fn value(&self) -> &f64 {
+   |            ^^^^^
+
+warning: function `whatever` is never used
+ --> src/main.rs:7:12
+  |
+7 |         fn whatever() {
+  |            ^^^^^^^^
+
+warning: function `function` is never used
+  --> src/main.rs:47:16
+   |
+47 |         pub fn function() {
+   |                ^^^^^^^^
+
+warning: function `public_function_in_my_mod` is never used
+  --> src/main.rs:58:34
+   |
+58 |         pub(in crate::my_mod) fn public_function_in_my_mod() {
+   |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `public_function_in_nested` is never used
+  --> src/main.rs:65:22
+   |
+65 |         pub(self) fn public_function_in_nested() {
+   |                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `public_function_in_super_mod` is never used
+  --> src/main.rs:71:23
+   |
+71 |         pub(super) fn public_function_in_super_mod() {
+   |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `rust1` (bin "rust1") generated 13 warnings
+    Finished dev [unoptimized + debuginfo] target(s) in 0.04s
+     Running `target/debug/rust1`

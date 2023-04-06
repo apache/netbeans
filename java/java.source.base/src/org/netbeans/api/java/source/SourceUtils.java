@@ -484,7 +484,7 @@ public class SourceUtils {
      * @return the defining {@link FileObject} or null if it cannot be
      * found
      *
-     * @deprecated use {@link getFile(ElementHandle, ClasspathInfo)}
+     * @deprecated use {@link #getFile(ElementHandle, ClasspathInfo)}
      */
     @Deprecated
     public static FileObject getFile (Element element, final ClasspathInfo cpInfo) {
@@ -1290,7 +1290,7 @@ public class SourceUtils {
     /**
      * Returns names of all modules within given scope.
      * @param info the CompilationInfo used to resolve modules
-     * @param scope to search in {@see SearchScope}
+     * @param scope to search in {@link ClassIndex.SearchScope}
      * @return set of module names
      * @since 2.23
      */

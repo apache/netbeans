@@ -56,8 +56,6 @@ public class AccidentalAssignmentCustomizer extends javax.swing.JPanel {
         checkAssignmentsInWhileStatementsCheckBox = new javax.swing.JCheckBox();
         checkAssignmentsInSubStatementsCheckBox = new javax.swing.JCheckBox();
 
-        setFocusTraversalPolicy(null);
-
         checkAssignmentsInWhileStatementsCheckBox.setMnemonic('a');
         checkAssignmentsInWhileStatementsCheckBox.setText(org.openide.util.NbBundle.getMessage(AccidentalAssignmentCustomizer.class, "AccidentalAssignmentCustomizer.includeWhileCB.text")); // NOI18N
         checkAssignmentsInWhileStatementsCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -92,7 +90,7 @@ public class AccidentalAssignmentCustomizer extends javax.swing.JPanel {
                 .addComponent(checkAssignmentsInSubStatementsCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(checkAssignmentsInWhileStatementsCheckBox)
-                .addContainerGap(238, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         checkAssignmentsInWhileStatementsCheckBox.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(AccidentalAssignmentCustomizer.class, "AccidentalAssignmentCustomizer.cbIncludeWhile.AccessibleContext.accessibleName")); // NOI18N

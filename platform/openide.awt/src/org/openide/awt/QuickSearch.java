@@ -156,7 +156,7 @@ public class QuickSearch {
      * If <code>true</code>, three notification methods are called asynchronously
      * on a background thread. These are
      * {@link Callback#quickSearchUpdate(java.lang.String)},
-     * {@link Callback#showNextSelection(javax.swing.text.Position.Bias)},
+     * {@link Callback#showNextSelection(boolean)},
      * {@link Callback#findMaxPrefix(java.lang.String)}.
      * If <code>false</code> all methods are called synchronously on EQ thread.
      * @param popupMenu A pop-up menu, that is displayed on the find icon, next to the search
@@ -876,8 +876,6 @@ public class QuickSearch {
         
         /**
          * Called with an updated search text.
-         * When {@link #isAsynchronous()} is <code>false</code>
-         * it's called in EQ thread, otherwise, it's called in a background thread.
          * The client should update the visual representation of the search results
          *  and then return.<p>
          * This method is called to initiate and update the search process.
@@ -887,8 +885,6 @@ public class QuickSearch {
 
         /**
          * Called to select a next occurrence of the search result.
-         * When {@link #isAsynchronous()} is <code>false</code>
-         * it's called in EQ thread, otherwise, it's called in a background thread.
          * The client should update the visual representation of the search results
          * and then return.<p>
          * @param forward The direction of the next search result.
@@ -901,8 +897,6 @@ public class QuickSearch {
          * Find the maximum prefix among the search results, that starts with the provided string.
          * This method is called when user press TAB in the search field, to auto-complete
          * the maximum prefix.
-         * When {@link #isAsynchronous()} is <code>false</code>
-         * it's called in EQ thread, otherwise, it's called in a background thread.
          * Utility method {@link QuickSearch#findMaxPrefix(java.lang.String, java.lang.String, boolean)}
          * can be used by the implementation.
          * @param prefix The prefix to start with

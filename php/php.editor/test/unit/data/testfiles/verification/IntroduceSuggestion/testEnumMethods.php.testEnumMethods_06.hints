@@ -1,0 +1,4 @@
+BackedEnumString::Case2::introdu^ceStaticMethod();
+------------------------------------------------
+HINT:Introduce Hint
+FIX:Create Method " introduceStaticMethod()" in Enum "BackedEnumString" (testEnumMethods.php)

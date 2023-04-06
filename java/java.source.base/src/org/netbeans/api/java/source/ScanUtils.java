@@ -43,7 +43,7 @@ import org.openide.util.Parameters;
  * There are two variants of {@link JavaSource#runUserActionTask}, which support <b>abort and restart</b> of the user task,
  * if the task indicates incomplete data and the scanning is in progress. The restart is done in a hope that, after scanning
  * completes, the missing types or elements will appear.
- * <p/>
+ * <p>
  * The user task may use other provided wrapper methods to:
  * <ul>
  * <li>{@link #checkElement} to assert element's presence and validity
@@ -51,9 +51,9 @@ import org.openide.util.Parameters;
  * </ul>
  * Note that even though the user task run when all the parsing/scanning is over, there's no guarantee that data obtained from
  * the parser structures will be complete and valid - the source code may be really broken, dependency could be missing etc.
- * <p/>
+ * <p>
  * An example pattern how to use this class is:
- * <code><pre>
+ * <pre>{@code
  * final TreePath tp = ... ; // obtain a tree path
  * ScanUtils.waitUserActionTask(new Task&lt;{@link CompilationController}>() {
  *      public void run(CompilationController ctrl) {
@@ -67,7 +67,7 @@ import org.openide.util.Parameters;
  *          }
  *      }
  * };
- * </pre></code>
+ * }</pre>
  *
  * @author Svata Dedic
  * @since 0.95
@@ -79,7 +79,7 @@ public final class ScanUtils {
      * Runs the user task through {@link JavaSource#runUserActionTask}, and returns Future completion handle for it. 
      * The executed Task may indicate that it does not have enough data when scan is in progress, through e.g. {@link #checkElement}.
      * If so, processing of the Task will abort, and will be restarted when the scan finishes.
-     * <p/>
+     * <p>
      * For more details, see description of {@link #postUserTask(org.netbeans.modules.parsing.api.Source, org.netbeans.modules.parsing.api.UserTask) }.
      *
      * @param src JavaSource to process
@@ -108,12 +108,12 @@ public final class ScanUtils {
      * Runs the user task, and returns Future completion handle for it. 
      * The executed Task may indicate that it does not have enough data when scan is in progress, through e.g. {@link #checkElement}.
      * If so, processing of the Task will abort, and will be restarted when the scan finishes.
-     * <p/>
+     * <p>
      * The task <b>may run asynchronously</b>, pay attention to synchronization of task's output
      * data. The first attempt to run the task MAY execute synchronously. Do not call the method from
      * Swing EDT, if the task typically takes non-trivial time to complete (see {@link JavaSource#runUserActionTask}
      * for discussion).
-     * <p/>
+     * <p>
      * As {@code postUserTask} may decide to defer the task execution, {@code postUserTask} cannot reliably report exceptions thrown
      * from the parsing infrastructure. The Task itself is responsible for handling exceptions and propagating them
      * to the caller, the {@code post} method will just log the exception.
@@ -143,10 +143,10 @@ public final class ScanUtils {
      * The executed Task may indicate that it does not have enough data when scan is in progress, through e.g. {@link #checkElement}.
      * If so, processing of the Task will abort, and will be restarted when the scan finishes. The {@code waitUserActionTask} method
      * will wait until the rescheduled task completes.
-     * <p/>
+     * <p>
      * Unlike {@link #postUserActionTask}, this method propagates exceptiosn from the Task to the caller, even if the Task
      * is postponed and waited for.
-     * <p/>
+     * <p>
      * Calling this method from Swing ED thread is prohibited.
      *
      * @param src java source to process
@@ -198,17 +198,17 @@ public final class ScanUtils {
      * The executed Task may indicate that it does not have enough data when scan is in progress, through e.g. {@link #checkElement}.
      * If so, processing of the Task will abort, and will be restarted when the scan finishes. The {@code waitUserTask} method
      * will wait until the rescheduled task completes.
-     * <p/>
+     * <p>
      * Unlike {@link #postUserTask}, this method propagates exceptiosn from the Task to the caller, even if the Task
      * is postponed and waited for.
-     * <p/>
+     * <p>
      * Calling this method from Swing ED thread is prohibited.
      *
      * @param src java source to process
-     * @param uat task to execute
+     * @param task task to execute
      * 
      * @throws ParseException in the case of a failure in the user task, or scheduling failure (propagated from {@link JavaSource#runUserActionTask},
-     * {@link ParserManager#parseWhenScanFinished(java.util.Collection, org.netbeans.modules.parsing.api.UserTask) 
+     * {@link ParserManager#parseWhenScanFinished(java.util.Collection, org.netbeans.modules.parsing.api.UserTask) }
      *
      * @see ParserManager#parse(java.util.Collection, org.netbeans.modules.parsing.api.UserTask) 
      * @see ParserManager#parseWhenScanFinished(java.util.Collection, org.netbeans.modules.parsing.api.UserTask) 
@@ -259,25 +259,25 @@ public final class ScanUtils {
 
     /**
      * Checks that the Element is valid, is not erroneous. If the Element is {@code null} or erroneous and
-     * scanning is running, the method throws a {@link RetryWhenScanFinished} exception to
+     * scanning is running, the method throws a {@link ScanUtils.RetryWhenScanFinished} exception to
      * indicate that the action should be retried. The method should be only used in code, which
      * is directly or indirectly executed by {@link #waitUserActionTask}, otherwise {@link IllegalStateException}
      * will be thrown.
-     * <p/>
+     * <p>
      * If scan is not running, the method always returns the value of 'e' parameter.
-     * <p/>
+     * <p>
      * An example usage is as follows:
      * <code>
      * TreePath tp = ...;
      * Element e = checkElement(cu.getTrees().getElement(tp));
      * </code>
-     * <p/>
+     * <p>
      * <b>Note:</b> the method may be only called from within {@link #waitUserActionTask}, it aborts
      * the current processing under assumption the user task will be restarted. It is illegal to call the
      * method if not running as user task - IllegalStateException will be thrown.
      *
      * @param e the Element to check
-     * @param s the source of the Element
+     * @param info the source of the Element
      * @return the original Element, to support 'fluent' pattern
      *
      * @throws IllegalStateException if not called from within user task
@@ -305,8 +305,8 @@ public final class ScanUtils {
     /**
      * Aborts the user task and calls it again when parsing finishes, if a typename is not available.
      *
-     * @param el the Element which causes the trouble
-     * @param s source of the Element
+     * @param ci the Element which causes the trouble
+     * @param handle of the Element
      * @throws IllegalStateException if not called from within {@link #waitUserActionTask} and the like
      *
      */
@@ -512,7 +512,7 @@ public final class ScanUtils {
      * retried when parsing is finished. The exception derives from the {@link Error}
      * class to bypass ill-written code, which caught {@link RuntimeException} or
      * even {@link Exception}.
-     * <p/>
+     * <p>
      * The exception is interpreted by the Java Source infrastructure and is not
      * meant to be ever thrown or caught by regular application code. It's deliberately
      * package-private so users are not tempted to throw or catch it.

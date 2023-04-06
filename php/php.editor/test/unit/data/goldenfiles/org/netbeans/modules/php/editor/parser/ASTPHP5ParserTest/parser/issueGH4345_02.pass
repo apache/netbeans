@@ -1,0 +1,222 @@
+<testresult testFile='issueGH4345_02.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='827'>
+            <text>GH4345</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='828' end='829'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='834' end='840'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='841' end='849'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='850' end='855'>
+            <text>test1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='855' end='856'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='856' end='857'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='857' end='858'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='859' end='863'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='864' end='865'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='874' end='879'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='879' end='881'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='881' end='887'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='887' end='888'>
+            <text>(</text>
+        </token>
+        <token id='T_START_NOWDOC' start='901' end='910'>
+            <text>&lt;&lt;&lt;&apos;EOF&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='910' end='1019'>
+            <text>                test\n\n                test\n\n                test\n                test\n\n                test\n\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='1019' end='1038'>
+            <text>                EOF</text>
+        </token>
+        <token id='T_COMMA' start='1038' end='1039'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1052' end='1058'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1067' end='1068'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1068' end='1069'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1074' end='1075'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1081' end='1087'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1088' end='1096'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1097' end='1102'>
+            <text>test2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1102' end='1103'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1103' end='1104'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1104' end='1105'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1106' end='1110'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1111' end='1112'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1121' end='1126'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1126' end='1128'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1128' end='1134'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1134' end='1135'>
+            <text>(</text>
+        </token>
+        <token id='T_START_NOWDOC' start='1148' end='1157'>
+            <text>&lt;&lt;&lt;&apos;EOF&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1157' end='1182'>
+            <text>                test\n\n\n\n\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='1182' end='1201'>
+            <text>                EOF</text>
+        </token>
+        <token id='T_COMMA' start='1201' end='1202'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1215' end='1221'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1230' end='1231'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1231' end='1232'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1237' end='1238'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1239' end='1240'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1241' end='1241'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1241'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='1240' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='827' name='GH4345'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='828' end='1240' isCurly='true'>
+                    <MethodDeclaration start='834' end='1075' modifiers='public'>
+                        <FunctionDeclaration start='841' end='1075' isReference='false'>
+                            <Identifier start='850' end='855' name='test1'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='859' end='863' isCurrent='false' isGlobal='false'>
+                                <Identifier start='859' end='863' name='void'/>
+                            </NamespaceName>
+                            <Block start='864' end='1075' isCurly='true'>
+                                <ExpressionStatement start='874' end='1069'>
+                                    <MethodInvocation start='874' end='1068' isNullsafe='false'>
+                                        <Variable start='874' end='879' isDollared='true'>
+                                            <Identifier start='875' end='879' name='this'/>
+                                        </Variable>
+                                        <Method>
+                                            <FunctionInvocation start='881' end='1068'>
+                                                <FucntionName start='881' end='887'>
+                                                    <Variable start='881' end='887' isDollared='false'>
+                                                        <Identifier start='881' end='887' name='method'/>
+                                                    </Variable>
+                                                </FucntionName>
+                                                <Parameters>
+                                                    <Scalar start='901' end='1038' type='STRING' value='                test\n\n                test\n\n                test\n                test\n\n                test\n\n'/>
+                                                    <Scalar start='1052' end='1058' type='STRING' value='"test"'/>
+                                                </Parameters>
+                                            </FunctionInvocation>
+                                        </Method>
+                                    </MethodInvocation>
+                                </ExpressionStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1081' end='1238' modifiers='public'>
+                        <FunctionDeclaration start='1088' end='1238' isReference='false'>
+                            <Identifier start='1097' end='1102' name='test2'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1106' end='1110' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1106' end='1110' name='void'/>
+                            </NamespaceName>
+                            <Block start='1111' end='1238' isCurly='true'>
+                                <ExpressionStatement start='1121' end='1232'>
+                                    <MethodInvocation start='1121' end='1231' isNullsafe='false'>
+                                        <Variable start='1121' end='1126' isDollared='true'>
+                                            <Identifier start='1122' end='1126' name='this'/>
+                                        </Variable>
+                                        <Method>
+                                            <FunctionInvocation start='1128' end='1231'>
+                                                <FucntionName start='1128' end='1134'>
+                                                    <Variable start='1128' end='1134' isDollared='false'>
+                                                        <Identifier start='1128' end='1134' name='method'/>
+                                                    </Variable>
+                                                </FucntionName>
+                                                <Parameters>
+                                                    <Scalar start='1148' end='1201' type='STRING' value='                test\n\n\n\n\n'/>
+                                                    <Scalar start='1215' end='1221' type='STRING' value='"test"'/>
+                                                </Parameters>
+                                            </FunctionInvocation>
+                                        </Method>
+                                    </MethodInvocation>
+                                </ExpressionStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

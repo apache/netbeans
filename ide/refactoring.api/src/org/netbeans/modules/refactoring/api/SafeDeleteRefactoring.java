@@ -38,11 +38,12 @@ public final class SafeDeleteRefactoring extends AbstractRefactoring {
      * elements as parameter.
      * 
      * Safe Delete Refactoring implementations currently understand following types:
-     * <table border="1">
+     * <table>
+     *   <caption>SafeDeleteRefactoring types supported</caption>
      *   <tr><th>Module</th><th>Types the Module Understands</th><th>Implementation</th></tr>
      *   <tr><td>Refactoring API (Default impl.)</td><td>FileObject</td><td>Does file delete</td></tr>
      *   <tr><td>Java Refactoring</td><td><ul><li>{@link org.openide.filesystems.FileObject}(s) with content type text/x-java (safly delete class)
-     *                                <li>{@link org.netbeans.api.java.source.TreePathHandle} (class, field, method)</td>
+     *                                <li><a href="@org-netbeans-modules-java-source-base@/org/netbeans/api/java/source/TreePathHandle.html">org.netbeans.api.java.source.TreePathHandle</a> (class, field, method)</ul></td>
      *                              <td>Check for usages and does refactoring inside .java files.</td></tr>
      * </table>
      * @param namedElements The elements to be safely deleted

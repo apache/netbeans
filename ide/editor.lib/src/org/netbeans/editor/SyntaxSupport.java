@@ -143,7 +143,6 @@ public class SyntaxSupport {
     /** Get position pairs covering the blocks that include only the tokens
     * from the given token array. Although the startPos can be greater than
     * endPos, the blocks are always returned in the natural order.
-    * @param doc document to work with
     * @param startPos starting position of the requested document area.
     * @param endPos ending position of the requested document area
     * @param tokenIDArray the array of the token IDs that should be in the blocks.

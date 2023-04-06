@@ -439,7 +439,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 Kind[] kinds = {Kind.CLASS, Kind.IFACE};
                 occurencesBuilder.prepare(kinds, namespaceName, fileScope);
             }
-        } else if (!(parent instanceof ClassDeclaration) && !(parent instanceof InterfaceDeclaration)
+        } else if (!(parent instanceof ClassDeclaration) && !(parent instanceof EnumDeclaration) && !(parent instanceof InterfaceDeclaration)
                 && !(parent instanceof FormalParameter) && !(parent instanceof InstanceOfExpression)
                 && !(parent instanceof UseTraitStatementPart) && !(parent instanceof TraitConflictResolutionDeclaration)
                 && !(parent instanceof TraitMethodAliasDeclaration) && !(parent instanceof IntersectionType)) {

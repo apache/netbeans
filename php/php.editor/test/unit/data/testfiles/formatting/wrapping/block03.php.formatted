@@ -49,7 +49,6 @@ function test() {
 class Simple {
 
     public $field;
-
 }
 
 class Simple2 {
@@ -57,7 +56,6 @@ class Simple2 {
     function method() {
         echo "test";
     }
-
 }
 
 ?>

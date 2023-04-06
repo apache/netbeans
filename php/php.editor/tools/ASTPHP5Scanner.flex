@@ -334,6 +334,7 @@ DNUM=({LNUM}?[\.]{LNUM})|({LNUM}[\.]{LNUM}?)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
 HNUM="0x"[0-9a-fA-F]+(_[0-9a-fA-F]+)*
 BNUM="0b"[01]+(_[01]+)*
+ONUM="0o"[0-7]+(_[0-7]+)* // PHP 8.1: Explicit octal integer literal notation
 //LABEL=[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 LABEL=([[:letter:]_]|[\u007f-\u00ff])([[:letter:][:digit:]_]|[\u007f-\u00ff])*
 NAMESPACE_SEPARATOR=[\\]
@@ -943,6 +944,12 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     pushState(ST_IN_SCRIPTING);
 }
 
+<ST_IN_SCRIPTING>{ONUM} {
+    // PHP 8.1: Explicit octal integer literal notation
+    // https://wiki.php.net/rfc/explicit_octal_notation
+    return createFullSymbol(ASTPHP5Symbols.T_LNUMBER);
+}
+
 <ST_IN_SCRIPTING>{LNUM} {
     return createFullSymbol(ASTPHP5Symbols.T_LNUMBER);
 }
@@ -1282,11 +1289,18 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 
 <ST_NOWDOC> {
-    {NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
-        /* <ST_NOWDOC>{NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
+    {NEWLINE}+{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
+        /* <ST_NOWDOC>{NEWLINE}+{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
         if (isEndHereOrNowdoc(nowdoc)) {
             String yytext = yytext();
-            int newlineLength = yytext.startsWith("\r\n") ? 2 : 1;
+            int newlineLength = 0;
+            for (int i = 0; i < yylength(); i++) {
+                char c = yytext.charAt(i);
+                if (c != '\n' && c != '\r') {
+                    break;
+                }
+                newlineLength++;
+            }
             int back = yylength() - newlineLength;
             yypushback(back);
             updateNowdocBodyInfo();

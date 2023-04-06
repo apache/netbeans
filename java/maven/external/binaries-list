@@ -15,6 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 8E258F158B4572D40598D7F4793CFBFE84A7CC70 org.pantsbuild:jarjar:1.7.2
-D74D4BA0DEE443F68FB2DCB7FCDB945A2CD89912 org.ow2.asm:asm:7.0
-478006D07B7C561AE3A92DDC1829BCA81AE0CDD1 org.ow2.asm:asm-commons:7.0
 E48292EAE5E14EC44978AA53DEBB1AF7DDD6DF93 org.sonatype.aether:aether-api:1.13.1

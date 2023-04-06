@@ -27,7 +27,6 @@ import java.awt.event.ActionListener;
 
 import org.openide.DialogDescriptor;
 import org.openide.NotifyDescriptor;
-import org.openide.NotifyDescriptor.Message;
 import org.openide.DialogDisplayer;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
@@ -45,30 +44,33 @@ import org.openide.windows.TopComponent;
 @ActionRegistration(lazy = false, displayName = "#LBL_CustomZoom")
 public class CustomZoomAction extends CallableSystemAction {
 
-    
+
     /** Generated serial version UID. */
     static final long serialVersionUID = 8247068408606777895L;
-    
-    
+
+
     /** Actually performs action. */
+    @Override
     public void performAction () {
         final Dialog[] dialogs = new Dialog[1];
         final CustomZoomPanel zoomPanel = new CustomZoomPanel();
 
         zoomPanel.setEnlargeFactor(1);
         zoomPanel.setDecreaseFactor(1);
-        
+
         DialogDescriptor dd = new DialogDescriptor(
             zoomPanel,
-            NbBundle.getBundle(CustomZoomAction.class).getString("LBL_CustomZoomAction"),
+            NbBundle.getMessage(CustomZoomAction.class, "LBL_CustomZoomAction"),
             true,
             DialogDescriptor.OK_CANCEL_OPTION,
             DialogDescriptor.OK_OPTION,
             new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent ev) {
                     if (ev.getSource() == DialogDescriptor.OK_OPTION) {
-                        int enlargeFactor = 1, decreaseFactor = 1;
-                        
+                        int enlargeFactor;
+                        int decreaseFactor;
+
                         try {
                             enlargeFactor = zoomPanel.getEnlargeFactor();
                             decreaseFactor = zoomPanel.getDecreaseFactor();
@@ -76,35 +78,35 @@ public class CustomZoomAction extends CallableSystemAction {
                             notifyInvalidInput();
                             return;
                         }
-                        
+
                         // Invalid values.
                         if(enlargeFactor == 0 || decreaseFactor == 0) {
                             notifyInvalidInput();
                             return;
                         }
-                        
+
                         performZoom(enlargeFactor, decreaseFactor);
-                        
+
                         dialogs[0].setVisible(false);
                         dialogs[0].dispose();
                     } else {
                         dialogs[0].setVisible(false);
                         dialogs[0].dispose();
                     }
-                }        
-                
+                }
+
                 private void notifyInvalidInput() {
                     DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(
-                        NbBundle.getBundle(CustomZoomAction.class).getString("MSG_InvalidValues"),
+                        NbBundle.getMessage(CustomZoomAction.class, "MSG_InvalidValues"),
                         NotifyDescriptor.ERROR_MESSAGE
                     ));
                 }
-                
+
             } // End of annonymnous ActionListener.
         );
         dialogs[0] = DialogDisplayer.getDefault().createDialog(dd);
         dialogs[0].setVisible(true);
-        
+
     }
 
     /** Performs customized zoom. */
@@ -115,16 +117,19 @@ public class CustomZoomAction extends CallableSystemAction {
     }
 
     /** Gets action name. Implements superclass abstract method. */
+    @Override
     public String getName () {
-        return NbBundle.getBundle(CustomZoomAction.class).getString("LBL_CustomZoom");
+        return NbBundle.getMessage(CustomZoomAction.class, "LBL_CustomZoom");
     }
-    
+
     /** Gets action help context. Implemenets superclass abstract method.*/
+    @Override
     public HelpCtx getHelpCtx () {
-        return new HelpCtx(CustomZoomAction.class);
+        return new HelpCtx("org.netbeans.modules.image.CustomZoomAction");
     }
-    
+
     /** Gets icon resource. Overrides superclass method. */
+    @Override
     protected String iconResource() {
         return "org/netbeans/modules/image/customZoom.gif"; // NOI18N
     }

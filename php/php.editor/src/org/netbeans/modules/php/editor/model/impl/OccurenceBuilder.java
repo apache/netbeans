@@ -34,6 +34,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.ElementQuery.Index;
 import org.netbeans.modules.php.editor.api.NameKind;
@@ -296,7 +297,7 @@ class OccurenceBuilder {
     }
 
     void prepare(final NamespaceName namespaceName, final Scope scope) {
-        Kind[] kinds = {Kind.CLASS, Kind.ENUM};
+        Kind[] kinds = {Kind.CLASS, Kind.IFACE, Kind.ENUM};
         prepare(kinds, namespaceName, scope);
     }
 
@@ -801,7 +802,7 @@ class OccurenceBuilder {
                             buildMethods(index, fileScope, cachedOccurences);
                             setElementInfo((TypeScope) scope.getInScope());
                             if (elementInfo.setDeclarations(index.getTypes(NameKind.exact(elementInfo.getQualifiedName())))) {
-                                buildClassInstanceCreation(elementInfo, fileScope, cachedOccurences);
+                                buildClassInstanceCreation(elementInfo, fileScope, cachedOccurences, true);
                             }
                         }
                     }
@@ -1907,6 +1908,10 @@ class OccurenceBuilder {
     }
 
     private void buildClassInstanceCreation(ElementInfo query, FileScopeImpl fileScope, final List<Occurence> occurences) {
+        buildClassInstanceCreation(query, fileScope, occurences, false);
+    }
+
+    private void buildClassInstanceCreation(ElementInfo query, FileScopeImpl fileScope, final List<Occurence> occurences, boolean forConstructMethod) {
         Set<? extends PhpElement> elements = query.getDeclarations();
         for (PhpElement phpElement : elements) {
             for (Entry<ASTNodeInfo<ClassInstanceCreation>, Scope> entry : clasInstanceCreations.entrySet()) {
@@ -1915,7 +1920,24 @@ class OccurenceBuilder {
                 }
                 ASTNodeInfo<ClassInstanceCreation> nodeInfo = entry.getKey();
                 final boolean isAliased = VariousUtils.isAliased(nodeInfo.getQualifiedName(), nodeInfo.getOriginalNode().getStartOffset(), entry.getValue());
-                if (!isAliased || nodeInfo.getQualifiedName().getSegments().size() > 1) {
+                // GH-4382: Find usages of the __construct method
+                // also add alias of class instance creation
+                // e.g.
+                // use Example as ExampleAlias;
+                // class Example {
+                //	public function __construct(){}
+                // }
+                // $alias = new ExampleAlias();
+                // $original = new Example();
+                boolean isConstructorAlias = false;
+                if (forConstructMethod) {
+                    AliasedName aliasedName = VariousUtils.getAliasedName(nodeInfo.getQualifiedName(), nodeInfo.getOriginalNode().getStartOffset(), query.getScope());
+                    if (aliasedName != null) {
+                        QualifiedName realName = aliasedName.getRealName();
+                        isConstructorAlias = phpElement.getName().equals(realName.getName());
+                    }
+                }
+                if (!isAliased || nodeInfo.getQualifiedName().getSegments().size() > 1 || isConstructorAlias) {
                     final QualifiedName qualifiedName = VariousUtils.getFullyQualifiedName(
                             nodeInfo.getQualifiedName(),
                             nodeInfo.getOriginalNode().getStartOffset(),

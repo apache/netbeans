@@ -607,7 +607,7 @@ public class XDMModel {
     
     /**
      * This api deletes given node from a tree.
-     * @param node The node  to be deleted.
+     * @param n The node  to be deleted.
      * @return The parent node resulted by deletion of this node.
      */
     public synchronized List<Node> delete(Node n) {
@@ -621,8 +621,8 @@ public class XDMModel {
     
     /**
      * This api changes index of the given node.
-     * @param nodes The nodes to be moved.
-     * @param indexes the new indexes of the nodes.
+     * @param n The nodes to be moved.
+     * @param index the new indexe of the node.
      * @return The parent node resulted by deletion of this node.
      */
     public synchronized List<Node> reorder(Node parent, Node n, final int index) {
@@ -650,8 +650,9 @@ public class XDMModel {
     
     /**
      * This api changes indexes of the given node children.
-     * @param nodes The nodes to be moved.
-     * @param indexes the new indexes of the nodes.
+     * @param parent The parent node from which the nodes is to be reordered.
+     * @param permutation integer array with index represents current index and 
+     * value is final index after reordered
      * @return The parent node resulted by deletion of this node.
      */
     public synchronized List<Node> reorderChildren(Node parent, final int[] permutation) {
@@ -892,7 +893,7 @@ public class XDMModel {
     /**
      * This returns the statuc of the model.
      * @return the status.
-     * @see #Status
+     * @see Status
      */
     public synchronized Status getStatus() {
         return status;

@@ -216,7 +216,7 @@ public final class GradleConfiguration implements Serializable, ModuleSearchSupp
     /**
      * Returns the attributes of this configuration. The returned map is a
      * simplified version of the Gradle configuration
-     * {@link https://docs.gradle.org/current/javadoc/org/gradle/api/attributes/AttributeContainer.html AttributeContainer},
+     * <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/attributes/AttributeContainer.html">AttributeContainer</a>,
      * where the attribute names are the keys and the attribute string values are the values.
      *
      * @return the attributes of this configuration

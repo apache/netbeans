@@ -18,18 +18,20 @@
  */
 package org.netbeans.modules.cloud.oracle.actions;
 
+import com.oracle.bmc.identity.model.Tenancy;
 import com.oracle.bmc.model.BmcException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCIProfile;
 import org.netbeans.modules.cloud.oracle.actions.DownloadWalletDialog.WalletInfo;
@@ -46,8 +48,6 @@ import org.openide.NotifyDescriptor.ComposedInput.Callback;
 import org.openide.NotifyDescriptor.QuickPick;
 import org.openide.NotifyDescriptor.QuickPick.Item;
 import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -65,12 +65,12 @@ import org.openide.util.NbBundle;
         asynchronous = true
 )
 
-@ActionReferences(value = {
-    @ActionReference(path = "Cloud/Oracle/Common/Actions", position = 260)
-})
 @NbBundle.Messages({
     "AddADB=Add Oracle Autonomous DB",
-    "SelectTenancy=Select Tenancy",
+    "SelectProfile=Select OCI Profile",
+    "# {0} - tenancy name",
+    "# {1} - region id",
+    "SelectProfile_Description={0} (region: {1})",
     "SelectCompartment=Select Compartment",
     "SelectDatabase=Select Compartment or Database",
     "EnterUsername=Enter Username",
@@ -83,47 +83,82 @@ public class AddADBAction implements ActionListener {
     private static final String USERNAME = "username"; //NOI18N
     private static final String PASSWORD = "password"; //NOI18N
 
+    @NbBundle.Messages({
+        "MSG_CollectingProfiles=Searching for OCI Profiles",
+        "MSG_CollectingProfiles_Text=Loading OCI Profiles",
+        "MSG_CollectingItems=Loading OCI contents",
+        "MSG_CollectingItems_Text=Listing compartments and databases",
+    })
     @Override
     public void actionPerformed(ActionEvent e) {
         Map<String, Object> result = new HashMap<> ();
         
         NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADB(), 3, new Callback() {
-            Map<Integer, List> values = new HashMap<> ();
-            
+            Map<Integer, Map> values = new HashMap<> ();
+
             @Override
             public NotifyDescriptor createInput(NotifyDescriptor.ComposedInput input, int number) {
                 if (number == 1) {
-                    List<TenancyItem> tenancies = new ArrayList<>();
-                    for (OCIProfile p : OCIManager.getDefault().getConnectedProfiles()) {
-                        p.getTenancy().ifPresent(tenancies::add);
+                    ProgressHandle h = ProgressHandle.createHandle(Bundle.MSG_CollectingProfiles());
+                    h.start();
+                    h.progress(Bundle.MSG_CollectingProfiles_Text());
+        
+                    Map<OCIProfile, Tenancy> profiles = new LinkedHashMap<>();
+                    Map<String, TenancyItem> tenancyItems = new LinkedHashMap<>();
+                    try {
+                        for (OCIProfile p : OCIManager.getDefault().getConnectedProfiles()) {
+                            TenancyItem t = p.getTenancy().orElse(null);
+                            if (t != null) {
+                                Tenancy data = p.getTenancyData();
+                                profiles.put(p, data);
+                                tenancyItems.put(p.getId(), t);
+                            }
+                        }
+                    } finally {
+                        h.finish();
                     }
                     String title;
-                    if (tenancies.size() == 1) {
-                        values.put(1, getCompartmentsAndDbs(tenancies.get(0)));
+                    if (profiles.size() == 1) {
+                        values.put(1, getCompartmentsAndDbs(profiles.keySet().iterator().next().getTenancy().get()));
                         title = Bundle.SelectCompartment();
+                        return createQuickPick(values.get(1), title);
                     } else {
-                        values.put(1, tenancies);
-                        title = Bundle.SelectTenancy();
+                        title = Bundle.SelectProfile();
+                        List<Item> items = new ArrayList<>(profiles.size());
+                        for (OCIProfile p : profiles.keySet()) {
+                            Tenancy t = profiles.get(p);
+                            items.add(new Item(p.getId(), Bundle.SelectProfile_Description(t.getName(), t.getHomeRegionKey())));
+                        }
+                        values.put(1, tenancyItems);
+                        return new NotifyDescriptor.QuickPick(title, title, items, false);
                     }
-                    return createQuickPick(values.get(1), title);
                 } else {
                     NotifyDescriptor prev = input.getInputs()[number - 2];
                     OCIItem prevItem = null;
                     if (prev instanceof NotifyDescriptor.QuickPick) {
-                        Optional<String> selected = ((QuickPick) prev).getItems().stream().filter(item -> item.isSelected()).map(item -> item.getLabel()).findFirst();
-                        if (selected.isPresent()) {
-                            Optional<? extends OCIItem> ti = values.get(number - 1).stream().filter(t -> ((OCIItem) t).getName().equals(selected.get())).findFirst();
-                            if (ti.isPresent()) {
-                                prevItem = ti.get();
+                        for (QuickPick.Item item : ((QuickPick)prev).getItems()) {
+                            if (item.isSelected()) {
+                                prevItem = (OCIItem)values.get(number - 1).get(item.getLabel());
+                                break;
                             }
+                        }
+                        if (prevItem == null) {
+                            return null;
                         }
                         if (prevItem instanceof DatabaseItem) {
                             result.put(DB, prevItem);
                             return new NotifyDescriptor.InputLine(Bundle.EnterUsername(), Bundle.EnterUsername());
                         }
-                        values.put(number, getCompartmentsAndDbs(prevItem));
-                        input.setEstimatedNumberOfInputs(input.getEstimatedNumberOfInputs() + 1);
-                        return createQuickPick(values.get(number), Bundle.SelectDatabase());
+                        ProgressHandle h = ProgressHandle.createHandle(Bundle.MSG_CollectingItems());
+                        h.start();
+                        h.progress(Bundle.MSG_CollectingItems_Text());
+                        try {
+                            values.put(number, getCompartmentsAndDbs(prevItem));
+                            input.setEstimatedNumberOfInputs(input.getEstimatedNumberOfInputs() + 1);
+                            return createQuickPick(values.get(number), Bundle.SelectDatabase());
+                        } finally {
+                            h.finish();
+                        }
                     } else if (prev instanceof NotifyDescriptor.PasswordLine) {
                         result.put(PASSWORD, ((NotifyDescriptor.PasswordLine) prev).getInputText());
                         return null;
@@ -156,24 +191,24 @@ public class AddADBAction implements ActionListener {
         }
     }
     
-    private <T extends OCIItem> NotifyDescriptor.QuickPick createQuickPick(List<T> ociItems, String title) {
+    private <T extends OCIItem> NotifyDescriptor.QuickPick createQuickPick(Map<String, T> ociItems, String title) {
         
-        List<Item> items = ociItems.stream()
+        List<Item> items = ociItems.values().stream()
                 .map(tenancy -> new Item(tenancy.getName(), tenancy.getDescription()))
                 .collect(Collectors.toList());
         return new NotifyDescriptor.QuickPick(title, title, items, false);
     }
     
-    private List<OCIItem> getCompartmentsAndDbs(OCIItem parent) {
-        List<OCIItem> items = new ArrayList<> ();
+    private Map<String, OCIItem> getCompartmentsAndDbs(OCIItem parent) {
+        Map<String, OCIItem> items = new HashMap<> ();
         try {
             if (parent instanceof CompartmentItem) {
-                items.addAll(DatabaseNode.getDatabases().apply((CompartmentItem) parent));
+                DatabaseNode.getDatabases().apply((CompartmentItem) parent).forEach((db) -> items.put(db.getName(), db));
             }
         } catch (BmcException e) {
             LOGGER.log(Level.SEVERE, "Unable to load compartment list", e); // NOI18N
         }
-        items.addAll(CompartmentNode.getCompartments().apply(parent));
+        CompartmentNode.getCompartments().apply(parent).forEach(c -> items.put(c.getName(), c));
         return items;
     }
     

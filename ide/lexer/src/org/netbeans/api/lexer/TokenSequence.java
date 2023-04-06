@@ -34,7 +34,7 @@ import org.netbeans.spi.lexer.LanguageEmbedding;
 /**
  * Token sequence allows to iterate between tokens
  * of a token hierarchy.
- * <br/>
+ * <br>
  * Token sequence for top-level language of a token hierarchy
  * may be obtained by {@link TokenHierarchy#tokenSequence()}.
  * 
@@ -44,7 +44,7 @@ import org.netbeans.spi.lexer.LanguageEmbedding;
  *   <li>
  *     Position token sequence before token that should first be retrieved
  *     (or behind desired token when iterating backwards).
- *     <br/>
+ *     <br>
  *     One of the following ways may be used:
  *     <ul>
  *       <li> {@link #move(int)} positions TS before token that either starts
@@ -60,21 +60,20 @@ import org.netbeans.spi.lexer.LanguageEmbedding;
  *     Token sequence will always be positioned between tokens
  *     when using one of the operations above
  *     ({@link #token()} will return <code>null</code> to signal between-tokens location).
- *     <br/>
+ *     <br>
  *   </li>
  * 
  *   <li>
  *     Start iterating through the tokens in forward/backward direction
  *     by using {@link #moveNext()} or {@link #movePrevious()}.
- *     <br/>
+ *     <br>
  *     If <code>moveNext()</code> or <code>movePrevious()</code> returned
  *     <code>true</code> then TS is positioned
  *     over a concrete token retrievable by {@link #token()}.
- *     <br/>
+ *     <br>
  *     Its offset can be retrieved by {@link #offset()}.
  *   </li>
  * </ol>
- * </p>
  * 
  * <p>
  * An example of forward iteration through the tokens:
@@ -88,7 +87,6 @@ import org.netbeans.spi.lexer.LanguageEmbedding;
  *       if (ts.offset() == ...) { ... }
  *   }
  * </pre>
- * </p>
  *
  * <p>
  * This object should be used by a single thread only. For token hierarchies
@@ -159,7 +157,7 @@ public final class TokenSequence<T extends TokenId> {
      * Get token to which this token sequence points to or null
      * if TS is positioned between tokens
      * ({@link #moveNext()} or {@link #movePrevious()} were not called yet).
-     * <br/>
+     * <br>
      * A typical iteration usage:
      * <pre>
      *   TokenSequence ts = tokenHierarchy.tokenSequence();
@@ -175,12 +173,11 @@ public final class TokenSequence<T extends TokenId> {
      * The returned token instance may be flyweight
      * ({@link Token#isFlyweight()} returns true)
      * which means that its {@link Token#offset(TokenHierarchy)} will return -1.
-     * <br/>
+     * <br>
      * To find a correct offset use {@link #offset()}.
-     * <br/>
+     * <br>
      * Or if its necessary to revert to a regular non-flyweigt token
      * the {@link #offsetToken()} may be used.
-     * </p>
      *
      * <p>
      * The lifetime of the returned token instance may be limited for mutable inputs.
@@ -200,10 +197,10 @@ public final class TokenSequence<T extends TokenId> {
     /**
      * Similar to {@link #token()} but always returns a non-flyweight token
      * with the appropriate offset.
-     * <br/>
+     * <br>
      * If the current token is flyweight then this method replaces it
      * with the corresponding non-flyweight token which it then returns.
-     * <br/>
+     * <br>
      * Subsequent calls to {@link #token()} will also return this non-flyweight token.
      *
      * <p>
@@ -250,7 +247,7 @@ public final class TokenSequence<T extends TokenId> {
     
     /**
      * Get an index of token to which (or before which) this TS is currently positioned.
-     * <br/>
+     * <br>
      * <p>
      * Initially or after {@link #move(int)} or {@link #moveIndex(int)}
      * token sequence is positioned between tokens:
@@ -259,7 +256,6 @@ public final class TokenSequence<T extends TokenId> {
      *        ^          ^                ^
      * Index: 0          1                n
      * </pre>
-     * </p>
      * 
      * <p>
      * After use of {@link #moveNext()} or {@link #movePrevious()}
@@ -269,7 +265,6 @@ public final class TokenSequence<T extends TokenId> {
      *             ^          ^                ^
      * Index:      0          1                n
      * </pre>
-     * </p>
      * 
      * @return &gt;=0 index of token to which (or before which) this TS is currently positioned.
      */
@@ -281,7 +276,7 @@ public final class TokenSequence<T extends TokenId> {
      * Get embedded token sequence if the token
      * to which this token sequence is currently positioned
      * has a language embedding.
-     * <br/>
+     * <br>
      * If there is a custom embedding created by
      * {@link #createEmbedding(Language,int,int)} it will be returned
      * instead of the default embedding
@@ -311,10 +306,10 @@ public final class TokenSequence<T extends TokenId> {
      * with the same language paths (if the embeddings allow it - see
      * {@link LanguageEmbedding#joinSections()}) into a single input text
      * which is then lexed as a single continuous text.
-     * <br/>
+     * <br>
      * If any of the resulting tokens crosses embedding's boundaries then the token
      * is split into multiple part tokens.
-     * <br/>
+     * <br>
      * If the embedding does not join sections then this method behaves
      * like {@link #embedded()}.
      * 
@@ -382,7 +377,7 @@ public final class TokenSequence<T extends TokenId> {
 
     /**
      * Create language embedding described by the given parameters.
-     * <br/>
+     * <br>
      * If the underying text input is mutable then this method should only be called
      * within a write lock over the text input.
      *
@@ -397,16 +392,16 @@ public final class TokenSequence<T extends TokenId> {
      *  and there will be no tokens created for them.
      * @param joinSections whether sections with this embedding should be joined
      *  across the input source or whether they should stay separate.
-     *  <br/>
+     *  <br>
      *  For example for HTML sections embedded in JSP this flag should be true:
      *  <pre>
      *   &lt;!-- HTML comment start
      *       &lt;% System.out.println("Hello"); %&gt;
             still in HTML comment --&lt;
      *  </pre>
-     *  <br/>
+     *  <br>
      *  Only the embedded sections with the same language path can be joined.
-     * <br/>
+     * <br>
      * If preceding embeddings requested sections joining for the particular language path
      * then this parameter will be updated from false to true automatically by the method.
      * @return true if the embedding was created successfully or false if an embedding
@@ -426,7 +421,7 @@ public final class TokenSequence<T extends TokenId> {
     
     /**
      * Remove previously created language embedding.
-     * <br/>
+     * <br>
      * If the underying text input is mutable then this method should only be called
      * within a write lock over the text input.
      */
@@ -534,7 +529,7 @@ public final class TokenSequence<T extends TokenId> {
     /**
      * Position token sequence between <code>index-1</code>
      * and <code>index</code> tokens.
-     * <br/>
+     * <br>
      * TS will be positioned in the following way:
      * <pre>
      *          Token[0]   ...   Token[index-1]   Token[index] ...
@@ -545,18 +540,18 @@ public final class TokenSequence<T extends TokenId> {
      * <p>
      * Subsequent {@link #moveNext()} or {@link #movePrevious()} is needed to fetch
      * a concrete token in the desired direction.
-     * <br/>
+     * <br>
      * Subsequent {@link #moveNext()} will position TS over <code>Token[index]</code>
      * (or {@link #movePrevious()} will position TS over <code>Token[index-1]</code>)
      * so that <code>{@link #token()} != null</code>.
      *
      * @param index index of the token to which this sequence
      *   should be positioned.
-     *   <br/>
+     *   <br>
      *   If <code>index >= {@link #tokenCount()}</code>
      *   then the TS will be positioned to {@link #tokenCount()}.
-     *   <br/>
-     *   If <code>index < 0</code> then the TS will be positioned to index 0.
+     *   <br>
+     *   If <code>index &lt; 0</code> then the TS will be positioned to index 0.
      * 
      * @return difference between requested index and the index to which TS
      *   is really set.
@@ -586,7 +581,7 @@ public final class TokenSequence<T extends TokenId> {
     
     /**
      * Move the token sequence to be positioned before the first token.
-     * <br/>
+     * <br>
      * This is equivalent to <code>moveIndex(0)</code>.
      */
     public void moveStart() {
@@ -598,7 +593,7 @@ public final class TokenSequence<T extends TokenId> {
     
     /**
      * Move the token sequence to be positioned behind the last token.
-     * <br/>
+     * <br>
      * This is equivalent to <code>moveIndex(tokenCount())</code>.
      */
     public void moveEnd() {
@@ -612,7 +607,7 @@ public final class TokenSequence<T extends TokenId> {
      * Move token sequence to be positioned between <code>index-1</code>
      * and <code>index</code> tokens where Token[index] either starts at offset
      * or "contains" the offset.
-     * <br/>
+     * <br>
      * <pre>
      *        +----------+-----+----------------+--------------+------
      *        | Token[0] | ... | Token[index-1] | Token[index] | ...
@@ -626,7 +621,7 @@ public final class TokenSequence<T extends TokenId> {
      * <p>
      * Subsequent {@link #moveNext()} or {@link #movePrevious()} is needed to fetch
      * a concrete token.
-     * <br/>
+     * <br>
      * If the offset is too big then the token sequence will be positioned
      * behind the last token.
      * </p>
@@ -642,7 +637,7 @@ public final class TokenSequence<T extends TokenId> {
      * @return difference between the reqeuested offset
      *  and the start offset of the token
      *  before which the the token sequence gets positioned.
-     *  <br/>
+     *  <br>
      *  If positioned right after the last token then (offset - last-token-end-offset)
      *  is returned.
      * 
@@ -664,7 +659,7 @@ public final class TokenSequence<T extends TokenId> {
     
     /**
      * Check whether this TS contains zero tokens.
-     * <br/>
+     * <br>
      * This check is strongly preferred over <code>tokenCount() == 0</code>.
      * 
      * @see #tokenCount()
@@ -713,7 +708,7 @@ public final class TokenSequence<T extends TokenId> {
      *  <code>tokenStartOffset + tokenLength > startOffset</code>
      *  will be present in the returned sequence.
      * @param endOffset >=startOffset only tokens satisfying
-     *  <code>tokenStartOffset < endOffset</code>
+     *  <code>tokenStartOffset &lt; endOffset</code>
      *  will be present in the returned sequence.
      * @return non-null sub sequence of this token sequence.
      */
@@ -735,7 +730,7 @@ public final class TokenSequence<T extends TokenId> {
     
     /**
      * Check whether this token sequence is valid and can be iterated.
-     * <br/>
+     * <br>
      * If this method returns false then the underlying token hierarchy was modified
      * and this token sequence should be abandoned.
      * 

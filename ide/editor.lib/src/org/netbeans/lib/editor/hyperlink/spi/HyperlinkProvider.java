@@ -39,7 +39,7 @@ import org.netbeans.spi.editor.mimelookup.MimeLocation;
  * </p>
  * 
  * <p>
- * Please see {@link org.netbeans.lib.editor.hyperlink.HyperlinkProviderManager}
+ * Please see {@code org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderManager}
  * for more details.
  * </p>
  *
@@ -51,7 +51,7 @@ import org.netbeans.spi.editor.mimelookup.MimeLocation;
  * 
  * <p><b>Related documentation</b>
  * 
- * <p><a href="http://platform.netbeans.org/tutorials/60/nbm-hyperlink.html">NetBeans Hyperlink Navigation Tutorial</a>
+ * <p><a href="https://netbeans.apache.org/tutorials/nbm-hyperlink.html">NetBeans Hyperlink Navigation Tutorial</a>
  *
  * @author Jan Lahoda
  * @since 1.0

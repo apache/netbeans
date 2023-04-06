@@ -30,7 +30,7 @@ import org.openide.filesystems.FileObject;
 /**
  * Encapsulate a group of individual factory methods that are responsible for creating objects
  * of specific interfaces. If subclassed and provided by
- * {@link AnnotationProvider#getInterceptionListener} then
+ * {@link BaseAnnotationProvider#getInterceptionListener} then
  * individual instances will be called by <code>MasterFileSystem</code>
  * There may exist more than one instance of <code>ProvidedExtensions</code>
  * at a given moment and therefore there is defined for
@@ -53,7 +53,7 @@ public class ProvidedExtensions implements InterceptionListener {
      * Creates a new ProvidedExtensions. 
      * 
      * @param providesCanWrite true if this instance is meant to 
-     *        determine a files {@link #canWrite()} value, otherwise false. 
+     *        determine a files {@link #canWrite(File)} value, otherwise false. 
      * @since 2.29
      *          
      */
@@ -327,7 +327,7 @@ public class ProvidedExtensions implements InterceptionListener {
      * This will stop all other "idle I/O" operations (like background refresh
      * after window is activated).
      *
-     * @param callable the {@link Callable} to run
+     * @param run the {@link Callable} to run
      * @throws Exception the exception thrown by the callable
      * @since 2.35
      */

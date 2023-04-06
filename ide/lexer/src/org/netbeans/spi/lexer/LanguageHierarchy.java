@@ -33,14 +33,14 @@ import org.netbeans.lib.lexer.TokenIdImpl;
 
 /**
  * Definition of a language, its lexer and its embedded languages.
- * <br/>
+ * <br>
  * It's a mirror of {@link Language} on SPI level containing
  * additional information necessary for the lexer infrastructure operation.
- * <br/>
+ * <br>
  * The language hierarchies should be implemented by SPI providers
  * and their languages should be given for public use
  * (language hierarchy classes do not need to be public though).
- * <br/>
+ * <br>
  * A typical situation may look like this:<pre>
  *
  * public enum MyTokenId implements TokenId {
@@ -149,7 +149,7 @@ public abstract class LanguageHierarchy<T extends TokenId> {
 
     /**
      * Provide map of token category names to collection of its members.
-     * <br/>
+     * <br>
      * The results of this method will be merged with the primary-category
      * information found in token ids.
      * <br>
@@ -195,14 +195,14 @@ public abstract class LanguageHierarchy<T extends TokenId> {
      * <br>
      * This method will only be called if the given token instance
      * will not be flyweight token or token with custom text:
-     * <code>token.isFlyweight() == false && token.isCustomText() == false</code>
+     * {@code token.isFlyweight() == false && token.isCustomText() == false}
      * <br>
      * That restriction exists because the children token list is constructed
      * lazily and the infrastructure needs to access the token's parent token
      * list which would not be possible if the token would be flyweight.
      *
      * @param token non-null token for which the language embedding will be resolved.
-     *  <br/>
+     *  <br>
      *  The token may have a zero length <code>({@link Token#length()} == 0)</code>
      *  in case the language infrastructure performs a poll for all embedded
      *  languages for the 
@@ -226,14 +226,14 @@ public abstract class LanguageHierarchy<T extends TokenId> {
      * Determine whether embedding may be present for a token with the given token id.
      * The embedding for the particular token may either never be present, always present or sometimes
      * present (depending on token's text or properties).
-     * <br/>
+     * <br>
      * By default the method returns {@link EmbeddingPresence#CACHED_FIRST_QUERY}
      * so the {@link #embedding(Token,LanguagePath,InputAttributes)}
      * will be called once (for a first token instance with the given token id)
      * and if there is no embedding then the embedding creation will not be attempted
      * for any other token with the same token id. This should be appropriate
      * for most cases.
-     * <br/>
+     * <br>
      * This method allows to avoid frequent queries checking
      * whether particular token might contain embedding or not.
      * 
@@ -258,14 +258,14 @@ public abstract class LanguageHierarchy<T extends TokenId> {
     /**
      * This feature is currently not supported - Token.text()
      * will return null for non-flyweight tokens.
-     * <br/>
+     * <br>
      * Determine whether the text of the token with the particular id should
      * be retained after the token has been removed from the token list
      * because of the underlying mutable input source modification.
-     * <br/>
+     * <br>
      * {@link org.netbeans.api.lexer.Token#text()} will continue
      * to return the value that it had right before the token's removal.
-     * <br/>
+     * <br>
      * This may be useful if the tokens are held directly in parse trees
      * and the parser queries the tokens for text.
      *
@@ -273,7 +273,7 @@ public abstract class LanguageHierarchy<T extends TokenId> {
      * Retaining text in the tokens has performance and memory implications
      * and should only be done selectively for tokens where it's desired
      * (such as identifiers).
-     * <br/>
+     * <br>
      * The extra performance and memory penalty only happens during
      * token's removal from the token list for the given input.
      * Token creation performance and memory consumption during

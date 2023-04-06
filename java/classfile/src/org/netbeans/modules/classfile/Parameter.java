@@ -75,7 +75,7 @@ public final class Parameter extends Field {
     }
 
     /**
-     * Return a string in the form "<type> <name>".  Class types
+     * Return a string in the form {@code "<type> <name>"}.  Class types
      * are shown in a "short" form; i.e. "Object" instead of
      * "java.lang.Object"j.
      *

@@ -40,7 +40,7 @@ public interface ModuleConfigurationFactory2 extends ModuleConfigurationFactory 
      * 
      * @param j2eeModule J2EE module the created ModuleConfigucation should be 
      *        associated with
-     * @param deployment URL of the target server instance
+     * @param instanceUrl  URL of the target server instance
      * 
      * @return ModuleConfiguration associated with the specified J2EE module
      */    

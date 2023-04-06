@@ -57,7 +57,7 @@ public final class CodeTemplateManager {
 
     /**
      * Get unmodifiable collection of the code templates for this manager.
-     * <br/>
+     * <br>
      * This method will block until the code templates will be loaded.
      *
      * @return non-null unmodifiable collection of the code templates.

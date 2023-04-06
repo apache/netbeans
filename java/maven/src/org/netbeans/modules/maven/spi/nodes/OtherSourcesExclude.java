@@ -27,7 +27,7 @@ import java.util.Set;
  * src/main and src/test. It is assumed that implementing this interface is associated 
  * with implementation of a NodeFactory providing special handling for such folder.
  * To be registered in project lookup.
- * Related to {@link JavaLikeRootProvider} but only handling the Other sources node display.
+ * Related to {@link org.netbeans.modules.maven.spi.queries.JavaLikeRootProvider} but only handling the Other sources node display.
  * 
  * Note: the api is a bit simplistic for performance reasons, eg. if user reconfigures the src/main/webapp content to a different location in pom.xml we silently assume that
  * src/main/webapp doesn't exist then.

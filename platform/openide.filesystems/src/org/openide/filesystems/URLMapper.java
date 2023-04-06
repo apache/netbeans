@@ -64,7 +64,7 @@ public abstract class URLMapper {
      * Not guaranteed to work from other machines (though it may).
      * <div class="nonnormative">
      * Typical protocols used: <code>file</code> for disk files (see {@link File#toURI});
-     * <code>jar</code> to wrap other URLs (e.g. <samp>jar:file:/some/thing.jar!/some/entry</samp>).
+     * <code>jar</code> to wrap other URLs (e.g. <code>jar:file:/some/thing.jar!/some/entry</code>).
      * </div>
      */
     public static final int EXTERNAL = 1;

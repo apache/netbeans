@@ -92,14 +92,14 @@ public class J2eeModule {
     /**
      * J2EE specification version 1.3
      * @since 1.5
-     * @deprecated use {@link Profile#J2EE_13}
+     * @deprecated use {@link org.netbeans.api.j2ee.core.Profile#J2EE_13}
      */
     @Deprecated
     public static final String J2EE_13 = "1.3"; //NOI18N
     /**
      * J2EE specification version 1.4
      * @since 1.5
-     * @deprecated use {@link Profile#J2EE_14}
+     * @deprecated use {@link org.netbeans.api.j2ee.core.Profile#J2EE_14}
      */
     @Deprecated
     public static final String J2EE_14 = "1.4"; //NOI18N
@@ -108,7 +108,7 @@ public class J2eeModule {
      * JAVA EE 5 specification version
      *
      * @since 1.6
-     * @deprecated use {@link Profile#JAVA_EE_5}
+     * @deprecated use {@link org.netbeans.api.j2ee.core.Profile#JAVA_EE_5}
      */
     @Deprecated
     public static final String JAVA_EE_5 = "1.5"; // NOI18N

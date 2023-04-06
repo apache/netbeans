@@ -175,7 +175,7 @@ public class Actions {
      * tested everytime and takes precedence over standard <code>Action.NAME</code>
      * <p>
      * By default icons are not visible in popup menus. This can be configured
-     * via <a href="@TOP@architecture-summary.html#branding-USE_MNEMONICS">branding</a>.
+     * via <a href="@TOP@architecture-summary.html#branding-org.openide.awt.USE_MNEMONICS">branding</a>.
      * 
      * @param item menu item
      * @param action action
@@ -292,10 +292,10 @@ public class Actions {
     }
 
     /** Sets the text for the menu item or other subclass of AbstractButton.
-    * Cut from the name '&' char.
+    * Cut from the name '&amp;' char.
     * @param item AbstractButton
     * @param text new label
-    * @param useMnemonic if true and '&' char found in new text, next char is used
+    * @param useMnemonic if true and '&amp;' char found in new text, next char is used
     *           as Mnemonic.
     * @deprecated Use either {@link AbstractButton#setText} or {@link Mnemonics#setLocalizedText(AbstractButton, String)} as appropriate.
     */
@@ -318,16 +318,16 @@ public class Actions {
 
     /**
      * Removes an ampersand from a text string; commonly used to strip out unneeded mnemonics.
-     * Replaces the first occurence of <samp>&amp;?</samp> by <samp>?</samp> or <samp>(&amp;??</samp> by the empty string
-     * where <samp>?</samp> is a wildcard for any character.
-     * <samp>&amp;?</samp> is a shortcut in English locale.
-     * <samp>(&amp;?)</samp> is a shortcut in Japanese locale.
+     * Replaces the first occurence of <code>&amp;?</code> by <code>?</code> or <code>(&amp;??</code> by the empty string
+     * where <code>?</code> is a wildcard for any character.
+     * <code>&amp;?</code> is a shortcut in English locale.
+     * <code>(&amp;?)</code> is a shortcut in Japanese locale.
      * Used to remove shortcuts from workspace names (or similar) when shortcuts are not supported.
      * <p>The current implementation behaves in the same way regardless of locale.
      * In case of a conflict it would be necessary to change the
      * behavior based on the current locale.
      * @param text a localized label that may have mnemonic information in it
-     * @return string without first <samp>&amp;</samp> if there was any
+     * @return string without first <code>&amp;</code> if there was any
      */
     public static String cutAmpersand(String text) {
         // XXX should this also be deprecated by something in Mnemonics?
@@ -592,7 +592,7 @@ public class Actions {
      * &lt;file name="action-pkg-ClassName.instance"&gt;
      *   &lt;attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/&gt;
      *   &lt;attr name="type" stringvalue="org.netbeans.api.actions.Openable"/&gt;
-     *   &lt;attr name="selectionType" stringvalue="ANY"/&gt; &lt-- or EXACTLY_ONE --&gt;
+     *   &lt;attr name="selectionType" stringvalue="ANY"/&gt; &lt;-- or EXACTLY_ONE --&gt;
      *   &lt;attr name="delegate" newvalue="action.pkg.YourAction"/&gt;
      * 
      *   &lt;!--
@@ -672,11 +672,11 @@ public class Actions {
      *    }
      *  }
      * </pre>
-     * <p/>
+     * <p>
      * Further attributes are defined to control action's enabled and checked state. 
      * Attributes which control enable state are prefixed by "{@code enableOn}". Attributes
      * controlling checked state have prefix "{@code checkedOn}":
-     * <code><pre>
+     * <pre><code>
      * &lt;file name="action-pkg-ClassName.instance"&gt;
      *   &lt;!-- Enable on certain type in Lookup --&gt;
      *   &lt;attr name="enableOnType" stringvalue="qualified.type.name"/&gt;
@@ -702,7 +702,7 @@ public class Actions {
      * 
      * &lt;/file&gt;
      * 
-     * </pre></code>
+     * </code></pre>
      *
      * @param type the object to seek for in the active context
      * @param single shall there be just one or multiple instances of the object

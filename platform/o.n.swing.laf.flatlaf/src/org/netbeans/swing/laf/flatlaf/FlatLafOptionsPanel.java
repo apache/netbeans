@@ -21,7 +21,6 @@ package org.netbeans.swing.laf.flatlaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.util.SystemInfo;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import org.netbeans.api.actions.Editable;
 import org.netbeans.spi.options.OptionsPanelController;
@@ -137,17 +136,20 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
             .addGroup(advPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(advPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(customPropertiesLabel)
-                    .addComponent(customPropertiesButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(customPropertiesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(advPanelLayout.createSequentialGroup()
+                        .addComponent(customPropertiesButton)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         advPanelLayout.setVerticalGroup(
             advPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(advPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(customPropertiesLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(customPropertiesButton)
-                .addGap(0, 54, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -156,16 +158,13 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(useWindowDecorationsCheckBox)
-                            .addComponent(unifiedTitleBarCheckBox)
-                            .addComponent(menuBarEmbeddedCheckBox)
-                            .addComponent(underlineMenuSelectionCheckBox)
-                            .addComponent(alwaysShowMnemonicsCheckBox))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(advPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(useWindowDecorationsCheckBox)
+                    .addComponent(unifiedTitleBarCheckBox)
+                    .addComponent(menuBarEmbeddedCheckBox)
+                    .addComponent(underlineMenuSelectionCheckBox)
+                    .addComponent(alwaysShowMnemonicsCheckBox))
+                .addContainerGap(213, Short.MAX_VALUE))
+            .addComponent(advPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

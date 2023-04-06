@@ -100,7 +100,7 @@ public class ModuleTest extends TestCase {
                         try {
                             final String moduleName = p.getName(p.getNameCount()-1).toString();
                             final Path moduleInfo = root.resolve(String.format("%s/module-info.class", moduleName));   //NOI18N
-                            assertTrue(Files.exists(moduleInfo));
+                            assertTrue(String.valueOf(moduleInfo), Files.exists(moduleInfo));
                             try (InputStream in = Files.newInputStream(moduleInfo)) {
                                 final ClassFile cf = new ClassFile(in, true);
                                 assertNotNull(cf);

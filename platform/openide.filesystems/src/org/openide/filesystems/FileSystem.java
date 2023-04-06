@@ -455,13 +455,13 @@ public abstract class FileSystem implements Serializable {
      * will be honored as of org.openide.filesystems 7.25:
      * <dl>
      * <dt>{@code displayName}</dt>
-     * <dd>Value of {@link Status#annotateName}. Often used with {@code bundlevalue} in an {@link XMLFileSystem}.</dd>
+     * <dd>Value of <a href="https://github.com/apache/netbeans/tree/master/platform/openide.filesystems.nb/src/org/netbeans/modules/openide/filesystems/FileSystemStatus.java">FileSystemStatus#annotateName</a>. Often used with {@code bundlevalue} in an {@link XMLFileSystem}.</dd>
      * <dt>{@code SystemFileSystem.localizingBundle}</dt>
      * <dd>Name of a bundle (as per {@link NbBundle#getBundle(String)}) in which to look up a display name.
      * The bundle key is the {@link FileObject#getPath}.
      * {@code displayName} is preferred for new code.</dd>
      * <dt>{@code iconBase}</dt>
-     * <dd>Resource path to icon for {@link Status#annotateIcon}.
+     * <dd>Resource path to icon for <a href="https://github.com/apache/netbeans/tree/master/platform/openide.filesystems.nb/src/org/netbeans/modules/openide/filesystems/FileSystemStatus.java">FileSystemStatus#annotateIcon</a>.
      * {@code _32} will be inserted before the file suffix for 32x32 icons.</dd>
      * <dt>{@code SystemFileSystem.icon} and {@code SystemFileSystem.icon32}</dt>
      * <dd>Icon specified directly as a {@link URL} (usually {@code nbresloc} protocol)

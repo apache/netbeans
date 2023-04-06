@@ -83,7 +83,7 @@ import org.openide.util.NbBundle;
  */
 public class Util {
 
-    private static final String[] JPA_VERSIONS = {Persistence.VERSION_1_0, Persistence.VERSION_2_0, Persistence.VERSION_2_1};
+    private static final String[] JPA_VERSIONS = {Persistence.VERSION_1_0, Persistence.VERSION_2_0, Persistence.VERSION_2_1, Persistence.VERSION_2_2};
     
     /*
      * Changes the text of a JLabel in component from oldLabel to newLabel
@@ -181,7 +181,7 @@ public class Util {
             return true;
         }
         if (JPAModuleInfo.ModuleType.WEB == moduleInfo.getType()
-                && asList("2.5", "3.1", "3.0", "4.0", "5.0").contains(moduleInfo.getVersion())) {
+                && asList("2.5", "3.1", "3.0", "4.0", "5.0", "6.0").contains(moduleInfo.getVersion())) {
             return true;
         }
         return false;
@@ -231,10 +231,14 @@ public class Util {
         int defIndex = 0;
         if(providers.size()>1){//if it's possible to select preferred jpa2.0 provider, we'll select instead of jpa1.0 default one
             String defProviderVersion = ProviderUtil.getVersion((Provider) providers.get(0));
-            boolean specialCase = (Util.isJPAVersionSupported(project, Persistence.VERSION_2_0) || Util.isJPAVersionSupported(project, Persistence.VERSION_2_1)) && (defProviderVersion == null || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 2.0 is supported by default (or first) is jpa1.0 or udefined version provider
+            boolean specialCase = (Util.isJPAVersionSupported(project, Persistence.VERSION_2_0) 
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_2_1) 
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_2_2)) 
+                    && (defProviderVersion == null 
+                    || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 2.2 is supported by default (or first) is jpa1.0 or undefined version provider
             if(specialCase){
                 for (int i = 1; i<providers.size() ; i++){
-                    if(ProviderUtil.ECLIPSELINK_PROVIDER.equals(providers.get(i))){//eclipselink jpa2.1 is preferred provider
+                    if(ProviderUtil.ECLIPSELINK_PROVIDER2_2.equals(providers.get(i))){//eclipselink jpa2.2 is preferred provider
                         defIndex = i;
                         break;
                     }
@@ -349,7 +353,9 @@ public class Util {
         String version = (lib != null && libIsAdded) ? PersistenceUtils.getJPAVersion(lib) : PersistenceUtils.getJPAVersion(project);//use library if possible it will provide better result, TODO: may be usage of project should be removed and use 1.0 is no library was found
         if (result == createPUButton) {
             PersistenceUnit punit = null;
-            if (Persistence.VERSION_2_1.equals(version)) {
+            if (Persistence.VERSION_2_2.equals(version)) {
+                punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
+            } else if (Persistence.VERSION_2_1.equals(version)) {
                 punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
             } else if (Persistence.VERSION_2_0.equals(version)) {
                 punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
@@ -427,7 +433,7 @@ public class Util {
         }
         if (provider == null) {
             //sometimes project may not report any provider as supported, use eclipselink as a base
-            provider = ProviderUtil.ECLIPSELINK_PROVIDER;
+            provider = ProviderUtil.ECLIPSELINK_PROVIDER2_2;
         }
         //add necessary libraries before pu creation
         Library lib = null;
@@ -460,7 +466,9 @@ public class Util {
             }
         }
         PersistenceUnit punit = null;
-        if (Persistence.VERSION_2_1.equals(version)) {
+        if (Persistence.VERSION_2_2.equals(version)) {
+            punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
+        } else if (Persistence.VERSION_2_1.equals(version)) {
             punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
         } else if (Persistence.VERSION_2_0.equals(version)) {
             punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
@@ -571,7 +579,9 @@ public class Util {
             return false;
         }
         String version = Persistence.VERSION_1_0;
-        if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
+        if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) {
+            version = Persistence.VERSION_2_2;
+        } else if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
             version = Persistence.VERSION_2_1;
         } else if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {
             version = Persistence.VERSION_2_0;
@@ -706,7 +716,9 @@ public class Util {
     public static void addPersistenceUnitToProject(Project project) {
         if(PersistenceUtils.getJPAVersion(project) == null){
             Library lib;
-            if(isJPAVersionSupported(project, Persistence.VERSION_2_1) || isJPAVersionSupported(project, Persistence.VERSION_2_0)) {
+            if(isJPAVersionSupported(project, Persistence.VERSION_2_2) 
+                    || isJPAVersionSupported(project, Persistence.VERSION_2_1) 
+                    || isJPAVersionSupported(project, Persistence.VERSION_2_0)) {
                 lib = LibraryManager.getDefault().getLibrary("jpa20-persistence");
 
             } else {

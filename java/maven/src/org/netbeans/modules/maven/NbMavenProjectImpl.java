@@ -71,6 +71,7 @@ import org.netbeans.api.annotations.common.NullUnknown;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectActionContext;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.FileUtilities;
@@ -134,8 +135,9 @@ public final class NbMavenProjectImpl implements Project {
         public void run() {
             problemReporter.clearReports(); //#167741 -this will trigger node refresh?
             MavenProject prj = loadOriginalMavenProject(true);
+            MavenProject old;
             synchronized (NbMavenProjectImpl.this) {
-                MavenProject old = project == null ? null : project.get();
+                old = project == null ? null : project.get();
                 if (old != null && MavenProjectCache.isFallbackproject(prj)) {
                     prj.setPackaging(old.getPackaging()); //#229366 preserve packaging for broken projects to avoid changing lookup.
                 }
@@ -146,6 +148,7 @@ public final class NbMavenProjectImpl implements Project {
                 projectVariants.clear();
             }
             ACCESSOR.doFireReload(watcher);
+            reloadPossibleBrokenModules(old, prj);
         }
     });
     private final FileObject fileObject;
@@ -551,6 +554,53 @@ public final class NbMavenProjectImpl implements Project {
             reloadTask.schedule(0); //asuming here that schedule(0) will move the scheduled task in the queue if not yet executed
         }
         return reloadTask;
+    }
+    
+    private void reloadPossibleBrokenModules(MavenProject preceding, MavenProject p) {
+        // restrict to just poms that were marked as broken/incomplete.
+        if (!(MavenProjectCache.isFallbackproject(preceding) || 
+            preceding.getContextValue("org.netbeans.modules.maven.problems.primingNotDone") != Boolean.TRUE)) {
+            return;
+        }
+        // but do not cascade from projects, which are themselves broken.
+        if (MavenProjectCache.isFallbackproject(p)) {
+            return;
+        }
+        File basePOMFile = p.getFile().getParentFile();
+        for (String modName : p.getModules()) {
+            File modPom = new File(new File(basePOMFile, modName), "pom.xml");
+            if (!modPom.exists() && modPom.isFile()) {
+                LOG.log(Level.FINE, "POM file {0} for module {1} does not exist", new Object[] { modPom, modName });
+                continue;
+            }
+            MavenProject child = MavenProjectCache.getMavenProject(modPom, true, false);
+            if (child == null) {
+                continue;
+            }
+            // the project may have more problems, more subtle, but now repair just total breakage
+            if (!MavenProjectCache.isFallbackproject(child)) {
+                LOG.log(Level.FINE, "Project for module {0} is not a fallback, skipping", modName);
+            }
+            FileObject dir = FileUtil.toFileObject(modPom.getParentFile());
+            if (dir == null) {
+                LOG.log(Level.FINE, "Project directory for {0} is not a FileObject", modName);
+                continue;
+            }
+            Project c;
+            try {
+                c = ProjectManager.getDefault().findProject(dir);
+                if (c == null) {
+                    LOG.log(Level.FINE, "Module {0} is not a project", modName);
+                }
+            } catch (IOException ex) {
+                LOG.log(Level.FINE, "Error getting module project {0} is not a project", modName);
+                LOG.log(Level.FINE, "Exception was: ", ex);
+                continue;
+            }
+            LOG.log(Level.INFO, "Recovering module {0}, pomfile {1}", new Object[] { modName, modPom });
+            NbMavenProjectImpl childImpl = c.getLookup().lookup(NbMavenProjectImpl.class);
+            childImpl.fireProjectReload();
+        }
     }
 
     public static void refreshLocalRepository(NbMavenProjectImpl project) {

@@ -39,6 +39,8 @@ import org.apache.maven.execution.DefaultMavenExecutionResult;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuildingException;
+import org.apache.maven.project.ProjectBuildingResult;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.ProjectActionContext;
@@ -99,6 +101,10 @@ public final class MavenProjectCache {
      * @return 
      */
     public static MavenProject getMavenProject(final File pomFile, final boolean reload) {
+        return getMavenProject(pomFile, false, reload);
+    }
+    
+    public static MavenProject getMavenProject(final File pomFile, final boolean doNotLoadReturnNull, final boolean reload) {
         Mutex mutex = getMutex(pomFile);
         MavenProject mp = mutex.writeAccess(new Action<MavenProject>() {
             @Override
@@ -111,6 +117,9 @@ public final class MavenProjectCache {
                             LOG.log(Level.FINE, "Maven project {0} loaded from cache, packacing = {1}", new Object[] { pomFile, mp.getPackaging() });
                             return mp;
                         }
+                    }
+                    if (doNotLoadReturnNull) {
+                        return null;
                     }
                 }
                 MavenProject mp = loadOriginalMavenProject(pomFile);
@@ -329,7 +338,7 @@ public final class MavenProjectCache {
             res.addException(exc);
         } finally {
             if (newproject == null) {
-                newproject = getFallbackProject(pomFile);
+                newproject = getFallbackProject(res, pomFile);
             }
             //#215159 clear the project building request, it references multiple Maven Models via the RepositorySession cache
             //is not used in maven itself, most likely used by m2e only..
@@ -350,6 +359,44 @@ public final class MavenProjectCache {
         }
         return newproject;
     }
+
+    private static final String CONTEXT_PARTIAL_PROJECT = "org.netbeans.modules.maven.partialProject"; // NOI18N
+    private static final String CONTEXT_FALLBACK_PROJECT = "org.netbeans.modules.maven.fallbackProject"; // NOI18N
+    
+    /**
+     * Create a fallback project, but patch the incomplete project from the building result into it.
+     * The method will eventually start to return the partial project but still flagged as a fallback - see {@link #isFallbackproject(org.apache.maven.project.MavenProject)}.
+     * 
+     * @param result the maven execution / project building result.
+     * @param projectFile the project file.
+     * @return fallback project
+     * @throws AssertionError 
+     */
+    public static MavenProject getFallbackProject(MavenExecutionResult result, File projectFile) throws AssertionError {
+        MavenProject toReturn = getFallbackProject(projectFile);
+        if (result == null) {
+            return toReturn;
+        }
+        MavenProject partial = null;
+        
+        for (Throwable t : result.getExceptions()) {
+            if (t instanceof ProjectBuildingException) {
+                ProjectBuildingException pbe = (ProjectBuildingException)t;
+                for (ProjectBuildingResult res : pbe.getResults()) {
+                    if (projectFile.equals(res.getPomFile())) {
+                        partial = res.getProject();
+                        break;
+                    }
+                }
+            }
+        }
+        if (partial != null) {
+            toReturn.setContextValue(CONTEXT_PARTIAL_PROJECT, partial);
+        }
+        return toReturn;
+        
+    }
+    
     @NbBundle.Messages({
         "LBL_Incomplete_Project_Name=<partially loaded Maven project>",
         "LBL_Incomplete_Project_Desc=Partially loaded Maven project; try building it."
@@ -364,11 +411,16 @@ public final class MavenProjectCache {
         newproject.setName(Bundle.LBL_Incomplete_Project_Name());
         newproject.setDescription(Bundle.LBL_Incomplete_Project_Desc());
         newproject.setFile(projectFile);
+        newproject.setContextValue(CONTEXT_FALLBACK_PROJECT, true);
         return newproject;
     }
     
     public static boolean isFallbackproject(MavenProject prj) {
-        return "error".equals(prj.getGroupId()) && "error".equals(prj.getArtifactId()) && Bundle.LBL_Incomplete_Project_Name().equals(prj.getName());
+        if ("error".equals(prj.getGroupId()) && "error".equals(prj.getArtifactId()) && Bundle.LBL_Incomplete_Project_Name().equals(prj.getName())) {
+            return true;
+        } else {
+            return prj.getContextValue(CONTEXT_PARTIAL_PROJECT) == Boolean.TRUE;
+        }
     }
     
     public static Properties createUserPropsForProjectLoading(Map<String, String> activeConfiguration) {

@@ -382,10 +382,12 @@ public final class MavenProjectCache {
         for (Throwable t : result.getExceptions()) {
             if (t instanceof ProjectBuildingException) {
                 ProjectBuildingException pbe = (ProjectBuildingException)t;
-                for (ProjectBuildingResult res : pbe.getResults()) {
-                    if (projectFile.equals(res.getPomFile())) {
-                        partial = res.getProject();
-                        break;
+                if (pbe.getResults() != null) {
+                    for (ProjectBuildingResult res : pbe.getResults()) {
+                        if (projectFile.equals(res.getPomFile())) {
+                            partial = res.getProject();
+                            break;
+                        }
                     }
                 }
             }

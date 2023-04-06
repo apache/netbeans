@@ -569,7 +569,7 @@ public final class NbMavenProjectImpl implements Project {
         File basePOMFile = p.getFile().getParentFile();
         for (String modName : p.getModules()) {
             File modPom = new File(new File(basePOMFile, modName), "pom.xml");
-            if (!modPom.exists() && modPom.isFile()) {
+            if (!modPom.exists() || !modPom.isFile()) {
                 LOG.log(Level.FINE, "POM file {0} for module {1} does not exist", new Object[] { modPom, modName });
                 continue;
             }
@@ -586,20 +586,19 @@ public final class NbMavenProjectImpl implements Project {
                 LOG.log(Level.FINE, "Project directory for {0} is not a FileObject", modName);
                 continue;
             }
-            Project c;
             try {
-                c = ProjectManager.getDefault().findProject(dir);
+                Project c = ProjectManager.getDefault().findProject(dir);
                 if (c == null) {
                     LOG.log(Level.FINE, "Module {0} is not a project", modName);
+                } else {
+                    LOG.log(Level.INFO, "Recovering module {0}, pomfile {1}", new Object[] { modName, modPom });
+                    NbMavenProjectImpl childImpl = c.getLookup().lookup(NbMavenProjectImpl.class);
+                    childImpl.fireProjectReload();
                 }
             } catch (IOException ex) {
                 LOG.log(Level.FINE, "Error getting module project {0} is not a project", modName);
                 LOG.log(Level.FINE, "Exception was: ", ex);
-                continue;
             }
-            LOG.log(Level.INFO, "Recovering module {0}, pomfile {1}", new Object[] { modName, modPom });
-            NbMavenProjectImpl childImpl = c.getLookup().lookup(NbMavenProjectImpl.class);
-            childImpl.fireProjectReload();
         }
     }
 

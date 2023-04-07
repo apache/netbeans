@@ -608,9 +608,15 @@ final class DocRenderer {
                 if (type.isResolved()) {
                     QualifiedName typeName = type.getTypeName(true);
                     if (typeName != null) {
-                        if (sb.length() > 0
-                                && (typeKind == Type.Kind.UNION || typeKind == Type.Kind.INTERSECTION)) {
-                            sb.append(" ").append(typeKind.getSign()).append(" "); // NOI18N
+                        if (sb.length() > 0) {
+                                if (typeKind == Type.Kind.INTERSECTION) {
+                                    sb.append(" ").append(typeKind.getSign()).append(" "); // NOI18N
+                                } else {
+                                    //GH-5355: If a function returns multiple types
+                                    //and doesn't have a declared return type,
+                                    //it's always a union type.
+                                    sb.append(" ").append(Type.Kind.UNION.getSign()).append(" "); // NOI18N
+                                }
                         }
                         if (type.isNullableType()) {
                             sb.append(CodeUtils.NULLABLE_TYPE_PREFIX);

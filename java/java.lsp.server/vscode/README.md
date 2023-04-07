@@ -35,6 +35,8 @@ Apache NetBeans Language Server brings full featured Java development (edit-comp
     subprojects etc.
 4. Or simply create a new Java class file with `public static void main(String[] args)` method in opened folder and start coding, compiling, debugging. Works on JDK 8 and newer.
 
+## Proxy Issues
+When running this extension on GraalVM, as its runtime JDK, behind proxy it requires GraalVM JavaScript (Graal.JS) component installed to perform automatic proxy resolution. Either install Graal.JS using GraalVM VSCode extension available on Marketplace or invoke `gu install js` for GraalVM used by VSCode.
 
 ## Supported Actions
 * __Java: New Project...__ allows creation of new Maven or Gradle project 

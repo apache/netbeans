@@ -52,9 +52,15 @@ public final class MicronautMavenConstants {
     public static final String CLASSIFIER_NATIVE = "native-image";
     
     /**
-     * Native image plugin's goal to compile image without fork.
+     * Native image plugin's goal to compile image without fork. Available from
+     * 0.9.14 version, DOES NOT exist on earlier versions.
      */
-    public static final String PLUGIN_GOAL_COMPILE_NOFORK = "build";
+    public static final String PLUGIN_GOAL_COMPILE_NOFORK = "compile-no-fork";
+
+    /**
+     * Now deprecated goal, which produces a warning starting from 0.9.14 .
+     */
+    public static final String PLUGIN_GOAL_COMPILE_NOFORK_OLD = "build";
 
     /**
      * Native image plugin's goal to compile image from commandline

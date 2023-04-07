@@ -59,7 +59,7 @@ class SequenceElement implements Comparable<SequenceElement> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof SequenceElement)) {
+        if (!(obj instanceof SequenceElement)) {
             return false;
         }
         SequenceElement other = (SequenceElement)obj;

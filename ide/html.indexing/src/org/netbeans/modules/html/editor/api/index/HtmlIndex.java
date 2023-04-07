@@ -30,10 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.WeakHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
@@ -45,6 +42,8 @@ import org.netbeans.modules.web.common.api.WebUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
+
+import static java.util.Arrays.asList;
 
 /**
  * An instance of the indexer which can be held until the source roots are valid.
@@ -64,7 +63,7 @@ public class HtmlIndex {
     /**
      * Index version.
      */
-    public static final int VERSION = 2;
+    public static final int VERSION = 3;
 
     /**
      * Name of the field with references.
@@ -134,9 +133,8 @@ public class HtmlIndex {
      */
     public Collection<FileObject> find(String keyName, String value) {
         try {
-            String searchExpression = ".*(" + value + ")[,;].*"; //NOI18N
             Collection<FileObject> matchedFiles = new LinkedList<>();
-            Collection<? extends IndexResult> results = querySupport.query(keyName, searchExpression, QuerySupport.Kind.REGEXP, keyName);
+            Collection<? extends IndexResult> results = querySupport.query(keyName, value, QuerySupport.Kind.REGEXP, keyName);
             for (IndexResult result : filterDeletedFiles(results)) {
                 matchedFiles.add(result.getFile());
             }
@@ -147,7 +145,6 @@ public class HtmlIndex {
 
         return Collections.emptyList();
     }
-
 
     /**
      * Gets two maps wrapped in the AllDependenciesMaps class which contains
@@ -162,15 +159,13 @@ public class HtmlIndex {
         Map<FileObject, Collection<FileReference>> source2dests = new HashMap<>();
         Map<FileObject, Collection<FileReference>> dest2sources = new HashMap<>();
         for (IndexResult result : results) {
-            String importsValue = result.getValue(REFERS_KEY);
-            if (importsValue != null) {
+            String[] imports = result.getValues(REFERS_KEY);
+            if (imports != null) {
                 FileObject file = result.getFile();
-                Collection<String> imports = decodeListValue(importsValue);
                 Collection<FileReference> imported = new HashSet<>();
                 for (String importedFileName : imports) {
                     //resolve the file
                     FileReference resolvedReference = WebUtils.resolveToReference(file, importedFileName);
-//                FileObject resolvedFileObject = ref.target();
                     if (resolvedReference != null) {
                         imported.add(resolvedReference);
                         //add reverse dependency
@@ -197,9 +192,9 @@ public class HtmlIndex {
         Collection<? extends IndexResult> results = filterDeletedFiles(querySupport.query(REFERS_KEY, "", QuerySupport.Kind.PREFIX, REFERS_KEY));
         Set<String> paths = new HashSet<>();
         for (IndexResult result : results) {
-            String importsValue = result.getValue(REFERS_KEY);
+            String[] importsValue = result.getValues(REFERS_KEY);
             if(importsValue != null) {
-                paths.addAll(decodeListValue(importsValue));
+                paths.addAll(asList(importsValue));
             }
         }
         List<URL> urls = new ArrayList<>();
@@ -269,18 +264,6 @@ public class HtmlIndex {
             }
         }
 
-    }
-
-
-    //each list value is terminated by semicolon
-    private Collection<String> decodeListValue(String value) {
-        assert value.charAt(value.length() - 1) == ';';
-        Collection<String> list = new ArrayList<>();
-        StringTokenizer st = new StringTokenizer(value.substring(0, value.length() - 1), ",");
-        while (st.hasMoreTokens()) {
-            list.add(st.nextToken());
-        }
-        return list;
     }
 
      //if an indexed file is delete and IndexerFactory.filesDeleted() hasn't removed

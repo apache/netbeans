@@ -47,12 +47,12 @@
         <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/aopalliance-repackaged-2.6.1.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/osgi.core-8.0.0.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/osgi-resource-locator-1.0.3.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.core-2.7.10.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.asm-9.2.0.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.antlr-2.7.10.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.jpa-2.7.10.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.jpa.jpql-2.7.10.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.moxy-2.7.10.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.core-2.7.12.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.asm-9.4.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.antlr-2.7.12.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.jpa-2.7.12.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.jpa.jpql-2.7.12.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/org.eclipse.persistence.moxy-2.7.12.jar!/</resource>
     </volume>
     <properties>
         <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->

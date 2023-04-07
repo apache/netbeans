@@ -4,3 +4,4 @@ self::TEST1->|value;
 METHOD     test()                          [PUBLIC]   Union
 ------------------------------------
 METHOD     cases()                         [STATIC,   UnitEnum
+VARIABLE   string name                                \Union

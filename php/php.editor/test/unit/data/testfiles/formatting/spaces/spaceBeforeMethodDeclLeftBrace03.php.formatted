@@ -7,7 +7,6 @@ class Test extends Parent
     {
         return $this->text;
     }
-
 }
 
 ?>

@@ -56,11 +56,16 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     private final List<String> imports = new ArrayList<>();
 
     private static final Logger LOG = Logger.getLogger(Antlr4ParserResult.class.getName());
+
     public static final Reference HIDDEN = new Reference(ReferenceType.CHANNEL, "HIDDEN", OffsetRange.NONE);
-    
+    public static final Reference DEFAULT_MODE = new Reference(ReferenceType.MODE, "DEFAULT_MODE", OffsetRange.NONE);
+
+    final Set<String> unknownReferences = new HashSet<>();
+
     public Antlr4ParserResult(Snapshot snapshot) {
         super(snapshot);
         references.put(HIDDEN.name, HIDDEN);
+        references.put(DEFAULT_MODE.name, DEFAULT_MODE);
     }
     
     @Override
@@ -86,6 +91,7 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
         }
         occurrences.forEach((refName, offsets) -> {
             if (!allRefs.containsKey(refName)) {
+                unknownReferences.add(refName);
                 for (OffsetRange offset : offsets) {
                     errors.add(new DefaultError(null, "Unknown Reference: " + refName, null, getFileObject(), offset.getStart(), offset.getEnd(), Severity.ERROR));
                 }

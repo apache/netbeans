@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.61
+#Version 1.63
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1338,6 +1338,7 @@ meth public javax.swing.text.Document getBaseDocument()
 meth public org.netbeans.modules.xml.xam.dom.AbstractDocumentComponent findComponent(org.netbeans.modules.xml.xam.dom.AbstractDocumentComponent,java.util.List<org.w3c.dom.Element>,int)
 meth public org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<? extends org.w3c.dom.Node>,java.util.List<? extends org.w3c.dom.Node>)
 meth public org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<org.w3c.dom.Node>)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(int)
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(java.util.List<org.w3c.dom.Element>)
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(org.w3c.dom.Element)

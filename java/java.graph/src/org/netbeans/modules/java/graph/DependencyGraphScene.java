@@ -482,8 +482,7 @@ public class DependencyGraphScene<I extends GraphNodeImplementation> extends Gra
 
         if(supportsVersions()) {
             // other important paths
-            ArrayList<I> representants = new ArrayList<>(node.getDuplicatesOrConflicts());
-            for (GraphNodeImplementation curRep : representants) {
+            for (GraphNodeImplementation curRep : node.getDuplicatesOrConflicts()) {
                 addPathToRoot(curRep, curRep.getParent(), otherPathsEdges, importantNodes);
             }
         }

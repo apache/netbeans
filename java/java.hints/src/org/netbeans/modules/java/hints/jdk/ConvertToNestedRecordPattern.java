@@ -29,6 +29,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.IdentifierTree;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +40,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
@@ -69,7 +72,7 @@ import org.openide.util.NbBundle;
 @Hint(displayName = "#DN_ConvertToNestedRecordPattern", description = "#DESC_ConvertToNestedRecordPattern", category = "rules15",
         minSourceVersion = "19")
 /**
- *
+ * XXX: should not convert binding patters to deconstructor patterns when not all the uses of the original binding variable are removed!
  * @author mjayan
  */
 public class ConvertToNestedRecordPattern {
@@ -82,17 +85,21 @@ public class ConvertToNestedRecordPattern {
             return null;
         }
         TreePath t = ctx.getPath();
-        if (!t.getParentPath().getLeaf().getKind().equals(Tree.Kind.INSTANCE_OF)) {
+        if (t.getParentPath().getLeaf().getKind() != Tree.Kind.INSTANCE_OF) {
             return null;
         }
-        Set<String> recordPatternVarSet = new HashSet<>();
-        Map<PatternTree, List<PatternTree>> recordComponentMap = new LinkedHashMap<>();
-        DeconstructionPatternTree recordPattern = (DeconstructionPatternTree) t.getLeaf();
-        recordComponentMap = findNested(recordPattern, recordComponentMap);
+        Set<Element> recordPatternVarSet = new HashSet<>();
+        Map<TreePath, List<PatternTree>> recordComponentMap = new LinkedHashMap<>();
+        recordComponentMap = findNested(t, recordComponentMap);
 
-        for (PatternTree p : recordComponentMap.keySet()) {
-            BindingPatternTree bTree = (BindingPatternTree) p;
-            recordPatternVarSet.add(bTree.getVariable().getName().toString());
+        for (TreePath p : recordComponentMap.keySet()) {
+            BindingPatternTree bTree = (BindingPatternTree) p.getLeaf();
+            Element bindingElement = ctx.getInfo().getTrees().getElement(new TreePath(p, bTree.getVariable()));
+            if (bindingElement == null || bindingElement.getKind() != ElementKind.BINDING_VARIABLE) {
+                //seems like an unexpected error during attribution, skip:
+                return null;
+            }
+            recordPatternVarSet.add(bindingElement);
         }
         while (t != null && t.getLeaf().getKind() != Tree.Kind.BLOCK) {
             t = t.getParentPath();
@@ -100,6 +107,7 @@ public class ConvertToNestedRecordPattern {
         Set<TreePath> convertPath = new HashSet<>();
         List<String> localVarList = new ArrayList<>();
         Map<String, List<UserVariables>> userVars = new HashMap<>();
+        boolean[] patternNameUsed = new boolean[1];
         new CancellableTreePathScanner<Void, Void>() {
 
             @Override
@@ -110,7 +118,7 @@ public class ConvertToNestedRecordPattern {
                 List<UserVariables> nList = new ArrayList<>();
                 boolean match = MatcherUtilities.matches(ctx, getCurrentPath(), "$type $var1 = $expr3.$meth1()", outerVariables, new HashMap<>(), innerVariables);
 
-                if (match && recordPatternVarSet.contains(outerVariables.get("$expr3").getLeaf().toString())) {
+                if (match && recordPatternVarSet.contains(ctx.getInfo().getTrees().getElement(outerVariables.get("$expr3")))) {
                     String expr3 = outerVariables.get("$expr3").getLeaf().toString();
                     nList.clear();
                     if (userVars.get(expr3) != null) {
@@ -119,8 +127,17 @@ public class ConvertToNestedRecordPattern {
                     nList.add(new UserVariables(innerVariables.get("$var1"), innerVariables.get("$meth1")));
                     userVars.put(expr3, nList);
                     convertPath.add(getCurrentPath());
+                    return null;
                 }
                 return super.visitVariable(node, p);
+            }
+
+            @Override
+            public Void visitIdentifier(IdentifierTree node, Void p) {
+                if (recordPatternVarSet.contains(ctx.getInfo().getTrees().getElement(getCurrentPath()))) {
+                    patternNameUsed[0] = true;
+                }
+                return super.visitIdentifier(node, p);
             }
 
             @Override
@@ -128,6 +145,8 @@ public class ConvertToNestedRecordPattern {
                 return ctx.isCanceled();
             }
         }.scan(t, null);
+        if (patternNameUsed[0])
+            return null; //the name of the binding variable is used for other purposes that just reading components, cannot convert
         if (!convertPath.isEmpty()) {
             Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), convertPath, localVarList, userVars).toEditorFix();
             return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToNestedRecordPattern(), fix);
@@ -135,25 +154,23 @@ public class ConvertToNestedRecordPattern {
         return null;
     }
 
-    private static Map<PatternTree, List<PatternTree>> findNested(PatternTree pTree, Map<PatternTree, List<PatternTree>> recordComponentMap) {
-        switch (pTree.getKind()) {
+    private static Map<TreePath, List<PatternTree>> findNested(TreePath patternPath, Map<TreePath, List<PatternTree>> nestedBindingPatterns) {
+        switch (patternPath.getLeaf().getKind()) {
             case BINDING_PATTERN:
-                recordComponentMap.put(pTree, new ArrayList<>());
-                return recordComponentMap;
+                nestedBindingPatterns.put(patternPath, new ArrayList<>());
+                return nestedBindingPatterns;
             case DECONSTRUCTION_PATTERN:
-                DeconstructionPatternTree bTree = (DeconstructionPatternTree) pTree;
+                DeconstructionPatternTree bTree = (DeconstructionPatternTree) patternPath.getLeaf();
                 for (PatternTree p : bTree.getNestedPatterns()) {
-                    findNested(p, recordComponentMap);
+                    findNested(new TreePath(patternPath, p), nestedBindingPatterns);
                 }
-                break;
+                return nestedBindingPatterns;
             case PARENTHESIZED_PATTERN:
-                ParenthesizedPatternTree parenthTree = (ParenthesizedPatternTree) pTree;
-                findNested(parenthTree.getPattern(), recordComponentMap);
-                break;
+                ParenthesizedPatternTree parenthTree = (ParenthesizedPatternTree) patternPath.getLeaf();
+                return findNested(new TreePath(patternPath, parenthTree.getPattern()), nestedBindingPatterns);
             default:
-                return recordComponentMap;
+                return nestedBindingPatterns;
         }
-        return recordComponentMap;
     }
 
     private static class UserVariables {
@@ -198,14 +215,13 @@ public class ConvertToNestedRecordPattern {
             WorkingCopy wc = ctx.getWorkingCopy();
             TreePath t = ctx.getPath();
             TypeElement type = null;
-            Map<PatternTree, List<PatternTree>> recordComponentMap = new LinkedHashMap<>();
-            DeconstructionPatternTree recordPattern = (DeconstructionPatternTree) t.getLeaf();
-            recordComponentMap = findNested(recordPattern, recordComponentMap);
+            Map<TreePath, List<PatternTree>> recordComponentMap = new LinkedHashMap<>();
+            recordComponentMap = findNested(t, recordComponentMap);
 
             Set<String> localVars = new HashSet<>(localVarList);
-            for (PatternTree p : recordComponentMap.keySet()) {
+            for (TreePath tp : recordComponentMap.keySet()) {
                 List<PatternTree> bindTree = new ArrayList<>();
-                BindingPatternTree bTree = (BindingPatternTree) p;
+                BindingPatternTree bTree = (BindingPatternTree) tp.getLeaf();
                 VariableTree v = bTree.getVariable();
                 type = (TypeElement) wc.getTrees().getElement(TreePath.getPath(t, v.getType()));
                 if (type == null || type.getRecordComponents().size() == 0) {
@@ -233,10 +249,12 @@ public class ConvertToNestedRecordPattern {
                     bindTree.add((BindingPatternTree) wc.getTreeMaker().BindingPattern(wc.getTreeMaker().Variable(wc.getTreeMaker().
                             Modifiers(EnumSet.noneOf(Modifier.class)), name, wc.getTreeMaker().Type(returnType), null)));
                 }
-                recordComponentMap.put(p, bindTree);
+                recordComponentMap.put(tp, bindTree);
             }
 
-            DeconstructionPatternTree d = (DeconstructionPatternTree) createNestedPattern((PatternTree) t.getLeaf(), wc, recordComponentMap);
+            Map<PatternTree, List<PatternTree>> simpleRecordComponentMap =
+                    recordComponentMap.entrySet().stream().collect(Collectors.toMap(e -> (PatternTree) e.getKey().getLeaf(), e -> e.getValue()));
+            DeconstructionPatternTree d = (DeconstructionPatternTree) createNestedPattern((PatternTree) t.getLeaf(), wc, simpleRecordComponentMap);
             while (t != null && t.getLeaf().getKind() != Tree.Kind.BLOCK) {
                 t = t.getParentPath();
             }
@@ -267,7 +285,7 @@ public class ConvertToNestedRecordPattern {
                     PatternTree val = createNestedPattern(p, wc, map);
                     list.add(val);
                 }
-                return (DeconstructionPatternTree) wc.getTreeMaker().RecordPattern(bTree.getDeconstructor(), list, bTree.getVariable());
+                return (DeconstructionPatternTree) wc.getTreeMaker().RecordPattern(bTree.getDeconstructor(), list, null);
             case PARENTHESIZED_PATTERN:
                 ParenthesizedPatternTree parenthTree = (ParenthesizedPatternTree) pTree;
                 return createNestedPattern(parenthTree.getPattern(), wc, map);

@@ -82,7 +82,7 @@ public class SmapResolver {
     
     /** contains hashmap of fileid's & filenames in the jsp
      */
-    private Hashtable fsection = new Hashtable(3);
+    private Map<String, String> fsection = new Hashtable<>(3);
     
     /** contains jsp -> servlet line mappings
      */

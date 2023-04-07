@@ -23,52 +23,188 @@
     <!-- if you find a general URL from netbeans.org site that make sence to reference, feel free
       to add it here with accept='true'
       -->
-    <!-- link to any API changes are ok -->
-    <filter pattern="http://www\.netbeans\.org/download/dev/javadoc/apichanges\.html" accept="true"/>
-    <filter pattern="http://www\.netbeans\.org/download/release41/javadoc/apichanges\.html" accept="true"/>
-    <filter pattern="http://www\.netbeans\.org/download/[0-9]_[0-9]/javadoc/apichanges\.html" accept="true"/>
-    <filter pattern="http://bits\.netbeans\.org/[0-9.]+/javadoc/apichanges\.html" accept="true"/>
-    <filter pattern="http://bits\.netbeans\.org/" accept="true"/>
-    <!-- sources -->
-    <filter pattern="http://www\.netbeans\.org/(unbranded-)?source/browse/.*" accept="true"/>
-    <filter pattern="http://hg\.netbeans\.org.*" accept="true"/>
-    <filter pattern="http://openide\.netbeans\.org/versioning-policy\.html.*" accept="true"/>
-    <filter pattern="http://www\.netbeans\.org/issues/show_bug\.cgi.*" accept="true"/>
-    <filter pattern="http://openide\.netbeans\.org.*tutorial.*api-design.*" accept="true"/>
-    <filter pattern="http://openide\.netbeans\.org.*tutorial.*api.html.*" accept="true"/>
-    <filter pattern="http://platform\.netbeans\.org/" accept="true"/>
-    <filter pattern="http://www\.netbeans\.org.products.ide.index.html" accept="true"/>
-    <filter pattern="http://mdr\.netbeans\.org/example\.html" accept="true"/>
-    <filter pattern="http://mdr\.netbeans\.org/uml2mof.*" accept="true"/>
-    <filter pattern="http://java\.netbeans\.org/models/java/java\.xml" accept="true"/>
-    <filter pattern="http://autoupdate\.netbeans\.org/nbm/nbm_package\.html.*" accept="true"/>
-    <!-- Winsys important documents -->
-    <filter pattern="http://core\.netbeans\.org/windowsystem/.*html.*" accept="true"/>
-    <!-- UI specifications -->
-    <filter pattern="http://ui\.netbeans\.org/docs/hi/javamdr/.*" accept="true"/>
-    <filter pattern="http://ui.netbeans.org/docs/ui/VersioningSpecification.*" accept="true"/>
-    <filter pattern="http://ui\.netbeans\.org/docs/ui/code_folding/cf_uispec\.html" accept="true"/>
-    <!-- is used in generated question from arch.xml -->
-    <filter pattern="http://www\.netbeans\.org/community/guidelines/q-evangelism\.html" accept="true"/>
-    <!-- direct link to main website is ok as well -->
-    <filter pattern="http://www\.netbeans\.org/" accept="true"/>
-    <filter pattern="http://www\.netbeans\.org/community/lists/top\.html" accept="true"/>
-    <filter pattern="http://translatedfiles\.netbeans\.org/" accept="true"/>
-    <!-- dtd are fine they cannot change anyway -->
-    <filter pattern="http://www\.netbeans\.org/dtds/.*" accept="true"/>
-    <filter pattern="http://www\.netbeans\.org/servlets/.*" accept="true"/>
-    <filter pattern="http://openide\.netbeans\.org/proposals/.*" accept="true"/>        
-    <!-- logger module uses references to real website pages -->
-    <filter pattern="http://logger\.netbeans\.org/nonav/welcome/.*" accept="true"/>        
-    <!-- allow xsd files -->
-    <filter pattern="http://www\.netbeans\.org/ns/.*" accept="true"/>
-    <!-- allow Project Design document -->
-    <filter pattern="http://projects\.netbeans\.org/buildsys/.*" accept="true"/>
-    <filter pattern="http://platform\.netbeans\.org/articles/.*" accept="true"/>
-    <filter pattern="http://ui\.netbeans\.org/docs/ui/themes/themes\.html" accept="true"/>
-    <filter pattern="http://wiki.netbeans.org/.*" accept="true"/>
-    <!-- Useful to point to open layer positions (see e.g. HOWTO-MIME.html): -->
-    <filter pattern="http://deadlock\.netbeans\.org/hudson/job/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/build/generated/layers\.txt" accept="true"/>
-    <filter pattern="http://deadlock\.netbeans\.org/job/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/build/generated/layers\.txt" accept="true"/>
-    <!-- forbid the rest of NetBeans sites -->
-    <filter pattern="http://.*netbeans\.org/.*" accept="false"/>
+    <!-- issue tracking system -->
+
+    <filter pattern="https://bz\.apache\.org/netbeans/show_bug\.cgi\?id=.*" accept="true"/>   
+    <filter pattern="https://issues\.apache\.org/jira/browse/NETBEANS-\d+" accept="true"/>
+
+    <!-- some ant issue linked -->
+    <filter pattern="https://bz\.apache\.org/bugzilla/show_bug\.cgi\?id=.*" accept="true"/>
+    <!-- some sun jdk issue linked -->
+    
+    <filter pattern="http://bugs\.sun\.com/bugdatabase/.*" accept="true"/>
+    
+    
+    <!-- version control ours and others  -->
+    <filter pattern="https://github\.com/apache/netbeans.*" accept="true" />
+    <filter pattern="https://gitbox\.apache\.org/repos/asf\?p=netbeans\.git" accept="true" />
+    <!-- transition  -->
+    <filter pattern="https://github\.com/emilianbold/netbeans-releases/.*" accept="true" />
+
+    <filter pattern="https://github\.com/graalvm/fastr" accept="true" />
+    <filter pattern="https://github\.com/graalvm/graalpython" accept="true" />
+    <filter pattern="https://github\.com/graalvm/truffleruby" accept="true" />
+    <filter pattern="https://github\.com/twall/jna" accept="true" />
+    <filter pattern="https://github\.com/openjdk/.*" accept="true" />
+    <filter pattern="https://github\.com/simpligility/.*" accept="true" />
+    
+    
+    <!-- project site we use -->
+    <filter pattern="https://bits\.netbeans\.org/html\+java/dev.*" accept="true" />
+    <filter pattern="https://graalvm\.org" accept="true" />
+    <filter pattern="https://freemarker\.apache\.org" accept="true" />
+    <filter pattern="https://felix\.apache\.org" accept="true" />
+    <filter pattern="https://ant\.apache\.org" accept="true" />
+    <filter pattern="https://ant\.apache\.org/manual/running\.html#sysprops" accept="true" />
+    <filter pattern="https://ant\.apache\.org/manual/Types/antlib\.html" accept="true" />
+    
+    <filter pattern="https://river\.apache\.org" accept="true" /> <!-- jini -->
+    <filter pattern="http://findbugs\.sourceforge\.net" accept="true" />
+    <filter pattern="http://www\.saxproject\.org" accept="true" />
+    <filter pattern="https://www\.eclipse\.org/jgit" accept="true" />
+    <filter pattern="https://knockoutjs\.com" accept="true" />
+    <filter pattern="https://services\.gradle\.org/versions/all" accept="true" /> 
+    
+    <!-- documentation API -->
+    <filter pattern="https://docs\.oracle\.com/javase.*" accept="true" />
+    <filter pattern="https://docs\.oracle\.com/javaee.*" accept="true" />
+    <filter pattern="https://docs\.microsoft\.com/.*" accept="true" />
+    
+    <filter pattern="https://www\.graalvm\.org/truffle/javadoc/.*" accept="true" />
+    <filter pattern="https://openjfx\.io/javadoc/.*" accept="true" />
+    <filter pattern="https://www\.oracle\.com/technetwork/java/jaf-1-150219\.pdf*" accept="true" />
+    <!-- javahelp documentation -->
+    <filter pattern="https://docs\.oracle\.com/cd/E19253-01/819-0913/819-0913\.pdf" accept="true" />
+    <!-- https://docs.oracle.com/javase/specs/ -->
+    <filter pattern="https://www\.oracle\.com/java/technologies/jaxp-introduction\.html" accept="true" />
+    <filter pattern="https://docs\.gradle\.org/.*" accept="true" />
+    <filter pattern="https://search\.maven\.org/search\?q=org\.netbeans\.api" accept="true" />
+    
+    <filter pattern="https://www\.ietf\.org/rfc/rfc3023\.txt" accept="true" />
+    <filter pattern="https://www\.rfc-editor\.org/rfc/rfc4288\.html#section-4\.2" accept="true" />
+    <filter pattern="https://www\.w3\.org/XML" accept="true" />
+    <filter pattern="https://openjdk\.org/projects/coin" accept="true" />
+    
+    <filter pattern="https://junit\.org/junit4/javadoc/latest/org/junit/Ignore\.html" accept="true" />
+    
+    <!-- wiki apidesing former netbeans sources -->
+    <filter pattern="http://wiki\.apidesign\.org/wiki/CodeInjection" accept="true" />
+    <filter pattern="http://wiki\.apidesign\.org/wiki/Netbinox" accept="true" />
+    <filter pattern="http://wiki\.apidesign\.org/wiki/Privileged_API" accept="true" />
+    <filter pattern="http://wiki\.apidesign\.org/wiki/Startup#Morning_Launch" accept="true" />
+    <filter pattern="http://wiki\.apidesign\.org/wiki/Startup#Multi_User_Initial_Launch" accept="true" />
+    <filter pattern="http://wiki\.apidesign\.org/wiki/Startup" accept="true" />
+    <filter pattern="http://wiki\.apidesign\.org/wiki/Bck2Brwsr" accept="true" />
+    <filter pattern="http://wiki\.apidesign\.org/wiki/Netbinox" accept="true" />
+    <filter pattern="http://wiki\.apidesign\.org/wiki/OrderOfElements" accept="true" />
+    <filter pattern="http://wiki\.apidesign\.org/wiki/ExtendingInterfaces" accept="true" />
+    <filter pattern="http://source\.apidesign\.org/hg/netbeans/misc/file/tip/platform/samples/window-system-groups" accept="true" />
+    <filter pattern="http://source\.apidesign\.org/hg/netbeans/misc/file/tip/platform/samples/window-system-basic" accept="true" />
+
+
+    <!-- book -->
+    <filter pattern="https://leanpub\.com/nbp4beginners" accept="true" />
+    <filter pattern="https://www.martinfowler.com/articles/injection\.html" accept="true" />
+    <filter pattern="https://software\.intel\.com/en-us/multi-os-engine" accept="true" />
+    
+    
+    <!-- dtd and xsl -->
+    <filter pattern="http://www\.netbeans\.org/dtds/annotation-type-1_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/attributes-1_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/connection-1_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/editor-palette-item-1_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/filesystem-1_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/filesystem-1_1\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/filesystem-1_2\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/group-properties2_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/java-platformdefinition-1_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/jdbc-driver-1_1\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/library-declaration-1_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/mode-properties2_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/module-auto-deps-1_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/module-status-1_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/properties-1_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/sessionsettings-1_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/tc_group2_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/tc_ref2_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/windowmanager-properties2_0\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/EditorFontsColors-1_1\.dtd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/dtds/EditorKeyBindings-1_1\.dtd" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/dtds/EditorFontsColors-1_2\.dtd" accept="true"/>
+    <!-- xsd used in documentation -->
+    <filter pattern="http://www\.netbeans\.org/ns/ant-project-libraries/1\.xsd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/ns/j2se-project/1\.xsd" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/ns/j2se-project/2\.xsd" accept="true"/>
+    
+    <!-- j2ee dtd-->
+    <filter pattern="https://java\.sun\.com/dtd/.*" accept="true"/>
+    <filter pattern="https://java\.sun\.com/j2ee/dtds/.*" accept="true"/>
+    <filter pattern="https://www\.oracle\.com/webfolder/technetwork/.*" accept="true"/>
+    <filter pattern="https://jcp\.org/aboutJava/communityprocess/.*" accept="true"/>
+    
+    
+    <!-- not in website
+    
+    -->
+    <!-- wiki pagess -->
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Stability#private" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Stability#friend" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Stability#devel" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Stability#stable" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Stability#official" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Stability#third_party" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Stability#standard" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Stability#deprecated" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Stability" accept="true"/>
+
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Design#Separate_API_for_clients_from_support_API" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Design#The_Importance_of_Being_Use_Case_Oriented" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Design#What_is_an_API" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/API_Design" accept="true"/>
+    
+    <filter pattern="https://netbeans\.apache\.org/wiki/APIDevelopment" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/Authenticator" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/FitnessViaPostMortem" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/FitnessViaTimersCounter" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/VersioningPolicy#Compatible_change_on_the_trunk" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/SignatureTest" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/DevFaqNetBeansFullHack" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/RunConfigurations49636" accept="true"/> 
+    <filter pattern="https://netbeans\.apache\.org/wiki/ParsingAPI" accept="true"/> 
+    <filter pattern="https://netbeans\.apache\.org/wiki/BugtrackingCookbook" accept="true"/> 
+    <filter pattern="https://netbeans\.apache\.org/wiki/TaskManagementUseCases" accept="true"/> 
+    <filter pattern="https://netbeans\.apache\.org/wiki/TaskDashboardDesignSpec" accept="true"/> 
+    <filter pattern="https://netbeans\.apache\.org/wiki/BugtrackingAPISPIUseCases" accept="true"/> 
+    <filter pattern="https://netbeans\.apache\.org/wiki/Java_DevelopersGuide" accept="true"/> 
+    <filter pattern="https://netbeans\.apache\.org/wiki/FolderOrdering103187" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/DevFaqActionContextSensitive" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/DevFaqLookupDefault" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/DevFaqAddGlobalContext" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/BackwardCompatibilityPatches" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/BuildSystemHowTo" accept="true"/>
+    <filter pattern="https://netbeans\.apache\.org/wiki/JavaHT_Modification" accept="true"/>
+    
+    <filter pattern="https://en\.wikipedia\.org/wiki/Proxy_auto-config" accept="true"/> 
+    <filter pattern="https://en\.wikipedia\.org/wiki/Web_Proxy_Auto-Discovery_Protocol" accept="true"/> 
+    <filter pattern="https://en\.wikipedia\.org/wiki/ANSI_escape_code" accept="true"/> 
+    
+    <!-- main site links page -->
+    <filter pattern="https://netbeans\.apache\.org/tutorials/.*" accept="true"/> 
+    <filter pattern="https://netbeans\.apache\.org/kb/.*" accept="true"/> 
+    <filter pattern="https://netbeans\.apache\.org/participate/qualityevangelism\.html*" accept="true"/> 
+    <filter pattern="https://netbeans\.apache\.org" accept="true"/> 
+    <filter pattern="https://netbeans\.apache\.org/download/index\.html" accept="true"/>
+    
+    <!-- old blog entry -->
+    <filter pattern="https://netbeans\.apache\.org/blogs/.*" accept="true"/>
+    <!-- old projects entry -->
+    <filter pattern="https://netbeans\.apache\.org/projects/.*" accept="true"/>
+    
+    <!-- jenkins page -->
+    <filter pattern="https://ci-builds\.apache\.org/job/Netbeans/job/netbeans-linux/lastSuccessfulBuild/artifact/nbbuild/build/generated/layers\.txt" accept="true"/>
+    
+     <!-- ui gesture -->
+    <filter pattern="http://www\.netbeans\.org/servlets/Join" accept="false"/>
+    <!-- all other links are disallowed -->
+    <filter pattern="https://.*" accept="false"/>
+    <filter pattern="http://.*" accept="false"/>

@@ -156,13 +156,10 @@ public class UpdateUnitFactory {
         assert items != null : "UpdateProvider[" + provider.getName () + "] should return non-null items.";
         
         // append updates
-        for (String simpleItemId : items.keySet ()) {
-
+        for (UpdateItem ui : items.values()) {
             UpdateElement updateEl = null;
             try {
-
-                // create UpdateItemImpl
-                UpdateItemImpl itemImpl = Trampoline.SPI.impl (items.get (simpleItemId));
+                UpdateItemImpl itemImpl = Trampoline.SPI.impl(ui); // create UpdateItemImpl
 
                 boolean isKitModule = false;
                 if (itemImpl instanceof ModuleItem) {

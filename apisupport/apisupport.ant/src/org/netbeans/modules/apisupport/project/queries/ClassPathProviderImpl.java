@@ -112,6 +112,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider {
                     @Override
                     public ClassPath run() {
                         if (boot == null) {
+                            ClassPathImplementation prependCP = createPathFromProperty(BOOTCLASSPATH_PREPEND);
                             final String loc = project.evaluator().getProperty(Evaluator.NBJDK_BOOTCLASSPATH_MODULAR);
                             if(loc != null) {
                                 final File locf = new File(loc);
@@ -122,13 +123,15 @@ public final class ClassPathProviderImpl implements ClassPathProvider {
                                             .findFirst()
                                             .orElse(null);
                                     if (locf.equals(jpLocf)) {
-                                        boot = jp.getBootstrapLibraries();
+                                        boot = ClassPathSupport.createProxyClassPath(
+                                                ClassPathFactory.createClassPath(prependCP),
+                                                jp.getBootstrapLibraries());
                                         break;
                                     }
                                 }
                             } else {
                                 boot = ClassPathFactory.createClassPath(ClassPathSupport.createProxyClassPathImplementation(
-                                        createPathFromProperty(BOOTCLASSPATH_PREPEND),
+                                        prependCP,
                                         createPathFromProperty(Evaluator.NBJDK_BOOTCLASSPATH),
                                         createFxPath()));
                             }

@@ -1924,7 +1924,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                             else {
                                 //What does it mean?
                                 if (ctx.useInitialState) {
-                                    if (!ctx.initialBinaries2InvDeps.keySet().contains(binaryRoot)) {
+                                    if (!ctx.initialBinaries2InvDeps.containsKey(binaryRoot)) {
                                         ctx.newBinariesToScan.add (binaryRoot);
                                         List<URL> binDeps = ctx.newBinaries2InvDeps.get(binaryRoot);
                                         if (binDeps == null) {
@@ -3826,7 +3826,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
         }
 
         protected @Override boolean getDone() {
-            if (scannedRoots2Depencencies.keySet().contains(root) ||
+            if (scannedRoots2Depencencies.containsKey(root) ||
                 !PathRegistry.getDefault().isIncompleteRoot(root)) {
                 updateProgress(root, false);
                 if (scanFiles(root, files, forceRefresh, sourceForBinaryRoot)) {

@@ -43,8 +43,7 @@ public enum TomlTokenId implements TokenId {
     DOT("separator"),
     TABLE_MARK("table-mark"),
     STRING("string"),
-    ML_STRING_START("string"),
-    ML_STRING_END("string"),
+    STRING_QUOTE("string"),
     ESCAPE_SEQUENCE("string-escape"),
     WHITESPACE("whitespace");
 

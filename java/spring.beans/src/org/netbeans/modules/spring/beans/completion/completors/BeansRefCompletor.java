@@ -91,11 +91,12 @@ public class BeansRefCompletor extends Completor {
             public void run(SpringBeans sb) {
                 Map<String, SpringBean> name2Bean = getName2Beans(sb); // if local beans, then add only bean ids;
 
-                for (String beanName : name2Bean.keySet()) {
+                for (Map.Entry<String, SpringBean> it : name2Bean.entrySet()) {
+                    String beanName = it.getKey();
                     if (!beanName.startsWith(contextPrefix) || cNames.contains(beanName) || forbiddenNames.contains(beanName)) {
                         continue;
                     }
-                    SpringBean bean = name2Bean.get(beanName);
+                    SpringBean bean = it.getValue();
                     
                     SpringXMLConfigCompletionItem item =
                             SpringXMLConfigCompletionItem.createBeanRefItem(getAnchorOffset(), beanName, bean, fo);

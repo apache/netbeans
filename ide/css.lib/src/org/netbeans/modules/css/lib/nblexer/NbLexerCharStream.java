@@ -20,6 +20,7 @@ package org.netbeans.modules.css.lib.nblexer;
 
 import java.util.Stack;
 import org.antlr.runtime.CharStream;
+import org.netbeans.modules.css.lib.api.CssTokenId;
 import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
@@ -34,7 +35,7 @@ public class NbLexerCharStream implements CharStream {
     private Stack<Integer> markers = new Stack<>();
 //    private int index;
 
-    public NbLexerCharStream(LexerRestartInfo lri) {
+    public NbLexerCharStream(LexerRestartInfo<CssTokenId> lri) {
         this.li = lri.input();
 
     }

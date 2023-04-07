@@ -20,11 +20,11 @@
 package org.netbeans.modules.gradle.execute;
 
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
-import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.actions.CustomActionRegistrationSupport;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
+import org.netbeans.modules.gradle.customizer.BuildActionsCustomizer;
 import org.openide.text.CloneableEditorSupport;
 
 /**
@@ -50,7 +50,7 @@ public class GradleExecutorOptionsPanel extends javax.swing.JPanel {
         EditorKit kit = CloneableEditorSupport.getEditorKit("text/x-gradle-cli"); //NOI18N
         epCLI.setEditorKit(kit);
         if (project != null) {
-            epCLI.getDocument().putProperty(Document.StreamDescriptionProperty, project);
+            epCLI.getDocument().putProperty(BuildActionsCustomizer.GRADLE_PROJECT_PROPERTY, project);
         } else {
             tfRememberAs.setEnabled(false);
             lbRememberAs.setEnabled(false);

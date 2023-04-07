@@ -49,6 +49,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -645,7 +646,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * 
      * @param component the component to open
      * @param displayName the display name of the action
-     * @param image the image to associated with the action
+     * @param iconBase the location to the actions icon
      * @param noIconInMenu true if this icon shall not have an item in menu
      * @see OpenActionRegistration
      * 
@@ -796,7 +797,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * if it is not already.
      * <p>Subclasses should override this method to transfer focus to desired
      * focusable component. <code>TopComponent</code> itself is not focusable.
-     * See for example {@link org.openide.text.CloneableEditor#requestFocus}.
+     * See for example <a href="@org-openide-text@/org/openide/text/CloneableEditor.html#requestFocus--">CloneableEditor#requestFocus</a>.
      * <p><strong>Note:</strong> Use {@link #requestActive} instead to make TopComponent active
      * in the window system (not only focused). This method should be considered deprecated
      * for calling from outside; but it may be overridden (inside of which you may call super).
@@ -816,7 +817,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * if it is not already.
      * <p>Subclasses should override this method to transfer focus to desired
      * focusable component. <code>TopComponent</code> itself is not focusable.
-     * See for example {@link org.openide.text.CloneableEditor#requestFocusInWindow}.
+     * See for example <a href="@org-openide-text@/org/openide/text/CloneableEditor.html#requestFocusInWindow--">CloneableEditor#requestFocusInWindow</a>.
      * <p><strong>Note:</strong> Use {@link #requestActive} instead to make TopComponent active
      * in the window system (not only focused). This method should be considered deprecated
      * for calling from outside; but it may be overridden (inside of which you may call super).
@@ -887,7 +888,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * window.
      * It is safe to call this method outside EDT.
      *
-     * @param True to start 'busy' notification, 'false' to stop it.
+     * @param busy True to start 'busy' notification, 'false' to stop it.
      *
      * @see WindowManager#topComponentMakeBusy(org.openide.windows.TopComponent, boolean)
      * @since 6.51
@@ -939,6 +940,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
     * The default implementation just notifies the window manager.
     * @param name the new display name
     */
+    @Override
     public void setName(final String name) {
         String old = getName();
 
@@ -959,7 +961,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
     public void setDisplayName(String displayName) {
         String old = this.displayName;
 
-        if ((displayName == old) || ((displayName != null) && displayName.equals(old))) {
+        if (Objects.equals(displayName, old)) {
             return;
         }
 
@@ -1007,7 +1009,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
     public void setHtmlDisplayName(String htmlDisplayName) {
         String old = this.htmlDisplayName;
 
-        if ((htmlDisplayName == old) || ((htmlDisplayName != null) && htmlDisplayName.equals(old))) {
+        if (Objects.equals(htmlDisplayName, old)) {
             return;
         }
 
@@ -1032,6 +1034,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
 
     /** Sets toolTip for this <code>TopComponent</code>, adds notification
      * about the change to its <code>WindowManager.TopComponentManager</code>. */
+    @Override
     public void setToolTipText(String toolTip) {
         if ((toolTip != null) && toolTip.equals(getToolTipText())) {
             return;
@@ -1108,6 +1111,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
 
     /** Overrides superclass method, adds possible additional handling of global keystrokes
      * in case this <code>TopComoponent</code> is ancestor of focused component. */
+    @Override
     protected boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {
         boolean ret = super.processKeyBinding(ks, e, condition, pressed);
 
@@ -1248,13 +1252,16 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
     /* Read accessible context
      * @return - accessible context
      */
+    @Override
     public AccessibleContext getAccessibleContext() {
         if (accessibleContext == null) {
             accessibleContext = new JComponent.AccessibleJComponent() {
+                        @Override
                         public AccessibleRole getAccessibleRole() {
                             return AccessibleRole.PANEL;
                         }
 
+                        @Override
                         public String getAccessibleName() {
                             if (accessibleName != null) {
                                 return accessibleName;
@@ -1264,6 +1271,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
                         }
 
                         /* Fix for 19344: Null accessible decription of all TopComponents on JDK1.4 */
+                        @Override
                         public String getToolTipText() {
                             return TopComponent.this.getToolTipText();
                         }
@@ -1297,7 +1305,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * an action just because focus is transferred from a component with a (potential)
      * node selection to a component that does not have node selections.
      * <p>
-     * If you override the method in your subclass, the default activatedNodes<->lookup synchronization
+     * If you override the method in your subclass, the default activatedNodes&lt;-&gt;lookup synchronization
      * will not be performed. That can influence functionality that relies on activated Nodes being present 
      * in the TopComponent's lookup. If you want to preserve the synchronization, use {@link #associateLookup}
      * instead.

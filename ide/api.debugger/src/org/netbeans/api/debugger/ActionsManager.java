@@ -164,7 +164,7 @@ public final class ActionsManager {
     /**
      * Post action on this DebuggerEngine.
      * This method does not block till the action is done,
-     * if {@link #canPostAsynchronously} returns true.
+     * if <code>#canPostAsynchronously}</code> returns true.
      * Otherwise it behaves like {@link #doAction}.
      * The returned task, or
      * {@link ActionsManagerListener} can be used to
@@ -638,7 +638,7 @@ public final class ActionsManager {
                     }
                     l.destroy ();
                 }
-                lazyListeners = new ArrayList ();
+                lazyListeners = new ArrayList<>();
             }
         }
         synchronized (actionProvidersLock) {

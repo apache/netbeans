@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.2.0
+#Version 2.4.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -42,6 +42,7 @@ fld protected final java.util.concurrent.Callable<java.lang.Boolean> cancel
 innr public abstract interface static ItemFactory
 innr public abstract interface static LambdaItemFactory
 innr public abstract interface static ModuleItemFactory
+innr public abstract interface static RecordPatternItemFactory
 innr public abstract interface static TypeCastableItemFactory
 innr public final static !enum Options
 meth protected void resolve(org.netbeans.api.java.source.CompilationController) throws java.io.IOException
@@ -55,7 +56,7 @@ meth public static <%0 extends java.lang.Object> org.netbeans.modules.java.compl
  anno 4 org.netbeans.api.annotations.common.NullAllowed()
 meth public void run(org.netbeans.modules.parsing.api.ResultIterator) throws java.lang.Exception
 supr org.netbeans.modules.parsing.api.UserTask
-hfds ABSTRACT_KEYWORD,ASSERT_KEYWORD,BLOCK_KEYWORDS,BOOLEAN_KEYWORD,BREAK_KEYWORD,BYTE_KEYWORD,CASE_KEYWORD,CATCH_KEYWORD,CHAR_KEYWORD,CLASS_BODY_KEYWORDS,CLASS_KEYWORD,COLON,CONTINUE_KEYWORD,DEFAULT_KEYWORD,DOUBLE_KEYWORD,DO_KEYWORD,ELSE_KEYWORD,EMPTY,ENUM_KEYWORD,ERROR,EXPORTS_KEYWORD,EXTENDS_KEYWORD,FALSE_KEYWORD,FINALLY_KEYWORD,FINAL_KEYWORD,FLOAT_KEYWORD,FOR_KEYWORD,IF_KEYWORD,IMPLEMENTS_KEYWORD,IMPORT_KEYWORD,INIT,INSTANCEOF_KEYWORD,INTERFACE_KEYWORD,INT_KEYWORD,JAVA_LANG_CLASS,JAVA_LANG_ITERABLE,JAVA_LANG_OBJECT,LONG_KEYWORD,MODULE_BODY_KEYWORDS,MODULE_KEYWORD,NATIVE_KEYWORD,NEW_KEYWORD,NON_SEALED_KEYWORD,NULL_KEYWORD,OPENS_KEYWORD,OPEN_KEYWORD,PACKAGE_KEYWORD,PERMITS_KEYWORD,PRIM_KEYWORDS,PRIVATE_KEYWORD,PROTECTED_KEYWORD,PROVIDES_KEYWORD,PUBLIC_KEYWORD,RECORD_KEYWORD,REQUIRES_KEYWORD,RETURN_KEYWORD,SEALED_KEYWORD,SEMI,SHORT_KEYWORD,SPACE,STATEMENT_KEYWORDS,STATEMENT_SPACE_KEYWORDS,STATIC_KEYWORD,STRICT_KEYWORD,SUPER_KEYWORD,SWITCH_KEYWORD,SYNCHRONIZED_KEYWORD,THIS_KEYWORD,THROWS_KEYWORD,THROW_KEYWORD,TO_KEYWORD,TRANSIENT_KEYWORD,TRANSITIVE_KEYWORD,TRUE_KEYWORD,TRY_KEYWORD,USES_KEYWORD,VAR_KEYWORD,VOID_KEYWORD,VOLATILE_KEYWORD,WHILE_KEYWORD,WITH_KEYWORD,YIELD_KEYWORD,anchorOffset,hasAdditionalClasses,hasAdditionalMembers,itemFactory,options,results
+hfds ABSTRACT_KEYWORD,ASSERT_KEYWORD,BLOCK_KEYWORDS,BOOLEAN_KEYWORD,BREAK_KEYWORD,BYTE_KEYWORD,CASE_KEYWORD,CATCH_KEYWORD,CHAR_KEYWORD,CLASS_BODY_KEYWORDS,CLASS_KEYWORD,COLON,CONTINUE_KEYWORD,DEFAULT_KEYWORD,DOUBLE_KEYWORD,DO_KEYWORD,ELSE_KEYWORD,EMPTY,ENUM_KEYWORD,ERROR,EXPORTS_KEYWORD,EXTENDS_KEYWORD,FALSE_KEYWORD,FINALLY_KEYWORD,FINAL_KEYWORD,FLOAT_KEYWORD,FOR_KEYWORD,IF_KEYWORD,IMPLEMENTS_KEYWORD,IMPORT_KEYWORD,INIT,INSTANCEOF_KEYWORD,INTERFACE_KEYWORD,INT_KEYWORD,JAVA_LANG_CLASS,JAVA_LANG_ITERABLE,JAVA_LANG_OBJECT,LONG_KEYWORD,MODULE_BODY_KEYWORDS,MODULE_KEYWORD,NATIVE_KEYWORD,NEW_KEYWORD,NON_SEALED_KEYWORD,NULL_KEYWORD,OPENS_KEYWORD,OPEN_KEYWORD,PACKAGE_KEYWORD,PERMITS_KEYWORD,PRIM_KEYWORDS,PRIVATE_KEYWORD,PROTECTED_KEYWORD,PROVIDES_KEYWORD,PUBLIC_KEYWORD,RECORD_KEYWORD,REQUIRES_KEYWORD,RETURN_KEYWORD,SEALED_KEYWORD,SEMI,SHORT_KEYWORD,SPACE,STATEMENT_KEYWORDS,STATEMENT_SPACE_KEYWORDS,STATIC_KEYWORD,STRICT_KEYWORD,SUPER_KEYWORD,SWITCH_KEYWORD,SYNCHRONIZED_KEYWORD,THIS_KEYWORD,THROWS_KEYWORD,THROW_KEYWORD,TO_KEYWORD,TRANSIENT_KEYWORD,TRANSITIVE_KEYWORD,TRUE_KEYWORD,TRY_KEYWORD,USES_KEYWORD,VAR_KEYWORD,VOID_KEYWORD,VOLATILE_KEYWORD,WHEN_KEYWORD,WHILE_KEYWORD,WITH_KEYWORD,YIELD_KEYWORD,anchorOffset,hasAdditionalClasses,hasAdditionalMembers,itemFactory,options,results
 
 CLSS public abstract interface static org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory<%0 extends java.lang.Object>
  outer org.netbeans.modules.java.completion.JavaCompletionTask
@@ -99,6 +100,11 @@ fld public final static org.netbeans.modules.java.completion.JavaCompletionTask$
 meth public static org.netbeans.modules.java.completion.JavaCompletionTask$Options valueOf(java.lang.String)
 meth public static org.netbeans.modules.java.completion.JavaCompletionTask$Options[] values()
 supr java.lang.Enum<org.netbeans.modules.java.completion.JavaCompletionTask$Options>
+
+CLSS public abstract interface static org.netbeans.modules.java.completion.JavaCompletionTask$RecordPatternItemFactory<%0 extends java.lang.Object>
+ outer org.netbeans.modules.java.completion.JavaCompletionTask
+intf org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory<{org.netbeans.modules.java.completion.JavaCompletionTask$RecordPatternItemFactory%0}>
+meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$RecordPatternItemFactory%0} createRecordPatternItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.TypeElement,javax.lang.model.type.DeclaredType,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean)
 
 CLSS public abstract interface static org.netbeans.modules.java.completion.JavaCompletionTask$TypeCastableItemFactory<%0 extends java.lang.Object>
  outer org.netbeans.modules.java.completion.JavaCompletionTask

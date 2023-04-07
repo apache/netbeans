@@ -39,12 +39,14 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
 
     void loadValues() {
         cbEnabled.setSelected(Janitor.isEnabled());
+        cbAutoRemove.setSelected(Janitor.isAutoRemoveAbanconedCache());
         spinnerModel.setValue(Janitor.getUnusedDays());
         resetRunNow();
     }
 
     void saveValues() {
         Janitor.setEnabled(cbEnabled.isSelected());
+        Janitor.setAutoRemoveAbanconedCache(cbAutoRemove.isSelected());
         Janitor.setUnusedDays(spinnerModel.getNumber().intValue());
         resetRunNow();
     }
@@ -52,6 +54,7 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
     boolean isChanged() {
         boolean changed = false;
         changed |= cbEnabled.isSelected() != Janitor.isEnabled();
+        changed |= cbAutoRemove.isSelected() != Janitor.isAutoRemoveAbanconedCache();
         changed |= spinnerModel.getNumber().intValue() != Janitor.getUnusedDays();
         changed |= !btRunNow.isEnabled();
         return changed;
@@ -67,15 +70,18 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         cbEnabled = new javax.swing.JCheckBox();
-        jLabel1 = new javax.swing.JLabel();
+        lbUnusedDays = new javax.swing.JLabel();
+        cbAutoRemove = new javax.swing.JCheckBox();
         spUnusedDays = new javax.swing.JSpinner();
         btRunNow = new javax.swing.JButton();
         lbRunNowInfo = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(cbEnabled, org.openide.util.NbBundle.getMessage(JanitorOptionsPanel.class, "JanitorOptionsPanel.cbEnabled.text")); // NOI18N
 
-        jLabel1.setLabelFor(spUnusedDays);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(JanitorOptionsPanel.class, "JanitorOptionsPanel.jLabel1.text")); // NOI18N
+        lbUnusedDays.setLabelFor(spUnusedDays);
+        org.openide.awt.Mnemonics.setLocalizedText(lbUnusedDays, org.openide.util.NbBundle.getMessage(JanitorOptionsPanel.class, "JanitorOptionsPanel.lbUnusedDays.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbAutoRemove, org.openide.util.NbBundle.getMessage(JanitorOptionsPanel.class, "JanitorOptionsPanel.cbAutoRemove.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(btRunNow, org.openide.util.NbBundle.getMessage(JanitorOptionsPanel.class, "JanitorOptionsPanel.btRunNow.text")); // NOI18N
         btRunNow.addActionListener(new java.awt.event.ActionListener() {
@@ -89,22 +95,21 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbEnabled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spUnusedDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(btRunNow))
-                                .addGap(0, 65, Short.MAX_VALUE))))
+                        .addComponent(btRunNow)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbRunNowInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cbEnabled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(lbRunNowInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbUnusedDays)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spUnusedDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbAutoRemove))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -112,15 +117,20 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(cbEnabled)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbAutoRemove)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(lbUnusedDays)
                     .addComponent(spUnusedDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(btRunNow)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lbRunNowInfo)
-                .addContainerGap(176, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(lbRunNowInfo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btRunNow)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -138,9 +148,10 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRunNow;
+    private javax.swing.JCheckBox cbAutoRemove;
     private javax.swing.JCheckBox cbEnabled;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lbRunNowInfo;
+    private javax.swing.JLabel lbUnusedDays;
     private javax.swing.JSpinner spUnusedDays;
     // End of variables declaration//GEN-END:variables
 }

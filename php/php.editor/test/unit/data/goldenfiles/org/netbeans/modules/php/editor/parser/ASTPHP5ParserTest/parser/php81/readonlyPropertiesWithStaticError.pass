@@ -43,6 +43,7 @@
         </Comments>
         <Statements>
             <ASTError start='815' end='860'/>
+            <ASTError start='861' end='869'/>
             <ASTError start='870' end='873'/>
             <ExpressionStatement start='874' end='886'>
                 <Variable start='874' end='885' isDollared='true'>

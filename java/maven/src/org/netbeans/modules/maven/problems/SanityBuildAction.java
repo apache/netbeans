@@ -21,6 +21,7 @@ package org.netbeans.modules.maven.problems;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,11 +31,14 @@ import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.RunConfig.ReactorStyle;
 import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.execute.BeanRunConfig;
+import org.netbeans.modules.maven.execute.MavenProxySupport;
+import org.netbeans.modules.maven.execute.MavenProxySupport.ProxyResult;
 import static org.netbeans.modules.maven.problems.Bundle.*;
 import org.netbeans.spi.project.ui.ProjectProblemResolver;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -67,6 +71,11 @@ public class SanityBuildAction implements ProjectProblemResolver {
         return this.pendingResult;
     }
 
+    @NbBundle.Messages({
+        "ERR_SanityBuildCancalled=Sanity build cancelled",
+        "# {0} - message",
+        "ERR_ProxyUpdateFailed=Proxy setup failed: {0}"
+    })
     @Override
     public CompletableFuture<ProjectProblemsProvider.Result> resolve() {
         CompletableFuture<ProjectProblemsProvider.Result> pr = pendingResult;
@@ -97,6 +106,27 @@ public class SanityBuildAction implements ProjectProblemResolver {
                     String label = build_label(nbproject.getProjectDirectory().getNameExt());
                     config.setExecutionName(label);
                     config.setTaskDisplayName(label);
+                    
+                    MavenProxySupport mps = nbproject.getLookup().lookup(MavenProxySupport.class);
+                    if (mps != null) {
+                        ProxyResult res;
+                        try {
+                            res = mps.checkProxySettings().get();
+                            if (res.getStatus() == MavenProxySupport.Status.ABORT) {
+                                ProjectProblemsProvider.Result r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.UNRESOLVED, ERR_SanityBuildCancalled());
+                                publicResult.complete(r);
+                                return;
+                            }
+                        } catch (ExecutionException ex) {
+                            ProjectProblemsProvider.Result r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.UNRESOLVED, ERR_ProxyUpdateFailed(ex.getLocalizedMessage()));
+                            publicResult.complete(r);
+                            return;
+                        } catch (InterruptedException ex) {
+                            ProjectProblemsProvider.Result r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.UNRESOLVED, ERR_SanityBuildCancalled());
+                            publicResult.complete(r);
+                            return;
+                        }
+                    }
                     LOG.log(Level.FINE, "Executing sanity build: goals = {0}, properties = {1}", new Object[] { config.getGoals(), config.getProperties() });
                     ExecutorTask et = RunUtils.run(config);
                     et.addTaskListener(t -> {

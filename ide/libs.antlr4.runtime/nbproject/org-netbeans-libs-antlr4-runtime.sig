@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.18.0
+#Version 1.20.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -7,6 +7,12 @@ CLSS public abstract interface java.lang.Cloneable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -343,6 +349,7 @@ meth public abstract void reset(org.antlr.v4.runtime.Parser)
 meth public abstract void sync(org.antlr.v4.runtime.Parser)
 
 CLSS public org.antlr.v4.runtime.ANTLRFileStream
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String) throws java.io.IOException
 cons public init(java.lang.String,java.lang.String) throws java.io.IOException
 fld protected java.lang.String fileName
@@ -351,6 +358,7 @@ meth public void load(java.lang.String,java.lang.String) throws java.io.IOExcept
 supr org.antlr.v4.runtime.ANTLRInputStream
 
 CLSS public org.antlr.v4.runtime.ANTLRInputStream
+ anno 0 java.lang.Deprecated()
 cons public init()
 cons public init(char[],int)
 cons public init(java.io.InputStream) throws java.io.IOException
@@ -542,7 +550,7 @@ meth public int getTokenIndex()
 meth public int getType()
 meth public java.lang.String getText()
 meth public java.lang.String toString()
-meth public java.lang.String toString(org.antlr.v4.runtime.Recognizer)
+meth public java.lang.String toString(org.antlr.v4.runtime.Recognizer<?,?>)
 meth public org.antlr.v4.runtime.CharStream getInputStream()
 meth public org.antlr.v4.runtime.TokenSource getTokenSource()
 meth public void setChannel(int)
@@ -838,6 +846,7 @@ meth public org.antlr.v4.runtime.tree.pattern.ParseTreePattern compileParseTreeP
 meth public org.antlr.v4.runtime.tree.pattern.ParseTreePattern compileParseTreePattern(java.lang.String,int,org.antlr.v4.runtime.Lexer)
 meth public void addParseListener(org.antlr.v4.runtime.tree.ParseTreeListener)
 meth public void dumpDFA()
+meth public void dumpDFA(java.io.PrintStream)
 meth public void enterOuterAlt(org.antlr.v4.runtime.ParserRuleContext,int)
 meth public void enterRecursionRule(org.antlr.v4.runtime.ParserRuleContext,int)
  anno 0 java.lang.Deprecated()
@@ -925,6 +934,7 @@ hfds vocabulary
 CLSS public org.antlr.v4.runtime.ParserRuleContext
 cons public init()
 cons public init(org.antlr.v4.runtime.ParserRuleContext,int)
+fld public final static org.antlr.v4.runtime.ParserRuleContext EMPTY
 fld public java.util.List<org.antlr.v4.runtime.tree.ParseTree> children
 fld public org.antlr.v4.runtime.RecognitionException exception
 fld public org.antlr.v4.runtime.Token start
@@ -1019,7 +1029,6 @@ hfds _listeners,_stateNumber,ruleIndexMapCache,tokenTypeMapCache
 CLSS public org.antlr.v4.runtime.RuleContext
 cons public init()
 cons public init(org.antlr.v4.runtime.RuleContext,int)
-fld public final static org.antlr.v4.runtime.ParserRuleContext EMPTY
 fld public int invokingState
 fld public org.antlr.v4.runtime.RuleContext parent
 intf org.antlr.v4.runtime.tree.RuleNode
@@ -1057,7 +1066,7 @@ supr org.antlr.v4.runtime.ParserRuleContext
 
 CLSS public org.antlr.v4.runtime.RuntimeMetaData
 cons public init()
-fld public final static java.lang.String VERSION = "4.7.2"
+fld public final static java.lang.String VERSION = "4.11.1"
 meth public static java.lang.String getMajorMinorVersion(java.lang.String)
 meth public static java.lang.String getRuntimeVersion()
 meth public static void checkVersion(java.lang.String,java.lang.String)
@@ -1246,6 +1255,9 @@ meth public int getMaxTokenType()
 meth public java.lang.String getDisplayName(int)
 meth public java.lang.String getLiteralName(int)
 meth public java.lang.String getSymbolicName(int)
+meth public java.lang.String[] getDisplayNames()
+meth public java.lang.String[] getLiteralNames()
+meth public java.lang.String[] getSymbolicNames()
 meth public static org.antlr.v4.runtime.Vocabulary fromTokenNames(java.lang.String[])
 supr java.lang.Object
 hfds EMPTY_NAMES,displayNames,literalNames,maxTokenType,symbolicNames
@@ -1391,69 +1403,40 @@ CLSS public org.antlr.v4.runtime.atn.ATNDeserializer
 cons public init()
 cons public init(org.antlr.v4.runtime.atn.ATNDeserializationOptions)
 fld public final static int SERIALIZED_VERSION
-fld public final static java.util.UUID SERIALIZED_UUID
 meth protected org.antlr.v4.runtime.atn.ATNState stateFactory(int,int)
 meth protected org.antlr.v4.runtime.atn.LexerAction lexerActionFactory(org.antlr.v4.runtime.atn.LexerActionType,int,int)
 meth protected org.antlr.v4.runtime.atn.Transition edgeFactory(org.antlr.v4.runtime.atn.ATN,int,int,int,int,int,int,java.util.List<org.antlr.v4.runtime.misc.IntervalSet>)
-meth protected static boolean isFeatureSupported(java.util.UUID,java.util.UUID)
 meth protected static int toInt(char)
 meth protected static int toInt32(char[],int)
-meth protected static java.util.UUID toUUID(char[],int)
-meth protected static long toLong(char[],int)
+meth protected static int toInt32(int[],int)
 meth protected void checkCondition(boolean)
 meth protected void checkCondition(boolean,java.lang.String)
 meth protected void markPrecedenceDecisions(org.antlr.v4.runtime.atn.ATN)
 meth protected void verifyATN(org.antlr.v4.runtime.atn.ATN)
 meth public org.antlr.v4.runtime.atn.ATN deserialize(char[])
+meth public org.antlr.v4.runtime.atn.ATN deserialize(int[])
+meth public static int[] decodeIntsEncodedAs16BitWords(char[])
+meth public static int[] decodeIntsEncodedAs16BitWords(char[],boolean)
+meth public static org.antlr.v4.runtime.misc.IntegerList encodeIntsWith16BitWords(org.antlr.v4.runtime.misc.IntegerList)
 supr java.lang.Object
-hfds ADDED_LEXER_ACTIONS,ADDED_PRECEDENCE_TRANSITIONS,ADDED_UNICODE_SMP,BASE_SERIALIZED_UUID,SUPPORTED_UUIDS,deserializationOptions
-hcls UnicodeDeserializer,UnicodeDeserializingMode
+hfds deserializationOptions
 
 CLSS public org.antlr.v4.runtime.atn.ATNSerializer
 cons public init(org.antlr.v4.runtime.atn.ATN)
-cons public init(org.antlr.v4.runtime.atn.ATN,java.util.List<java.lang.String>)
 fld public org.antlr.v4.runtime.atn.ATN atn
-meth public java.lang.String decode(char[])
-meth public java.lang.String getTokenName(int)
 meth public org.antlr.v4.runtime.misc.IntegerList serialize()
-meth public static char[] getSerializedAsChars(org.antlr.v4.runtime.atn.ATN)
-meth public static java.lang.String getDecoded(org.antlr.v4.runtime.atn.ATN,java.util.List<java.lang.String>)
-meth public static java.lang.String getSerializedAsString(org.antlr.v4.runtime.atn.ATN)
 meth public static org.antlr.v4.runtime.misc.IntegerList getSerialized(org.antlr.v4.runtime.atn.ATN)
 supr java.lang.Object
-hfds tokenNames
-hcls CodePointSerializer
+hfds data,nonGreedyStates,precedenceStates,sets
 
 CLSS public abstract org.antlr.v4.runtime.atn.ATNSimulator
 cons public init(org.antlr.v4.runtime.atn.ATN,org.antlr.v4.runtime.atn.PredictionContextCache)
 fld protected final org.antlr.v4.runtime.atn.PredictionContextCache sharedContextCache
 fld public final org.antlr.v4.runtime.atn.ATN atn
-fld public final static int SERIALIZED_VERSION
- anno 0 java.lang.Deprecated()
-fld public final static java.util.UUID SERIALIZED_UUID
- anno 0 java.lang.Deprecated()
 fld public final static org.antlr.v4.runtime.dfa.DFAState ERROR
 meth public abstract void reset()
 meth public org.antlr.v4.runtime.atn.PredictionContext getCachedContext(org.antlr.v4.runtime.atn.PredictionContext)
 meth public org.antlr.v4.runtime.atn.PredictionContextCache getSharedContextCache()
-meth public static int toInt(char)
- anno 0 java.lang.Deprecated()
-meth public static int toInt32(char[],int)
- anno 0 java.lang.Deprecated()
-meth public static java.util.UUID toUUID(char[],int)
- anno 0 java.lang.Deprecated()
-meth public static long toLong(char[],int)
- anno 0 java.lang.Deprecated()
-meth public static org.antlr.v4.runtime.atn.ATN deserialize(char[])
- anno 0 java.lang.Deprecated()
-meth public static org.antlr.v4.runtime.atn.ATNState stateFactory(int,int)
- anno 0 java.lang.Deprecated()
-meth public static org.antlr.v4.runtime.atn.Transition edgeFactory(org.antlr.v4.runtime.atn.ATN,int,int,int,int,int,int,java.util.List<org.antlr.v4.runtime.misc.IntervalSet>)
- anno 0 java.lang.Deprecated()
-meth public static void checkCondition(boolean)
- anno 0 java.lang.Deprecated()
-meth public static void checkCondition(boolean,java.lang.String)
- anno 0 java.lang.Deprecated()
 meth public void clearDFA()
 supr java.lang.Object
 
@@ -1620,7 +1603,7 @@ fld public int decision
 supr org.antlr.v4.runtime.atn.ATNState
 
 CLSS public org.antlr.v4.runtime.atn.EmptyPredictionContext
-cons public init()
+fld public final static org.antlr.v4.runtime.atn.EmptyPredictionContext Instance
 meth public boolean equals(java.lang.Object)
 meth public boolean isEmpty()
 meth public int getReturnState(int)
@@ -1681,7 +1664,6 @@ fld public final static boolean debug = false
 fld public final static boolean dfa_debug = false
 fld public final static int MAX_DFA_EDGE = 127
 fld public final static int MIN_DFA_EDGE = 0
-fld public static int match_calls
 innr protected static SimState
 meth protected boolean closure(org.antlr.v4.runtime.CharStream,org.antlr.v4.runtime.atn.LexerATNConfig,org.antlr.v4.runtime.atn.ATNConfigSet,boolean,boolean,boolean)
 meth protected boolean evaluatePredicate(org.antlr.v4.runtime.CharStream,int,int,boolean)
@@ -2015,8 +1997,6 @@ cons protected init(int)
 fld public final int cachedHashCode
 fld public final int id
 fld public final static int EMPTY_RETURN_STATE = 2147483647
-fld public final static org.antlr.v4.runtime.atn.EmptyPredictionContext EMPTY
-fld public static int globalNodeCount
 meth protected static int calculateEmptyHashCode()
 meth protected static int calculateHashCode(org.antlr.v4.runtime.atn.PredictionContext,int)
 meth protected static int calculateHashCode(org.antlr.v4.runtime.atn.PredictionContext[],int[])
@@ -2041,7 +2021,7 @@ meth public static org.antlr.v4.runtime.atn.PredictionContext mergeRoot(org.antl
 meth public static org.antlr.v4.runtime.atn.PredictionContext mergeSingletons(org.antlr.v4.runtime.atn.SingletonPredictionContext,org.antlr.v4.runtime.atn.SingletonPredictionContext,boolean,org.antlr.v4.runtime.misc.DoubleKeyMap<org.antlr.v4.runtime.atn.PredictionContext,org.antlr.v4.runtime.atn.PredictionContext,org.antlr.v4.runtime.atn.PredictionContext>)
 meth public static void getAllContextNodes_(org.antlr.v4.runtime.atn.PredictionContext,java.util.List<org.antlr.v4.runtime.atn.PredictionContext>,java.util.Map<org.antlr.v4.runtime.atn.PredictionContext,org.antlr.v4.runtime.atn.PredictionContext>)
 supr java.lang.Object
-hfds INITIAL_HASH
+hfds INITIAL_HASH,globalNodeCount
 
 CLSS public org.antlr.v4.runtime.atn.PredictionContextCache
 cons public init()
@@ -2132,9 +2112,9 @@ supr org.antlr.v4.runtime.atn.Transition
 
 CLSS public abstract org.antlr.v4.runtime.atn.SemanticContext
 cons public init()
-fld public final static org.antlr.v4.runtime.atn.SemanticContext NONE
 innr public abstract static Operator
 innr public static AND
+innr public static Empty
 innr public static OR
 innr public static PrecedencePredicate
 innr public static Predicate
@@ -2155,6 +2135,13 @@ meth public java.lang.String toString()
 meth public java.util.Collection<org.antlr.v4.runtime.atn.SemanticContext> getOperands()
 meth public org.antlr.v4.runtime.atn.SemanticContext evalPrecedence(org.antlr.v4.runtime.Recognizer<?,?>,org.antlr.v4.runtime.RuleContext)
 supr org.antlr.v4.runtime.atn.SemanticContext$Operator
+
+CLSS public static org.antlr.v4.runtime.atn.SemanticContext$Empty
+ outer org.antlr.v4.runtime.atn.SemanticContext
+cons public init()
+fld public final static org.antlr.v4.runtime.atn.SemanticContext$Empty Instance
+meth public boolean eval(org.antlr.v4.runtime.Recognizer<?,?>,org.antlr.v4.runtime.RuleContext)
+supr org.antlr.v4.runtime.atn.SemanticContext
 
 CLSS public static org.antlr.v4.runtime.atn.SemanticContext$OR
  outer org.antlr.v4.runtime.atn.SemanticContext
@@ -2344,9 +2331,10 @@ CLSS public org.antlr.v4.runtime.misc.Array2DHashSet<%0 extends java.lang.Object
 cons public init()
 cons public init(org.antlr.v4.runtime.misc.AbstractEqualityComparator<? super {org.antlr.v4.runtime.misc.Array2DHashSet%0}>)
 cons public init(org.antlr.v4.runtime.misc.AbstractEqualityComparator<? super {org.antlr.v4.runtime.misc.Array2DHashSet%0}>,int,int)
+fld protected final int initialBucketCapacity
+fld protected final int initialCapacity
 fld protected final org.antlr.v4.runtime.misc.AbstractEqualityComparator<? super {org.antlr.v4.runtime.misc.Array2DHashSet%0}> comparator
 fld protected int currentPrime
-fld protected int initialBucketCapacity
 fld protected int n
 fld protected int threshold
 fld protected {org.antlr.v4.runtime.misc.Array2DHashSet%0}[][] buckets
@@ -2413,9 +2401,10 @@ CLSS public org.antlr.v4.runtime.misc.FlexibleHashMap<%0 extends java.lang.Objec
 cons public init()
 cons public init(org.antlr.v4.runtime.misc.AbstractEqualityComparator<? super {org.antlr.v4.runtime.misc.FlexibleHashMap%0}>)
 cons public init(org.antlr.v4.runtime.misc.AbstractEqualityComparator<? super {org.antlr.v4.runtime.misc.FlexibleHashMap%0}>,int,int)
+fld protected final int initialBucketCapacity
+fld protected final int initialCapacity
 fld protected final org.antlr.v4.runtime.misc.AbstractEqualityComparator<? super {org.antlr.v4.runtime.misc.FlexibleHashMap%0}> comparator
 fld protected int currentPrime
-fld protected int initialBucketCapacity
 fld protected int n
 fld protected int threshold
 fld protected java.util.LinkedList<org.antlr.v4.runtime.misc.FlexibleHashMap$Entry<{org.antlr.v4.runtime.misc.FlexibleHashMap%0},{org.antlr.v4.runtime.misc.FlexibleHashMap%1}>>[] buckets
@@ -2524,10 +2513,6 @@ fld public final static int INTERVAL_POOL_MAX_VALUE = 1000
 fld public final static org.antlr.v4.runtime.misc.Interval INVALID
 fld public int a
 fld public int b
-fld public static int creates
-fld public static int hits
-fld public static int misses
-fld public static int outOfRange
 meth public boolean adjacent(org.antlr.v4.runtime.misc.Interval)
 meth public boolean disjoint(org.antlr.v4.runtime.misc.Interval)
 meth public boolean equals(java.lang.Object)
@@ -2632,6 +2617,7 @@ supr java.lang.Object
 hfds DEFAULT_SEED
 
 CLSS public abstract interface !annotation org.antlr.v4.runtime.misc.NotNull
+ anno 0 java.lang.Deprecated()
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, METHOD, PARAMETER, LOCAL_VARIABLE])
@@ -2683,6 +2669,7 @@ CLSS public abstract interface org.antlr.v4.runtime.misc.Predicate<%0 extends ja
 meth public abstract boolean test({org.antlr.v4.runtime.misc.Predicate%0})
 
 CLSS public org.antlr.v4.runtime.misc.TestRig
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth public static void main(java.lang.String[])
 supr java.lang.Object
@@ -2830,6 +2817,7 @@ meth public static java.util.Collection<org.antlr.v4.runtime.tree.ParseTree> fin
 meth public static java.util.Collection<org.antlr.v4.runtime.tree.ParseTree> findAllTokenNodes(org.antlr.v4.runtime.tree.ParseTree,int)
 meth public static java.util.List<? extends org.antlr.v4.runtime.tree.Tree> getAncestors(org.antlr.v4.runtime.tree.Tree)
 meth public static java.util.List<org.antlr.v4.runtime.tree.ParseTree> descendants(org.antlr.v4.runtime.tree.ParseTree)
+ anno 0 java.lang.Deprecated()
 meth public static java.util.List<org.antlr.v4.runtime.tree.ParseTree> findAllNodes(org.antlr.v4.runtime.tree.ParseTree,int,boolean)
 meth public static java.util.List<org.antlr.v4.runtime.tree.ParseTree> getDescendants(org.antlr.v4.runtime.tree.ParseTree)
 meth public static java.util.List<org.antlr.v4.runtime.tree.Tree> getChildren(org.antlr.v4.runtime.tree.Tree)

@@ -20,6 +20,24 @@
     under the License.
 
 -->
+## Version 17.0.301
+* nb-javac 20 support
+* Gradle support to work on JDK 20
+* Various bug fixes
+
+## Version 17.0.0
+* Various bug fixes
+
+## Version 16.0.301
+* Multistep wizard added to connect to Autonomous DB 
+* Fixes for obtaining projects information
+* Temporary fix: Support extra cluster directories.
+* Support for GraalVM MX projects updated
+
+## Version 16.0.1
+* Gradle 7.6 support to work on JDK 19
+* Proxy autodection and configuration for Maven & Gradle
+
 ## Version 15.0.301
 * Native image CE debugger works on aarch64
 * Organize Imports fixed for clashing star imports

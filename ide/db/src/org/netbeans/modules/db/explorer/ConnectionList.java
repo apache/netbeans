@@ -24,9 +24,9 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.prefs.PreferenceChangeEvent;
@@ -62,6 +62,11 @@ public class ConnectionList {
     private final List<ConnectionListener> listeners = new CopyOnWriteArrayList<ConnectionListener>();
 
     private final Preferences dbPreferences;
+
+    /**
+     * Name of the LAST connection returned as a default.
+     */
+    private String lastPrefName;
 
     private Lookup.Result<DatabaseConnection> result = getLookupResult();
     
@@ -273,32 +278,57 @@ public class ConnectionList {
             }
             ref.clear();
             preferred = new PreferredRef(c);
+            lastPrefName = null;
         }
         dbPreferences.put(PREF_PREFERRED_CONNECTION_NAME, c.getName());
         fireListeners();
     }
     
     public DatabaseConnection getPreferredConnection(boolean selectFirst) {
-        DatabaseConnection p = preferred.get();
-        if (p != null) {
-            return p;
+        String fallback;
+        DatabaseConnection p;
+        synchronized (this) {
+            p = preferred.get();
+            if (p != null) {
+                return p;
+            }
+            fallback = this.lastPrefName;
         }
         String prefName = dbPreferences.get(PREF_PREFERRED_CONNECTION_NAME, null);
         DatabaseConnection[] conns = getConnections();
-        if (prefName == null) {
-            return conns.length == 0 || !selectFirst ? null : conns[0];
+        DatabaseConnection selected = findConnection(prefName, conns);
+        boolean prefChanged = false;
+        if (selected == null) {
+            if (conns.length > 0) {
+                // find the last one, or just anything.
+                selected = findConnection(fallback, conns);
+            }
+            if (selected != null) {
+                prefChanged = !Objects.equals(lastPrefName, selected.getName());
+                lastPrefName = selected.getName();
+            } else {
+                return null;
+            }
         }
+        synchronized (this) {
+            p = preferred.get();
+            if (p == null) {
+                preferred = new PreferredRef(selected);
+                p = selected;
+            }
+        }
+        if (prefChanged) {
+            fireListeners();
+        }
+        return p;
+    }
+    
+    private static DatabaseConnection findConnection(String name, DatabaseConnection[] conns) {
         for (int i = 0; i < conns.length; i++) {
             DatabaseConnection c = conns[i];
-            if (prefName.equals(c.getName())) {
-                synchronized (this) {
-                    p = preferred.get();
-                    if (p == null) {
-                        preferred = new PreferredRef(c);
-                        p = c;
-                    }
-                    return p;
-                }
+            // accept anything when no preference is set.
+            if (name == null || name.equals(c.getName())) {
+                return c;
             }
         }
         return null;

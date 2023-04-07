@@ -79,7 +79,6 @@ public class ProvidedExtensionsProxy extends ProvidedExtensions {
     }
     
     public ProvidedExtensions.IOHandler getRenameHandler(final File from, final String newName) {
-        final File to = new File(from.getParentFile(), newName);
         IOHandler retValue = null;
         for (Iterator<BaseAnnotationProvider> it = annotationProviders.iterator(); it.hasNext() && retValue == null;) {
             BaseAnnotationProvider provider = it.next();

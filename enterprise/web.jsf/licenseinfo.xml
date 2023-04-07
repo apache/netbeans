@@ -99,6 +99,8 @@
     <fileset>
         <file>src/org/netbeans/modules/web/jsf/resources/web-facelettaglibrary_3_0.xsd</file>
         <file>src/org/netbeans/modules/web/jsf/resources/web-facesconfig_3_0.xsd</file>
+        <file>src/org/netbeans/modules/web/jsf/resources/web-facelettaglibrary_4_0.xsd</file>
+        <file>src/org/netbeans/modules/web/jsf/resources/web-facesconfig_4_0.xsd</file>
         <license ref="EPL-v20" />
         <comment type="CATEGORY_B" />
     </fileset>

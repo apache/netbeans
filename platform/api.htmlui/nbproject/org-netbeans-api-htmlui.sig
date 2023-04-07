@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.25
+#Version 1.27
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -63,11 +63,13 @@ innr public abstract interface static OnSubmit
 innr public final static Builder
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.String className()
+meth public abstract !hasdefault java.lang.String[] resources()
 meth public abstract !hasdefault java.lang.String[] techIds()
 meth public abstract java.lang.String url()
 
 CLSS public final static org.netbeans.api.htmlui.HTMLDialog$Builder
  outer org.netbeans.api.htmlui.HTMLDialog
+meth public !varargs org.netbeans.api.htmlui.HTMLDialog$Builder addResources(java.lang.String[])
 meth public !varargs org.netbeans.api.htmlui.HTMLDialog$Builder addTechIds(java.lang.String[])
 meth public <%0 extends java.lang.Object> {%%0} component(java.lang.Class<{%%0}>)
 meth public java.lang.String showAndWait()
@@ -75,7 +77,7 @@ meth public org.netbeans.api.htmlui.HTMLDialog$Builder loadFinished(java.lang.Ru
 meth public static org.netbeans.api.htmlui.HTMLDialog$Builder newDialog(java.lang.String)
 meth public void show(org.netbeans.api.htmlui.HTMLDialog$OnSubmit)
 supr java.lang.Object
-hfds onPageLoad,techIds,url
+hfds onPageLoad,resources,techIds,url
 
 CLSS public abstract interface static org.netbeans.api.htmlui.HTMLDialog$OnSubmit
  outer org.netbeans.api.htmlui.HTMLDialog
@@ -108,9 +110,10 @@ meth public boolean isDialog()
 meth public boolean isWindow()
 meth public boolean onSubmit(java.lang.String)
 meth public java.lang.ClassLoader getClassLoader()
+meth public java.lang.String[] getResources()
 meth public java.lang.String[] getTechIds()
 meth public java.net.URL getPage()
 meth public org.openide.util.Lookup onPageLoad()
 supr java.lang.Object
-hfds component,lifeCycleCallback,loader,onPageLoad,onSubmit,techIds,url
+hfds component,lifeCycleCallback,loader,onPageLoad,onSubmit,resources,techIds,url
 

@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 import javax.swing.Icon;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
@@ -102,6 +103,7 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
             final String updates = getUpdates();
             SwingUtilities.invokeLater(() -> {
                 description.setText(LBL_description(getProductVersionValue(), getJavaValue(), getVMValue(), getOperatingSystemValue(), getEncodingValue(), getSystemLocaleValue(), getUserDirValue(), Places.getCacheDirectory().getAbsolutePath(), updates, FONT_SIZE, getJavaRuntime()));
+                descriptionScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS); // will need a scrollbar now
                 description.setCursor(null);
                 description.revalidate();
                 description.setCaretPosition(0);
@@ -156,7 +158,7 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
         javax.swing.JButton closeButton = new javax.swing.JButton();
         javax.swing.JScrollPane copyrightScrollPane = new javax.swing.JScrollPane();
         copyright = new javax.swing.JTextPane();
-        javax.swing.JScrollPane descriptionScrollPane = new javax.swing.JScrollPane();
+        descriptionScrollPane = new javax.swing.JScrollPane();
         description = new javax.swing.JTextPane();
         javax.swing.JPanel imagePanel = new javax.swing.JPanel();
         imageLabel = new javax.swing.JLabel();
@@ -184,6 +186,7 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
         copyright.setMinimumSize(new java.awt.Dimension(50, 0));
         copyright.setCaretPosition(0); // so that text is not scrolled down
         copyright.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 copyrightMouseClicked(evt);
             }
@@ -242,6 +245,7 @@ private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane copyright;
     private javax.swing.JTextPane description;
+    private javax.swing.JScrollPane descriptionScrollPane;
     private javax.swing.JLabel imageLabel;
     // End of variables declaration//GEN-END:variables
     

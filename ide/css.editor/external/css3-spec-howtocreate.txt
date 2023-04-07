@@ -51,7 +51,9 @@ http://www.w3.org/TR/css3-ui/ \
 http://www.w3.org/TR/css3-values/ \
 http://www.w3.org/TR/css3-writing-modes/ \
 http://www.w3.org/TR/css-align-3/ \
-http://www.w3.org/TR/css-break-3/
+http://www.w3.org/TR/css-break-3/ \
+http://www.w3.org/TR/css-position-3/ \
+http://www.w3.org/TR/css-sizing-3/
 
 3. Check that the contents still looks sane and mirroring worked
 

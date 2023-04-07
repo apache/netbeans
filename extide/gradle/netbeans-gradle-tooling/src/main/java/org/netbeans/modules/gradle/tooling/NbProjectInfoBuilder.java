@@ -85,18 +85,13 @@ import org.gradle.api.distribution.DistributionContainer;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.initialization.IncludedBuild;
-import org.gradle.api.internal.plugins.PluginManagerInternal;
-import org.gradle.api.internal.plugins.PluginRegistry;
-import org.gradle.api.internal.project.ProjectInternal;
-import org.gradle.api.internal.provider.PropertyInternal;
 import org.gradle.api.internal.provider.ProviderInternal;
-import org.gradle.api.internal.provider.ValueSupplier.ExecutionTimeValue;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.logging.Logging;
 import org.gradle.api.plugins.ExtensionAware;
 import org.gradle.api.plugins.ExtensionContainer;
 import org.gradle.api.plugins.ExtensionsSchema.ExtensionSchema;
-import org.gradle.api.plugins.JavaPlatformPlugin;
+import org.gradle.api.plugins.ExtraPropertiesExtension;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.reflect.HasPublicType;
 import org.gradle.api.reflect.TypeOf;
@@ -106,11 +101,12 @@ import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskDependency;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.api.tasks.testing.Test;
+import org.gradle.internal.extensibility.DefaultExtraPropertiesExtension;
 import org.gradle.jvm.JvmLibrary;
 import org.gradle.language.base.artifact.SourcesArtifact;
 import org.gradle.language.java.artifact.JavadocArtifact;
 import org.gradle.plugin.use.PluginId;
-import org.gradle.util.VersionNumber;
+import org.gradle.util.GradleVersion;
 import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
 
 /**
@@ -127,6 +123,11 @@ class NbProjectInfoBuilder {
      * project loader is enabled to FINER level.
      */
     private static final Logger LOG =  Logging.getLogger(NbProjectInfoBuilder.class);
+
+    /**
+     * Name of the default extensibility point for various domain objects defined by Gradle.
+     */
+    private static final String DEFAULT_EXTENSION_NAME = "ext"; // NOI18N
     
     private static final String NB_PREFIX = "netbeans.";
     private static final Set<String> CONFIG_EXCLUDES = new HashSet<>(asList( new String[]{
@@ -181,16 +182,35 @@ class NbProjectInfoBuilder {
         "war"
     }));
 
+    private static final GradleVersion GRADLE_VERSION = GradleVersion.current().getBaseVersion();
+
     final Project project;
-    final VersionNumber gradleVersion;
+    final GradleInternalAdapter adapter;
+
+    public static final class ValueAndType {
+        final Class type;
+        final Optional<Object> value;
+
+        public ValueAndType(Class type, Object value) {
+            this.type = type;
+            this.value = Optional.ofNullable(value);
+        }
+
+        public ValueAndType(Class type) {
+            this.type = type;
+            this.value = Optional.empty();
+        }
+    }
 
     NbProjectInfoBuilder(Project project) {
         this.project = project;
-        this.gradleVersion = VersionNumber.parse(project.getGradle().getGradleVersion());
+        this.adapter = sinceGradleOrDefault("7.6", () -> new GradleInternalAdapter.Gradle76(project), () -> new GradleInternalAdapter(project));
     }
+    
+    private NbProjectInfoModel model = new NbProjectInfoModel();
 
     public NbProjectInfo buildAll() {
-        NbProjectInfoModel model = new NbProjectInfoModel();
+        adapter.setModel(model);
         runAndRegisterPerf(model, "meta", this::detectProjectMetadata);
         detectProps(model);
         detectLicense(model);
@@ -217,7 +237,7 @@ class NbProjectInfoBuilder {
         storeGlobalTypes(model);
         return model;
     }
-
+    
     @SuppressWarnings("null")
     private void detectDistributions(NbProjectInfoModel model) {
         if (project.getPlugins().hasPlugin("distribution")) {
@@ -277,9 +297,8 @@ class NbProjectInfoBuilder {
         Map<String, Object> taskProperties = new HashMap<>();
         Map<String, String> taskPropertyTypes = new HashMap<>();
         
-        Map<String, Task> taskList = project.getTasks().getAsMap();
-        for (String s : taskList.keySet()) {
-            Task task = taskList.get(s);
+        // make a copy of the task map; may mutate.
+        for (Task task : new ArrayList<>(project.getTasks().getAsMap().values())) {
             Class taskClass = task.getClass();
             Class nonDecorated = findNonDecoratedClass(taskClass);
             
@@ -294,9 +313,8 @@ class NbProjectInfoBuilder {
     private void detectTaskDependencies(NbProjectInfoModel model) {
         Map<String, Object> tasks = new HashMap<>();
         
-        Map<String, Task> taskList = project.getTasks().getAsMap();
-        for (String s : taskList.keySet()) {
-            Task task = taskList.get(s);
+        // make a copy of the task map; may mutate.
+        for (Task task : new ArrayList<>(project.getTasks().getAsMap().values())) {
             Map<String, String> taskInfo = new HashMap<>();
             taskInfo.put("name", task.getPath()); // NOI18N
             taskInfo.put("enabled", Boolean.toString(task.getEnabled())); // NOI18N
@@ -317,11 +335,16 @@ class NbProjectInfoBuilder {
     }
     
     private String dependenciesAsString(Task t, TaskDependency td) {
-        Set<? extends Task> deps = td.getDependencies(t);
-        if (deps.isEmpty()) {
+        try {
+            Set<? extends Task> deps = td.getDependencies(t);
+            if (deps.isEmpty()) {
+                return "";
+            }
+            return deps.stream().map(Task::getPath).collect(Collectors.joining(","));
+        } catch (LinkageError | RuntimeException ex) {
+            LOG.warn("Error getting dependencies for task {}: {}", t.getName(), ex.getLocalizedMessage(), ex);
             return "";
         }
-        return deps.stream().map(Task::getPath).collect(Collectors.joining(","));
     }
     
     private void detectConfigurationArtifacts(NbProjectInfoModel model) {
@@ -365,29 +388,15 @@ class NbProjectInfoBuilder {
      * @param model 
      */
     private void detectAdditionalPlugins(NbProjectInfoModel model) {
-        final PluginManagerInternal pmi;
-        PluginRegistry reg;
-        if (project.getPluginManager() instanceof PluginManagerInternal) {
-            pmi = (PluginManagerInternal)project.getPluginManager();
-        } else {
+        if (!adapter.hasPluginManager()) {
             return;
-        }
-        if (project instanceof ProjectInternal) {
-            reg = ((ProjectInternal)project).getServices().get(PluginRegistry.class);
-        } else {
-            reg = null;
         }
         LOG.lifecycle("Detecting additional plugins");
         final Set<String> plugins = new LinkedHashSet<>();
         
         project.getPlugins().matching((Plugin p) -> {
             for (Class c = p.getClass(); c != null && c != Object.class; c = c.getSuperclass()) {
-                Class fc = c;
-                // with Gradle 7.1+, plugins can be better enumerated. Prior to 7.1 I can only get IDs for registry-supplied plugins.
-                Optional<PluginId> id = sinceGradleOrDefault("7.1", () -> pmi.findPluginIdForClass(fc), Optional::empty); // NOI18N
-                if (!id.isPresent() && reg != null) {
-                    id = reg.findPluginForClass(c);
-                }
+                Optional<PluginId> id = adapter.findPluginId(c);
                 if (id.isPresent()) {
                     LOG.info("Plugin: {} -> {}", id.get(), p);
                     plugins.add(id.get().getId());
@@ -504,13 +513,7 @@ class NbProjectInfoBuilder {
             return false;
         }
         String n = c.getName();
-        if (n.indexOf('.') == -1) {
-            return true;
-        } else if (n.startsWith("java.lang.")) {
-            return true;
-        }
-        
-        return false;
+        return c.isPrimitive() || n.startsWith("java.lang.");
     }
     
     /**
@@ -537,42 +540,48 @@ class NbProjectInfoBuilder {
     }
     
     private boolean isMutableType(Object potentialValue) {
-        if (potentialValue instanceof PropertyInternal) {
-            return true;
-        } else if ((potentialValue instanceof NamedDomainObjectContainer) && (potentialValue instanceof HasPublicType)) {
-            return true;
-        } else if (potentialValue instanceof Iterable || potentialValue instanceof Map) {
-            return true;
-        }
-        return false;
+        return adapter.isMutableType(potentialValue);
+    }
+    
+    private void addNestedKeys(String prefix, Map<String, String> propertyTypes, Collection<String> keys) {
+            propertyTypes.merge(prefix + COLLECTION_KEYS_MARKER, String.join(";;", keys), (old, add) -> {
+                List<String> oldList = new ArrayList<>(Arrays.asList(old.split(";;")));
+                List<String> newList = Arrays.asList(add.split(";;"));
+                oldList.addAll(newList);
+                return String.join(";;", oldList);
+            });
     }
     
     private void inspectObjectAndValues0(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues, Set<String> excludes, boolean type) {
         Class nonDecorated = findNonDecoratedClass(clazz);
         
         // record object's type first, even though the value may be excluded (i.e. ignored class). Do not add types for collection or map items -- to much clutter.
+        String typeKey = prefix;
+        if (prefix.endsWith(".")) {
+            typeKey = prefix.substring(0, prefix.length() - 1);
+        } else {
+            typeKey = prefix;
+        }
         if (type) {
-            String typeKey = prefix;
-            if (prefix.endsWith(".")) {
-                typeKey = prefix.substring(0, prefix.length() - 1);
-            } else {
-                typeKey = prefix;
-            }
             if (propertyTypes.putIfAbsent(typeKey, nonDecorated.getName()) != null && object == null) {
                 // type already introspected, no value to fetch properties from.
                 return;
             }
         }
-        if (clazz == null || (excludes == null && ignoreClassesPattern.matcher(clazz.getName()).matches())) {
+        
+        if (clazz == null || clazz.isEnum()) {
             return;
         }
-        if (clazz.isEnum() || clazz.isArray()) {
+        if (clazz.isArray() || (excludes == null && ignoreClassesPattern.matcher(clazz.getName()).matches())) {
+            // try to dump as a list/map
+            dumpValue(object, typeKey, propertyTypes, defaultValues, clazz, null);
             return;
         }
 
         MetaClass mclazz = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
         Map<String, String> globTypes = globalTypes.computeIfAbsent(nonDecorated.getName(), cn -> new HashMap<>());
         List<MetaProperty> props = mclazz.getProperties();
+        List<String> addedKeys = new ArrayList<>();
         for (MetaProperty mp : props) {
             Class propertyDeclaringClass = null;
             String getterName = null;
@@ -640,24 +649,15 @@ class NbProjectInfoBuilder {
                 // Provider must NOT be asked for a value, otherwise it might run a Task in order to compute
                 // the value.
                 try {
+                    value = mclazz.getProperty(object, propName);
                     if (Provider.class.isAssignableFrom(t)) {
-                        Object potentialValue = mclazz.getProperty(object, propName);
-                        if (potentialValue instanceof ProviderInternal) {
-                            ProviderInternal provided = (ProviderInternal) potentialValue;
-                            t = provided.getType();
-                            ExecutionTimeValue etv;
-                            etv = provided.calculateExecutionTimeValue();
-                            if (etv.isFixedValue()) {
-                                value = etv.getFixedValue();
-                            }
-                        } else {
-                            value = potentialValue;
-                            if (value != null) {
-                                t = value.getClass();
+                        ValueAndType vt = adapter.findPropertyValueInternal(propName, value);
+                        if (vt != null) {
+                            t = vt.type;
+                            if (vt.value.isPresent()) {
+                                value = vt.value.get();
                             }
                         }
-                    } else {
-                        value = mclazz.getProperty(object, propName);
                     }
                 } catch (RuntimeException ex) {
                     // just ignore - the property value cannot be obtained
@@ -675,6 +675,8 @@ class NbProjectInfoBuilder {
                     }
                 }
             }
+            
+            addedKeys.add(propName);
             
             String cn = findNonDecoratedClass(t).getName();
             globTypes.put(propName, cn);
@@ -695,6 +697,7 @@ class NbProjectInfoBuilder {
                         itemClass = findIterableItemClass(pubType.getConcreteClass());
                     }
                     propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_NAMED);
+                    propertyTypes.put(prefix + propName, findNonDecoratedClass(t).getName());
                     if (itemClass != null) {
                         propertyTypes.put(prefix + propName + COLLECTION_ITEM_MARKER, itemClass.getName());
                         newPrefix = prefix + propName + COLLECTION_ITEM_PREFIX; // NOI18N
@@ -702,88 +705,11 @@ class NbProjectInfoBuilder {
                     }
 
                     NamedDomainObjectContainer nc = (NamedDomainObjectContainer)value;
-                    Map<String, ?> m = nc.getAsMap();
-                    List<String> ss = new ArrayList<>(m.keySet());
-                    propertyTypes.put(prefix + propName + COLLECTION_KEYS_MARKER, String.join(";;", ss));
-                    for (String k : m.keySet()) {
-                        newPrefix = prefix + propName + "." + k + "."; // NOI18N
-                        Object v = m.get(k);
-                        defaultValues.put(prefix + propName + "." + k, Objects.toString(v)); // NOI18N
-                        inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
-                    }
+                    Map<String, ?> m = new HashMap<>(nc.getAsMap());
+                    dumpContainerProperties(m, prefix + propName, defaultValues);
                     dumped = true;
-                } else if (Iterable.class.isAssignableFrom(t)) {
-                    itemClass = findIterableItemClass(t);
-                    if (itemClass == null && typeParameters != null && !typeParameters.isEmpty()) {
-                        if (typeParameters.get(0) instanceof Class) {
-                            itemClass = (Class)typeParameters.get(0);
-                        }
-                    }
-                    
-                    propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_LIST);
-                    if (itemClass != null) {
-                        cn = findNonDecoratedClass(itemClass).getName();
-                        propertyTypes.put(prefix + propName + COLLECTION_ITEM_MARKER, cn);
-                        String newPrefix = prefix + propName + COLLECTION_ITEM_PREFIX; // NOI18N
-                        if (!cn.startsWith("java.lang.") && !Provider.class.isAssignableFrom(t)) { //NOI18N
-                            inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
-                        }
-                    }
-                    
-                    if (value instanceof Iterable) {
-                        int index = 0;
-                        try {
-                            for (Object o : (Iterable)value) {
-                                String newPrefix = prefix + propName + "[" + index + "]."; // NOI18N
-                                defaultValues.put(prefix + propName + "[" + index + "]", Objects.toString(o)); //NOI18N
-                                inspectObjectAndValues(o.getClass(), o, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
-                                index++;
-                            }
-                        } catch (RuntimeException ex) {
-                            // values cannot be obtained
-                        }
-                        dumped = true;
-                    }
-                } else if (value instanceof Map) {
-                    Map mvalue = (Map)value;
-                    Set<Object> ks = mvalue.keySet();
-                    Class keyClass = findIterableItemClass(ks.getClass());
-                    if (keyClass == null || keyClass == java.lang.Object.class) {
-                        boolean ok = true;
-                        for (Object k : ks) {
-                            if (!(k instanceof String)) {
-                                ok = false;
-                            }
-                        }
-                        if (ok) {
-                            keyClass = String.class;
-                        }
-                    }
-                    if (keyClass == String.class) {
-                        itemClass = findIterableItemClass(mvalue.values().getClass());
-
-                        String keys = ks.stream().map(k -> k.toString()).map((String k) -> k.replace(";", "\\;")).collect(Collectors.joining(";;"));
-                        propertyTypes.put(prefix + propName + COLLECTION_KEYS_MARKER, keys);
-                        
-                        propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_MAP);
-                        if (itemClass != null) {
-                            cn = findNonDecoratedClass(itemClass).getName();
-                            propertyTypes.put(prefix + propName + COLLECTION_ITEM_MARKER, cn);
-                            String newPrefix = prefix + propName + COLLECTION_ITEM_PREFIX; // NOI18N
-                            if (!cn.startsWith("java.lang.") && !Provider.class.isAssignableFrom(t)) { //NOI18N
-                                inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
-                            }
-                        }
-
-                        for (Object o : ks) {
-                            String k = o.toString();
-                            String newPrefix = prefix + propName + "[" + k + "]"; // NOI18N
-                            Object v = mvalue.get(o);
-                            defaultValues.put(newPrefix, Objects.toString(v)); // NOI18N
-                            inspectObjectAndValues(v.getClass(), v, newPrefix + ".", globalTypes, propertyTypes, defaultValues, null, itemClass == null);
-                        }
-                        dumped = true;
-                    }
+                } else {
+                    dumped = dumpValue(value, prefix + propName, propertyTypes, defaultValues, t, typeParameters);
                 }
                 
                 if (!dumped) {
@@ -796,6 +722,129 @@ class NbProjectInfoBuilder {
                 }
             }
         }
+        addNestedKeys(typeKey, propertyTypes, addedKeys);
+    }
+    
+    private void dumpContainerProperties(Map<String, ?> m, String prefix, Map<String, Object> defaultValues) {
+        // merge with other properties
+        addNestedKeys(prefix, propertyTypes, m.keySet());
+
+        for (Map.Entry<String, ?> it : m.entrySet()) {
+            String k = it.getKey();
+            String newPrefix = prefix + "." + k + "."; // NOI18N
+            Object v = it.getValue();
+            defaultValues.put(prefix + "." + k, Objects.toString(v)); // NOI18N
+            inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+        }
+    }
+    
+    private boolean dumpValue(Object value, String prefix, Map<String, String> propertyTypes, Map<String, Object> defaultValues, Class t, List<Type> typeParameters) {
+        // attemtp to enumerate membrs of a Container or an Iterable.
+        Class itemClass = null;
+        String cn = null;
+        boolean dumped = false;
+        if ((value instanceof NamedDomainObjectContainer) && (value instanceof HasPublicType)) {
+            String newPrefix;
+
+            TypeOf pubType = ((HasPublicType)value).getPublicType();
+            if (pubType != null && pubType.getComponentType() != null) {
+                itemClass = pubType.getComponentType().getConcreteClass();
+            } else {
+                itemClass = findIterableItemClass(pubType.getConcreteClass());
+            }
+            propertyTypes.put(prefix + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_NAMED);
+            if (itemClass != null) {
+                propertyTypes.put(prefix + COLLECTION_ITEM_MARKER, itemClass.getName());
+                newPrefix = prefix + COLLECTION_ITEM_PREFIX; // NOI18N
+                inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
+            }
+
+            NamedDomainObjectContainer nc = (NamedDomainObjectContainer)value;
+            Map<String, ?> m = new HashMap<>(nc.getAsMap());
+            List<String> ss = new ArrayList<>(m.keySet());
+            propertyTypes.put(prefix + COLLECTION_KEYS_MARKER, String.join(";;", ss));
+            for (String k : m.keySet()) {
+                newPrefix = prefix + "." + k + "."; // NOI18N
+                Object v = m.get(k);
+                defaultValues.put(prefix + "." + k, Objects.toString(v)); // NOI18N
+                inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+            }
+            dumped = true;
+        } else if (Iterable.class.isAssignableFrom(t)) {
+            itemClass = findIterableItemClass(t);
+            if (itemClass == null && typeParameters != null && !typeParameters.isEmpty()) {
+                if (typeParameters.get(0) instanceof Class) {
+                    itemClass = (Class)typeParameters.get(0);
+                }
+            }
+
+            propertyTypes.put(prefix + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_LIST);
+            
+            if (itemClass != null) {
+                cn = findNonDecoratedClass(itemClass).getName();
+                propertyTypes.put(prefix + COLLECTION_ITEM_MARKER, cn);
+                String newPrefix = prefix + COLLECTION_ITEM_PREFIX; // NOI18N
+                if (!cn.startsWith("java.lang.") && !Provider.class.isAssignableFrom(t)) { //NOI18N
+                    inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
+                }
+            }
+
+            if (value instanceof Iterable) {
+                int index = 0;
+                try {
+                    for (Object o : (Iterable)value) {
+                        String newPrefix = prefix + "[" + index + "]."; // NOI18N
+                        defaultValues.put(prefix + "[" + index + "]", Objects.toString(o)); //NOI18N
+                        inspectObjectAndValues(o.getClass(), o, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+                        index++;
+                    }
+                } catch (RuntimeException ex) {
+                    // values cannot be obtained
+                }
+                dumped = true;
+            }
+        } else if (value instanceof Map) {
+            Map mvalue = (Map)value;
+            Set<Object> ks = mvalue.keySet();
+            Class keyClass = findIterableItemClass(ks.getClass());
+            if (keyClass == null || keyClass == java.lang.Object.class) {
+                boolean ok = true;
+                for (Object k : ks) {
+                    if (!(k instanceof String)) {
+                        ok = false;
+                    }
+                }
+                if (ok) {
+                    keyClass = String.class;
+                }
+            }
+            if (keyClass == String.class) {
+                itemClass = findIterableItemClass(mvalue.values().getClass());
+
+                String keys = ks.stream().map(k -> k.toString()).map((String k) -> k.replace(";", "\\;")).collect(Collectors.joining(";;"));
+                propertyTypes.put(prefix + COLLECTION_KEYS_MARKER, keys);
+
+                propertyTypes.put(prefix + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_MAP);
+                if (itemClass != null) {
+                    cn = findNonDecoratedClass(itemClass).getName();
+                    propertyTypes.put(prefix + COLLECTION_ITEM_MARKER, cn);
+                    String newPrefix = prefix + COLLECTION_ITEM_PREFIX; // NOI18N
+                    if (!cn.startsWith("java.lang.") && !Provider.class.isAssignableFrom(t)) { //NOI18N
+                        inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
+                    }
+                }
+
+                for (Object o : ks) {
+                    String k = o.toString();
+                    String newPrefix = prefix + "[" + k + "]"; // NOI18N
+                    Object v = mvalue.get(o);
+                    defaultValues.put(newPrefix, Objects.toString(v)); // NOI18N
+                    inspectObjectAndValues(v.getClass(), v, newPrefix + ".", globalTypes, propertyTypes, defaultValues, null, itemClass == null);
+                }
+                dumped = true;
+            }
+        }
+        return dumped;
     }
     
     private static Class findNonDecoratedClass(Class clazz) {
@@ -829,7 +878,7 @@ class NbProjectInfoBuilder {
             
             Object ext;
             try {
-                ext = project.getExtensions().getByName(extName);
+                ext = container.getByName(extName);
                 if (ext == null) {
                     continue;
                 }
@@ -837,6 +886,15 @@ class NbProjectInfoBuilder {
                 // ignore, the extension could not be obtained, ignore.
                 continue;
             }
+            
+            // special case for 'ext' DefaultProperiesExtension whose properties are 'merged' with the base object
+            // can be read in the buildscript as if the object itself defined them
+            if (DEFAULT_EXTENSION_NAME.equals(extName) && (ext instanceof ExtraPropertiesExtension)) {
+                String p = prefix.endsWith(".") ? prefix.substring(0, prefix.length() - 1) : prefix;
+                dumpContainerProperties(((ExtraPropertiesExtension)ext).getProperties(), p, values);
+                continue;
+            }
+            
             Class c = findNonDecoratedClass(ext.getClass());
             propertyTypes.put(prefix + extName, c.getName());
             inspectObjectAndValues(ext.getClass(), ext, prefix + extName + ".", globalTypes, propertyTypes, values);
@@ -879,7 +937,7 @@ class NbProjectInfoBuilder {
         model.getInfo().put("project_subProjects", sp);
         
         Map<String, File> ib = new HashMap<>();
-        LOG.lifecycle("Gradle Version: {}", gradleVersion);
+        LOG.lifecycle("Gradle Version: {}", GradleVersion.current());
         sinceGradle("3.1", () -> {
             for(IncludedBuild p: project.getGradle().getIncludedBuilds()) {
                 LOG.lifecycle("Include Build: {}", p.getName());
@@ -1018,49 +1076,55 @@ class NbProjectInfoBuilder {
 
                             List<String> compilerArgs;
 
-                            try {
-                                compilerArgs = (List<String>) getProperty(compileTask, "options", "allCompilerArgs");
-                            } catch (Throwable ex) {
-                                try {
-                                    compilerArgs = (List<String>) getProperty(compileTask, "options", "compilerArgs");
-                                } catch (Throwable ex2) {
-                                    compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "freeCompilerArgs");
-                                }
+                            compilerArgs = (List<String>) getProperty(compileTask, "options", "allCompilerArgs");
+                            if (compilerArgs == null) {
+                                compilerArgs = (List<String>) getProperty(compileTask, "options", "compilerArgs");
+                            }
+                            if (compilerArgs == null) {
+                                compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "freeCompilerArgs");
                             }
                             model.getInfo().put(propBase + lang + "_compiler_args", new ArrayList<>(compilerArgs));
                         }
                         if (Boolean.TRUE.equals(available.get(langId))) {
                             model.getInfo().put(propBase + lang, storeSet(getProperty(sourceSet, langId, "srcDirs")));
-                            DirectoryProperty dirProp = (DirectoryProperty)getProperty(sourceSet, langId, "classesDirectory");
-                            if (dirProp != null) {
-                                File outDir;
-                                
-                                if (dirProp.isPresent()) {
-                                    outDir = dirProp.get().getAsFile();
-                                } else {
-                                    // kotlin plugin uses some weird late binding, so it has the output item, but it cannot be resolved to a 
-                                    // concrete file path at this time. Let's make an approximation from 
-                                    Path candidate = null;
-                                    if (base != null) {
-                                        Path prefix = base.resolve(langId);
-                                        // assume the language has just one output dir in the source set:
-                                        for (int i = 0; i < outPaths.size(); i++) {
-                                            Path p = outPaths.get(i);
-                                            if (p.startsWith(prefix)) {
-                                                if (candidate != null) {
-                                                    candidate = null;
-                                                    break;
-                                                } else {
-                                                    candidate = p;
+                            asGradle("4.0", "6.1", () -> {
+                                File outDir = (File) getProperty(sourceSet, langId, "outputDir");
+                                model.getInfo().put(propBase + lang + "_output_classes", outDir);
+                            });
+                            sinceGradle("6.1", () -> {
+                                DirectoryProperty dirProp = (DirectoryProperty)getProperty(sourceSet, langId, "classesDirectory");
+                                if (dirProp != null) {
+                                    File outDir;
+
+                                    if (dirProp.isPresent()) {
+                                        outDir = dirProp.get().getAsFile();
+                                    } else {
+                                        // kotlin plugin uses some weird late binding, so it has the output item, but it cannot be resolved to a
+                                        // concrete file path at this time. Let's make an approximation from
+                                        Path candidate = null;
+                                        if (base != null) {
+                                            Path prefix = base.resolve(langId);
+                                            // assume the language has just one output dir in the source set:
+                                            for (int i = 0; i < outPaths.size(); i++) {
+                                                Path p = outPaths.get(i);
+                                                if (p.startsWith(prefix)) {
+                                                    if (candidate != null) {
+                                                        candidate = null;
+                                                        break;
+                                                    } else {
+                                                        candidate = p;
+                                                    }
                                                 }
                                             }
                                         }
+                                        outDir = candidate != null ? candidate.toFile() : new File("");
                                     }
-                                    outDir = candidate != null ? candidate.toFile() : new File("");
+
+                                    model.getInfo().put(propBase + lang + "_output_classes", outDir);
                                 }
-                                
-                                model.getInfo().put(propBase + lang + "_output_classes", outDir);
-                            }
+                            });
+
+
                         }
                     }
    
@@ -1131,8 +1195,17 @@ class NbProjectInfoBuilder {
             }
         }
         Map<String, Object> archives = new HashMap<>();
-        project.getTasks().withType(Jar.class).forEach(jar -> {
-            archives.put(jar.getClassifier(), jar.getArchivePath());
+        beforeGradle("5.2", () -> {
+            // The jar.getCassifier() and jar.getArchievePath() are deprecated since 5.2
+            // These methods got removed in 8.0
+            project.getTasks().withType(Jar.class).forEach(jar -> {
+                archives.put(jar.getClassifier(), jar.getArchivePath());
+            });
+        });
+        sinceGradle("5.2", () -> {
+            project.getTasks().withType(Jar.class).forEach(jar -> {
+                archives.put(jar.getArchiveClassifier().get(), jar.getDestinationDirectory().file(jar.getArchiveFileName().get()).get().getAsFile());
+            });
         });
         model.getInfo().put("archives", archives);
     }
@@ -1301,16 +1374,16 @@ class NbProjectInfoBuilder {
     }
     
     private void detectDependencies(NbProjectInfoModel model) {
-        Set<ComponentIdentifier> ids = new HashSet();
-        Map<String, File> projects = new HashMap();
-        Map<String, String> unresolvedProblems = new HashMap();
-        Map<String, Set<File>> resolvedJvmArtifacts = new HashMap();
+        Set<ComponentIdentifier> ids = new HashSet<>();
+        Map<String, File> projects = new HashMap<>();
+        Map<String, String> unresolvedProblems = new HashMap<>();
+        Map<String, Set<File>> resolvedJvmArtifacts = new HashMap<>();
         Set<Configuration> visibleConfigurations = configurationsToSave();
         Map<String, String> projectIds = new HashMap<>();
 
         // NETBEANS-5846: if this project uses javaPlatform plugin with dependencies enabled, 
         // do not report unresolved problems
-        boolean ignoreUnresolvable = (project.getPlugins().hasPlugin(JavaPlatformPlugin.class) && 
+        boolean ignoreUnresolvable = (project.getPlugins().hasPlugin("java-platform") &&
             Boolean.TRUE.equals(getProperty(project, "javaPlatform", "allowDependencies")));
 
         visibleConfigurations.forEach(it -> {
@@ -1611,7 +1684,7 @@ class NbProjectInfoBuilder {
                 .collect(Collectors.toSet());
     }
     
-    private interface ExceptionCallable<T, E extends Throwable> {
+    interface ExceptionCallable<T, E extends Throwable> {
         public T call() throws E;
     }
 
@@ -1621,7 +1694,7 @@ class NbProjectInfoBuilder {
     }        
     
     private <T, E extends Throwable> T sinceGradleOrDefault(String version, ExceptionCallable<T, E> c, Supplier<T> def) {
-        if (gradleVersion.compareTo(VersionNumber.parse(version)) >= 0) {
+        if (GRADLE_VERSION.compareTo(GradleVersion.version(version)) >= 0) {
             try {
                 return c.call();
             } catch (RuntimeException | Error e) {
@@ -1630,8 +1703,10 @@ class NbProjectInfoBuilder {
                 sneakyThrow(t);
                 return null;
             }
-        } else {
+        } else if (def != null) {
             return def.get();
+        } else {
+            return null;
         }
     }
     
@@ -1640,23 +1715,34 @@ class NbProjectInfoBuilder {
     }
     
     private void sinceGradle(String version, Runnable r) {
-        if (gradleVersion.compareTo(VersionNumber.parse(version)) >= 0) {
+        if (GRADLE_VERSION.compareTo(GradleVersion.version(version)) >= 0) {
             r.run();
         }
     }
 
     private void beforeGradle(String version, Runnable r) {
-        if (gradleVersion.compareTo(VersionNumber.parse(version)) < 0) {
+        if (GRADLE_VERSION.compareTo(GradleVersion.version(version)) < 0) {
+            r.run();
+        }
+    }
+
+    private void asGradle(String fromVersion, String toVersion, Runnable r) {
+        if ((GRADLE_VERSION.compareTo(GradleVersion.version(fromVersion)) >= 0)
+                && (GRADLE_VERSION.compareTo(GradleVersion.version(toVersion)) < 0)) {
             r.run();
         }
     }
 
     private static Object getProperty(Object obj, String... propPath) {
         Object currentObject = obj;
-        for(String prop: propPath) {
-            currentObject = InvokerHelper.getPropertySafe(currentObject, prop);
+        try {
+            for(String prop: propPath) {
+                currentObject = InvokerHelper.getPropertySafe(currentObject, prop);
+            }
+            return currentObject;
+        } catch (MissingPropertyException ex) {
+            return null;
         }
-        return currentObject;
     }
 }
 

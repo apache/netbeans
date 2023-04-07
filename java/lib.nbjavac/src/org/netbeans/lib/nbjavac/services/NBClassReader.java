@@ -110,23 +110,25 @@ public class NBClassReader extends ClassReader {
                 JavaFileObject origFile = c.classfile;
                 try (InputStream in = origFile.openInputStream()) {
                     byte[] data = readFile(in);
-                    int major = (Byte.toUnsignedInt(data[6]) << 8) + Byte.toUnsignedInt(data[7]);
-                    int maxMajor = ClassFile.Version.MAX().major;
-                    if (maxMajor < major) {
-                        if (log.currentSourceFile() != null) {
-                            log.warning(0, Warnings.BigMajorVersion(origFile, major, maxMajor));
-                        }
-                        data[6] = (byte) (maxMajor >> 8);
-                        data[7] = (byte) (maxMajor & 0xFF);
-                        byte[] dataFin = data;
-                        c.classfile = new ForwardingJavaFileObject(origFile) {
-                            @Override
-                            public InputStream openInputStream() throws IOException {
-                                return new ByteArrayInputStream(dataFin);
+                    if (data.length > 8) {
+                        int major = (Byte.toUnsignedInt(data[6]) << 8) + Byte.toUnsignedInt(data[7]);
+                        int maxMajor = ClassFile.Version.MAX().major;
+                        if (maxMajor < major) {
+                            if (log.currentSourceFile() != null) {
+                                log.warning(0, Warnings.BigMajorVersion(origFile, major, maxMajor));
                             }
-                        };
-                        super.readClassFile(c);
-                        return ;
+                            data[6] = (byte) (maxMajor >> 8);
+                            data[7] = (byte) (maxMajor & 0xFF);
+                            byte[] dataFin = data;
+                            c.classfile = new ForwardingJavaFileObject(origFile) {
+                                @Override
+                                public InputStream openInputStream() throws IOException {
+                                    return new ByteArrayInputStream(dataFin);
+                                }
+                            };
+                            super.readClassFile(c);
+                            return ;
+                        }
                     }
                 } catch (IOException ex) {
                     LOG.log(Level.FINE, null, ex);

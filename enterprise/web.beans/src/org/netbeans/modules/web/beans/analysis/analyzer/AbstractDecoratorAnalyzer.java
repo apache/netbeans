@@ -168,7 +168,7 @@ public abstract class AbstractDecoratorAnalyzer<T> {
         Map<String, ? extends AnnotationMirror> qualifiersFqns = helper.
             getAnnotationsByType(qualifiers);
         boolean hasOnlyDefault = false;
-        if ( qualifiersFqns.keySet().contains(AnnotationUtil.DEFAULT_FQN)){
+        if ( qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN)){
             HashSet<String> fqns = new HashSet<String>(qualifiersFqns.keySet());
             fqns.remove( AnnotationUtil.NAMED );
             fqns.remove( AnnotationUtil.ANY );

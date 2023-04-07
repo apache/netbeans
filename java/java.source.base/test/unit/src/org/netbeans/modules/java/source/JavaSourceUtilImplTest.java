@@ -87,7 +87,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
         MockLookup.setInstances(new SourceLevelQueryImplementation() {
             @Override
             public String getSourceLevel(FileObject javaFile) {
-                return "1.8";
+                return "11";
             }
         });
         assertNotNull(root);
@@ -163,7 +163,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
         }, new SourceLevelQueryImplementation() {
             @Override
             public String getSourceLevel(FileObject javaFile) {
-                return "1.8";
+                return "11";
             }
         });
 
@@ -179,7 +179,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
                         "import javax.lang.model.element.TypeElement;\n" +
                         "import javax.lang.model.SourceVersion;\n" +
                         "\n" +
-                        "@SupportedAnnotationTypes(\"*\") @SupportedSourceVersion(SourceVersion.RELEASE_8)\n" +
+                        "@SupportedAnnotationTypes(\"*\") @SupportedSourceVersion(SourceVersion.RELEASE_11)\n" +
                         "public class AP extends AbstractProcessor {\n" +
                         "    int round;\n" +
                         "    @Override\n" +
@@ -229,7 +229,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
         MockLookup.setInstances(new SourceLevelQueryImplementation() {
             @Override
             public String getSourceLevel(FileObject javaFile) {
-                return "1.8";
+                return "11";
             }
         });
         assertNotNull(root);

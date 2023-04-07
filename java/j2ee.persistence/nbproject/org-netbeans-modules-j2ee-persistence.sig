@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.72.0
+#Version 1.75.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,6 +159,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -1128,6 +1130,7 @@ fld public final static java.lang.String VERSION = "Version"
 fld public final static java.lang.String VERSION_1_0 = "1.0"
 fld public final static java.lang.String VERSION_2_0 = "2.0"
 fld public final static java.lang.String VERSION_2_1 = "2.1"
+fld public final static java.lang.String VERSION_2_2 = "2.2"
 meth public abstract int addPersistenceUnit(org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
 meth public abstract int removePersistenceUnit(org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
 meth public abstract int sizePersistenceUnit()
@@ -1447,20 +1450,27 @@ supr java.lang.Object
 hfds providerClass,vendorSpecificProperties,version
 
 CLSS public org.netbeans.modules.j2ee.persistence.provider.ProviderUtil
-fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER1_0
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER2_0
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER2_1
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER2_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER2_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER2_1
-fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER2_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER1_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER2_0
-fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER2_1
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER2_2
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER1_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER2_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER2_1
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER2_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider KODO_PROVIDER
-fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider OPENJPA_PROVIDER
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider OPENJPA_PROVIDER1_0
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider OPENJPA_PROVIDER2_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider OPENJPA_PROVIDER2_1
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider OPENJPA_PROVIDER2_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider TOPLINK_PROVIDER1_0
 meth public static boolean canServerBeSelected(org.netbeans.api.project.Project)
 meth public static boolean isValid(org.netbeans.modules.j2ee.persistence.unit.PUDataObject)
@@ -1894,7 +1904,7 @@ meth public void refresh()
 meth public void removeCatalogListener(org.netbeans.modules.xml.catalog.spi.CatalogListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.lang.Object
-hfds ORM_NS,ORM_OLD_NS,PERSISTENCE_NS,PERSISTENCE_OLD_NS,RESOURCE_PATH,schemas
+hfds ORM_JAKARTA_NS,ORM_NS,ORM_OLD_NS,PERSISTENCE_JAKARTA_NS,PERSISTENCE_NS,PERSISTENCE_OLD_NS,RESOURCE_PATH,schemas
 hcls SchemaInfo
 
 CLSS public org.netbeans.modules.j2ee.persistence.unit.PersistenceCfgProperties
@@ -1904,7 +1914,7 @@ meth public static java.util.List<java.lang.String> getKeys(org.netbeans.modules
 meth public static java.util.List<org.netbeans.modules.j2ee.persistence.provider.Provider> getProviders()
 meth public static java.util.Map<org.netbeans.modules.j2ee.persistence.provider.Provider,java.util.Map<java.lang.String,java.lang.String[]>> getAllKeyAndValues()
 supr java.lang.Object
-hfds EL_BATCHWRITER,EL_CACHE_TYPES,EL_CONTEXT_REFMODE,EL_DDL_GEN_MODE,EL_EXCLUSIVE_CON_MODE,EL_FLUSH_CLEAR_CACHE,EL_LOGGER,EL_LOGGER_LEVEL,EL_PROFILER,EL_TARGET_DATABASE,EL_TARGET_SERVER,EL_WEAWING,SCHEMA_GEN_OPTIONS,SCHEMA_GEN_SOURCE_TYPES,TRUE_FALSE,possiblePropertyValues
+hfds DN_CONN_POOLING,DN_TRX_ATTR,DN_TRX_ISO,DN_VALIDATION_MODE,EL_BATCHWRITER,EL_CACHE_TYPES,EL_CONTEXT_REFMODE,EL_DDL_GEN_MODE,EL_EXCLUSIVE_CON_MODE,EL_FLUSH_CLEAR_CACHE,EL_LOGGER,EL_LOGGER_LEVEL,EL_PROFILER,EL_TARGET_DATABASE,EL_TARGET_SERVER,EL_WEAVING,HIBERNATE_DIALECTS,RESOURCE_TYPE,SCHEMA_GEN_DB_OPTIONS,SCHEMA_GEN_SCRIPTS_OPTIONS,SCHEMA_GEN_SOURCE_TYPES,SHARED_CACHE_MODE,TRUE_FALSE,possiblePropertyValues
 hcls KeyOrder
 
 CLSS public org.netbeans.modules.j2ee.persistence.unit.PersistenceToolBarMVElement
@@ -2062,7 +2072,7 @@ meth public java.util.List<java.net.URL> getProjectClassPath(org.openide.filesys
 meth public org.netbeans.api.project.Project getProject()
 meth public org.openide.filesystems.FileObject getLocation()
 supr java.lang.Object
-hfds loaderRef,logger,project
+hfds loaderRef,project
 
 CLSS public final org.netbeans.modules.j2ee.persistence.util.PersistenceProviderComboboxHelper
 cons public init(org.netbeans.api.project.Project)

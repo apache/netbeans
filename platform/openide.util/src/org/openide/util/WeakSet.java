@@ -827,7 +827,6 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
              * key to the specified value.
              *
              * @param key the key represented by this entry
-             * @param value the value represented by this entry
              */
             public SimpleEntry(K key) {
                 this.key   = key;

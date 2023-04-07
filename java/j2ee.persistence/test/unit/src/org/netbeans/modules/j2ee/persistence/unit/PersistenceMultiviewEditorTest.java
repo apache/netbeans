@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.j2ee.persistence.unit;
 
-import org.openide.filesystems.FileObject;
-
 /**
  * Tests for the visual view of the multiview editor.
  * @author Erno Mononen

@@ -18,8 +18,12 @@
  */
 package org.netbeans.modules.css.model.impl;
 
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.css.lib.api.Node;
@@ -178,26 +182,38 @@ public final class ElementFactoryImpl implements ElementFactory {
                 return new PageI(model, node);
             case "Ws":
                 return new WsI(model, node);
+            case "ComponentValueOuter":
             case "Token":
-                return new PlainElementI(model, node);
             case "Error":
                 return new PlainElementI(model, node);
             default:
                 //fallback for unknown types
-                Logger.getLogger(ElementFactoryImpl.class.getName()).log( Level.WARNING, "created element by reflection for {0}, update the ElementFactoryImpl.createElement() methods ugly switch!", className);
-                return createElementByReflection(model, node);
+                return createElementByReflection(model, node, className);
         }
     }
 
-    private Element createElementByReflection(Model model, Node node) {
+    private static final Map<NodeType, Reference<Constructor<?>>> reflectiveImplementations = new ConcurrentHashMap<>();
+    private Element createElementByReflection(Model model, Node node, String interfaceName) {
         Parameters.notNull("model", model);
         Parameters.notNull("node", node);
         try {
+            Reference<Constructor<?>> implConstructorRef = reflectiveImplementations.get(node.type());
+            Constructor<?> implConstructor = implConstructorRef == null ? null : implConstructorRef.get();
+            if(implConstructor != null) {
+                return (Element) implConstructor.newInstance(model, node);
+            }
+            Logger.getLogger(ElementFactoryImpl.class.getName()).log( Level.FINE, "created element by reflection for {0}, update the ElementFactoryImpl.createElement() methods ugly switch!", interfaceName);
             Class<?> clazz = Class.forName(Utils.getImplementingClassNameForNodeType(node.type()));
             Constructor<?> constructor = clazz.getConstructor(Model.class, Node.class);
+            reflectiveImplementations.put(node.type(), new WeakReference<>(constructor));
             return (Element) constructor.newInstance(model, node);
         } catch (ClassNotFoundException cnfe ) {
             //no implementation found - use default
+            try {
+                reflectiveImplementations.put(node.type(), new WeakReference<>(PlainElementI.class.getConstructor(Model.class, Node.class)));
+            } catch (NoSuchMethodException ex) {
+                throw new RuntimeException(cnfe);
+            }
             return new PlainElementI(model, node);
         } catch (IllegalAccessException | IllegalArgumentException | InstantiationException 
                 | NoSuchMethodException | SecurityException | InvocationTargetException ex) {

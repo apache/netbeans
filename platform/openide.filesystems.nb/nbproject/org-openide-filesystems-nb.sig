@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.27
+#Version 9.29
 
 CLSS public java.io.IOException
 cons public init()
@@ -521,6 +521,7 @@ meth public static java.net.URL getArchiveRoot(java.net.URL)
 meth public static java.net.URL urlForArchiveOrDir(java.io.File)
 meth public static java.net.URLStreamHandler nbfsURLStreamHandler()
  anno 0 java.lang.Deprecated()
+meth public static java.nio.file.Path toPath(org.openide.filesystems.FileObject)
 meth public static java.util.List<java.lang.String> getMIMETypeExtensions(java.lang.String)
 meth public static java.util.List<org.openide.filesystems.FileObject> getOrder(java.util.Collection<org.openide.filesystems.FileObject>,boolean)
 meth public static java.util.function.BiFunction<java.lang.String,java.lang.Object,java.lang.Object> defaultAttributesTransformer()
@@ -540,6 +541,7 @@ meth public static org.openide.filesystems.FileObject getSystemConfigFile(java.l
 meth public static org.openide.filesystems.FileObject getSystemConfigRoot()
 meth public static org.openide.filesystems.FileObject moveFile(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject,java.lang.String) throws java.io.IOException
 meth public static org.openide.filesystems.FileObject toFileObject(java.io.File)
+meth public static org.openide.filesystems.FileObject toFileObject(java.nio.file.Path)
 meth public static org.openide.filesystems.FileObject[] fromFile(java.io.File)
  anno 0 java.lang.Deprecated()
 meth public static org.openide.filesystems.FileStatusListener weakFileStatusListener(org.openide.filesystems.FileStatusListener,java.lang.Object)

@@ -70,12 +70,14 @@ public final class Stub {
     
     private static final class DefaultStubImplementation implements StubImplementation {
     
-        private static final Map/*<Object,Delegate>*/ STUB_TO_DELEGATE = new WeakHashMap();
+        private static final Map<Object, StubDelegate> STUB_TO_DELEGATE = new WeakHashMap<>();
         
+        @Override
         public Object create(Class[] intfs) {
             return create(intfs, new DefaultInvocationHandler());
         }
 
+        @Override
         public Object create(Class[] intfs, StubDelegate delegate) {
             Object stub = create(intfs, new MethodDelegatingInvocationHandler(delegate));
             STUB_TO_DELEGATE.put(stub, delegate);
@@ -86,6 +88,7 @@ public final class Stub {
             return Proxy.newProxyInstance(Stub.class.getClassLoader(), intfs, handler);
         }
         
+        @Override
         public Object getDelegate(Object stub) {
             StubDelegate delegate = (StubDelegate)STUB_TO_DELEGATE.get(stub);
             if (delegate == null) {
@@ -94,6 +97,7 @@ public final class Stub {
             return delegate;
         }
 
+        @Override
         public void setProperty(Object stub, Object key, Object value) {
             ((StubDelegate)getDelegate(stub)).setProperty(key, value);
         }
@@ -110,6 +114,7 @@ public final class Stub {
             this.delegate = delegate;
         }
 
+        @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             try {
                 Method delegateMethod = delegate.getClass().getMethod(method.getName(), method.getParameterTypes());
@@ -129,14 +134,15 @@ public final class Stub {
      */
     private static final class DefaultInvocationHandler implements InvocationHandler {
         
+        @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             String methodName = method.getName();
             Class[] paramTypes = method.getParameterTypes();
 
             if ("hashCode".equals(methodName)) {
-                return new Integer(System.identityHashCode(proxy));
+                return System.identityHashCode(proxy);
             } else if ("equals".equals(methodName) && paramTypes.length == 1 && paramTypes[0] == Object.class) {
-                return Boolean.valueOf(args[0] == proxy);
+                return args[0] == proxy;
             }
                 
             Class retClass = method.getReturnType();
@@ -147,15 +153,15 @@ public final class Stub {
                 } else if (retClass == Short.TYPE) {
                     return (short)0;
                 } else if (retClass == Integer.TYPE) {
-                    return new Integer(0);
+                    return 0;
                 } else if (retClass == Long.TYPE) {
-                    return new Long(0L);
+                    return 0L;
                 } else if (retClass == Float.TYPE) {
-                    return new Float(0);
+                    return Float.valueOf(0);
                 } else if (retClass == Double.TYPE) {
-                    return new Double(0.0);
+                    return 0.0;
                 } else if (retClass == Character.TYPE) {
-                    return new Character('\0');
+                    return '\0';
                 } else if (retClass == Boolean.TYPE) {
                     return Boolean.FALSE;
                 }

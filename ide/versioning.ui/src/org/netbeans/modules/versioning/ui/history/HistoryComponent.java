@@ -1053,7 +1053,7 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
             endIdx = value.indexOf(contains, startIdx);
         }
         if(startIdx < value.length()) {
-            String t = value.substring(startIdx, value.length());
+            String t = value.substring(startIdx);
             sb.append(HistoryUtils.escapeForHTMLLabel(t)); 
         }
         return sb.toString();

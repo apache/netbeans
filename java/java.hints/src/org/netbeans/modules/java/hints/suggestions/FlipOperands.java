@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumSet;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.errors.Utilities;
@@ -58,14 +59,14 @@ import org.openide.util.NbBundle.Messages;
 @Hint(displayName = "#DN_FlipOperands", description = "#DESC_FlipOperands", category = "suggestions", hintKind = Kind.ACTION, severity = Severity.HINT)
 public class FlipOperands {
     
-    private static final Set<Tree.Kind> /*ALMOST*/SAFE_FLIP = new HashSet<>(Arrays.asList(
+    private static final Set<Tree.Kind> /*ALMOST*/SAFE_FLIP = EnumSet.of(
             Tree.Kind.EQUAL_TO, Tree.Kind.NOT_EQUAL_TO, Tree.Kind.MULTIPLY, Tree.Kind.PLUS,
             Tree.Kind.AND, Tree.Kind.OR, Tree.Kind.XOR, Tree.Kind.CONDITIONAL_AND, Tree.Kind.CONDITIONAL_OR
-    ));
-    private static final Set<Tree.Kind> UNSAFE_FLIP = new HashSet<>(Arrays.asList(
+    );
+    private static final Set<Tree.Kind> UNSAFE_FLIP = EnumSet.of(
             Tree.Kind.DIVIDE, Tree.Kind.REMAINDER, Tree.Kind.MINUS, Tree.Kind.LEFT_SHIFT,
             Tree.Kind.RIGHT_SHIFT, Tree.Kind.UNSIGNED_RIGHT_SHIFT
-    ));
+    );
     private static final Map<Tree.Kind, Tree.Kind> CONVERT_FLIP = new HashMap<>();
     private static final Map<Tree.Kind, String> OPERATOR_DN = new HashMap<>();
     

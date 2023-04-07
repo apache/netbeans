@@ -362,7 +362,7 @@ public class LibraryDeclarationChecker extends HintsProvider {
 
         // undeclared tag prefix
         if (openTag.namespacePrefix() != null
-                && !result.getNamespaces().values().contains(openTag.namespacePrefix().toString())) {
+                && !result.getNamespaces().containsValue(openTag.namespacePrefix().toString())) {
             undeclaredEntries.add(openTag);
         }
 
@@ -373,7 +373,7 @@ public class LibraryDeclarationChecker extends HintsProvider {
             }
         })) {
             // undeclared attribute prefix
-            if (!result.getNamespaces().values().contains(attribute.namespacePrefix().toString())) {
+            if (!result.getNamespaces().containsValue(attribute.namespacePrefix().toString())) {
                 undeclaredEntries.add(attribute);
             }
         }

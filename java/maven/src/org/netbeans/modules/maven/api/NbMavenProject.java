@@ -443,7 +443,7 @@ public final class NbMavenProject {
     }
 
     /**
-     * @deprecated Use {@link #downloadDependencyAndJavadocSource(boolean) with {@code true}.
+     * @deprecated Use {@link #downloadDependencyAndJavadocSource(boolean)} with {@code true}.
      */
     @Deprecated
     public void downloadDependencyAndJavadocSource() {
@@ -612,7 +612,7 @@ public final class NbMavenProject {
     }
 
     public static void addPropertyChangeListener(Project prj, PropertyChangeListener listener) {
-        if (prj != null && prj instanceof NbMavenProjectImpl) {
+        if (prj instanceof NbMavenProjectImpl) {
             // cannot call getLookup() -> stackoverflow when called from NbMavenProjectImpl.createBasicLookup()..
             NbMavenProject watcher = ((NbMavenProjectImpl)prj).getProjectWatcher();
             watcher.addPropertyChangeListener(listener);
@@ -622,7 +622,7 @@ public final class NbMavenProject {
     }
     
     public static void removePropertyChangeListener(Project prj, PropertyChangeListener listener) {
-        if (prj != null && prj instanceof NbMavenProjectImpl) {
+        if (prj instanceof NbMavenProjectImpl) {
             // cannot call getLookup() -> stackoverflow when called from NbMavenProjectImpl.createBasicLookup()..
             NbMavenProject watcher = ((NbMavenProjectImpl)prj).getProjectWatcher();
             watcher.removePropertyChangeListener(listener);

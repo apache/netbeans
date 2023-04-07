@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.65.0
+#Version 1.67.0
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -95,6 +95,8 @@ hcls JavaDocSnippetLinkTagFileObject,SourceLineCharterMapperToHtmlTag
 
 CLSS public final org.netbeans.api.java.source.ui.ElementOpen
 innr public final static Location
+meth public !varargs static boolean open(org.netbeans.api.java.source.ClasspathInfo,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,java.lang.String[])
+meth public !varargs static java.util.concurrent.CompletableFuture<org.netbeans.api.java.source.ui.ElementOpen$Location> getLocation(org.netbeans.api.java.source.ClasspathInfo,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,java.lang.String,java.lang.String[])
 meth public static boolean open(org.netbeans.api.java.source.ClasspathInfo,javax.lang.model.element.Element)
 meth public static boolean open(org.netbeans.api.java.source.ClasspathInfo,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>)
 meth public static boolean open(org.openide.filesystems.FileObject,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>)

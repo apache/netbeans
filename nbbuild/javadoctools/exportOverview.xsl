@@ -198,14 +198,28 @@
             <td> <!-- stability category -->
                 <a>
                     <xsl:attribute name="href">
-                        <xsl:text>http://wiki.netbeans.org/API_Stability#</xsl:text>
-                        <xsl:value-of select="$category" />
+                        <xsl:text>https://netbeans.apache.org/wiki/API_Stability#</xsl:text>
+                        <xsl:choose>
+                            <xsl:when test="$category='official'">official</xsl:when>
+                            <xsl:when test="$category='stable'">stable</xsl:when>
+                            <xsl:when test="$category='devel'">devel</xsl:when>
+                            <xsl:when test="$category='third'">third_party</xsl:when>
+                            <xsl:when test="$category='standard'">standard</xsl:when>
+                            <xsl:when test="$category='friend'">friend</xsl:when>
+                            <xsl:when test="$category='private'">private</xsl:when>
+                            <xsl:when test="$category='deprecated'">deprecated</xsl:when>
+                            <xsl:otherwise>
+                                <xsl:message>
+                                    WARNING: <xsl:value-of select="$category"/>
+                                </xsl:message>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:attribute>
                     <xsl:choose>
                         <xsl:when test="$category='official'">Official</xsl:when>
                         <xsl:when test="$category='stable'">Stable</xsl:when>
-                        <xsl:when test="$category='devel'">Devel</xsl:when>
-                        <xsl:when test="$category='third'">Third_Party</xsl:when>
+                        <xsl:when test="$category='devel'">Under Development</xsl:when>
+                        <xsl:when test="$category='third'">Third party</xsl:when>
                         <xsl:when test="$category='standard'">Standard</xsl:when>
                         <xsl:when test="$category='friend'">Friend</xsl:when>
                         <xsl:when test="$category='private'">Private</xsl:when>

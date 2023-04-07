@@ -75,7 +75,7 @@ public final class ViewStats {
     }
 
     public static void incrementStaleViewCreations() {
-        staleViewCreationCount++;;
+        staleViewCreationCount++;
         if (LOG.isLoggable(Level.FINE)) {
             if (LOG.isLoggable(Level.FINEST) ||
                 (staleViewCreationCount % STALE_VIEW_CREATION_TIMEOUT) == 0)

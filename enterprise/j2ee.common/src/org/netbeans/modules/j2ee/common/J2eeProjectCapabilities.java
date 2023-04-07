@@ -157,7 +157,7 @@ public final class J2eeProjectCapabilities {
      */
     public boolean isEjb40Supported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee9 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAKARTA_EE_9_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_1_FULL));
+        boolean ee9 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAKARTA_EE_9_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_1_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_10_FULL));
         return ee9 && (J2eeModule.Type.EJB.equals(moduleType) || J2eeModule.Type.WAR.equals(moduleType));
     }
     
@@ -170,7 +170,7 @@ public final class J2eeProjectCapabilities {
      */
     public boolean isEjb40LiteSupported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee9Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAKARTA_EE_9_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_1_WEB));
+        boolean ee9Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAKARTA_EE_9_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_1_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_10_WEB));
         return isEjb40Supported() || (J2eeModule.Type.WAR.equals(moduleType) && ee9Web);
     }
     
@@ -229,6 +229,18 @@ public final class J2eeProjectCapabilities {
             Profile.JAKARTA_EE_9_1_FULL.equals(ejbJarProfile) ||
             Profile.JAKARTA_EE_9_1_WEB.equals(webProfile) ||
             Profile.JAKARTA_EE_9_1_FULL.equals(carProfile);
+    }
+
+    /**
+     * Is CDI 4.0 supported in this project?
+     *
+     * @return {@code true} if the project targets Jakarta EE 10 profile,
+     * {@code false} otherwise
+     */
+    public boolean isCdi40Supported() {
+        return Profile.JAKARTA_EE_10_FULL.equals(ejbJarProfile)
+                || Profile.JAKARTA_EE_10_WEB.equals(webProfile)
+                || Profile.JAKARTA_EE_10_FULL.equals(carProfile);
     }
 
     /**

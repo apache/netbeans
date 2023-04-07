@@ -185,6 +185,14 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/nowdoc_015");
     }
 
+    public void testIssueGH4345_01() throws Exception {
+        performTest("parser/issueGH4345_01");
+    }
+
+    public void testIssueGH4345_02() throws Exception {
+        performTest("parser/issueGH4345_02");
+    }
+
     public void testHereDoc_01() throws Exception {
         performTest("parser/heredoc00");
     }
@@ -1335,6 +1343,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/newInInitializers_01");
     }
 
+    public void testNewInInitializers_02() throws Exception {
+        performTest("parser/php81/newInInitializers_02");
+    }
+
     public void testNewInInitializersWithClassConstantError() throws Exception {
         performTest("parser/php81/newInInitializersWithClassConstantError");
     }
@@ -1384,6 +1396,34 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/treatNamespacedNamesAsSingleToken_01a");
     }
 
+    public void testExplicitOctalIntegerLiteralNotation_01() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotation_01");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_01() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_01");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_02() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_02");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_03() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_03");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_04() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_04");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_05() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_05");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_06() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_06");
+    }
+
     public void testTreatNamespacedNamesAsSingleToken_01b() throws Exception {
         performTest("parser/php80/treatNamespacedNamesAsSingleToken_01b");
     }
@@ -1430,6 +1470,35 @@ public class ASTPHP5ParserTest extends ParserTestBase {
 
     public void testGH4684() throws Exception {
         performTest("parser/gh4684");
+    }
+
+    // PHP 8.2 gh-4725
+    public void testReadonlyClass_01() throws Exception {
+        performTest("parser/php82/readonlyClass_01");
+    }
+
+    public void testReadonlyTraitError_01() throws Exception {
+        performTest("parser/php82/readonlyTraitError_01");
+    }
+
+    public void testReadonlyInterfaceError_01() throws Exception {
+        performTest("parser/php82/readonlyInterfaceError_01");
+    }
+
+    public void testReadonlyEnumError_01() throws Exception {
+        performTest("parser/php82/readonlyEnumError_01");
+    }
+
+    public void testFetchPropertiesInConstExpressions_01() throws Exception {
+        performTest("parser/php82/fetchPropertiesInConstExpressions_01");
+    }
+
+    public void testConstantsInTraits_01() throws Exception {
+        performTest("parser/php82/constantsInTraits_01");
+    }
+
+    public void testDnfTypes_01() throws Exception {
+        performTest("parser/php82/dnfTypes_01");
     }
 
     @Override

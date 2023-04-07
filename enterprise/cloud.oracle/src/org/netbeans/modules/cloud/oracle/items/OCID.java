@@ -75,4 +75,8 @@ public final class OCID  {
         return Objects.equals(this.path, other.path);
     }
 
+    @Override
+    public String toString() {
+        return "OCID{ path=" + path  + ", value=" + value + '}';
+    }
 }

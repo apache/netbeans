@@ -213,7 +213,7 @@ public class RenamePanel extends JPanel implements CustomRefactoringPanel {
                 String methodName = RefactoringUtils.getTestMethodName(methodElement.getSimpleName().toString());
                 for (ExecutableElement testClassMethod : testClassMethods) {
                     if (testClassMethod.getSimpleName().contentEquals(methodName) 
-                            && testClassMethod.getReturnType().getKind().equals(TypeKind.VOID)) { // test method should at least be void
+                            && testClassMethod.getReturnType().getKind() == TypeKind.VOID) { // test method should at least be void
                         return true;
                     }
                 }

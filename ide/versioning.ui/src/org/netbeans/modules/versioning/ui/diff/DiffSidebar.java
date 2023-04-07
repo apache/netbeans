@@ -1102,7 +1102,7 @@ class DiffSidebar extends JPanel implements DocumentListener, ComponentListener,
 
         if (dao instanceof MultiDataObject) {
             MultiDataObject.Entry entry = findEntryForFile((MultiDataObject) dao, fileObj);
-            if ((entry != null) && (entry instanceof CookieSet.Factory)) {
+            if (entry instanceof CookieSet.Factory) {
                 CookieSet.Factory factory = (CookieSet.Factory) entry;
                 return factory.createCookie(EditorCookie.class);   //can be null
             }

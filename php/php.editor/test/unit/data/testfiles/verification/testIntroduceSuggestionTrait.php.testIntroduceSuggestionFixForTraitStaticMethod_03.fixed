@@ -22,7 +22,6 @@ trait TraitB {
     public static function staticTraitBMethod() {
         
     }
-
 }
 
 trait TraitC {

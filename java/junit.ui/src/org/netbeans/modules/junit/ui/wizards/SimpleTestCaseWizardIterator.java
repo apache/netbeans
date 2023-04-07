@@ -121,7 +121,7 @@ public class SimpleTestCaseWizardIterator implements TemplateWizard.Instantiatin
         // Make sure list of steps is accurate.
         String[] beforeSteps = null;
         Object prop = wizard.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = createSteps(beforeSteps, panels);

@@ -69,6 +69,7 @@ export function launch(
     if (info.verbose) {
         ideArgs.push('-J-Dnetbeans.logger.console=true');
     }
+    ideArgs.push(`-J-Dnetbeans.extra.dirs="${clusterPath}"`)
     if (env['netbeans.extra.options']) {
         ideArgs.push(env['netbeans.extra.options']);
     }
@@ -81,9 +82,6 @@ export function launch(
     let process: ChildProcessByStdio<any, Readable, Readable> = spawn(nbcodePath, ideArgs, {
         cwd : userDir,
         stdio : ["ignore", "pipe", "pipe"],
-        env : Object.assign({
-            'extra_clusters' : clusterPath
-        }, global.process.env)
     });
     return process;
 }

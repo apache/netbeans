@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.54.0
+#Version 1.56.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -869,6 +869,7 @@ supr java.lang.Object
 hfds destFolder,ext,name,result,source
 
 CLSS public final org.netbeans.modules.glassfish.eecommon.api.config.AppClientVersion
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.AppClientVersion APP_CLIENT_10_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.AppClientVersion APP_CLIENT_1_3
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.AppClientVersion APP_CLIENT_1_4
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.AppClientVersion APP_CLIENT_5_0
@@ -881,6 +882,7 @@ meth public static org.netbeans.modules.glassfish.eecommon.api.config.AppClientV
 supr org.netbeans.modules.glassfish.eecommon.api.config.J2EEBaseVersion
 
 CLSS public final org.netbeans.modules.glassfish.eecommon.api.config.ApplicationVersion
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ApplicationVersion APPLICATION_10_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ApplicationVersion APPLICATION_1_3
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ApplicationVersion APPLICATION_1_4
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ApplicationVersion APPLICATION_5_0
@@ -1192,6 +1194,7 @@ hfds j2eeModuleVersion,numericModuleVersion,numericSpecVersion
 CLSS public final org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion J2EE_1_3
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion J2EE_1_4
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_10_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_8_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_9_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_9_1

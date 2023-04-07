@@ -45,13 +45,16 @@ public class PropertiesPanel extends SectionInnerPanel {
         add(panel, gridBagConstraints);
     }
 
+    @Override
     public javax.swing.JComponent getErrorComponent(String errorId) {
         return null;
     }
 
+    @Override
     public void setValue(javax.swing.JComponent source, Object value) {
     }
 
+    @Override
     public void linkButtonPressed(Object obj, String id) {
     }
 

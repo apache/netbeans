@@ -31,12 +31,14 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.maven.execution.MavenExecutionRequest;
@@ -48,6 +50,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 import org.openide.util.WeakSet;
 
 /**
@@ -85,7 +88,10 @@ public final class MavenSettings  {
     private static final String PROP_PLUGIN_POLICY = "pluginUpdatePolicy"; //NOI18N
     private static final String PROP_FAILURE_BEHAVIOUR = "failureBehaviour"; //NOI18N
     private static final String PROP_USE_REGISTRY = "usePluginRegistry"; //NOI18N
+    public static final String PROP_NETWORK_PROXY = "networkProxy";
       
+    private static final Pattern MAVEN_CORE_JAR_PATTERN = Pattern.compile("maven-core-(\\d+\\.\\d+\\.\\d+)\\.jar");  // NOI18N
+
     private static final MavenSettings INSTANCE = new MavenSettings();
     
     private final Set<PropertyChangeListener> listeners = new WeakSet<>();
@@ -159,7 +165,7 @@ public final class MavenSettings  {
         //import from older versions
         String defOpts = getPreferences().get(PROP_DEFAULT_OPTIONS, null);
         if (defOpts == null) {
-            defOpts = "";
+            defOpts = getDefaultOptions();
             //only when not already set by user or by previous import
             String debug = getPreferences().get(PROP_DEBUG, null);
             if (debug != null) {
@@ -223,7 +229,7 @@ public final class MavenSettings  {
     }
 
     public String getDefaultOptions() {
-        return getPreferences().get(PROP_DEFAULT_OPTIONS, ""); //NOI18N
+        return getPreferences().get(PROP_DEFAULT_OPTIONS, "--no-transfer-progress"); //NOI18N
     }
 
     public void setDefaultOptions(String options) {
@@ -470,7 +476,6 @@ public final class MavenSettings  {
     }
     
     public static @CheckForNull String getCommandLineMavenVersion(File mavenHome) {
-
         Path lib = Paths.get(mavenHome.getPath(), "lib");        // mvn layout  // NOI18N
         if (!Files.exists(lib)) {
             lib = Paths.get(mavenHome.getPath(), "mvn", "lib");  // mvnd layout // NOI18N
@@ -479,6 +484,20 @@ public final class MavenSettings  {
             }
         }
 
+        // try to resolve maven version by checking maven-core jar name
+        try (Stream<String> mavenCoreVersions = Files.list(lib)
+                .map(file -> file.getFileName().toString())
+                .filter(file -> file.startsWith("maven-core")) // NOI18N
+                .map(file -> MAVEN_CORE_JAR_PATTERN.matcher(file))
+                .filter(matcher -> matcher.matches())
+                .map(matcher -> matcher.group(1))) {
+            Optional<String> mavenCoreVersion = mavenCoreVersions.findFirst();
+            if (mavenCoreVersion.isPresent()) {
+                return mavenCoreVersion.get();
+            }
+        } catch (IOException ignored) {}
+
+        // try to resolve maven version by parsing pom.properties
         try {
             try (Stream<Path> jars = Files.list(lib).filter(file -> file.toString().endsWith(".jar"))) {  // NOI18N
                 for (Path jar : jars.collect(Collectors.toList())) {
@@ -497,6 +516,12 @@ public final class MavenSettings  {
         } catch (IOException ignored) {}
 
         return null;
+    }
+
+    public static boolean isMavenDaemon(Path mavenHome) {
+        String mvndExecutableName = Utilities.isWindows() ? "mvnd.exe" : "mvnd";
+
+        return Files.exists(mavenHome.resolve("bin").resolve(mvndExecutableName));
     }
 
     private static List<String> searchMavenRuntimes(String[] paths, boolean stopOnFirstValid) {
@@ -591,4 +616,16 @@ public final class MavenSettings  {
         }
     }
     
+    public NetworkProxySettings getNetworkProxy() {
+        String s = getPreferences().get(PROP_NETWORK_PROXY, NetworkProxySettings.ASK.name());
+        try {
+            return NetworkProxySettings.valueOf(s);
+        } catch (IllegalArgumentException ex) {
+            return NetworkProxySettings.ASK;
+        }
+    }
+    
+    public void setNetworkProxy(NetworkProxySettings s) {
+        getPreferences().put(PROP_NETWORK_PROXY, s.name());
+    }
 }

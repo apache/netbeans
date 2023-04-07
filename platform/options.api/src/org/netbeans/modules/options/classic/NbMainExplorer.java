@@ -104,7 +104,7 @@ public final class NbMainExplorer {
         }
 
         /** Getter for ConfirmDelete
-         * @param true if the user should asked for confirmation of object delete, false otherwise */
+         * @return true if the user should asked for confirmation of object delete, false otherwise */
         private static boolean getConfirmDelete() {
             return getPreferences().getBoolean(PROP_CONFIRM_DELETE, true);//NOI18N
         }

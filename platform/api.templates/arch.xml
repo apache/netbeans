@@ -126,6 +126,7 @@
          </p>
      </usecase>
      <usecase id="script" name="Using Scripting and Templating Languages" >
+        <a id="script"></a>
         <p>
         There is a built in <a href="@org-netbeans-api-scripting@/overview-summary.html">support for scripting languages</a>
         in the NetBeans Platform. If a template is annotated with
@@ -134,7 +135,7 @@
             return real instance of <code>ScriptEngine</code> interface or
             a <code>String</code> name of the engine that is then used to
             search for it in the <code>javax.script.ScriptEngineManager</code>.
-            Usually the <a href="https://freemarker.apache.org/">freemarker</a> engine is the one that is
+            Usually the <a href="https://freemarker.apache.org">freemarker</a> engine is the one that is
             supported by the NetBeans IDE - if your module wants to use it
             then include a token dependency <code>OpenIDE-Module-Needs: javax.script.ScriptEngine.freemarker</code>
             in your manifest file (also accessible through project customizer GUI)
@@ -211,9 +212,9 @@
             annotation and include <code>page()</code> attribute referencing
             your own HTML page:
         </p>
-        <pre>
+        <pre><code style="background-color:#fafafb">
 <b>public class</b> X {
-    {@code @TemplateRegistration}(
+    <span>@</span>TemplateRegistration(
         page = "x.html",
         scriptEngine = "freemarker",
         displayName = "JS Wizard",
@@ -224,16 +225,16 @@
         <b>return</b> "yourInitializationCode();";
     }
 }            
-        </pre>
+        </code></pre>
         <p>
             the return value of the annotated method (named <code>jsWizard</code>)
             should be of type String and its content should be snippet of 
             JavaScript code to execute inside of your specified HTML page 
             (e.g. <code>x.html</code>) to create an instance of 
-            <a href="http://knockoutjs.com">KnockoutJS model</a> to 
+            <a href="https://knockoutjs.com">KnockoutJS model</a> to 
             drive the wizard. Here is a sample code for the model:     
         </p>        
-        <pre>
+        <pre><code style="background-color:#fafafb">
 <b>function</b> yourInitializationCode() {
     <b>var</b> ok = ko.observable(false);
     <b>var</b> msg = ko.observable('');
@@ -252,7 +253,7 @@
     ko.applyBindings(data);
     <b>return</b> data;
 }
-</pre>
+</code></pre>
     <p>
         The model defines wizard composed of few panels (defined in following
         HTML file) and a verification function (registered as <code>errorCode</code>) 
@@ -260,10 +261,10 @@
         proprietary text value <code>msg</code> which is 
         going to be filled by the wizard and cannot be empty. Each
         page of the wizard is registered using a custom
-        <a href="http://knockoutjs.com">Knockout.js</a> binding called
+        <a href="https://knockoutjs.com">Knockout.js</a> binding called
         <code>step</code>. Here is an HTML page defining three steps:
     </p>
-<pre>
+<pre><code style="background-color:#fafafb">
 &lt;<b>section</b> data-bind="step: { 'id' : 'init', text : 'Initial Page'}" &gt;
     &lt;<b>p</b>&gt;
         Write your UI in portable HTML and display it in NetBeans 
@@ -291,13 +292,13 @@
         templating engine and values filled in this wizard.
     &lt;/<b>p</b>&gt;
 &lt;/<b>section</b>&gt;
-</pre>
+</code></pre>
 <p>
     The Next/Finish buttons are controlled by the <code>errorCode</code> property. 
     If it is non-zero, there is an error and these buttons are disabled. 
     Also once can use that inside of the HTML page to display user related errors: 
 </p>
-<pre>
+<pre><code style="background-color:#fafafb">
 &lt;<b>div</b> data-bind="visible: errorCode() == 1"&gt;
     &lt;<b>span</b> style="color: red"&gt;Please check you are OK!&lt;/<b>span</b>&gt;
 &lt;/<b>div</b>&gt;
@@ -305,7 +306,7 @@
 &lt;<b>div</b> data-bind="visible: errorCode() == 2"&gt;
     &lt;<b>span</b> style="color: red"&gt;Tell us how do you feel!&lt;/<b>span</b>&gt;
 &lt;/<b>div</b>&gt;    
-</pre>
+</code></pre>
 <p>
 The L10N of the wizard is done on the level of HTML pages. 
 The whole page gets translated into different language with appropriate 
@@ -339,18 +340,18 @@ I feel ${wizard.msg}.
             way to rewrite the <a href="#html-and-js">HTML and JavaScript sample</a>
             to <b>Java</b>
             (and possibly run it in a plugin-less browser via 
-            <a onclick="target='_blank'" href="http://bck2brwsr.apidesign.org">bck2brwsr VM</a>). Keep the
-            same HTML, <a onclick="target='_blank'" href="http://freemarker.org/">Freemarker</a>, etc.
+            <a href="http://wiki.apidesign.org/wiki/Bck2Brwsr">bck2brwsr VM</a>). Keep the
+            same HTML, <a href="https://freemarker.apache.org">Freemarker</a>, etc.
             files - just instead of encoding the logic in JavaScript use Java:
         </p>
-<pre>
-{@link net.java.html.json.Model @Model}(className = "JavaWizard", properties = {
-    {@link net.java.html.json.Property @Property}(name = "current", type = String.<b>class</b>),
-    {@link net.java.html.json.Property @Property}(name = "ok", type = <b>boolean</b>.<b>class</b>),
-    {@link net.java.html.json.Property @Property}(name = "msg", type = String.<b>class</b>)
+<pre><code style="background-color:#fafafb">
+<span>@</span><a href="https://bits.netbeans.org/html+java/dev/net/java/html/json/Model.html?is-external=true">Model</a>(className = "JavaWizard", properties = {
+    <span>@</span><a href="https://bits.netbeans.org/html+java/dev/net/java/html/json/Property.html?is-external=true">Property</a>(name = "current", type = String.<b>class</b>),
+    <span>@</span><a href="https://bits.netbeans.org/html+java/dev/net/java/html/json/Property.html?is-external=true">Property</a>(name = "ok", type = <b>boolean</b>.<b>class</b>),
+    <span>@</span><a href="https://bits.netbeans.org/html+java/dev/net/java/html/json/Property.html?is-external=true">Property</a>(name = "msg", type = String.<b>class</b>)
 })
 <b>public class</b> JavaWizardCntrl {
-    {@link net.java.html.json.ComputedProperty @ComputedProperty} <b>static int</b> errorCode(
+    <span>@</span><a href="https://bits.netbeans.org/html+java/dev/net/java/html/json/ComputedProperty.html?is-external=true">ComputedProperty</a> <b>static int</b> errorCode(
         String current, boolean ok, String msg
     ) {
         if ("Init".equals(current)) <b>return</b> 0;
@@ -360,7 +361,7 @@ I feel ${wizard.msg}.
     }
  
  
-    {@code @TemplateRegistration}(
+    <span>@</span>TemplateRegistration(
         page = "x.html",
         scriptEngine = "freemarker",
         displayName = "HTML/Java Wizard",
@@ -371,12 +372,12 @@ I feel ${wizard.msg}.
         return new JavaWizard("Init", false, "");
     }
 }            
-</pre>        
+</code></pre>        
 <p>
     The return value of the annotated method is now an
-    <a onclick="target='_blank'" href="http://bits.netbeans.org/html+java/">HTML/Java</a>
+    <a href="https://bits.netbeans.org/html+java/dev">HTML/Java</a>
     model class which can naturally represent the essential 
-    <a onclick="target='_blank'" href="http://knockoutjs.com">Knockout.js</a> objects
+    <a href="https://knockoutjs.com">Knockout.js</a> objects
     in Java. 
 </p>
     </usecase>
@@ -391,10 +392,10 @@ I feel ${wizard.msg}.
         one can just include following code snippet in the HTML file and
         leave its actual rendering on the system:
         </p>
-<pre>
+<pre><code style="background-color:#fafafb">
 &lt;<b>section</b> data-bind="step: 'targetChooser'" &gt;
 &lt;/<b>section</b>&gt;
-</pre>     
+</code></pre>     
 <p>   
         Such section will then be replaced by a panel which provides appropriate
         UI for choosing target directory as well as name for the newly created
@@ -438,8 +439,8 @@ I feel ${wizard.msg}.
             example of the UI being in <code>x.html</code> and the archetype
             described in <code>x.archetype</code> one:
         </p>
-        <pre>
-    {@code @TemplateRegistration}(
+        <pre><code style="background-color:#fafafb">
+    <span>@</span>TemplateRegistration(
         page = "x.html",
         displayName = "HTML/Java Wizard",
         folder = "Java",
@@ -448,7 +449,7 @@ I feel ${wizard.msg}.
     <b>public static</b> MavenWizard mavenArchetype() {
         <b>return new</b> MavenWizard(<em>/*...*/</em>);
     }
-        </pre>
+        </code></pre>
         <p>
             The <code>x.archetype</code> file describes the archetype to use
             and has following properties-like syntax:

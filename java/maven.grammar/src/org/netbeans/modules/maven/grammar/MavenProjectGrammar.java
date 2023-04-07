@@ -212,7 +212,7 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
                 if(idxLeft > idxRight) {                    
                     sb.append(value.substring(idxRight + 1, idxLeft));
                 } else {
-                    sb.append(value.substring(idxRight + 1, value.length()));
+                    sb.append(value.substring(idxRight + 1));
                 }
             }             
             idxRight++;

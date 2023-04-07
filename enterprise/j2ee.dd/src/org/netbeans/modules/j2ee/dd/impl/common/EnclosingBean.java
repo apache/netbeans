@@ -95,7 +95,7 @@ public abstract class EnclosingBean extends BaseBean implements CommonDDBean, Cr
                         break;
                     }
                 }
-            if (keyValue!=null && keyValue instanceof String) {
+            if (keyValue instanceof String) {
                 if (findBeanByName(beanName, keyProperty,(String)keyValue)!=null) {
                     throw new NameAlreadyUsedException(beanName,  keyProperty, (String)keyValue);
                 }

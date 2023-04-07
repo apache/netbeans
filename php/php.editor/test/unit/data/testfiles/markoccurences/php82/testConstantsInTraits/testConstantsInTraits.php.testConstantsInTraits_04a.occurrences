@@ -1,0 +1,2 @@
+    public const |>MARK_OCCURRENCES:PUBLIC^_TRAIT<| = 'ExampleTrait public';
+        echo parent::|>MARK_OCCURRENCES:PUBLIC_TRAIT<| . PHP_EOL; // child

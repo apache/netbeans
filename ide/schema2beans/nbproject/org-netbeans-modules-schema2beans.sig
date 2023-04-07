@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64
+#Version 1.66
 
 CLSS public abstract interface java.beans.BeanInfo
 fld public final static int ICON_COLOR_16x16 = 1
@@ -1142,13 +1142,16 @@ meth public static boolean shouldEscape(char)
 meth public static boolean shouldEscape(java.lang.String)
 meth public static org.xml.sax.Locator findLocationXPath(org.xml.sax.InputSource,java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
 meth public static void printXML(java.io.Writer,char,boolean) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth public static void printXML(java.io.Writer,java.lang.String) throws java.io.IOException
 meth public static void printXML(java.io.Writer,java.lang.String,boolean) throws java.io.IOException
 meth public static void printXML(java.lang.StringBuffer,char,boolean)
+ anno 0 java.lang.Deprecated()
 meth public static void printXML(java.lang.StringBuffer,java.lang.String)
 meth public static void printXML(java.lang.StringBuffer,java.lang.String,boolean)
 meth public static void reindent(org.w3c.dom.Document,java.lang.String)
 meth public static void writeXML(java.io.Writer,char,boolean) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth public static void writeXML(java.io.Writer,java.lang.String) throws java.io.IOException
 meth public static void writeXML(java.io.Writer,java.lang.String,boolean) throws java.io.IOException
 supr java.lang.Object

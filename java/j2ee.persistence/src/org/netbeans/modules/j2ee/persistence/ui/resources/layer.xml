@@ -209,9 +209,7 @@
                     <file name="sep-6.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="1700"/>
-                    </file> 
-                    
-
+                    </file>
                 </folder>
             </folder>
         </folder>

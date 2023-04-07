@@ -126,11 +126,11 @@ public enum TextmateTokenId implements TokenId {
                 while (en.hasMoreElements()) {
                     FileObject candidate = en.nextElement();
                     Object attr = candidate.getAttribute(GRAMMAR_MARK);
-                    if (attr != null && attr instanceof String) {
+                    if (attr instanceof String) {
                         String scope = (String) attr;
                         scope2File.put(scope, candidate);
                         attr = candidate.getAttribute(INJECTION_MARK);
-                        if (attr != null && attr instanceof String) {
+                        if (attr instanceof String) {
                             for (String s : ((String)attr).split(",")) {
                                 scope2Injections.computeIfAbsent(s, str -> new ArrayList<>()).add(scope);
                             }

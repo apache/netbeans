@@ -306,9 +306,9 @@ public class FileInformation extends FileNodeInformation {
                 default:
                     throw new IllegalStateException("Unknown conflict type: " + conflictType.toString()); //NOI18N
             }
-        } else if (Mode.HEAD_VS_INDEX.equals(mode)) {
+        } else if (Mode.HEAD_VS_INDEX == mode) {
             return new MessageFormat("{0}").format(new Object[] { sIndex }); //NOI18N
-        } else if (Mode.INDEX_VS_WORKING_TREE.equals(mode)) {
+        } else if (Mode.INDEX_VS_WORKING_TREE == mode) {
             return new MessageFormat("{0}").format(new Object[] { sWorkingTree }); //NOI18N
         } else {
             return new MessageFormat("{0}/{1}").format(new Object[] { sIndex, sWorkingTree }, new StringBuffer(), null).toString(); //NOI18N

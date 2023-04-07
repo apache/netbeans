@@ -2769,4 +2769,11 @@ public class PropertiesATest extends CssModuleTestBase {
         assertCssCode(".demo {grid: auto-flow 1fr / repeat(auto-fill, 5em);}");
         assertCssCode(".demo {grid: auto 1fr auto / repeat(5, 1fr);}");
     }
+
+    public void testCaseSensitivity() throws Exception {
+        assertCssCode("h1 { border-style: dashed; border-width: 1rem; }");
+        assertCssCode("h1 { border-style: dAsHeD; border-width: 1ReM; }");
+        assertCssCode("h1 { BORDER-STYLE: dashed }");
+        assertCssCode("h1 { bOrDeR-sTyLe: dashed }");
+    }
 }

@@ -91,7 +91,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.URI;
@@ -129,9 +128,6 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
-import net.bytebuddy.dynamic.DynamicType.Loaded;
-import net.bytebuddy.dynamic.DynamicType.Unloaded;
-import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -451,7 +447,7 @@ public class Utilities {
                             Element currentElement = trees.getElement(getCurrentPath());
 
                             if (!isError(currentElement)) {
-                                if (currentElement.getKind() == ElementKind.PACKAGE && el.getPackageElement(node.toString()) == null) {
+                                if (currentElement.getKind() == ElementKind.PACKAGE && el.getAllPackageElements(node.toString()).isEmpty()) {
                                     ((JCFieldAccess) node).sym = symtab.errSymbol;
                                     ((JCFieldAccess) node).type = symtab.errType;
                                 } else {
@@ -466,7 +462,7 @@ public class Utilities {
                             Element currentElement = trees.getElement(getCurrentPath());
 
                             if (!isError(currentElement)) {
-                                if (currentElement.getKind() == ElementKind.PACKAGE && el.getPackageElement(node.toString()) == null) {
+                                if (currentElement.getKind() == ElementKind.PACKAGE && el.getAllPackageElements(node.toString()).isEmpty()) {
                                     ((JCIdent) node).sym = symtab.errSymbol;
                                     ((JCIdent) node).type = symtab.errType;
                                 } else {
@@ -1289,18 +1285,6 @@ public class Utilities {
 
     public static boolean isJavadocSupported(CompilationInfo info) { //TODO: unnecessary?
         return true;
-    }
-
-    static <T> Loaded<T> load(Unloaded<T> unloaded) {
-        ClassLoadingStrategy<ClassLoader> strategy;
-
-        try {
-            strategy = ClassLoadingStrategy.UsingLookup.of(MethodHandles.lookup());
-        } catch (IllegalStateException ex) {
-            strategy = new ClassLoadingStrategy.ForUnsafeInjection();
-        }
-
-        return unloaded.load(JackpotTrees.class.getClassLoader(), strategy);
     }
 
     private static class JackpotJavacParser extends NBJavacParser {

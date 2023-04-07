@@ -97,8 +97,8 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
         "-//Sun Microsystems Inc.//DTD Application Server 8.1 Domain//EN"                              ,"sun-domain_1_1.dtd",
         "-//Sun Microsystems Inc.//DTD Application Server 9.0 Domain//EN"                              ,"sun-domain_1_2.dtd",
         "-//Sun Microsystems Inc.//DTD Application Server 9.1 Domain//EN"                              ,"sun-domain_1_3.dtd",
-        "-//Sun Microsystems Inc.//DTD Payara Communications Server 1.5 Domain//EN"      ,"sun-domain_1_4.dtd",
-        "-//Sun Microsystems Inc.//DTD Payara Communications Server 2.0 Domain//EN"      ,"sun-domain_1_5.dtd",
+        "-//Sun Microsystems Inc.//DTD GlassFish Communications Server 1.5 Domain//EN"      ,"sun-domain_1_4.dtd",
+        "-//Sun Microsystems Inc.//DTD GlassFish Communications Server 2.0 Domain//EN"      ,"sun-domain_1_5.dtd",
         "-//Sun Microsystems, Inc.//DTD Application Server 9.0 SIP Servlet 1.1//EN"                    , "sun-sip-app_1_1-0.dtd",
         
         "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN"                                       , "application_1_3.dtd",
@@ -133,40 +133,70 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String SchemaToURLMap[] = {
         
         "SCHEMA:http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd"                    , "ejb-jar_2_1",
-        
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"                  , "ejb-jar_3_0",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"                  , "ejb-jar_3_1",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd"                 , "ejb-jar_3_2",
+        "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd"                , "ejb-jar_4_0",
         "SCHEMA:http://java.sun.com/xml/ns/j2ee/application-client_1_4.xsd"         , "application-client_1_4",
         "SCHEMA:http://java.sun.com/xml/ns/j2ee/application_1_4.xsd"                , "application_1_4",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/application-client_5.xsd"         , "application-client_5",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/application_5.xsd"                , "application_5",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/application-client_6.xsd"         , "application-client_6",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/application_6.xsd"                , "application_6",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/application-client_7.xsd"        , "application-client_7",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd"               , "application_7",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/application-client_8.xsd"        , "application-client_8",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/application_8.xsd"               , "application_8",
+        "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application-client_9.xsd"       , "application-client_9",
+        "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application_9.xsd"              , "application_9",
+        "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application-client_10.xsd"       , "application-client_10",
+        "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application_10.xsd"              , "application_10",
         "SCHEMA:http://java.sun.com/xml/ns/j2ee/jax-rpc-ri-config.xsd"              , "jax-rpc-ri-config",
         "SCHEMA:http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"                  , "connector_1_5",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/connector_1_6.xsd"                , "connector_1_6",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/connector_1_7.xsd"               , "connector_1_7",
+        "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/connector_2_0.xsd"              , "connector_2_0",
+        "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/connector_2_1.xsd"              , "connector_2_1",
         ///"SCHEMA:http://java.sun.com/xml/ns/j2ee/jsp_2_0.xsd"                        , "jsp_2_0.xsd",
         ///"SCHEMA:http://java.sun.com/xml/ns/j2ee/datatypes.dtd"                      , "datatypes",
         ///"SCHEMA:http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"                    , "web-app_2_4",
         ///"SCHEMA:http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"          , "web-jsptaglibrary_2_0",
         ///"SCHEMA:http://java.sun.com/xml/ns/j2ee/j2ee_1_4.xsd"                       , "j2ee_1_4",
-        "SCHEMA:http://java.sun.com/xml/ns/j2ee/j2ee_jaxrpc_mapping_1_1.xsd"        , "j2ee_jaxrpc_mapping_1_1",
+        "SCHEMA:http://java.sun.com/xml/ns/j2ee/j2ee_jaxrpc_mapping_1_1.xsd"              , "j2ee_jaxrpc_mapping_1_1",
         "SCHEMA:http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"             ,"j2ee_web_services_1_1",
-        "SCHEMA:http://java.sun.com/xml/ns/j2ee/j2ee_web_services_client_1_1.xsd"          ,"j2ee_web_services_client_1_1",
-        "SCHEMA:http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"                    , "ejb-jar_3_0",
-        "SCHEMA:http://java.sun.com/xml/ns/javaee/application-client_5.xsd"         , "application-client_5",
-        "SCHEMA:http://java.sun.com/xml/ns/javaee/application_5.xsd"         , "application_5",
-        "SCHEMA:http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"         , "orm_1_0",
-        "SCHEMA:http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"         , "persistence_1_0",
-        "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_1_2.xsd"          ,"javaee_web_services_1_2",
-        "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_client_1_2.xsd"          ,"javaee_web_services_client_1_2",
-
+        "SCHEMA:http://java.sun.com/xml/ns/j2ee/j2ee_web_services_client_1_1.xsd"         ,"j2ee_web_services_client_1_1",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_1_2.xsd"            ,"javaee_web_services_1_2",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_client_1_2.xsd"     ,"javaee_web_services_client_1_2",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_1_3.xsd"            ,"javaee_web_services_1_3",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_client_1_3.xsd"     ,"javaee_web_services_client_1_3",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/javaee_web_services_1_4.xsd"           ,"javaee_web_services_1_4",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/javaee_web_services_client_1_4.xsd"    ,"javaee_web_services_client_1_4",
+        "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/jakartaee_web_services_2_0.xsd"          ,"jakartaee_web_services_2_0",
+        "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/jakartaee_web_services_client_2_0.xsd"   ,"jakartaee_web_services_client_2_0",
+        "SCHEMA:http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"                          , "orm_1_0",
+        "SCHEMA:http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"                          , "orm_2_0",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"                         , "orm_2_1",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd"                         , "orm_2_2",
+        "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"                       , "orm_3_0",
+        "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm/orm_3_1.xsd"                       , "orm_3_1",
+        "SCHEMA:http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"                  , "persistence_1_0",
+        "SCHEMA:http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"                  , "persistence_2_0",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"                 , "persistence_2_1",
+        "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"                 , "persistence_2_2",
+        "SCHEMA:https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"                   , "persistence_3_0",
     };
     
     private static final String JavaEE6SchemaToURLMap[] = {
 
-        "SCHEMA:http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"                    , "ejb-jar_3_1",
-        "SCHEMA:http://java.sun.com/xml/ns/j2ee/jsp_2_2.xsd"                        , "jsp_2_2",
-        "SCHEMA:http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"                    , "web-app_3_0",
-        "SCHEMA:http://java.sun.com/xml/ns/javaee/web-common_3_0.xsd"                    , "web-common_3_0",
-        "SCHEMA:http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"                    , "web-fragment_3_0",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"              , "ejb-jar_3_1",
+        "SCHEMA:http://java.sun.com/xml/ns/j2ee/jsp_2_2.xsd"                    , "jsp_2_2",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"              , "web-app_3_0",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/web-common_3_0.xsd"           , "web-common_3_0",
+        "SCHEMA:http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"         , "web-fragment_3_0",
         "SCHEMA:http://xmlns.oracle.com/weblogic/jdbc-data-source/1.0/jdbc-data-source.xsd", "jdbc-data-source",
     };
 
-    private static Map<ServerInstanceProvider, RunTimeDDCatalog> ddCatalogMap = new HashMap<ServerInstanceProvider, RunTimeDDCatalog>();
+    private static Map<ServerInstanceProvider, RunTimeDDCatalog> ddCatalogMap = new HashMap<>();
 //    private static RunTimeDDCatalog preludeDDCatalog;
     private static RunTimeDDCatalog defaultDDCatalog;
 
@@ -218,7 +248,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
             return null;
         }
         
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for (int i=0;i<TypeToURLMap.length;i = i+2){
             list.add(TypeToURLMap[i]);
         }
@@ -334,7 +364,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     
     }
     
-    private List<CatalogListener> catalogListeners = new ArrayList<CatalogListener>(1);
+    private List<CatalogListener> catalogListeners = new ArrayList<>(1);
     
     /**
      * Optional operation allowing to listen at catalog for changes.
@@ -406,6 +436,8 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     
     public static final String J2EE_NS = "http://java.sun.com/xml/ns/j2ee"; // NOI18N
     public static final String JAVAEE_NS = "http://java.sun.com/xml/ns/javaee"; // NOI18N
+    public static final String NEW_JAVAEE_NS = "http://xmlns.jcp.org/xml/ns/javaee"; // NOI18N
+    public static final String JAKARTAEE_NS = "https://jakarta.ee/xml/ns/jakartaee"; // NOI18N
     public static final String RI_CONFIG_NS = "http://java.sun.com/xml/ns/jax-rpc/ri/config"; // NOI18N
 
     public static final String IBM_J2EE_NS = "http://www.ibm.com/webservices/xsd"; // NOI18N
@@ -422,6 +454,18 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String EJBJAR_3_0 = JAVAEE_NS+"/"+EJBJAR_3_0_XSD; // NOI18N
     public static final String EJBJAR_3_0_ID = "SCHEMA:"+EJBJAR_3_0; // NOI18N
     
+    private static final String EJBJAR_3_1_XSD="ejb-jar_3_1.xsd"; // NOI18N
+    private static final String EJBJAR_3_1 = JAVAEE_NS+"/"+EJBJAR_3_1_XSD; // NOI18N
+    public static final String EJBJAR_3_1_ID = "SCHEMA:"+EJBJAR_3_1; // NOI18N
+    
+    private static final String EJBJAR_3_2_XSD="ejb-jar_3_2.xsd"; // NOI18N
+    private static final String EJBJAR_3_2 = NEW_JAVAEE_NS+"/"+EJBJAR_3_2_XSD; // NOI18N
+    public static final String EJBJAR_3_2_ID = "SCHEMA:"+EJBJAR_3_2; // NOI18N
+    
+    private static final String EJBJAR_4_0_XSD="ejb-jar_4_0.xsd"; // NOI18N
+    private static final String EJBJAR_4_0 = JAKARTAEE_NS+"/"+EJBJAR_4_0_XSD; // NOI18N
+    public static final String EJBJAR_4_0_ID = "SCHEMA:"+EJBJAR_4_0; // NOI18N
+    
     private static final String APP_TAG="application"; //NOI18N
     private static final String APP_1_4_XSD="application_1_4.xsd"; // NOI18N
     private static final String APP_1_4= J2EE_NS+"/"+APP_1_4_XSD; // NOI18N
@@ -431,6 +475,25 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String APP_5= JAVAEE_NS+"/"+APP_5_XSD; // NOI18N
     public static final String APP_5_ID = "SCHEMA:"+APP_5; // NOI18N
  
+    private static final String APP_6_XSD="application_6.xsd"; // NOI18N
+    private static final String APP_6= JAVAEE_NS+"/"+APP_6_XSD; // NOI18N
+    public static final String APP_6_ID = "SCHEMA:"+APP_6; // NOI18N
+    
+    private static final String APP_7_XSD="application_7.xsd"; // NOI18N
+    private static final String APP_7= NEW_JAVAEE_NS+"/"+APP_7_XSD; // NOI18N
+    public static final String APP_7_ID = "SCHEMA:"+APP_7; // NOI18N
+    
+    private static final String APP_8_XSD="application_8.xsd"; // NOI18N
+    private static final String APP_8= NEW_JAVAEE_NS+"/"+APP_8_XSD; // NOI18N
+    public static final String APP_8_ID = "SCHEMA:"+APP_8; // NOI18N
+    
+    private static final String APP_9_XSD="application_9.xsd"; // NOI18N
+    private static final String APP_9= JAKARTAEE_NS+"/"+APP_9_XSD; // NOI18N
+    public static final String APP_9_ID = "SCHEMA:"+APP_9; // NOI18N
+    
+    private static final String APP_10_XSD="application_10.xsd"; // NOI18N
+    private static final String APP_10= JAKARTAEE_NS+"/"+APP_10_XSD; // NOI18N
+    public static final String APP_10_ID = "SCHEMA:"+APP_10; // NOI18N
     
     private static final String APPCLIENT_TAG="application-client"; //NOI18N
     private static final String APPCLIENT_1_4_XSD="application-client_1_4.xsd"; // NOI18N
@@ -441,7 +504,26 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String APPCLIENT_5= JAVAEE_NS+"/"+APPCLIENT_5_XSD; // NOI18N
     public static final String APPCLIENT_5_ID = "SCHEMA:"+APPCLIENT_5; // NOI18N
     
+    private static final String APPCLIENT_6_XSD="application-client_6.xsd"; // NOI18N
+    private static final String APPCLIENT_6= JAVAEE_NS+"/"+APPCLIENT_6_XSD; // NOI18N
+    public static final String APPCLIENT_6_ID = "SCHEMA:"+APPCLIENT_6; // NOI18N
     
+    private static final String APPCLIENT_7_XSD="application-client_7.xsd"; // NOI18N
+    private static final String APPCLIENT_7= NEW_JAVAEE_NS+"/"+APPCLIENT_7_XSD; // NOI18N
+    public static final String APPCLIENT_7_ID = "SCHEMA:"+APPCLIENT_7; // NOI18N
+    
+    private static final String APPCLIENT_8_XSD="application-client_8.xsd"; // NOI18N
+    private static final String APPCLIENT_8= NEW_JAVAEE_NS+"/"+APPCLIENT_8_XSD; // NOI18N
+    public static final String APPCLIENT_8_ID = "SCHEMA:"+APPCLIENT_8; // NOI18N
+    
+    private static final String APPCLIENT_9_XSD="application-client_9.xsd"; // NOI18N
+    private static final String APPCLIENT_9= JAKARTAEE_NS+"/"+APPCLIENT_9_XSD; // NOI18N
+    public static final String APPCLIENT_9_ID = "SCHEMA:"+APPCLIENT_9; // NOI18N
+
+    private static final String APPCLIENT_10_XSD="application-client_10.xsd"; // NOI18N
+    private static final String APPCLIENT_10= JAKARTAEE_NS+"/"+APPCLIENT_10_XSD; // NOI18N
+    public static final String APPCLIENT_10_ID = "SCHEMA:"+APPCLIENT_10; // NOI18N
+
     private static final String WEBSERVICES_TAG="webservices"; //NOI18N
     private static final String WEBSERVICES_1_1_XSD="j2ee_web_services_1_1.xsd"; // NOI18N
     private static final String WEBSERVICES_1_1= IBM_J2EE_NS+"/"+WEBSERVICES_1_1_XSD; // NOI18N
@@ -455,9 +537,33 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String WEBSERVICES_1_2= JAVAEE_NS+"/"+WEBSERVICES_1_2_XSD; // NOI18N
     public static final String WEBSERVICES_1_2_ID = "SCHEMA:"+WEBSERVICES_1_2; // NOI18N
 
+    private static final String WEBSERVICES_1_3_XSD="javaee_web_services_1_3.xsd"; // NOI18N
+    private static final String WEBSERVICES_1_3= JAVAEE_NS+"/"+WEBSERVICES_1_3_XSD; // NOI18N
+    public static final String WEBSERVICES_1_3_ID = "SCHEMA:"+WEBSERVICES_1_3; // NOI18N
+    
+    private static final String WEBSERVICES_1_4_XSD="javaee_web_services_1_4.xsd"; // NOI18N
+    private static final String WEBSERVICES_1_4= NEW_JAVAEE_NS+"/"+WEBSERVICES_1_4_XSD; // NOI18N
+    public static final String WEBSERVICES_1_4_ID = "SCHEMA:"+WEBSERVICES_1_4; // NOI18N
+    
+    private static final String WEBSERVICES_2_0_XSD="jakartaee_web_services_2_0.xsd"; // NOI18N
+    private static final String WEBSERVICES_2_0= JAKARTAEE_NS+"/"+WEBSERVICES_2_0_XSD; // NOI18N
+    public static final String WEBSERVICES_2_0_ID = "SCHEMA:"+WEBSERVICES_2_0; // NOI18N
+
     private static final String WEBSERVICES_CLIENT_1_2_XSD="javaee_web_services_client_1_2.xsd"; // NOI18N
     private static final String WEBSERVICES_CLIENT_1_2= JAVAEE_NS+"/"+WEBSERVICES_CLIENT_1_2_XSD; // NOI18N
     public static final String WEBSERVICES_CLIENT_1_2_ID = "SCHEMA:"+WEBSERVICES_CLIENT_1_2; // NOI18N
+
+    private static final String WEBSERVICES_CLIENT_1_3_XSD="javaee_web_services_client_1_3.xsd"; // NOI18N
+    private static final String WEBSERVICES_CLIENT_1_3= JAVAEE_NS+"/"+WEBSERVICES_CLIENT_1_3_XSD; // NOI18N
+    public static final String WEBSERVICES_CLIENT_1_3_ID = "SCHEMA:"+WEBSERVICES_CLIENT_1_3; // NOI18N
+    
+    private static final String WEBSERVICES_CLIENT_1_4_XSD="javaee_web_services_client_1_4.xsd"; // NOI18N
+    private static final String WEBSERVICES_CLIENT_1_4= NEW_JAVAEE_NS+"/"+WEBSERVICES_CLIENT_1_4_XSD; // NOI18N
+    public static final String WEBSERVICES_CLIENT_1_4_ID = "SCHEMA:"+WEBSERVICES_CLIENT_1_4; // NOI18N
+    
+    private static final String WEBSERVICES_CLIENT_2_0_XSD="jakartaee_web_services_client_2_0.xsd"; // NOI18N
+    private static final String WEBSERVICES_CLIENT_2_0= JAKARTAEE_NS+"/"+WEBSERVICES_CLIENT_2_0_XSD; // NOI18N
+    public static final String WEBSERVICES_CLIENT_2_0_ID = "SCHEMA:"+WEBSERVICES_CLIENT_2_0; // NOI18N
 
     private static final String WEBAPP_TAG="web-app"; //NOI18N
     private static final String WEBAPP_2_5_XSD="web-app_2_5.xsd"; // NOI18N
@@ -465,25 +571,118 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     public static final String WEBAPP_2_5_ID = "SCHEMA:"+WEBAPP_2_5; // NOI18N
 
     private static final String WEBAPP_3_0_XSD="web-app_3_0.xsd"; // NOI18N
-
-    private static final String WEBFRAGMENT_3_0_XSD="web-fragment_3_0.xsd"; // NOI18N
+    private static final String WEBAPP_3_0 = JAVAEE_NS+"/"+WEBAPP_3_0_XSD; // NOI18N
+    public static final String WEBAPP_3_0_ID = "SCHEMA:"+WEBAPP_3_0; // NOI18N
 
     private static final String WEBCOMMON_3_0_XSD="web-common_3_0.xsd"; // NOI18N
+    private static final String WEBCOMMON_3_0 = JAVAEE_NS+"/"+WEBCOMMON_3_0_XSD; // NOI18N
+    public static final String WEBCOMMON_3_0_ID = "SCHEMA:"+WEBCOMMON_3_0; // NOI18N
+    
+    private static final String WEBFRAGMENT_3_0_XSD="web-fragment_3_0.xsd"; // NOI18N
+    private static final String WEBFRAGMENT_3_0 = JAVAEE_NS+"/"+WEBFRAGMENT_3_0_XSD; // NOI18N
+    public static final String WEBFRAGMENT_3_0_ID = "SCHEMA:"+WEBFRAGMENT_3_0; // NOI18N
+
+    private static final String WEBAPP_3_1_XSD="web-app_3_1.xsd"; // NOI18N
+    private static final String WEBAPP_3_1 = NEW_JAVAEE_NS+"/"+WEBAPP_3_1_XSD; // NOI18N
+    public static final String WEBAPP_3_1_ID = "SCHEMA:"+WEBAPP_3_1; // NOI18N
+
+    private static final String WEBCOMMON_3_1_XSD="web-common_3_1.xsd"; // NOI18N
+    private static final String WEBCOMMON_3_1 = NEW_JAVAEE_NS+"/"+WEBCOMMON_3_1_XSD; // NOI18N
+    public static final String WEBCOMMON_3_1_ID = "SCHEMA:"+WEBCOMMON_3_1; // NOI18N
+    
+    private static final String WEBFRAGMENT_3_1_XSD="web-fragment_3_1.xsd"; // NOI18N
+    private static final String WEBFRAGMENT_3_1 = NEW_JAVAEE_NS+"/"+WEBFRAGMENT_3_1_XSD; // NOI18N
+    public static final String WEBFRAGMENT_3_1_ID = "SCHEMA:"+WEBFRAGMENT_3_1; // NOI18N
+    
+    private static final String WEBAPP_4_0_XSD="web-app_4_0.xsd"; // NOI18N
+    private static final String WEBAPP_4_0 = NEW_JAVAEE_NS+"/"+WEBAPP_4_0_XSD; // NOI18N
+    public static final String WEBAPP_4_0_ID = "SCHEMA:"+WEBAPP_4_0; // NOI18N
+    
+    private static final String WEBCOMMON_4_0_XSD="web-common_4_0.xsd"; // NOI18N
+    private static final String WEBCOMMON_4_0 = NEW_JAVAEE_NS+"/"+WEBCOMMON_4_0_XSD; // NOI18N
+    public static final String WEBCOMMON_4_0_ID = "SCHEMA:"+WEBCOMMON_4_0; // NOI18N
+    
+    private static final String WEBFRAGMENT_4_0_XSD="web-fragment_4_0.xsd"; // NOI18N
+    private static final String WEBFRAGMENT_4_0 = NEW_JAVAEE_NS+"/"+WEBFRAGMENT_4_0_XSD; // NOI18N
+    public static final String WEBFRAGMENT_4_0_ID = "SCHEMA:"+WEBFRAGMENT_4_0; // NOI18N
+    
+    private static final String WEBAPP_5_0_XSD="web-app_5_0.xsd"; // NOI18N
+    private static final String WEBAPP_5_0 = JAKARTAEE_NS+"/"+WEBAPP_5_0_XSD; // NOI18N
+    public static final String WEBAPP_5_0_ID = "SCHEMA:"+WEBAPP_5_0; // NOI18N
+    
+    private static final String WEBCOMMON_5_0_XSD="web-common_5_0.xsd"; // NOI18N
+    private static final String WEBCOMMON_5_0 = JAKARTAEE_NS+"/"+WEBCOMMON_5_0_XSD; // NOI18N
+    public static final String WEBCOMMON_5_0_ID = "SCHEMA:"+WEBCOMMON_5_0; // NOI18N
+    
+    private static final String WEBFRAGMENT_5_0_XSD="web-fragment_5_0.xsd"; // NOI18N
+    private static final String WEBFRAGMENT_5_0 = JAKARTAEE_NS+"/"+WEBFRAGMENT_5_0_XSD; // NOI18N
+    public static final String WEBFRAGMENT_5_0_ID = "SCHEMA:"+WEBFRAGMENT_5_0; // NOI18N
+
+    private static final String WEBAPP_6_0_XSD="web-app_6_0.xsd"; // NOI18N
+    private static final String WEBAPP_6_0 = JAKARTAEE_NS+"/"+WEBAPP_6_0_XSD; // NOI18N
+    public static final String WEBAPP_6_0_ID = "SCHEMA:"+WEBAPP_6_0; // NOI18N
+    
+    private static final String WEBCOMMON_6_0_XSD="web-common_6_0.xsd"; // NOI18N
+    private static final String WEBCOMMON_6_0 = JAKARTAEE_NS+"/"+WEBCOMMON_6_0_XSD; // NOI18N
+    public static final String WEBCOMMON_6_0_ID = "SCHEMA:"+WEBCOMMON_6_0; // NOI18N
+    
+    private static final String WEBFRAGMENT_6_0_XSD="web-fragment_6_0.xsd"; // NOI18N
+    private static final String WEBFRAGMENT_6_0 = JAKARTAEE_NS+"/"+WEBFRAGMENT_6_0_XSD; // NOI18N
+    public static final String WEBFRAGMENT_6_0_ID = "SCHEMA:"+WEBFRAGMENT_6_0; // NOI18N
 
     public static final String PERSISTENCE_NS = "http://java.sun.com/xml/ns/persistence"; // NOI18N
+    public static final String NEW_PERSISTENCE_NS = "http://xmlns.jcp.org/xml/ns/persistence"; // NOI18N
+    public static final String JAKARTA_PERSISTENCE_NS = "https://jakarta.ee/xml/ns/persistence"; // NOI18N
+    
     private static final String PERSISTENCE_TAG="persistence"; //NOI18N
     private static final String PERSISTENCE_XSD="persistence_1_0.xsd"; // NOI18N
     private static final String PERSISTENCE = PERSISTENCE_NS+"/"+PERSISTENCE_XSD; // NOI18N
     public static final String PERSISTENCE_ID = "SCHEMA:"+PERSISTENCE; // NOI18N    
     
+    private static final String PERSISTENCE_2_0_XSD="persistence_2_0.xsd"; // NOI18N
+    private static final String PERSISTENCE_2_0 = PERSISTENCE_NS+"/"+PERSISTENCE_2_0_XSD; // NOI18N
+    public static final String PERSISTENCE_2_0_ID = "SCHEMA:"+PERSISTENCE_2_0; // NOI18N 
+    
+    private static final String PERSISTENCE_2_1_XSD="persistence_2_1.xsd"; // NOI18N
+    private static final String PERSISTENCE_2_1 = NEW_PERSISTENCE_NS+"/"+PERSISTENCE_2_1_XSD; // NOI18N
+    public static final String PERSISTENCE_2_1_ID = "SCHEMA:"+PERSISTENCE_2_1; // NOI18N 
+    
+    private static final String PERSISTENCE_2_2_XSD="persistence_2_2.xsd"; // NOI18N
+    private static final String PERSISTENCE_2_2 = NEW_PERSISTENCE_NS+"/"+PERSISTENCE_2_2_XSD; // NOI18N
+    public static final String PERSISTENCE_2_2_ID = "SCHEMA:"+PERSISTENCE_2_2; // NOI18N 
+    
+    private static final String PERSISTENCE_3_0_XSD="persistence_3_0.xsd"; // NOI18N
+    private static final String PERSISTENCE_3_0 = JAKARTA_PERSISTENCE_NS+"/"+PERSISTENCE_3_0_XSD; // NOI18N
+    public static final String PERSISTENCE_3_0_ID = "SCHEMA:"+PERSISTENCE_3_0; // NOI18N 
+    
     public static final String PERSISTENCEORM_NS = "http://java.sun.com/xml/ns/persistence/orm"; // NOI18N
+    public static final String NEW_PERSISTENCEORM_NS = "http://xmlns.jcp.org/xml/ns/persistence/orm"; // NOI18N
+    public static final String JAKARTA_PERSISTENCEORM_NS = "https://jakarta.ee/xml/ns/persistence/orm"; // NOI18N
+    
     private static final String PERSISTENCEORM_TAG="entity-mappings"; //NOI18N
     private static final String PERSISTENCEORM_XSD="orm_1_0.xsd"; // NOI18N
     private static final String PERSISTENCEORM = PERSISTENCE_NS+"/"+PERSISTENCEORM_XSD; // NOI18N  yes not ORM NS!!!
     public static final String PERSISTENCEORM_ID = "SCHEMA:"+PERSISTENCEORM; // NOI18N
 
+    private static final String PERSISTENCEORM_2_0_XSD="orm_2_0.xsd"; // NOI18N
+    private static final String PERSISTENCEORM_2_0 = PERSISTENCE_NS+"/"+PERSISTENCEORM_2_0_XSD; // NOI18N  yes not ORM NS!!!
+    public static final String PERSISTENCEORM_2_0_ID = "SCHEMA:"+PERSISTENCEORM_2_0; // NOI18N
 
+    private static final String PERSISTENCEORM_2_1_XSD="orm_2_1.xsd"; // NOI18N
+    private static final String PERSISTENCEORM_2_1 = NEW_PERSISTENCEORM_NS+"/"+PERSISTENCEORM_2_1_XSD; // NOI18N  yes not ORM NS!!!
+    public static final String PERSISTENCEORM_2_1_ID = "SCHEMA:"+PERSISTENCEORM_2_1; // NOI18N
     
+    private static final String PERSISTENCEORM_2_2_XSD="orm_2_2.xsd"; // NOI18N
+    private static final String PERSISTENCEORM_2_2 = NEW_PERSISTENCEORM_NS+"/"+PERSISTENCEORM_2_2_XSD; // NOI18N  yes not ORM NS!!!
+    public static final String PERSISTENCEORM_2_2_ID = "SCHEMA:"+PERSISTENCEORM_2_2; // NOI18N
+    
+    private static final String PERSISTENCEORM_3_0_XSD="orm_3_0.xsd"; // NOI18N
+    private static final String PERSISTENCEORM_3_0 = JAKARTA_PERSISTENCEORM_NS+"/"+PERSISTENCEORM_3_0_XSD; // NOI18N  yes not ORM NS!!!
+    public static final String PERSISTENCEORM_3_0_ID = "SCHEMA:"+PERSISTENCEORM_3_0; // NOI18N
+    
+    private static final String PERSISTENCEORM_3_1_XSD="orm_3_1.xsd"; // NOI18N
+    private static final String PERSISTENCEORM_3_1 = JAKARTA_PERSISTENCEORM_NS+"/"+PERSISTENCEORM_3_1_XSD; // NOI18N  yes not ORM NS!!!
+    public static final String PERSISTENCEORM_3_1_ID = "SCHEMA:"+PERSISTENCEORM_3_1; // NOI18N
     
     public String getFullURLFromSystemId(String systemId){
         return null;
@@ -521,68 +720,133 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
             }catch(Exception e){
                 Logger.getLogger("payara-jakartaee").log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
             }
-
-            
         }
-        if (systemId!=null && systemId.endsWith(EJBJAR_2_1_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+EJBJAR_2_1_XSD);
+        
+        if (systemId != null) {
+            if (systemId.endsWith(EJBJAR_2_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + EJBJAR_2_1_XSD);
+            } else if (systemId.endsWith(EJBJAR_3_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + EJBJAR_3_0_XSD);
+            } else if (systemId.endsWith(EJBJAR_3_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + EJBJAR_3_1_XSD);
+            } else if (systemId.endsWith(EJBJAR_3_2_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + EJBJAR_3_2_XSD);
+            } else if (systemId.endsWith(EJBJAR_4_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + EJBJAR_4_0_XSD);
+            } // application & application-client
+            else if (systemId.endsWith(APP_1_4_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APP_1_4_XSD);
+            } else if (systemId.endsWith(APPCLIENT_1_4_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APPCLIENT_1_4_XSD);
+            } else if (systemId.endsWith(APP_5_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APP_5_XSD);
+            } else if (systemId.endsWith(APPCLIENT_5_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APPCLIENT_5_XSD);
+            } else if (systemId.endsWith(APP_6_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APP_6_XSD);
+            } else if (systemId.endsWith(APPCLIENT_6_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APPCLIENT_6_XSD);
+            } else if (systemId.endsWith(APP_7_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APP_7_XSD);
+            } else if (systemId.endsWith(APPCLIENT_7_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APPCLIENT_7_XSD);
+            } else if (systemId.endsWith(APP_8_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APP_8_XSD);
+            } else if (systemId.endsWith(APPCLIENT_8_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APPCLIENT_8_XSD);
+            } else if (systemId.endsWith(APP_9_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APP_9_XSD);
+            } else if (systemId.endsWith(APPCLIENT_9_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APPCLIENT_9_XSD);
+            } else if (systemId.endsWith(APP_10_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APP_10_XSD);
+            } else if (systemId.endsWith(APPCLIENT_10_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + APPCLIENT_10_XSD);
+            } //web-app, web-common & web-fragment
+            else if (systemId.endsWith(WEBAPP_2_5_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBAPP_2_5_XSD);
+            } else if (systemId.endsWith(WEBAPP_3_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBAPP_3_0_XSD);
+            } else if (systemId.endsWith(WEBFRAGMENT_3_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBFRAGMENT_3_0_XSD);
+            } else if (systemId.endsWith(WEBCOMMON_3_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBCOMMON_3_0_XSD);
+            } else if (systemId.endsWith(WEBAPP_3_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBAPP_3_1_XSD);
+            } else if (systemId.endsWith(WEBFRAGMENT_3_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBFRAGMENT_3_1_XSD);
+            } else if (systemId.endsWith(WEBCOMMON_3_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBCOMMON_3_1_XSD);
+            } else if (systemId.endsWith(WEBAPP_4_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBAPP_4_0_XSD);
+            } else if (systemId.endsWith(WEBFRAGMENT_4_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBFRAGMENT_4_0_XSD);
+            } else if (systemId.endsWith(WEBCOMMON_4_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBCOMMON_4_0_XSD);
+            } else if (systemId.endsWith(WEBAPP_5_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBAPP_5_0_XSD);
+            } else if (systemId.endsWith(WEBFRAGMENT_5_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBFRAGMENT_5_0_XSD);
+            } else if (systemId.endsWith(WEBCOMMON_5_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBCOMMON_5_0_XSD);
+            } else if (systemId.endsWith(WEBAPP_6_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBAPP_6_0_XSD);
+            } else if (systemId.endsWith(WEBFRAGMENT_6_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBFRAGMENT_6_0_XSD);
+            } else if (systemId.endsWith(WEBCOMMON_6_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBCOMMON_6_0_XSD);
+            } //persistence & orm
+            else if (systemId.endsWith(PERSISTENCEORM_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCEORM_XSD);
+            } else if (systemId.endsWith(PERSISTENCE_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCE_XSD);
+            } else if (systemId.endsWith(PERSISTENCEORM_2_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCEORM_2_0_XSD);
+            } else if (systemId.endsWith(PERSISTENCE_2_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCE_2_0_XSD);
+            } else if (systemId.endsWith(PERSISTENCEORM_2_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCEORM_2_1_XSD);
+            } else if (systemId.endsWith(PERSISTENCE_2_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCE_2_1_XSD);
+            } else if (systemId.endsWith(PERSISTENCEORM_2_2_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCEORM_2_2_XSD);
+            } else if (systemId.endsWith(PERSISTENCE_2_2_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCE_2_2_XSD);
+            } else if (systemId.endsWith(PERSISTENCEORM_3_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCEORM_3_0_XSD);
+            } else if ( systemId.endsWith(PERSISTENCEORM_3_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_3_1_XSD);
+            } else if (systemId.endsWith(PERSISTENCE_3_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + PERSISTENCE_3_0_XSD);
+            } //webservice & webservice-client
+            else if (systemId.endsWith(WEBSERVICES_1_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBSERVICES_1_1_XSD);
+            } else if (systemId.endsWith(WEBSERVICES_1_2_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBSERVICES_1_2_XSD);
+            } else if (systemId.endsWith(WEBSERVICES_1_3_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBSERVICES_1_3_XSD);
+            } else if (systemId.endsWith(WEBSERVICES_1_4_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBSERVICES_1_4_XSD);
+            } else if (systemId.endsWith(WEBSERVICES_2_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBSERVICES_2_0_XSD);
+            } else if (systemId.endsWith(WEBSERVICES_CLIENT_1_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBSERVICES_CLIENT_1_1_XSD);
+            } else if (systemId.endsWith(WEBSERVICES_CLIENT_1_2_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBSERVICES_CLIENT_1_2_XSD);
+            } else if (systemId.endsWith(WEBSERVICES_CLIENT_1_3_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBSERVICES_CLIENT_1_3_XSD);
+            } else if (systemId.endsWith(WEBSERVICES_CLIENT_1_4_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBSERVICES_CLIENT_1_4_XSD);
+            } else if (systemId.endsWith(WEBSERVICES_CLIENT_2_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + WEBSERVICES_CLIENT_2_0_XSD);
+            } else if (systemId.endsWith("jdbc-data-source.xsd")) { //NOI18N
+                return new org.xml.sax.InputSource(SCHEMASLOCATION + "jdbc-data-source.xsd"); //NOI18N
+            } else if (XML_XSD.equals(systemId)) {
+                return new org.xml.sax.InputSource(new java.io.StringReader(XML_XSD_DEF));
+            }
         }
-        else  if (systemId!=null && systemId.endsWith(EJBJAR_3_0_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+EJBJAR_3_0_XSD);
-        }            
-        else if (systemId!=null && systemId.endsWith(APP_1_4_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_1_4_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(APPCLIENT_1_4_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_1_4_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(WEBAPP_2_5_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBAPP_2_5_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(WEBAPP_3_0_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBAPP_3_0_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(WEBFRAGMENT_3_0_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBFRAGMENT_3_0_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(WEBCOMMON_3_0_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBCOMMON_3_0_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(APP_5_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_5_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(APPCLIENT_5_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_5_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(PERSISTENCEORM_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(PERSISTENCE_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCE_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(WEBSERVICES_1_1_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_1_1_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(WEBSERVICES_1_2_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_1_2_XSD);
-        } else if (XML_XSD.equals(systemId)) {
-            return new org.xml.sax.InputSource(new java.io.StringReader(XML_XSD_DEF));
-        }
-        else if (systemId!=null && systemId.endsWith(WEBSERVICES_CLIENT_1_1_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_CLIENT_1_1_XSD);
-        }
-        else if (systemId!=null && systemId.endsWith(WEBSERVICES_CLIENT_1_2_XSD)) {
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_CLIENT_1_2_XSD);
-        } else if (XML_XSD.equals(systemId)) {
-            return new org.xml.sax.InputSource(new java.io.StringReader(XML_XSD_DEF));
-        } else if (systemId != null && systemId.endsWith("jdbc-data-source.xsd")) { //NOI18N
-            return new org.xml.sax.InputSource(SCHEMASLOCATION+"jdbc-data-source.xsd"); //NOI18N
-        } else {
-            return null;
-        }
+        return null;
     }
-    
-    
     
     @Override
     public Enumeration enabled(GrammarEnvironment ctx) {
@@ -595,98 +859,16 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
             } else if (next.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) next;
                 String tag = element.getTagName();
-                if (EJB_JAR_TAG.equals(tag)) {  // NOI18N
-                    String xmlns = element.getAttribute(XMLNS_ATTR);
-                    if (xmlns!=null && J2EE_NS.equals(xmlns)) {
-                        Vector<Node> v = new Vector<Node>();
-                        v.add(next);
-                        return v.elements();
-                        //   return org.openide.util.Enumerations.singleton(next);
-                    }
-                    else  if (xmlns!=null && JAVAEE_NS.equals(xmlns)) {
-                        Vector<Node> v = new Vector<Node>();
-                        v.add(next);
-                        return v.elements();
-                        //   return org.openide.util.Enumerations.singleton(next);
-                    }
-                }
-                
-                if (APP_TAG.equals(tag)) {  // NOI18N
-                    String xmlns = element.getAttribute(XMLNS_ATTR);
-                    if (xmlns!=null && J2EE_NS.equals(xmlns)) {
-                        Vector<Node> v = new Vector<Node>();
-                        v.add(next);
-                        return v.elements();
-                        //   return org.openide.util.Enumerations.singleton(next);
-                    }
-                    else   if (xmlns!=null && JAVAEE_NS.equals(xmlns)) {
-                        Vector<Node> v = new Vector<Node>();
-                        v.add(next);
-                        return v.elements();
-                        //   return org.openide.util.Enumerations.singleton(next);
-                    }
-                }
-                if (WEBAPP_TAG.equals(tag)) {  // NOI18N
-                    String xmlns = element.getAttribute(XMLNS_ATTR);
-                    if (xmlns!=null && JAVAEE_NS.equals(xmlns)) {
-                        Vector<Node> v = new Vector<Node>();
-                        v.add(next);
-                        return v.elements();
-                        //   return org.openide.util.Enumerations.singleton(next);
-                    }
+                String xmlns = element.getAttribute(XMLNS_ATTR);
+                if (xmlns != null && (EJB_JAR_TAG.equals(tag) || APP_TAG.equals(tag)
+                        || WEBAPP_TAG.equals(tag) || APPCLIENT_TAG.equals(tag)
+                        || PERSISTENCEORM_TAG.equals(tag) || PERSISTENCE_TAG.equals(tag)
+                        || WEBSERVICES_TAG.equals(tag))) {  // NOI18N
 
-                }
-                if (APPCLIENT_TAG.equals(tag)) {  // NOI18N
-                    String xmlns = element.getAttribute(XMLNS_ATTR);
-                    if (xmlns!=null && J2EE_NS.equals(xmlns)) {
-                        Vector<Node> v = new Vector<Node>();
-                        v.add(next);
-                        return v.elements();
-                        //   return org.openide.util.Enumerations.singleton(next);
-                    }
-                    else   if (xmlns!=null && JAVAEE_NS.equals(xmlns)) {
-                        Vector<Node> v = new Vector<Node>();
-                        v.add(next);
-                        return v.elements();
-                        //   return org.openide.util.Enumerations.singleton(next);
-                    }
-                }                
-                if (PERSISTENCEORM_TAG.equals(tag)) {  // NOI18N
-                    String xmlns = element.getAttribute(XMLNS_ATTR);
-                    if (xmlns!=null && PERSISTENCEORM_NS.equals(xmlns)) {
-                        Vector<Node> v = new Vector<Node>();
-                        v.add(next);
-                        return v.elements();
-                        //   return org.openide.util.Enumerations.singleton(next);
-                    }
-
-                }
-                
-                if (PERSISTENCE_TAG.equals(tag)) {  // NOI18N
-                    String xmlns = element.getAttribute(XMLNS_ATTR);
-                    if (xmlns!=null && PERSISTENCE_NS.equals(xmlns)) {
-                        Vector<Node> v = new Vector<Node>();
-                        v.add(next);
-                        return v.elements();
-                        //   return org.openide.util.Enumerations.singleton(next);
-                    }
-
-                }
-                
-                if (WEBSERVICES_TAG.equals(tag)) {  // NOI18N
-                    String xmlns = element.getAttribute(XMLNS_ATTR);
-                    if (xmlns!=null && J2EE_NS.equals(xmlns)) {
-                        Vector<Node> v = new Vector<Node>();
-                        v.add(next);
-                        return v.elements();
-                        //   return org.openide.util.Enumerations.singleton(next);
-                    } else   if (xmlns!=null && JAVAEE_NS.equals(xmlns)) {
-                        Vector<Node> v = new Vector<Node>();
-                        v.add(next);
-                        return v.elements();
-                        //   return org.openide.util.Enumerations.singleton(next);
-                    }
-                    else   if (xmlns!=null && IBM_J2EE_NS.equals(xmlns)) {
+                    if (J2EE_NS.equals(xmlns)
+                            || JAVAEE_NS.equals(xmlns)
+                            || NEW_JAVAEE_NS.equals(xmlns)
+                            || JAKARTAEE_NS.equals(xmlns)) {  // NOI18N
                         Vector<Node> v = new Vector<Node>();
                         v.add(next);
                         return v.elements();
@@ -695,7 +877,6 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                 }
             }
         }
-        
         return null;
     }
     
@@ -720,38 +901,140 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
             if (resolver != null) {
                 try {
                     
-                    
                     if (ctx.getFileObject() == null) {
                         return null;
                     }
                     InputSource inputSource = null;                    
                     
                     String mimeType = ctx.getFileObject().getMIMEType();
-                    if (mimeType==null){
+                    if (mimeType == null){
                         return null;
                     }
-                    if (mimeType.equals("text/x-dd-ejbjar3.0")){// NOI18N
+                    switch (mimeType) {
+                        case "text/x-dd-ejbjar4.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(EJBJAR_4_0_ID, "");
+                            break;
+                        case "text/x-dd-ejbjar3.2":  // NOI18N
+                            inputSource = resolver.resolveEntity(EJBJAR_3_2_ID, "");
+                            break;
+                        case "text/x-dd-ejbjar3.1":  // NOI18N
+                            inputSource = resolver.resolveEntity(EJBJAR_3_1_ID, "");
+                            break;
+                        case "text/x-dd-ejbjar3.0":  // NOI18N
                         inputSource = resolver.resolveEntity(EJBJAR_3_0_ID, "");
-                    } else if (mimeType.equals("text/x-dd-ejbjar2.1")) {// NOI18N
+                            break;
+                        case "text/x-dd-ejbjar2.1":  // NOI18N
                         inputSource = resolver.resolveEntity(EJBJAR_2_1_ID, "");
-                    } else if (mimeType.equals("text/x-dd-application5.0")) {// NOI18N
+                            break;
+                        case "text/x-dd-application9.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APP_9_ID, "");
+                            break;
+                        case "text/x-dd-application8.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APP_8_ID, "");
+                            break;
+                        case "text/x-dd-application7.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APP_7_ID, "");
+                            break;
+                        case "text/x-dd-application6.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APP_6_ID, "");
+                            break;
+                        case "text/x-dd-application5.0":  // NOI18N
                         inputSource = resolver.resolveEntity(APP_5_ID, "");
-                    }else if (mimeType.equals("text/x-dd-application1.4")) {// NOI18N
+                            break;
+                        case "text/x-dd-application1.4":  // NOI18N
                         inputSource = resolver.resolveEntity(APP_1_4_ID, "");
-                    }else if (mimeType.equals("text/x-dd-client5.0")) {// NOI18N
+                            break;
+                        case "text/x-dd-client9.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APPCLIENT_9_ID, "");
+                            break;
+                        case "text/x-dd-client8.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APPCLIENT_8_ID, "");
+                            break;
+                        case "text/x-dd-client7.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APPCLIENT_7_ID, "");
+                            break;
+                        case "text/x-dd-client6.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APPCLIENT_6_ID, "");
+                            break;
+                        case "text/x-dd-client5.0":  // NOI18N
                         inputSource = resolver.resolveEntity(APPCLIENT_5_ID, "");
-                    }else if (mimeType.equals("text/x-dd-client1.4")) {// NOI18N
+                            break;
+                        case "text/x-dd-client1.4":  // NOI18N
                         inputSource = resolver.resolveEntity(APPCLIENT_1_4_ID, "");
-                    }else if (mimeType.equals("text/x-persistence1.0")) {// NOI18N
-                        inputSource = resolver.resolveEntity(PERSISTENCE_ID, "");
-                    }else if (mimeType.equals("text/x-orm1.0")) {// NOI18N
+                            break;
+                        case "text/x-dd-servlet6.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBAPP_6_0_ID, "");
+                            break;
+                        case "text/x-dd-servlet5.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBAPP_5_0_ID, "");
+                            break;
+                        case "text/x-dd-servlet4.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBAPP_4_0_ID, "");
+                            break;
+                        case "text/x-dd-servlet3.1":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBAPP_3_1_ID, "");
+                            break;
+                        case "text/x-dd-servlet3.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBAPP_3_0_ID, "");
+                            break;
+                        case "text/x-dd-servlet2.5":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBAPP_2_5_ID, "");
+                            break;
+                        case "text/x-dd-servlet-fragment6.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBFRAGMENT_6_0_ID, "");
+                            break;
+                        case "text/x-dd-servlet-fragment5.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBFRAGMENT_5_0_ID, "");
+                            break;
+                        case "text/x-dd-servlet-fragment4.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBFRAGMENT_4_0_ID, "");
+                            break;
+                        case "text/x-dd-servlet-fragment3.1":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBFRAGMENT_3_1_ID, "");
+                            break;
+                        case "text/x-dd-servlet-fragment3.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBFRAGMENT_3_0_ID, "");
+                            break;
+                        case "text/x-persistence3.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCE_3_0_ID, "");
+                            break;
+                        case "text/x-persistence2.2":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCE_2_2_ID, "");
+                            break;
+                        case "text/x-persistence2.1":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCE_2_1_ID, "");
+                            break;
+                        case "text/x-persistence2.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCE_2_0_ID, "");
+                            break;
+                        case "text/x-persistence1.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCE_ID, "");
+                            break;
+                        case "text/x-orm3.1":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCEORM_3_1_ID, "");
+                            break;
+                        case "text/x-orm3.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCEORM_3_0_ID, "");
+                            break;
+                        case "text/x-orm2.2":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCEORM_2_2_ID, "");
+                            break;
+                        case "text/x-orm2.1":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCEORM_2_1_ID, "");
+                            break;
+                        case "text/x-orm2.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCEORM_2_0_ID, "");
+                            break;
+                        case "text/x-orm1.0":  // NOI18N
                         inputSource = resolver.resolveEntity(PERSISTENCEORM_ID, "");
+                            break;
+                        default:
+                            break;
                     }
 
-                    if (inputSource!=null) {
+                    if (inputSource != null) {
                         return DTDUtil.parseDTD(true, inputSource);
                     }
-                    
                     
                     if (is.getSystemId().endsWith("webservices.xml") ) {  // NOI18N
                         // System.out.println("webservices tag");
@@ -759,8 +1042,6 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                         if (inputSource!=null) {
                             return DTDUtil.parseDTD(true, inputSource);
                         }
-                        
-                        
                     }
                     
                 } catch(SAXException e) {

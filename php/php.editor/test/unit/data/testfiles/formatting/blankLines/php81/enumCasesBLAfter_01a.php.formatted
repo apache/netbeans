@@ -34,7 +34,6 @@ enum Simple {
     public static function staticTest(Foo&Bar $param): void {
         
     }
-
 }
 
 #[Attr]

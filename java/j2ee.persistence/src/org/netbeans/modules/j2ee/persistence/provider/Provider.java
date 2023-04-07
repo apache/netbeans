@@ -41,8 +41,7 @@ public abstract class Provider {
     public static final String TABLE_GENERATION_CREATE = "tableGenerationCreate";
     public static final String TABLE_GENERATION_DROPCREATE = "tableGenerationDropCreate";
     public static final String TABLE_GENERATTION_UNKOWN = "tableGenerationUnknown";
-    
-    
+
     /**
      * Fully qualified class name of the provider.
      */
@@ -84,11 +83,13 @@ public abstract class Provider {
         boolean ret = cp.findResource(classRelativePath) != null;
         if(ret && version != null)
         {
-            if(Persistence.VERSION_2_1.equals(version)){
+            if (Persistence.VERSION_2_2.equals(version)) {
+                ret &= cp.findResource("javax/persistence/TableGenerators.class") != null;
+            } else if (Persistence.VERSION_2_1.equals(version)) {
                 ret &= cp.findResource("javax/persistence/criteria/CriteriaUpdate.class") != null;
-            } else if(Persistence.VERSION_2_0.equals(version)){
+            } else if (Persistence.VERSION_2_0.equals(version)) {
                 ret &= cp.findResource("javax/persistence/criteria/JoinType.class") != null;
-            } else if(Persistence.VERSION_1_0.equals(version)){
+            } else if (Persistence.VERSION_1_0.equals(version)) {
                 ret &= cp.findResource("javax/persistence/Entity.class") != null && cp.findResource("javax/persistence/criteria/JoinType.class") == null;
             }
         }
@@ -131,7 +132,9 @@ public abstract class Provider {
             return null;
         }
         Property result;
-        if  (Persistence.VERSION_2_1.equals(version)) {
+        if  (Persistence.VERSION_2_2.equals(version)) {
+                result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Property();
+        } else if  (Persistence.VERSION_2_1.equals(version)) {
                 result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Property();
         } else if  (Persistence.VERSION_2_0.equals(version)) {
                 result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.Property();
@@ -157,7 +160,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.0+
+     * default implementation is valid for jpa 2.0+
      * @return names of the property representing JDBC URL, map version-property name
      */
     public String getJdbcUrl() {
@@ -165,7 +168,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.0+
+     * default implementation is valid for jpa 2.0+
      * @return name of the property representing JDBC driver.
      */
     public String getJdbcDriver() {
@@ -173,7 +176,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.0+
+     * default implementation is valid for jpa 2.0+
      * @return name of the property representing JDBC user name.
      */
     public String getJdbcUsername() {
@@ -181,7 +184,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.0+
+     * default implementation is valid for jpa 2.0+
      * @return name of the property representing JDBC password.
      */
     public String getJdbcPassword() {
@@ -203,7 +206,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.1+
+     * default implementation is valid for jpa 2.1+
      * @return name of the property representing table generation strategy in database
      */
     public String getTableGenerationPropertyName() {
@@ -211,7 +214,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.1+
+     * default implementation is valid for jpa 2.1+
      * @return value of the property that represents <tt>create tables</tt> strategy.
      */
     public String getTableGenerationCreateValue(){
@@ -219,7 +222,7 @@ public abstract class Provider {
     }
     
     /**
-     * default inplementation is valid for jpa 2.1+
+     * default implementation is valid for jpa 2.1+
      * @return value of the property that represents <tt>create and drop tables</tt> strategy.
      */
     public String getTableGenerationDropCreateValue(){
@@ -227,12 +230,12 @@ public abstract class Provider {
     }
     
     /**
-     * @return Map<String, String> containing vendor specific properties.
+     * @return Map{@code <String, String>} containing vendor specific properties.
      */
     public abstract Map getUnresolvedVendorSpecificProperties();
     
     /**
-     * @return Map<String, String> containing vendor specific properties
+     * @return Map{@code <String, String>} containing vendor specific properties
      * which should be set on a new unit by default.
      */
     public abstract Map getDefaultVendorSpecificProperties();
@@ -247,7 +250,7 @@ public abstract class Provider {
      *  representing value of the property).
      */
     public final Map<String, String> getConnectionPropertiesMap(DatabaseConnection connection, String version){
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
         result.put(getJdbcDriver(), connection != null ? connection.getDriverClass() : "");
         result.put(getJdbcUrl(), connection != null ? connection.getDatabaseURL() : "");
         result.put(getJdbcUsername(), connection != null ? connection.getUser(): "");

@@ -27,6 +27,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.netbeans.modules.gradle.api.BuildPropertiesSupport;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
@@ -121,15 +122,16 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
                 default:
                     return null;
             }
-            if (base.getName()== null || propertyPath == null) {
+            if (base.getName()== null) {
                 return null;
             }
             Object id = base.getId();
             String path;
+            String suffix = propertyPath == null ? "" : "." + propertyPath; // NOI18N
             if (id == null) {
-                path = base.getName() + "." + propertyPath; // NOI18N
+                path = base.getName() + suffix; // NOI18N
             } else if (id instanceof String) {
-                path = id.toString() + "." + propertyPath; // NOI18N
+                path = id.toString() + suffix; // NOI18N
             } else {
                 return null;
             }
@@ -170,7 +172,7 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
             if (c == null) {
                 return null;
             }
-            return Arrays.asList(c.split(";;")).stream().map(s -> s.replaceAll("\\;", ";")).collect(Collectors.toList());
+            return Stream.of(c.split(";;")).map(s -> s.replace("\\;", ";")).collect(Collectors.toList());
         }
 
         @Override

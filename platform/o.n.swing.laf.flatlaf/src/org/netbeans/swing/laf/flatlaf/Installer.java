@@ -21,6 +21,8 @@ package org.netbeans.swing.laf.flatlaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import javax.swing.UIManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -29,7 +31,9 @@ import org.openide.util.*;
 
 @NbBundle.Messages({
     "LBL_FLATLAF_LIGHT=FlatLaf Light",
-    "LBL_FLATLAF_DARK=FlatLaf Dark"
+    "LBL_FLATLAF_DARK=FlatLaf Dark",
+    "LBL_FLATLAF_CUPERTINO_LIGHT=FlatLaf Cupertino Light",
+    "LBL_FLATLAF_CUPERTINO_DARK=FlatLaf Cupertino Dark"
 })
 public class Installer extends ModuleInstall {
 
@@ -37,6 +41,8 @@ public class Installer extends ModuleInstall {
     public void validate() throws IllegalStateException {
         UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_LIGHT(), FlatLightLaf.class.getName()));
         UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_DARK(), FlatDarkLaf.class.getName()));
+        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_CUPERTINO_LIGHT(), FlatMacLightLaf.class.getName()));
+        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_CUPERTINO_DARK(), FlatMacDarkLaf.class.getName()));
 
         // tell FlatLaf that it should look for .properties files in the given package
         FlatLaf.registerCustomDefaultsSource("org.netbeans.swing.laf.flatlaf", getClass().getClassLoader());

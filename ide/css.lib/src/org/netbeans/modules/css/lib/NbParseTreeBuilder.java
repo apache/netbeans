@@ -50,23 +50,24 @@ public class NbParseTreeBuilder extends BlankDebugEventListener {
     //automatically by ANTLR but we do not care about them since 
     //the error recovery implementation in syncToSet(...)
     //calls DBG.enter/exit/Rule("recovery") itself.
-    private String[] IGNORED_RULES = new String[]{"syncToDeclarationsRule", "syncToFollow"}; //!!! must be sorted alphabetically !!!
-    Stack<RuleNode> callStack = new Stack<>();
-    List<CommonToken> hiddenTokens = new ArrayList<>();
+    private static final String[] IGNORED_RULES = new String[]{"syncToDeclarationsRule", "syncToFollow"}; //!!! must be sorted alphabetically !!!
+    private static final String RECOVERY_RULE_NAME = "recovery";
+
+    private static boolean debug_tokens = false;
+
+    private final CharSequence source;
+    private final Stack<RuleNode> callStack = new Stack<>();
+    private final Stack<ErrorNode> errorNodes = new Stack<>();
+    private final List<CommonToken> hiddenTokens = new ArrayList<>();
+    private final Map<CommonToken, Pair<Node>> noViableAltNodes = new HashMap<>();
+    private final Collection<RuleNode> leafRuleNodes = new ArrayList<>();
+    private final Collection<ProblemDescription> problems = new LinkedHashSet<> ();
+
     private int backtracking = 0;
     private CommonToken lastConsumedToken;
-    private CharSequence source;
-    static boolean debug_tokens = false; //testing 
-    private Stack<ErrorNode> errorNodes = new Stack<>();
     private boolean resync;
     private CommonToken unexpectedToken;
 
-    private Map<CommonToken, Pair<Node>> noViableAltNodes = new HashMap<>();
-    private Collection<RuleNode> leafRuleNodes = new ArrayList<>();
-    
-    private static final String RECOVERY_RULE_NAME = "recovery";
-    private final Collection<ProblemDescription> problems = new LinkedHashSet<> ();
-    
     public NbParseTreeBuilder(CharSequence source) {
         this.source = source;
         callStack.push(new RootNode(source));
@@ -177,6 +178,7 @@ public class NbParseTreeBuilder extends BlankDebugEventListener {
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public void consumeToken(Token token) {
         if (backtracking > 0 || resync) {
             return;
@@ -211,6 +213,7 @@ public class NbParseTreeBuilder extends BlankDebugEventListener {
     }
 
     //set first token for all RuleNode-s in the stack without the first token set
+    @SuppressWarnings("AssignmentToMethodParameter")
     private void updateFirstTokens(RuleNode ruleNode, CommonToken token) {
         while (true) {
 
@@ -266,7 +269,8 @@ public class NbParseTreeBuilder extends BlankDebugEventListener {
 
         //special handling for EOF token - it has lenght == 1 !
         if(unexpectedTokenId == CssTokenId.EOF) {
-            from = to = CommonTokenUtil.getCommonTokenOffsetRange(unexpectedToken)[0]; 
+            from = CommonTokenUtil.getCommonTokenOffsetRange(unexpectedToken)[0];
+            to = from;
         } else {
             //normal tokens
             from = CommonTokenUtil.getCommonTokenOffsetRange(unexpectedToken)[0]; 
@@ -300,7 +304,7 @@ public class NbParseTreeBuilder extends BlankDebugEventListener {
             //error during predicate - the unexpected token may or may not be
             //reported later as an error. To handle this,
             //store the error node and the ruleNode where the error node should be added
-            noViableAltNodes.put(unexpectedToken, new Pair<Node>(ruleNode, errorNode));
+            noViableAltNodes.put(unexpectedToken, new Pair<>(ruleNode, errorNode));
             errorNodes.push(errorNode);
         } else {
             //possibly remove the unexpectedToken from the noViableAltNodes map
@@ -353,6 +357,7 @@ public class NbParseTreeBuilder extends BlankDebugEventListener {
     }
     
     //removes all empty rule nodes in the tree path from the given node to the parse tree root
+    @SuppressWarnings("AssignmentToMethodParameter")
     private void removeLeafRuleNodes(RuleNode node) {
         for(;;) {
             if(node.children().isEmpty()) {
@@ -387,6 +392,7 @@ public class NbParseTreeBuilder extends BlankDebugEventListener {
             }
     }
 
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public Collection<ProblemDescription> getProblems() {
         return problems;
     }
@@ -467,7 +473,7 @@ public class NbParseTreeBuilder extends BlankDebugEventListener {
     }
     
     private static class Pair<T> {
-        T n1, n2;
+        final T n1, n2;
         public Pair(T n1, T n2) {
             this.n1 = n1;
             this.n2 = n2;

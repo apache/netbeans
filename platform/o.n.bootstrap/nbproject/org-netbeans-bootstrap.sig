@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.95
+#Version 2.97
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -287,7 +287,7 @@ meth public static boolean isArchivePopulated()
 meth public static void saveArchive()
 meth public void destroy()
 supr org.netbeans.ProxyClassLoader
-hfds LOGGER,archive,cache,module,patchingBytecode,sources
+hfds BASE_VERSION,LOGGER,META_INF,MULTI_RELEASE,RUNTIME_VERSION,archive,cache,module,patchingBytecode,sources
 hcls DirSource,JarSource,JarURLStreamHandler,NbJarURLConnection,Source
 
 CLSS public final org.netbeans.JaveleonModule
@@ -456,8 +456,8 @@ meth public void releaseModuleManifests()
 meth public void reload(org.netbeans.Module) throws java.io.IOException
 meth public void replaceJaveleonModule(org.netbeans.Module,org.netbeans.Module)
 supr org.openide.modules.Modules
-hfds EMPTY_COLLECTION,MODULE_PROBLEMS_LOCK,MUTEX,MUTEX_PRIVILEGED,PRINT_TOPOLOGICAL_EXCEPTION_STACK_TRACES,PROBING_IN_PROCESS,bootstrapModules,changeSupport,classLoader,classLoaderLock,classLoaderPatches,completeLookup,ev,firer,fragmentModules,installer,lookup,mdc,moduleFactory,moduleProblemsWithNeeds,moduleProblemsWithoutNeeds,modules,modulesByName,netigso,providersOf,readOnly
-hcls CodeNameBaseComparator,ModuleDataCache,ProvidersOf,SystemClassLoader
+hfds EMPTY_COLLECTION,MODULE_PROBLEMS_LOCK,MUTEX,MUTEX_PRIVILEGED,PRINT_TOPOLOGICAL_EXCEPTION_STACK_TRACES,PROBING_IN_PROCESS,bootstrapModules,changeSupport,classLoader,classLoaderLock,classLoaderPatches,completeLookup,enableContext,ev,firer,fragmentModules,installer,lookup,mdc,moduleFactory,moduleProblemsWithNeeds,moduleProblemsWithoutNeeds,modules,modulesByName,netigso,providersOf,readOnly
+hcls CodeNameBaseComparator,EnableContext,ModuleDataCache,ProvidersOf,SystemClassLoader
 
 CLSS public final org.netbeans.NbClipboard
 cons public init()

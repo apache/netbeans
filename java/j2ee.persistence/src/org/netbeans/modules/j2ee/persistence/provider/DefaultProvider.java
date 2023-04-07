@@ -39,14 +39,17 @@ public class DefaultProvider extends Provider{
         super("javax.persistence.EntityManager");
     }
     
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(DefaultProvider.class, "LBL_DEFAULT_PROVIDER"); //NOI18N
     }
     
+    @Override
     public Map getUnresolvedVendorSpecificProperties() {
         return Collections.emptyMap();
     }
     
+    @Override
     public Map getDefaultVendorSpecificProperties() {
         return Collections.emptyMap();
     }

@@ -43,7 +43,7 @@ import org.openide.util.actions.CookieAction;
 
 /** Save a one or more objects. Since version 6.20 this handles ANY selection
  * instead of EXACTLY_ONE selection.
- * @see savable
+ * @see Savable
  * @see SaveCookie
  *
  * @author   Jan Jancura, Petr Hamernik, Ian Formanek, Dafe Simonek

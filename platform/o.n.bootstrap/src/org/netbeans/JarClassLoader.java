@@ -946,7 +946,8 @@ public class JarClassLoader extends ProxyClassLoader {
             super(BaseUtilities.toURI(file).toURL());
             dir = file;
         }
-        
+
+        @Override
         public Manifest getManifest() {
             Manifest mf = manifest;
             if (mf != null) {

@@ -362,7 +362,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         
                         pkSchema = rset.get(new Integer(2));
                         fkSchema = rset.get(new Integer(6));
-                        if ((pkSchema == fkSchema) || (pkSchema.equals(fkSchema))) {
+                        if (Objects.equals(pkSchema, fkSchema)) {
                             refTable = rset.get(new Integer(3));
                             if (! tables.contains(refTable))
                                 tables.add(refTable);
@@ -389,7 +389,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         if (fkSchema != null) {
                             fkSchema = fkSchema.trim();
                         }
-                        if ((pkSchema == fkSchema) || (pkSchema.equals(fkSchema))) {
+                        if (Objects.equals(pkSchema, fkSchema)) {
                             refTable = rs.getString("PKTABLE_NAME").trim(); //NOI18N
                             if (! tables.contains(refTable))
                                 tables.add(refTable);

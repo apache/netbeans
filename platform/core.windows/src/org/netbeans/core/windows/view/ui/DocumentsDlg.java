@@ -393,7 +393,8 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
         w.setVisible(false);
         w.dispose();
     }
-    
+
+    @Override
     public void addNotify () {
         explorer.addPropertyChangeListener(this);
         jButtonActivate.setEnabled(false);
@@ -401,7 +402,8 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
         jButtonSave.setEnabled(false);
         super.addNotify();
     }
-    
+
+    @Override
     public void removeNotify () {
         // save dialog size on click at [x] in titlebar
         Window dlg = SwingUtilities.getWindowAncestor(this);

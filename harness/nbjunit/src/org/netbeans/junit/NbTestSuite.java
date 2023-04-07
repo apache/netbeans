@@ -47,6 +47,7 @@ public class NbTestSuite extends TestSuite implements NbTest {
     /**
      * Constructs a TestSuite from the given class. Adds all the methods
      * starting with "test" as test cases to the suite.
+     * @param theClass the class to create tests for (from methods starting with test)
      *
      */
     public NbTestSuite(Class<? extends TestCase> theClass) {       
@@ -71,6 +72,7 @@ public class NbTestSuite extends TestSuite implements NbTest {
 
     /**
      * Constructs an empty TestSuite.
+     * @param name name of the test suite
      */
     public NbTestSuite(String name) {
         super(name);
@@ -153,6 +155,7 @@ public class NbTestSuite extends TestSuite implements NbTest {
      * @param clazz the class to create tests for (from methods starting with test)
      * @param slowness this must be true: slowness * min &lt; max
      * @param repeat number of times to repeat the test
+     * @return testsuite
      */
     public static NbTestSuite speedSuite (Class<? extends TestCase> clazz, int slowness, int repeat) {
         if (ignoreRandomFailures()) {
@@ -170,8 +173,9 @@ public class NbTestSuite extends TestSuite implements NbTest {
      * of GC and hotspot compiler.
      *
      * @param clazz the class to create tests for (from methods starting with test)
-     * @param slowness this must be true: slowness * min < max
+     * @param slowness this must be true: slowness * min &lt; max
      * @param repeat number of times to repeat the test
+     * @return testsuite
      */
     public static NbTestSuite linearSpeedSuite (Class<? extends TestCase> clazz, int slowness, int repeat) {
         if (ignoreRandomFailures()) {

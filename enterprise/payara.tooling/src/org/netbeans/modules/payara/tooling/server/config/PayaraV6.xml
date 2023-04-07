@@ -32,11 +32,13 @@ under the License.
         <platform version="16"/>
         <platform version="17"/>
     </java>
-    <javaee version="9.1.0">
+    <javaee version="10.0.0">
         <profile version="9.0.0" type="web"/>
         <profile version="9.0.0" type="full" check="full"/>
         <profile version="9.1.0" type="web"/>
         <profile version="9.1.0" type="full" check="full"/>
+        <profile version="10.0.0" type="web"/>
+        <profile version="10.0.0" type="full" check="full"/>
         <module type="war"/>
         <module type="car" check="full"/>
         <module type="ear" check="full"/>
@@ -86,7 +88,7 @@ under the License.
             </fileset>
         </classpath>
         <javadocs>
-            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/3.0.3/jersey-documentation-3.0.3-docbook.zip"/>
+            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/3.1.0/jersey-documentation-3.1.0-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>

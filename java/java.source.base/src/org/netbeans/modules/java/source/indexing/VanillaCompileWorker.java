@@ -26,11 +26,14 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
+import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
@@ -42,9 +45,12 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Kinds.Kind;
+import com.sun.tools.javac.code.Preview;
+import com.sun.tools.javac.code.Source.Feature;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.RecordComponent;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.SymbolMetadata;
 import com.sun.tools.javac.code.Symtab;
@@ -67,12 +73,15 @@ import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
+import com.sun.tools.javac.tree.JCTree.JCSwitch;
+import com.sun.tools.javac.tree.JCTree.JCSwitchExpression;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -342,6 +351,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     return;
                 }
                 dropMethodsAndErrors(jtFin.getContext(), env.toplevel, dc);
+                log.nerrors = 0;
             });
             final Future<Void> done = FileManagerTransaction.runConcurrent(new FileSystem.AtomicAction() {
                 @Override
@@ -536,6 +546,7 @@ final class VanillaCompileWorker extends CompileWorker {
         Types types = Types.instance(ctx);
         TreeMaker make = TreeMaker.instance(ctx);
         Elements el = JavacElements.instance(ctx);
+        Preview preview = Preview.instance(ctx);
         boolean hasMatchException = el.getTypeElement("java.lang.MatchException") != null;
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
@@ -718,6 +729,10 @@ final class VanillaCompileWorker extends CompileWorker {
                     ct.supertype_field = error2Object(ct.supertype_field);
                 }
                 clearAnnotations(clazz.sym.getMetadata());
+                for (RecordComponent rc : clazz.sym.getRecordComponents()) {
+                    rc.type = error2Object(rc.type);
+                    scan(rc.accessorMeth, p);
+                }
                 for (JCTree def : clazz.defs) {
                     boolean errorClass = isErroneousClass(def);
                     if (errorClass) {
@@ -891,8 +906,14 @@ final class VanillaCompileWorker extends CompileWorker {
             }
 
             @Override
+            public Void visitMemberReference(MemberReferenceTree node, Void p) {
+                JCMemberReference ref = (JCMemberReference) node;
+                ref.target = error2Object(ref.target);
+                return super.visitMemberReference(node, p);
+            }
+
+            @Override
             public Void visitBindingPattern(BindingPatternTree node, Void p) {
-                errorFound |= !hasMatchException;
                 return super.visitBindingPattern(node, p);
             }
 
@@ -900,6 +921,26 @@ final class VanillaCompileWorker extends CompileWorker {
             public Void visitDeconstructionPattern(DeconstructionPatternTree node, Void p) {
                 errorFound |= !hasMatchException;
                 return super.visitDeconstructionPattern(node, p);
+            }
+
+            @Override
+            public Void visitSwitch(SwitchTree node, Void p) {
+                JCSwitch swt = (JCSwitch) node;
+                handleSwitch(swt.patternSwitch);
+                return super.visitSwitch(node, p);
+            }
+
+            @Override
+            public Void visitSwitchExpression(SwitchExpressionTree node, Void p) {
+                JCSwitchExpression swt = (JCSwitchExpression) node;
+                handleSwitch(swt.patternSwitch);
+                return super.visitSwitchExpression(node, p);
+            }
+
+            private void handleSwitch(boolean patternSwitch) {
+                if (patternSwitch && !preview.isEnabled() && preview.isPreview(Feature.PATTERN_SWITCH)) {
+                    errorFound = true;
+                }
             }
 
             @Override
@@ -978,6 +1019,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     return null;
 
                 if (isErroneous(t)) {
+                    errorFound = true;
                     return syms.objectType;
                 }
 

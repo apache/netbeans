@@ -49,7 +49,6 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.code.Kinds;
 import com.sun.tools.javac.code.Scope.NamedImportScope;
 import com.sun.tools.javac.code.Scope.StarImportScope;
 import com.sun.tools.javac.code.Symbol;
@@ -61,19 +60,10 @@ import com.sun.tools.javac.comp.Check;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.InterruptedIOException;
-import java.io.Reader;
 import java.util.function.Predicate;
 import javax.lang.model.util.ElementScanner14;
 
 import javax.swing.SwingUtilities;
-import javax.swing.text.ChangedCharSetException;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.parser.ParserDelegator;
 import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.Diagnostic;
@@ -81,16 +71,13 @@ import javax.tools.JavaFileObject;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.lexer.JavaTokenId;
-import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.queries.JavadocForBinaryQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
-import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.matching.Matcher;
@@ -125,7 +112,6 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
@@ -161,7 +147,7 @@ public class SourceUtils {
         }
         return null;
     }
-    
+
     /**
      * Find duplicates for provided expression
      * @param info CompilationInfo
@@ -173,14 +159,14 @@ public class SourceUtils {
      */
     public static Set<TreePath> computeDuplicates(CompilationInfo info, TreePath searchingFor, TreePath scope, AtomicBoolean cancel) {
         Set<TreePath> result = new HashSet<>();
-        
+
         for (Occurrence od : Matcher.create(info).setCancel(cancel).setSearchRoot(scope).match(Pattern.createSimplePattern(searchingFor))) {
             result.add(od.getOccurrenceRoot());
         }
 
         return result;
-    }    
-    
+    }
+
     public static boolean checkTypesAssignable(CompilationInfo info, TypeMirror from, TypeMirror to) {
         Context c = ((JavacTaskImpl) info.impl.getJavacTask()).getContext();
         if (from.getKind() == TypeKind.TYPEVAR) {
@@ -194,7 +180,7 @@ public class SourceUtils {
         }
         return Check.instance(c).checkType(null, (Type)from, (Type)to).getKind() != TypeKind.ERROR;
     }
-    
+
     public static TypeMirror getBound(WildcardType wildcardType) {
         Type.TypeVar bound = ((Type.WildcardType)wildcardType).bound;
         return bound != null ? bound.getUpperBound() : null;
@@ -203,14 +189,14 @@ public class SourceUtils {
     /**
      * Returns a list of completions for an annotation attribute value suggested by
      * annotation processors.
-     * 
+     *
      * @param info the CompilationInfo used to resolve annotation processors
      * @param element the element being annotated
      * @param annotation the (perhaps partial) annotation being applied to the element
      * @param member the annotation member to return possible completions for
      * @param userText source code text to be completed
      * @return suggested completions to the annotation member
-     * 
+     *
      * @since 0.57
      */
     public static List<? extends Completion> getAttributeValueCompletions(CompilationInfo info, Element element, AnnotationMirror annotation, ExecutableElement member, String userText) {
@@ -266,21 +252,42 @@ public class SourceUtils {
     public static @Deprecated TypeElement getEnclosingTypeElement( Element element ) throws IllegalArgumentException {
         return ElementUtilities.enclosingTypeElementImpl(element);
     }
-    
+
     public static TypeElement getOutermostEnclosingTypeElement( Element element ) {
-	
+
 	Element ec =  getEnclosingTypeElement( element );
 	if (ec == null) {
 	    ec = element;
 	}
-	
-	while( ec.getEnclosingElement().getKind().isClass() || 
+
+	while( ec.getEnclosingElement().getKind().isClass() ||
 	       ec.getEnclosingElement().getKind().isInterface() ) {
-	
+
 	    ec = ec.getEnclosingElement();
 	}
-		
+
 	return (TypeElement)ec;
+    }
+
+    /** Finds a source name that the {@code element} originates from. In case
+     * of {@code element} being created via {@link JavaSource#forFileObject(org.openide.filesystems.FileObject) source file}
+     * it should be the name (without any path) of the source file. For elements
+     * originating from {@code .class} file the returned value corresponds to
+     * the value of {@code SourceFile} attribute, if present.
+     *
+     * @param element element of a source file
+     * @return the (short) name of source file that this elements originates
+     *    from or {@code null}, if the name isn't known
+     * @since 2.60
+     */
+    public static String findSourceFileName(Element element) {
+        if (element instanceof ClassSymbol) {
+            ClassSymbol s = (ClassSymbol) element;
+            if (s.sourcefile != null) {
+                return s.sourcefile.getName();
+            }
+        }
+        return null;
     }
 
     /**
@@ -305,11 +312,11 @@ public class SourceUtils {
     /**Resolve full qualified name in the given context. Adds import statement as necessary.
      * Returns name that resolved to a given FQN in given context (either simple name
      * or full qualified name). Handles import conflicts.
-     * 
+     *
      * <br><b>Note:</b> if the <code>info</code> passed to this method is not an instance of {@link WorkingCopy},
      * missing import statement is added from a separate modification task executed asynchronously.
      * <br><b>Note:</b> after calling this method, it is not permitted to rewrite copy.getCompilationUnit().
-     * 
+     *
      * @param info CompilationInfo over which the method should work
      * @param context in which the fully qualified should be resolved
      * @param fqn the fully qualified name to resolve
@@ -325,7 +332,7 @@ public class SourceUtils {
         if (fqn == null) {
             throw new NullPointerException();
         }
-        
+
         CodeStyle cs = DiffContext.getCodeStyle(info);
         if (cs.useFQNs()) {
             return fqn;
@@ -399,7 +406,7 @@ public class SourceUtils {
         if (clashing || toImport == null) {
             return fqn;
         }
-        
+
         //not imported/visible so far by any means:
         String topLevelLanguageMIMEType = info.getFileObject().getMIMEType();
         if ("text/x-java".equals(topLevelLanguageMIMEType)){ //NOI18N
@@ -465,24 +472,25 @@ public class SourceUtils {
             for (ImportProcessor importsProcesor : instances) {
                 importsProcesor.addImport(info.getDocument(), fqn);
             }
-            
+
         }
         return sqName.toString();
     }
-    
+
     /**
      * Returns a {@link FileObject} in which the Element is defined.
      * @param element for which the {@link FileObject} should be located
      * @param cpInfo the classpaths context
      * @return the defining {@link FileObject} or null if it cannot be
      * found
-     * 
-     * @deprecated use {@link getFile(ElementHandle, ClasspathInfo)}
+     *
+     * @deprecated use {@link #getFile(ElementHandle, ClasspathInfo)}
      */
+    @Deprecated
     public static FileObject getFile (Element element, final ClasspathInfo cpInfo) {
         Parameters.notNull("element", element); //NOI18N
         Parameters.notNull("cpInfo", cpInfo);   //NOI18N
-        
+
         Element prev = isPkgOrMdl(element.getKind()) ? element : null;
         while (!isPkgOrMdl(element.getKind())) {
             prev = element;
@@ -491,11 +499,11 @@ public class SourceUtils {
         final ElementKind kind = prev.getKind();
         if (!(kind.isClass() || kind.isInterface() || isPkgOrMdl(kind))) {
             return null;
-        }        
+        }
         final ElementHandle<? extends Element> handle = ElementHandle.create(prev);
-        return getFile (handle, cpInfo);
+        return getFile (handle, cpInfo, null);
     }
-    
+
     /**
      * Returns a {@link FileObject} of the source file in which the handle is declared.
      * @param handle to find the {@link FileObject} for
@@ -503,17 +511,29 @@ public class SourceUtils {
      * @return {@link FileObject} or null when the source file cannot be found
      */
     public static FileObject getFile (final ElementHandle<? extends Element> handle, final ClasspathInfo cpInfo) {
+      return getFile(handle, cpInfo, new String[0]);
+    }
+
+    /**
+     * Returns a {@link FileObject} of the source file in which the handle is declared.
+     * @param handle to find the {@link FileObject} for
+     * @param cpInfo classpaths for resolving handle
+     * @param names suggested file names
+     * @return {@link FileObject} or null when the source file cannot be found
+     * @since 2.60
+     */
+    public static FileObject getFile (final ElementHandle<? extends Element> handle, final ClasspathInfo cpInfo, String... names) {
         Parameters.notNull("handle", handle);
-        Parameters.notNull("cpInfo", cpInfo);        
+        Parameters.notNull("cpInfo", cpInfo);
         try {
             boolean pkg = handle.getKind() == ElementKind.PACKAGE;
             String[] signature = handle.getSignature();
             assert signature.length >= 1;
-            final ClassPath[] cps = 
+            final ClassPath[] cps =
                 new ClassPath[] {
                     cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE),
                     createClassPath(cpInfo,ClasspathInfo.PathKind.OUTPUT),
-                    createClassPath(cpInfo,ClasspathInfo.PathKind.BOOT),                    
+                    createClassPath(cpInfo,ClasspathInfo.PathKind.BOOT),
                     createClassPath(cpInfo,ClasspathInfo.PathKind.COMPILE),
                 };
             String pkgName, className = null;
@@ -536,7 +556,7 @@ public class SourceUtils {
                     JavaFileObject jfo = fm.getJavaFileForInput(loc, className, JavaFileObject.Kind.CLASS);
                     FileObject fo = jfo != null ? URLMapper.findFileObject(jfo.toUri().toURL()) : null;
                     if (fo != null) {
-                        FileObject foundFo = findSourceForBinary(fo.getParent(), fo, signature[0], pkgName, className, false);
+                        FileObject foundFo = findSourceForBinary(fo.getParent(), fo, signature[0], pkgName, className, false, names);
                         if (foundFo != null) {
                             return foundFo;
                         }
@@ -555,12 +575,12 @@ public class SourceUtils {
                 }
             }
             final List<Pair<FileObject,ClassPath>> fos = findAllResources(pkgName, filter, cps);
-            for (Pair<FileObject,ClassPath> pair : fos) {                
+            for (Pair<FileObject,ClassPath> pair : fos) {
                 FileObject root = pair.second().findOwnerRoot(pair.first());
                 if (root == null) {
                     continue;
                 }
-                FileObject foundFo = findSourceForBinary(root, pair.first(), signature[0], pkgName, className, pkg);
+                FileObject foundFo = findSourceForBinary(root, pair.first(), signature[0], pkgName, className, pkg, names);
                 if (foundFo != null) {
                     return foundFo;
                 }
@@ -568,21 +588,25 @@ public class SourceUtils {
         } catch (IOException e) {
             Exceptions.printStackTrace(e);
         }
-        return null;        
+        return null;
     }
 
-    private static FileObject findSourceForBinary(FileObject binaryRoot, FileObject binary, String signature, String pkgName, String className, boolean isPkg) throws IOException {
-        FileObject[] sourceRoots = SourceForBinaryQuery.findSourceRoots(binaryRoot.toURL()).getRoots();                        
+    private static FileObject findSourceForBinary(FileObject binaryRoot, FileObject binary, String signature, String pkgName, String className, boolean isPkg, String[] names) throws IOException {
+        FileObject[] sourceRoots = SourceForBinaryQuery.findSourceRoots(binaryRoot.toURL()).getRoots();
         ClassPath sourcePath = ClassPathSupport.createClassPath(sourceRoots);
         LinkedList<FileObject> folders = new LinkedList<>(sourcePath.findAllResources(pkgName));
         if (isPkg) {
             return folders.isEmpty() ? binary : folders.get(0);
         }
         final boolean caseSensitive = isCaseSensitive ();
-        final Object fnames = getSourceFileNames(className);
+        final List<String> fnames = new ArrayList<>();
+        fnames.addAll(getSourceFileNames(className));
+        if (names != null) {
+            fnames.addAll(Arrays.asList(names));
+        }
         folders.addFirst(binary);
-        if (fnames instanceof String) {
-            FileObject match = findMatchingChild((String)fnames, folders, caseSensitive);
+        if (fnames.size() == 1) {
+            FileObject match = findMatchingChild(fnames.get(0), folders, caseSensitive);
             if (match != null) {
                 return match;
             }
@@ -600,7 +624,7 @@ public class SourceUtils {
         }
         return sourceRoots.length == 0 ? findSource(signature,binaryRoot) : findSource(signature,sourceRoots);
     }
-    
+
     private static FileObject findMatchingChild(String sourceFileName, Collection<FileObject> folders, boolean caseSensitive) {
         final Match matchSet = caseSensitive ? new CaseSensitiveMatch(sourceFileName) : new CaseInsensitiveMatch(sourceFileName);
         for (FileObject folder : folders) {
@@ -612,7 +636,7 @@ public class SourceUtils {
         }
         return null;
     }
-    
+
     @NonNull
     private static List<Pair<FileObject, ClassPath>> findAllResources(
             @NonNull final String resourceName,
@@ -660,6 +684,9 @@ public class SourceUtils {
         }
 
         final boolean apply(final FileObject fo) {
+            if (fo.getNameExt().equals(name)) {
+                return true;
+            }
             final String foName = fo.getName();
             return match(foName,name) && isJava(fo);
         }
@@ -694,9 +721,9 @@ public class SourceUtils {
             return name1.equalsIgnoreCase(name2);
         }
     }
-    
+
     /**
-     * Finds {@link URL} of a javadoc page for given element when available. This method 
+     * Finds {@link URL} of a javadoc page for given element when available. This method
      * uses {@link JavadocForBinaryQuery} to find the javadoc page for the give element.
      * For {@link PackageElement} it returns the package-summary.html for given package.
      * @param element to find the Javadoc for
@@ -706,7 +733,7 @@ public class SourceUtils {
      * or {@link SourceUtils#getPreferredJavadoc(javax.lang.model.element.Element)}
      */
     @Deprecated
-    public static URL getJavadoc (final Element element, final ClasspathInfo cpInfo) {      
+    public static URL getJavadoc (final Element element, final ClasspathInfo cpInfo) {
         final Collection<? extends URL> res = getJavadoc(element);
         return res.isEmpty() ?
             null :
@@ -735,7 +762,7 @@ public class SourceUtils {
      * Finds {@link URL}s of a javadoc page for given element when available. This method
      * uses {@link JavadocForBinaryQuery} to find the javadoc page for the give element.
      * For {@link PackageElement} it returns the package-summary.html for given package.
-     * Due to the https://bugs.openjdk.java.net/browse/JDK-8025633 there are more possible 
+     * Due to the https://bugs.openjdk.java.net/browse/JDK-8025633 there are more possible
      * URLs for {@link ExecutableElement}s, this method returns all of them.
      * @param element to find the Javadoc for
      * @return the URLs of the javadoc page or an empty collection when the javadoc is not available.
@@ -753,7 +780,7 @@ public class SourceUtils {
             return page.getLocations();
         }
     }
-    
+
     /**
      * Tests whether the initial scan is in progress.
      */
@@ -762,11 +789,12 @@ public class SourceUtils {
     }
 
     /**
-     * Waits for the end of the initial scan, this helper method 
+     * Waits for the end of the initial scan, this helper method
      * is designed for tests which require to wait for end of initial scan.
      * @throws InterruptedException is thrown when the waiting thread is interrupted.
      * @deprecated use {@link JavaSource#runWhenScanFinished}
      */
+    @Deprecated
     public static void waitScanFinished () throws InterruptedException {
         try {
             class T extends UserTask implements ClasspathInfoProvider {
@@ -789,8 +817,8 @@ public class SourceUtils {
         } catch (Exception ex) {
         }
     }
-    
-    
+
+
     /**
      * Returns the dependent source path roots for given source root.
      * It returns all the open project source roots which have either
@@ -805,7 +833,7 @@ public class SourceUtils {
     public static Set<URL> getDependentRoots (@NonNull final URL root) {
         return getDependentRoots(root, true);
     }
-    
+
     /**
      * Returns the dependent source path roots for given source root. It returns
      * all the source roots which have either direct or transitive dependency on
@@ -830,7 +858,7 @@ public class SourceUtils {
             return Collections.<URL>singleton(root);
         }
     }
-        
+
     //Helper methods
 
     /**
@@ -857,13 +885,13 @@ public class SourceUtils {
         if (fo.isVirtual()) {
             throw new IllegalArgumentException ("FileObject : " + FileUtil.getFileDisplayName(fo) + " is virtual.");  //NOI18N
         }
-        final JavaSource js = JavaSource.forFileObject(fo);        
+        final JavaSource js = JavaSource.forFileObject(fo);
         if (js == null) {
             throw new IllegalArgumentException ();
         }
         try {
             final LinkedHashSet<ElementHandle<TypeElement>> result = new LinkedHashSet<> ();
-            js.runUserActionTask(new Task<CompilationController>() {            
+            js.runUserActionTask(new Task<CompilationController>() {
                 @Override
                 public void run(final CompilationController control) throws Exception {
                     if (control.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED).compareTo (JavaSource.Phase.ELEMENTS_RESOLVED)>=0) {
@@ -890,16 +918,16 @@ public class SourceUtils {
                             }
                         }
                     }
-                }                
+                }
 
             }, true);
             return result;
         } catch (IOException ioe) {
             Exceptions.printStackTrace(ioe);
             return Collections.<ElementHandle<TypeElement>>emptySet();
-        }		
+        }
     }
-    
+
     /**
      * Returns true when the class contains main method.
      * @param qualifiedName the fully qualified name of class
@@ -909,7 +937,7 @@ public class SourceUtils {
     public static boolean isMainClass (final String qualifiedName, ClasspathInfo cpInfo) {
         return isMainClass(qualifiedName, cpInfo, false);
     }
-    
+
     /**
      * Returns true when the class contains main method.
      * @param qualifiedName the fully qualified name of class
@@ -951,7 +979,7 @@ public class SourceUtils {
                 LOG.log(Level.INFO, "Ignoring fast check for root: {0} due to: {1}", new Object[]{entry.getURL().toString(), e.getMessage()}); //NOI18N
             }
         }
-        
+
         final boolean[] result = new boolean[]{false};
         if (!optimistic) {
             //Slow path fallback - for main in libraries
@@ -983,7 +1011,7 @@ public class SourceUtils {
         }
         return result[0];
     }
-    
+
     /**
      * Returns true if the method is a main method
      * @param method to be checked
@@ -1015,7 +1043,7 @@ public class SourceUtils {
         }
         return "java.lang.String".contentEquals(((TypeElement)((DeclaredType)compound).asElement()).getQualifiedName());   //NOI18N
     }
-    
+
     /**
      * Returns classes declared under the given source roots which have the main method.
      * @param sourceRoots the source roots
@@ -1079,7 +1107,7 @@ public class SourceUtils {
     }
 
     private static boolean isIncluded (final ElementHandle<TypeElement> element, final ClasspathInfo cpInfo) {
-        FileObject fobj = getFile (element,cpInfo);
+        FileObject fobj = getFile(element,cpInfo);
         if (fobj == null) {
             //Not source
             return true;
@@ -1093,20 +1121,20 @@ public class SourceUtils {
         }
         return true;
     }
-    
+
     private static boolean isCaseSensitive () {
         return ! new File ("a").equals (new File ("A"));    //NOI18N
     }
-    
+
     /**
-     * Returns candidate filenames given a classname. The return value is either 
+     * Returns candidate filenames given a classname. The return value is either
      * a String (top-level class, no $) or List&lt;String> as the JLS permits $ in
-     * class names. 
+     * class names.
      */
-    private static Object getSourceFileNames (String classFileName) {
+    private static List<String> getSourceFileNames(String classFileName) {
         int index = classFileName.lastIndexOf('$');
         if (index == -1) {
-            return classFileName;
+            return Collections.singletonList(classFileName);
         }
         List<String> ll = new ArrayList<>(3);
         ll.add(classFileName);
@@ -1116,18 +1144,18 @@ public class SourceUtils {
         }
         return ll;
     }
-        
+
     /**
      * Resolves all captured type variables to their respective wildcards in the given type.
      * @param info CompilationInfo over which the method should work
      * @param tm type to resolve
      * @return resolved type
-     * 
+     *
      * @since 0.136
      */
     public static TypeMirror resolveCapturedType(CompilationInfo info, TypeMirror tm) {
         TypeMirror type = resolveCapturedTypeInt(info, tm);
-        
+
         if (type.getKind() == TypeKind.WILDCARD) {
             TypeMirror tmirr = ((WildcardType) type).getExtendsBound();
             tmirr = tmirr != null ? tmirr : ((WildcardType) type).getSuperBound();
@@ -1137,23 +1165,23 @@ public class SourceUtils {
                 TypeElement tel = info.getElements().getTypeElement("java.lang.Object"); // NOI18N
                 return tel == null ? null : tel.asType();
             }
-                
+
         }
-        
+
         return type;
     }
-    
+
     private static TypeMirror resolveCapturedTypeInt(CompilationInfo info, TypeMirror tm) {
         if (tm == null) {
             return tm;
         }
-        
+
         TypeMirror orig = resolveCapturedType(tm);
 
         if (orig != null) {
             tm = orig;
         }
-        
+
         if (tm.getKind() == TypeKind.WILDCARD) {
             TypeMirror extendsBound = ((WildcardType) tm).getExtendsBound();
             TypeMirror rct = resolveCapturedTypeInt(info, extendsBound != null ? extendsBound : ((WildcardType) tm).getSuperBound());
@@ -1161,20 +1189,20 @@ public class SourceUtils {
                 return rct.getKind() == TypeKind.WILDCARD ? rct : info.getTypes().getWildcardType(extendsBound != null ? rct : null, extendsBound == null ? rct : null);
             }
         }
-        
+
         if (tm.getKind() == TypeKind.DECLARED) {
             DeclaredType dt = (DeclaredType) tm;
             TypeElement el = (TypeElement) dt.asElement();
             if (((DeclaredType)el.asType()).getTypeArguments().size() != dt.getTypeArguments().size()) {
                 return info.getTypes().getDeclaredType(el);
             }
-            
+
             List<TypeMirror> typeArguments = new LinkedList<>();
-            
+
             for (TypeMirror t : dt.getTypeArguments()) {
                 typeArguments.add(resolveCapturedTypeInt(info, t));
             }
-            
+
             final TypeMirror enclosingType = dt.getEnclosingType();
             if (enclosingType.getKind() == TypeKind.DECLARED) {
                 return info.getTypes().getDeclaredType((DeclaredType) enclosingType, el, typeArguments.toArray(new TypeMirror[0]));
@@ -1196,7 +1224,7 @@ public class SourceUtils {
                     return info.getTypes().getArrayType(componentType);
             }
         }
-        
+
         return tm;
     }
     /**
@@ -1209,7 +1237,7 @@ public class SourceUtils {
             return null;
         }
     }
-    
+
     /**
      * Returns all elements of the given scope that are declared after given position in a source.
      * @param path to the given search scope
@@ -1217,13 +1245,13 @@ public class SourceUtils {
      * @param sourcePositions
      * @param trees
      * @return collection of forward references
-     * 
+     *
      * @since 0.136
      */
     public static Collection<? extends Element> getForwardReferences(TreePath path, int pos, SourcePositions sourcePositions, Trees trees) {
         HashSet<Element> refs = new HashSet<>();
         Element el;
-        
+
         while(path != null) {
             switch(path.getLeaf().getKind()) {
                 case VARIABLE:
@@ -1252,17 +1280,17 @@ public class SourceUtils {
                         if (el != null) {
                             refs.add(el);
                         }
-                    }                        
+                    }
             }
             path = path.getParentPath();
         }
         return refs;
     }
-    
+
     /**
      * Returns names of all modules within given scope.
      * @param info the CompilationInfo used to resolve modules
-     * @param scope to search in {@see SearchScope}
+     * @param scope to search in {@link ClassIndex.SearchScope}
      * @return set of module names
      * @since 2.23
      */
@@ -1333,9 +1361,9 @@ public class SourceUtils {
 
     // --------------- Helper methods of getFile () -----------------------------
     private static ClassPath createClassPath (ClasspathInfo cpInfo, PathKind kind) throws MalformedURLException {
-	return ClasspathInfoAccessor.getINSTANCE().getCachedClassPath(cpInfo, kind);	
-    }    
-    
+	return ClasspathInfoAccessor.getINSTANCE().getCachedClassPath(cpInfo, kind);
+    }
+
     // --------------- End of getFile () helper methods ------------------------------
 
     @NonNull

@@ -28,11 +28,15 @@ import javax.swing.JFrame;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.source.BuildArtifactMapper;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.Constants;
+import org.netbeans.modules.maven.execute.ActionToGoalUtils;
 import org.netbeans.modules.maven.execute.BeanRunConfig;
 import org.netbeans.modules.maven.execute.MavenCommandLineExecutor;
 import org.netbeans.spi.project.AuxiliaryProperties;
+import org.netbeans.spi.project.ProjectConfiguration;
 import org.openide.execution.ExecutorTask;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
 
@@ -98,6 +102,27 @@ public final class RunUtils {
     public static ExecutorTask executeMaven(final RunConfig config) {
         return MavenCommandLineExecutor.executeMaven(config, null, null);
     }
+    
+    /**
+     * Creates a {@link RunConfig} for the specified project action. Project configuration to be used can be also specified, which 
+     * affects potentially the action's mapping and/or properties. If {@code null} is passed, the current/active configuration is used.
+     * If applied on non-Maven project, the method returns {@code null}, as well as if the requested action does not exist in the project
+     * or its requested (or active) configuration.
+     * 
+     * @param action project action name
+     * @param prj the project
+     * @param c the configuration to use, use {@code null} for the active one.
+     * @param lookup lookup that becomes available to the action provider for possible further data / options
+     * @return configured {@link RunConfig} suitable for execution or {@code null} if the project is not maven, or action is unavailable.
+     * @since 2.157
+     */
+    public static RunConfig createRunConfig(String action, Project prj, ProjectConfiguration c, Lookup lookup) {
+        NbMavenProjectImpl impl = prj.getLookup().lookup(NbMavenProjectImpl.class);
+        if (impl == null) {
+            return null;
+        }
+        return ActionToGoalUtils.createRunConfig(action, impl, c, lookup);
+    }
 
     public static RunConfig createRunConfig(File execDir, Project prj, String displayName, List<String> goals)
     {
@@ -148,7 +173,7 @@ public final class RunUtils {
     
     /**
      *
-     * @param project
+     * @param prj
      * @return true if compile on save is allowed for running the application.
      */
     @Deprecated
@@ -187,7 +212,7 @@ public final class RunUtils {
 
     /**
      *
-     * @param project
+     * @param prj
      * @return true if compile on save is allowed for running tests.
      */
     @Deprecated

@@ -153,6 +153,9 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
             if (Profile.JAKARTA_EE_9_1_FULL.equals(pomProfile)) {
                 return Profile.JAKARTA_EE_9_1_WEB;
             }
+            if (Profile.JAKARTA_EE_10_FULL.equals(pomProfile)) {
+                return Profile.JAKARTA_EE_10_WEB;
+            }
             return pomProfile;
         }
 
@@ -189,6 +192,9 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
                 }
                 if (WebApp.VERSION_5_0.equals(waVersion)) {
                     return Profile.JAKARTA_EE_9_WEB;
+                }
+                if (WebApp.VERSION_6_0.equals(waVersion)) {
+                    return Profile.JAKARTA_EE_10_WEB;
                 }
             } catch (IOException exc) {
                 ErrorManager.getDefault().notify(exc);
@@ -230,6 +236,8 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
         List<DependencyDesc> jakartaEE9Full = new ArrayList<>();
         List<DependencyDesc> jakartaEE91Web = new ArrayList<>();
         List<DependencyDesc> jakartaEE91Full = new ArrayList<>();
+        List<DependencyDesc> jakartaEE10Web = new ArrayList<>();
+        List<DependencyDesc> jakartaEE10Full = new ArrayList<>();
 
         // Java EE specification
         javaEE5.add(new DependencyDesc("javaee", "javaee-api", "5.0"));
@@ -246,6 +254,8 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
         jakartaEE9Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","9.0.0"));
         jakartaEE91Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","9.1.0"));
         jakartaEE91Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","9.1.0"));
+        jakartaEE10Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","10.0.0"));
+        jakartaEE10Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","10.0.0"));
 
         // GlassFish implementations
         javaEE5.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "2"));
@@ -262,6 +272,8 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
         jakartaEE9Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "6.0.0"));
         jakartaEE91Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "6.2.5"));
         jakartaEE91Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "6.2.5"));
+        jakartaEE10Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "7.0.0-M4"));
+        jakartaEE10Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "7.0.0-M4"));
         
 
         // WebLogic implementations
@@ -297,6 +309,8 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
         javaEEMap.put(Profile.JAKARTA_EE_9_FULL, jakartaEE9Full);
         javaEEMap.put(Profile.JAKARTA_EE_9_1_WEB, jakartaEE91Web);
         javaEEMap.put(Profile.JAKARTA_EE_9_1_FULL, jakartaEE91Full);
+        javaEEMap.put(Profile.JAKARTA_EE_10_WEB, jakartaEE10Web);
+        javaEEMap.put(Profile.JAKARTA_EE_10_FULL, jakartaEE10Full);
     }
 
     private static class DependencyDesc {

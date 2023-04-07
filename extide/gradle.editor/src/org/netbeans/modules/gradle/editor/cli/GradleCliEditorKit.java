@@ -19,13 +19,15 @@
 
 package org.netbeans.modules.gradle.editor.cli;
 
+import javax.swing.text.EditorKit;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.editor.NbEditorKit;
 
 /**
  *
  * @author lkishalmi
  */
-
+@MimeRegistration(mimeType = GradleCliEditorKit.MIME_TYPE, service = EditorKit.class)
 public class GradleCliEditorKit extends NbEditorKit {
 
     public static final String MIME_TYPE = "text/x-gradle-cli"; //NOI18N

@@ -181,11 +181,13 @@ public class InplaceEditorNoModifyOnTextChangeContractStringEditorTest extends N
         public void attachEnv(PropertyEnv env) {
             this.env = env;
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }

@@ -34,7 +34,6 @@ class HostPropertyProcessor extends PropertyProcessor {
     }
     
     void processPropertyImpl(String propertyName, Object value) {
-        StringBuffer sb = new StringBuffer();
         if ("hostProperty".equals(propertyName)) {//NOI18N
             List l = ((SerParser.ObjectWrapper)value).data;
             for (Iterator it = l.iterator(); it.hasNext();) {

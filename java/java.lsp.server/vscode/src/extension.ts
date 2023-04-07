@@ -134,7 +134,7 @@ export function findClusters(myPath : string): string[] {
 // for tests only !
 export function awaitClient() : Promise<NbLanguageClient> {
     const c : Promise<NbLanguageClient> = client;
-    if (c) {
+    if (c && !(c instanceof InitialPromise)) {
         return c;
     }
     let nbcode = vscode.extensions.getExtension('asf.apache-netbeans-java');
@@ -142,7 +142,7 @@ export function awaitClient() : Promise<NbLanguageClient> {
         return Promise.reject(new Error("Extension not installed."));
     }
     const t : Thenable<NbLanguageClient> = nbcode.activate().then(nc => {
-        if (client === undefined) {
+        if (client === undefined || client instanceof InitialPromise) {
             throw new Error("Client not available");
         } else {
             return client;
@@ -292,16 +292,63 @@ function wrapCommandWithProgress(lsCommand : string, title : string, log? : vsco
     });
 }
 
+/**
+ * Just a simple promise subclass, so I can test for the 'initial promise' value:
+ * unlike all other promises, that must be fullfilled in order to e.g. properly stop the server or otherwise communicate with it,
+ * the initial one needs to be largely ignored in the launching/mgmt code, BUT should be available to normal commands / features.
+ */
+class InitialPromise extends Promise<NbLanguageClient> {
+    constructor(f : (resolve: (value: NbLanguageClient | PromiseLike<NbLanguageClient>) => void, reject: (reason?: any) => void) => void) {
+        super(f);
+    }
+}
+
+/**
+ * Determines the outcome, if there's a conflict betwee RH Java and us: disable java, enable java, ask the user.
+ * @returns false, if java should be disablde; true, if enabled. Undefined if no config is present, ask the user
+ */
+function shouldEnableConflictingJavaSupport() : boolean | undefined {
+    // backwards compatibility; remove in NBLS 19
+    if (vscode.extensions.getExtension('oracle-labs-graalvm.gcn')) {
+        return false;
+    }
+    let r = undefined;
+    for (const ext of vscode.extensions.all) {
+        const services = ext.packageJSON?.contributes && ext.packageJSON?.contributes['netbeans.options'];
+        if (!services) {
+            continue;
+        }
+        if (services['javaSupport.conflict'] !== undefined) {
+            const v = !!services['javaSupport.conflict'];
+            if (!v) {
+                // request to disable wins.
+                return false;
+            }
+            r = v;
+        }
+    }
+    return r;
+}
+
 export function activate(context: ExtensionContext): VSNetBeansAPI {
     let log = vscode.window.createOutputChannel("Apache NetBeans Language Server");
+
+    var clientResolve : (x : NbLanguageClient) => void;
+    var clientReject : (err : any) => void;
+
+    // establish a waitable Promise, export the callbacks so they can be called after activation.
+    client = new InitialPromise((resolve, reject) => {
+        clientResolve = resolve;
+        clientReject = reject;
+    });
 
     function checkConflict(): void {
         let conf = workspace.getConfiguration();
         if (conf.get("netbeans.conflict.check") && conf.get("netbeans.javaSupport.enabled")) {
-            const id = 'redhat.java';
-            let e = vscode.extensions.getExtension(id);
-            if (e && workspace.name) {
-                if (vscode.extensions.getExtension('oracle-labs-graalvm.gcn')) {
+            const e : boolean | undefined = shouldEnableConflictingJavaSupport();
+            if (!e && vscode.extensions.getExtension('redhat.java')) {
+                if (e === false) {
+                    // do not ask, an extension wants us to disable on conflict
                     conf.update("netbeans.javaSupport.enabled", false, true);
                 } else {
                     const DISABLE_EXTENSION = `Manually disable extension`;
@@ -327,10 +374,10 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             const newClusters = findClusters(context.extensionPath).sort();
             if (newClusters.length !== currentClusters.length || newClusters.find((value, index) => value !== currentClusters[index])) {
                 currentClusters = newClusters;
-                activateWithJDK(specifiedJDK, context, log, true);
+                activateWithJDK(specifiedJDK, context, log, true, clientResolve, clientReject);
             }
         }));
-        activateWithJDK(specifiedJDK, context, log, true);
+        activateWithJDK(specifiedJDK, context, log, true, clientResolve, clientReject);
     });
 
     //register debugger:
@@ -357,6 +404,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     initializeRunConfiguration().then(initialized => {
 		if (initialized) {
 			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', runConfigurationProvider));
+			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java', runConfigurationProvider));
 			context.subscriptions.push(vscode.window.registerTreeDataProvider('run-config', runConfigurationNodeProvider));
 			context.subscriptions.push(vscode.commands.registerCommand('java.workspace.configureRunSettings', (...params: any[]) => {
 				configureRunSettings(context, params);
@@ -539,6 +587,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand('java.package.test', async (uri, launchConfiguration?) => {
         await runDebug(true, true, uri, undefined, launchConfiguration);
     }));
+    context.subscriptions.push(commands.registerCommand('nbls.startup.condition', async () => {
+        return client;
+    }));
 
     // register completions:
     launchConfigurations.registerCompletion(context);
@@ -558,7 +609,8 @@ let maintenance : Promise<void> | null;
  */
 let activationPending : boolean = false;
 
-function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean): void {
+function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean, 
+    clientResolve? : (x : NbLanguageClient) => void, clientReject? : (x : any) => void): void {
     if (activationPending) {
         // do not activate more than once in parallel.
         handleLog(log, "Server activation requested repeatedly, ignoring...");
@@ -567,9 +619,23 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
     let oldClient = client;
     let setClient : [(c : NbLanguageClient) => void, (err : any) => void];
     client = new Promise<NbLanguageClient>((clientOK, clientErr) => {
-        setClient = [ clientOK, clientErr ];
+        setClient = [
+            function (c : NbLanguageClient) {
+                clientOK(c);
+                if (clientResolve) {
+                    clientResolve(c);
+                }
+            }, function (err) {
+                clientErr(err);
+                if (clientReject) {
+                    clientReject(err);
+                }
+            }
+        ]
+        //setClient = [ clientOK, clientErr ];
     });
     const a : Promise<void> | null = maintenance;
+
     commands.executeCommand('setContext', 'nbJavaLSReady', false);
     commands.executeCommand('setContext', 'dbAddConnectionPresent', true);
     activationPending = true;
@@ -862,7 +928,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             c.onRequest(ExecInHtmlPageRequest.type, execInHtmlPage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
-                const selected = await window.showQuickPick(param.items, { title: param.title, placeHolder: param.placeHolder, canPickMany: param.canPickMany });
+                const selected = await window.showQuickPick(param.items, { title: param.title, placeHolder: param.placeHolder, canPickMany: param.canPickMany, ignoreFocusOut: true });
                 return selected ? Array.isArray(selected) ? selected : [selected] : undefined;
             });
             c.onRequest(UpdateConfigurationRequest.type, async (param) => {
@@ -980,31 +1046,35 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
     class Decorator implements TreeItemDecorator<Visualizer> {
         private provider : CustomizableTreeDataProvider<Visualizer>;
-        private serverPreferred : Thenable<any>;
         private setCommand : vscode.Disposable;
+        private initialized: boolean = false;
 
         constructor(provider : CustomizableTreeDataProvider<Visualizer>, client : NbLanguageClient) {
             this.provider = provider;
-            this.serverPreferred = vscode.commands.executeCommand('java.db.preferred.connection');
             this.setCommand = vscode.commands.registerCommand('java.local.db.set.preferred.connection', (n) => this.setPreferred(n));
         }
 
+        decorateChildren(element: Visualizer, children: Visualizer[]): Visualizer[] {
+            if (element.id == this.provider.getRoot().id) {
+                vscode.commands.executeCommand('setContext', 'nb.database.view.active', children.length == 0);
+            }
+            return children;
+        }
+
         async decorateTreeItem(vis : Visualizer, item : vscode.TreeItem) : Promise<vscode.TreeItem> {
-            return new Promise((resolve, reject) => {
-                this.serverPreferred.then((id) => {
-                    if (id == vis.id) {
-                        let s : string = typeof item.label == 'string' ? item.label : item.label?.label || '';
-                        const high : [number, number][] = [[0, s.length]];
-                        item.label = { label : s, highlights: high };
-                    }
-                    resolve(item);
-                });
-            })
+            if (!(item.contextValue && item.contextValue.match(/class:org.netbeans.api.db.explorer.DatabaseConnection/))) {
+                return item;
+            }
+            return vscode.commands.executeCommand('java.db.preferred.connection').then((id) => {
+                if (id == vis.id) {
+                    item.description = '(default)';
+                }
+                return item;
+            });
         }
 
         setPreferred(...args : any[]) {
             const id : number = args[0]?.id || -1;
-            this.serverPreferred = new  Promise((resolve, reject) => resolve(id));
             vscode.commands.executeCommand('nbls:Database:netbeans.db.explorer.action.makepreferred', ...args);
             // refresh all
             this.provider.fireItemChange();
@@ -1031,13 +1101,14 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         let tv : vscode.TreeView<Visualizer> = await ts.createView('foundProjects', 'Projects', { canSelectMany : false });
 
         async function revealActiveEditor(ed? : vscode.TextEditor) {
-            if (!window.activeTextEditor?.document?.uri) {
+            const uri = window.activeTextEditor?.document?.uri;
+            if (!uri || uri.scheme.toLowerCase() !== 'file') {
                 return;
             }
             if (!tv.visible) {
                 return;
             }
-            let vis : Visualizer | undefined = await ts.findPath(tv, window.activeTextEditor?.document?.uri?.toString());
+            let vis : Visualizer | undefined = await ts.findPath(tv, uri.toString());
             if (!vis) {
                 return;
             }
@@ -1182,12 +1253,12 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     }
 }
 
-function stopClient(clinetPromise: Promise<LanguageClient>): Thenable<void> {
+function stopClient(clientPromise: Promise<LanguageClient>): Thenable<void> {
     if (testAdapter) {
         testAdapter.dispose();
         testAdapter = undefined;
     }
-    return clinetPromise ? clinetPromise.then(c => c.stop()) : Promise.resolve();
+    return clientPromise && !(clientPromise instanceof InitialPromise) ? clientPromise.then(c => c.stop()) : Promise.resolve();
 }
 
 export function deactivate(): Thenable<void> {

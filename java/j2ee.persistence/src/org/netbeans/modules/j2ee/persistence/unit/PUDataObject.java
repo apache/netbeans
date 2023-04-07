@@ -21,6 +21,7 @@ package org.netbeans.modules.j2ee.persistence.unit;
 
 import java.awt.Image;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.logging.Level;
@@ -174,22 +175,19 @@ public class PUDataObject extends XmlMultiViewDataObject {
         } else if (isModified()){//if it's isn't modified and persistenc eexits (parsed) no need to reparse
             try{
                 String oldVersion = persistence.getVersion();
-                java.io.InputStream is = getEditorSupport().getInputStream();
                 String version=Persistence.VERSION_1_0;
-                try {
+                try (InputStream is = getEditorSupport().getInputStream()) {
                     version=JPAParseUtils.getVersion(is);
                 } catch (SAXException ex) {
                     LOG.log(Level.INFO, null, ex);//persistence.xml may be corrupted, but no need to show exception dialog
                 }
-                finally
-                {
-                    is.close();
-                }
-                is = getEditorSupport().getInputStream();
                 Persistence newPersistence;
                 Persistence cleanPersistence;
-                try {
-                    if(Persistence.VERSION_2_1.equals(version)) {
+                try (InputStream is = getEditorSupport().getInputStream()) {
+                    if(Persistence.VERSION_2_2.equals(version)) {
+                        newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Persistence.createGraph(is);
+                        cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Persistence();
+                    } else if(Persistence.VERSION_2_1.equals(version)) {
                         newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Persistence.createGraph(is);
                         cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Persistence();
                     } else if(Persistence.VERSION_2_0.equals(version)) {
@@ -220,12 +218,9 @@ public class PUDataObject extends XmlMultiViewDataObject {
                         }
                     }
                 }
-            } catch (IOException ioe){
-                LOG.log(Level.INFO, null, ioe);
-                return false;
-            } catch (IllegalStateException e) {
+            } catch (IOException | IllegalStateException ex) {
                 //issue 134726, sometimes faled to parser document if it's changed during update, just skip, should be parsed with next event
-                LOG.log(Level.INFO, null, e);
+                LOG.log(Level.INFO, null, ex);
                 return false;
             }
         }
@@ -270,12 +265,7 @@ public class PUDataObject extends XmlMultiViewDataObject {
             // postpone the "Switch to XML View" action to the end of event dispatching thread
             // this enables to finish the current action first (e.g. painting particular view)
             // see the issue 67580
-            SwingUtilities.invokeLater(new Runnable(){
-                @Override
-                public void run() {
-                    goToXmlView();
-                }
-            });
+            SwingUtilities.invokeLater( () -> goToXmlView() );
         }
         return !switchView;
 
@@ -374,12 +364,8 @@ public class PUDataObject extends XmlMultiViewDataObject {
         }
         if (target!=null) {
             final Object key=target;
-            org.netbeans.modules.xml.multiview.Utils.runInAwtDispatchThread(new Runnable() {
-                @Override
-                public void run() {
-                    getActiveMultiViewElement0().getSectionView().openPanel(key);
-                }
-            });
+            org.netbeans.modules.xml.multiview.Utils.runInAwtDispatchThread( () -> 
+                    getActiveMultiViewElement0().getSectionView().openPanel(key));
         }
     }
     
@@ -463,14 +449,10 @@ public class PUDataObject extends XmlMultiViewDataObject {
             if (model == null) {
                 return;
             }
-            try {
-                Writer out = new StringWriter();
+            try (Writer out = new StringWriter()) {
                 ((BaseBean) model).write(out);
-                out.close();
                 getDataCache().setData(lock, out.toString(), modify);
-            } catch (IOException e) {
-                LOG.log(Level.INFO, null, e);
-            } catch (Schema2BeansException e) {
+            } catch (IOException | Schema2BeansException e) {
                 LOG.log(Level.INFO, null, e);
             } finally {
                 if (lock != null){

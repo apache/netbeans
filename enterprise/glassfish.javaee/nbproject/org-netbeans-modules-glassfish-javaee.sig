@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.58
+#Version 1.60
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -777,11 +777,12 @@ meth public javax.enterprise.deploy.spi.DeploymentManager getDisconnectedDeploym
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createEe6()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createEe7()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createEe8()
+meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe10()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe8()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe9()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe91()
 supr java.lang.Object
-hfds displayName,ee6Instance,ee7Instance,ee8Instance,jakartaee8Instance,jakartaee91Instance,jakartaee9Instance,preludeInstance,su,uriFragments,version
+hfds displayName,ee6Instance,ee7Instance,ee8Instance,jakartaee10Instance,jakartaee8Instance,jakartaee91Instance,jakartaee9Instance,preludeInstance,su,uriFragments,version
 
 CLSS public org.netbeans.modules.glassfish.javaee.Hk2DeploymentManager
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.glassfish.spi.ServerUtilities)
@@ -826,7 +827,7 @@ cons public init()
 meth public org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformImpl getJ2eePlatformImpl(javax.enterprise.deploy.spi.DeploymentManager)
 meth public static org.netbeans.modules.glassfish.javaee.Hk2JavaEEPlatformFactory getFactory()
 supr org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformFactory
-hfds V3_LOOKUP_KEY,V4_LOOKUP_KEY,V510_LOOKUP_KEY,V5_LOOKUP_KEY,V610_LOOKUP_KEY,V6_LOOKUP_KEY,instance
+hfds V3_LOOKUP_KEY,V4_LOOKUP_KEY,V510_LOOKUP_KEY,V5_LOOKUP_KEY,V610_LOOKUP_KEY,V6_LOOKUP_KEY,V7_LOOKUP_KEY,instance
 
 CLSS public org.netbeans.modules.glassfish.javaee.Hk2JavaEEPlatformImpl
 cons public init(org.netbeans.modules.glassfish.javaee.Hk2DeploymentManager,java.lang.String[],org.netbeans.api.j2ee.core.Profile[],org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type[],java.lang.String,java.lang.String,java.lang.String)
@@ -969,6 +970,7 @@ meth public org.openide.WizardDescriptor$InstantiatingIterator getAddInstanceIte
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe6()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe7()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe8()
+meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe10()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe8()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe9()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe91()
@@ -1073,7 +1075,7 @@ meth public boolean isModuleSupported(java.lang.String,java.util.Properties)
 meth public java.lang.Object createModule(org.openide.util.Lookup)
 meth public static org.netbeans.modules.glassfish.spi.GlassfishModuleFactory getDefault()
 supr java.lang.Object
-hfds CLASSPATH_VOLUME,CLASS_LIBRARY_TYPE,COMET_JAR_2_MATCHER,COMET_JAR_MATCHER,COMET_LIB,COMET_LIB_2,ECLIPSE_LINK_LIB,ECLIPSE_LINK_LIB_2,EL_CORE_JAR_MATCHER,GRIZZLY_OPTIONAL_JAR_MATCHER,JAVADOC_VOLUME,JAVA_EE_5_LIB,JAVA_EE_6_LIB,JAVA_EE_JAVADOC,JAXRS_LIBRARIES,JAXRS_LIBRARIES_31,JERSEY_GF_SERVER,PERSISTENCE_API_JAR_MATCHER_1,PERSISTENCE_API_JAR_MATCHER_2,PERSISTENCE_JAVADOC,RP,SOURCE_VOLUME,singleton
+hfds CLASSPATH_VOLUME,CLASS_LIBRARY_TYPE,COMET_JAR_2_MATCHER,COMET_JAR_MATCHER,COMET_LIB,COMET_LIB_2,ECLIPSE_LINK_LIB,ECLIPSE_LINK_LIB_2,EL_CORE_JAR_MATCHER,GRIZZLY_OPTIONAL_JAR_MATCHER,JAKARTA_EE_10_JAVADOC,JAKARTA_EE_8_JAVADOC,JAKARTA_EE_9_JAVADOC,JAVADOC_VOLUME,JAVA_EE_5_LIB,JAVA_EE_6_LIB,JAVA_EE_JAVADOC,JAXRS_LIBRARIES,JAXRS_LIBRARIES_31,JERSEY_GF_SERVER,LOG,PERSISTENCE_API_JAR_MATCHER_1,PERSISTENCE_API_JAR_MATCHER_2,PERSISTENCE_JAVADOC,RP,SOURCE_VOLUME,singleton
 hcls InitializeLibrary
 
 CLSS public org.netbeans.modules.glassfish.javaee.ModuleConfigurationImpl
@@ -1139,25 +1141,73 @@ hfds nameKey,properties,resourceData
 
 CLSS public org.netbeans.modules.glassfish.javaee.RunTimeDDCatalog
 cons public init()
+fld public final static java.lang.String APPCLIENT_10_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application-client_10.xsd"
 fld public final static java.lang.String APPCLIENT_1_4_ID = "SCHEMA:http://java.sun.com/xml/ns/j2ee/application-client_1_4.xsd"
 fld public final static java.lang.String APPCLIENT_5_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/application-client_5.xsd"
+fld public final static java.lang.String APPCLIENT_6_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/application-client_6.xsd"
+fld public final static java.lang.String APPCLIENT_7_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/application-client_7.xsd"
+fld public final static java.lang.String APPCLIENT_8_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/application-client_8.xsd"
+fld public final static java.lang.String APPCLIENT_9_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application-client_9.xsd"
+fld public final static java.lang.String APP_10_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application_10.xsd"
 fld public final static java.lang.String APP_1_4_ID = "SCHEMA:http://java.sun.com/xml/ns/j2ee/application_1_4.xsd"
 fld public final static java.lang.String APP_5_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/application_5.xsd"
+fld public final static java.lang.String APP_6_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/application_6.xsd"
+fld public final static java.lang.String APP_7_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd"
+fld public final static java.lang.String APP_8_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/application_8.xsd"
+fld public final static java.lang.String APP_9_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application_9.xsd"
 fld public final static java.lang.String EJBJAR_2_1_ID = "SCHEMA:http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd"
 fld public final static java.lang.String EJBJAR_3_0_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"
+fld public final static java.lang.String EJBJAR_3_1_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"
+fld public final static java.lang.String EJBJAR_3_2_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd"
+fld public final static java.lang.String EJBJAR_4_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd"
 fld public final static java.lang.String IBM_J2EE_NS = "http://www.ibm.com/webservices/xsd"
 fld public final static java.lang.String J2EE_NS = "http://java.sun.com/xml/ns/j2ee"
+fld public final static java.lang.String JAKARTAEE_NS = "https://jakarta.ee/xml/ns/jakartaee"
+fld public final static java.lang.String JAKARTA_PERSISTENCEORM_NS = "https://jakarta.ee/xml/ns/persistence/orm"
+fld public final static java.lang.String JAKARTA_PERSISTENCE_NS = "https://jakarta.ee/xml/ns/persistence"
 fld public final static java.lang.String JAVAEE_NS = "http://java.sun.com/xml/ns/javaee"
+fld public final static java.lang.String NEW_JAVAEE_NS = "http://xmlns.jcp.org/xml/ns/javaee"
+fld public final static java.lang.String NEW_PERSISTENCEORM_NS = "http://xmlns.jcp.org/xml/ns/persistence/orm"
+fld public final static java.lang.String NEW_PERSISTENCE_NS = "http://xmlns.jcp.org/xml/ns/persistence"
+fld public final static java.lang.String PERSISTENCEORM_2_0_ID = "SCHEMA:http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+fld public final static java.lang.String PERSISTENCEORM_2_1_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/orm/orm_2_1.xsd"
+fld public final static java.lang.String PERSISTENCEORM_2_2_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/orm/orm_2_2.xsd"
+fld public final static java.lang.String PERSISTENCEORM_3_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
 fld public final static java.lang.String PERSISTENCEORM_ID = "SCHEMA:http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
 fld public final static java.lang.String PERSISTENCEORM_NS = "http://java.sun.com/xml/ns/persistence/orm"
+fld public final static java.lang.String PERSISTENCE_2_0_ID = "SCHEMA:http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+fld public final static java.lang.String PERSISTENCE_2_1_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+fld public final static java.lang.String PERSISTENCE_2_2_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+fld public final static java.lang.String PERSISTENCE_3_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
 fld public final static java.lang.String PERSISTENCE_ID = "SCHEMA:http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
 fld public final static java.lang.String PERSISTENCE_NS = "http://java.sun.com/xml/ns/persistence"
 fld public final static java.lang.String RI_CONFIG_NS = "http://java.sun.com/xml/ns/jax-rpc/ri/config"
 fld public final static java.lang.String WEBAPP_2_5_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+fld public final static java.lang.String WEBAPP_3_0_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+fld public final static java.lang.String WEBAPP_3_1_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+fld public final static java.lang.String WEBAPP_4_0_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+fld public final static java.lang.String WEBAPP_5_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+fld public final static java.lang.String WEBAPP_6_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+fld public final static java.lang.String WEBCOMMON_3_0_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/web-common_3_0.xsd"
+fld public final static java.lang.String WEBCOMMON_3_1_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-common_3_1.xsd"
+fld public final static java.lang.String WEBCOMMON_4_0_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-common_4_0.xsd"
+fld public final static java.lang.String WEBCOMMON_5_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-common_5_0.xsd"
+fld public final static java.lang.String WEBCOMMON_6_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-common_6_0.xsd"
+fld public final static java.lang.String WEBFRAGMENT_3_0_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+fld public final static java.lang.String WEBFRAGMENT_3_1_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-fragment_3_1.xsd"
+fld public final static java.lang.String WEBFRAGMENT_4_0_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-fragment_4_0.xsd"
+fld public final static java.lang.String WEBFRAGMENT_5_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-fragment_5_0.xsd"
+fld public final static java.lang.String WEBFRAGMENT_6_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-fragment_6_0.xsd"
 fld public final static java.lang.String WEBSERVICES_1_1_ID = "SCHEMA:http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"
 fld public final static java.lang.String WEBSERVICES_1_2_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_1_2.xsd"
+fld public final static java.lang.String WEBSERVICES_1_3_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_1_3.xsd"
+fld public final static java.lang.String WEBSERVICES_1_4_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/javaee_web_services_1_4.xsd"
+fld public final static java.lang.String WEBSERVICES_2_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/jakartaee_web_services_2_0.xsd"
 fld public final static java.lang.String WEBSERVICES_CLIENT_1_1_ID = "SCHEMA:http://java.sun.com/xml/ns/j2ee/j2ee_web_services_client_1_1.xsd"
 fld public final static java.lang.String WEBSERVICES_CLIENT_1_2_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_client_1_2.xsd"
+fld public final static java.lang.String WEBSERVICES_CLIENT_1_3_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_client_1_3.xsd"
+fld public final static java.lang.String WEBSERVICES_CLIENT_1_4_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/javaee_web_services_client_1_4.xsd"
+fld public final static java.lang.String WEBSERVICES_CLIENT_2_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/jakartaee_web_services_client_2_0.xsd"
 intf org.netbeans.modules.xml.catalog.spi.CatalogDescriptor2
 intf org.netbeans.modules.xml.catalog.spi.CatalogReader
 intf org.xml.sax.EntityResolver
@@ -1184,7 +1234,7 @@ meth public void removeCatalogListener(org.netbeans.modules.xml.catalog.spi.Cata
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setInstanceProvider(org.netbeans.spi.server.ServerInstanceProvider)
 supr org.netbeans.modules.xml.api.model.GrammarQueryManager
-hfds APPCLIENT_1_4,APPCLIENT_1_4_XSD,APPCLIENT_5,APPCLIENT_5_XSD,APPCLIENT_TAG,APP_1_4,APP_1_4_XSD,APP_5,APP_5_XSD,APP_TAG,EJBJAR_2_1,EJBJAR_2_1_XSD,EJBJAR_3_0,EJBJAR_3_0_XSD,EJB_JAR_TAG,JavaEE6SchemaToURLMap,JavaEE6TypeToURLMap,PERSISTENCE,PERSISTENCEORM,PERSISTENCEORM_TAG,PERSISTENCEORM_XSD,PERSISTENCE_TAG,PERSISTENCE_XSD,SCHEMASLOCATION,SchemaToURLMap,TypeToURLMap,WEBAPP_2_5,WEBAPP_2_5_XSD,WEBAPP_3_0_XSD,WEBAPP_TAG,WEBCOMMON_3_0_XSD,WEBFRAGMENT_3_0_XSD,WEBSERVICES_1_1,WEBSERVICES_1_1_XSD,WEBSERVICES_1_2,WEBSERVICES_1_2_XSD,WEBSERVICES_CLIENT_1_1,WEBSERVICES_CLIENT_1_1_XSD,WEBSERVICES_CLIENT_1_2,WEBSERVICES_CLIENT_1_2_XSD,WEBSERVICES_TAG,XMLNS_ATTR,XML_XSD,XML_XSD_DEF,catalogListeners,ddCatalogMap,displayNameKey,hasAdditionalMap,javaEE6DDCatalog,platformRootDir,shortDescriptionKey
+hfds APPCLIENT_10,APPCLIENT_10_XSD,APPCLIENT_1_4,APPCLIENT_1_4_XSD,APPCLIENT_5,APPCLIENT_5_XSD,APPCLIENT_6,APPCLIENT_6_XSD,APPCLIENT_7,APPCLIENT_7_XSD,APPCLIENT_8,APPCLIENT_8_XSD,APPCLIENT_9,APPCLIENT_9_XSD,APPCLIENT_TAG,APP_10,APP_10_XSD,APP_1_4,APP_1_4_XSD,APP_5,APP_5_XSD,APP_6,APP_6_XSD,APP_7,APP_7_XSD,APP_8,APP_8_XSD,APP_9,APP_9_XSD,APP_TAG,EJBJAR_2_1,EJBJAR_2_1_XSD,EJBJAR_3_0,EJBJAR_3_0_XSD,EJBJAR_3_1,EJBJAR_3_1_XSD,EJBJAR_3_2,EJBJAR_3_2_XSD,EJBJAR_4_0,EJBJAR_4_0_XSD,EJB_JAR_TAG,JavaEE6SchemaToURLMap,JavaEE6TypeToURLMap,PERSISTENCE,PERSISTENCEORM,PERSISTENCEORM_2_0,PERSISTENCEORM_2_0_XSD,PERSISTENCEORM_2_1,PERSISTENCEORM_2_1_XSD,PERSISTENCEORM_2_2,PERSISTENCEORM_2_2_XSD,PERSISTENCEORM_3_0,PERSISTENCEORM_3_0_XSD,PERSISTENCEORM_TAG,PERSISTENCEORM_XSD,PERSISTENCE_2_0,PERSISTENCE_2_0_XSD,PERSISTENCE_2_1,PERSISTENCE_2_1_XSD,PERSISTENCE_2_2,PERSISTENCE_2_2_XSD,PERSISTENCE_3_0,PERSISTENCE_3_0_XSD,PERSISTENCE_TAG,PERSISTENCE_XSD,SCHEMASLOCATION,SchemaToURLMap,TypeToURLMap,WEBAPP_2_5,WEBAPP_2_5_XSD,WEBAPP_3_0,WEBAPP_3_0_XSD,WEBAPP_3_1,WEBAPP_3_1_XSD,WEBAPP_4_0,WEBAPP_4_0_XSD,WEBAPP_5_0,WEBAPP_5_0_XSD,WEBAPP_6_0,WEBAPP_6_0_XSD,WEBAPP_TAG,WEBCOMMON_3_0,WEBCOMMON_3_0_XSD,WEBCOMMON_3_1,WEBCOMMON_3_1_XSD,WEBCOMMON_4_0,WEBCOMMON_4_0_XSD,WEBCOMMON_5_0,WEBCOMMON_5_0_XSD,WEBCOMMON_6_0,WEBCOMMON_6_0_XSD,WEBFRAGMENT_3_0,WEBFRAGMENT_3_0_XSD,WEBFRAGMENT_3_1,WEBFRAGMENT_3_1_XSD,WEBFRAGMENT_4_0,WEBFRAGMENT_4_0_XSD,WEBFRAGMENT_5_0,WEBFRAGMENT_5_0_XSD,WEBFRAGMENT_6_0,WEBFRAGMENT_6_0_XSD,WEBSERVICES_1_1,WEBSERVICES_1_1_XSD,WEBSERVICES_1_2,WEBSERVICES_1_2_XSD,WEBSERVICES_1_3,WEBSERVICES_1_3_XSD,WEBSERVICES_1_4,WEBSERVICES_1_4_XSD,WEBSERVICES_2_0,WEBSERVICES_2_0_XSD,WEBSERVICES_CLIENT_1_1,WEBSERVICES_CLIENT_1_1_XSD,WEBSERVICES_CLIENT_1_2,WEBSERVICES_CLIENT_1_2_XSD,WEBSERVICES_CLIENT_1_3,WEBSERVICES_CLIENT_1_3_XSD,WEBSERVICES_CLIENT_1_4,WEBSERVICES_CLIENT_1_4_XSD,WEBSERVICES_CLIENT_2_0,WEBSERVICES_CLIENT_2_0_XSD,WEBSERVICES_TAG,XMLNS_ATTR,XML_XSD,XML_XSD_DEF,catalogListeners,ddCatalogMap,displayNameKey,hasAdditionalMap,javaEE6DDCatalog,platformRootDir,shortDescriptionKey
 
 CLSS public org.netbeans.modules.glassfish.javaee.SunMessageDestination
 cons public init(java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type)
@@ -1428,6 +1478,7 @@ fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
 fld public final static java.lang.String PROP_LIBRARIES = "libraries"
 fld public final static java.lang.String PROP_SERVER_LIBRARIES = "serverLibraries"
 meth public abstract boolean isToolSupported(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public abstract java.awt.Image getIcon()
 meth public abstract java.io.File[] getPlatformRoots()
 meth public abstract java.io.File[] getToolClasspathEntries(java.lang.String)
@@ -1439,9 +1490,13 @@ meth public final void addPropertyChangeListener(java.beans.PropertyChangeListen
 meth public final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public java.lang.String getToolProperty(java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set getSupportedModuleTypes()
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set<java.lang.String> getSupportedSpecVersions()
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set<java.lang.String> getSupportedSpecVersions(java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set<org.netbeans.api.j2ee.core.Profile> getSupportedProfiles()
 meth public java.util.Set<org.netbeans.api.j2ee.core.Profile> getSupportedProfiles(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type)
 meth public java.util.Set<org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type> getSupportedTypes()

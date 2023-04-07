@@ -187,14 +187,14 @@ public abstract class MIMEResolver {
          */
         public String[] extension();
         /** In case ordering of mime resolvers is important, one can 
-         * specify it by defining their {@link LayerBuilder#position() position}.
+         * specify it by defining their {@link org.openide.filesystems.annotations.LayerBuilder.File#position(int) position}.
          */        
         public int position() default Integer.MAX_VALUE;
         /**
          * Show file filters for this MIME type. Set localized names of file
          * filters that should contain files resolved by this resolver.
          *
-         * @see FileChooserBuilder#addDefaultFileFilters()
+         * @see <a href="@org-openide-filesystems-nb@/org/openide/filesystems/FileChooserBuilder.html#addDefaultFileFilters--" >FileChooserBuilder#addDefaultFileFilters()</a>
          * @since 8.1
          */
         public String[] showInFileChooser() default {};
@@ -242,7 +242,7 @@ public abstract class MIMEResolver {
          */
         public String mimeType();
         /** In case ordering of mime resolvers is important, one can 
-         * specify it by defining their {@link LayerBuilder#position() position}.
+         * specify it by defining their {@link org.openide.filesystems.annotations.LayerBuilder.File#position(int) position}.
          */        
         public int position() default Integer.MAX_VALUE;
         
@@ -289,7 +289,7 @@ public abstract class MIMEResolver {
      * an XML like <a href="doc-files/HOWTO-MIME.html">document</a> describing
      * the rules that will be interpreted by the mime recognizing infrastructure.
      * <pre>
-     * {@code @}{@link NbBundle.Messages}({
+     * {@code @}{@link org.openide.util.NbBundle.Messages}({
      *    "NICE_NAME=Nice name!"
      * })
      * {@code @}MIMEResolver.Registration(
@@ -314,7 +314,7 @@ public abstract class MIMEResolver {
         public String resource();
 
         /** In case ordering of mime resolvers is important, one can 
-         * specify it by defining their {@link LayerBuilder#position() position}.
+         * specify it by defining their {@link org.openide.filesystems.annotations.LayerBuilder.File#position(int) position}.
          */        
         public int position() default Integer.MAX_VALUE;
         
@@ -327,7 +327,7 @@ public abstract class MIMEResolver {
          * types resolved by file name or extension (not by file content) are
          * supported.
          *
-         * @see FileChooserBuilder#addDefaultFileFilters()
+         * @see <a href="@org-openide-filesystems-nb@/org/openide/filesystems/FileChooserBuilder.html#addDefaultFileFilters--" >FileChooserBuilder#addDefaultFileFilters()</a>
          * @since 8.1
          */
         public String[] showInFileChooser() default {};

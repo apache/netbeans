@@ -400,7 +400,7 @@ public class VisualState implements LayoutConstants {
 
     // Assuming collectResizingDiffs has already been done.
     void updateToActualSize(LayoutInterval group, int dimension, int sizeUpdate) {
-        Set<LayoutInterval> defaultCandidates = new HashSet();
+        Set<LayoutInterval> defaultCandidates = new HashSet<>();
         updateToActualSize(group, dimension, sizeUpdate, defaultCandidates);
         if (sizeUpdate == 1 && !defaultCandidates.isEmpty()) {
             // There are some candidates (i.e. "active" intervals with ATTR_FLEX_SIZEDEF

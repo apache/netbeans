@@ -33,7 +33,7 @@ public interface MemoryFilter {
      * JVM heap and it must return the same result if
      * it gets some instance multiple times. And
      * it must be very fast.
-     *
+     * @param obj instance to check
      * @return <code>true</code> if passed instance is not accepted.
      *
      * <p>E.g.:

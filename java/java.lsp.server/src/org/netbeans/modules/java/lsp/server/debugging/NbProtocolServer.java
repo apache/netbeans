@@ -97,6 +97,7 @@ import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 import org.netbeans.spi.debugger.ui.DebuggingView;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -173,7 +174,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
         NbDebugSession debugSession = context.getDebugSession();
         if (debugSession != null) {
             // Breakpoints were submitted, we can resume the debugger
-            context.getConfigurationSemaphore().notifyCongigurationDone();;
+            context.getConfigurationSemaphore().notifyCongigurationDone();
             future.complete(null);
         } else {
             ErrorUtilities.completeExceptionally(future, "Failed to launch debug session, the debugger will exit.", ResponseErrorCode.ServerNotInitialized);

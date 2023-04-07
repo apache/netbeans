@@ -390,7 +390,7 @@ public class TagLibParseSupport implements org.openide.nodes.Node.Cookie, TagLib
                     //Map prefixMapper = (pageInfo.getXMLPrefixMapper().size() > 0) ?
                     //    pageInfo.getApproxXmlPrefixMapper() : pageInfo.getJspPrefixMapper();
                     //Map prefixMapper = pageInfo.getJspPrefixMapper();
-                    Map prefixMapper = null;
+                    Map<String, String> prefixMapper = null;
                     if (pageInfo.getXMLPrefixMapper().size() > 0) {
                         prefixMapper = pageInfo.getApproxXmlPrefixMapper();
                         if (prefixMapper.size() == 0){

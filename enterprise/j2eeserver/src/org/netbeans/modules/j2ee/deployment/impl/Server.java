@@ -303,7 +303,7 @@ public class Server implements Node.Cookie {
     private Map<String, String[]> deployConfigDescriptorMap;
 
     private final void initDeploymentConfigurationFileList(FileObject fo) {
-        deployConfigDescriptorMap = new HashMap();
+        deployConfigDescriptorMap = new HashMap<>();
         FileObject deplFNames = fo.getFileObject(LAYER_DEPLOYMENT_FILE_NAMES);
         if (deplFNames != null) {
             FileObject mTypes [] = deplFNames.getChildren();

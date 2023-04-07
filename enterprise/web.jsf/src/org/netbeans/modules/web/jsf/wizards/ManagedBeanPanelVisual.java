@@ -341,7 +341,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
         return new HelpCtx("org.netbeans.modules.web.jsf.wizards.ManagedBeanPanelVisual");
     }
 
-    private final Set<ChangeListener> listeners = new HashSet(1);
+    private final Set<ChangeListener> listeners = new HashSet<>(1);
 
     public final void addChangeListener(ChangeListener l) {
         synchronized (listeners) {

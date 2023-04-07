@@ -31,6 +31,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.element.AnnotationValue;
 
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.SourceUtils;
@@ -125,13 +126,11 @@ public class Utils {
     private static String getAnnotationValue(Element element, String annotationType, String paramName) {
         for (AnnotationMirror annotation : element.getAnnotationMirrors()) {
             if (annotation.getAnnotationType().toString().equals(annotationType)) {
-                for (ExecutableElement key : annotation.getElementValues().keySet()) {
+                for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> it :
+                        annotation.getElementValues().entrySet()) {
                     //System.out.println("key = " + key.getSimpleName());
-                    if (key.getSimpleName().toString().equals(paramName)) {
-                        String value = annotation.getElementValues().get(key).toString();
-                        value = stripQuotes(value);
-
-                        return value;
+                    if (it.getKey().getSimpleName().toString().equals(paramName)) {
+                        return stripQuotes(it.getValue().toString());
                     }
                 }
             }

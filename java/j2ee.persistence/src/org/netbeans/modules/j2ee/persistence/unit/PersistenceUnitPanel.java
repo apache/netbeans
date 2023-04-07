@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.j2ee.persistence.unit;
 
-import java.awt.CardLayout;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,12 +68,11 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
     private Boolean isContainerManaged;
     private boolean jpa2x=false;
 
-    
     private final RequestProcessor RP = new RequestProcessor(PersistenceUnitPanel.class.getSimpleName(), 5);
 
     //jpa2.0 specific
-    private final java.lang.String[] validationModes = {"AUTO", "CALLBACK", "NONE"};//NOI18N
-    private final java.lang.String[] cachingTypes = {"ALL", "NONE", "ENABLE_SELECTIVE", "DISABLE_SELECTIVE", "UNSPECIFIED"};//NOI18N
+    private final String[] validationModes = {"AUTO", "CALLBACK", "NONE"};//NOI18N
+    private final String[] cachingTypes = {"ALL", "NONE", "ENABLE_SELECTIVE", "DISABLE_SELECTIVE", "UNSPECIFIED"};//NOI18N
     
     public PersistenceUnitPanel(SectionView view, final PUDataObject dObj,  final PersistenceUnit persistenceUnit) {
         super(view);
@@ -88,55 +86,48 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
         initComponents();
         setVisiblePanel();
         nameTextField.setText(NbBundle.getMessage(PersistenceUnitPanel.class,"LBL_Wait"));
-        RP.post(new Runnable() {
-
-            @Override
-            public void run() {
-
-                if (ProviderUtil.getConnection(persistenceUnit) != null && PersistenceLibrarySupport.getLibrary(persistenceUnit) != null) {
-                    isContainerManaged = false;
-                } else if (persistenceUnit.getJtaDataSource() != null || persistenceUnit.getNonJtaDataSource() != null) {
-                    isContainerManaged = true;
-                } else {
-                    isContainerManaged = Util.isSupportedJavaEEVersion(project);
-                }
-
-
-                PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
-                if (isContainerManaged){
-                    comboHelper.connect(providerCombo);
-                    ArrayList<Provider> providers = new ArrayList<Provider>();
-                    for(int i=0; i<providerCombo.getItemCount(); i++){
-                        Object obj = providerCombo.getItemAt(i);
-                        if(obj instanceof Provider){
-                            providers.add((Provider) obj);
-                        }
-                    }
-                    Provider provider = ProviderUtil.getProvider(persistenceUnit, providers.toArray(new Provider[]{}));
-                    providerCombo.setSelectedItem(provider);
-                } else {
-                    comboHelper.connect(libraryComboBox);
-                    setSelectedLibrary();
-                }
-
-                setVisiblePanel();
-                initIncludeAllEntities();
-                initEntityList();
-
-                initDataSource();
-                if(jpa2x)
-                {
-                    initCache();
-                    initValidation();
-                }
-
-                nameTextField.setText(persistenceUnit.getName());
-                setTableGeneration();
-                handleCmAmSelection();
-
-                registerModifiers();
+        RP.post( () -> {
+            if (ProviderUtil.getConnection(persistenceUnit) != null && PersistenceLibrarySupport.getLibrary(persistenceUnit) != null) {
+                isContainerManaged = false;
+            } else if (persistenceUnit.getJtaDataSource() != null || persistenceUnit.getNonJtaDataSource() != null) {
+                isContainerManaged = true;
+            } else {
+                isContainerManaged = Util.isSupportedJavaEEVersion(project);
             }
-        });
+            
+            PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
+            if (isContainerManaged){
+                comboHelper.connect(providerCombo);
+                ArrayList<Provider> providers = new ArrayList<>();
+                for(int i=0; i<providerCombo.getItemCount(); i++){
+                    Object obj = providerCombo.getItemAt(i);
+                    if(obj instanceof Provider){
+                        providers.add((Provider) obj);
+                    }
+                }
+                Provider provider = ProviderUtil.getProvider(persistenceUnit, providers.toArray(new Provider[]{}));
+                providerCombo.setSelectedItem(provider);
+            } else {
+                comboHelper.connect(libraryComboBox);
+                setSelectedLibrary();
+            }
+            
+            setVisiblePanel();
+            initIncludeAllEntities();
+            initEntityList();
+            
+            initDataSource();
+            if (jpa2x) {
+                initCache();
+                initValidation();
+            }
+            
+            nameTextField.setText(persistenceUnit.getName());
+            setTableGeneration();
+            handleCmAmSelection();
+            
+            registerModifiers();
+        });   
         
     }
     
@@ -220,11 +211,14 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
     }
     private void initCache(){
         String caching = "";
-        if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
+        if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) {
+            caching = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) persistenceUnit).getSharedCacheMode();
+        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
             caching = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) persistenceUnit).getSharedCacheMode();
         } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {
             caching = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) persistenceUnit).getSharedCacheMode();
         }
+
         if(cachingTypes[0].equals(caching))
         {
             ddAll.setSelected(true);
@@ -251,7 +245,9 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
     
     private void initValidation(){
         String validation = "";
-        if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
+        if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) {
+            validation = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) persistenceUnit).getValidationMode();
+        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
             validation = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) persistenceUnit).getValidationMode();
         } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {
             validation = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) persistenceUnit).getValidationMode();
@@ -286,15 +282,8 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
                     dsPopulator.connect(dsCombo); 
                 } else {
                     try {
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            @Override
-                            public void run() {
-                                dsPopulator.connect(dsCombo);
-                            }
-                        });
-                    } catch (InterruptedException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (InvocationTargetException ex) {
+                        SwingUtilities.invokeAndWait( () -> dsPopulator.connect(dsCombo) );
+                    } catch (InterruptedException | InvocationTargetException ex) {
                         Exceptions.printStackTrace(ex);
                     }
                 }
@@ -309,7 +298,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
                         (persistenceUnit.getTransactionType() == null 
                         || persistenceUnit.getTransactionType().equals(PersistenceUnit.JTA_TRANSACTIONTYPE)));//JTA is default for container managed (enabled checkbox)
             
-            ArrayList<Provider> providers = new ArrayList<Provider>();
+            ArrayList<Provider> providers = new ArrayList<>();
             for(int i=0; i<providerCombo.getItemCount(); i++){
                 Object obj = providerCombo.getItemAt(i);
                 if(obj instanceof Provider){
@@ -365,7 +354,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
      * Sets selected item in library combo box.
      */
     private void setSelectedLibrary(){
-        ArrayList<Provider> providers = new ArrayList<Provider>();
+        ArrayList<Provider> providers = new ArrayList<>();
         for(int i=0; i<libraryComboBox.getItemCount(); i++){
             Object obj = libraryComboBox.getItemAt(i);
             if(obj instanceof Provider){
@@ -438,7 +427,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
             if (props != null){
                 Property[] properties = props.getProperty2();
                 String url = null;
-                ArrayList<Provider> providers = new ArrayList<Provider>();
+                ArrayList<Provider> providers = new ArrayList<>();
                 JComboBox activeCB = providerCombo.isVisible() ? providerCombo : libraryComboBox;
                 for(int i=0; i<activeCB.getItemCount(); i++){
                     Object obj = activeCB.getItemAt(i);
@@ -535,13 +524,17 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
                 vMode = validationModes[2];
             }
             if(!"".equals(cType)) {
-                if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
+                if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) {
+                    ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) persistenceUnit).setSharedCacheMode(cType);
+                } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
                     ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) persistenceUnit).setSharedCacheMode(cType);
                 } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {
                     ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) persistenceUnit).setSharedCacheMode(cType);
                 }
             } else if(!"".equals(vMode)) {
-                if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
+                if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) {
+                    ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) persistenceUnit).setValidationMode(vMode);
+                } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
                     ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) persistenceUnit).setValidationMode(vMode);
                 } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {
                     ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) persistenceUnit).setValidationMode(vMode);
@@ -700,9 +693,11 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
         dObj.setChangedFromUI(false);
     }
     
+    @Override
     public void linkButtonPressed(Object ddBean, String ddProperty) {
     }
     
+    @Override
     public javax.swing.JComponent getErrorComponent(String errorId) {
         if ("name".equals(errorId)) {//NOI18N
             return nameTextField;
@@ -1089,7 +1084,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
             return;
         }
         String[] existingClassNames = persistenceUnit.getClass2();
-        Set<String> ignoreClassNames = new HashSet<String>(Arrays.asList(existingClassNames));
+        Set<String> ignoreClassNames = new HashSet<>(Arrays.asList(existingClassNames));
         List<String> addedClassNames = AddEntityDialog.open(entityClassScope, ignoreClassNames);
         for (String entityClass : addedClassNames) {
             if (dObj.addClass(persistenceUnit, entityClass, true)){

@@ -18,15 +18,12 @@
  */
 package org.netbeans.modules.gradle.java.execute;
 
-import java.util.prefs.Preferences;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.platform.Specification;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.api.GradleBaseProject;
-import org.netbeans.modules.gradle.api.NbGradleProject;
-import static org.netbeans.modules.gradle.api.execute.RunUtils.PROP_COMPILE_ON_SAVE;
-import static org.netbeans.modules.gradle.api.execute.RunUtils.PROP_JDK_PLATFORM;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
 import org.openide.util.Pair;
 
 /**
@@ -37,8 +34,17 @@ public class JavaRunUtils {
 
     private JavaRunUtils() {}
 
+    /**
+     * It is unlikely that the compile on save feature would be implemented for
+     * Gradle, as Gradle's continuous build feature provides a compelling
+     * alternative.
+     *
+     * @return {@code false}
+     * @deprecated
+     */
+    @Deprecated
     public static boolean isCompileOnSaveEnabled(Project project) {
-        return isOptionEnabled(project, PROP_COMPILE_ON_SAVE, false);
+        return false;
     }
 
     /**
@@ -67,26 +73,8 @@ public class JavaRunUtils {
     }
 
     public static Pair<String, JavaPlatform> getActivePlatform(Project project) {
-        Preferences prefs = NbGradleProject.getPreferences(project, false);
-        String platformId = prefs.get(PROP_JDK_PLATFORM, null);
-        if (platformId == null) {
-            GradleBaseProject gbp = GradleBaseProject.get(project);
-            platformId = gbp != null ? gbp.getNetBeansProperty(PROP_JDK_PLATFORM) : null;
-        }
-        return getActivePlatform(platformId);
-    }
-
-    private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
-        GradleBaseProject gbp = GradleBaseProject.get(project);
-        if (gbp != null) {
-            String value = gbp.getNetBeansProperty(option);
-            if (value != null) {
-                return Boolean.valueOf(value);
-            } else {
-                return NbGradleProject.getPreferences(project, false).getBoolean(option, defaultValue);
-            }
-        }
-        return false;
+        JavaRuntimeManager.JavaRuntime rt = RunUtils.getActiveRuntime(project);
+        return getActivePlatform(rt.getId());
     }
 
 }

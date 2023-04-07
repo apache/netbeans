@@ -245,7 +245,7 @@ public abstract class MainMenuAction implements Presenter.Menu, ChangeListener, 
         
         presenter.setEnabled(action != null);
         JTextComponent comp = Utilities.getFocusedComponent();
-        if (comp != null && comp instanceof JEditorPane){
+        if (comp instanceof JEditorPane){
             addAccelerators(action, presenter, comp);
         } else {
             presenter.setAccelerator(getDefaultAccelerator());

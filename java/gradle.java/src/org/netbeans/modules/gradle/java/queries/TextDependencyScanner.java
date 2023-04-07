@@ -634,13 +634,6 @@ public class TextDependencyScanner {
                 if (text.group == null || text.name == null) {
                     continue;
                 }
-                StringBuilder sb = new StringBuilder();
-                sb.append(text.group).append(text.name);
-                if (text.version != null) {
-                    sb.append(text.version);
-                } else {
-                    text.version = "";
-                }
             }
         }
     }
@@ -668,7 +661,7 @@ public class TextDependencyScanner {
             if (DependencyText.KEYWORD_PROJECT.equals(t.keyword) &&
                 t.contents.equals(projectName)) {
                 return t;
-            } else if (t.keyword == null && t.contents != null && t.contents.equals(gav)) {
+            } else if (t.keyword == null && t.getContentsOrGav().equals(gav)) {
                 return t;
             }
         }

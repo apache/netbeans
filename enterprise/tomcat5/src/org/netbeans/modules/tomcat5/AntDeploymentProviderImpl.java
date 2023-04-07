@@ -39,7 +39,7 @@ public class AntDeploymentProviderImpl implements AntDeploymentProvider {
     
     private final TomcatManager tm;
     
-    private static final Logger LOGGER = Logger.getLogger("org.netbeans.modules.tomcat5"); // NOI18N
+    private static final Logger LOGGER = Logger.getLogger(AntDeploymentProviderImpl.class.getName()); // NOI18N
     
     public AntDeploymentProviderImpl(DeploymentManager dm) {
         tm = (TomcatManager)dm;
@@ -49,6 +49,11 @@ public class AntDeploymentProviderImpl implements AntDeploymentProvider {
     public void writeDeploymentScript(OutputStream os, Object moduleType) throws IOException {
         String name = null;
         switch (tm.getTomcatVersion()) {
+            case TOMCAT_110:
+            case TOMCAT_101:
+            case TOMCAT_100:
+            case TOMCAT_90:
+            case TOMCAT_80:
             case TOMCAT_70:
                 name = "resources/tomcat-ant-deploy70.xml";
                 break;

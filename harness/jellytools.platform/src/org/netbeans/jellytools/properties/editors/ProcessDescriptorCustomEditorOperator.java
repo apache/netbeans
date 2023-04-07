@@ -40,7 +40,7 @@ import org.netbeans.jemmy.operators.JTextFieldOperator;
 public class ProcessDescriptorCustomEditorOperator extends NbDialogOperator {
 
     /** Creates new ProcessDescriptorCustomEditorOperator
-     * @throws TimeoutExpiredException when NbDialog not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when NbDialog not found
      * @param title String title of custom editor */
     public ProcessDescriptorCustomEditorOperator(String title) {
         super(title);
@@ -58,7 +58,7 @@ public class ProcessDescriptorCustomEditorOperator extends NbDialogOperator {
     private JTextAreaOperator _txtArguments;
 
     /** Tries to find null JTextArea in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JTextAreaOperator
      */
     public JTextAreaOperator txtArgumentKey() {
@@ -69,7 +69,7 @@ public class ProcessDescriptorCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find Browse... JButton in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JButtonOperator
      */
     public JButtonOperator btSelectProcessExecutable() {
@@ -82,7 +82,7 @@ public class ProcessDescriptorCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find null JTextField in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JTextFieldOperator
      */
     public JTextFieldOperator txtProcess() {
@@ -93,7 +93,7 @@ public class ProcessDescriptorCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find null JTextArea in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JTextAreaOperator
      */
     public JTextAreaOperator txtArguments() {
@@ -110,7 +110,7 @@ public class ProcessDescriptorCustomEditorOperator extends NbDialogOperator {
     }
 
     /** clicks on ... JButton
-     * @throws TimeoutExpiredException when JButton not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when JButton not found
      * @return FileCustomEditorOperator */
     public FileCustomEditorOperator selectProcessExecutable() {
         btSelectProcessExecutable().pushNoBlock();

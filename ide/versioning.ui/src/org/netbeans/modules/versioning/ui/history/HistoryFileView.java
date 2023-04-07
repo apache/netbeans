@@ -116,7 +116,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
     
     private HistoryRootNode getRootNode() {
         Node rootContext = tablePanel.getExplorerManager().getRootContext();
-        if(rootContext == null || !(rootContext instanceof HistoryRootNode)) {
+        if(!(rootContext instanceof HistoryRootNode)) {
             return null;
         }  
         return (HistoryRootNode) rootContext;
@@ -1033,7 +1033,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
                 sb.append(s.substring(start, end));
                 if(i == spans.length) {
                     sb.append("</u></font>"); // NOI18N
-                    sb.append(s.substring(end, s.length()));
+                    sb.append(s.substring(end));
                 }
             }
             return sb.toString();

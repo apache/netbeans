@@ -165,7 +165,7 @@ public class JQueryCodeCompletion implements CompletionProvider {
 
     @Override
     public String getHelpDocumentation(ParserResult info, ElementHandle element) {
-        if (element != null && element instanceof DocSimpleElement) {
+        if (element instanceof DocSimpleElement) {
             return ((DocSimpleElement)element).getDocumentation();
         }
         if (element != null && element.getKind() == ElementKind.CALL) {
@@ -577,7 +577,7 @@ public class JQueryCodeCompletion implements CompletionProvider {
     }
 
     private Collection<HtmlTag> getHtmlTags(String prefix) {
-        Collection<HtmlTag> result = Collections.emptyList();
+        Collection<HtmlTag> result;
         HtmlModel htmlModel = HtmlModelFactory.getModel(HtmlVersion.HTML5);
         Collection<HtmlTag> allTags = htmlModel.getAllTags();
         if (prefix.isEmpty()) {

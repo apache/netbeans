@@ -1,0 +1,30 @@
+    return 10;
+    ----------
+HINT:"void" cannot return anything
+        return; 
+        -------
+HINT:Return statement must be filled with the value
+        return;
+        -------
+HINT:Return statement must be filled with the value
+        return; 
+        -------
+HINT:Return statement must be filled with the value
+        return;
+        -------
+HINT:Return statement must be filled with the value
+        return;
+        -------
+HINT:Return statement must be filled with the value
+        return;
+        -------
+HINT:Return statement must be filled with the value
+        return;
+        -------
+HINT:Return statement must be filled with the value
+    return;
+    -------
+HINT:Return statement must be filled with the value
+        return;
+        -------
+HINT:Return statement must be filled with the value

@@ -827,6 +827,24 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 + "class Class2 {}"
         );
     }
+    
+    public void testFunctionGuessingBoolReturnType() throws Exception {
+        insertBreak( "<?php\n" +
+                            "/**^\n" +
+                            "function foo() {\n" +
+                            "    return true;\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "/**\n" +
+                            " * \n" +
+                            " * @return bool^\n" +
+                            " */\n" +
+                            "function foo() {\n" +
+                            "    return true;\n" +
+                            "}\n" +
+                            "?>\n");
+    }    
 
     @Override
     public void insertNewline(String source, String reformatted, IndentPrefs preferences) throws Exception {

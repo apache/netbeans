@@ -331,7 +331,7 @@ public class WebServiceFromWSDLPanel extends javax.swing.JPanel implements HelpC
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals(PortChooser.IS_VALID)) {
                     Object newvalue = evt.getNewValue();
-                    if ((newvalue != null) && (newvalue instanceof Boolean)) {
+                    if (newvalue instanceof Boolean) {
                         dd.setValid(((Boolean) newvalue));
                     }
                 }

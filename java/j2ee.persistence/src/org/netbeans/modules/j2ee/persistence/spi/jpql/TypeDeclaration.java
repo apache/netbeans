@@ -108,7 +108,7 @@ public class TypeDeclaration implements ITypeDeclaration {
 
     private ITypeDeclaration[] buildParameterTypes() {
 
-        List<ITypeDeclaration> parameterTypes = new ArrayList<ITypeDeclaration>();
+        List<ITypeDeclaration> parameterTypes = new ArrayList<>();
 
         // Example: Class<T>
         if (genericType instanceof ParameterizedType) {
@@ -139,7 +139,7 @@ public class TypeDeclaration implements ITypeDeclaration {
             }
         }
 
-        return parameterTypes.toArray(new ITypeDeclaration[parameterTypes.size()]);
+        return parameterTypes.toArray(new ITypeDeclaration[0]);
     }
 
     private TypeDeclaration buildTypeDeclaration(Object genericType) {

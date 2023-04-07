@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.modules.csl.api.CodeCompletionHandler.QueryType;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -263,6 +264,88 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "testIntersectionTy^pe(null, null); // function", false, "");
     }
 
+    public void testIssueGH5427_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5427.php", "$this->test_without_d^oc", false, "");
+    }
+
+    public void testIssueGH5427_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5427.php", "$this->test_without_v^ar_tag", false, "");
+    }
+
+    public void testIssueGH5427_03() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5427.php", "$this->test_with_v^ar_tag", false, "");
+    }
+
+    public void testIssueGH5375_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5375.php", "$this->test_without_v^ar_tag", false, "");
+    }
+
+    public void testIssueGH5375_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5375.php", "$this->test_with_v^ar_tag", false, "");
+    }
+
+    public void testIssueGH5375_03() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5375Intersection.php", "$this->test_without_v^ar_tag", false, "");
+    }
+
+    public void testIssueGH5375_04() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5375Intersection.php", "$this->test_with_v^ar_tag", false, "");
+    }
+
+    public void testIssueGH5426_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5426.php", "        $this->testFi^eld;", false, "");
+    }
+
+    public void testIssueGH5426_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5426.php", "        $this->testMetho^d(null);", false, "");
+    }
+
+    public void testIssueGH4494_01() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh44^94_aa_bbb();");
+    }
+
+    public void testIssueGH4494_02() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494_aa^_bbb();");
+    }
+
+    public void testIssueGH4494_03() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494_aa_b^bb();");
+    }
+
+    public void testIssueGH4494_04() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494^_aa_bb_cc();");
+    }
+
+    public void testIssueGH4494_05() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494_aa^_bb_cc();");
+    }
+
+    public void testIssueGH4494_06() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494_aa_bb^_cc();");
+    }
+
+    public void testIssueGH4494_07() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH4494.php", "gh4494_aa_bb_cc^();");
+    }
+
+    public void testIssueGH5347_01() throws Exception {
+        // no golden file
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5347.php", "^// test", true);
+    }
+
+    public void testIssueGH5347_02() throws Exception {
+        // no golden file
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5347.php", "un^defined();", true);
+    }
+
+    public void testIssueGH5355_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5355.php", "$this->testMetho^d(null);", false, "");
+    }
+
+    public void testIssueGH5355_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/issueGH5355.php", "testFunctio^n(null);", false, "");
+    }
+
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");
@@ -285,6 +368,24 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation(file, caretLine, includeModifiers, itemPrefix);
         if (followPhpdocumentor) {
             DocRenderer.PHPDocExtractor.UNIT_TEST_INHERITDOC_FOR_PHPDOCUMENTER = false;
+        }
+    }
+
+    private void checkCompletionOnlyDocumentation(String filePath, String caretLine) throws Exception {
+        checkCompletionOnlyDocumentation(filePath, caretLine, false);
+    }
+
+    private void checkCompletionOnlyDocumentation(String filePath, String caretLine, boolean noDocument) throws Exception {
+        if (!noDocument) {
+            checkCompletionDocumentation(filePath, caretLine, false, "", QueryType.DOCUMENTATION);
+        } else {
+            try {
+                checkCompletionDocumentation(filePath, caretLine, false, "", QueryType.DOCUMENTATION);
+            } catch (AssertionError ex) {
+                // there is no completion item
+                return;
+            }
+            fail("Must not have documentation");
         }
     }
 

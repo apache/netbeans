@@ -61,5 +61,4 @@ class AttributeSyntax {
     #[A(1)]
     #[A(2)]
     private Test $field8;
-
 }

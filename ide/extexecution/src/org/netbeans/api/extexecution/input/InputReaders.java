@@ -38,6 +38,7 @@ import org.openide.util.Parameters;
  * @author Petr Hejl
  * @deprecated use {@link org.netbeans.api.extexecution.base.input.InputReaders}
  */
+@Deprecated
 public final class InputReaders {
 
     private InputReaders() {

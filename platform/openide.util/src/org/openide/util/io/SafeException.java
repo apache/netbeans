@@ -33,6 +33,7 @@ public class SafeException extends FoldingIOException {
     private Exception ex;
 
     /** Default constructor.
+     * @param ex encapsuled exception
     */
     public SafeException(Exception ex) {
         super(ex, null);

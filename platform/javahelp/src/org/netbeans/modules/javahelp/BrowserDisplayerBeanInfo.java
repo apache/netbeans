@@ -34,7 +34,8 @@ public class BrowserDisplayerBeanInfo extends SimpleBeanInfo {
     public BrowserDisplayerBeanInfo () {
     }
 
-    public PropertyDescriptor[] getPropertyDescriptors () {
+	@Override
+	public PropertyDescriptor[] getPropertyDescriptors () {
 	PropertyDescriptor back[] = new PropertyDescriptor[7];
 	try {
 	    back[0] = new PropertyDescriptor("content", BrowserDisplayer.class);

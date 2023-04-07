@@ -122,9 +122,9 @@ public final class CharSequenceUtilities {
      * Create string for the given portion of the character sequence.
      *
      * @param text non-null text.
-     * @param start >=0 and <text.length() index of the first character
+     * @param start &gt;=0 and &lt;text.length() index of the first character
      *  to be present in the returned string.
-     * @param end >=start and <text.length() index after the last character
+     * @param end &gt;=start and &lt;text.length() index after the last character
      *  to be present in the returned string.
      */
     public static String toString(CharSequence text, int start, int end) {
@@ -136,7 +136,7 @@ public final class CharSequenceUtilities {
     
     /**
      * Append character sequence to the given string buffer.
-     * <br/>
+     * <br>
      * This method is no longer needed in JDK 1.5 where the implementation
      * does not create an extra java.lang.String instance.
      */
@@ -146,7 +146,7 @@ public final class CharSequenceUtilities {
     
     /**
      * Append part of the character sequence to the given string buffer.
-     * <br/>
+     * <br>
      * This method is no longer needed in JDK 1.5 where the implementation
      * of the same functionality is available in the StringBuffer directly.
      */

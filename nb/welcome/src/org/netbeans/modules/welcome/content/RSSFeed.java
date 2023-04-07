@@ -141,7 +141,6 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
     
     public void setContent( Component content ) {
         removeAll();
-        Dimension d = new Dimension();
         add( content, BorderLayout.CENTER );
         firePropertyChange( FEED_CONTENT_PROPERTY, null, content );
         revalidate();

@@ -132,7 +132,9 @@ public class TomlTypedTextInterceptor implements TypedTextInterceptor {
         while ((ts.token() != null) && STRING_OR_WS.contains(ts.token().id())) {
             ts.movePrevious();
         }
-        return (ts.token() != null) && TomlTokenId.ML_STRING_START == ts.token().id();
+        return (ts.token() != null) 
+                && (TomlTokenId.STRING_QUOTE == ts.token().id()) 
+                && ts.token().text().length() == 3;
     }
 
     private static int quotesInLine(Context context, char quote) throws BadLocationException {

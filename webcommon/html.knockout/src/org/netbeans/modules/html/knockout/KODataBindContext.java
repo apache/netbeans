@@ -76,7 +76,7 @@ public class KODataBindContext {
         assert alias == null || foreach;
 
         String replacement = (data == null || data.equals("$root")) ? "ko.$bindings" : data; // NOI18N
-        String toAdd = newData.replaceAll("$data", replacement); // NOI18N
+        String toAdd = newData.replace("$data", replacement); // NOI18N
 
         if (!noExpansion && foreach) {
             toAdd = "(" + toAdd + ")[0]"; // NOI18N

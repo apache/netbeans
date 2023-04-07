@@ -631,8 +631,7 @@ public class ProjectProblemsProviders {
                 return false;
             }
             final BaseResolver otherResolver = (BaseResolver) other;
-            return type.equals(otherResolver.type) &&
-                   id.equals(otherResolver.id);
+            return type == otherResolver.type && id.equals(otherResolver.id);
         }
 
         @Override

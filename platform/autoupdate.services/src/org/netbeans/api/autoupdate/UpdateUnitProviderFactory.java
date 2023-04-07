@@ -54,7 +54,7 @@ public final class UpdateUnitProviderFactory {
     /** Returns <code>java.util.List</code> of <code>UpdateUnitProvider</code>. The parameter
      * onlyEnabled specifies if only enabled provider should be returned or all.
      * 
-     * @param onlyEnabled 
+     * @param onlyEnabled if only enabled provider should be returned or all
      * @return list of providers
      */
     public List<UpdateUnitProvider> getUpdateUnitProviders (boolean onlyEnabled) {

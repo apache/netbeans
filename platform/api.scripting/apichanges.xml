@@ -62,7 +62,7 @@
               <a href="@TOP@/org/netbeans/api/scripting/Scripting.html">Scripting.createManager()</a>
               to obtain enhanced version of
               <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
-              that can work well with <a href="http://graalvm.org">GraalVM</a>
+              that can work well with <a href="https://graalvm.org">GraalVM</a>
               languages registered via
               <a href="@TOP@/org/netbeans/spi/scripting/EngineProvider.html">EngineProvider</a>
           </description>

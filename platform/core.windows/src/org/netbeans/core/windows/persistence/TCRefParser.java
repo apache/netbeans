@@ -244,8 +244,9 @@ class TCRefParser {
             tcRefConfig = null;
             internalConfig = null;
         }
-        
-        public void startElement (String nameSpace, String name, String qname, Attributes attrs) 
+
+        @Override
+        public void startElement (String nameSpace, String name, String qname, Attributes attrs)
         throws SAXException {
             if ("tc-ref".equals(qname)) { // NOI18N
                 handleTCRef(attrs);
@@ -270,6 +271,7 @@ class TCRefParser {
             }
         }
 
+        @Override
         public void error(SAXParseException ex) throws SAXException  {
             throw ex;
         }

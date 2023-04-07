@@ -88,7 +88,8 @@
 		"viewsWelcome": [
 			{
 				"view": "database.connections",
-				"contents": "No Database Connections found.\n[Add a new connection](command:db.add.connection)"
+				"contents": "No database connections found.\n[Add Database Connection](command:db.add.connection)\n[Add Oracle Autonomous DB](command:nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction)",
+				"when": "nb.database.view.active"
 			}
 		],
 		"configuration": {
@@ -498,7 +499,7 @@
 			},
 			{
 				"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
-				"title": "Disconnect"
+				"title": "Disconnect from Database"
 			},
 			{
 				"command": "nbls:Database:netbeans.db.explorer.action.Refresh",
@@ -568,7 +569,7 @@
 			},
 			{
 				"command": "java.local.db.set.preferred.connection",
-				"title": "Make Default Connection"
+				"title": "Set as Default Connection"
 			},
 			{
 				"command": "java.workspace.configureRunSettings",
@@ -583,6 +584,10 @@
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
 				"title": "Add DB Connection"
+			},
+			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction",
+				"title": "Add Oracle Autonomous Database"
 			},
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
@@ -754,19 +759,23 @@
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
-					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/ && viewItem =~ /is:disconnected/",
+					"group": "db@10"
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
-					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/ && viewItem =~ /is:connected/",
+					"group": "db@20"
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Refresh",
-					"when": "viewItem =~ /class:ddl.DBConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/",
+					"group": "db@30"
 				},
 				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
-					"when": "viewItem =~ /cap:delete/"
+					"when": "viewItem =~ /cap:delete/",
+					"group": "db@50"
 				},
 				{
 					"command": "java.workspace.new",
@@ -785,19 +794,23 @@
 				},
 				{
 					"command": "java.project.test",
-					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/ && config.netbeans.javaSupport.enabled"
+					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/ && config.netbeans.javaSupport.enabled",
+					"group": "F@30"
 				},
 				{
 					"command": "java.project.compile",
-					"when": "view == foundProjects && viewItem =~ /is:project/ && config.netbeans.javaSupport.enabled"
+					"when": "view == foundProjects && viewItem =~ /is:project/ && config.netbeans.javaSupport.enabled",
+					"group": "F@10"
 				},
 				{
 					"command": "java.project.clean",
-					"when": "view == foundProjects && viewItem =~ /is:project/ && config.netbeans.javaSupport.enabled"
+					"when": "view == foundProjects && viewItem =~ /is:project/ && config.netbeans.javaSupport.enabled",
+					"group": "F@20"
 				},
 				{
 					"command": "java.local.db.set.preferred.connection",
-					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/",
+					"group": "db@40"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
@@ -833,7 +846,7 @@
 				},
 				{
 					"command": "java.workspace.configureRunSettings",
-					"when": "view == run-config && viewItem == configureRunSettings && config.netbeans.javaSupport.enabled",
+					"when": "view == run-config && viewItem == configureRunSettings",
 					"group": "inline@1"
 				}
 			]
@@ -906,11 +919,11 @@
 				"codeicon": "cloud"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/compartment_nbcode.svg",
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/compartment.svg",
 				"codeicon": "archive"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/database_nbcode.svg",
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/database.svg",
 				"codeicon": "database"
 			},
 			{
@@ -972,16 +985,36 @@
 				"color": "charts.red"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/db/resources/connection_nbcode.svg",
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/connection.gif",
 				"codeicon": "database"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/db/resources/connectionDisconnected_nbcode.svg",
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/connectionDisconnected.gif",
 				"codeicon": "debug-disconnect"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/db/resources/folder_nbcode.svg",
-				"codeicon": ""
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/column.gif",
+				"codeicon": "layout-centered"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/table.gif",
+				"codeicon": "table"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/schema.png",
+				"codeicon": "layers-dot"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/folder.svg",
+				"codeicon": "folder"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/view.gif",
+				"codeicon": "open-preview"
+			},
+			{
+				"uriExpression": "nbres:/org/openide/nodes/wait.gif",
+				"codeicon": "watch"
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/yellow_dot.svg",

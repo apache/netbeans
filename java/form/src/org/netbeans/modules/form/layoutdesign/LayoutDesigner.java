@@ -362,7 +362,7 @@ public final class LayoutDesigner implements LayoutConstants {
      * @return List of Ids of components that can be dragged together
      */
     public List<String> getDraggableComponents(List<String> componentIds) {
-        List<LayoutComponent> components = new ArrayList(componentIds.size());
+        List<LayoutComponent> components = new ArrayList<>(componentIds.size());
         for (String compId : componentIds) {
             LayoutComponent comp = layoutModel.getLayoutComponent(compId);
             if (comp != null) {
@@ -3821,7 +3821,7 @@ public final class LayoutDesigner implements LayoutConstants {
     }
 
     private void removeComponents(LayoutComponent[] components, boolean fromModel) {
-        Set<LayoutComponent> conts = new HashSet();
+        Set<LayoutComponent> conts = new HashSet<>();
         for (LayoutComponent comp : components) {
             if (comp != null) {
                 if (logTestCode() && fromModel) {

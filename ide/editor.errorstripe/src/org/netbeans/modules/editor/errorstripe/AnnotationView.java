@@ -500,7 +500,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
             scrollPaneCandidade = scrollPaneCandidade.getParent();
         }
         
-        if (scrollPaneCandidade == null || !(scrollPaneCandidade instanceof JScrollPane) || scrollBar == null) {
+        if (!(scrollPaneCandidade instanceof JScrollPane) || scrollBar == null) {
             //no help for #54080:
             return getHeight() - HEIGHT_OFFSET;
         }

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.48
+#Version 1.50
 
 CLSS public abstract interface java.io.Serializable
 
@@ -115,6 +115,7 @@ cons public init()
 meth public abstract java.io.File getProjectCatalog()
  anno 0 java.lang.Deprecated()
 meth public abstract java.io.File retrieveResource(java.io.File,java.net.URI) throws java.io.IOException,java.net.URISyntaxException
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Map<org.netbeans.modules.xml.retriever.RetrieveEntry,java.lang.Exception> getRetrievedResourceExceptionMap()
 meth public abstract org.openide.filesystems.FileObject retrieveResource(org.openide.filesystems.FileObject,java.net.URI) throws java.io.IOException,java.net.URISyntaxException
 meth public abstract org.openide.filesystems.FileObject retrieveResource(org.openide.filesystems.FileObject,java.net.URI,java.net.URI) throws java.io.IOException,java.net.URISyntaxException

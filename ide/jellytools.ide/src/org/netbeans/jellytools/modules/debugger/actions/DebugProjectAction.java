@@ -25,7 +25,7 @@ import org.netbeans.jellytools.actions.Action;
  * Used to call "Debug" popup menu item on project's root node.
  *
  * @see Action
- * @see org.netbeans.jellytools.nodes.JavaProjectRootNode
+ * @see <a href="@org-netbeans-modules-jellytools-java@/org/netbeans/jellytools/nodes/JavaProjectRootNode.html">org.netbeans.jellytools.nodes.JavaProjectRootNode</a>
  * @author Vojtech Sigler
  */
 public class DebugProjectAction extends Action {

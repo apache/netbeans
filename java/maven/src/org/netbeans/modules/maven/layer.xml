@@ -49,6 +49,11 @@
                         </folder>
                     </folder>
                 </folder>
+                
+                <file name="settings.xml" url="settings.template.xml">
+                    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                    <attr name="template.openFile" boolvalue="false"/>
+                </file>
             </folder>
         </folder>
     </folder>

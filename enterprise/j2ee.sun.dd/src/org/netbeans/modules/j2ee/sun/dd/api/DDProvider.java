@@ -745,6 +745,7 @@ public final class DDProvider {
      * @return ASDDVersion for the current graph or null if it cannot be determined.
      * @deprecated
      */
+    @Deprecated
     public static ASDDVersion getASDDVersion(RootInterface rootDD) {
         return getASDDVersion(rootDD, null);
     }

@@ -207,7 +207,7 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
         };
         
         return new MavenDependencyResult(nbMavenProject.getMavenProject(), 
-                convert2(n, compositeFiter, broken), new ArrayList<>(scopes), broken, 
+                convertDependencies(n, compositeFiter, broken), new ArrayList<>(scopes), broken, 
                 project, nbMavenProject);
     }
     
@@ -236,10 +236,57 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
         }
     }
     
-    private Dependency convert2(org.apache.maven.shared.dependency.tree.DependencyNode n, Dependency.Filter filter, Set<ArtifactSpec> broken) {
-        List<Dependency> ch = new ArrayList<>();
+    private static String getFullArtifactId(Artifact a) {
+        if (a.getDependencyTrail() == null) {
+            return "/" + a.getId();
+        } else {
+            return String.join("/", a.getDependencyTrail()) + "/" + a.getId(); // NOI18N
+        }
+    }
+    
+    private void findRealNodes(org.apache.maven.shared.dependency.tree.DependencyNode n, Map<String, List<org.apache.maven.shared.dependency.tree.DependencyNode>> result) {
+        if (n.getArtifact() == null) {
+            return;
+        }
+        Artifact a = n.getArtifact();
+        if (n.getState() != org.apache.maven.shared.dependency.tree.DependencyNode.INCLUDED) {
+            return;
+        }
+        // register (if not present) using plain artifact ID, but also using the full path, which will be preferred for the lookup.
+        result.putIfAbsent(a.getId(), n.getChildren());
+        result.put(getFullArtifactId(a), n.getChildren());
+        
         for (org.apache.maven.shared.dependency.tree.DependencyNode c : n.getChildren()) {
-            Dependency cd = convert2(c, filter, broken);
+            findRealNodes(c, result);
+        }
+    }
+
+    private Dependency convertDependencies(org.apache.maven.shared.dependency.tree.DependencyNode n, Dependency.Filter filter, Set<ArtifactSpec> broken) {
+        Map<String, List<org.apache.maven.shared.dependency.tree.DependencyNode>> realNodes = new HashMap<>();
+        findRealNodes(n, realNodes);
+        return convert2(n, filter, realNodes, broken);
+    }
+    
+    private Dependency convert2(org.apache.maven.shared.dependency.tree.DependencyNode n, Dependency.Filter filter, Map<String, List<org.apache.maven.shared.dependency.tree.DependencyNode>> realNodes, Set<ArtifactSpec> broken) {
+        List<Dependency> ch = new ArrayList<>();
+        
+        List<org.apache.maven.shared.dependency.tree.DependencyNode> children = null;
+        
+        if (n.getState() == org.apache.maven.shared.dependency.tree.DependencyNode.OMITTED_FOR_CONFLICT || 
+            n.getState() == org.apache.maven.shared.dependency.tree.DependencyNode.OMITTED_FOR_DUPLICATE) {
+            // attempt to find / copy the children subtree, [refer full artifact path.
+            if (n.getRelatedArtifact() != null) {
+                children = realNodes.get(getFullArtifactId(n.getRelatedArtifact()));
+            }
+            if (children == null) {
+                children = realNodes.getOrDefault(n.getArtifact().getId(), n.getChildren());
+            }
+        } else {
+            children = n.getChildren();
+        }
+        
+        for (org.apache.maven.shared.dependency.tree.DependencyNode c : children) {
+            Dependency cd = convert2(c, filter, realNodes, broken);
             if (cd != null) {
                 ch.add(cd);
             }

@@ -51,7 +51,7 @@ final class ProfilerPlugins {
         if (providers.isEmpty()) {
             plugins = null;
         } else {
-            List<ProfilerPlugin> _plugins = new ArrayList();
+            List<ProfilerPlugin> _plugins = new ArrayList<>();
             Lookup.Provider project = session.getProject();
             SessionStorage storage = session.getStorage();
             for (ProfilerPlugin.Provider provider : providers) {
@@ -82,7 +82,7 @@ final class ProfilerPlugins {
     }
     
     List<JMenuItem> menuItems() {
-        List<JMenuItem> menus = new ArrayList();
+        List<JMenuItem> menus = new ArrayList<>();
         
         if (plugins != null) for (ProfilerPlugin plugin : plugins) {
             try {

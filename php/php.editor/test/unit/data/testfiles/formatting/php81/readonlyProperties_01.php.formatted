@@ -46,7 +46,6 @@ class ReadonlyProperties {
     public function readonly(): void {
         
     }
-
 }
 
 trait ReadonlyPropertiesTrait {
@@ -76,5 +75,4 @@ trait ReadonlyPropertiesTrait {
     public function readonly(): void {
         
     }
-
 }

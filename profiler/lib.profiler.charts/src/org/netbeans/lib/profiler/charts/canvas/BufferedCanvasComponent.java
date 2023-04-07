@@ -80,7 +80,7 @@ public abstract class BufferedCanvasComponent extends JComponent {
     private float accelerationPriority = .5f;
     
     private Image offscreenImage = null;
-    private WeakReference<Image> offscreenImageReference = new WeakReference(offscreenImage);
+    private WeakReference<Image> offscreenImageReference = new WeakReference<>(offscreenImage);
     
     private Rectangle invalidOffscreenArea = new Rectangle();
     

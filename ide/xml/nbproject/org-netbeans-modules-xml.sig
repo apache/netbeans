@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.50
+#Version 1.52
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -957,6 +957,7 @@ CLSS public abstract interface static org.netbeans.modules.xml.actions.CollectXM
  outer org.netbeans.modules.xml.actions.CollectXMLAction
 
 CLSS public final org.netbeans.modules.xml.actions.InputOutputReporter
+ anno 0 java.lang.Deprecated()
 cons public init()
 cons public init(java.lang.String)
 intf org.netbeans.api.xml.cookies.CookieObserver
@@ -1613,6 +1614,7 @@ CLSS public abstract interface static org.openide.cookies.EditorCookie$Observabl
 fld public final static java.lang.String PROP_DOCUMENT = "document"
 fld public final static java.lang.String PROP_MODIFIED = "modified"
 fld public final static java.lang.String PROP_OPENED_PANES = "openedPanes"
+fld public final static java.lang.String PROP_RELOADING = "reloading"
 intf org.openide.cookies.EditorCookie
 meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)

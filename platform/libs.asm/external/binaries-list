@@ -14,6 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-8E6300EF51C1D801A7ED62D07CD221ACA3A90640 org.ow2.asm:asm:9.3
-78D2ECD61318B5A58CD04FB237636C0E86B77D97 org.ow2.asm:asm-tree:9.3
-1F2A432D1212F5C352AE607D7B61DCAE20C20AF5 org.ow2.asm:asm-commons:9.3
+DC6EA1875F4D64FBC85E1691C95B96A3D8569C90 org.ow2.asm:asm:9.5
+FD33C8B6373ABAA675BE407082FDFDA35021254A org.ow2.asm:asm-tree:9.5
+19AB5B5800A3910D30D3A3E64FDB00FD0CB42DE0 org.ow2.asm:asm-commons:9.5

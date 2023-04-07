@@ -3341,7 +3341,7 @@ public class FormatingTest extends NbTestCase {
                 + "    private void test(Object o) {\n"
                 + "        if (o instanceof Point\n"
                 + "                (int     x, int    \n"
-                + "                y) p) {\n"
+                + "                y) ) {\n"
                 + "            System.out.println(\"Hello\");\n"
                 + "        }\n"
                 + "    }\n"
@@ -3356,7 +3356,7 @@ public class FormatingTest extends NbTestCase {
                 + "public class Test {\n"
                 + "\n"
                 + "    private void test(Object o) {\n"
-                + "        if (o instanceof Point(int x, int y) p) {\n"
+                + "        if (o instanceof Point(int x, int y)) {\n"
                 + "            System.out.println(\"Hello\");\n"
                 + "        }\n"
                 + "    }\n"
@@ -3392,7 +3392,7 @@ public class FormatingTest extends NbTestCase {
                 + "        if (o instanceof\n"
                 + "                Rect\n"
                 + "                (       ColoredPoint      ul,   ColoredPoint\n"
-                + "                        lr)    r) {\n"
+                + "                        lr)  ) {\n"
                 + "            Point p = ul.p();\n"
                 + "            System.out.println(\"Hello\");\n"
                 + "        }\n"
@@ -3420,7 +3420,7 @@ public class FormatingTest extends NbTestCase {
                 + "public class Test {\n"
                 + "\n"
                 + "    private void test(Object o) {\n"
-                + "        if (o instanceof Rect(ColoredPoint ul, ColoredPoint lr) r) {\n"
+                + "        if (o instanceof Rect(ColoredPoint ul, ColoredPoint lr)) {\n"
                 + "            Point p = ul.p();\n"
                 + "            System.out.println(\"Hello\");\n"
                 + "        }\n"
@@ -3459,8 +3459,8 @@ public class FormatingTest extends NbTestCase {
                 + "                (       ColoredPoint(Point   \n"
                 + "                        p, Color \n"
                 + "                                c\n"
-                + "                        )      ul,   ColoredPoint\n"
-                + "                        lr)    r\n"
+                + "                        )      ,   ColoredPoint\n"
+                + "                        lr)    \n"
                 + "                ) {\n"
                 + "            int x = p.x();\n"
                 + "            System.out.println(\"Hello\");\n"
@@ -3489,7 +3489,7 @@ public class FormatingTest extends NbTestCase {
                 + "public class Test {\n"
                 + "\n"
                 + "    private void test(Object o) {\n"
-                + "        if (o instanceof Rect(ColoredPoint(Point p, Color c) ul, ColoredPoint lr) r) {\n"
+                + "        if (o instanceof Rect(ColoredPoint(Point p, Color c), ColoredPoint lr)) {\n"
                 + "            int x = p.x();\n"
                 + "            System.out.println(\"Hello\");\n"
                 + "        }\n"
@@ -3498,7 +3498,44 @@ public class FormatingTest extends NbTestCase {
                 + "\n";
         reformat(doc, content, golden);
     }
-    
+
+    public void testAnnotatedRecord() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_19, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getLookup().lookup(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content =
+                  "package test;\n"
+                + "\n"
+                + "/**\n"
+                + " * @author duke\n"
+                + " */\n"
+                + "@Deprecated public record DeprecatedRecord(int a) {}"
+                + "\n";
+
+        String golden =
+                  "package test;\n"
+                + "\n"
+                + "/**\n"
+                + " * @author duke\n"
+                + " */\n"
+                + "@Deprecated\n"
+                + "public record DeprecatedRecord(int a) {\n"
+                + "\n"
+                + "}"
+                + "\n";
+        reformat(doc, content, golden);
+    }
+
     public void testDoWhile() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,
@@ -6325,6 +6362,42 @@ public class FormatingTest extends NbTestCase {
                 + "public class Test {\n\n"
                 + "    public static void main(String[] args) {\n"
                 + "        try (final PrintStream out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try ( var  out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (var out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try ( final  var  out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (final var out = System.out) {\n"
                 + "            System.out.println(\"TEST\");\n"
                 + "        }\n"
                 + "    }\n"

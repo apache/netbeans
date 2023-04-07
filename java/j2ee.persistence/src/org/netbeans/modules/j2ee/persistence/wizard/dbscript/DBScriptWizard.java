@@ -147,11 +147,11 @@ public final class DBScriptWizard implements WizardDescriptor.ProgressInstantiat
     }
 
     static List<String> run(final Project project, final FileObject sFile, final PersistenceEnvironment pe, final ProgressHandle handle, final boolean validateOnly) {
-        final List<URL> localResourcesURLList = new ArrayList<URL>();
+        final List<URL> localResourcesURLList = new ArrayList<>();
 
         //
-        final HashMap<String, String> props = new HashMap<String, String>();
-        final List<String> initialProblems = new ArrayList<String>();
+        final HashMap<String, String> props = new HashMap<>();
+        final List<String> initialProblems = new ArrayList<>();
         PersistenceUnit[] pus = null;
         if(handle!=null) {
             handle.progress(NbBundle.getMessage(DBScriptWizard.class, "MSG_CollectConfig"),10);
@@ -171,12 +171,9 @@ public final class DBScriptWizard implements WizardDescriptor.ProgressInstantiat
         final DatabaseConnection dbconn = JPAEditorUtil.findDatabaseConnection(pu, pe.getProject());
         if (dbconn != null) {
             if (dbconn.getJDBCConnection() == null) {
-                Mutex.EVENT.readAccess(new Mutex.Action<DatabaseConnection>() {
-                    @Override
-                    public DatabaseConnection run() {
-                        ConnectionManager.getDefault().showConnectionDialog(dbconn);
-                        return dbconn;
-                    }
+                Mutex.EVENT.readAccess( (Mutex.Action<DatabaseConnection>) () -> {
+                    ConnectionManager.getDefault().showConnectionDialog(dbconn);
+                    return dbconn;
                 });
             }
         }

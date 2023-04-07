@@ -6,5 +6,4 @@ class ClassConstantVisibility {
     public const PUBLIC_CONST = 1;
     private const PRIVATE_CONST = [1, 2];
     protected const PROTECTED_CONST = "";
-
 }

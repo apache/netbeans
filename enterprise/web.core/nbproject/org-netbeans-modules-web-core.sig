@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.49.0
+#Version 2.51.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -687,7 +687,7 @@ meth public boolean isTagLibRegistered(java.lang.String)
 meth public boolean isXMLSyntax()
 meth public java.lang.String toString()
 meth public java.util.Map getPrefixMapper()
-meth public void applyParsedData(java.util.Map,java.util.Map,boolean,boolean,boolean)
+meth public void applyParsedData(java.util.Map,java.util.Map<java.lang.String,java.lang.String>,boolean,boolean,boolean)
 meth public void parsingStarted()
 supr java.beans.PropertyChangeSupport
 hfds elIgnored,initialized,prefixMapper,taglibs,xmlSyntax

@@ -170,8 +170,8 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 // finally, find the correct body and rewrite it.
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 ModifiersTree mods = clazz.getModifiers();
-                Set<Modifier> s = new HashSet<Modifier>(mods.getFlags());
-                s.add(Modifier.ABSTRACT);
+                Set<Modifier> s = EnumSet.of(Modifier.ABSTRACT);
+                s.addAll(mods.getFlags());
                 workingCopy.rewrite(mods, make.Modifiers(s));
             }
             
@@ -687,8 +687,8 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 ModifiersTree mods = clazz.getModifiers();
-                Set<Modifier> flags = new HashSet<Modifier>(mods.getFlags());
-                flags.add(Modifier.ABSTRACT);
+                Set<Modifier> flags = EnumSet.of(Modifier.ABSTRACT);
+                flags.addAll(mods.getFlags());
                 workingCopy.rewrite(mods, make.Modifiers(flags, mods.getAnnotations()));
             }
             
@@ -1017,7 +1017,8 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 ModifiersTree mods = clazz.getModifiers();
-                Set<Modifier> flags = new HashSet<Modifier>(mods.getFlags());
+                Set<Modifier> flags = EnumSet.noneOf(Modifier.class);
+                flags.addAll(mods.getFlags());
                 flags.remove(Modifier.PUBLIC);
                 ModifiersTree modified = make.Modifiers(flags);
                 

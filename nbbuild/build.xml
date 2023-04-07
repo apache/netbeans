@@ -95,6 +95,8 @@
         <include name="platform/javahelp/external/jhall*.jar"/>
         <!-- For json parsing -->
         <include name="nbbuild/external/json-simple*.jar"/>
+        <!-- For parsing some web : -->
+        <include name="nbbuild/external/jsoup*.jar"/>
       </fileset>
     </path>
     <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
@@ -324,6 +326,7 @@ metabuild.hash=${metabuild.hash}</echo>
           <buildpath path="${modules.sorted}"/>
           <property name="base.nbm.target.dir" value="${base.nbm.target.dir}"/>
           <property name="nbm.always.create" value="true" />
+          <property name="buildnumber" value="${buildnumber}" />
       </subant-junit>
   </target>
 
@@ -334,6 +337,7 @@ metabuild.hash=${metabuild.hash}</echo>
       <subant-junit target="nbm-nosignature" failonerror="${nbms.fail.on.error}" report="${nb.build.dir}/build-nbms.xml" inheritall="false">
           <buildpath path="${modules.sorted}"/>
           <property name="base.nbm.target.dir" value="${base.nbm.target.dir}"/>
+          <property name="buildnumber" value="${buildnumber}" />
       </subant-junit>
   </target>
 

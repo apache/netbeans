@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.68
+#Version 1.70
 
 CLSS public abstract interface java.io.Serializable
 
@@ -138,8 +138,11 @@ meth public int getColumnWidth()
 meth public int getCurrentOrderNumber()
 meth public java.beans.PropertyEditor getPropertyEditor()
 meth public java.lang.Character getDisplayedMnemonic()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getNextColumnID()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getPreviuosColumnID()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getShortDescription()
 meth public void setColumnWidth(int)
 meth public void setCurrentOrderNumber(int)

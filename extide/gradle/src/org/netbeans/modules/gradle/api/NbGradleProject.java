@@ -70,7 +70,7 @@ public final class NbGradleProject {
      * E.g. If we just need to know if the project is a Gradle project, there
      * is no need to go and fetch all the dependencies.
      * <p>
-     * <img src="doc-files/gradle-quality.png" alt="Quality States"/>
+     * <img src="doc-files/gradle-quality.png" alt="Quality States">
      * </p>
      * <p>
      * Gradle project is associated with the quality of the
@@ -262,9 +262,9 @@ public final class NbGradleProject {
      * the current {@link #getQuality()} level. Reason for the reload may be specified: if the reload
      * takes some time (i.e. executing Gradle build), the IDE may use the {@code reason} text to annotate
      * the ongoing progress.
-     * <p/>
+     * <p>
      * The returned {@link CompletionStage} may complete in this thread, or asynchronously in an unspecified thread.
-     * <p/>
+     * <p>
      * Note that the loading may fail, so the returned Quality may be <b>less than requested</b>. For example
      * if the project is not trusted, its Gradle build will not be executed, so the returned quality can be {@link Quality#EVALUATED}.
      * 
@@ -396,7 +396,7 @@ public final class NbGradleProject {
      * @param l
      */
     public static void addPropertyChangeListener(Project project, PropertyChangeListener l) {
-        if (project != null && project instanceof NbGradleProjectImpl) {
+        if (project instanceof NbGradleProjectImpl) {
             ((NbGradleProjectImpl) project).getProjectWatcher().addPropertyChangeListener(l);
         } else {
             assert false : "Attempted to add PropertyChangeListener to project " + project; //NOI18N
@@ -410,7 +410,7 @@ public final class NbGradleProject {
      * @param l
      */
     public static void removePropertyChangeListener(Project project, PropertyChangeListener l) {
-        if (project != null && project instanceof NbGradleProjectImpl) {
+        if (project instanceof NbGradleProjectImpl) {
             ((NbGradleProjectImpl) project).getProjectWatcher().removePropertyChangeListener(l);
         } else {
             assert false : "Attempted to remove PropertyChangeListener to project " + project; //NOI18N

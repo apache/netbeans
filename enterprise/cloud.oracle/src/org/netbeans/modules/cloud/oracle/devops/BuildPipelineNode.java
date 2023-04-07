@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.openide.util.NbBundle;
 import org.netbeans.modules.cloud.oracle.OCINode;
@@ -53,9 +52,9 @@ public class BuildPipelineNode extends OCINode {
         return BuildPipelineNode::new;
     }
 
-    public static ChildrenProvider<DevopsProjectItem, BuildPipelineItem.BuildPipelineFolder> listDevopsPipelines() {
-        return project -> {
-            try ( DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
+    public static ChildrenProvider.SessionAware<DevopsProjectItem, BuildPipelineItem.BuildPipelineFolder> listDevopsPipelines() {
+        return (project, session) -> {
+            try ( DevopsClient client = session.newClient(DevopsClient.class)) {
                 ListBuildPipelinesRequest request = ListBuildPipelinesRequest.builder().projectId(project.getKey().getValue()).build();
                 ListBuildPipelinesResponse response = client.listBuildPipelines(request);
                 List<BuildPipelineSummary> projects = response.getBuildPipelineCollection().getItems();

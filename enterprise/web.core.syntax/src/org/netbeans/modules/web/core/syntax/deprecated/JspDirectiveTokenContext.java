@@ -34,7 +34,7 @@ import org.netbeans.editor.BaseTokenID;
 * @author Marek Fukala
 * @deprecated Use Jsp Lexer instead.
 */
-
+@Deprecated
 public class JspDirectiveTokenContext extends JspTagTokenContext {
 
     //token ids - are inherited from superclass

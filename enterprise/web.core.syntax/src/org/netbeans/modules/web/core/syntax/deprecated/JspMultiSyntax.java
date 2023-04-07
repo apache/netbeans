@@ -37,7 +37,7 @@ import org.netbeans.editor.TokenID;
 * @version 1.00
 * @deprecated Use JSP Lexer instead
 */
-
+@Deprecated
 public class JspMultiSyntax extends Syntax {
 
     //<editor-fold defaultstate="collapsed" desc="class & instance members">

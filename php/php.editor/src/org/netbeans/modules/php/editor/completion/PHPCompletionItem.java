@@ -272,7 +272,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         ElementHandle elem = getElement();
         if (elem instanceof MethodElement) {
             final MethodElement method = (MethodElement) elem;
-            if (method.isConstructor() && request.context.equals(CompletionContext.NEW_CLASS)) {
+            if (method.isConstructor() && isNewClassContext(request.context)) {
                 elem = method.getType();
             }
         }
@@ -445,6 +445,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             }
         }
         return result;
+    }
+
+    private boolean isNewClassContext(CompletionContext context) {
+        return context.equals(CompletionContext.NEW_CLASS)
+                || context.equals(CompletionContext.THROW_NEW);
     }
 
     static class NewClassItem extends MethodElementItem {

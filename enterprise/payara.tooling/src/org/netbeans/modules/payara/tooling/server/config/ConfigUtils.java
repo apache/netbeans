@@ -102,8 +102,8 @@ public class ConfigUtils {
         List<String> paths = fileset.getPaths();
         ArrayList<File> result = new ArrayList<>();
 
-        for (String dir : filesets.keySet()) {
-            File d = new File(dir);
+        for (Map.Entry<String, List<String>> it : filesets.entrySet()) {
+            File d = new File(it.getKey());
             String dirPrefix;
             if (!d.isAbsolute()) {
                 dirPrefix = new File(rootDir, d.getPath()).getAbsolutePath();
@@ -111,7 +111,7 @@ public class ConfigUtils {
                 dirPrefix = d.getAbsolutePath();
             }
             
-            List<Pattern> patterns = compilePatterns(filesets.get(dir));
+            List<Pattern> patterns = compilePatterns(it.getValue());
             File[] fileArray = new File(dirPrefix).listFiles(createFilter(
                     patterns));
             if (fileArray != null) {

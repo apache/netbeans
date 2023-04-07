@@ -1,0 +1,18 @@
+    private ?mixed $mixed;
+             -----
+HINT:"mixed" cannot be used as a nullable type.
+    private ?null $null;
+             ----
+HINT:"null" cannot be used as a nullable type.
+    public function returnMixed(): ?mixed {
+                                    -----
+HINT:"mixed" cannot be used as a nullable type.
+    public function returnNull(): ?null {
+                                   ----
+HINT:"null" cannot be used as a nullable type.
+    public function parameterMixed(?mixed $mixed) {
+                                    -----
+HINT:"mixed" cannot be used as a nullable type.
+    public function parameterNull(?null $null) {
+                                   ----
+HINT:"null" cannot be used as a nullable type.

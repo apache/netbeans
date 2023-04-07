@@ -121,7 +121,7 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
         // Creating steps.
         Object prop = wizard.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = createSteps(beforeSteps, panels);
@@ -181,7 +181,7 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
                         break;
                 }
             } else {
-                if (targetName.equalsIgnoreCase(beanName) && targetName.substring(0, 1).toLowerCase().equals(beanName.substring(0, 1))) {
+                if (targetName.equalsIgnoreCase(beanName) && targetName.substring(0, 1).equalsIgnoreCase(beanName.substring(0, 1))) {
                     templateProperties.put("classAnnotation", "@ManagedBean");   //NOI18N
                 } else {
                     templateProperties.put("classAnnotation", "@ManagedBean(name=\"" + beanName + "\")");   //NOI18N

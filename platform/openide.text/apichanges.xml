@@ -532,7 +532,7 @@
         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
         <description>
             <p>An <code>ActiveEditorDrop</code> interface has been added due to 
-                drag and drop callback support described at <a href="http://www.netbeans.org/issues/show_bug.cgi?id=61367">issue #61367</a>
+                drag and drop callback support described at <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=61367">issue #61367</a>
             </p>
         </description>
         <class package="org.openide.text" name="ActiveEditorDrop"/>

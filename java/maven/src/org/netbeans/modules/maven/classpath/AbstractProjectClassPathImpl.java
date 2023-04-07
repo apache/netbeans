@@ -94,11 +94,8 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
         if (oldValues == null) {
             return (newValues != null);
         }
-        Iterator<PathResourceImplementation> it = oldValues.iterator();
-        ArrayList<PathResourceImplementation> nl = new ArrayList<PathResourceImplementation>();
-        nl.addAll(newValues);
-        while (it.hasNext()) {
-            PathResourceImplementation res = it.next();
+        ArrayList<PathResourceImplementation> nl = new ArrayList<>(newValues);
+        for (PathResourceImplementation res : oldValues) {
             URL oldUrl = res.getRoots()[0];
             boolean found = false;
             if (nl.isEmpty()) {
@@ -144,12 +141,7 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
     abstract URI[] createPath();
     
     private List<PathResourceImplementation> getPath() {
-        List<PathResourceImplementation> base = getPath(createPath(), new Includer() {
-            @Override public boolean includes(URL root, String resource) {
-                return AbstractProjectClassPathImpl.this.includes(root, resource);
-            }
-        });
-        return Collections.<PathResourceImplementation>unmodifiableList(base);
+        return Collections.unmodifiableList(getPath(createPath(), AbstractProjectClassPathImpl.this::includes));
     }
 
     protected boolean includes(URL root, String resource) {
@@ -160,12 +152,12 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
         boolean includes(URL root, String resource);
     }
     
-    public static  List<PathResourceImplementation> getPath(URI[] pieces, final Includer includer) {
-        List<PathResourceImplementation> result = new ArrayList<PathResourceImplementation>();
-        for (int i = 0; i < pieces.length; i++) {
+    public static List<PathResourceImplementation> getPath(URI[] pieces, final Includer includer) {
+        List<PathResourceImplementation> result = new ArrayList<>();
+        for (URI piece : pieces) {
             try {
                 // XXX would be cleaner to take a File[] if that is what these all are anyway!
-                final URL entry = FileUtil.urlForArchiveOrDir(Utilities.toFile(pieces[i]));
+                final URL entry = FileUtil.urlForArchiveOrDir(Utilities.toFile(piece));
                 if (entry != null) {
                     result.add(new FilteringPathResourceImplementation() {
                         @Override public boolean includes(URL root, String resource) {
@@ -182,7 +174,7 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
                     });
                 }
             } catch (IllegalArgumentException exc) {
-                Logger.getLogger(AbstractProjectClassPathImpl.class.getName()).log(Level.INFO, "Cannot use uri " + pieces[i] + " for classpath", exc);
+                Logger.getLogger(AbstractProjectClassPathImpl.class.getName()).log(Level.INFO, "Cannot use uri " + piece + " for classpath", exc);
             }
         }
         return result;

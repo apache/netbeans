@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.71
+#Version 2.73
 
 CLSS public abstract interface !annotation com.google.common.annotations.Beta
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -4025,6 +4025,7 @@ meth public java.lang.String getScriptSourceDirectory()
 meth public java.lang.String getSourceDirectory()
 meth public java.lang.String getTestOutputDirectory()
 meth public java.lang.String getTestSourceDirectory()
+meth public java.lang.String toString()
 meth public java.util.List<org.apache.maven.model.Extension> getExtensions()
 meth public org.apache.maven.model.Build clone()
 meth public void addExtension(org.apache.maven.model.Extension)
@@ -4045,6 +4046,7 @@ intf java.lang.Cloneable
 meth public java.lang.String getDefaultGoal()
 meth public java.lang.String getDirectory()
 meth public java.lang.String getFinalName()
+meth public java.lang.String toString()
 meth public java.util.List<java.lang.String> getFilters()
 meth public java.util.List<org.apache.maven.model.Resource> getResources()
 meth public java.util.List<org.apache.maven.model.Resource> getTestResources()
@@ -4115,6 +4117,7 @@ meth public java.lang.String getOrganization()
 meth public java.lang.String getOrganizationUrl()
 meth public java.lang.String getTimezone()
 meth public java.lang.String getUrl()
+meth public java.lang.String toString()
 meth public java.util.List<java.lang.String> getRoles()
 meth public java.util.Properties getProperties()
 meth public org.apache.maven.model.Contributor clone()
@@ -4203,6 +4206,7 @@ cons public init()
 intf java.io.Serializable
 intf java.lang.Cloneable
 meth public java.lang.String getId()
+meth public java.lang.String toString()
 meth public org.apache.maven.model.Developer clone()
 meth public void setId(java.lang.String)
 supr org.apache.maven.model.Contributor
@@ -4331,6 +4335,7 @@ intf java.lang.Cloneable
 intf org.apache.maven.model.InputLocationTracker
 meth public java.lang.String getSystem()
 meth public java.lang.String getUrl()
+meth public java.lang.String toString()
 meth public org.apache.maven.model.InputLocation getLocation(java.lang.Object)
 meth public org.apache.maven.model.IssueManagement clone()
 meth public void setLocation(java.lang.Object,org.apache.maven.model.InputLocation)
@@ -4349,6 +4354,7 @@ meth public java.lang.String getComments()
 meth public java.lang.String getDistribution()
 meth public java.lang.String getName()
 meth public java.lang.String getUrl()
+meth public java.lang.String toString()
 meth public org.apache.maven.model.InputLocation getLocation(java.lang.Object)
 meth public org.apache.maven.model.License clone()
 meth public void setComments(java.lang.String)
@@ -4370,6 +4376,7 @@ meth public java.lang.String getName()
 meth public java.lang.String getPost()
 meth public java.lang.String getSubscribe()
 meth public java.lang.String getUnsubscribe()
+meth public java.lang.String toString()
 meth public java.util.List<java.lang.String> getOtherArchives()
 meth public org.apache.maven.model.InputLocation getLocation(java.lang.Object)
 meth public org.apache.maven.model.MailingList clone()
@@ -4530,6 +4537,7 @@ intf java.lang.Cloneable
 intf org.apache.maven.model.InputLocationTracker
 meth public java.lang.String getName()
 meth public java.lang.String getUrl()
+meth public java.lang.String toString()
 meth public org.apache.maven.model.InputLocation getLocation(java.lang.Object)
 meth public org.apache.maven.model.Organization clone()
 meth public void setLocation(java.lang.Object,org.apache.maven.model.InputLocation)
@@ -4622,6 +4630,7 @@ CLSS public org.apache.maven.model.PluginConfiguration
 cons public init()
 intf java.io.Serializable
 intf java.lang.Cloneable
+meth public java.lang.String toString()
 meth public org.apache.maven.model.PluginConfiguration clone()
 meth public org.apache.maven.model.PluginManagement getPluginManagement()
 meth public void setPluginManagement(org.apache.maven.model.PluginManagement)
@@ -4633,6 +4642,7 @@ cons public init()
 intf java.io.Serializable
 intf java.lang.Cloneable
 intf org.apache.maven.model.InputLocationTracker
+meth public java.lang.String toString()
 meth public java.util.List<org.apache.maven.model.Plugin> getPlugins()
 meth public java.util.Map<java.lang.String,org.apache.maven.model.Plugin> getPluginsAsMap()
 meth public org.apache.maven.model.InputLocation getLocation(java.lang.Object)
@@ -4875,6 +4885,7 @@ meth public java.lang.String getConnection()
 meth public java.lang.String getDeveloperConnection()
 meth public java.lang.String getTag()
 meth public java.lang.String getUrl()
+meth public java.lang.String toString()
 meth public org.apache.maven.model.InputLocation getLocation(java.lang.Object)
 meth public org.apache.maven.model.Scm clone()
 meth public void setChildScmConnectionInheritAppendPath(boolean)
@@ -8448,14 +8459,16 @@ cons public init()
 meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration setAll(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
 meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration setGet(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
 meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration setHead(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
+meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration setMkcol(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
 meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration setPut(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
 meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getAll()
 meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getGet()
 meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getHead()
 meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getMethodConfiguration(org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest)
+meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getMkcol()
 meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getPut()
 supr java.lang.Object
-hfds DEFAULT_PUT,all,get,head,put
+hfds all,get,head,mkcol,put
 
 CLSS public org.apache.maven.wagon.providers.http.wagon.shared.HttpMessageUtils
 cons public init()

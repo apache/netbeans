@@ -29,7 +29,7 @@ import org.openide.util.NbBundle;
 */
 class GrantAccessPanel extends javax.swing.JPanel {
 
-    private String msg;
+    private final String msg;
 
     /** Creates new panel */
     public GrantAccessPanel (String msg) {
@@ -55,9 +55,7 @@ class GrantAccessPanel extends javax.swing.JPanel {
         localTopMessage.setDisabledTextColor (javax.swing.UIManager.getColor ("Label.foreground"));  // NOI18N
         localTopMessage.setFont (javax.swing.UIManager.getFont ("Label.font")); // NOI18N
 
-        StringBuffer lTopMessage = new StringBuffer();
-        lTopMessage.append(msg);
-        localTopMessage.setText(lTopMessage.toString());
+        localTopMessage.setText(msg != null ? msg : "");
         add(localTopMessage, java.awt.BorderLayout.NORTH);
         
         Mnemonics.setLocalizedText(jCheckBox1, NbBundle.getMessage (GrantAccessPanel.class, "CTL_DNSTDNT"));
@@ -65,7 +63,6 @@ class GrantAccessPanel extends javax.swing.JPanel {
         add(jCheckBox1, java.awt.BorderLayout.SOUTH);
     }
 
-    private javax.swing.JLabel jLabel;
     private javax.swing.JCheckBox jCheckBox1;
 
     // main methods ....................................................................................

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64
+#Version 1.66
 
 CLSS public java.lang.Object
 cons public init()
@@ -167,6 +167,7 @@ CLSS public abstract interface static org.netbeans.modules.progress.spi.RunOffED
  outer org.netbeans.modules.progress.spi.RunOffEDTProvider
 intf org.netbeans.modules.progress.spi.RunOffEDTProvider$Progress
 meth public abstract void runOffEventThreadWithCustomDialogContent(java.lang.Runnable,java.lang.String,javax.swing.JPanel,int,int)
+ anno 0 java.lang.Deprecated()
 meth public abstract void runOffEventThreadWithProgressDialog(java.lang.Runnable,java.lang.String,org.netbeans.api.progress.ProgressHandle,boolean,int,int)
 
 CLSS public final org.netbeans.modules.progress.spi.TaskModel

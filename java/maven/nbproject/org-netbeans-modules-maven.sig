@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.154
+#Version 2.157.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1133,6 +1133,8 @@ meth public java.net.URI getEarAppDirectory()
 meth public java.net.URI getWebAppDirectory()
 meth public java.net.URI[] getResources(boolean)
 meth public org.apache.maven.model.Model getRawModel() throws org.apache.maven.model.building.ModelBuildingException
+meth public org.apache.maven.project.MavenProject getEvaluatedProject(org.netbeans.api.project.ProjectActionContext)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.apache.maven.project.MavenProject getMavenProject()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.apache.maven.project.MavenProject loadAlternateMavenProject(org.netbeans.modules.maven.embedder.MavenEmbedder,java.util.List<java.lang.String>,java.util.Properties)
@@ -1155,7 +1157,7 @@ meth public void synchronousDependencyDownload()
 meth public void triggerDependencyDownload()
 meth public void triggerSourceJavadocDownload(boolean)
 supr java.lang.Object
-hfds BINARYRP,NONBINARYRP,files,listener,project,support,task
+hfds BINARYRP,LOG,NONBINARYRP,files,listener,project,support,task
 hcls AccessorImpl,FCHSL
 
 CLSS public org.netbeans.modules.maven.api.PluginPropertyUtils
@@ -1469,7 +1471,7 @@ meth public void removePOMModification(org.netbeans.modules.maven.model.ModelOpe
 meth public void setActiveConfiguration(org.netbeans.modules.maven.api.customizer.ModelHandle2$Configuration)
 meth public void setRawAuxiliaryProperty(java.lang.String,java.lang.String,boolean)
 supr java.lang.Object
-hfds active,auxiliaryProps,configurations,mappings,modConfig,model,modifiedMappings,pomOperations,project,transPropsPrivate,transPropsShared
+hfds active,allActions,auxiliaryProps,configurations,mappings,modConfig,model,modifiedMappings,pomOperations,project,transPropsPrivate,transPropsShared
 hcls AccessorImpl
 
 CLSS public static org.netbeans.modules.maven.api.customizer.ModelHandle2$Configuration
@@ -1663,6 +1665,7 @@ meth public static boolean isCompileOnSaveEnabled(org.netbeans.api.project.Proje
 meth public static boolean isCompileOnSaveEnabled(org.netbeans.modules.maven.api.execute.RunConfig)
 meth public static org.netbeans.modules.maven.api.execute.RunConfig cloneRunConfig(org.netbeans.modules.maven.api.execute.RunConfig)
 meth public static org.netbeans.modules.maven.api.execute.RunConfig createRunConfig(java.io.File,org.netbeans.api.project.Project,java.lang.String,java.util.List<java.lang.String>)
+meth public static org.netbeans.modules.maven.api.execute.RunConfig createRunConfig(java.lang.String,org.netbeans.api.project.Project,org.netbeans.spi.project.ProjectConfiguration,org.openide.util.Lookup)
 meth public static org.openide.execution.ExecutorTask executeMaven(org.netbeans.modules.maven.api.execute.RunConfig)
 meth public static org.openide.execution.ExecutorTask run(org.netbeans.modules.maven.api.execute.RunConfig)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
@@ -1847,6 +1850,9 @@ meth public static org.netbeans.modules.maven.execute.AbstractOutputHandler$Leve
 meth public static org.netbeans.modules.maven.execute.AbstractOutputHandler$Level[] values()
 supr java.lang.Enum<org.netbeans.modules.maven.execute.AbstractOutputHandler$Level>
 
+CLSS public abstract interface org.netbeans.modules.maven.execute.ActionNameProvider
+meth public abstract java.util.ResourceBundle getTranslations()
+
 CLSS public final org.netbeans.modules.maven.execute.ActionToGoalUtils
 fld public static org.netbeans.modules.maven.execute.ActionToGoalUtils$ContextAccessor ACCESSOR
 innr public abstract static ContextAccessor
@@ -1938,7 +1944,7 @@ meth protected org.openide.windows.InputOutput getIO()
 meth public org.netbeans.modules.maven.execute.cmd.ExecutionEventObject$Tree getExecutionTree()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 supr org.netbeans.modules.maven.execute.AbstractOutputHandler
-hfds DOWNLOAD,END_TO_START_Mappings,LOG,PROCESSOR,SEC_MOJO_EXEC,addMojoFold,addProjectFold,contextImpl,currentProject,currentTag,currentTreeNode,executionTree,firstFailure,forkCount,handle,inStackTrace,inp,inputOutput,linePattern,mavenSomethingPlugin,mavencoreurls,outTask,parser,projectCount,reactorFailure,reactorSize,somethingMavenPlugin,stackTraceElement,state,stdOut
+hfds END_TO_START_Mappings,LOG,PROCESSOR,SEC_MOJO_EXEC,addMojoFold,addProjectFold,contextImpl,currentProject,currentTag,currentTreeNode,executionTree,firstFailure,foldsBroken,forkCount,handle,inStackTrace,inp,inputOutput,linePattern,mavenSomethingPlugin,mavencoreurls,outTask,parser,projectCount,reactorFailure,reactorSize,somethingMavenPlugin,stackTraceElement,state,stdOut
 hcls FindByEvents,FindByName,Input,Output,ProgressState
 
 CLSS public static org.netbeans.modules.maven.execute.CommandLineOutputHandler$ContextImpl
@@ -1955,6 +1961,7 @@ hfds currentProject,executionTree
 CLSS public org.netbeans.modules.maven.execute.DefaultActionGoalProvider
 cons public init()
 meth protected java.io.InputStream getActionDefinitionStream()
+meth public static org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Reader createI18nReader(java.util.ResourceBundle)
 supr org.netbeans.modules.maven.spi.actions.AbstractMavenActionsProvider
 hfds MAPPINGS
 
@@ -1977,7 +1984,7 @@ meth public boolean cancel()
 meth public static org.openide.execution.ExecutorTask executeMaven(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
 meth public void run()
 supr org.netbeans.modules.maven.execute.AbstractMavenExecutor
-hfds ENV_JAVAHOME,ENV_PREFIX,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER17,preProcess,preProcessUUID,process,processUUID
+hfds ENV_JAVAHOME,ENV_PREFIX,ICON_MAVEN_PROJECT,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER17,preProcess,preProcessUUID,process,processUUID
 hcls WrapperShellConstructor
 
 CLSS public static org.netbeans.modules.maven.execute.MavenCommandLineExecutor$ExecuteMaven
@@ -1991,6 +1998,39 @@ intf java.lang.Runnable
 meth public abstract org.openide.windows.InputOutput getInputOutput()
 meth public abstract void addInitialMessage(java.lang.String,org.openide.windows.OutputListener)
 meth public abstract void setTask(org.openide.execution.ExecutorTask)
+
+CLSS public org.netbeans.modules.maven.execute.MavenProxySupport
+cons public init(org.netbeans.api.project.Project)
+innr public final static !enum Status
+innr public final static ProxyResult
+meth public java.util.concurrent.CompletableFuture<org.netbeans.modules.maven.execute.MavenProxySupport$ProxyResult> checkProxySettings()
+supr java.lang.Object
+hfds FILENAME_BASE_SETTINGS,FILENAME_SETTINGS,FILENAME_SETTINGS_EXT,FILENAME_SUFFIX_OLD,ICON_MAVEN_PROJECT,LOG,PORT_DEFAULT_HTTP,PORT_DEFAULT_HTTPS,PROBE_URI_STRING,SUFFIX_NEW_PROXY,SUFFIX_NONE_PROXY,TAG_ACTIVE_END,TAG_ACTIVE_START,TAG_NAME_ACTIVE,TAG_PROXIES,TAG_PROXY,TAG_SETTINGS,acknowledgedResults
+hcls LineAndColumn,Processor,ProxyInfo,TagInfo,TextInfo,XppDelegate
+
+CLSS public final static org.netbeans.modules.maven.execute.MavenProxySupport$ProxyResult
+ outer org.netbeans.modules.maven.execute.MavenProxySupport
+cons public init(org.netbeans.modules.maven.execute.MavenProxySupport$Status,java.net.Proxy)
+cons public init(org.netbeans.modules.maven.execute.MavenProxySupport$Status,java.net.Proxy,java.lang.String,java.lang.String,java.lang.String,int,boolean,org.apache.maven.settings.Settings)
+meth public java.io.IOException getException()
+meth public java.lang.String getProxySpec()
+meth public java.lang.String getToolProxy()
+meth public java.net.Proxy getProxy()
+meth public org.netbeans.modules.maven.execute.BeanRunConfig configure(org.netbeans.modules.maven.execute.BeanRunConfig) throws java.io.IOException
+meth public org.netbeans.modules.maven.execute.MavenProxySupport$Status getStatus()
+supr java.lang.Object
+hfds FMT_PROXY_HOST,FMT_PROXY_PORT,adoc,exception,fileLookup,mavenSettings,nonDefaultPort,proxy,proxyHost,proxyPort,proxySpec,settingsDir,settingsEditor,settingsFileName,settingsLineDoc,status,textInfo,toolProxy
+
+CLSS public final static !enum org.netbeans.modules.maven.execute.MavenProxySupport$Status
+ outer org.netbeans.modules.maven.execute.MavenProxySupport
+fld public final static org.netbeans.modules.maven.execute.MavenProxySupport$Status ABORT
+fld public final static org.netbeans.modules.maven.execute.MavenProxySupport$Status CONTINUE
+fld public final static org.netbeans.modules.maven.execute.MavenProxySupport$Status OVERRIDE
+fld public final static org.netbeans.modules.maven.execute.MavenProxySupport$Status RECONFIGURED
+fld public final static org.netbeans.modules.maven.execute.MavenProxySupport$Status UNKNOWN
+meth public static org.netbeans.modules.maven.execute.MavenProxySupport$Status valueOf(java.lang.String)
+meth public static org.netbeans.modules.maven.execute.MavenProxySupport$Status[] values()
+supr java.lang.Enum<org.netbeans.modules.maven.execute.MavenProxySupport$Status>
 
 CLSS public final org.netbeans.modules.maven.execute.ModelRunConfig
 cons public init(org.netbeans.api.project.Project,org.netbeans.modules.maven.execute.model.NetbeansActionMapping,java.lang.String,org.openide.filesystems.FileObject,org.openide.util.Lookup,boolean)

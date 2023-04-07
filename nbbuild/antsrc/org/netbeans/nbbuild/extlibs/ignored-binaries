@@ -76,3 +76,7 @@ nbbuild/installer/jnlp/external/*
 
 # Temporary product of building VSCode extension
 java/java.lsp.server/nbcode/dist/nbcode.zip
+
+# Simple Rust empty template project
+rust/rust.project/src/org/netbeans/modules/rust/project/templates/RustProjectTemplateProject.zip
+

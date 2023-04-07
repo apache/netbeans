@@ -95,7 +95,7 @@ public class StaticImport {
             return null;
         }
 
-        if (ElementKind.METHOD.equals(e.getKind())) {
+        if (ElementKind.METHOD == e.getKind()) {
             TreePath mitp = treePath.getParentPath();
             if (mitp == null || mitp.getLeaf().getKind() != Kind.METHOD_INVOCATION) {
             return null;

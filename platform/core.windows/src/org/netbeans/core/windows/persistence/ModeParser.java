@@ -454,14 +454,14 @@ class ModeParser {
             //if (DEBUG) Debug.log(ModeParser.class, "-- -- tcRefCfg[" + i + "]: " + mc.tcRefConfigs[i].tc_id);
             tcRefConfigMap.put(mc.tcRefConfigs[i].tc_id, mc.tcRefConfigs[i]);
         }
-        TCRefParser tcRefParser;
+
         List<String> toDelete = new ArrayList<String>(10);
-        for (String s: tcRefParserMap.keySet()) {
-            tcRefParser = tcRefParserMap.get(s);
+        for (TCRefParser tcRefParser : tcRefParserMap.values()) {
             if (!tcRefConfigMap.containsKey(tcRefParser.getName())) {
                 toDelete.add(tcRefParser.getName());
             }
         }
+
         for (int i = 0; i < toDelete.size(); i++) {
             //if (DEBUG) Debug.log(ModeParser.class, " ** REMOVE FROM MAP tcRefParser: " + toDelete.get(i));
             tcRefParserMap.remove(toDelete.get(i));
@@ -474,7 +474,7 @@ class ModeParser {
         for (int i = 0; i < mc.tcRefConfigs.length; i++) {
             //if (DEBUG) Debug.log(ModeParser.class, "-- -- tcRefCfg[" + i + "]: " + mc.tcRefConfigs[i].tc_id);
             if (!tcRefParserMap.containsKey(mc.tcRefConfigs[i].tc_id)) {
-                tcRefParser = new TCRefParser(mc.tcRefConfigs[i].tc_id);
+                TCRefParser tcRefParser = new TCRefParser(mc.tcRefConfigs[i].tc_id);
                 //if (DEBUG) Debug.log(ModeParser.class, " ** CREATE tcRefParser:" + tcRefParser.getName());
                 tcRefParserMap.put(mc.tcRefConfigs[i].tc_id, tcRefParser);
             }
@@ -490,7 +490,7 @@ class ModeParser {
         //if (DEBUG) Debug.log(ModeParser.class, "writeTCRefs" + " localFolder:" + localFolder);
         
         for (Iterator<String> it = tcRefParserMap.keySet().iterator(); it.hasNext(); ) {
-            tcRefParser = tcRefParserMap.get(it.next());
+            TCRefParser tcRefParser = tcRefParserMap.get(it.next());
             tcRefParser.setLocalParentFolder(localFolder);
             tcRefParser.setInLocalFolder(true);
             tcRefParser.save((TCRefConfig) tcRefConfigMap.get(tcRefParser.getName()));
@@ -1028,7 +1028,8 @@ class ModeParser {
             modeConfig = null;
             internalConfig = null;
         }
-        
+
+        @Override
         public void startElement (String nameSpace, String name, String qname, Attributes attrs) throws SAXException {
             if ("mode".equals(qname)) { // NOI18N
                 handleMode(attrs);
@@ -1069,7 +1070,8 @@ class ModeParser {
                 //Parse version < 2.0
             }
         }
-        
+
+        @Override
         public void error(SAXParseException ex) throws SAXException  {
             throw ex;
         }

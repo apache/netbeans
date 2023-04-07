@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
@@ -456,43 +458,146 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
 
     @Override
     public Set<Profile> getSupportedProfiles() {
-        Set<Profile> profiles = new HashSet<>(5);
-        //if (!manager.isTomEE()) {
-            // TomEE is new and it actually does not support older specs (classloading separation etc).
-            // we will see if that's a problem for anybody
-            profiles.add(Profile.J2EE_13);
-            profiles.add(Profile.J2EE_14);
-            if (manager.isTomcat60() || manager.isAboveTomcat70()) {
-                profiles.add(Profile.JAVA_EE_5);
+        Set<Profile> profiles = new HashSet<>(10);
+
+        if (manager.isTomEE()) {
+            // Only TomEE versions 8/9 of type Plus/PluME support full profile
+            if (manager.getTomEEType().ordinal() >= 3 ) {
+                switch (manager.getTomEEVersion()) {
+                    case TOMEE_90:
+                        profiles.add(Profile.JAKARTA_EE_9_1_FULL);
+                        break;
+                    case TOMEE_80:
+                        profiles.add(Profile.JAKARTA_EE_8_FULL);
+                        profiles.add(Profile.JAVA_EE_8_FULL);
+                        profiles.add(Profile.JAVA_EE_7_FULL);
+                        profiles.add(Profile.JAVA_EE_6_FULL);
+                        break;
+                    default:
+                        break;
+                }
             }
-        //}
-        if (manager.isAboveTomcat70()) {
-            profiles.add(Profile.JAVA_EE_6_WEB);
-        }
-        if (manager.isTomcat80() || manager.isTomcat90()) {
-            profiles.add(Profile.JAVA_EE_7_WEB);
+            switch (manager.getTomEEVersion()) {
+                case TOMEE_90:
+                    profiles.add(Profile.JAKARTA_EE_9_1_WEB);
+                    break;
+                case TOMEE_80:
+                    profiles.add(Profile.JAKARTA_EE_8_WEB);
+                    profiles.add(Profile.JAVA_EE_8_WEB);
+                    profiles.add(Profile.JAVA_EE_7_WEB);
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                case TOMEE_71:
+                case TOMEE_70:
+                    profiles.add(Profile.JAVA_EE_7_WEB);
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                case TOMEE_17:
+                case TOMEE_16:
+                case TOMEE_15:
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (manager.getTomcatVersion()) {
+                case TOMCAT_110:
+                    profiles.add(Profile.JAKARTA_EE_10_WEB);
+                    break;
+                case TOMCAT_101:
+                    profiles.add(Profile.JAKARTA_EE_10_WEB);
+                    break;
+                case TOMCAT_100:
+                    profiles.add(Profile.JAKARTA_EE_9_1_WEB);
+                    profiles.add(Profile.JAKARTA_EE_9_WEB);
+                    break;
+                case TOMCAT_90:
+                    profiles.add(Profile.JAKARTA_EE_8_WEB);
+                    profiles.add(Profile.JAVA_EE_8_WEB);
+                    profiles.add(Profile.JAVA_EE_7_WEB);
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                case TOMCAT_80:
+                    profiles.add(Profile.JAVA_EE_7_WEB);
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                case TOMCAT_70:
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                case TOMCAT_60:
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                case TOMCAT_55:
+                case TOMCAT_50:
+                    profiles.add(Profile.J2EE_14);
+                    break;
+                default:
+                    break;
+            }
         }
         return profiles;
     }
     
     @Override
     public Set<String> getSupportedJavaPlatformVersions() {
-        Set<String> versions = new HashSet<>(6);
+        Set<String> versions = new HashSet<>(16);
 
-        if (!manager.isTomcat90()) {
-            if (!manager.isTomcat80()) {
-                if (!manager.isTomcat70()) {
-                    if (!manager.isTomcat60()) {
-                        versions.add("1.4"); // NOI18N
-                        versions.add("1.5"); // NOI18N
-                    }
-                    versions.add("1.5"); // NOI18N
-                }
-                versions.add("1.6"); // NOI18N
+        // TomEE has different supported Java versions
+        if (manager.isTomEE()) {
+            switch (manager.getTomEEVersion()) {
+                case TOMEE_90:
+                    versions = versionRange(11, 21);
+                    break;
+                case TOMEE_80:
+                    versions = versionRange(8, 21);
+                    break;
+                case TOMEE_71:
+                case TOMEE_70:
+                    versions = versionRange(7, 8);
+                    break;
+                case TOMEE_17:
+                case TOMEE_16:
+                case TOMEE_15:
+                    versions = versionRange(6, 8);
+                    break;
+                default:
+                    break;
             }
-            versions.add("1.7"); // NOI18N
+        } else {
+            switch (manager.getTomcatVersion()) {
+                case TOMCAT_110:
+                    versions = versionRange(17, 21);
+                    break;
+                case TOMCAT_101:
+                    versions = versionRange(11, 21);
+                    break;
+                case TOMCAT_100:
+                case TOMCAT_90:
+                    versions = versionRange(8, 21);
+                    break;
+                case TOMCAT_80:
+                    versions = versionRange(7, 21);
+                    break;
+                case TOMCAT_70:
+                    versions = versionRange(6, 21);
+                    break;
+                case TOMCAT_60:
+                    versions = versionRange(5, 8);
+                    break;
+                case TOMCAT_55:
+                case TOMCAT_50:
+                    versions = versionRange(4, 8);
+                    break;
+                default:
+                    break;
+            }
         }
-        versions.add("1.8"); // NOI18N
         return versions;
     }
     
@@ -509,10 +614,10 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         Collections.addAll(content, tp.getCatalinaHome(),
                 new EjbSupportImpl(manager), wsStack);
         if (manager.isTomEE()) {
-            content.add(new JpaSupportImpl());
-        }
-        if (manager.isTomEEJaxRS()) {
-            content.add(new JaxRsStackSupportImpl(this));
+            content.add(new JpaSupportImpl(manager));
+            if (manager.isTomEEJaxRS()) {
+                content.add(new JaxRsStackSupportImpl(this));
+            }
         }
 
         Lookup baseLookup = Lookups.fixed(content.toArray());
@@ -527,4 +632,21 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         lib.setContent(J2eeLibraryTypeProvider.VOLUME_TYPE_JAVADOC, tp.getJavadocs());
         lib.setContent(J2eeLibraryTypeProvider.VOLUME_TYPE_SRC, tp.getSources());        
     }
+    
+    /**
+     * Create Set containing desired java versions. e.g.
+     * <pre>{@code
+     *  Set<String> versions = versionRange(8, 11)
+     * }</pre>
+     * This Set will contain ["1.8", "9", "10", "11"]
+     * @param min minimum Java version {@code inclusive}
+     * @param max maximum Java version {@code inclusive}
+     * @return {@code Set<String>} of desired Java versions
+     */
+    private static Set<String> versionRange(int min, int max) {
+        return IntStream.range(min, max+1)
+                    .mapToObj((int v) ->  v > 8 ? Integer.toString(v) : "1." + v)
+                    .collect(Collectors.toSet());
+    }
+    
 }

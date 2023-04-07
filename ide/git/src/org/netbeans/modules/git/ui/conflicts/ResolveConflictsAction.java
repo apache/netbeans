@@ -64,7 +64,7 @@ public class ResolveConflictsAction extends MultipleRepositoryAction {
     protected Task performAction (File repository, File[] roots, VCSContext context) {
         final File[] files = Git.getInstance().getFileStatusCache().listFiles(roots, EnumSet.of(Status.IN_CONFLICT));
         if (files.length > 0) {
-            GitProgressSupport supp = new ResolveConflictsExecutor(files);;
+            GitProgressSupport supp = new ResolveConflictsExecutor(files);
             supp.start(Git.getInstance().getRequestProcessor(repository), repository, NbBundle.getMessage(ResolveConflictsAction.class, "MSG_PreparingMerge")); //NOI18N
             return supp.getTask();
         } else {

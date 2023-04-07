@@ -1,0 +1,1 @@
+for |>CUSTOM2:await<| (const i of num()) {}

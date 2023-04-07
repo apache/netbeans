@@ -25,6 +25,7 @@ import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.DeprecatedTree;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
+import static com.sun.source.doctree.DocTree.Kind.SUMMARY;
 import com.sun.source.doctree.EndElementTree;
 import com.sun.source.doctree.EntityTree;
 import com.sun.source.doctree.InheritDocTree;
@@ -37,6 +38,8 @@ import com.sun.source.doctree.SeeTree;
 import com.sun.source.doctree.SinceTree;
 import com.sun.source.doctree.SnippetTree;
 import com.sun.source.doctree.StartElementTree;
+import com.sun.source.doctree.SummaryTree;
+import com.sun.source.doctree.SystemPropertyTree;
 import com.sun.source.doctree.TextTree;
 import com.sun.source.doctree.ThrowsTree;
 import com.sun.source.doctree.UnknownBlockTagTree;
@@ -101,7 +104,6 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.preprocessorbridge.api.JavaSourceUtil;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -112,15 +114,16 @@ import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.xml.XMLUtil;
 
-import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
-import javax.tools.ToolProvider;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
-import com.sun.tools.javac.code.ClassFinder;
+import org.netbeans.api.java.queries.SourceLevelQuery;
+import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
 import org.netbeans.api.java.source.ui.snippet.MarkupTagProcessor;
+import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.openide.filesystems.FileSystem;
 
 /** Utility class for viewing Javadoc comments as HTML.
  *
@@ -1060,8 +1063,8 @@ public class ElementJavadoc {
                                 }
                                 sb.append(inlineTags(unTag.getContent(), path, doc, info.getDocTrees(), null));
                                 break;
-                    }
-                    break;
+                        }
+                        break;
                 }
             }
 
@@ -1325,6 +1328,24 @@ public class ElementJavadoc {
                     snippetCount++;
                     processDocSnippet(sb, (SnippetTree)tag, snippetCount,docPath, doc, trees);
                     break;
+                case SUMMARY:
+                    SummaryTree summaryTag = (SummaryTree)tag;
+                    List<? extends DocTree> summary = summaryTag.getSummary();
+                    sb.append(inlineTags(summary, docPath, doc, trees, null));
+                    break;
+                case SYSTEM_PROPERTY:
+                    SystemPropertyTree systemPropTag = (SystemPropertyTree) tag;
+                    sb.append("<code>"); //NOI18N
+                    sb.append(systemPropTag.getPropertyName());
+                    sb.append("</code>"); //NOI18N
+                    break;
+                default:
+                    sb.append("<code>"); //NOI18N
+                    try {
+                        sb.append(XMLUtil.toElementContent(tag.toString()));
+                    } catch (IOException ioe) {}
+                    sb.append("</code>"); //NOI18N
+                    break;
             }
         }
         return sb;
@@ -1434,8 +1455,8 @@ public class ElementJavadoc {
         String error = null;
         String text = null;
 
-        pckgName = pckgName.replaceAll("\\.", "\\\\");
-        FileObject snippetFile = classPath.findResource(pckgName + "\\snippet-files\\" + fileName);
+        pckgName = pckgName.replaceAll("\\.", "/");
+        FileObject snippetFile = classPath.findResource(pckgName + "/snippet-files/" + fileName);
         if (snippetFile == null || fileName.isEmpty()) {
             error = "error: snippet markup: File invalid";
             errorList.add(error);
@@ -1758,10 +1779,20 @@ public class ElementJavadoc {
 
     private static class JavaDocSnippetLinkTagFileObject extends SimpleJavaFileObject {
 
+        private static final URI fakeFileObjectURI;
+        static {
+            try {
+                FileSystem mfs = FileUtil.createMemoryFileSystem();
+                FileObject fakeFileObject = mfs.getRoot().createData("JavaDocSnippetLinkTagFileObject.java");
+                fakeFileObjectURI = fakeFileObject.toURI();
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
         private String text;
 
         public JavaDocSnippetLinkTagFileObject(String text) {
-            super(URI.create("myfo:/JavaDocSnippetLinkTag.java"), JavaFileObject.Kind.SOURCE); //NOI18N
+            super(fakeFileObjectURI, JavaFileObject.Kind.SOURCE); //NOI18N
             this.text = text;
         }
 
@@ -1772,17 +1803,7 @@ public class ElementJavadoc {
     }
     
     private void createSnippetMarkupLinkTag(StringBuilder sb, JavaDocSnippetLinkTagFileObject fileObject) throws IOException {
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        StringBuilder prjClsPath = new StringBuilder();
-        String prjSrcPath = cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE).toString();
-        prjClsPath.append(prjSrcPath);
-        
-        for(ClassPath.Entry cpe : cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE).entries()){
-            prjClsPath.append(";");
-            prjClsPath.append(cpe.getRoot().getFileSystem().getDisplayName());
-        }
-        List<String> opt = Arrays.asList("-cp",prjClsPath.toString());
-        JavacTask task = (JavacTask) compiler.getTask(null, null, null, opt, null, Arrays.asList(fileObject));
+        JavacTask task = JavacParser.createJavacTask(cpInfo, d -> {}, SourceLevelQuery.getSourceLevel(this.fileObject), Profile.DEFAULT, null, null, null, null, Collections.singletonList(fileObject));
 
         DocTrees docTrees = DocTrees.instance(task);//trees
         
@@ -1798,7 +1819,7 @@ public class ElementJavadoc {
                     for(DocTree dTree: body){
                         if(dTree instanceof LinkTree){
                             LinkTree linkTag = (LinkTree)dTree;
-                            appendReference(sb, linkTag.getReference(), body, path, doc, docTrees);
+                            appendReference(sb, linkTag.getReference(), linkTag.getLabel(), path, doc, docTrees);
                             break main;
                         }
                     }

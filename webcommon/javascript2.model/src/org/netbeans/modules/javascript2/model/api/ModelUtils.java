@@ -273,7 +273,7 @@ public class ModelUtils {
         while (result.getParent() != null && !(result.getParent() instanceof DeclarationScope)) {
             result = result.getParent();
         }
-        if (result.getParent() != null && result.getParent() instanceof DeclarationScope) {
+        if (result.getParent() instanceof DeclarationScope) {
             result = result.getParent();
         }
         if (!(result instanceof DeclarationScope)) {
@@ -544,7 +544,7 @@ public class ModelUtils {
         } else if(type.getType().startsWith(SemiTypeResolverVisitor.ST_VAR)){
             String name = type.getType().substring(5);
             DeclarationScope declarationScope = object instanceof DeclarationScope ? (DeclarationScope)object : getDeclarationScope(object);
-            List<JsObject> variables = new ArrayList(ModelUtils.getVariables(declarationScope));
+            List<JsObject> variables = new ArrayList<>(ModelUtils.getVariables(declarationScope));
             if (!(object instanceof DeclarationScope) && object.getParent() != null && !(object.getParent() instanceof DeclarationScope)) {
                 variables.addAll(object.getParent().getProperties().values());
             }
@@ -1755,7 +1755,7 @@ public class ModelUtils {
             int partType = 0;
             boolean wasLastDot = lookBefore;
             int offsetFirstRightParen = -1;
-            List<String> exp = new ArrayList();
+            List<String> exp = new ArrayList<>();
 
             while (token.id() != JsTokenId.OPERATOR_SEMICOLON
                     && token.id() != JsTokenId.BRACKET_RIGHT_CURLY && token.id() != JsTokenId.BRACKET_LEFT_CURLY
@@ -1906,7 +1906,7 @@ public class ModelUtils {
             for (Occurrence occurrence : property.getOccurrences()) {
                 newProperty.addOccurrence(occurrence.getOffsetRange());
             }
-            List<JsObject>propertiesToMove = new ArrayList(property.getProperties().values());
+            List<JsObject>propertiesToMove = new ArrayList<>(property.getProperties().values());
             for (JsObject propOfProperty: propertiesToMove) {
                 moveProperty(newProperty, propOfProperty);
             }

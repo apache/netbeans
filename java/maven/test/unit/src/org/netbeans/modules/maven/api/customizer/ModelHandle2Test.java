@@ -162,7 +162,7 @@ public class ModelHandle2Test extends NbTestCase {
 "            </packagings>\n" +
 "            <goals>\n" +
 "                <goal>process-classes</goal>\n" +
-"                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>\n" +
+"                <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>\n" +
 "            </goals>\n" +
 "            <properties>\n" +
 "                <exec.args>-classpath %classpath ${packageClassName}</exec.args>\n" +
@@ -177,7 +177,7 @@ public class ModelHandle2Test extends NbTestCase {
 "            </packagings>\n" +
 "            <goals>\n" +
 "                <goal>process-classes</goal>\n" +
-"                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>\n" +
+"                <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>\n" +
 "            </goals>\n" +
 "            <properties>\n" +
 "                <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>\n" +
@@ -199,7 +199,7 @@ public class ModelHandle2Test extends NbTestCase {
 "            </packagings>\n" +
 "            <goals>\n" +
 "                <goal>process-classes</goal>\n" +
-"                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>\n" +
+"                <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>\n" +
 "            </goals>\n" +
 "            <properties>\n" +
 "                <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>\n" +
@@ -223,7 +223,7 @@ public class ModelHandle2Test extends NbTestCase {
             RunConfig run = ActionToGoalUtils.createRunConfig("debug.single.main", (NbMavenProjectImpl) project, project.getLookup());
             assertEquals("Two goals: " + run.getGoals(), 2, run.getGoals().size());
             assertEquals("process-classes", run.getGoals().get(0));
-            assertEquals("org.codehaus.mojo:exec-maven-plugin:3.0.0:exec", run.getGoals().get(1));
+            assertEquals("org.codehaus.mojo:exec-maven-plugin:3.1.0:exec", run.getGoals().get(1));
             assertEquals("One profile activated in action: " + run.getActivatedProfiles(), 1, run.getActivatedProfiles().size());
             assertEquals("jetty", run.getActivatedProfiles().get(0));
         }

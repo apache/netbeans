@@ -36,7 +36,7 @@ import org.netbeans.modules.xml.multiview.Error;
 public class PersistenceValidator {
     
     private final PUDataObject puDataObject;
-    private List<Error> errors = new ArrayList<Error>();
+    private List<Error> errors = new ArrayList<>();
     
     /**
      * Creates a new instance of PersistenceValidator

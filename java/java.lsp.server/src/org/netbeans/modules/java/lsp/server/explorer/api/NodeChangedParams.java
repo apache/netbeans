@@ -28,10 +28,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
  */
 public class NodeChangedParams {
     @NonNull
-    private final int rootId;
+    private int rootId;
     
-    private final Integer nodeId;
-
+    private Integer nodeId;
+    
     public NodeChangedParams(int rootId) {
         this.rootId = rootId;
         this.nodeId = null;
@@ -51,5 +51,17 @@ public class NodeChangedParams {
     @Pure
     public Integer getNodeId() {
         return nodeId;
+    }
+
+    // needed for testing, as GSON deserializes the structure on the client side.
+    public NodeChangedParams() {
+    }
+
+    public void setRootId(int rootId) {
+        this.rootId = rootId;
+    }
+
+    public void setNodeId(Integer nodeId) {
+        this.nodeId = nodeId;
     }
 }

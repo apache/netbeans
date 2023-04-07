@@ -82,7 +82,7 @@ public abstract class ValidityAwarePanel extends JPanel implements Scrollable {
     public boolean getScrollableTracksViewportWidth() {
         Container parent = getParent();
 
-        if ((parent == null) || !(parent instanceof JViewport)) {
+        if (!(parent instanceof JViewport)) {
             return false;
         }
 

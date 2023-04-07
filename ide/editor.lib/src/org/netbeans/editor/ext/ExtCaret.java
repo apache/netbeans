@@ -39,6 +39,7 @@ public class ExtCaret extends BaseCaret {
      * @deprecated Please use Braces Matching SPI instead, for details see
      *   <a href="@org-netbeans-modules-editor-bracesmatching@/overview-summary.html">Editor Braces Matching</a>.
      */
+    @Deprecated
     protected void updateMatchBrace() {
     }
 
@@ -51,6 +52,7 @@ public class ExtCaret extends BaseCaret {
      * @deprecated Please use Braces Matching SPI instead, for details see
      *   <a href="@org-netbeans-modules-editor-bracesmatching@/overview-summary.html">Editor Braces Matching</a>.
      */
+    @Deprecated
     public void requestMatchBraceUpdateSync() {
     }
     

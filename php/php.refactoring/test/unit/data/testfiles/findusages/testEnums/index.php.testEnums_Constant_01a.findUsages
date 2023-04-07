@@ -1,0 +1,9 @@
+Display text: public const <b>CONSTANT_A</b> = 1;
+File name: index.php
+Name: CONSTANT_A
+Position: BEGIN: 860 END: 870
+
+Display text: public const CONSTANT_B = EnumA::<b>CONSTANT_A</b>;
+File name: index.php
+Name: CONSTANT_A
+Position: BEGIN: 1366 END: 1376

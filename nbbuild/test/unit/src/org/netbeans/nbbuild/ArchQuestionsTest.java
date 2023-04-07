@@ -189,7 +189,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "Describe the overall architecture. \n" +
             "<hint>\n" +
             "What will be API for \n" +
-            "<a href='http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi'>\n" +
+            "<a href='https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API'>\n" +
                 "clients and what support API</a>? \n" +
             "What parts will be pluggable?\n" +
             "How will plug-ins be registered? Please use <code>&lt;api type='export'/&gt;</code>\n" +
@@ -286,7 +286,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "Describe the overall architecture. \n" +
             "<hint>\n" +
             "What will be API for \n" +
-            "<a href='http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi'>\n" +
+            "<a href='https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API'>\n" +
                 "clients and what support API</a>? \n" +
             "What parts will be pluggable?\n" +
             "How will plug-ins be registered? Please use <code>&lt;api type='export'/&gt;</code>\n" +

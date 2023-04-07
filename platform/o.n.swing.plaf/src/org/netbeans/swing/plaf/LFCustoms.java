@@ -45,7 +45,7 @@ import javax.swing.text.AttributeSet;
  * &quot;Nb.[return value of the custom look and feel's getID() method]LFCustoms&quot;.
  * <p>
  * Given that all this class does is return some keys and values, in the future it may be replaced by an
- * XML file similar to <a href="ui.netbeans.org/project/ui/docs/ui/themes/themes.html">theme files</a>.
+ * XML file similar to <a href="https://netbeans.apache.org/projects/ui/themes/themes.html">theme files</a>.
  * <p>
  * This class defines a number of relatively self-explanatory UIManager keys for things used in various parts
  * of NetBeans.
@@ -58,9 +58,13 @@ public abstract class LFCustoms {
     private Object[] guaranteedKeysAndValues = null;
     protected static final String WORKPLACE_FILL = "nb_workplace_fill"; //NOI18N
 
-    /** convert color
+    /**
+     * convert color
+     *
      * @since 1.27
-     *  @return hexadecimal value */
+     * @param color as integer value
+     * @return hexadecimal value
+     */
     public static String getHexString(int color) {
             String result = Integer.toHexString(color).toUpperCase();
             if (result.length() == 1) {
@@ -137,6 +141,7 @@ public abstract class LFCustoms {
 
     /** convert color to brighter one if window foreground text color is bright color
      * or convert color to darker one if window foreground text color is dark color
+     * @param color to shift
      * @return converted color
      * @since 1.27
      */
@@ -150,6 +155,7 @@ public abstract class LFCustoms {
 
     /** get foreground text color from AttributeSet
      *  or get window foreground text color if AttributeSet doesn't define foreground text color
+     * @param a attributeset to get color from
      * @return  foreground text color
      * @since 1.27
      */
@@ -238,7 +244,7 @@ public abstract class LFCustoms {
     /**
      * LFCustoms implementations which use UIBootstrapValue.Lazy should return
      * any keys that it will install here, so they can be merged into the list
-     * of things to clear on L&F change.
+     * of things to clear on L&amp;F change.
      *
      * @return an array of objects or null.
      */

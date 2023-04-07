@@ -36,10 +36,10 @@ import org.netbeans.modules.parsing.api.Snapshot;
  * @author mfukala@netbeans.org
  */
 public class CssRuleStructureItem implements StructureItem {
-    private CharSequence name;
-    private CssNodeElement element;
-    private int from;
-    private int to;
+    private final CharSequence name;
+    private final CssNodeElement element;
+    private final int from;
+    private final int to;
 
     CssRuleStructureItem(CharSequence name, CssNodeElement element, Snapshot source) {
         this.name = name;
@@ -107,7 +107,7 @@ public class CssRuleStructureItem implements StructureItem {
     public int hashCode() {
         int hash = 7;
         hash = 29 * hash + (this.name != null ? this.name.hashCode() : 0);
-        return hash + new Long(getPosition()).hashCode();
+        return hash + Long.hashCode(getPosition());
     }
 
     @Override

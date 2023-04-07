@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.11
+#Version 1.14
 
 CLSS public abstract interface java.io.Serializable
 
@@ -221,6 +221,7 @@ innr public final static !enum Severity
 innr public final static Builder
 meth public java.lang.String getCode()
 meth public java.lang.String getDescription()
+meth public java.net.URL getCodeDescription()
 meth public org.netbeans.api.lsp.Diagnostic$LazyCodeActions getActions()
 meth public org.netbeans.api.lsp.Diagnostic$Severity getSeverity()
 meth public org.netbeans.api.lsp.Position getEndPosition()
@@ -229,17 +230,18 @@ meth public static org.netbeans.api.lsp.Diagnostic$ReporterControl findReporterC
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
 supr java.lang.Object
-hfds actions,code,description,endPosition,severity,startPosition
+hfds actions,code,codeDescription,description,endPosition,severity,startPosition
 
 CLSS public final static org.netbeans.api.lsp.Diagnostic$Builder
  outer org.netbeans.api.lsp.Diagnostic
 meth public org.netbeans.api.lsp.Diagnostic build()
 meth public org.netbeans.api.lsp.Diagnostic$Builder addActions(org.netbeans.api.lsp.Diagnostic$LazyCodeActions)
 meth public org.netbeans.api.lsp.Diagnostic$Builder setCode(java.lang.String)
+meth public org.netbeans.api.lsp.Diagnostic$Builder setCodeDescription(java.net.URL)
 meth public org.netbeans.api.lsp.Diagnostic$Builder setSeverity(org.netbeans.api.lsp.Diagnostic$Severity)
 meth public static org.netbeans.api.lsp.Diagnostic$Builder create(org.netbeans.api.lsp.Position,org.netbeans.api.lsp.Position,java.lang.String)
 supr java.lang.Object
-hfds actions,code,description,endPosition,severity,startPosition
+hfds actions,code,codeDescription,description,endPosition,severity,startPosition
 
 CLSS public abstract interface static org.netbeans.api.lsp.Diagnostic$LazyCodeActions
  outer org.netbeans.api.lsp.Diagnostic

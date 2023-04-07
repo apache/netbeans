@@ -29,8 +29,6 @@ ide/db.sql.visualeditor/external/javacc-7.0.10.jar java/performance/external/jav
 # It happens that maven 3.3.9 uses commons-lang-2.6.jar, same as o.apache.commons.lang
 # and commons-io-2.5.jar, same as java.lsp.server
 # These are used independently, different functional goals
-# maven 3.8.6 use common-io-2.6 java/java.lsp.server/external/commons-io-2.5.jar java/maven.embedder/external/apache-maven-3.6.3-bin.zip
-platform/o.apache.commons.io/external/commons-io-2.6.jar java/maven.embedder/external/apache-maven-3.8.6-bin.zip
 
 # Contains test data (badPackageFileInJar.jar is packaged twice) - this is an
 # upstream problem
@@ -45,11 +43,7 @@ webcommon/javascript2.jade/external/jflex-1.4.3.jar webcommon/javascript2.lexer/
 # javax.annotation-api is used by multiple modules.
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar java/maven.indexer/external/javax.annotation-api-1.2.jar
 enterprise/javaee7.api/external/javax.annotation-api-1.2.jar enterprise/javaee8.api/external/javax.annotation-api-1.2.jar
-enterprise/javaee8.api/external/javax.annotation-api-1.2.jar java/maven.indexer/external/javax.annotation-api-1.2.jar
-enterprise/javaee8.api/external/javax.annotation-api-1.2.jar java/maven.embedder/external/apache-maven-3.8.6-bin.zip
-enterprise/javaee7.api/external/javax.annotation-api-1.2.jar java/maven.embedder/external/apache-maven-3.8.6-bin.zip
-java/maven.indexer/external/javax.annotation-api-1.2.jar java/maven.embedder/external/apache-maven-3.8.6-bin.zip
-
+enterprise/javaee8.api/external/javax.annotation-api-1.3.2.jar java/maven.embedder/external/apache-maven-3.9.1-bin.zip
 
 # jaxb-api-osgi is used by multiple modules.
 enterprise/javaee.api/external/jaxb-api-osgi-2.2.7.jar enterprise/javaee7.api/external/jaxb-api-osgi-2.2.7.jar
@@ -70,21 +64,21 @@ enterprise/web.core.syntax/external/struts-tiles-1.3.10.jar enterprise/web.strut
 extide/gradle/external/gradle-7.4-bin.zip enterprise/libs.amazon/external/ion-java-1.0.2.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/c.jcraft.jsch/external/jsch-0.1.55.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/c.jcraft.jzlib/external/jzlib-1.1.3.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/libs.antlr4.runtime/external/antlr4-runtime-4.7.2.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/libs.commons_compress/external/commons-compress-1.21.jar
+extide/gradle/external/gradle-7.4-bin.zip ide/libs.commons_compress/external/commons-compress-1.23.0.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/libs.tomlj/external/tomlj-1.0.0.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/o.eclipse.jgit/external/org.eclipse.jgit-5.7.0.202003110725-r.jar
-extide/gradle/external/gradle-7.4-bin.zip java/maven.embedder/external/apache-maven-3.8.6-bin.zip
+extide/gradle/external/gradle-7.4-bin.zip java/debugger.jpda.truffle/external/antlr4-runtime-4.7.2.jar
+extide/gradle/external/gradle-7.4-bin.zip java/maven.embedder/external/apache-maven-3.9.1-bin.zip
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/junit-4.13.2.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.testng/external/jcommander-1.78.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.io/external/commons-io-2.6.jar
 extide/gradle/external/gradle-7.4-bin.zip enterprise/cloud.oracle/external/jsr305-3.0.2.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.15.jar
-extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-9.3.jar
-extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-commons-9.3.jar
-extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-tree-9.3.jar
+extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-9.4.jar
+extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-commons-9.4.jar
+extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-tree-9.4.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.batik.read/external/xml-apis-1.4.01.jar
 
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate
@@ -105,9 +99,6 @@ ide/lsp.client/external/org.eclipse.xtext.xbase.lib-2.24.0.jar java/java.lsp.ser
 ide/db/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.14.2.0.jar
 ide/derby/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.14.2.0.jar
 
-# Antlr4 is used internally in two unrelated modules:
-ide/libs.antlr4.runtime/external/antlr4-runtime-4.7.2.jar java/debugger.jpda.truffle/external/antlr4-runtime-4.7.2.jar
-
 # Only used as testdata (not redistributed) and modules should be testable independed of each other
 webcommon/javascript2.doc/external/testfiles-jsdoc-1.zip webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip are identical
 webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip are identical
@@ -118,8 +109,22 @@ webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2
 harness/apisupport.harness/external/launcher-12.5-distribution.zip platform/o.n.bootstrap/external/launcher-12.5-distribution.zip
 
 # only one is part of the product:
-java/libs.javacapi/external/nb-javac-jdk-19+33-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-19+33-api.jar
-java/libs.javacapi/external/nb-javac-jdk-19+33.jar java/libs.nbjavacapi/external/nb-javac-jdk-19+33.jar
+java/libs.javacapi/external/nb-javac-jdk-20+34-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-20+34-api.jar
+java/libs.javacapi/external/nb-javac-jdk-20+34.jar java/libs.nbjavacapi/external/nb-javac-jdk-20+34.jar
 
-# Maven and Gradle are self-contained distributions - ignoring overlaps
-platform/o.apache.commons.lang3/external/commons-lang3-3.8.1.jar java/maven.embedder/external/apache-maven-3.8.6-bin.zip
+# Used only in unittests for mysql db specific tests
+ide/db.metadata.model/external/mysql-connector-j-8.0.31.jar ide/db.mysql/external/mysql-connector-j-8.0.31.jar
+
+# Jakarta EE API doc is repackaged to align with old NetBeans format, embedded indexes are thus identically and can be ignored.
+enterprise/jakartaee10.platform/external/generated-jakarta.jakartaee-api-10.0.0-javadoc.jar enterprise/jakartaee10.platform/external/jakarta.jakartaee-api-10.0.0-javadoc.jar
+
+# Jakarta Servlet API is used by both servletjspapi and websvc.restlib
+enterprise/servletjspapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websvc.restlib/external/jakarta.servlet-api-4.0.4.jar
+
+# rust/rust.grammar uses ANTLR4 to compile grammars at build time, but use the runtime libraries from ide/libs.antlr4.runtime - ignoring overlaps
+rust/rust.grammar/external/antlr4-4.11.1.jar ide/libs.antlr4.runtime/external/antlr4-4.11.1.jar 
+rust/rust.grammar/external/antlr4-runtime-4.11.1.jar ide/libs.antlr4.runtime/external/antlr4-runtime-4.11.1.jar 
+rust/rust.grammar/external/ST4-4.3.4.jar ide/libs.antlr4.runtime/external/ST4-4.3.4.jar 
+
+# The enterprise usage is for library - it is better to keep the two separate
+ide/servletapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websvc.restlib/external/jakarta.servlet-api-4.0.4.jar

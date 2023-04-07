@@ -64,13 +64,13 @@ package org.netbeans.api.lexer;
  * <br>
  * All token ids of a language must have both
  * unique ordinal and name.
- * <br/>
+ * <br>
  * Token name should be all uppercase while token categories should be named
  * in lowercase.
  *
  * <p>
  * Detailed information and rules for naming can be found
- * in <A href="http://lexer.netbeans.org/doc/token-id-naming.html">TokenId Naming</A>.
+ * in <A href="https://netbeans.apache.org/projects/lexer/token-id-naming.html">TokenId Naming</A>.
  *
  * @author Miloslav Metelka
  * @version 1.00
@@ -120,7 +120,7 @@ public interface TokenId {
 
     /**
      * Get name of primary token category into which this token belongs.
-     * <br/>
+     * <br>
      * Other token categories for this id can be defined in the language hierarchy.
      *
      * @return name of the primary token category into which this token belongs

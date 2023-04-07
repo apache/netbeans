@@ -94,16 +94,8 @@ public class PersistenceToolBarMVElement extends ToolBarMultiViewElement impleme
         comp = new ToolBarDesignEditor();
         factory=new PersistenceUnitPanelFactory(comp,puDataObject);
         setVisualEditor(comp);
-        repaintingTask = RequestProcessor.getDefault().create(new Runnable() {
-            @Override
-            public void run() {
-                javax.swing.SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        repaintView();
-                    }
-                });
-            }
+        repaintingTask = RequestProcessor.getDefault().create( () -> {
+            javax.swing.SwingUtilities.invokeLater( () -> repaintView() );
         });
         
     }
@@ -391,16 +383,13 @@ public class PersistenceToolBarMVElement extends ToolBarMultiViewElement impleme
                     NotifyDescriptor.PLAIN_MESSAGE,
                     null, null
                     );
-            panel.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
-                        Object newvalue = evt.getNewValue();
-                        if (newvalue != null && newvalue instanceof Boolean) {
-                            validateUnitName(panel);
-                            nd.setValid((Boolean) newvalue);
-                            
-                        }
+            panel.addPropertyChangeListener( (PropertyChangeEvent evt1) -> {
+                if (evt1.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
+                    Object newvalue = evt1.getNewValue();
+                    if (newvalue instanceof Boolean) {
+                        validateUnitName(panel);
+                        nd.setValid((Boolean) newvalue);
+                        
                     }
                 }
             });
@@ -415,7 +404,11 @@ public class PersistenceToolBarMVElement extends ToolBarMultiViewElement impleme
                 PersistenceUnit punit;
                 boolean useModelgen = false;
                 String modelGenLib = null;
-                if(Persistence.VERSION_2_1.equals(version))
+                if(Persistence.VERSION_2_2.equals(version))
+                {
+                    useModelgen = true;
+                    punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
+                } else if(Persistence.VERSION_2_1.equals(version))
                 {
                     useModelgen = true;
                     punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();

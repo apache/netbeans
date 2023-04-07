@@ -444,7 +444,7 @@ public class XMLJ2eeUtils {
         // removing the next text element (only if this element was the last non text element in parent)
         if (firstElement) {
             Node next = element.getNextSibling();
-            if (next!=null && next instanceof CharacterData && next.getNextSibling()==null)
+            if (next instanceof CharacterData && next.getNextSibling() == null)
                      parent.removeChild(next);        
         }
      
@@ -535,11 +535,11 @@ public class XMLJ2eeUtils {
                 Node previous = lastInList.getPreviousSibling();
                 Node next = lastInList.getNextSibling();
                 if (next != null) {
-                    if (previous!=null && previous instanceof CharacterData)
+                    if (previous instanceof CharacterData)
                         element.insertBefore(previous.cloneNode(false),next);
                     element.insertBefore(newElement,next);
                 } else {
-                    if (previous!=null && previous instanceof CharacterData)
+                    if (previous instanceof CharacterData)
                         element.appendChild(previous.cloneNode(false));
                     element.appendChild(newElement);
                 }
@@ -611,11 +611,11 @@ public class XMLJ2eeUtils {
                 Node previous = lastInList.getPreviousSibling();
                 Node next = lastInList.getNextSibling();
                 if (next != null) {
-                    if (previous!=null && previous instanceof CharacterData)
+                    if (previous instanceof CharacterData)
                         element.insertBefore(previous.cloneNode(false),next);
                     element.insertBefore(newElement,next);
                 } else {
-                    if (previous!=null && previous instanceof CharacterData)
+                    if (previous instanceof CharacterData)
                         element.appendChild(previous.cloneNode(false));
                     element.appendChild(newElement);
                 }
@@ -675,13 +675,13 @@ public class XMLJ2eeUtils {
         // removing the next text element (only if this element was the last non text element in parent)
         if (firstElement) {
             Node next = list.item(list.getLength()-1).getNextSibling();
-            if (next!=null && next instanceof CharacterData && next.getNextSibling()==null)
+            if (next instanceof CharacterData && next.getNextSibling() == null)
                      element.removeChild(next);        
         }
         for(int i=list.getLength()-1;i>=0;i--){
             Node item = list.item(i);
             Node previous = item.getPreviousSibling();
-            if (previous!=null && previous instanceof CharacterData)
+            if (previous instanceof CharacterData)
                 element.removeChild(previous);
             element.removeChild(item);
         }

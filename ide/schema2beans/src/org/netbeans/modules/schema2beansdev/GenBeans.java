@@ -441,6 +441,7 @@ public class GenBeans {
         /**
          * @deprecated  use setMddIn instead
          */
+        @Deprecated
         public void setMDDIn(java.io.InputStream value) {
             setMddIn(value);
         }
@@ -448,6 +449,7 @@ public class GenBeans {
         /**
          * @deprecated  use setFileIn instead
          */
+        @Deprecated
         public void setDTDIn(java.io.InputStream value) {
             setFileIn(value);
         }

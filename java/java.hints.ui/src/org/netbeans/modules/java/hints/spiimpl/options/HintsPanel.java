@@ -330,7 +330,6 @@ public final class HintsPanel extends javax.swing.JPanel   {
         okButton.setVisible(showOkCancel);
         cancelButton.setVisible(showOkCancel);
         validate();
-        jSplitPane1.setDividerLocation(getDividerLocation());
     }
     
     private void updateEnabledState() {
@@ -345,11 +344,6 @@ public final class HintsPanel extends javax.swing.JPanel   {
                 enableDisableRecursively(c, enable);
             }
         }
-    }
-
-    private int getDividerLocation() {
-        final int location = (int) ((jSplitPane1.getWidth() - jSplitPane1.getDividerSize()) * 0.4f);
-        return Math.min(400, location);
     }
     
     /** This method is called from within the constructor to
@@ -399,7 +393,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 8, 8, 8));
         setLayout(new java.awt.GridBagLayout());
 
-        jSplitPane1.setDividerLocation(320);
+        jSplitPane1.setDividerLocation(260);
 
         treePanel.setOpaque(false);
         treePanel.setLayout(new java.awt.BorderLayout());
@@ -480,6 +474,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         descriptionPanel.add(descriptionLabel, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(saveButton, org.openide.util.NbBundle.getMessage(HintsPanel.class, "HintsPanel.saveButton.text")); // NOI18N
@@ -509,7 +504,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
             editingButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editingButtonsLayout.createSequentialGroup()
                 .addComponent(openInEditor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 272, Short.MAX_VALUE)
                 .addComponent(saveButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancelEdit))

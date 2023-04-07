@@ -313,6 +313,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                 }
             }
             a = new SanityBuildAction(project);
+            project.getLookup().lookup(NbMavenProject.class).getMavenProject().setContextValue("org.netbeans.modules.maven.problems.primingNotDone", true);
             cachedSanityBuild = new WeakReference<>(a);
             return a;
         }

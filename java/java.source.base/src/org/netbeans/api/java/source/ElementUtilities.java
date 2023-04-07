@@ -289,11 +289,11 @@ public final class ElementUtilities {
      * will <b>also</b> map to the outer class' scope. The caller can then determine, based on {@link Element#getEnclosingElement()} and
      * the mapped Scope whether the symbol is directly declared, or inherited. Non-member symbols (variables, parameters, try resources, ...) 
      * map to Scope of their defining Method.
-     * <p/>
+     * <p>
      * If an Element from outer Scope is hidden by a similar Element
      * in inner scope, only the Element visible to the passed Scope is returned. For example, if both the starting (inner) class and its outer class
      * define method m(), only InnerClass.m() will be returned.
-     * <p/>
+     * <p>
      * Note that {@link Scope#getEnclosingMethod()} returns non-null even for class scopes of local or anonymous classes; check both {@link Scope#getEnclosingClass()}
      * and {@link Scope#getEnclosingMethod()} and their relationship to get the appropriate Element associated with the Scope.
      * 
@@ -313,8 +313,8 @@ public final class ElementUtilities {
         Elements elements = JavacElements.instance(ctx);
         Types types = JavacTypes.instance(ctx);
         TypeElement cls;
-        Deque<Scope>  outerScopes = new ArrayDeque();
-        Deque<Map>  visibleEls = new ArrayDeque();
+        Deque<Scope>  outerScopes = new ArrayDeque<>();
+        Deque<Map>  visibleEls = new ArrayDeque<>();
         Element current = null;
         
         while (scope != null) {
@@ -677,7 +677,7 @@ public final class ElementUtilities {
     /**
      * Finds all unimplemented methods in the given type and supertypes, but possibly include
      * also interface default methods.
-     * <p/>
+     * <p>
      * If the platform configured for the type is older than JDK8, the method is equivalent
      * to {@link #findUnimplementedMethods(javax.lang.model.element.TypeElement)}. If `includeDefaults'
      * is {@code true}, returns also default methods as if the methods were required to be
@@ -819,7 +819,7 @@ public final class ElementUtilities {
      *         See method format for more details on parameter types.</dd>
      * </dl>
      * 
-     * @param elementDescription the description of the element that should be checked for existence
+     * @param description the description of the element that should be checked for existence
      * @return the found element, or null if not available
      * @since 0.115
      */

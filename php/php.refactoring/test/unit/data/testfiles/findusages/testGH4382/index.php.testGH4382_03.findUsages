@@ -1,0 +1,14 @@
+Display text: use <b>Example</b> as ExampleAlias;
+File name: index.php
+Name: Example
+Position: BEGIN: 820 END: 827
+
+Display text: class <b>Example</b> {
+File name: index.php
+Name: Example
+Position: BEGIN: 852 END: 859
+
+Display text: $example = new <b>Example</b>();
+File name: index.php
+Name: Example
+Position: BEGIN: 1031 END: 1038

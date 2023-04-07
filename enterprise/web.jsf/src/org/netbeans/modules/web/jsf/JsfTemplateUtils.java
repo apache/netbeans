@@ -85,7 +85,7 @@ public class JsfTemplateUtils {
         while (children.hasMoreElements()) {
             FileObject folder = children.nextElement();
             Object position = folder.getAttribute("position");
-            if (position == null || !(position instanceof Integer)) {
+            if (!(position instanceof Integer)) {
                 result.add(new Template(folder.getName(), getLocalizedName(folder)));
             } else {
                 result.add(new Template(folder.getName(), getLocalizedName(folder), (Integer) position));

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.j2ee.persistence.sourcetestsupport;
 
-import java.io.Serializable;
 import java.net.URL;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -42,6 +41,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         this.classPath = ClassPathSupport.createClassPath(sources);
     }
     
+    @Override
     public ClassPath findClassPath(FileObject file, String type) {
         if(ClassPath.SOURCE.equals(type)){
             return this.classPath;

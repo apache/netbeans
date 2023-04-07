@@ -65,6 +65,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -696,7 +697,25 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         }
 
         if (className != null) {
-            classObject = new JsObjectImpl(parent, className, new OffsetRange(node.getStart(), node.getFinish()), true, parent.getMimeType(), parent.getSourceLabel());
+            // At least for exported classes multiple JsObjectImpls are created
+            // and that latest created one is missing the properties. To fix
+            // this, an existing object is checked and if it exists its
+            // properties are moved to the latest instance, creating a superset
+            // of all properties.
+            classObject = new JsObjectImpl(
+                    parent,
+                    className,
+                    new OffsetRange(node.getStart(), node.getFinish()),
+                    true,
+                    parent.getMimeType(),
+                    parent.getSourceLabel()
+            );
+            JsObject origClassObject = parent.getProperty(className.getName());
+            if (origClassObject != null) {
+                for (Entry<String, ? extends JsObject> e : origClassObject.getProperties().entrySet()) {
+                    ModelUtils.moveProperty(classObject, e.getValue());
+                }
+            }
             parent.addProperty(className.getName(), classObject);
             classObject.setJsKind(JsElement.Kind.CLASS);
             if (refName != null) {
@@ -837,6 +856,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
 
     @Override
     public boolean enterExportNode(ExportNode exportNode) {
+        boolean result = super.enterExportNode(exportNode);
         final ExportClauseNode exportClause = exportNode.getExportClause();
         final FromNode from = exportNode.getFrom();
         final Expression expression = exportNode.getExpression();
@@ -866,7 +886,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
             expression.accept(this);
             removeFromPathTheLast();
         }
-        return false;
+        return result;
     }
 
     @Override

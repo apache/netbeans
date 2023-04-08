@@ -1427,4 +1427,12 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php82/dnfTypes_01.php");
     }
 
+    public void testIssueGH5585_01() throws Exception {
+        checkErrors("testfiles/parser/issueGH5585_01.php");
+    }
+
+    public void testIssueGH5585_02() throws Exception {
+        checkErrors("testfiles/parser/issueGH5585_02.php");
+    }
+
 }

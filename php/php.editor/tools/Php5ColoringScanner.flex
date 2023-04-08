@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.php.editor.lexer;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Objects;
 import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
@@ -72,8 +74,8 @@ import org.netbeans.modules.web.common.api.ByteStack;
 %{
 
     private final ByteStack stack = new ByteStack();
+    private final Deque<String> heredocStack = new ArrayDeque<>();
     private String heredoc = null;
-    private int hereocLength = 0;
     private int parenBalanceInScripting = 0; // for named arguments [NETBEANS-4443] PHP 8.0
     private int parenBalanceInConst = 0; // for context sensitive lexer
     private int bracketBalanceInConst = 0; // for context sensitive lexer
@@ -113,17 +115,16 @@ import org.netbeans.modules.web.common.api.ByteStack;
         final int zzLexicalState;
         /* remember the heredoc */
         final String heredoc;
-        /* and the lenght of */
-        final int hereocLength;
         final int parenBalanceInScripting;
+        final Deque<String> heredocStack;
 
-        LexerState(ByteStack stack, int zzState, int zzLexicalState, String heredoc, int hereocLength, int parenBalanceInScripting) {
+        LexerState(ByteStack stack, int zzState, int zzLexicalState, String heredoc, int parenBalanceInScripting, Deque<String> heredocStack) {
             this.stack = stack;
             this.zzState = zzState;
             this.zzLexicalState = zzLexicalState;
             this.heredoc = heredoc;
-            this.hereocLength = hereocLength;
             this.parenBalanceInScripting = parenBalanceInScripting;
+            this.heredocStack = heredocStack;
         }
 
         @Override
@@ -140,26 +141,26 @@ import org.netbeans.modules.web.common.api.ByteStack;
             return (this.stack.equals(state.stack)
                 && (this.zzState == state.zzState)
                 && (this.zzLexicalState == state.zzLexicalState)
-                && (this.hereocLength == state.hereocLength)
                 && ((this.heredoc == null && state.heredoc == null) || (this.heredoc != null && state.heredoc != null && this.heredoc.equals(state.heredoc))))
-                && (this.parenBalanceInScripting == state.parenBalanceInScripting);
+                && (this.parenBalanceInScripting == state.parenBalanceInScripting)
+                && (this.heredocStack.equals(state.heredocStack));
         }
 
         @Override
         public int hashCode() {
-            int hash = 3;
-            hash = 71 * hash + Objects.hashCode(this.stack);
-            hash = 71 * hash + this.zzState;
-            hash = 71 * hash + this.zzLexicalState;
-            hash = 71 * hash + Objects.hashCode(this.heredoc);
-            hash = 71 * hash + this.hereocLength;
-            hash = 71 * hash + this.parenBalanceInScripting;
+            int hash = 7;
+            hash = 29 * hash + Objects.hashCode(this.stack);
+            hash = 29 * hash + this.zzState;
+            hash = 29 * hash + this.zzLexicalState;
+            hash = 29 * hash + Objects.hashCode(this.heredoc);
+            hash = 29 * hash + this.parenBalanceInScripting;
+            hash = 29 * hash + Objects.hashCode(this.heredocStack);
             return hash;
         }
     }
 
     public LexerState getState() {
-        return new LexerState(stack.copyOf(), zzState, zzLexicalState, heredoc, hereocLength, parenBalanceInScripting);
+        return new LexerState(stack.copyOf(), zzState, zzLexicalState, heredoc, parenBalanceInScripting, new ArrayDeque<>(heredocStack));
     }
 
     public void setState(LexerState state) {
@@ -167,8 +168,9 @@ import org.netbeans.modules.web.common.api.ByteStack;
         this.zzState = state.zzState;
         this.zzLexicalState = state.zzLexicalState;
         this.heredoc = state.heredoc;
-        this.hereocLength = state.hereocLength;
         this.parenBalanceInScripting = state.parenBalanceInScripting;
+        this.heredocStack.clear();
+        this.heredocStack.addAll(state.heredocStack);
     }
 
     protected boolean isHeredocState(int state) {
@@ -1256,15 +1258,22 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
     int bprefix = (yytext().charAt(0) != '<') ? 1 : 0;
         int startString=3+bprefix;
         /* 3 is <<<, 2 is quotes, 1 is newline */
-        hereocLength = yylength()-bprefix-3-2-1-(yytext().charAt(yylength()-2)=='\r'?1:0);
+        int heredocLength = yylength() - bprefix - 3 - 2 - 1 - (yytext().charAt(yylength() - 2) == '\r' ? 1 : 0);
         while ((yytext().charAt(startString) == ' ') || (yytext().charAt(startString) == '\t')) {
             startString++;
-            hereocLength--;
+            heredocLength--;
         }
         // first quate
         startString++;
-        heredoc = yytext().substring(startString, hereocLength+startString);
-        yybegin(ST_PHP_START_NOWDOC);
+        if (heredoc != null) {
+            heredocStack.push(heredoc);
+        }
+        heredoc = yytext().substring(startString, heredocLength + startString);
+        if (!heredocStack.isEmpty()) {
+            pushState(ST_PHP_START_NOWDOC);
+        } else {
+           yybegin(ST_PHP_START_NOWDOC);
+        }
         return PHPTokenId.PHP_NOWDOC_TAG_START;
 }
 
@@ -1281,9 +1290,12 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
         int indexOfNowdocId = yytext().indexOf(heredoc);
         int back = yylength() - indexOfNowdocId - heredoc.length();
         yypushback(back);
-        heredoc=null;
-        hereocLength=0;
-        yybegin(ST_PHP_IN_SCRIPTING);
+        heredoc = heredocStack.pollFirst();
+        if (heredoc != null) {
+            popState();
+        } else {
+            yybegin(ST_PHP_IN_SCRIPTING);
+        }
         return PHPTokenId.PHP_NOWDOC_TAG_END;
     } else {
         yypushback(1);
@@ -1317,8 +1329,12 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
 }
 
 <ST_PHP_END_NOWDOC>{NEWLINE}*{TABS_AND_SPACES}{LABEL}";"? {
-    heredoc=null; hereocLength=0;
-    yybegin(ST_PHP_IN_SCRIPTING);
+    heredoc = heredocStack.pollFirst();
+    if (heredoc != null) {
+        popState();
+    } else {
+        yybegin(ST_PHP_IN_SCRIPTING);
+    }
     int back = 0;
     // mark just the label
     if (yytext().charAt(yylength() - 1)==';') {
@@ -1331,18 +1347,25 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
 <ST_PHP_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|"\""{LABEL}"\""){NEWLINE} {
     int bprefix = (yytext().charAt(0) != '<') ? 1 : 0;
     int startString=3+bprefix;
-    hereocLength = yylength()-bprefix-3-1-(yytext().charAt(yylength()-2)=='\r'?1:0);
+    int heredocLength = yylength() - bprefix - 3 - 1 - (yytext().charAt(yylength() - 2) == '\r' ? 1 : 0);
     while ((yytext().charAt(startString) == ' ') || (yytext().charAt(startString) == '\t')) {
         startString++;
-        hereocLength--;
+        heredocLength--;
     }
     // HEREDOC PHP 5.3
     if (yytext().charAt(startString) == '"') {
-        hereocLength -= 2;
+        heredocLength -= 2;
         startString ++;
     }
-    heredoc = yytext().substring(startString,hereocLength+startString);
-    yybegin(ST_PHP_START_HEREDOC);
+    if (heredoc != null) {
+        heredocStack.push(heredoc);
+    }
+    heredoc = yytext().substring(startString, heredocLength + startString);
+    if (!heredocStack.isEmpty()) {
+        pushState(ST_PHP_START_HEREDOC);
+    } else {
+        yybegin(ST_PHP_START_HEREDOC);
+    }
     return PHPTokenId.PHP_HEREDOC_TAG_START;
 }
 
@@ -1445,9 +1468,12 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
 }
 
 <ST_PHP_END_HEREDOC>{TABS_AND_SPACES}{LABEL}";"? {
-    heredoc=null;
-    hereocLength=0;
-    yybegin(ST_PHP_IN_SCRIPTING);
+    heredoc = heredocStack.pollFirst();
+    if (heredoc != null) {
+        popState();
+    } else {
+        yybegin(ST_PHP_IN_SCRIPTING);
+    }
     int back = 0;
     // mark just the label
     if (yytext().charAt(yylength() - 1)==';') {

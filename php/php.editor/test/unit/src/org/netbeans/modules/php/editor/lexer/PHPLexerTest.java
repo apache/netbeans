@@ -339,4 +339,11 @@ public class PHPLexerTest extends PHPLexerTestBase {
         performTest("lexer/issueGH4345_02");
     }
 
+    public void testIssueGH5585_01() throws Exception {
+        performTest("lexer/issueGH5585_01");
+    }
+
+    public void testIssueGH5585_02() throws Exception {
+        performTest("lexer/issueGH5585_02");
+    }
 }

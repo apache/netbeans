@@ -321,6 +321,7 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         FileObject srcInDefPkg = src.createData("Foo","java");
         assertNotNull(srcInDefPkg);
         FileObject sourceFile = src.createFolder("org").createFolder("me").createData("Test", "java");
+        src.getFileObject("org/me").createFolder("Test"); // https://github.com/apache/netbeans/issues/5738
         assertNotNull(sourceFile);
         ClasspathInfo cpInfo = ClasspathInfo.create(ClassPathSupport.createClassPath(new FileObject[0]), ClassPathSupport.createClassPath(new FileObject[0]),
             ClassPathSupport.createClassPath(new FileObject[]{src}));
@@ -337,16 +338,16 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         ElementHandle<? extends Element> handle = ElementHandle.createTypeElementHandle(ElementKind.CLASS, "org.me.Test");
         assertNotNull (handle);
         FileObject result = SourceUtils.getFile(handle, cpInfo);
-        assertNotNull(result);
+        assertEquals(sourceFile, result);
         handle = ElementHandle.createTypeElementHandle(ElementKind.CLASS, "org.me.Test$Inner");
         result = SourceUtils.getFile(handle,cpInfo);
-        assertNotNull(result);
+        assertEquals(sourceFile, result);
         handle = ElementHandle.createPackageElementHandle("org.me");
         result = SourceUtils.getFile(handle,cpInfo);
-        assertNotNull(result);
+        assertEquals(sourceFile.getParent(), result);
         handle = ElementHandle.createTypeElementHandle(ElementKind.CLASS, "Foo");
         result = SourceUtils.getFile(handle,cpInfo);
-        assertNotNull(result);
+        assertEquals(srcInDefPkg, result);
     }
 
     public void testGetMainClasses() throws Exception {

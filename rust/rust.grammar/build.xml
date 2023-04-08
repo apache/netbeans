@@ -25,9 +25,8 @@
 
     <!-- Antlr Tool classpath -->
     <path id="antlr.path">
-        <fileset dir="external">
-            <include name="**/*.jar" />
-        </fileset>
+        <fileset dir="../../ide/libs.antlr4.runtime/external" includes="*.jar"/>
+        <fileset dir="../../ide/libs.antlr3.runtime/external" includes="antlr-runtime-*.jar"/>
     </path>
 
     <!-- Prepares Antlr variables -->

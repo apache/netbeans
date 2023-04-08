@@ -48,7 +48,8 @@
                         <folder name="Defaults">
                             <file name="org-netbeans-modules-rust-grammar-resources-token-colorings_2.xml" url="resources/citylights.xml"/>
                         </folder>
-                    </folder>                </folder>
+                    </folder>
+                </folder>
             </folder>
         </folder>
     </folder>

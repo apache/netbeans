@@ -234,6 +234,11 @@ public class ModelTest extends ModelTestBase {
         checkModel("testfiles/structure/issueGH5184_02.js");
     }
 
+    public void testBogusGlobalThis() throws Exception {
+        checkModel("testfiles/structure/bogusGlobalThis_01.js");
+        checkModel("testfiles/structure/bogusGlobalThis_02.js");
+    }
+
     public void testPersonRevert() throws Exception {
         FileObject fo = getTestFile("testfiles/model/person.js.model");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(fo.getInputStream()))) {

@@ -95,7 +95,12 @@ public class UsedNamesCollector {
                     break;
                 }
             } else {
-                if (useElement.getName().endsWith(firstSegmentName)) {
+                // GH-5330
+                // do not check the end string of the declared name
+                // check whether segment is the same name
+                // e.g. OtherSameNamePart and SameNamePart are end with "SameNamePart"
+                QualifiedName declaredName = QualifiedName.create(useElement.getName());
+                if (declaredName.getSegments().getLast().equals(firstSegmentName)) {
                     result = true;
                     break;
                 }

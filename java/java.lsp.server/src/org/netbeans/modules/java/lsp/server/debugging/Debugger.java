@@ -55,7 +55,7 @@ public final class Debugger {
         NbProtocolServer server = new NbProtocolServer(context);
 
         Launcher<IDebugProtocolClient> serverLauncher = DSPLauncher.createServerLauncher(
-                server, io.first(), io.second(), null, del -> new ConsumeWithLookup(del, session));
+                server, io.first(), io.second(), null, ConsumeWithLookup::new);
         context.setClient(serverLauncher.getRemoteProxy());
         Future<Void> runningServer = serverLauncher.startListening();
         server.setRunningFuture(runningServer);
@@ -64,18 +64,16 @@ public final class Debugger {
 
     private static class ConsumeWithLookup implements MessageConsumer {
         private final MessageConsumer delegate;
-        private final LspSession session;
         private OperationContext topContext;
 
-        public ConsumeWithLookup(MessageConsumer delegate, LspSession session) {
+        public ConsumeWithLookup(MessageConsumer delegate) {
             this.delegate = delegate;
-            this.session = session;
         }
         
         @Override
         public void consume(Message message) throws MessageIssueException, JsonRpcException {
             InstanceContent ic = new InstanceContent();
-            ProxyLookup ll = new ProxyLookup(new AbstractLookup(ic), session.getLookup());
+            ProxyLookup ll = new ProxyLookup(new AbstractLookup(ic), Lookup.getDefault());
             // HACK: piggyback on LSP's client.
             if (topContext == null) {
                 topContext = OperationContext.find(null);

@@ -24,6 +24,7 @@ import com.sun.source.util.TreePath;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -193,6 +194,13 @@ public class JavaErrorProvider implements ErrorProvider {
             if (f instanceof IncompleteClassPath.ResolveFix) {
                 // We know that this is a project problem and that the problems reported by ProjectProblemsProvider should be resolved
                 CodeAction action = new CodeAction(f.getText(), new Command(f.getText(), "java.project.resolveProjectProblems"));
+                result.add(action);
+            }
+            if (f instanceof org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix) {
+                org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix rf = (org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix) f;
+                List<Object> params = rf.getNewSourceLevel() != null ? Arrays.asList(rf.getNewSourceLevel())
+                                                                     : Collections.emptyList();
+                CodeAction action = new CodeAction(f.getText(), new Command(f.getText(), "java.project.enable.preview", params));
                 result.add(action);
             }
             if (f instanceof ImportClass.FixImport) {

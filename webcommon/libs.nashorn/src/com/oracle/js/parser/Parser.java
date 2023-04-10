@@ -1967,7 +1967,6 @@ loop:
      * Verify destructuring variable declaration binding pattern and extract bound variable declarations.
      */
     private void verifyDestructuringBindingPattern(Expression pattern, Consumer<IdentNode> identifierCallback) {
-        assert pattern instanceof ObjectNode || pattern instanceof ArrayLiteralNode;
         pattern.accept(new VerifyDestructuringPatternNodeVisitor(new LexicalContext()) {
             @Override
             protected void verifySpreadElement(Expression lvalue) {

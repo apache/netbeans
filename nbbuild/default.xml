@@ -248,5 +248,7 @@
       <property name="metabuild.jms-flags" value="${jms-base.flags}${jms-desktop.flags}${jms-compiler.flags}${jms-tools.flags}"/>
       <!-- Excluding jms-tools.flags, as nbjavac usually overlaps with tools dependencies -->
       <property name="metabuild.jms-flags.jvm" value="${jms-base.flags.jvm}${jms-desktop.flags.jvm}${jms-compiler.flags.jvm}"/>
+
+      <property name="nbjavac.class.path" value="nbbuild/external/compiler*.jar"/>
   </target>
 </project>

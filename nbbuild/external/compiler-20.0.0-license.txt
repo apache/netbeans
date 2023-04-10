@@ -1,10 +1,10 @@
 Name: Javac Compiler Implementation
 Description: Javac Compiler Implementation
-Files: nb-javac-jdk-20+34-api.jar nb-javac-jdk-20+34.jar
-Version: jdk-20+34
+Files: compiler-20.0.0.jar
+Version: 20.0.0
 License: GPL-2-CP
-Origin: OpenJDK (https://github.com/openjdk/jdk20)
-Source: https://github.com/openjdk/jdk20
+Origin: Frgaal (https://frgaal.org/)
+Source: https://github.com/eppleton/frgaal/
 Type: compile-time,optional
 Comment: Used at compile and design time to compile against; optional at runtime.
 

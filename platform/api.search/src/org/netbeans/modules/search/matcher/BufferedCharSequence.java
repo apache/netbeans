@@ -27,13 +27,10 @@ import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
-import java.nio.charset.MalformedInputException;
-import java.nio.charset.UnmappableCharacterException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.search.provider.SearchListener;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 
 /**
  * The {@code BufferedCharSequence} class provides the {@code CharSequence}
@@ -170,12 +167,9 @@ public class BufferedCharSequence implements CharSequence {
     @Override
     @SuppressWarnings("FinalizeDeclaration")
     protected void finalize() throws Throwable {
-        try {
-            close();
-        } finally {
-            super.finalize();
-        }
+        close();
     }
+
     /**
      * Gets maximal size of the source buffer.
      * @return the size of the source buffer.

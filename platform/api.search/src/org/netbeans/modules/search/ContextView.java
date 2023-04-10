@@ -477,6 +477,7 @@ public final class ContextView extends JPanel {
          * @author  Marian Petras
          */
         @Override
+        @SuppressWarnings("deprecation")
         public void run() {
             assert EventQueue.isDispatchThread();
             

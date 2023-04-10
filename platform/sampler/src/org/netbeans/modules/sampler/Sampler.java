@@ -177,7 +177,7 @@ public abstract class Sampler {
                     try {
                         ThreadInfo[] infos = threadBean.dumpAllThreads(false, false);
                         long timestamp = System.nanoTime() + nanoTimeCorrection;
-                        samplesStream.writeSample(infos, timestamp, Thread.currentThread().getId());
+                        samplesStream.writeSample(infos, timestamp, findThreadId());
                         updateStats(timestamp);
                     } catch (Throwable ex) {
                         printStackTrace(ex);
@@ -185,6 +185,11 @@ public abstract class Sampler {
                 }
             }
         }, SAMPLER_RATE, SAMPLER_RATE);
+    }
+
+    @SuppressWarnings("deprecation")
+    private static long findThreadId() {
+        return Thread.currentThread().getId();
     }
 
     /**

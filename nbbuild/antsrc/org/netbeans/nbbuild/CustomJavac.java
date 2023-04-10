@@ -41,6 +41,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * and a separate task for {@link #cleanUpStaleClasses}.
  */
 public class CustomJavac extends Javac {
+
     public CustomJavac() {}
 
     private Path processorPath;

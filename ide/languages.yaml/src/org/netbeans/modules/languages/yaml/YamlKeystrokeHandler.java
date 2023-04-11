@@ -115,6 +115,13 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
             return true;
         }
 
+        if (((c == '}') || (c == ']')) && dotPos < doc.getLength()) {
+            if (String.valueOf(c).equals(doc.getText(dotPos, 1))) {
+                caret.setDot(dotPos + 1);
+                return true;
+            }
+        }
+        
         if ((c == '\'') || (c == '"')) {
             int sstart = target.getSelectionStart();
             int send = target.getSelectionEnd();

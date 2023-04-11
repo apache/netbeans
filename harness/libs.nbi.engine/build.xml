@@ -47,7 +47,20 @@
     </target>
 
     <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/nbi.engine-external-binaries-11.zip" dest="${nbi.engine.dir}"/>
+        <delete dir="native/cleaner/windows/dist" /> 
+        <delete dir="native/launcher/windows/dist" />       
+        <unzip src="external/nbi.engine-external-binaries-11.zip" dest="${nbi.engine.dir}">
+            <patternset>
+                <exclude name="native/cleaner/windows/**/*.*"/>
+                <exclude name="native/launcher/windows/**/*.*"/>
+            </patternset>
+        </unzip>
+        <unzip src="external/nbi.engine-external-binaries-12.6.zip" dest="${nbi.engine.dir}">
+            <patternset>
+                <exclude name="LICENSE"/>
+                <exclude name="NOTICE"/>
+            </patternset>
+        </unzip>
     </target>
 
 </project>

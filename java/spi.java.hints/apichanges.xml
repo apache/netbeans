@@ -25,6 +25,22 @@
         <apidef name="JavaHintsSPI">Java Hints SPI</apidef>
     </apidefs>
     <changes>
+        <change id="openRefactoringUI">
+            <api name="JavaHintsSPI"/>
+            <summary>Added utility methods and SPI to open UI for hints</summary>
+            <version major="1" minor="53"/>
+            <date day="17" month="3" year="2021"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Internal helper method added to open refactoring UI with selected hints. 
+                    <a href="@TOP@/org/netbeans/modules/java/hints/spiimpl/HintsRefactoringFactory.html">Added SPI</a> that 
+                    can be implemented by UI module(s) to actually provide the UI implementation.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.java.hints.spiimpl" name="HintsRefactoringFactory"/>
+            <class package="org.netbeans.modules.java.hints.spiimpl" name="Utilities"/>
+        </change>
         <change id="JavaFixUtilities.isPrimary">
             <api name="JavaHintsSPI"/>
             <summary>Added JavaFixUtilities.isPrimary() utility</summary>

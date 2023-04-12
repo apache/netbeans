@@ -55,35 +55,19 @@ export function registerCompletion(context: ExtensionContext) {
                                 completionItems = commands.executeCommand('java.project.configuration.completion', uri, attributesMap);
                             }
                         }
-
-
-			return (completionItems as Thenable<CompletionList<CompletionItem>>).then(itemsList => {
+                        return (completionItems as Thenable<CompletionList<CompletionItem>>).then(itemsList => {
                             let items = itemsList.items;
-			    if (!items) {
+                            if (!items) {
                                 items = ((itemsList as unknown) as CompletionItem[]);
-			    }
+                            }
                             addCommas(sourceText, offset, items);
-			    return new CompletionList(items);
+                            return new CompletionList(items);
                         });
                     }
                 }
             }
         }
     }));
-}
-
-function getAttributesMap(node: jsoncp.Node) {
-    let attributes = new Map<string, object>();
-    if (node.children) {
-        for (let index in node.children) {
-            let ch = node.children[index];
-            let prop = ch.children;
-            if (prop) {
-                attributes.set(prop[0].value, prop[1].value);
-            }
-        }
-    }
-    return attributes;
 }
 
 function getAttributes(node: jsoncp.Node) {
@@ -136,7 +120,7 @@ function addCommas(sourceText: string, offset: number, completionItems: Completi
                 if (append) {
                     snippet.value = snippet.value + ',';
                 }
-	    } else {
+            } else {
                 if (prepend) {
                     ci.insertText = ',' + ci.insertText;
                 }
@@ -144,6 +128,9 @@ function addCommas(sourceText: string, offset: number, completionItems: Completi
                     ci.insertText = ci.insertText + ',';
                 }
             }
+        }
+        if (ci.kind) {
+            ci.kind--; // Note difference between vscode's CompletionItemKind and lsp's CompletionItemKind
         }
     }
 }

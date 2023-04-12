@@ -1199,7 +1199,7 @@ public class ServerTest extends NbTestCase {
     }
 
     private void checkAttachToPort(DebugConnector c) {
-        assertEquals("java8+", c.getType());
+        assertEquals("java+", c.getType());
         List<String> arguments = c.getArguments();
         assertEquals(2, arguments.size());
         assertEquals("hostName", arguments.get(0));
@@ -1208,7 +1208,7 @@ public class ServerTest extends NbTestCase {
     }
 
     private void checkAttachToProcess(DebugConnector c) {
-        assertEquals("java8+", c.getType());
+        assertEquals("java+", c.getType());
         List<String> arguments = c.getArguments();
         assertEquals(1, arguments.size());
         assertEquals("processId", arguments.get(0));

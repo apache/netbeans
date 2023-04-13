@@ -591,6 +591,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         return client;
     }));
 
+    launchConfigurations.updateLaunchConfig();
+
     // register completions:
     launchConfigurations.registerCompletion(context);
     return Object.freeze({

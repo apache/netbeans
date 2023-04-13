@@ -539,9 +539,7 @@ public final class DeployOnSaveManager {
                 }
             // standard incremental deploy
             } else {
-                long start = System.currentTimeMillis();
                 state = server.notifyArtifactsUpdated(provider, artifacts);
-                System.out.println("Totallllllllllll " + ( System.currentTimeMillis() - start));
                 if (state == DeploymentState.SERVER_STATE_UNSUPPORTED
                         && lastState == DeploymentState.MODULE_NOT_DEPLOYED) {
                     state = DeploymentState.MODULE_NOT_DEPLOYED;

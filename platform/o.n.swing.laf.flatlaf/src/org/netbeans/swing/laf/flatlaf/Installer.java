@@ -53,6 +53,10 @@ public class Installer extends ModuleInstall {
             FlatLaf.registerCustomDefaultsSource(customFolder.toURL());
         }
 
+        FlatLaf.setSystemColorGetter( name -> {
+            return name.equals( "accent" ) ? FlatLafPrefs.getAccentColor() : null;
+        } );
+
         // don't allow FlatLaf to update UI on system font changes because this would
         // invoke UIManager.setLookAndFeel() and SwingUtilities.updateComponentTreeUI()
         System.setProperty( "flatlaf.updateUIOnSystemFontChange", "false" );

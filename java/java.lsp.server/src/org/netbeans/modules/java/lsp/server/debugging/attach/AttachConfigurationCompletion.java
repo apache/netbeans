@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.CompletionItem;
+import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.InsertTextFormat;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.lsp.server.Utils;
@@ -69,7 +70,8 @@ public class AttachConfigurationCompletion implements LaunchConfigurationComplet
     }
 
     private static CompletionItem createCompletion(ConfigurationAttributes configAttrs) {
-        CompletionItem ci = new CompletionItem("Java 8+: " + configAttrs.getName());    // NOI18N
+        CompletionItem ci = new CompletionItem("Java+: " + configAttrs.getName());    // NOI18N
+        ci.setKind(CompletionItemKind.Module);
         StringWriter sw = new StringWriter();
         try (JsonWriter w = new JsonWriter(sw)) {
             w.setIndent("\t");                                              // NOI18N

@@ -382,18 +382,18 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     //register debugger:
     let debugTrackerFactory =new NetBeansDebugAdapterTrackerFactory();
-    context.subscriptions.push(vscode.debug.registerDebugAdapterTrackerFactory('java8+', debugTrackerFactory));
+    context.subscriptions.push(vscode.debug.registerDebugAdapterTrackerFactory('java+', debugTrackerFactory));
     let configInitialProvider = new NetBeansConfigurationInitialProvider();
-    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configInitialProvider, vscode.DebugConfigurationProviderTriggerKind.Initial));
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java+', configInitialProvider, vscode.DebugConfigurationProviderTriggerKind.Initial));
     let configDynamicProvider = new NetBeansConfigurationDynamicProvider(context);
-    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configDynamicProvider, vscode.DebugConfigurationProviderTriggerKind.Dynamic));
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java+', configDynamicProvider, vscode.DebugConfigurationProviderTriggerKind.Dynamic));
     let configResolver = new NetBeansConfigurationResolver();
-    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configResolver));
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java+', configResolver));
     let configNativeResolver = new NetBeansConfigurationNativeResolver();
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('nativeimage', configNativeResolver));
 
     let debugDescriptionFactory = new NetBeansDebugAdapterDescriptionFactory();
-    context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java8+', debugDescriptionFactory));
+    context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java+', debugDescriptionFactory));
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('nativeimage', debugDescriptionFactory));
 
     // register content provider
@@ -403,7 +403,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     // initialize Run Configuration
     initializeRunConfiguration().then(initialized => {
 		if (initialized) {
-			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', runConfigurationProvider));
+			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java+', runConfigurationProvider));
 			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java', runConfigurationProvider));
 			context.subscriptions.push(vscode.window.registerTreeDataProvider('run-config', runConfigurationNodeProvider));
 			context.subscriptions.push(vscode.commands.registerCommand('java.workspace.configureRunSettings', (...params: any[]) => {
@@ -537,7 +537,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         if (docUri) {
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
             const debugConfig : vscode.DebugConfiguration = {
-                type: "java8+",
+                type: "java+",
                 name: "Java Single Debug",
                 request: "launch",
                 methodName,
@@ -590,6 +590,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand('nbls.startup.condition', async () => {
         return client;
     }));
+
+    launchConfigurations.updateLaunchConfig();
 
     // register completions:
     launchConfigurations.registerCompletion(context);
@@ -1336,7 +1338,7 @@ class NetBeansConfigurationInitialProvider implements vscode.DebugConfigurationP
                 }
                 const debugConfig : vscode.DebugConfiguration = {
                     name: cname,
-                    type: "java8+",
+                    type: "java+",
                     request: "launch",
                     launchConfiguration: cn,
                 };
@@ -1410,7 +1412,7 @@ class NetBeansConfigurationResolver implements vscode.DebugConfigurationProvider
 
     resolveDebugConfiguration(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
         if (!config.type) {
-            config.type = 'java8+';
+            config.type = 'java+';
         }
         if (!config.request) {
             config.request = 'launch';

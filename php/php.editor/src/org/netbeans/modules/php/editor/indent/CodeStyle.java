@@ -208,6 +208,10 @@ public final class CodeStyle {
         return preferences.getInt(BLANK_LINES_AFTER_FIELDS, getDefaultAsInt(BLANK_LINES_AFTER_FIELDS));
     }
 
+    public boolean getBlankLinesEOF() {
+        return preferences.getBoolean(BLANK_LINES_EOF, getDefaultAsBoolean(BLANK_LINES_EOF));
+    }
+
     /**
      *
      * @return true it the fields will be group without php doc together (no empty line between them)

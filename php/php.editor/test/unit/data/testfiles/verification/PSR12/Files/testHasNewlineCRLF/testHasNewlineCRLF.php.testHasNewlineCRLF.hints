@@ -1,0 +1,4 @@
+<?php
+-----
+HINT:PSR-12 Violation:
+PHP files MUST use the Unix LF (linefeed) line ending only

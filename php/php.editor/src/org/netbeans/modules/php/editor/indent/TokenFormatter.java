@@ -160,6 +160,7 @@ public class TokenFormatter {
         public int blankLinesAfterClassHeader;
         public int blankLinesBeforeFields;
         public int blankLinesBetweenFields;
+        public boolean blankLinesEOF;
         public boolean blankLinesGroupFields;
         public int blankLinesAfterFields;
         public int blankLinesBeforeFunction;
@@ -327,6 +328,7 @@ public class TokenFormatter {
             blankLinesAfterClassHeader = codeStyle.getBlankLinesAfterClassHeader();
             blankLinesBeforeFields = codeStyle.getBlankLinesBeforeFields();
             blankLinesBetweenFields = codeStyle.getBlankLinesBetweenFields();
+            blankLinesEOF = codeStyle.getBlankLinesEOF();
             blankLinesGroupFields = codeStyle.getBlankLinesGroupFieldsWithoutDoc();
             blankLinesAfterFields = codeStyle.getBlankLinesAfterFields();
             blankLinesBeforeFunction = codeStyle.getBlankLinesBeforeFunction();
@@ -2222,6 +2224,9 @@ public class TokenFormatter {
                         index++;
                     }
                 } finally {
+                    if (docOptions.blankLinesEOF) {
+                        resolveNoNewLineAtEOF(doc);
+                    }
                     mti.tokenHierarchyControl().setActive(true);
                 }
                 if (LOGGER.isLoggable(Level.FINE)) {
@@ -3111,6 +3116,36 @@ public class TokenFormatter {
         }
 
         return sb.toString();
+    }
+
+    private void resolveNoNewLineAtEOF(BaseDocument document) {
+        try {
+            String lastChar = getLastChar(document);
+            String lineEndings = getLineEndings(document);
+            if (!lastChar.equals("\n") && !lastChar.equals("\r")) { // NOI18N
+                document.insertString(document.getLength(), lineEndings, null);
+            }
+        } catch (BadLocationException ex) {
+            LOGGER.log(Level.WARNING, "Cannot insert the newline to the EOF. document length: {0}, invalid offset: {1}",
+                    new Object[]{document.getLength(), ex.offsetRequested()});
+        }
+    }
+
+    private String getLastChar(BaseDocument document) throws BadLocationException {
+        String lastChar = ""; // NOI18N
+        if (document.getLength() > 0) {
+            lastChar = document.getText(document.getLength() - 1, 1);
+        }
+        return lastChar;
+    }
+
+    private String getLineEndings(BaseDocument document) {
+        String lineEndings = BaseDocument.LS_LF;
+        Object lineSeparator = document.getProperty(BaseDocument.READ_LINE_SEPARATOR_PROP);
+        if (lineSeparator instanceof String) {
+            lineEndings = (String) lineSeparator;
+        }
+        return lineEndings;
     }
 
     private static final class SpacesCounter {

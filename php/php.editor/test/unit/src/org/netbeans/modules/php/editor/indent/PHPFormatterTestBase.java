@@ -130,7 +130,7 @@ public abstract class PHPFormatterTestBase extends PHPTestBase {
         FileObject fo = getTestFile(file);
         assertNotNull(fo);
 
-        String text = read(fo);
+        String text = readFile(fo);
 
         int formatStart = 0;
         int formatEnd = text.length();

@@ -2130,6 +2130,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
             case LOCAL_VARIABLE:
             case EXCEPTION_PARAMETER:
             case RESOURCE_VARIABLE:
+            case BINDING_VARIABLE:
                 ve = (VariableElement) elm;
                 String varName = ve.getSimpleName().toString();
                 ScriptVariable var = evaluationContext.getScriptVariableByName(varName);

@@ -3,4 +3,4 @@ OpenIDE-Module: org.netbeans.modules.languages.go
 OpenIDE-Module-Layer: org/netbeans/modules/languages/go/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/languages/go/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
-AutoUpdate-Show-In-Client: false
+AutoUpdate-Show-In-Client: true

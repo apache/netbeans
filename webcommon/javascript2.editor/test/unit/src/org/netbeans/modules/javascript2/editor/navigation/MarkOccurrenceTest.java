@@ -2243,7 +2243,11 @@ public class MarkOccurrenceTest extends JsTestBase {
     public void testIssue258724_02() throws Exception {
         checkOccurrences("testfiles/markoccurences/issue258724.js", "return this.ag^e;", true);
     }
-    
+
+    public void testIssueGH5184_01() throws Exception {
+        checkOccurrences("testfiles/markoccurences/issueGH5184_01.js", "export {te^st2};", true);
+    }
+
     private String getTestName() {
         String name = getName();
         int indexOf = name.indexOf("_");

@@ -59,9 +59,11 @@ class DumpingVisitor extends NodeVisitor {
             System.out.println(indent() + node.getClass().getName() + " [" + ((LiteralNode) node).getValue() + "]");
         } else if (node instanceof FunctionNode) {
             FunctionNode fn = (FunctionNode) node;
-            System.out.printf("%s%s [%s, kind=%s, isAsync=%b, isMethod=%b]%n",
+            System.out.printf("%s%s [%s-%d, %s, kind=%s, isAsync=%b, isMethod=%b]%n",
                     indent(),
                     node.getClass().getName(),
+                    fn.getStart(),
+                    fn.getFinish(),
                     fn.getName(),
                     fn.getKind().name(),
                     fn.isAsync(),

@@ -144,9 +144,13 @@ public class HCLParserResult  extends ParserResult {
     }
     private void addFold(FoldType ft, Token start, Token stop) {
         if (start.getLine() < stop.getLine()) {
-            List<OffsetRange> foldBag = folds.computeIfAbsent(ft.code(), (t) ->  new ArrayList<>());
-            OffsetRange range = new OffsetRange(start.getStartIndex(), stop.getStopIndex() + 1);
-            foldBag.add(range);
+            int startPos = start.getStartIndex();
+            int stopPos = stop.getStopIndex() + 1;
+            if (startPos < stopPos) {
+                List<OffsetRange> foldBag = folds.computeIfAbsent(ft.code(), (t) ->  new ArrayList<>());
+                OffsetRange range = new OffsetRange(startPos, stopPos);
+                foldBag.add(range);
+            }
         }
     }
 

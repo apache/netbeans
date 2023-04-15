@@ -76,7 +76,7 @@ class IntroduceClass {
             }
             method = parentPath;
         }
-        CompilationUnitTree compilationUnit = info.getCompilationUnit();
+        CompilationUnitTree compilationUnit = treePath.getCompilationUnit();
         SourcePositions sourcePositions = info.getTrees().getSourcePositions();
         long endPosition = sourcePositions.getEndPosition(compilationUnit, method.getLeaf());
         if (TreeUtilities.CLASS_TREE_KINDS.contains(method.getLeaf().getKind())) {

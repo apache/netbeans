@@ -80,6 +80,7 @@ public final class BasicHCLLexer extends AnstractHCLLexer {
             case GTE:
             case LT:
             case LTE:
+            case MINUS:
             case NOT:
             case NOT_EQUALS:
             case OR:

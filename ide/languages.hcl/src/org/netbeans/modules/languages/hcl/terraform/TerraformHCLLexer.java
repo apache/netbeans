@@ -66,6 +66,7 @@ public final class TerraformHCLLexer extends AnstractHCLLexer {
             case OUTPUT:
             case PROVIDER:
             case RESOURCE:
+            case TerraformLexer.STRING:
             case TERRAFORM:
             case VAR:
             case VARIABLE:
@@ -99,6 +100,7 @@ public final class TerraformHCLLexer extends AnstractHCLLexer {
             case GTE:
             case LT:
             case LTE:
+            case MINUS:
             case NOT:
             case NOT_EQUALS:
             case OR:

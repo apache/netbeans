@@ -119,6 +119,14 @@ public class JsGlobalIsNotDeclaredTest extends HintTestBase {
         checkHints(this, createRule(), "testfiles/hints/issueGH4246.js", null);
     }
 
+    public void testIssueGH4213() throws Exception {
+        checkHints(this, createRule(), "testfiles/hints/issueGH4213.js", null);
+    }
+
+    public void testIssueGH4568() throws Exception {
+        checkHints(this, createRule(), "testfiles/hints/issueGH4568.js", null);
+    }
+
     @Override
     protected boolean cleanCacheDir() {
         // The cache dir also holds the index cache - if the cache is cleared,

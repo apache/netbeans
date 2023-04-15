@@ -1,0 +1,14 @@
+FUNCTION bogusGlobalThis_02 [ANONYMOUS: false, DECLARED: true - bogusGlobalThis_02, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+q : OBJECT q [ANONYMOUS: false, DECLARED: true - q, MODIFIERS: PUBLIC, CLASS]
+  # PROPERTIES
+  a : OBJECT a [ANONYMOUS: false, DECLARED: false - a, MODIFIERS: PUBLIC, OBJECT]
+    # PROPERTIES
+    b : OBJECT b [ANONYMOUS: false, DECLARED: true - b, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+  x : FUNCTION x [ANONYMOUS: false, DECLARED: true - x, MODIFIERS: PUBLIC, METHOD]
+    # RETURN TYPES
+    undefined, RESOLVED: true
+    # PROPERTIES
+    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

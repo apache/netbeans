@@ -148,7 +148,7 @@ public final class RunUtils {
     @NbBundle.Messages({
         "#compile on save: all, none",
         "#NOI18N",
-        "DEFAULT_COMPILE_ON_SAVE=all"
+        "DEFAULT_COMPILE_ON_SAVE=none"
     })
     public static boolean isCompileOnSaveEnabled(Project prj) {
         AuxiliaryProperties auxprops = prj.getLookup().lookup(AuxiliaryProperties.class);

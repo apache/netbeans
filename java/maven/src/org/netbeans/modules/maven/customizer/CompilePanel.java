@@ -137,7 +137,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
 
             @Override
             public boolean getDefaultValue() {
-                return cosSupported;
+                return false; // see org.netbeans.modules.maven.api.execute.RunUtils#isCompileOnSaveEnabled
             }
 
             @Override

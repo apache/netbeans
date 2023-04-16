@@ -708,7 +708,7 @@ AtomicLockListener, FoldHierarchyListener {
 
     /**
      * Update the caret's visual position.
-     * <br/>
+     * <br>
      * The document is read-locked while calling this method.
      *
      * @param scrollViewToCaret whether the view of the text component should be
@@ -1152,7 +1152,7 @@ AtomicLockListener, FoldHierarchyListener {
 
     /**
      * Assign the caret a new offset in the underlying document.
-     * <br/>
+     * <br>
      * This method implicitly sets the selection range to zero.
      */
     public @Override void setDot(int offset) {
@@ -2241,7 +2241,7 @@ AtomicLockListener, FoldHierarchyListener {
      * Some height or view changes may result in the caret going off the screen. In some cases, this is not desirable,
      * as the user's work may be interrupted by e.g. an automatic refresh. This method repositions the view so the
      * caret remains visible.
-     * <p/>
+     * <p>
      * The method has two modes: it can reposition the view just if it originally displayed the caret and the caret became
      * invisible, and it can scroll the caret into view unconditionally.
      * @param retainInView true to scroll only if the caret was visible. False to refresh regardless of visibility.

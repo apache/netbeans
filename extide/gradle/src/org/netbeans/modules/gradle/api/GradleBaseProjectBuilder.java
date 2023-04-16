@@ -322,11 +322,14 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                     String parentId = it.getKey();
 
                     GradleDependency parentD;
+                    boolean special = false;
                     if (parentId.equals("")) {
                         parentD = GradleConfiguration.SELF_DEPENDENCY;
+                        special = true;
                     } else if (parentId.startsWith(DEPENDENCY_PROJECT_PREFIX)) {
                         int sep1 = parentId.indexOf(':', DEPENDENCY_PROJECT_PREFIX.length());
                         parentD = projects.get(parentId.substring(DEPENDENCY_PROJECT_PREFIX.length(), sep1));
+                        special = true;
                     } else {
                         parentD = components.get(parentId);
                         if (parentD == null) {
@@ -339,7 +342,17 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                     
                     if (childSpecs.remove(parentId)) {
                         children.add(parentD);
-                        
+                    } else if (!special) {
+                        // special case - version may not be specified, but is implied somehow.
+                        try {
+                            String[] gav = GradleModuleFileCache21.gavSplit(parentId);
+                            String versionLess = gav[0] + ':' + gav[1] + ':';
+                            if (childSpecs.remove(versionLess)) {
+                                children.add(parentD);
+                            }
+                        } catch (IllegalArgumentException ex) {
+                            LOG.log(Level.FINE, "Unknown dependency GAV: parentId");
+                        }
                     }
                     
                     for (String cid : it.getValue()) {

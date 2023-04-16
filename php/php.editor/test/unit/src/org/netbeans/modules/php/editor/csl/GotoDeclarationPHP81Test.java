@@ -437,6 +437,26 @@ public class GotoDeclarationPHP81Test extends GotoDeclarationTestBase {
         checkDeclaration(getTestPath(), "$i::publicSt^aticMethod();", "    public static function ^publicStaticMethod(): void {");
     }
 
+    public void testEnumerationsWithInterface_01a() throws Exception {
+        checkDeclaration(getTestPath(), "use Enum1\\ExampleInter^face1;", "interface ^ExampleInterface1 {}");
+    }
+
+    public void testEnumerationsWithInterface_01b() throws Exception {
+        checkDeclaration(getTestPath(), "enum EnumImpl1 implements ExampleInterf^ace1 {", "interface ^ExampleInterface1 {}");
+    }
+
+    public void testEnumerationsWithInterface_01c() throws Exception {
+        checkDeclaration(getTestPath(), "enum EnumImpl2 implements ExampleInterfa^ce1, ExampleInterface2 {", "interface ^ExampleInterface1 {}");
+    }
+
+    public void testEnumerationsWithInterface_02a() throws Exception {
+        checkDeclaration(getTestPath(), "use Enum1\\ExampleInter^face2;", "interface ^ExampleInterface2 {}");
+    }
+
+    public void testEnumerationsWithInterface_02b() throws Exception {
+        checkDeclaration(getTestPath(), "enum EnumImpl2 implements ExampleInterface1, ExampleInterfa^ce2 {", "interface ^ExampleInterface2 {}");
+    }
+
     public void testEnumerationsWithBackingType_01() throws Exception {
         checkDeclaration(getTestPath(), "            static::CASE^1 => 'Case1',", "    case ^CASE1 = 1;");
     }

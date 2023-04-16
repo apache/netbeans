@@ -41,6 +41,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -188,6 +189,7 @@ import org.netbeans.spi.lsp.ErrorProvider;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
+import org.openide.DialogDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
@@ -219,6 +221,40 @@ public class ServerTest extends NbTestCase {
         super(name);
     }
 
+    private static final String COMMAND_EXTRACT_LOOKUP = "test.lookup.extract"; // NOI8N
+    
+    static volatile ServerLookupExtractionCommand extractCommand = null;
+
+    @ServiceProvider(service = CodeActionsProvider.class)
+    public static class ServerLookupExtractionCommand extends CodeActionsProvider {
+        volatile Lookup serverLookup;
+        volatile Lookup commandLookup;
+
+        public ServerLookupExtractionCommand() {
+            extractCommand = this;
+        }
+        
+        @Override
+        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public Set<String> getCommands() {
+            // this is called during server's initialization.
+            serverLookup = Lookup.getDefault();
+            return Collections.singleton(COMMAND_EXTRACT_LOOKUP); 
+        }
+
+        @Override
+        public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+            if (COMMAND_EXTRACT_LOOKUP.equals(command)) {
+                commandLookup = Lookup.getDefault();
+                return CompletableFuture.completedFuture(true);
+            }
+            return null;
+        }
+    }
     @Override
     protected void setUp() throws Exception {
         System.setProperty("java.awt.headless", Boolean.TRUE.toString());
@@ -1163,7 +1199,7 @@ public class ServerTest extends NbTestCase {
     }
 
     private void checkAttachToPort(DebugConnector c) {
-        assertEquals("java8+", c.getType());
+        assertEquals("java+", c.getType());
         List<String> arguments = c.getArguments();
         assertEquals(2, arguments.size());
         assertEquals("hostName", arguments.get(0));
@@ -1172,7 +1208,7 @@ public class ServerTest extends NbTestCase {
     }
 
     private void checkAttachToProcess(DebugConnector c) {
-        assertEquals("java8+", c.getType());
+        assertEquals("java+", c.getType());
         List<String> arguments = c.getArguments();
         assertEquals(1, arguments.size());
         assertEquals("processId", arguments.get(0));
@@ -4362,6 +4398,7 @@ public class ServerTest extends NbTestCase {
     }
     
     private Launcher<LanguageServer> createClientLauncherWithLogging(LanguageClient client, InputStream input, OutputStream output) {
+        System.err.println("Creating a client for testcase: " + getName());
         Launcher.Builder<LanguageServer> builder = new LSPLauncher.Builder<LanguageServer>() 
             .setLocalService(client)
             .setExceptionHandler((t) -> {
@@ -5549,6 +5586,29 @@ public class ServerTest extends NbTestCase {
         assertTrue(completion.isRight());
         List<String> actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         assertEquals(Arrays.asList("Method:length() : int"), actualItems);
+    }
+
+    /**
+     * Checks that the default Lookup contents is present just once in Lookup.getDefault() during server invocation in general,
+     * and specifically during command invocation.
+     */
+    public void testDefaultLookupJustOnce() throws Exception {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient(), client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        CompletableFuture<Object> o = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(COMMAND_EXTRACT_LOOKUP, Collections.emptyList()));
+        o.get();
+        Collection<? extends NbCodeLanguageClient> mm1 = extractCommand.serverLookup.lookupAll(NbCodeLanguageClient.class);
+        Collection<? extends NbCodeLanguageClient> mm2 = extractCommand.commandLookup.lookupAll(NbCodeLanguageClient.class);
+        
+        assertEquals(1, mm1.size());
+        assertEquals(1, mm2.size());
+
+        Collection<? extends DialogDisplayer> mm3 = extractCommand.serverLookup.lookupAll(DialogDisplayer.class);
+        Collection<? extends DialogDisplayer> mm4 = extractCommand.commandLookup.lookupAll(DialogDisplayer.class);
+
+        assertEquals(1, mm3.size());
+        assertEquals(1, mm4.size());
     }
 
     static {

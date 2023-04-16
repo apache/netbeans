@@ -52,10 +52,10 @@ public final class EditorStyleConstants {
      * <code>HighlightAttributeValue</code> returning <code>String</code>.
      * 
      * <p>The tooltip text can either be plain text or HTML. If using HTML the
-     * text must be enclosed in the case insensitive &lt;html&gt;&lt/html&gt; tags.
+     * text must be enclosed in the case insensitive &lt;html&gt;&lt;/html&gt; tags.
      * The only HTML tags guaranteed to work are those defined in <code>HtmlRenderer</code>.
      * 
-     * @see org.openide.awt.HtmlRenderer
+     * @see <a href="@org-openide-awt@/org/openide/awt/HtmlRenderer.html">HtmlRenderer</a>
      * @since 1.12
      */
     public static final Object Tooltip = new EditorStyleConstants ("tooltip"); //NOI18N

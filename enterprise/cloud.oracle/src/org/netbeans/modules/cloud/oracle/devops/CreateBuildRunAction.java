@@ -25,7 +25,6 @@ import com.oracle.bmc.devops.requests.CreateBuildRunRequest;
 import com.oracle.bmc.devops.responses.CreateBuildRunResponse;
 import com.oracle.bmc.model.BmcException;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.netbeans.modules.cloud.oracle.OCIManager;

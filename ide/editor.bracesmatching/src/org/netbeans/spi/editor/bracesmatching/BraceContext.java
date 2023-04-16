@@ -25,19 +25,19 @@ import javax.swing.text.Position;
  * by a semantically connected text, such as `if' statement or `while' statement in a do-while
  * loop in Java. Such text may be displayed as a context for the brace highlight. The marked text
  * should include the brace sign itself.
- * <p/>
+ * <p>
  * It may be necessary to provide a completely unrelated context, such is in the example
  * of if-else statement. The 'else' does not provide enough information itself as it is 
  * just a negation of earlier condition. Such related piece of text can be reported as 'related' 
- * BraceContext instance. Note that <i>related</b> instances may be chained - see the example below.
- * <p/>
+ * BraceContext instance. Note that <i>related</i> instances may be chained - see the example below.
+ * <p>
  * The infrastructure uses the provided information to present the context to the user. If 
  * a 'related' positions are present the infrastructure will attempt to present the source
  * on the 'context' and 'related' positions in the source text order (e.g. displays portion of the document);
  * contents between 'context' and 'related' positions may be suppressed.
- * <p/>
+ * <p>
  * An example of context and related areas for Java (PHP) if-elseif-else, with the origin t
- * <code><pre>
+ * <pre>{@code
  *  //  vvvvvvvvvvvvvvvvv -- related
  *      if (condition1) {
  *  //  vvvvvvvvvvvvvvvvvvvvvvvvvvv -- related
@@ -48,7 +48,7 @@ import javax.swing.text.Position;
  *      ...
  *      }
  * //   ^ -- origin/caret location
- * </pre></code>
+ * }</pre>
  * @author sdedic
  */
 public final class BraceContext {

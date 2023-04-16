@@ -55,7 +55,8 @@ public class GitException extends Exception {
     }
 
     /**
-     * Describes an error when a non existent git object is tried to be loaded.<br/>
+     * Describes an error when a non existent git object is tried to be loaded.
+     * <br>
      * Usually is thrown when a caller passes a name of a branch or tag or a non-existent commit id
      * to a git command.
      */
@@ -103,7 +104,7 @@ public class GitException extends Exception {
     
     /**
      * Thrown when a file cannot be checked out into the working tree because it would result in a local conflict.
-     * <br/>
+     * <br>
      * The code that handles the exception should resolve the conflicts before retrying the failed command.
      * {@link #getConflicts() } can be called to get the conflicted paths.
      */
@@ -175,7 +176,7 @@ public class GitException extends Exception {
     /**
      * Thrown to notify a caller of the fact that a revision he passed has not been
      * fully merged into a current HEAD yet.
-     * <br/>
+     * <br>
      * Common use case is when trying to delete a not yet merged branch without the 
      * <code>forceDeleteUnmerged</code> parameter, see {@link GitClient#deleteBranch(java.lang.String, boolean, org.netbeans.libs.git.progress.ProgressMonitor) }.
      * Then {@link #getUnmergedRevision() } returns the name of the unmerged branch.

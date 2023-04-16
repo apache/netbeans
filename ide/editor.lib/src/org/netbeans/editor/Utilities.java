@@ -83,6 +83,7 @@ import org.netbeans.modules.editor.lib.BeforeSaveTasks;
 import org.netbeans.modules.editor.lib2.EditorPreferencesDefaults;
 import org.netbeans.modules.editor.lib2.view.DocumentView;
 import org.netbeans.modules.editor.lib2.view.EditorView;
+import org.openide.awt.Actions;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
@@ -267,7 +268,6 @@ public class Utilities {
     /** Get the end position of the row right before the new-line character.
     * @param c text component to operate on
     * @param offset position in document where to start searching
-    * @param relLine shift offset forward/back by some amount of lines
     * @return position of the end of the row or -1 for invalid position
     * @deprecated use {@link LineDocumentUtils}
     */
@@ -333,7 +333,7 @@ public class Utilities {
 
     /** Get the position that is one line above and visually at some
     * x-coordinate value.
-    * @param doc document to operate on
+    * @param c component to operate on
     * @param offset position in document from which the current line is determined
     * @param x float x-coordinate value
     * @return position of the character that is at the one line above at
@@ -586,7 +586,7 @@ public class Utilities {
     }
 
     /** Get the identifier around the given position or null if there's no identifier
-    * @see getIdentifierBlock()
+    * @see #getIdentifierBlock(BaseDocument,int)
     */
     public static String getIdentifier(BaseDocument doc, int offset)
     throws BadLocationException {
@@ -702,7 +702,7 @@ public class Utilities {
     }
 
     /** Get the selection or identifier at the current caret position
-     * @see getSelectionOrIdentifierBlock(JTextComponent, int)
+     * @see #getSelectionOrIdentifierBlock(JTextComponent, int)
      */
     public static int[] getSelectionOrIdentifierBlock(JTextComponent c) {
         try {
@@ -866,9 +866,9 @@ public class Utilities {
 
     /**
      * Reformat a block of code.
-     * <br/>
+     * <br>
      * The document should not be locked prior entering of this method.
-     * <br/>
+     * <br>
      * The method should be called from AWT thread so that the given offsets are more stable.
      * 
      * @param doc document to work with
@@ -904,9 +904,9 @@ public class Utilities {
 
     /**
      * Reformat the line around the given position.
-     * <br/>
+     * <br>
      * The document should not be locked prior entering of this method.
-     * <br/>
+     * <br>
      * The method should be called from AWT thread so that the given offsets are more stable.
      * 
      */
@@ -931,7 +931,7 @@ public class Utilities {
     }
 
     /** @deprecated
-     * @see Formatter.insertTabString()
+     * {@code Formatter#insertTabString()} editor.deprecated.pre65formatting
      */
     @Deprecated
     public static String getTabInsertString(BaseDocument doc, int offset)
@@ -1253,7 +1253,7 @@ public class Utilities {
      * @param readLockDocument if true lock the document before locking the view hierarchy.
      *  This parameter should only be false if it's known that the document was already read/write-locked
      *  prior calling this method.
-     * @r non-null runnable to execute.
+     * @param r  non-null runnable to execute.
      */
     public static void runViewHierarchyTransaction(final JTextComponent component,
             boolean readLockDocument, final Runnable r)
@@ -1279,7 +1279,7 @@ public class Utilities {
     /**
      * Creates nice textual description of sequence of KeyStrokes. Usable for
      * displaying MultiKeyBindings. The keyStrokes are delimited by space.
-     * @param Array of KeyStrokes representing the actual sequence.
+     * @param seq Array of KeyStrokes representing the actual sequence.
      * @return String describing the KeyStroke sequence.
      */
     public static String keySequenceToString( KeyStroke[] seq ) {
@@ -1293,47 +1293,14 @@ public class Utilities {
 
     /**
      * Creates nice textual representation of KeyStroke.
-     * Modifiers and an actual key label are concated by plus signs
-     * @param the KeyStroke to get description of
+     * Modifiers and an actual key label are concated per the platform-specific convention
+     * @param stroke the KeyStroke to get description of
      * @return String describing the KeyStroke
      */
     public static String keyStrokeToString( KeyStroke stroke ) {
-        String modifText = KeyEvent.getKeyModifiersText( stroke.getModifiers() );
-        String keyText = (stroke.getKeyCode() == KeyEvent.VK_UNDEFINED) ? 
-            String.valueOf(stroke.getKeyChar()) : getKeyText(stroke.getKeyCode());
-        if( modifText.length() > 0 ) return modifText + '+' + keyText;
-        else return keyText;
-    }
-    
-    /** @return slight modification of what KeyEvent.getKeyText() returns.
-     *  The numpad Left, Right, Down, Up get extra result.
-     */
-    private static String getKeyText(int keyCode) {
-        String ret = KeyEvent.getKeyText(keyCode);
-        if (ret != null) {
-            switch (keyCode) {
-                case KeyEvent.VK_KP_DOWN:
-                    ret = prefixNumpad(ret, KeyEvent.VK_DOWN);
-                    break;
-                case KeyEvent.VK_KP_LEFT:
-                    ret = prefixNumpad(ret, KeyEvent.VK_LEFT);
-                    break;
-                case KeyEvent.VK_KP_RIGHT:
-                    ret = prefixNumpad(ret, KeyEvent.VK_RIGHT);
-                    break;
-                case KeyEvent.VK_KP_UP:
-                    ret = prefixNumpad(ret, KeyEvent.VK_UP);
-                    break;
-            }
-        }
-        return ret;
-    }
-    
-    private static String prefixNumpad(String key, int testKeyCode) {
-        if (key.equals(KeyEvent.getKeyText(testKeyCode))) {
-            key = NbBundle.getBundle(BaseKit.class).getString("key-prefix-numpad") + key;
-        }
-        return key;
+        /* The related logic has now been moved into org.openide.awt.Actions, so that it can be used
+        by modules that do not depend on the editor infrastructure. */
+        return Actions.keyStrokeToString(stroke);
     }
 
     private static void checkOffsetValid(Document doc, int offset) throws BadLocationException {
@@ -1375,7 +1342,7 @@ public class Utilities {
     }
     
     /**
-     * @see isSelectionShowing(Caret)
+     * @see #isSelectionShowing(Caret)
      * @param component non-null component.
      * @return if selection is showing for component's caret.
      */

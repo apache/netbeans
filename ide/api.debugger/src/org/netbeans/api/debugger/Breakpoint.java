@@ -135,7 +135,7 @@ public abstract class Breakpoint {
     
     /**
      * Get the style of hit count filtering.
-     * @return the style of hit count filtering, or <cpde>null</code> when no count filter is set.
+     * @return the style of hit count filtering, or <code>null</code> when no count filter is set.
      */
     public final synchronized HIT_COUNT_FILTERING_STYLE getHitCountFilteringStyle() {
         return hitCountFilteringStyle;
@@ -285,7 +285,7 @@ public abstract class Breakpoint {
      * <p>
      * Not all breakpoint implementations honor dependent breakpoints.
      * Use {@link #canHaveDependentBreakpoints()} to determine if the operation is supported.
-     * @param breakpointsToEnable The set of breakpoints.
+     * @param breakpointsToDisable The set of breakpoints.
      * @throws UnsupportedOperationException if the breakpoint does not support
      * dependent breakpoints - see {@link #canHaveDependentBreakpoints()}.
      * @since 1.35

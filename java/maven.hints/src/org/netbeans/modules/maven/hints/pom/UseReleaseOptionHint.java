@@ -28,6 +28,9 @@ import javax.xml.namespace.QName;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.NbEditorUtilities;
+import org.netbeans.modules.maven.api.Constants;
+import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.hints.pom.spi.Configuration;
 import org.netbeans.modules.maven.hints.pom.spi.POMErrorFixProvider;
 import org.netbeans.modules.maven.model.pom.Build;
@@ -62,7 +65,11 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
     private static final String SOURCE_TAG = "source";
     private static final String RELEASE_TAG = "release";
 
-    private static final ComparableVersion MIN_VERSION = new ComparableVersion("3.6");
+    // min compiler plugin version for release option support
+    private static final ComparableVersion COMPILER_PLUGIN_VERSION = new ComparableVersion("3.6.0");
+
+    // maven version which added the required compiler plugin implicitly
+    private static final ComparableVersion MAVEN_VERSION = new ComparableVersion("3.9.0");
 
     private static final Configuration config = new Configuration(UseReleaseOptionHint.class.getName(),
                 TIT_UseReleaseVersionHint(), DESC_UseReleaseVersionHint(), true, Configuration.HintSeverity.WARNING);
@@ -70,36 +77,57 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
     @Override
     public List<ErrorDescription> getErrorsForDocument(POMModel model, Project prj) {
 
+        if (prj == null) {
+            return Collections.emptyList();
+        }
+
+        // no hints if plugin was downgraded
+        NbMavenProject nbproject = prj.getLookup().lookup(NbMavenProject.class);
+        if (nbproject != null) {
+            // note: this is the embedded plugin version, only useful for downgrade checks
+            String pluginVersion = PluginPropertyUtils.getPluginVersion(nbproject.getMavenProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
+            if (new ComparableVersion(pluginVersion).compareTo(COMPILER_PLUGIN_VERSION) <= 0) {
+                return Collections.emptyList();
+            }
+        }
+
         Build build = model.getProject().getBuild();
 
-        if (build != null && build.getPlugins() != null) {
+        List<ErrorDescription> hints = new ArrayList<>();
 
-            List<ErrorDescription> hints = new ArrayList<>();
+        boolean releaseSupportedByDeclaredPlugin = false;
+
+        if (build != null && build.getPlugins() != null) {
             Optional<Plugin> compilerPlugin = build.getPlugins().stream()
                     .filter((p) -> "maven-compiler-plugin".equals(p.getArtifactId()))
                     .filter(this::isPluginCompatible)
                     .findFirst();
 
             if (compilerPlugin.isPresent()) {
+                releaseSupportedByDeclaredPlugin = true;
                 hints.addAll(createHintsForParent("", compilerPlugin.get().getConfiguration()));
                 if (compilerPlugin.get().getExecutions() != null) {
                     for (PluginExecution exec : compilerPlugin.get().getExecutions()) {
                         hints.addAll(createHintsForParent("", exec.getConfiguration()));
                     }
                 }
-            } else {
-                return Collections.emptyList();
             }
-
-            Properties properties = model.getProject().getProperties();
-            if (properties != null) {
-                hints.addAll(createHintsForParent("maven.compiler.", properties));
-            }
-
-            return hints;
         }
 
-        return Collections.emptyList();
+        // no hints if required version not declared and also not provided by maven
+        if (!releaseSupportedByDeclaredPlugin) {
+            ComparableVersion mavenVersion = PomModelUtils.getActiveMavenVersion();
+            if (mavenVersion == null || mavenVersion.compareTo(MAVEN_VERSION) <= 0) {
+                return Collections.emptyList();
+            }
+        }
+
+        Properties properties = model.getProject().getProperties();
+        if (properties != null) {
+            hints.addAll(createHintsForParent("maven.compiler.", properties));
+        }
+
+        return hints;
     }
 
     private List<ErrorDescription> createHintsForParent(String prefix, POMComponent parent) {
@@ -164,7 +192,7 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
         if (version == null || version.isEmpty()) {
             return false;
         }
-        return new ComparableVersion(version).compareTo(MIN_VERSION) >= 0;
+        return new ComparableVersion(version).compareTo(COMPILER_PLUGIN_VERSION) >= 0;
     }
 
     private static class ConvertToReleaseOptionFix implements Fix {

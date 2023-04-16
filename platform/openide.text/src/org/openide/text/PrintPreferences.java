@@ -278,7 +278,7 @@ public final class PrintPreferences {
     }
     
     /** 
-     * @param <code>correction</code> the amount of vertical space to print between lines.
+     * @param correction the amount of vertical space to print between lines.
      * @exception IllegalArgumentException if <tt>correction</tt> is less than 0.
      */
     public static void setLineAscentCorrection(float correction) {

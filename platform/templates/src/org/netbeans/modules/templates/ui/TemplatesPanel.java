@@ -87,7 +87,6 @@ import org.openide.nodes.NodeMemberEvent;
 import org.openide.nodes.NodeReorderEvent;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
-import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -272,11 +271,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
                         Logger.getLogger(TemplatesPanel.class.getName()).log(Level.FINE, ex.getLocalizedMessage (), ex);
                     }
                 }
-                SwingUtilities.invokeLater (new Runnable () {
-                    @Override public void run() {
-                        view.requestFocus ();
-                    }
-                });
+                SwingUtilities.invokeLater (view::requestFocus);
             }
         });
     }
@@ -291,11 +286,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
                 Logger.getLogger(TemplatesPanel.class.getName()).log(Level.FINE, ex.getLocalizedMessage (), ex);
             }
         }
-        SwingUtilities.invokeLater (new Runnable () {
-            @Override public void run() {
-                view.requestFocus ();
-            }
-        });
+        SwingUtilities.invokeLater (view::requestFocus);
     }
     
     static Node getTemplateRootNode () {
@@ -347,7 +338,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
             Object o = fo.getAttribute(DataObject.PROP_TEMPLATE);
             boolean ret = false;
             if (o instanceof Boolean) {
-                ret = ((Boolean) o).booleanValue();
+                ret = (Boolean) o;
             }
             return ret;
         }
@@ -459,7 +450,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(addButton, gridBagConstraints);
         addButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(TemplatesPanel.class, "ACD_TemplatesPanel_Add")); // NOI18N
 
@@ -473,7 +464,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(newFolderButton, gridBagConstraints);
         newFolderButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(TemplatesPanel.class, "ACD_TemplatesPanel_New")); // NOI18N
 
@@ -493,7 +484,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(duplicateButton, gridBagConstraints);
         duplicateButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(TemplatesPanel.class, "ACD_TemplatesPanel_Duplicate")); // NOI18N
 
@@ -507,7 +498,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(renameButton, gridBagConstraints);
         renameButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(TemplatesPanel.class, "ACD_TemplatesPanel_Rename")); // NOI18N
 
@@ -527,7 +518,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(moveUpButton, gridBagConstraints);
         moveUpButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(TemplatesPanel.class, "ACD_TemplatesPanel_MoveUp")); // NOI18N
 
@@ -541,7 +532,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(moveDownButton, gridBagConstraints);
         moveDownButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(TemplatesPanel.class, "ACD_TemplatesPanel_MoveDown")); // NOI18N
 
@@ -561,7 +552,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(revertButton, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(deleteButton, org.openide.util.NbBundle.getBundle(TemplatesPanel.class).getString("BTN_TemplatesPanel_Delete")); // NOI18N
@@ -574,7 +565,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(deleteButton, gridBagConstraints);
         deleteButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(TemplatesPanel.class, "ACD_TemplatesPanel_Delete")); // NOI18N
 
@@ -594,7 +585,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(settingsButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -603,7 +594,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 11, 11, 8);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 5);
         add(buttonsPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1119,7 +1110,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
             Object o = obj.getAttribute(DataObject.PROP_TEMPLATE);
             boolean ret = false;
             if (o instanceof Boolean)
-                ret = ((Boolean) o).booleanValue();
+                ret = (Boolean) o;
             return ret;
         }
 

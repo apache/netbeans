@@ -20,6 +20,14 @@
     under the License.
 
 -->
+## Version 18.0.0
+* Java 8+ launch config renamed to Java+
+
+## Version 17.0.301
+* nb-javac 20 support
+* Gradle support to work on JDK 20
+* Various bug fixes
+
 ## Version 17.0.0
 * Various bug fixes
 

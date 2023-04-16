@@ -24,6 +24,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -128,25 +129,100 @@ public class Actions {
             return null;
         }
 
-        KeyStroke accelerator = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
+        KeyStroke stroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
 
-        if (accelerator == null) {
+        if (stroke == null) {
             return null;
         }
 
-        int modifiers = accelerator.getModifiers();
-        String acceleratorText = ""; // NOI18N
+        return keyStrokeToString(stroke);
+    }
 
-        if (modifiers > 0) {
-            acceleratorText = KeyEvent.getKeyModifiersText(modifiers);
-            acceleratorText += "+"; // NOI18N
-        } else if (accelerator.getKeyCode() == KeyEvent.VK_UNDEFINED) {
-            return ""; // NOI18N
+    // Based on com.formdev.flatlaf.FlatMenuItemRenderer.getMacOSModifiersExText
+    private static String getMacOSModifiersExText(int modifiersEx) {
+        /* Use the proper MacOS convention, which uses single-character modifier symbols, in the
+        order below, without "+" or space separators. */
+        StringBuilder buf = new StringBuilder();
+        if ((modifiersEx & InputEvent.CTRL_DOWN_MASK) != 0) {
+            buf.append('\u2303'); // MacOS "control key" symbol.
         }
+        if ((modifiersEx & (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK)) != 0) {
+            buf.append('\u2325'); // MacOS "option key" symbol.
+        }
+        if ((modifiersEx & InputEvent.SHIFT_DOWN_MASK) != 0) {
+            buf.append('\u21E7'); // MacOS "shift key" symbol.
+        }
+        if ((modifiersEx & InputEvent.META_DOWN_MASK) != 0) {
+            buf.append('\u2318'); // MacOS "command key" symbol.
+        }
+        return buf.toString();
+    }
 
-        acceleratorText += KeyEvent.getKeyText(accelerator.getKeyCode());
+    /**
+     * Creates nice textual representation of KeyStroke.
+     * Modifiers and an actual key label are concated per the platform-specific convention
+     * @param stroke the KeyStroke to get description of
+     * @return String describing the KeyStroke
+     */
+    public static String keyStrokeToString( KeyStroke stroke ) {
+        boolean macOS = Utilities.isMac();
+        String modifText = macOS
+                ? getMacOSModifiersExText(stroke.getModifiers())
+                : InputEvent.getModifiersExText(stroke.getModifiers());
+        String keyText = (stroke.getKeyCode() == KeyEvent.VK_UNDEFINED) ?
+            String.valueOf(stroke.getKeyChar()) : getKeyText(stroke.getKeyCode());
+        if (!modifText.isEmpty()) {
+            if (macOS) {
+                return modifText + keyText;
+            } else {
+                return modifText + '+' + keyText;
+            }
+        } else {
+            return keyText;
+        }
+    }
 
-        return acceleratorText;
+    /** @return slight modification of what KeyEvent.getKeyText() returns.
+     *  The numpad Left, Right, Down, Up get extra result.
+     */
+    private static String getKeyText(int keyCode) {
+        String ret = KeyEvent.getKeyText(keyCode);
+        if (ret != null) {
+            switch (keyCode) {
+                case KeyEvent.VK_KP_DOWN:
+                    ret = prefixNumpad(ret, KeyEvent.VK_DOWN);
+                    break;
+                case KeyEvent.VK_KP_LEFT:
+                    ret = prefixNumpad(ret, KeyEvent.VK_LEFT);
+                    break;
+                case KeyEvent.VK_KP_RIGHT:
+                    ret = prefixNumpad(ret, KeyEvent.VK_RIGHT);
+                    break;
+                case KeyEvent.VK_KP_UP:
+                    ret = prefixNumpad(ret, KeyEvent.VK_UP);
+                    break;
+            }
+        }
+        return ret;
+    }
+
+    private static String prefixNumpad(String key, int nonNumpadCode) {
+        final String REPLACABLE_PREFIX = "KP_";
+        final String usePrefix = NbBundle.getMessage(Actions.class, "key-prefix-numpad");
+        final String nonNumpadName = KeyEvent.getKeyText(nonNumpadCode);
+        if (key.equals(nonNumpadName)) {
+            /* AWT's name for the key does not distinguish the numpad vs. non-numpad version of the
+            key; add our "Numpad-" prefix. */
+            return usePrefix + key;
+        } else if (key.startsWith(REPLACABLE_PREFIX)) {
+            /* AWT's name for the numpad key uses the somewhat confusing "KP_" prefix (e.g.
+            "KP_LEFT"); use our own preferred prefix instead (e.g. "Numpad-LEFT"). */
+            return usePrefix + key.substring(REPLACABLE_PREFIX.length());
+        } else {
+            /* AWT is using some other convention to disambiguate the numpad vs. non-numpad version
+            of the key. Use AWT's name in this case. */
+            return key;
+        }
     }
 
     /** Attaches menu item to an action.
@@ -175,7 +251,7 @@ public class Actions {
      * tested everytime and takes precedence over standard <code>Action.NAME</code>
      * <p>
      * By default icons are not visible in popup menus. This can be configured
-     * via <a href="@TOP@architecture-summary.html#branding-USE_MNEMONICS">branding</a>.
+     * via <a href="@TOP@architecture-summary.html#branding-org.openide.awt.USE_MNEMONICS">branding</a>.
      * 
      * @param item menu item
      * @param action action
@@ -292,10 +368,10 @@ public class Actions {
     }
 
     /** Sets the text for the menu item or other subclass of AbstractButton.
-    * Cut from the name '&' char.
+    * Cut from the name '&amp;' char.
     * @param item AbstractButton
     * @param text new label
-    * @param useMnemonic if true and '&' char found in new text, next char is used
+    * @param useMnemonic if true and '&amp;' char found in new text, next char is used
     *           as Mnemonic.
     * @deprecated Use either {@link AbstractButton#setText} or {@link Mnemonics#setLocalizedText(AbstractButton, String)} as appropriate.
     */
@@ -318,16 +394,16 @@ public class Actions {
 
     /**
      * Removes an ampersand from a text string; commonly used to strip out unneeded mnemonics.
-     * Replaces the first occurence of <samp>&amp;?</samp> by <samp>?</samp> or <samp>(&amp;??</samp> by the empty string
-     * where <samp>?</samp> is a wildcard for any character.
-     * <samp>&amp;?</samp> is a shortcut in English locale.
-     * <samp>(&amp;?)</samp> is a shortcut in Japanese locale.
+     * Replaces the first occurence of <code>&amp;?</code> by <code>?</code> or <code>(&amp;??</code> by the empty string
+     * where <code>?</code> is a wildcard for any character.
+     * <code>&amp;?</code> is a shortcut in English locale.
+     * <code>(&amp;?)</code> is a shortcut in Japanese locale.
      * Used to remove shortcuts from workspace names (or similar) when shortcuts are not supported.
      * <p>The current implementation behaves in the same way regardless of locale.
      * In case of a conflict it would be necessary to change the
      * behavior based on the current locale.
      * @param text a localized label that may have mnemonic information in it
-     * @return string without first <samp>&amp;</samp> if there was any
+     * @return string without first <code>&amp;</code> if there was any
      */
     public static String cutAmpersand(String text) {
         // XXX should this also be deprecated by something in Mnemonics?
@@ -592,7 +668,7 @@ public class Actions {
      * &lt;file name="action-pkg-ClassName.instance"&gt;
      *   &lt;attr name="instanceCreate" methodvalue="org.openide.awt.Actions.context"/&gt;
      *   &lt;attr name="type" stringvalue="org.netbeans.api.actions.Openable"/&gt;
-     *   &lt;attr name="selectionType" stringvalue="ANY"/&gt; &lt-- or EXACTLY_ONE --&gt;
+     *   &lt;attr name="selectionType" stringvalue="ANY"/&gt; &lt;-- or EXACTLY_ONE --&gt;
      *   &lt;attr name="delegate" newvalue="action.pkg.YourAction"/&gt;
      * 
      *   &lt;!--
@@ -672,11 +748,11 @@ public class Actions {
      *    }
      *  }
      * </pre>
-     * <p/>
+     * <p>
      * Further attributes are defined to control action's enabled and checked state. 
      * Attributes which control enable state are prefixed by "{@code enableOn}". Attributes
      * controlling checked state have prefix "{@code checkedOn}":
-     * <code><pre>
+     * <pre><code>
      * &lt;file name="action-pkg-ClassName.instance"&gt;
      *   &lt;!-- Enable on certain type in Lookup --&gt;
      *   &lt;attr name="enableOnType" stringvalue="qualified.type.name"/&gt;
@@ -702,7 +778,7 @@ public class Actions {
      * 
      * &lt;/file&gt;
      * 
-     * </pre></code>
+     * </code></pre>
      *
      * @param type the object to seek for in the active context
      * @param single shall there be just one or multiple instances of the object

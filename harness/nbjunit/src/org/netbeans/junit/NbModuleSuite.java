@@ -83,7 +83,7 @@ import org.netbeans.junit.internal.NbModuleLogHandler;
  * For more advanced configuration see {@link #emptyConfiguration()} and {@link Configuration}.
  *
  * @since 1.46
- * @author Jaroslav Tulach <jaroslav.tulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jaroslav.tulach@netbeans.org&gt;
  */
 public class NbModuleSuite {
     private static final Logger LOG;
@@ -273,7 +273,7 @@ public class NbModuleSuite {
         /** Adds new test name, or array of names into the configuration. By 
          * default the suite executes all <code>testXYZ</code> 
          * methods present in the test class
-         * (the one passed into {@link Configuration#create(java.lang.Class)}
+         * (the one passed into {@link NbModuleSuite#createConfiguration(java.lang.Class)}
          * method). However if there is a need to execute just some of them,
          * one can use this method to explicitly enumerate them by subsequent
          * calls to <code>addTest</code> method.

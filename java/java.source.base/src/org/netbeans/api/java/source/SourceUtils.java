@@ -484,7 +484,7 @@ public class SourceUtils {
      * @return the defining {@link FileObject} or null if it cannot be
      * found
      *
-     * @deprecated use {@link getFile(ElementHandle, ClasspathInfo)}
+     * @deprecated use {@link #getFile(ElementHandle, ClasspathInfo)}
      */
     @Deprecated
     public static FileObject getFile (Element element, final ClasspathInfo cpInfo) {
@@ -628,7 +628,9 @@ public class SourceUtils {
     private static FileObject findMatchingChild(String sourceFileName, Collection<FileObject> folders, boolean caseSensitive) {
         final Match matchSet = caseSensitive ? new CaseSensitiveMatch(sourceFileName) : new CaseInsensitiveMatch(sourceFileName);
         for (FileObject folder : folders) {
-            for (FileObject child : folder.getChildren()) {
+            FileObject[] children = folder.getChildren();
+            Arrays.sort(children, Comparator.comparing(FileObject::getNameExt)); // for determinism
+            for (FileObject child : children) {
                 if (matchSet.apply(child)) {
                     return child;
                 }
@@ -684,6 +686,9 @@ public class SourceUtils {
         }
 
         final boolean apply(final FileObject fo) {
+            if (fo.isFolder()) {
+                return false;
+            }
             if (fo.getNameExt().equals(name)) {
                 return true;
             }
@@ -1127,9 +1132,8 @@ public class SourceUtils {
     }
 
     /**
-     * Returns candidate filenames given a classname. The return value is either
-     * a String (top-level class, no $) or List&lt;String> as the JLS permits $ in
-     * class names.
+     * Returns candidate filenames given a classname.
+     * @return a single name (top-level class, no $) or multiple as the JLS permits $ in class names.
      */
     private static List<String> getSourceFileNames(String classFileName) {
         int index = classFileName.lastIndexOf('$');
@@ -1290,7 +1294,7 @@ public class SourceUtils {
     /**
      * Returns names of all modules within given scope.
      * @param info the CompilationInfo used to resolve modules
-     * @param scope to search in {@see SearchScope}
+     * @param scope to search in {@link ClassIndex.SearchScope}
      * @return set of module names
      * @since 2.23
      */

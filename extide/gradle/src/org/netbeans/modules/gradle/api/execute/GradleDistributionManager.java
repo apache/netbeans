@@ -99,6 +99,7 @@ public final class GradleDistributionManager {
         GradleVersion.version("7.3"), // JDK-17
         GradleVersion.version("7.5"), // JDK-18
         GradleVersion.version("7.6"), // JDK-19
+        GradleVersion.version("8.1"), // JDK-20
     };
 
     final File gradleUserHome;
@@ -500,7 +501,9 @@ public final class GradleDistributionManager {
          */
         public int lastSupportedJava() {
             int i = JDK_COMPAT.length - 1;
-            while ((i >= 0) && version.compareTo(JDK_COMPAT[i]) < 0) {
+            //Make sure that even RC-s are considered to be compatible.
+            GradleVersion baseVersion = version.getBaseVersion();
+            while ((i >= 0) && baseVersion.compareTo(JDK_COMPAT[i]) < 0) {
                 i--;
             }
             return i + 9;

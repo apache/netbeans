@@ -103,7 +103,7 @@ public final class FoldOperation {
      *  If the guarded area is modified the fold will be removed automatically.
      * @param extraInfo arbitrary extra information specific for the fold being created.
      *  It's not touched or used by the folding infrastructure in any way.
-     *  <code>null<code> can be passed if there is no extra information.
+     *  <code>null</code> can be passed if there is no extra information.
      *  <br>
      *  The extra info of the existing fold can be obtained by
      *  {@link #getExtraInfo(org.netbeans.api.editor.fold.Fold)}.
@@ -130,13 +130,13 @@ public final class FoldOperation {
      * The description and the guarded start/end is taken from the 'template' FoldTemplate. As the fold template display
      * is the most common override, the override string can be passed in 'displayOverride' (and will be used instead
      * of template and instead of type's template).
-     * <p/>
+     * <p>
      * The collapsed state can be prescribed, but can {@code null} can be passed to indicate the infrastructure should
      * assign collapsed state based on e.g. user preferences. The exact assignment algorithm is left unspecified. Callers
      * are recommended not to assign collapsed/expanded state explicitly.
-     * <p/>
+     * <p>
      * Usually, it's OK to pass null for collapsed, template and possibly extraInfo.
-     * <p/>
+     * <p>
      * Events produced by this add- call will be fired when the 'transaction' is committed. However fold hierarch will
      * be changed immediately.
      * 
@@ -147,7 +147,7 @@ public final class FoldOperation {
      * @param template the FoldTemplate to use instead of default template of the type. {@code null}, if the type's template should be used.
      * @param extraInfo arbitrary extra information specific for the fold being created.
      *  It's not touched or used by the folding infrastructure in any way.
-     *  <code>null<code> can be passed if there is no extra information.
+     *  <code>null</code> can be passed if there is no extra information.
      *  <br>
      *  The extra info of the existing fold can be obtained by
      *  {@link #getExtraInfo(org.netbeans.api.editor.fold.Fold)}.
@@ -330,7 +330,7 @@ public final class FoldOperation {
      * Enumerates all Folds defined by this Operation, in the document-range order.
      * Outer folds precede the inner ones. Folds, which overlap are enumerated strictly
      * in the order of their starting positions. 
-     * <p/>
+     * <p>
      * The method may be only called under {@link FoldHierarchy#lock}. The Iterator may
      * be only used until that lock is released. After releasing the lock, the Iterator
      * may fail.
@@ -352,17 +352,17 @@ public final class FoldOperation {
      * For each of the supplied FoldInfos, there should be at most 1 Fold either created or found existing, and no
      * Folds without a corresponding input FoldInfo should remain in the hierarchy after the call. The mapping from the
      * input FoldInfo to the corresponding Fold (created or found existing) is returned.
-     * <p/>
+     * <p>
      * Note that Folds, which are blocked (e.g. by a higher-priority manager) will be added/removed/updated and
      * returned as well. In order to find whether a specific Fold is blocked, please call {@link #isBlocked}.
-     * <p/>
+     * <p>
      * If the {@code removed} or {@code created} parameters are not null, the removed Fold instances, or the FoldInfos
      * that created new Folds will be put into those collection as a supplemental return value. The caller may then
      * update its own data with respect to the changes and the current Fold set.
-     * <p/>
+     * <p>
      * <b>Note:</b> The method may be only called under {@link FoldHierarchy#lock}. This implies the document is also read-locked.
      * The caller <b>must check</b> whether a modification happen in between the FoldInfos were produced at the 
-     * document + hierarchy lock. The method creates and commits its own {@link FoldTransaction} - they are not reentrant,
+     * document + hierarchy lock. The method creates and commits its own {@code FoldTransaction} - they are not reentrant,
      * so do not call the method under a transaction.
      * 
      * @param infos current state of folds that should be updated to the hierarchy

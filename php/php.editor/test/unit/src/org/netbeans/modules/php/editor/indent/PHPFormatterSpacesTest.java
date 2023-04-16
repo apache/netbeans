@@ -793,28 +793,28 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/spaceAroundTernaryOp08.php", options);
     }
 
-    public void testSpacesAroundTernaryOp09() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
-        options.put(FmtOptions.SPACE_AROUND_TERNARY_OPS, false);
-        reformatFileContents("testfiles/formatting/spaces/spaceAroundTernaryOp09.php", options);
+    public void testSpacesAroundCoalescingOp01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_COALESCING_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/spaceAroundCoalescingOp01.php", options);
     }
 
-    public void testSpacesAroundTernaryOp10() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
-        options.put(FmtOptions.SPACE_AROUND_TERNARY_OPS, true);
-        reformatFileContents("testfiles/formatting/spaces/spaceAroundTernaryOp10.php", options);
+    public void testSpacesAroundCoalescingOp02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_COALESCING_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/spaceAroundCoalescingOp02.php", options);
     }
 
-    public void testSpacesAroundTernaryOp11() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
-        options.put(FmtOptions.SPACE_AROUND_TERNARY_OPS, true);
-        reformatFileContents("testfiles/formatting/spaces/spaceAroundTernaryOp11.php", options);
+    public void testSpacesAroundCoalescingOp03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_COALESCING_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/spaceAroundCoalescingOp03.php", options);
     }
 
-    public void testSpacesAroundTernaryOp12() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
-        options.put(FmtOptions.SPACE_AROUND_TERNARY_OPS, false);
-        reformatFileContents("testfiles/formatting/spaces/spaceAroundTernaryOp12.php", options);
+    public void testSpacesAroundCoalescingOp04() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_COALESCING_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/spaceAroundCoalescingOp04.php", options);
     }
 
     public void testSpacesAroundKeyValue01() throws Exception {

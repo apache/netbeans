@@ -136,7 +136,7 @@ public class FixUsesPerformerTest extends PHPTestBase {
     }
 
     public void testIssue238828() throws Exception {
-        String[] selections = new String[] {"\\First\\Second\\Util", CAN_NOT_BE_RESOLVED, CAN_NOT_BE_RESOLVED, CAN_NOT_BE_RESOLVED};
+        String[] selections = new String[] {CAN_NOT_BE_RESOLVED, CAN_NOT_BE_RESOLVED, "\\First\\Second\\Util", CAN_NOT_BE_RESOLVED};
         Options options = new Options(true, false, true, true, false);
         performTest("function functionName3($param) {}^", createSelections(selections, ItemVariant.Type.CLASS), false, options);
     }
@@ -352,7 +352,266 @@ public class FixUsesPerformerTest extends PHPTestBase {
         performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
     }
 
-    private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final Options options) throws Exception {
+    public void testGH5578_01() throws Exception {
+        String[] selections = new String[] {"\\NS1\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testGH5578_02() throws Exception {
+        String[] selections = new String[] {"\\NS1\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testGH5578_03() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\A", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\B", ItemVariant.Type.CLASS));
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", selections, true, options);
+    }
+
+    public void testGH5578_04() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testGH5578_05() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testGH5578_06() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testGH5578_07() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testGH5578_08() throws Exception {
+        String[] selections = new String[] {"\\NS1\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testMultipleDefaultNSUse_01() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testMultipleDefaultNSUse_02() throws Exception {
+        String[] selections = new String[] {"\\NS2\\D"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testWholeFileUse_01() throws Exception {
+        String[] selections = new String[] {"\\NS2\\B", "\\NS2\\D"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testWholeFileUse_02() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\F", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\D", ItemVariant.Type.CLASS));
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", selections, true, options);
+    }
+
+    public void testGH4609PSR12_GroupUses() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_B", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Classes\\MyClass", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\Vendor\\Package\\Enums\\MyEnum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\Vendor\\Package\\Traits\\MyTrait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\Vendor\\Package\\Interfaces\\MyInterface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\Vendor\\Package\\Functions\\functionA", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, true, false, false, PhpVersion.PHP_81);
+        performTest("        $a = new MyCla^ss();", selections, true, false, options);
+    }
+
+    public void testGH4609PSR12_GroupUsesWithPSR12a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_A", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_B", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Classes\\MyClass", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\Vendor\\Package\\Enums\\MyEnum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\Vendor\\Package\\Traits\\MyTrait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\Vendor\\Package\\Interfaces\\MyInterface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\Vendor\\Package\\Functions\\functionA", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, true, false, false, PhpVersion.PHP_81);
+        performTest("        $a = new MyCla^ss();", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_GroupUsesWithPSR12b() throws Exception {
+        // no functions
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_A", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_B", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Classes\\MyClass", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\Vendor\\Package\\Enums\\MyEnum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\Vendor\\Package\\Traits\\MyTrait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\Vendor\\Package\\Interfaces\\MyInterface", ItemVariant.Type.INTERFACE));
+        Options options = new Options(false, false, true, false, false, PhpVersion.PHP_81);
+        performTest("        $a = new MyCla^ss();", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_GroupUsesWithPSR12c() throws Exception {
+        // no classes, no functions
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_A", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_B", ItemVariant.Type.CONST));
+        Options options = new Options(false, false, true, false, false, PhpVersion.PHP_81);
+        performTest("CONST^ANT_A;", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_GroupUsesWithPSR12d() throws Exception {
+        // no constants
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Classes\\MyClass", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\Vendor\\Package\\Enums\\MyEnum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\Vendor\\Package\\Traits\\MyTrait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\Vendor\\Package\\Interfaces\\MyInterface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\Vendor\\Package\\Functions\\functionA", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, true, false, false, PhpVersion.PHP_81);
+        performTest("        $a = new MyCla^ss();", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_GroupUsesWithPSR12e() throws Exception {
+        // no functions, no constants
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Classes\\MyClass", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\Vendor\\Package\\Enums\\MyEnum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\Vendor\\Package\\Traits\\MyTrait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\Vendor\\Package\\Interfaces\\MyInterface", ItemVariant.Type.INTERFACE));
+        Options options = new Options(false, false, true, false, false, PhpVersion.PHP_81);
+        performTest("        $a = new MyCla^ss();", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_GroupUsesWithPSR12f() throws Exception {
+        // no classes
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_A", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_B", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Functions\\functionA", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, true, false, false, PhpVersion.PHP_81);
+        performTest("CONSTAN^T_A;", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_GroupUsesWithPSR12g() throws Exception {
+        // no classes, no constants
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Functions\\functionA", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, true, false, false, PhpVersion.PHP_81);
+        performTest("funct^ionA();", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_SingleLineUses() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_B", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Classes\\MyClass", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\Vendor\\Package\\Enums\\MyEnum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\Vendor\\Package\\Traits\\MyTrait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\Vendor\\Package\\Interfaces\\MyInterface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\Vendor\\Package\\Functions\\functionA", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performTest("        $a = new MyCla^ss();", selections, true, false, options);
+    }
+
+    public void testGH4609PSR12_SingleLineUsesWithPSR12a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_A", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_B", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Classes\\MyClass", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\Vendor\\Package\\Enums\\MyEnum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\Vendor\\Package\\Traits\\MyTrait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\Vendor\\Package\\Interfaces\\MyInterface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\Vendor\\Package\\Functions\\functionA", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performTest("        $a = new MyCla^ss();", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_SingleLineUsesWithPSR12b() throws Exception {
+        // no functions
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_A", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_B", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Classes\\MyClass", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\Vendor\\Package\\Enums\\MyEnum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\Vendor\\Package\\Traits\\MyTrait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\Vendor\\Package\\Interfaces\\MyInterface", ItemVariant.Type.INTERFACE));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performTest("        $a = new MyCla^ss();", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_SingleLineUsesWithPSR12c() throws Exception {
+        // no classes, no functions
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_A", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_B", ItemVariant.Type.CONST));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performTest("CONST^ANT_A;", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_SingleLineUsesWithPSR12d() throws Exception {
+        // no constants
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Classes\\MyClass", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\Vendor\\Package\\Enums\\MyEnum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\Vendor\\Package\\Traits\\MyTrait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\Vendor\\Package\\Interfaces\\MyInterface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\Vendor\\Package\\Functions\\functionA", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performTest("        $a = new MyCla^ss();", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_SingleLineUsesWithPSR12e() throws Exception {
+        // no functions, no constants
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Classes\\MyClass", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\Vendor\\Package\\Enums\\MyEnum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\Vendor\\Package\\Traits\\MyTrait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\Vendor\\Package\\Interfaces\\MyInterface", ItemVariant.Type.INTERFACE));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performTest("        $a = new MyCla^ss();", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_SingleLineUsesWithPSR12f() throws Exception {
+        // no classes
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_A", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Constants\\CONSTANT_B", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\Vendor\\Package\\Functions\\functionA", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performTest("CONST^ANT_A;", selections, true, true, options);
+    }
+
+    public void testGH4609PSR12_SingleLineUsesWithPSR12g() throws Exception {
+        // no classes, no constants
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Vendor\\Package\\Functions\\functionA", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performTest("functio^nA();", selections, true, true, options);
+    }
+
+    public void testGH5330_01() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\Test\\SameName\\SameNamePart", ItemVariant.Type.CLASS));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performTest("class Exam^ple {", selections, true, true, options);
+    }
+
+    private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final boolean putInPSR12Order, final Options options) throws Exception {
         FileObject testFile = getTestFile(fileName);
 
         Source testSource = getTestSource(testFile);
@@ -393,6 +652,9 @@ public class FixUsesPerformerTest extends PHPTestBase {
                             namespaceScope.getNamespaceName(),
                             currentOptions).create();
                     final List<ItemVariant> properSelections = new ArrayList<>();
+                    // this logic probably needs refactoring because selections always 
+                    // should be paired with import data items by index and in the feature it
+                    // could be a problem if data items order will change
                     for (Selection selection : selections) {
                         properSelections.add(new ItemVariant(
                                 selection.getSelection(),
@@ -401,7 +663,7 @@ public class FixUsesPerformerTest extends PHPTestBase {
                                 selection.isAlias()));
                     }
                     importData.caretPosition = caretOffset;
-                    FixUsesPerformer fixUsesPerformer = new FixUsesPerformer(phpResult, importData, properSelections, removeUnusedUses, currentOptions);
+                    FixUsesPerformer fixUsesPerformer = new FixUsesPerformer(phpResult, importData, properSelections, removeUnusedUses, putInPSR12Order, currentOptions);
                     fixUsesPerformer.perform();
                     result[0] = document.getText(0, document.getLength());
                 }
@@ -419,8 +681,12 @@ public class FixUsesPerformerTest extends PHPTestBase {
     }
 
     private void performTest(final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final Options options) throws Exception {
+        performTest(caretLine, selections, removeUnusedUses, false, options);
+    }
+
+    private void performTest(final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, boolean putInPSR12Order, final Options options) throws Exception {
         String exactFileName = getTestPath();
-        String result = getTestResult(exactFileName, caretLine, selections, removeUnusedUses, options);
+        String result = getTestResult(exactFileName, caretLine, selections, removeUnusedUses, putInPSR12Order, options);
         assertDescriptionMatches(exactFileName, result, false, ".fixUses");
     }
 

@@ -229,12 +229,12 @@ public @interface HTMLDialog {
         }
 
         /** Obtains the component from the builder. The parameter
-         * can either be {@link javafx.embed.swing.JFXPanel}.<b>class</b> or
-         * {@link javafx.scene.web.WebView}.<b>class</b>. After calling this
+         * can either be <a href="https://openjfx.io/javadoc/11/javafx.swing/javafx/embed/swing/JFXPanel.html">JFXPanel</a>.<b>class</b> or
+         * <a href="https://openjfx.io/javadoc/11/javafx.web/javafx/scene/web/WebView.html">WebView</a>.<b>class</b>. After calling this
          * method the builder becomes useless.
          *
          * @param <C> requested component type
-         * @param type either {@link javafx.embed.swing.JFXPanel} or {@link javafx.scene.web.WebView} class
+         * @param type either <a href="https://openjfx.io/javadoc/11/javafx.swing/javafx/embed/swing/JFXPanel.html">JFXPanel</a> or <a href="https://openjfx.io/javadoc/11/javafx.web/javafx/scene/web/WebView.html">WebView</a> class
          * @return instance of the requested component
          */
         public <C> C component(Class<C> type) {

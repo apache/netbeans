@@ -45,7 +45,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class)
 public class DBSetEnvCommand extends CodeActionsProvider {
     private static final String  COMMAND_SET_DB_ENV = "java.db.set.env"; //NOI18N
-    private static final String CONFIG_SECTION = "java8+.runConfig"; //NOI18N
+    private static final String CONFIG_SECTION = "java+.runConfig"; //NOI18N
     
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
         COMMAND_SET_DB_ENV

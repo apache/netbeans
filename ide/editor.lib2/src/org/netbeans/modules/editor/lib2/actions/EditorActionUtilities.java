@@ -47,6 +47,7 @@ import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.KeyBindingSettings;
 import org.netbeans.api.editor.settings.MultiKeyBinding;
 import org.netbeans.spi.editor.AbstractEditorAction;
+import org.openide.awt.Actions;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -184,7 +185,7 @@ public final class EditorActionUtilities {
      * @return mnemonic of the keystroke.
      */
     public static String getKeyMnemonic(KeyStroke key) {
-        return appendKeyMnemonic(new StringBuilder(20), key).toString();
+        return Actions.keyStrokeToString(key);
     }
 
     public static String getKeyMnemonic(List<KeyStroke> keys) {
@@ -193,36 +194,10 @@ public final class EditorActionUtilities {
             if (sb.length() > 0) {
                 sb.append(' '); //NOI18N
             }
-            appendKeyMnemonic(sb, key);
+            sb.append(Actions.keyStrokeToString(key));
         }
         return sb.toString();
     }
-
-    public static String appendKeyMnemonic(StringBuilder sb, KeyStroke key) {
-        String sk = org.openide.util.Utilities.keyToString(key);
-        int mods = key.getModifiers();
-        if ((mods & KeyEvent.CTRL_MASK) != 0) {
-            sb.append("Ctrl+"); // NOI18N
-        }
-        if ((mods & KeyEvent.ALT_MASK) != 0) {
-            sb.append("Alt+"); // NOI18N
-        }
-        if ((mods & KeyEvent.SHIFT_MASK) != 0) {
-            sb.append("Shift+"); // NOI18N
-        }
-        if ((mods & KeyEvent.META_MASK) != 0) {
-            sb.append("Meta+"); // NOI18N
-        }
-
-        int i = sk.indexOf('-'); //NOI18N
-        if (i != -1) {
-            sk = sk.substring(i + 1);
-        }
-        sb.append(sk);
-
-        return sb.toString();
-    }
-
 
     public static SearchableEditorKit getGlobalActionsKit() {
         synchronized (EditorActionUtilities.class) {

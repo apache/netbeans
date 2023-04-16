@@ -33,13 +33,16 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.metadata.Metadata;
 import org.apache.maven.artifact.repository.metadata.Versioning;
@@ -464,6 +467,80 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
                 return Collections.enumeration(elems);
             }
         }
+        // version property completion
+        String propXPath = "/project/properties/"; //NOI18N
+        if (path.startsWith(propXPath) && path.indexOf("/", propXPath.length()) == -1) { //NOI18N
+            String propName = path.substring(propXPath.length());
+            String decorated = "${"+propName+"}"; //NOI18N
+            
+            Set<ArtifactInfoHolder> usages = new HashSet<>();
+          
+            NodeList pomNodes;
+            if (virtualTextCtx.getCurrentPrefix().isEmpty()) {
+                pomNodes = virtualTextCtx.getParentNode().getParentNode().getChildNodes();
+            } else {
+                pomNodes = virtualTextCtx.getParentNode().getParentNode().getParentNode().getChildNodes();
+            }
+
+            for (Node node : iterate(pomNodes)) {
+                if ("dependencies".equals(node.getNodeName())) { //NOI18N
+                    collectArtifacts("dependency", node, decorated, usages); //NOI18N
+                } else if ("dependencyManagement".equals(node.getNodeName())) { //NOI18N
+                    for (Node dmChild : iterate(node.getChildNodes())) {
+                        if ("dependencies".equals(dmChild.getNodeName())) { //NOI18N
+                            collectArtifacts("dependency", dmChild, decorated, usages); //NOI18N
+                            break;
+                        }
+                    }
+                } else if ("build".equals(node.getNodeName())) { //NOI18N
+                    for (Node buildChild : iterate(node.getChildNodes())) {
+                        if ("plugins".equals(buildChild.getNodeName())) { //NOI18N
+                            collectArtifacts("plugin", buildChild, decorated, usages); //NOI18N
+                        } else if ("pluginManagement".equals(buildChild.getNodeName())) { //NOI18N
+                            for (Node pmChild : iterate(buildChild.getChildNodes())) {
+                                if ("plugins".equals(pmChild.getNodeName())) { //NOI18N
+                                    collectArtifacts("plugin", pmChild, decorated, usages); //NOI18N
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // intersection set; make sure all usages support the suggested versions
+            Set<String> versions = new LinkedHashSet<>();
+            boolean first = true;
+            boolean partial = false;
+            for (ArtifactInfoHolder artifact : usages) {
+                Result<NBVersionInfo> versionInfo = RepositoryQueries.getVersionsResult(artifact.getGroupId(), artifact.getArtifactId(), null);
+                partial |= versionInfo.isPartial();
+
+                List<String> list = versionInfo.getResults().stream()
+                                                            .map(NBVersionInfo::getVersion)
+                                                            .collect(Collectors.toList());
+                if (first) {
+                    versions.addAll(list);
+                    first = false;
+                } else {
+                    versions.retainAll(list);
+                }
+            }
+
+            List<GrammarResult> completionItems = new ArrayList<>();
+            for (String version : versions) {
+                if (version.startsWith(virtualTextCtx.getCurrentPrefix())) {
+                    completionItems.add(new MyTextElement(version, virtualTextCtx.getCurrentPrefix()));
+                }
+            }
+
+            if (partial) {
+                completionItems.add(new PartialTextElement());
+            }
+
+            return Collections.enumeration(completionItems);
+        }
+        
         if (path.endsWith("dependencies/dependency/groupId") || //NOI18N
             path.endsWith("extensions/extension/groupId")) {    //NOI18N
                 Result<String> result = RepositoryQueries.getGroupsResult(RepositoryPreferences.getInstance().getRepositoryInfos());
@@ -682,6 +759,38 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
         }
         return null;
     }
+    
+    // NodeList isn't iterable for some reason
+    private static Iterable<Node> iterate(NodeList list) {
+        return () -> new Iterator<Node>() {
+            int current = 0;
+            @Override public boolean hasNext() {
+                return current < list.getLength();
+            }
+            @Override public Node next() {
+                return list.item(current++);
+            }
+        };
+    }
+
+    private void collectArtifacts(String artifactTag, Node parent, String decoratedProperty, Set<ArtifactInfoHolder> usages) {
+        for (Node child : iterate(parent.getChildNodes())) {
+            if (artifactTag.equals(child.getNodeName())) {
+                ArtifactInfoHolder artifact = new ArtifactInfoHolder();
+                artifact.setGroupId("org.apache.maven.plugins"); //NOI18N
+                for (Node attr : iterate(child.getChildNodes())) {
+                    if (attr.getNodeName() != null) switch (attr.getNodeName()) {
+                        case "groupId": artifact.setGroupId(attr.getFirstChild().getNodeValue()); break; //NOI18N
+                        case "artifactId": artifact.setArtifactId(attr.getFirstChild().getNodeValue()); break; //NOI18N
+                        case "version": artifact.setVersion(attr.getFirstChild().getNodeValue()); break; //NOI18N
+                    }
+                }
+                if (artifact.getGroupId() != null && artifact.getArtifactId() != null && decoratedProperty.equals(artifact.getVersion())) {
+                    usages.add(artifact);
+                }
+            }
+        }
+    }
 
     private Enumeration<GrammarResult> collectGoals(Document pluginDoc, HintContext virtualTextCtx) {
         @SuppressWarnings("unchecked")
@@ -737,7 +846,6 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
     }
 
     
-    
     private static class ArtifactInfoHolder  {
         private String artifactId;
         private String groupId;
@@ -766,6 +874,41 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
         public void setVersion(String version) {
             this.version = version;
         }
-        
-    }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 67 * hash + Objects.hashCode(this.artifactId);
+            hash = 67 * hash + Objects.hashCode(this.groupId);
+            hash = 67 * hash + Objects.hashCode(this.version);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
             }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final ArtifactInfoHolder other = (ArtifactInfoHolder) obj;
+            if (!Objects.equals(this.artifactId, other.artifactId)) {
+                return false;
+            }
+            if (!Objects.equals(this.groupId, other.groupId)) {
+                return false;
+            }
+            return Objects.equals(this.version, other.version);
+        }
+
+        @Override
+        public String toString() {
+            return "ArtifactInfoHolder{" + "artifactId=" + artifactId + ", groupId=" + groupId + ", version=" + version + '}'; //NOI18N
+        }
+
+    }
+}

@@ -44,8 +44,8 @@ public class Mark {
     private Position pos;
     
     /** Bias of the mark. It is either
-     * {@link javax.swing.text.Position.Bias.Forward}
-     * or {@link javax.swing.text.Position.Bias.Backward}
+     * {@link javax.swing.text.Position.Bias#Forward}
+     * or {@link javax.swing.text.Position.Bias#Backward}
      */
     private Position.Bias bias;
     
@@ -162,8 +162,8 @@ public class Mark {
     }
     
     /** @return the bias of this mark. It will be either
-     * {@link javax.swing.text.Position.Bias.Forward}
-     * or {@link javax.swing.text.Position.Bias.Backward}.
+     * {@link javax.swing.text.Position.Bias#Forward}
+     * or {@link javax.swing.text.Position.Bias#Backward}.
      */
     public final Position.Bias getBias() {
         return bias;

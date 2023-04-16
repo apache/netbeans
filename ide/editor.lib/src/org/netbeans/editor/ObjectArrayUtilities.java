@@ -86,7 +86,7 @@ public class ObjectArrayUtilities {
      * @param c comparator to be used to compare the items.
      * @return index of the search key, if it is contained in the object array;
      *	       otherwise, <tt>(-(<i>insertion point</i>) - 1)</tt>.
-     * @see binarySearch(ObjectArray, Object)
+     * @see #binarySearch(ObjectArray, Object)
      */
     public static int binarySearch(ObjectArray objectArray, Object key, Comparator c) {
         int low = 0;

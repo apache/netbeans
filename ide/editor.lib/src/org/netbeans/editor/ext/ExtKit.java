@@ -201,7 +201,7 @@ public class ExtKit extends BaseKit {
     
     /**
      * Action that is localized in org.netbeans.editor package.
-     * <br/>
+     * <br>
      * <code>BaseKit.class</code> is used as a bundle class.
      */
     private abstract static class BaseKitLocalizedAction extends BaseAction {
@@ -1080,7 +1080,7 @@ public class ExtKit extends BaseKit {
         /** 
          * Check the characters that should cause reindenting the line. 
          * 
-         * @deprecated Please use <a href="@org-netbeans-modules-editor-indent@/org/netbeans/modules/editor/indent/spi/support/AutomatedIndenting.html">AutomatedIndentig</a>
+         * @deprecated Please use <a href="@org-netbeans-modules-editor-indent-support@/org/netbeans/modules/editor/indent/spi/support/AutomatedIndenting.html">AutomatedIndentig</a>
          *   or Typing Hooks instead, for details see
          *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
          */

@@ -20,7 +20,6 @@ package org.netbeans.modules.tomcat5.customizer;
 
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.openide.util.NbBundle;
 import org.netbeans.modules.tomcat5.deploy.TomcatManager;
 

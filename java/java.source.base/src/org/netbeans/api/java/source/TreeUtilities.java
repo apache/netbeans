@@ -1044,7 +1044,7 @@ public final class TreeUtilities {
 
     /**Find span of the {@link ClassTree}'s body in the source.
      * Returns starting and ending offset of the body in the source code that was parsed
-     * (ie. {@link CompilationInfo.getText()}, which may differ from the positions in the source
+     * (ie. {@link CompilationInfo#getText()}, which may differ from the positions in the source
      * document if it has been already altered.
      * 
      * @param clazz class which body should be searched for
@@ -1082,7 +1082,7 @@ public final class TreeUtilities {
     
     /**Find span of the {@link ClassTree#getSimpleName()} identifier in the source.
      * Returns starting and ending offset of the name in the source code that was parsed
-     * (ie. {@link CompilationInfo.getText()}, which may differ from the positions in the source
+     * (ie. {@link CompilationInfo#getText()}, which may differ from the positions in the source
      * document if it has been already altered.
      * 
      * @param clazz class which name should be searched for
@@ -1095,7 +1095,7 @@ public final class TreeUtilities {
     
     /**Find span of the {@link MethodTree#getName()} identifier in the source.
      * Returns starting and ending offset of the name in the source code that was parsed
-     * (ie. {@link CompilationInfo.getText()}, which may differ from the positions in the source
+     * (ie. {@link CompilationInfo#getText()}, which may differ from the positions in the source
      * document if it has been already altered.
      * 
      * @param method method which name should be searched for
@@ -1128,7 +1128,7 @@ public final class TreeUtilities {
     
     /**Find span of the {@link VariableTree#getName()} identifier in the source.
      * Returns starting and ending offset of the name in the source code that was parsed
-     * (ie. {@link CompilationInfo.getText()}, which may differ from the positions in the source
+     * (ie. {@link CompilationInfo#getText()}, which may differ from the positions in the source
      * document if it has been already altered.
      * 
      * @param var variable which name should be searched for
@@ -1141,7 +1141,7 @@ public final class TreeUtilities {
     
     /**Find span of the {@link LabeledStatementTree#getLabel()} identifier in the source.
      * Returns starting and ending offset of the name in the source code that was parsed
-     * (ie. {@link CompilationInfo.getText()}, which may differ from the positions in the source
+     * (ie. {@link CompilationInfo#getText()}, which may differ from the positions in the source
      * document if it has been already altered.
      * 
      * @param lst labeled statement which name should be searched for
@@ -1154,7 +1154,7 @@ public final class TreeUtilities {
     
     /**Find span of the {@link TypeParameterTree#getName()} identifier in the source.
      * Returns starting and ending offset of the name in the source code that was parsed
-     * (ie. {@link CompilationInfo.getText()}, which may differ from the positions in the source
+     * (ie. {@link CompilationInfo#getText()}, which may differ from the positions in the source
      * document if it has been already altered.
      * 
      * @param tpt type parameter which name should be searched for
@@ -1167,7 +1167,7 @@ public final class TreeUtilities {
     
     /**Find span of the {@link LabeledStatementTree#getLabel()} identifier in the source.
      * Returns starting and ending offset of the name in the source code that was parsed
-     * (ie. {@link CompilationInfo.getText()}, which may differ from the positions in the source
+     * (ie. {@link CompilationInfo#getText()}, which may differ from the positions in the source
      * document if it has been already altered.
      * 
      * @param brk labeled statement which name should be searched for
@@ -1180,7 +1180,7 @@ public final class TreeUtilities {
     
     /**Find span of the {@link LabeledStatementTree#getLabel()} identifier in the source.
      * Returns starting and ending offset of the name in the source code that was parsed
-     * (ie. {@link CompilationInfo.getText()}, which may differ from the positions in the source
+     * (ie. {@link CompilationInfo#getText()}, which may differ from the positions in the source
      * document if it has been already altered.
      * 
      * @param cont labeled statement which name should be searched for
@@ -1193,7 +1193,7 @@ public final class TreeUtilities {
     
     /**Find span of the {@link MethodTree#getParameters()} parameter list in the source.
      * Returns the position of the opening and closing parentheses of the parameter list
-     * in the source code that was parsed (ie. {@link CompilationInfo.getText()}, which
+     * in the source code that was parsed (ie. {@link CompilationInfo#getText()}, which
      * may differ from the positions in the source document if it has been already altered.
      * 
      * @param method method which parameter list should be searched for
@@ -1237,7 +1237,7 @@ public final class TreeUtilities {
     
     /**Find span of the {@link MemberSelectTree#getIdentifier()} identifier in the source.
      * Returns starting and ending offset of the name in the source code that was parsed
-     * (ie. {@link CompilationInfo.getText()}, which may differ from the positions in the source
+     * (ie. {@link CompilationInfo#getText()}, which may differ from the positions in the source
      * document if it has been already altered.
      * 
      * @param mst member select which identifier should be searched for
@@ -1250,7 +1250,7 @@ public final class TreeUtilities {
     
     /**Find span of the {@link MemberReferenceTree#getName()} identifier in the source.
      * Returns starting and ending offset of the name in the source code that was parsed
-     * (ie. {@link CompilationInfo.getText()}, which may differ from the positions in the source
+     * (ie. {@link CompilationInfo#getText()}, which may differ from the positions in the source
      * document if it has been already altered.
      * 
      * @param mst member reference for which the identifier should be searched for
@@ -1263,7 +1263,7 @@ public final class TreeUtilities {
     
     /**Find span of the name in the DocTree's reference tree (see {@link #getReferenceName(com.sun.source.util.DocTreePath)}
      * identifier in the source. Returns starting and ending offset of the name in
-     * the source code that was parsed (ie. {@link CompilationInfo.getText()}, which
+     * the source code that was parsed (ie. {@link CompilationInfo#getText()}, which
      * may differ from the positions in the source document if it has been already
      * altered.
      * 
@@ -1469,23 +1469,23 @@ public final class TreeUtilities {
         }
     }
 
-    /**Decode escapes defined in: http://wikis.sun.com/display/mlvm/ProjectCoinProposal, 3.1-3.9.
+    /**Decode escapes defined in: https://openjdk.org/projects/coin, 3.1-3.9.
      * Must be a full token text, including possible #".
      *
      * @param text to decode
      * @return decoded escapes from the identifier
-     * @see http://wikis.sun.com/display/mlvm/ProjectCoinProposal
+     * @see <a href="https://openjdk.org/projects/coin">ProjectCoinProposal</a>
      * @since 0.56
      */
     public @NonNull CharSequence decodeIdentifier(@NonNull CharSequence text) {
         return decodeIdentifierInternal(text);
     }
 
-    /**Encode identifier using escapes defined in: http://wikis.sun.com/display/mlvm/ProjectCoinProposal, 3.1-3.9.
+    /**Encode identifier using escapes defined in: https://openjdk.org/projects/coin, 3.1-3.9.
      *
-     * @param text to encode
+     * @param ident to encode
      * @return encoded identifier, including #" if necessary
-     * @see http://wikis.sun.com/display/mlvm/ProjectCoinProposal
+     * @see <a href="https://openjdk.org/projects/coin">ProjectCoinProposal</a>
      * @since 0.56
      */
     public @NonNull CharSequence encodeIdentifier(@NonNull CharSequence ident) {

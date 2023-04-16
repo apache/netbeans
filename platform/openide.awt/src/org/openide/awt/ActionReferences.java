@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 /** Allows registration of multiple {@link ActionReference}s for a single
  * action.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 7.27
  */
 @Retention(RetentionPolicy.SOURCE)

@@ -2145,6 +2145,14 @@ public abstract class CslTestBase extends NbTestCase {
 
         ParserManager.parse(Collections.singleton(testSource), new UserTask() {
             public @Override void run(ResultIterator resultIterator) throws Exception {
+
+                // FoldingScanner#folds calls source.getDocument(false) and receive non null values on JDK 8.
+                // On JDK 11+ however the document is null which leads to test failures in FoldingTest#testPHPTags.
+                // This is likely a race condition which is more likely to occur on JDK 11+ since the test can be
+                // brute forced to passing on linux if restarted often enough. 
+                // This fixes it by making sure the document is open before folds are computed
+                assertNotNull(resultIterator.getSnapshot().getSource().getDocument(true));
+                
                 StructureScanner analyzer = getStructureScanner();
                 assertNotNull("getStructureScanner must be implemented", analyzer);
 
@@ -3054,8 +3062,12 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
     public void checkCompletionDocumentation(final String file, final String caretLine, final boolean includeModifiers, final String itemPrefix) throws Exception {
+        checkCompletionDocumentation(file, caretLine, includeModifiers, itemPrefix, QueryType.COMPLETION);
+    }
+
+    public void checkCompletionDocumentation(final String file, final String caretLine, final boolean includeModifiers, final String itemPrefix, QueryType queryType) throws Exception {
         // TODO call TestCompilationInfo.setCaretOffset!
-        final QueryType type = QueryType.COMPLETION;
+        final QueryType type = queryType;
         final boolean caseSensitive = true;
 
         Source testSource = getTestSource(getTestFile(file));

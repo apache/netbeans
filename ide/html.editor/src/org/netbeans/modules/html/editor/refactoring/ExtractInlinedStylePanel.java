@@ -356,7 +356,7 @@ public class ExtractInlinedStylePanel extends JPanel implements CustomRefactorin
         externalSheetRB.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ACSD_ExternalStylesheet")); // NOI18N
         existingEmbeddedSectionsComboBox.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ACSD_EmbeddedSectionComboBoxName")); // NOI18N
         existingEmbeddedSectionsComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ACSD_EmbeddedSectionComboBoxDescription")); // NOI18N
-        externalSheetsComboBox.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ASCD_ExternalStylesheetName")); // NOI18N
+        externalSheetsComboBox.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ACSD_ExternalStylesheetName")); // NOI18N
         externalSheetsComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ACSD_ExternalStylesheetDescr")); // NOI18N
         idSelectorTypeRB.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ASCD_GenerateIdSelectors")); // NOI18N
         classSelectorTypeRB.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ASCD_GenerateClassSelectors")); // NOI18N

@@ -404,7 +404,7 @@ public class OptionsPanel extends JPanel {
 
         pOptions.setBorder(new CompoundBorder(
                 new VariableBorder(null, null, borderMac, null),
-                BorderFactory.createEmptyBorder(0, 5, 5, 5)
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
                 ));
         add(pCategories, BorderLayout.NORTH);
         add(pOptions, BorderLayout.CENTER);
@@ -1155,7 +1155,6 @@ public class OptionsPanel extends JPanel {
             addMouseListener (this);
             setFocusable (false);
             setFocusTraversalKeysEnabled (false);
-            setForeground (getTabPanelForeground());
             
             if (isMac) {
                 setFont(labelFontMac);
@@ -1171,7 +1170,8 @@ public class OptionsPanel extends JPanel {
             } else {
                 setBorder (new EmptyBorder (2, 4, 2, 4));
             }
-            setBackground (getTabPanelBackground());
+            setBackground(getTabPanelBackground());
+            setForeground(getTabPanelForeground());
         }
         
         void setSelected () {
@@ -1189,7 +1189,8 @@ public class OptionsPanel extends JPanel {
                     new EmptyBorder (0, 2, 0, 2)
                 ));
             }
-            setBackground (selected);            
+            setBackground(selected);            
+            setForeground(getUIColorOrDefault("MenuItem.selectionForeground", getTabPanelForeground()));
         }
         
         void setHighlighted() {
@@ -1202,6 +1203,7 @@ public class OptionsPanel extends JPanel {
                         new EmptyBorder(0, 2, 0, 2)
                         ));
                 setBackground(highlighted);
+                setForeground(getTabPanelForeground());
             }
             if (!category.isHighlited()) {
                 if (categoryModel.getHighlitedCategoryID() != null) {

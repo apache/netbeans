@@ -54,7 +54,7 @@ public interface PathFinder {
     *     assert Collections.singleton(target).equals(new HashSet(res));
     * }
     * </pre>
-    * @param root a root node. E.g. a node from {@link #createLogicalView} or some wapper
+    * @param root a root node. E.g. a node from {@link LogicalViewProvider#createLogicalView} or some wapper
     *        (FilterNode) around the node. The provider of the functionality is
     *        responsible for finding the appropriate node in the wrapper's children.
     * @param target a target cookie, such as a {@link org.openide.loaders.DataObject}

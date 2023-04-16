@@ -88,13 +88,21 @@ public class ModelUtils {
 
     private static final Logger LOG = Logger.getLogger(ModelUtils.class.getName());
 
+    @SuppressWarnings("AssignmentToMethodParameter")
     public static JsObjectImpl getJsObject (ModelBuilder builder, List<Identifier> fqName, boolean isLHS) {
         if (fqName == null || fqName.isEmpty()) {
             return null;
         }
         JsObject result = builder.getCurrentObject();
-        JsObject tmpObject = null;
         String firstName = fqName.get(0).getName();
+        JsObject tmpObject;
+
+        if (THIS.equals(firstName)) {
+            tmpObject = resolveThis(result);
+            fqName = fqName.subList(1, fqName.size());
+        } else {
+            tmpObject = null;
+        }
 
         while (tmpObject == null && result != null && result.getParent() != null) {
             if (result instanceof JsFunctionImpl) {

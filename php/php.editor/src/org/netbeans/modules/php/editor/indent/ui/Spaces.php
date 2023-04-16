@@ -22,6 +22,10 @@ private ClassA&ClassB $intersectionType;
 	$result = $a < $b ? $a : $b;
     }
 
+    public function coalescingOperatorExample(?string $a): string {
+        return $a ?? 'default value';
+    }
+
 public function forExample() {
     for ($i = 1; $i <= 10; $i++) {echo 'Item: '; echo $i;}
 }

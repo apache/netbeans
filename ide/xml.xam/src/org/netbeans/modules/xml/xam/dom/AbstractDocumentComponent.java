@@ -94,7 +94,7 @@ public abstract class AbstractDocumentComponent<C extends DocumentComponent<C>>
      *
      * @param eventPropertyName property name to be used in firing property change event.
      * @param attr attribute name
-     * @value attribute value
+     * @param value attribute value
      */
     @Override
     public void setAttribute(String eventPropertyName, Attribute attr, Object value) {
@@ -849,7 +849,7 @@ public abstract class AbstractDocumentComponent<C extends DocumentComponent<C>>
     }
     
     /**
-     * @returns the index of given element relative to other domain elements in 
+     * @return the index of given element relative to other domain elements in 
      * the peer node children; return -1 if not domain element or not found.
      */
     protected int findDomainIndex(Element e) {

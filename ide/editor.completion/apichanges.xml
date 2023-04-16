@@ -84,6 +84,24 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="CompletionItem.shouldSingleClickInvokeDefaultAction">
+            <api name="completion"/>
+            <summary>Addition of optional CompletionItem.shouldSingleClickInvokeDefaultAction() method</summary>
+            <version major="1" minor="65"/>
+            <date day="20" month="1" year="2023"/>
+            <author login="ebakke"/>
+            <compatibility addition="yes"/>
+            <description>
+            <p>
+                <code>CompletionItem.shouldSingleClickInvokeDefaultAction</code> method was added
+                to to indicate that a single mouse click on the <code>CompletionItem</code> in the
+                completion list, rather than only a double-click, will invoke its default action.
+                A default method is provided in the method which returns false, preserving the old
+                behavior by default.
+            </p>
+            </description>
+        </change>
+
         <change id="CompletionUtilities.newCompletionItemBuilder">
             <api name="completion"/>
             <summary>Addition of CompletionUtilities.newCompletionItemBuilder() method</summary>

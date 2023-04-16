@@ -79,17 +79,26 @@ class EclipseLinkProvider extends Provider {
     
     @Override
     public String getTableGenerationPropertyName() {
-        return (getVersion()!=null && Persistence.VERSION_2_1.equals(getVersion())) ?  super.getTableGenerationPropertyName() : PersistenceUnitProperties.DDL_GENERATION;
+        return getVersion() != null && 
+                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
+                ?  super.getTableGenerationPropertyName()
+                : PersistenceUnitProperties.DDL_GENERATION;
     }
 
     @Override
     public String getTableGenerationDropCreateValue() {
-        return (getVersion()!=null && Persistence.VERSION_2_1.equals(getVersion())) ? super.getTableGenerationDropCreateValue() : PersistenceUnitProperties.DROP_AND_CREATE;
+        return getVersion() != null && 
+                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
+                ? super.getTableGenerationDropCreateValue()
+                : PersistenceUnitProperties.DROP_AND_CREATE;
     }
 
     @Override
     public String getTableGenerationCreateValue() {
-        return (getVersion()!=null && Persistence.VERSION_2_1.equals(getVersion())) ? super.getTableGenerationCreateValue() : PersistenceUnitProperties.CREATE_ONLY;
+        return getVersion() != null && 
+                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
+                ? super.getTableGenerationCreateValue()
+                : PersistenceUnitProperties.CREATE_ONLY;
     }
 
     @Override
@@ -102,5 +111,4 @@ class EclipseLinkProvider extends Provider {
         return Collections.emptyMap();
     }
     
-    private final HashMap<String,String[]> properties = new HashMap<>();
 }

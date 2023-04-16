@@ -43,6 +43,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.FirstClassCallableArg;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
+import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
@@ -208,6 +209,17 @@ public final class PHP81UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(Scalar scalar) {
+            // Check explicit octal integer literal notation
+            // e.g. 0o16, 0O16, 0o1_6
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkExplicitOctalNotation(scalar);
+            super.visit(scalar);
+        }
+
         private void checkConstantDeclaration(ConstantDeclaration constantDeclaration) {
             if (BodyDeclaration.Modifier.isFinal(constantDeclaration.getModifier())) {
                 for (Identifier name : constantDeclaration.getNames()) {
@@ -230,6 +242,22 @@ public final class PHP81UnhandledError extends UnhandledErrorRule {
             if (node instanceof ClassInstanceCreation) {
                 createError(node);
             }
+        }
+
+        private void checkExplicitOctalNotation(Scalar scalar) {
+            if (isNumber(scalar) && isOctal(scalar)) {
+                createError(scalar);
+            }
+        }
+
+        private boolean isNumber(Scalar scalar) {
+            return scalar.getScalarType() == Scalar.Type.INT
+                    || scalar.getScalarType() == Scalar.Type.REAL;
+        }
+
+        private boolean isOctal(Scalar scalar) {
+            return scalar.getStringValue().startsWith("0o") // NOI18N
+                    || scalar.getStringValue().startsWith("0O"); // NOI18N
         }
 
         private void createError(ASTNode node) {

@@ -47,6 +47,7 @@ import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
 import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
+import java.util.concurrent.CompletionException;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
@@ -81,10 +82,13 @@ import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
 import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
+import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
 import org.eclipse.lsp4j.jsonrpc.messages.RequestMessage;
+import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
+import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.lsp4j.jsonrpc.services.JsonDelegate;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -103,6 +107,7 @@ import org.netbeans.api.project.ProjectUtils;
 import static org.netbeans.api.project.ProjectUtils.parentOf;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.lsp.server.LspGsonSetup;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.Utils;
@@ -153,7 +158,7 @@ public final class Server {
     }
 
     public static NbLspServer launchServer(Pair<InputStream, OutputStream> io, LspSession session) {
-        LanguageServerImpl server = new LanguageServerImpl();
+        LanguageServerImpl server = new LanguageServerImpl(session);
         ConsumeWithLookup msgProcessor = new ConsumeWithLookup(server.getSessionLookup());
         Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup);
         NbCodeLanguageClient remote = serverLauncher.getRemoteProxy();
@@ -162,7 +167,7 @@ public final class Server {
         Future<Void> runningServer = serverLauncher.startListening();
         return new NbLspServer(server, runningServer);
     }
-
+    
     private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
             Function<MessageConsumer, MessageConsumer> processor) {
         return new LSPLauncher.Builder<NbCodeLanguageClient>()
@@ -172,6 +177,8 @@ public final class Server {
             .setOutput(io.second())
             .wrapMessages(processor)
             .configureGson(gb -> {
+                Lookup.getDefault().lookupAll(LspGsonSetup.class).forEach(s -> s.configureBuilder(gb));
+                
                 gb.registerTypeAdapter(SemanticTokensCapabilities.class, new InstanceCreator<SemanticTokensCapabilities>() {
                     @Override public SemanticTokensCapabilities createInstance(Type type) {
                         return new SemanticTokensCapabilities(null);
@@ -185,6 +192,18 @@ public final class Server {
             })
             .setExceptionHandler((t) -> {
                 LOG.log(Level.WARNING, "Error occurred during LSP message dispatch", t);
+                if (t instanceof CompletionException) {
+                    if (t.getCause() instanceof ResponseErrorException) {
+                        return ((ResponseErrorException)t).getResponseError();
+                    }
+                    Throwable cause = t.getCause();
+                    ResponseError error = new ResponseError();
+                    error.setMessage(cause.getMessage());
+                    error.setCode(ResponseErrorCode.InternalError);
+                    error.setData(cause);
+                    
+                    return error;
+                }
                 return RemoteEndpoint.DEFAULT_EXCEPTION_HANDLER.apply(t);
             })
             .create();
@@ -338,8 +357,9 @@ public final class Server {
         private final TextDocumentServiceImpl textDocumentService = new TextDocumentServiceImpl(this);
         private final WorkspaceServiceImpl workspaceService = new WorkspaceServiceImpl(this);
         private final InstanceContent   sessionServices = new InstanceContent();
+        private final AbstractLookup sessionOnly = new AbstractLookup(sessionServices);
         private final Lookup sessionLookup = new ProxyLookup(
-                new AbstractLookup(sessionServices),
+                sessionOnly,
                 Lookup.getDefault()
         );
 
@@ -382,9 +402,24 @@ public final class Server {
         private final List<FileObject> acceptedWorkspaceFolders = new ArrayList<>();
 
         private final OpenedDocuments openedDocuments = new OpenedDocuments();
+        
+        private final LspSession lspSession;
+        
+        LanguageServerImpl(LspSession session) {
+            this.lspSession = session;
+        }
 
-        Lookup getSessionLookup() {
-            return sessionLookup;
+        private Lookup getSessionLookup() {
+            return lspSession.getLookup();
+        }
+        
+        /**
+         * Returns a Lookup specific for this LSP server's session. Does not include the default Lookup contents,
+         * it is suitable for composing into a ProxyLookup with other parts + the default one.
+         * @return 
+         */
+        Lookup getSessionOnlyLookup() {
+            return sessionOnly;
         }
 
         /**

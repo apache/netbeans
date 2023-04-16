@@ -39,10 +39,9 @@ import org.netbeans.modules.css.editor.Css3Utils;
 import org.netbeans.modules.css.editor.CssProjectSupport;
 import org.netbeans.modules.css.indexing.CssFileModel;
 import org.netbeans.modules.css.indexing.api.CssIndex;
-import org.netbeans.modules.css.lib.api.CssTokenId;
-import org.netbeans.modules.css.lib.api.Node;
-import org.netbeans.modules.css.lib.api.NodeType;
-import org.netbeans.modules.css.lib.api.NodeUtil;
+import org.netbeans.modules.css.refactoring.api.CssRefactoringExtraInfo;
+import org.netbeans.modules.css.refactoring.api.CssRefactoringInfo;
+import org.netbeans.modules.css.refactoring.api.CssRefactoringInfo.Type;
 import org.netbeans.modules.css.refactoring.api.Entry;
 import org.netbeans.modules.css.refactoring.api.RefactoringElementType;
 import org.netbeans.modules.parsing.api.Source;
@@ -81,25 +80,12 @@ public class CssRenameRefactoringPlugin implements RefactoringPlugin {
     private static final boolean LOG = LOGGER.isLoggable(Level.FINE);
     private final RenameRefactoring refactoring;
     private final Lookup lookup;
-    private CssElementContext context;
+    private CssRefactoringInfo context;
 
     public CssRenameRefactoringPlugin(RenameRefactoring refactoring) {
         this.refactoring = refactoring;
         this.lookup = refactoring.getRefactoringSource();
-        this.context = lookup.lookup(CssElementContext.class);
-
-        if (context == null) {
-            //if a generic folder is rename this plugin is triggered but the lookup doesn't contain
-            //the CssElementContext since the RenameRefactoring was not created by the CssActionsImplementationProvider
-            //but some other, in this case the lookup contain the renamed FileObject
-            FileObject folder = lookup.lookup(FileObject.class);
-            assert folder != null;
-            assert folder.isFolder();
-
-            //create a context for the rename folder
-            context = new CssElementContext.Folder(folder);
-        }
-
+        this.context = lookup.lookup(CssRefactoringInfo.class);
     }
 
     @Override
@@ -113,32 +99,6 @@ public class CssRenameRefactoringPlugin implements RefactoringPlugin {
         if (newName.length() == 0) {
             return new Problem(true, NbBundle.getMessage(CssRenameRefactoringPlugin.class, "MSG_Error_ElementEmpty")); //NOI18N
         }
-
-        if (context instanceof CssElementContext.Editor) {
-            CssElementContext.Editor editorContext = (CssElementContext.Editor) context;
-            char firstChar = refactoring.getNewName().charAt(0);
-            switch (editorContext.getElement().type()) {
-                case cssId:
-                case hexColor:
-                    //hex color code
-                    //id
-                    if (firstChar != '#') {
-                    return new Problem(true, NbBundle.getMessage(CssRenameRefactoringPlugin.class, "MSG_Error_MissingHash")); //NOI18N
-                }
-                    break;
-                case cssClass:
-                    //class
-                    if (firstChar != '.') {
-                    return new Problem(true, NbBundle.getMessage(CssRenameRefactoringPlugin.class, "MSG_Error_MissingDot")); //NOI18N
-                }
-                    break;
-            }
-            if (newName.length() == 1) {
-                return new Problem(true, NbBundle.getMessage(CssRenameRefactoringPlugin.class, "MSG_Error_ElementShortName")); //NOI18N
-            }
-
-        }
-
         return null;
     }
 
@@ -161,58 +121,47 @@ public class CssRenameRefactoringPlugin implements RefactoringPlugin {
         CssIndex index = sup.getIndex();
         ModificationResult modificationResult = new ModificationResult();
 
-        if (context instanceof CssElementContext.Editor) {
-            //editor elements refactoring
-            CssElementContext.Editor econtext = (CssElementContext.Editor) context;
+        if (context != null) {
             //get selected element in the editor
-            NodeType kind = econtext.getElement().type();
-            Node element = econtext.getElement();
-            String elementImage = econtext.getElementName();
+            Type kind = context.getType();
+            String elementImage = context.getElementName();
 
             switch (kind) {
-                case cssClass:
-                    int elementPrefixLength = 1;
-                    elementImage = elementImage.substring(elementPrefixLength); //cut off the dot
+                case CLASS:
                     Collection<FileObject> files = index.findClasses(elementImage);
-                    refactor(lookup, modificationResult, RefactoringElementType.CLASS, files, elementPrefixLength, econtext, index, SELECTOR_RENAME_MSG_KEY);
+                    refactor(lookup, modificationResult, RefactoringElementType.CLASS, files, context, index, SELECTOR_RENAME_MSG_KEY);
                     break;
-                case cssId:
-                    elementPrefixLength = 1;
-                    elementImage = elementImage.substring(elementPrefixLength); //cut off the dot
+                case ID:
                     files = index.findIds(elementImage);
-                    refactor(lookup, modificationResult, RefactoringElementType.ID, files, elementPrefixLength, econtext, index, SELECTOR_RENAME_MSG_KEY);
+                    refactor(lookup, modificationResult, RefactoringElementType.ID, files, context, index, SELECTOR_RENAME_MSG_KEY);
                     break;
-                case hexColor:
+                case HEX_COLOR:
                     files = index.findColor(elementImage);
-                    refactor(lookup, modificationResult, RefactoringElementType.COLOR, files, 0, econtext, index, COLOR_RENAME_MSG_KEY);
+                    refactor(lookup, modificationResult, RefactoringElementType.COLOR, files, context, index, COLOR_RENAME_MSG_KEY);
                     break;
-                case elementName:
-                    refactorElement(modificationResult, econtext, index);
+                case ELEMENT:
+                    refactorElement(modificationResult, context, index);
                     break;
-                case resourceIdentifier:
-                    Node token = NodeUtil.getChildTokenNode(element, CssTokenId.STRING);
-                    if (token != null) {
-                        String unquoted = WebUtils.unquotedValue(token.image());
-                        FileObject resolved = WebUtils.resolve(context.getFileObject(), unquoted);
-                        if (resolved != null) {
-                            refactorFile(modificationResult, resolved, index);
-                            //add the file rename refactoring itself
-                            refactoringElements.add(refactoring, new RenameFile(resolved));
-                        }
-                        return null;
+                case RESOURCE_IDENTIFIER: {
+                    FileObject resolved = WebUtils.resolve(context.getFileObject(), elementImage);
+                    if (resolved != null) {
+                        refactorFile(modificationResult, resolved, index);
+                        //add the file rename refactoring itself
+                        refactoringElements.add(refactoring, new RenameFile(resolved));
                     }
+
+                    return null;
+                }
                 //fallback if the resourceIdentifier contains URI (no STRING) token
-                case term:
+                case URI:
                     //uri in term
-                    token = NodeUtil.getChildTokenNode(element, CssTokenId.URI);
-                    if (token != null) {
-                        CharSequence image = token.image();
-                        Matcher m = Css3Utils.URI_PATTERN.matcher(image);
+                    {
+                        Matcher m = Css3Utils.URI_PATTERN.matcher(elementImage);
                         if (m.matches()) {
                             int groupIndex = 1;
                             String content = m.group(groupIndex);
                             String unquoted = WebUtils.unquotedValue(content);
-                            FileObject resolved = WebUtils.resolve(context.getFileObject(), unquoted);
+                            FileObject resolved = WebUtils.resolve(context.getFileObject(), elementImage);
                             if (resolved != null) {
                                 refactorFile(modificationResult, resolved, index);
                                 //add the file rename refactoring itself
@@ -224,19 +173,20 @@ public class CssRenameRefactoringPlugin implements RefactoringPlugin {
 
             }
 
-        } else if (context instanceof CssElementContext.File) {
-            //refactor a file in explorer
-            CssElementContext.File fileContext = (CssElementContext.File) context;
-            refactorFile(modificationResult, fileContext.getFileObject(), index);
+        } else {
+            FileObject fileObject = lookup.lookup(FileObject.class);
 
-        } else if (context instanceof CssElementContext.Folder) {
-            //refactor a folder in explorer
-            CssElementContext.Folder folderContext = (CssElementContext.Folder) context;
-            refactorFolder(modificationResult, folderContext, index);
-            //add folder rename element implementation, there doesn't seem to a default one
-            //like for file rename
-            // Disabled RenameFolder as it collides with FileRenamePlugin see #187635
-//            refactoringElements.add(refactoring, new RenameFolder(folderContext.getFileObject()));
+            if(fileObject != null && !fileObject.isFolder()) {
+                //refactor a file in explorer
+                refactorFile(modificationResult, fileObject, index);
+            } else if (fileObject != null && fileObject.isFolder()) {
+                //refactor a folder in explorer
+                refactorFolder(modificationResult, fileObject, index);
+                //add folder rename element implementation, there doesn't seem to a default one
+                //like for file rename
+                // Disabled RenameFolder as it collides with FileRenamePlugin see #187635
+                //            refactoringElements.add(refactoring, new RenameFolder(folderContext.getFileObject()));
+            }
         }
 
         //commit the transaction and add the differences to the result
@@ -314,13 +264,12 @@ public class CssRenameRefactoringPlugin implements RefactoringPlugin {
         }
     }
 
-    private void refactorFolder(ModificationResult modificationResult, CssElementContext.Folder context, CssIndex index) {
-        LOGGER.log(Level.FINE, "refactor folder {0}", context.getFileObject().getPath()); //NOI18N
+    private void refactorFolder(ModificationResult modificationResult, FileObject renamedFolder, CssIndex index) {
+        LOGGER.log(Level.FINE, "refactor folder {0}", renamedFolder.getPath()); //NOI18N
         String newName = refactoring.getNewName();
         try {
             CssIndex.AllDependenciesMaps alldeps = index.getAllDependencies();
             Map<FileObject, Collection<FileReference>> source2dest = alldeps.getSource2dest();
-            FileObject renamedFolder = context.getFileObject();
 
             Map<FileObject, CssFileModel> modelsCache = new WeakHashMap<>();
             Set<Entry> refactoredReferenceEntries = new HashSet<>();
@@ -382,13 +331,17 @@ public class CssRenameRefactoringPlugin implements RefactoringPlugin {
         }
     }
 
-    private void refactorElement(ModificationResult modificationResult, CssElementContext.Editor context, CssIndex index) {
+    private void refactorElement(ModificationResult modificationResult, CssRefactoringInfo context, CssIndex index) {
         //type selector: div
         //we do refactor only elements in the current css file, and even this is questionable if makes much sense
-        Node element = context.getElement();
-        String elementImage = element.image().toString();
+        String elementImage = context.getElementName();
 
-        CssFileModel model = CssFileModel.create(context.getParserResult());
+        CssFileModel model;
+        try {
+            model = CssFileModel.create(Source.create(context.getFileObject()));
+        } catch (ParseException ex) {
+            throw new RuntimeException(ex);
+        }
         List<Difference> diffs = new ArrayList<>();
         CloneableEditorSupport editor = GsfUtilities.findCloneableEditorSupport(context.getFileObject());
         for (Entry entry : model.getHtmlElements()) {
@@ -407,8 +360,8 @@ public class CssRenameRefactoringPlugin implements RefactoringPlugin {
 
     }
 
-    private void refactor(Lookup lookup, ModificationResult modificationResult, RefactoringElementType type, Collection<FileObject> files, int elementPrefixLenght, CssElementContext.Editor context, CssIndex index, String renameMsgKey) {
-        String elementImage = context.getElementName().substring(elementPrefixLenght);
+    private void refactor(Lookup lookup, ModificationResult modificationResult, RefactoringElementType type, Collection<FileObject> files, CssRefactoringInfo context, CssIndex index, String renameMsgKey) {
+        String elementImage = context.getElementName();
         List<FileObject> involvedFiles = new LinkedList<>(files);
         DependenciesGraph deps = index.getDependencies(context.getFileObject());
         Collection<FileObject> relatedFiles = deps.getAllRelatedFiles();
@@ -435,7 +388,7 @@ public class CssRenameRefactoringPlugin implements RefactoringPlugin {
             }
         }
 
-        String newName = refactoring.getNewName().substring(elementPrefixLenght); //cut off the dot or hash
+        String newName = refactoring.getNewName();
         //make css simple models for all involved files
         //where we already have the result
         for (FileObject file : involvedFiles) {

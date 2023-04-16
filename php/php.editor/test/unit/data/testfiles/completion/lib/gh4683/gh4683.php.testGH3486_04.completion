@@ -1,0 +1,8 @@
+Code completion result for source line:
+$test->|data;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethod()                  [PUBLIC]   MixinClass
+METHOD     publicStaticMethod()            [STATIC]   MixinClass
+METHOD     test()                          [PUBLIC]   TestClass
+VARIABLE   TestData data                   [PUBLIC]   MixinClass
+VARIABLE   array publicField               [PUBLIC]   MixinClass

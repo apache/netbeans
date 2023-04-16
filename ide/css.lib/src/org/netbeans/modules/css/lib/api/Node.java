@@ -40,5 +40,8 @@ public interface Node {
     public Node parent();
     
     public CharSequence image();
-    
+
+    public default String unescapedImage() {
+        return NodeUtil.unescape(image());
+    }
 }

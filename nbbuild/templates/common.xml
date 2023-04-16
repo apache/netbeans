@@ -79,10 +79,10 @@
         <tstamp>
             <format property="module.build.started.time" pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ"/>
         </tstamp>
-        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-9.4.jar">
-            <available file="${nbplatform.active.dir}/platform/core/asm-9.4.jar"/>
+        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-9.5.jar">
+            <available file="${nbplatform.active.dir}/platform/core/asm-9.5.jar"/>
         </condition>
-        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-9.4.jar"/>
+        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-9.5.jar"/>
         <property name="tsaurl" value=""/>
         <property name="tsacert" value=""/>
     </target>

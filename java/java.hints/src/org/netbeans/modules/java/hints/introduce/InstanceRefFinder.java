@@ -133,6 +133,7 @@ public class InstanceRefFinder extends ErrorAwareTreePathScanner {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                 case NEW_CLASS:
                     enclosingElementPath = path;
                     enclosingElement = ci.getTrees().getElement(enclosingElementPath);
@@ -364,6 +365,7 @@ public class InstanceRefFinder extends ErrorAwareTreePathScanner {
             case CLASS:
             case ENUM:
             case INTERFACE:
+            case RECORD:
                 if (node.getName().contentEquals("this") || node.getName().contentEquals("super")) {
                     addInstanceForType(enclosingType);
                 }

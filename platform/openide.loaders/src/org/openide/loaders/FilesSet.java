@@ -30,7 +30,7 @@ import org.openide.filesystems.FileObject;
  * <p>
  * This class is an implementation of performance enhancement #16396.
  *
- * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=16396">Issue #16396</a>
+ * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=16396">Issue #16396</a>
  *
  * @author  Petr Hamernik
  */

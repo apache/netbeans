@@ -143,7 +143,8 @@ public interface ErrorProvider {
      * The kind of errors/warnings that should be computed. {@code ERRORS} is
      * intended to compute more significant diagnostics quicker, {@code HINTS}
      * is inteded to compute less significant diagnostics at the cost of taking
-     * longer. The {@link Severity} of {@link ErrorDescription} reported for neither
+     * longer. The <a href="@org-netbeans-spi-editor-hints@/org/netbeans/spi/editor/hints/Severity.html">Severity</a> 
+     * of <a href="@org-netbeans-spi-editor-hints@/org/netbeans/spi/editor/hints/ErrorDescription.html">ErrorDescription</a> reported for neither
      * of these is limited.
      */
     public enum Kind {

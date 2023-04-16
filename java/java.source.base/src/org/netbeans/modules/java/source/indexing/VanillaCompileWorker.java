@@ -914,7 +914,6 @@ final class VanillaCompileWorker extends CompileWorker {
 
             @Override
             public Void visitBindingPattern(BindingPatternTree node, Void p) {
-                errorFound |= !hasMatchException;
                 return super.visitBindingPattern(node, p);
             }
 

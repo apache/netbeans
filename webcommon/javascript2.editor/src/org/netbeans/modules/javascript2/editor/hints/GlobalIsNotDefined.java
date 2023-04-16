@@ -60,7 +60,7 @@ import org.openide.util.NbBundle;
 public class GlobalIsNotDefined extends JsAstRule {
 
     private static final List<String> KNOWN_GLOBAL_OBJECTS = Arrays.asList(
-            "super",  "$", "jQuery",  //NOI18N
+            "super",  "$", "jQuery", "this", //NOI18N
             Type.ARRAY, Type.OBJECT, Type.BOOLEAN, Type.NULL, Type.NUMBER,
             Type.REGEXP, Type.STRING, Type.UNDEFINED, Type.UNRESOLVED);
 

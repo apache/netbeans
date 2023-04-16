@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.cloud.oracle.adm;
 
-import com.oracle.bmc.model.BmcException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Optional;

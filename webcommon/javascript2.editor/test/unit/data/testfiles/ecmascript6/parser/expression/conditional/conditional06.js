@@ -1,0 +1,1 @@
+'name' === name ? c="jedna" :  c="dva";

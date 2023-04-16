@@ -29,6 +29,8 @@ public interface JpaProviderImplementation {
     boolean isJpa2Supported();
 
     boolean isJpa21Supported();
+
+    boolean isJpa22Supported();
     
     boolean isDefault();
     

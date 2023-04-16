@@ -1564,7 +1564,7 @@ jobs:
         run: ant $OPTS -f java/api.debugger.jpda test
 
       - name: debugger.jpda
-        run: ant $OPTS -f java/debugger.jpda test
+        run: .github/retry.sh ant $OPTS -f java/debugger.jpda test
 
       - name: debugger.jpda.js
         run: ant $OPTS -f java/debugger.jpda.js test

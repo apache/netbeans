@@ -57,7 +57,15 @@ public final class VersioningSupport {
     public static Preferences getPreferences() {
         return VersioningConfig.getDefault().getPreferences();
     }
-        
+
+    /**
+     * Returns the value of {@link #PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE}.
+     * @see #getPreferences()
+     */
+    public static boolean isTextAnnotationVisible() {
+        return getPreferences().getBoolean(PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, true);
+    }
+
     /**
      * Queries the Versioning infrastructure for file ownership.
      * 

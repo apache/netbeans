@@ -25,6 +25,8 @@ import java.util.Map;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.eclipse.persistence.jpa.PersistenceProvider;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
+import static org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit.JAKARTA_NAMESPACE;
+import static org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit.JAVAX_NAMESPACE;
 import org.openide.util.NbBundle;
 
 /**
@@ -79,26 +81,29 @@ class EclipseLinkProvider extends Provider {
     
     @Override
     public String getTableGenerationPropertyName() {
-        return getVersion() != null && 
-                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
-                ?  super.getTableGenerationPropertyName()
-                : PersistenceUnitProperties.DDL_GENERATION;
+        String result = (getVersion()!=null && Float.parseFloat(Persistence.VERSION_2_1) <= (Float.parseFloat(getVersion()))) ?  super.getTableGenerationPropertyName() : PersistenceUnitProperties.DDL_GENERATION;
+        if(isJakartaNamespace()) {
+            result = result.replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE);
+        }
+        return result;
     }
 
     @Override
     public String getTableGenerationDropCreateValue() {
-        return getVersion() != null && 
-                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
-                ? super.getTableGenerationDropCreateValue()
-                : PersistenceUnitProperties.DROP_AND_CREATE;
+        String result = (getVersion() != null && Float.parseFloat(Persistence.VERSION_2_1) <= (Float.parseFloat(getVersion()))) ? super.getTableGenerationDropCreateValue() : PersistenceUnitProperties.DROP_AND_CREATE;
+        if (isJakartaNamespace()) {
+            result = result.replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE);
+        }
+        return result;
     }
 
     @Override
     public String getTableGenerationCreateValue() {
-        return getVersion() != null && 
-                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
-                ? super.getTableGenerationCreateValue()
-                : PersistenceUnitProperties.CREATE_ONLY;
+        String result = (getVersion() != null && Float.parseFloat(Persistence.VERSION_2_1) <= (Float.parseFloat(getVersion()))) ? super.getTableGenerationCreateValue() : PersistenceUnitProperties.CREATE_ONLY;
+        if (isJakartaNamespace()) {
+            result = result.replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE);
+        }
+        return result;
     }
 
     @Override

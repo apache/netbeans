@@ -166,6 +166,8 @@ meth public boolean isDefault()
 meth public boolean isJpa1Supported()
 meth public boolean isJpa21Supported()
 meth public boolean isJpa22Supported()
+meth public boolean isJpa30Supported()
+meth public boolean isJpa31Supported()
 meth public boolean isJpa2Supported()
 meth public java.lang.String getClassName()
 supr java.lang.Object
@@ -219,7 +221,7 @@ meth public abstract java.lang.String activationConfigProperty()
 CLSS public final org.netbeans.modules.javaee.specs.support.spi.JpaProviderFactory
 cons public init()
 innr public abstract static Accessor
-meth public static org.netbeans.modules.javaee.specs.support.api.JpaProvider createJpaProvider(java.lang.String,boolean,boolean,boolean,boolean,boolean)
+meth public static org.netbeans.modules.javaee.specs.support.api.JpaProvider createJpaProvider(java.lang.String,boolean,boolean,boolean,boolean,boolean,boolean,boolean)
 meth public static org.netbeans.modules.javaee.specs.support.api.JpaProvider createJpaProvider(org.netbeans.modules.javaee.specs.support.spi.JpaProviderImplementation)
 supr java.lang.Object
 
@@ -237,6 +239,8 @@ meth public abstract boolean isDefault()
 meth public abstract boolean isJpa1Supported()
 meth public abstract boolean isJpa21Supported()
 meth public abstract boolean isJpa22Supported()
+meth public abstract boolean isJpa30Supported()
+meth public abstract boolean isJpa31Supported()
 meth public abstract boolean isJpa2Supported()
 meth public abstract java.lang.String getClassName()
 

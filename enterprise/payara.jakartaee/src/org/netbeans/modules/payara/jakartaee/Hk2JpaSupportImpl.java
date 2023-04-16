@@ -50,15 +50,21 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
          * Creates an instance of individual JPA specifications support class.
          * <p/>
          * @param jpa_1_0 JPA 1.0 supported.
-         * @param jpa_2_0 JPA 1.0 supported.
+         * @param jpa_2_0 JPA 2.0 supported.
          * @param jpa_2_1 JPA 2.1 supported.
          * @param jpa_2_2 JPA 2.2 supported.
+         * @param jpa_3_0 JPA 3.0 supported.
+         * @param jpa_3_1 JPA 3.1 supported.
          */
-        JpaSupportVector(boolean jpa_1_0, boolean jpa_2_0, boolean jpa_2_1, boolean jpa_2_2) {
+        JpaSupportVector(boolean jpa_1_0, boolean jpa_2_0, 
+                boolean jpa_2_1, boolean jpa_2_2,
+                boolean jpa_3_0, boolean jpa_3_1) {
             _1_0 = jpa_1_0;
             _2_0 = jpa_2_0;
             _2_1 = jpa_2_1;
             _2_2 = jpa_2_2;
+            _3_0 = jpa_3_0;
+            _3_1 = jpa_3_1;
         }
 
         /** JPA 1.0 supported. */
@@ -72,6 +78,12 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
 
         /** JPA 2.2 supported. */
         boolean _2_2;
+
+        /** JPA 3.0 supported. */
+        boolean _3_0;
+
+        /** JPA 3.1 supported. */
+        boolean _3_1;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -91,7 +103,9 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
             jpaSupport.put(
                     version.toString(),
                     new JpaSupportVector(
-                            true, true, version.isEE7Supported(), version.isEE8Supported()
+                            true, true, 
+                            version.isEE7Supported(), version.isEE8Supported(), 
+                            version.isEE9Supported(), version.isEE10Supported()
                     )
             );
         }
@@ -166,7 +180,8 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
                 defaultProvider = JpaProviderFactory.createJpaProvider(
                     JPA_PROVIDER, true, instanceJpaSupport._1_0,
                     instanceJpaSupport._2_0, instanceJpaSupport._2_1,
-                    instanceJpaSupport._2_2);
+                    instanceJpaSupport._2_2, instanceJpaSupport._3_0,
+                    instanceJpaSupport._3_1);
             }
         }
         return defaultProvider;

@@ -146,11 +146,13 @@ public class PersistenceLibraryPanel extends javax.swing.JPanel {
     }
     
     private boolean containsEntityManager() {
-        return PersistenceLibrarySupport.containsClass(libImpl, "javax.persistence.EntityManager"); //NOI18N
+        return PersistenceLibrarySupport.containsClass(libImpl, "javax.persistence.EntityManager") 
+                || PersistenceLibrarySupport.containsClass(libImpl, "jakarta.persistence.EntityManager"); //NOI18N
     }
     
     private boolean containsPersistenceProvider() {
-        return PersistenceLibrarySupport.containsService(libImpl, "javax.persistence.spi.PersistenceProvider"); //NOI18N
+        return PersistenceLibrarySupport.containsService(libImpl, "javax.persistence.spi.PersistenceProvider") 
+                || PersistenceLibrarySupport.containsService(libImpl, "jakarta.persistence.spi.PersistenceProvider"); //NOI18N
     }
     
     /** This method is called from within the constructor to

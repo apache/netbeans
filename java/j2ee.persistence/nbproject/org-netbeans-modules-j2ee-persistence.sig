@@ -1131,6 +1131,8 @@ fld public final static java.lang.String VERSION_1_0 = "1.0"
 fld public final static java.lang.String VERSION_2_0 = "2.0"
 fld public final static java.lang.String VERSION_2_1 = "2.1"
 fld public final static java.lang.String VERSION_2_2 = "2.2"
+fld public final static java.lang.String VERSION_3_0 = "3.0"
+fld public final static java.lang.String VERSION_3_1 = "3.1"
 meth public abstract int addPersistenceUnit(org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
 meth public abstract int removePersistenceUnit(org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
 meth public abstract int sizePersistenceUnit()

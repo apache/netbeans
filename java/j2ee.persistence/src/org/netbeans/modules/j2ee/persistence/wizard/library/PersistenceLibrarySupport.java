@@ -322,7 +322,7 @@ public class PersistenceLibrarySupport {
             }
             ClassPath cp = getLibraryClassPath(each);
             Provider provider = extractProvider(cp, providerClass);
-            if (provider != null && containsClass(cp, "javax.persistence.EntityManager")) { //NOI18N
+            if (provider != null && (containsClass(cp, "javax.persistence.EntityManager") || containsClass(cp, "jakarta.persistence.EntityManager"))) { //NOI18N
                 providerLibs.add(new ProviderLibrary(each, cp, provider));
             }
         }

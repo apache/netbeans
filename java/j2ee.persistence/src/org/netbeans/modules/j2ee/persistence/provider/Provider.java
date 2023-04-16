@@ -83,7 +83,11 @@ public abstract class Provider {
         boolean ret = cp.findResource(classRelativePath) != null;
         if(ret && version != null)
         {
-            if (Persistence.VERSION_2_2.equals(version)) {
+            if(Persistence.VERSION_3_1.equals(version)){
+                ret &= cp.findResource("jakarta/persistence/spi/TransformerException.class.class") != null;
+            } else if(Persistence.VERSION_3_0.equals(version)){
+                ret &= cp.findResource("jakarta/persistence/Entity.class") != null;
+            } else if (Persistence.VERSION_2_2.equals(version)) {
                 ret &= cp.findResource("javax/persistence/TableGenerators.class") != null;
             } else if (Persistence.VERSION_2_1.equals(version)) {
                 ret &= cp.findResource("javax/persistence/criteria/CriteriaUpdate.class") != null;
@@ -99,6 +103,10 @@ public abstract class Provider {
     protected String getVersion()
     {
         return version;
+    }
+
+    protected boolean isJakartaNamespace() {
+      return getVersion()!=null && Float.parseFloat(Persistence.VERSION_2_2) < Float.parseFloat(getVersion());
     }
     
     private Set initPropertyNames(){
@@ -132,14 +140,18 @@ public abstract class Provider {
             return null;
         }
         Property result;
-        if  (Persistence.VERSION_2_2.equals(version)) {
+        if (Persistence.VERSION_3_1.equals(version)) {
+            result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Property();
+        } else if (Persistence.VERSION_3_0.equals(version)) {
+            result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.Property();
+        } else if  (Persistence.VERSION_2_2.equals(version)) {
                 result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Property();
         } else if  (Persistence.VERSION_2_1.equals(version)) {
                 result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Property();
         } else if  (Persistence.VERSION_2_0.equals(version)) {
                 result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.Property();
         } else {
-                result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.Property();
+            result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.Property();
         }
         result.setName(getTableGenerationPropertyName());
         if (TABLE_GENERATION_CREATE.equals(strategy)){
@@ -164,6 +176,9 @@ public abstract class Provider {
      * @return names of the property representing JDBC URL, map version-property name
      */
     public String getJdbcUrl() {
+        if(isJakartaNamespace()) {
+            return "jakarta.persistence.jdbc.url";
+        }
         return "javax.persistence.jdbc.url";
     }
     
@@ -172,6 +187,9 @@ public abstract class Provider {
      * @return name of the property representing JDBC driver.
      */
     public String getJdbcDriver() {
+        if(isJakartaNamespace()) {
+            return "jakarta.persistence.jdbc.driver";
+        }
         return "javax.persistence.jdbc.driver";
     }
     
@@ -180,6 +198,9 @@ public abstract class Provider {
      * @return name of the property representing JDBC user name.
      */
     public String getJdbcUsername() {
+        if(isJakartaNamespace()) {
+            return "jakarta.persistence.jdbc.user";
+        }
         return "javax.persistence.jdbc.user";
     }
     
@@ -188,6 +209,9 @@ public abstract class Provider {
      * @return name of the property representing JDBC password.
      */
     public String getJdbcPassword() {
+        if(isJakartaNamespace()) {
+            return "jakarta.persistence.jdbc.password";
+        }
         return "javax.persistence.jdbc.password";
     }
 

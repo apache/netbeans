@@ -259,6 +259,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
         "text/x-persistence2.1", //NOI18N
         "text/x-persistence2.2", //NOI18N
         "text/x-persistence3.0", //NOI18N
+        "text/x-persistence3.1", //NOI18N
         "text/x-orm1.0", //NOI18N
         "text/x-orm2.0", //NOI18N
         "text/x-orm2.1", //NOI18N

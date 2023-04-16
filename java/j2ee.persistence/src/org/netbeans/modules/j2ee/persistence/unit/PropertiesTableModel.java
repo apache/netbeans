@@ -21,6 +21,7 @@ package org.netbeans.modules.j2ee.persistence.unit;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.netbeans.modules.j2ee.persistence.dd.common.Properties;
 import org.netbeans.modules.j2ee.persistence.dd.common.Property;
 import org.openide.util.NbBundle;
 
@@ -83,7 +84,12 @@ public class PropertiesTableModel extends AbstractTableModel {
     }
 
     public void addRow(String propName, String propValue) {
-        Property prop = propParam.getPU().getProperties().newProperty();
+        Properties properties = propParam.getPU().getProperties();
+        if (properties == null) {
+            properties = propParam.getPU().newProperties();
+            propParam.getPU().setProperties(properties);
+        }
+        Property prop = properties.newProperty();
         prop.setName(propName);
         prop.setValue(propValue);
         int index = propParam.getPU().getProperties().addProperty2(prop);

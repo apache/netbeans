@@ -36,8 +36,10 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.j2ee.persistence.api.EntityClassScope;
 import org.netbeans.modules.j2ee.persistence.api.metadata.orm.Entity;
-import org.netbeans.modules.j2ee.persistence.api.metadata.orm.EntityMappingsMetadata;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
+import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
+import static org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit.JAKARTA_NAMESPACE;
+import static org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit.JAVAX_NAMESPACE;
 import org.netbeans.modules.j2ee.persistence.editor.CompletionContext;
 import org.netbeans.modules.j2ee.persistence.editor.JPAEditorUtil;
 import org.netbeans.modules.j2ee.persistence.provider.Provider;
@@ -311,7 +313,13 @@ public abstract class PUCompletor {
             ArrayList<String> keys = new ArrayList<>();
             String ver = provider == null ? context.getDocumentContext().getVersion() : ProviderUtil.getVersion(provider);
             if (provider == null || (ver!=null && !Persistence.VERSION_1_0.equals(ver))) {
-                keys.addAll(allKeyAndValues.get(null).keySet());
+                if (Float.parseFloat(ver) < Float.parseFloat(Persistence.VERSION_3_0)) {
+                    keys.addAll(allKeyAndValues.get(null).keySet());
+                } else {
+                    for (String key : allKeyAndValues.get(null).keySet()) {
+                        keys.add(key.replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE));
+                    }
+                }
             }
             if (provider != null && allKeyAndValues.get(provider) != null) {
                 keys.addAll(allKeyAndValues.get(provider).keySet());
@@ -319,7 +327,8 @@ public abstract class PUCompletor {
             String itemTexts[] = keys.toArray(new String[]{});
             for (int i = 0; i < itemTexts.length; i++) {
                 if (itemTexts[i].startsWith(typedChars.trim())
-                        || itemTexts[i].startsWith("javax.persistence." + typedChars.trim())) { // NOI18N
+                        || itemTexts[i].startsWith(PersistenceUnit.JAVAX_NAMESPACE + typedChars.trim())
+                        || itemTexts[i].startsWith(PersistenceUnit.JAKARTA_NAMESPACE + typedChars.trim())) { // NOI18N
                     JPACompletionItem item = JPACompletionItem.createAttribValueItem(caretOffset - typedChars.length(),
                             itemTexts[i]);
                     results.add(item);

@@ -77,6 +77,7 @@
         <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/persistence-2.1.xml</file>
         <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/persistence-2.2.xml</file>
         <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/persistence-3.0.xml</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/persistence-3.1.xml</file>
         <file>src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/IllegalOrphanException.java.txt</file>
         <file>src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/NonexistentEntityException.java.txt</file>
         <file>src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/PreexistingEntityException.java.txt</file>

@@ -26,9 +26,9 @@ apisupport.feedreader/external/jdom-1.0.jar mobility.deployment.webdav/external/
 # db.sql.visualeditor/external/javacc-7.0.10.jar is used at compile-time only
 ide/db.sql.visualeditor/external/javacc-7.0.10.jar java/performance/external/javacc-7.0.10.jar
 
-# It happens that maven 3.3.9 uses commons-lang-2.6.jar, same as o.apache.commons.lang
-# and commons-io-2.5.jar, same as java.lsp.server
+# It happens that maven 3.9.1 uses slf4j-api-1.7.36.jar, same as slf4j.api
 # These are used independently, different functional goals
+ide/slf4j.api/external/slf4j-api-1.7.36.jar java/maven.embedder/external/apache-maven-3.9.1-bin.zip
 
 # Contains test data (badPackageFileInJar.jar is packaged twice) - this is an
 # upstream problem

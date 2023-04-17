@@ -1,5 +1,5 @@
 Name: SLF4J
-Version: 1.7.28
+Version: 1.7.36
 License: MIT-slf4j
 Origin: https://www.slf4j.org/
 Description: Simple Logging Facade for Java (SLF4J).

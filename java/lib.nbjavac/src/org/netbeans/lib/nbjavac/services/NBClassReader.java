@@ -33,6 +33,8 @@ import com.sun.tools.javac.util.Names;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +46,8 @@ import javax.tools.JavaFileObject;
  * @author lahvac
  */
 public class NBClassReader extends ClassReader {
+
+    private static final Logger LOG = Logger.getLogger(NBClassReader.class.getName());
 
     public static void preRegister(Context context) {
         context.put(classReaderKey, new Context.Factory<ClassReader>() {
@@ -72,6 +76,24 @@ public class NBClassReader extends ClassReader {
                     readEnclosingMethodAttr(sym);
                     bp = newbp;
                 }
+            },
+            new NBAttributeReader(nbNames._org_netbeans_SourceLevelAnnotations, Version.V49, CLASS_OR_MEMBER_ATTRIBUTE) {
+                protected void read(Symbol sym, int attrLen) {
+                    attachAnnotations(sym);
+                }
+
+            },
+            new NBAttributeReader(nbNames._org_netbeans_SourceLevelParameterAnnotations, Version.V49, CLASS_OR_MEMBER_ATTRIBUTE) {
+                protected void read(Symbol sym, int attrLen) {
+                    attachParameterAnnotations(sym);
+                }
+
+            },
+            new NBAttributeReader(nbNames._org_netbeans_SourceLevelTypeAnnotations, Version.V52, CLASS_OR_MEMBER_ATTRIBUTE) {
+                protected void read(Symbol sym, int attrLen) {
+                    attachTypeAnnotations(sym);
+                }
+
             },
         };
 
@@ -109,7 +131,7 @@ public class NBClassReader extends ClassReader {
                         }
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(NBClassReader.class.getName()).log(Level.FINE, null, ex);
+                    LOG.log(Level.FINE, null, ex);
                 } finally {
                     c.classfile = origFile;
                 }
@@ -129,6 +151,42 @@ public class NBClassReader extends ClassReader {
             }
         }
         return Arrays.copyOf(data, off);
+    }
+
+    private void attachAnnotations(Symbol sym) {
+        try {
+            Method m = ClassReader.class.getDeclaredMethod("attachAnnotations", Symbol.class);
+            m.setAccessible(true);
+            m.invoke(this, sym);
+        } catch (NoSuchMethodException | SecurityException |
+                 IllegalAccessException | IllegalArgumentException |
+                 InvocationTargetException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void attachParameterAnnotations(Symbol sym) {
+        try {
+            Method m = ClassReader.class.getDeclaredMethod("readParameterAnnotations", Symbol.class);
+            m.setAccessible(true);
+            m.invoke(this, sym);
+        } catch (NoSuchMethodException | SecurityException |
+                 IllegalAccessException | IllegalArgumentException |
+                 InvocationTargetException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void attachTypeAnnotations(Symbol sym) {
+        try {
+            Method m = ClassReader.class.getDeclaredMethod("attachTypeAnnotations", Symbol.class);
+            m.setAccessible(true);
+            m.invoke(this, sym);
+        } catch (NoSuchMethodException | SecurityException |
+                 IllegalAccessException | IllegalArgumentException |
+                 InvocationTargetException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
     }
 
     private abstract class NBAttributeReader extends AttributeReader {

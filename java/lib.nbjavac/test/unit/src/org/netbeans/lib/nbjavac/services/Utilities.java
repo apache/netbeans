@@ -76,6 +76,7 @@ public class Utilities {
     }
 
     public static final PrintWriter DEV_NULL = new PrintWriter(new NullWriter(), false);
+    public static final PrintWriter OUT = new PrintWriter(System.err, true);
 
     private static class NullWriter extends Writer {
 

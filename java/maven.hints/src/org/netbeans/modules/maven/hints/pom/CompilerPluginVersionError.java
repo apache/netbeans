@@ -85,7 +85,7 @@ public class CompilerPluginVersionError implements POMErrorFixProvider {
             // note: this is the embedded plugin version
             // however, if this version here is compatible too we can exit, since we know it is not a downgrade and maven itself is compatible
             String version = PluginPropertyUtils.getPluginVersion(nbproject.getMavenProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
-            if (new ComparableVersion(version).compareTo(COMPILER_PLUGIN_VERSION) >= 0) {
+            if (version != null && new ComparableVersion(version).compareTo(COMPILER_PLUGIN_VERSION) >= 0) {
                 return Collections.emptyList();
             }
         }

@@ -86,7 +86,7 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
         if (nbproject != null) {
             // note: this is the embedded plugin version, only useful for downgrade checks
             String pluginVersion = PluginPropertyUtils.getPluginVersion(nbproject.getMavenProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
-            if (new ComparableVersion(pluginVersion).compareTo(COMPILER_PLUGIN_VERSION) <= 0) {
+            if (pluginVersion != null && new ComparableVersion(pluginVersion).compareTo(COMPILER_PLUGIN_VERSION) <= 0) {
                 return Collections.emptyList();
             }
         }

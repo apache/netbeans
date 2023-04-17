@@ -61,7 +61,7 @@ public class NBMNativeMWITest extends NbTestCase {
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
         assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals("3.11.0", model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(0, model.getRepositories().size());
     }
 
@@ -79,7 +79,7 @@ public class NBMNativeMWITest extends NbTestCase {
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
         assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals("3.11.0", model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(1, model.getRepositories().size());
     }
 
@@ -106,7 +106,7 @@ public class NBMNativeMWITest extends NbTestCase {
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
         assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals("3.11.0", model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(0, model.getRepositories().size());
     }
 
@@ -132,7 +132,7 @@ public class NBMNativeMWITest extends NbTestCase {
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
         assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals("3.11.0", model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(1, model.getRepositories().size());
     }
 
@@ -187,7 +187,7 @@ public class NBMNativeMWITest extends NbTestCase {
         assertEquals("nbm-maven-plugin", modeloutput.getBuild().getPlugins().get(0).getArtifactId());
         assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), modeloutput.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", modeloutput.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", modeloutput.getBuild().getPlugins().get(1).getVersion());
+        assertEquals("3.11.0", modeloutput.getBuild().getPlugins().get(1).getVersion());
         assertEquals(0, model.getRepositories().size());
     }
 

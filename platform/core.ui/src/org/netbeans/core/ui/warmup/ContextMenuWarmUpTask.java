@@ -41,7 +41,8 @@ import org.openide.windows.TopComponent;
  *
  * @author  Tomas Pavek, Peter Zavadsky
  */
-@OnShowing
+// disabled
+//@OnShowing
 public final class ContextMenuWarmUpTask implements Runnable {
     @Override
     public void run() {

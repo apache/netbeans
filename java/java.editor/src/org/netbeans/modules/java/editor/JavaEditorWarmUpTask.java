@@ -56,7 +56,8 @@ import org.openide.util.lookup.ServiceProvider;
  */
 public class JavaEditorWarmUpTask implements Runnable {
     
-    @ServiceProvider(service=Runnable.class,path="WarmUp")
+// disabled
+//    @ServiceProvider(service=Runnable.class,path="WarmUp")
     public static class Provider implements Runnable {
 
         private AtomicBoolean b = new AtomicBoolean();

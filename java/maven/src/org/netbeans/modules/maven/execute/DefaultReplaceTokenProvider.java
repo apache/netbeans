@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.ActionMap;
+import java.util.stream.Collectors;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
@@ -44,7 +44,6 @@ import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.classpath.MavenSourcesImpl;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
-import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.modules.maven.spi.actions.ActionConvertor;
 import org.netbeans.modules.maven.spi.actions.ReplaceTokenProvider;
 import org.netbeans.spi.project.ActionProvider;
@@ -215,8 +214,13 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                 HashSet<String> test = new HashSet<String>();
                 addSelectedFiles(false, fos, test);
                 addSelectedFiles(true, fos, test);
-                String files2test = test.toString().replace(" ", "");
-                packClassname.append(files2test.substring(1, files2test.length() - 1));
+                
+                packClassname.append(test
+                        .stream()
+                        .map(String::trim)
+                        .collect(Collectors.joining(","))
+                );
+
             }
         }
         if (packClassname.length() > 0) { //#213671
@@ -249,25 +253,34 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
     private void addSelectedFiles(boolean testRoots, FileObject[] candidates, HashSet<String> test) {
         NbMavenProjectImpl prj = project.getLookup().lookup(NbMavenProjectImpl.class);
         if (prj != null) {
-            URI[] roots = prj.getSourceRoots(testRoots);
-            for (URI uri : roots) {
-                FileObject root = FileUtil.toFileObject(Utilities.toFile(uri));
-                // test if root isn't null - NbMavenProjectImpl.getSourceRoots() might return a bogus 
-                // non test uri in case there are only test source roots.
-                // NOTE that not sure if this is generaly the right place for the fix. Even though it is 
-                // MavenProject which returns those uris, not sure if e.g. that behaviour wasn't somewhere on the way overriden 
-                // by the nb maven module ...
-                if(root != null) {
-                    for (FileObject candidate : candidates) {
-                        String relativePath = FileUtil.getRelativePath(root, candidate);
-                        if (relativePath != null) {
-                            if (testRoots) {
-                                relativePath = relativePath.replace(".java", "").replace('/', '.'); //NOI18N
-                            } else {
-                                relativePath = relativePath.replace(".java", "Test").replace('/', '.'); //NOI18N
+            addSelectedFilesInGivenRoot(prj.getSourceRoots(testRoots), candidates, testRoots, test);
+            addSelectedFilesInGivenRoot(prj.getGeneratedSourceRoots(testRoots), candidates, testRoots, test);
+        }
+    }
+
+    private void addSelectedFilesInGivenRoot(URI[] roots, FileObject[] candidates, boolean testRoots, HashSet<String> test) throws IllegalArgumentException {
+        for (URI rootUri : roots) {
+            FileObject root = FileUtil.toFileObject(Utilities.toFile(rootUri));
+            // test if root isn't null - NbMavenProjectImpl.getSourceRoots() might return a bogus
+            // non test uri in case there are only test source roots.
+            // NOTE that not sure if this is generaly the right place for the fix. Even though it is
+            // MavenProject which returns those uris, not sure if e.g. that behaviour wasn't somewhere on the way overriden
+            // by the nb maven module ...
+            if(root != null) {
+                for (FileObject candidate : candidates) {
+                    String relativePath = FileUtil.getRelativePath(root, candidate);
+                    if (relativePath != null) {
+                        if (testRoots) {
+                            relativePath = relativePath.replace(".java", "").replace('/', '.'); //NOI18N
+                            if (candidate.isFolder()) {
+                                relativePath += relativePath.isEmpty()
+                                        ? "**"
+                                        : ".**";
                             }
-                            test.add(relativePath);
+                        } else {
+                            relativePath = relativePath.replace(".java", "Test").replace('/', '.'); //NOI18N
                         }
+                        test.add(relativePath);
                     }
                 }
             }

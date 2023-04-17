@@ -45,11 +45,11 @@ import static org.netbeans.modules.languages.hcl.grammar.HCLLexer.*;
  *
  * @author lkishalmi
  */
-public abstract class AnstractHCLLexer extends AbstractAntlrLexerBridge<HCLHereDocAdaptor, HCLTokenId> {
+public abstract class AbstractHCLLexer extends AbstractAntlrLexerBridge<HCLHereDocAdaptor, HCLTokenId> {
 
-    private static final Logger LOG = Logger.getLogger(AnstractHCLLexer.class.getName());
+    private static final Logger LOG = Logger.getLogger(AbstractHCLLexer.class.getName());
 
-    public AnstractHCLLexer(LexerRestartInfo<HCLTokenId> info, Function<CharStream, HCLHereDocAdaptor> lexerCreator) {
+    public AbstractHCLLexer(LexerRestartInfo<HCLTokenId> info, Function<CharStream, HCLHereDocAdaptor> lexerCreator) {
         super(info, lexerCreator);
         lexer.removeErrorListeners();
         lexer.addErrorListener(HCL_ERROR_LISTENER);

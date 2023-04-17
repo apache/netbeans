@@ -19,7 +19,7 @@
 package org.netbeans.modules.languages.hcl.terraform;
 
 import org.netbeans.api.lexer.Token;
-import org.netbeans.modules.languages.hcl.AnstractHCLLexer;
+import org.netbeans.modules.languages.hcl.AbstractHCLLexer;
 import org.netbeans.modules.languages.hcl.HCLTokenId;
 import static org.netbeans.modules.languages.hcl.HCLTokenId.*;
 import org.netbeans.modules.languages.hcl.grammar.TerraformLexer;
@@ -30,7 +30,7 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
  *
  * @author Laszlo Kishalmi
  */
-public final class TerraformHCLLexer extends AnstractHCLLexer {
+public final class TerraformHCLLexer extends AbstractHCLLexer {
 
     public TerraformHCLLexer(LexerRestartInfo<HCLTokenId> info) {
         super(info, TerraformLexer::new);

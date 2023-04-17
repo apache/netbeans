@@ -28,7 +28,7 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
  *
  * @author Laszlo Kishalmi
  */
-public final class BasicHCLLexer extends AnstractHCLLexer {
+public final class BasicHCLLexer extends AbstractHCLLexer {
 
     public BasicHCLLexer(LexerRestartInfo<HCLTokenId> info) {
         super(info, HCLLexer::new);

@@ -20,6 +20,7 @@ package org.netbeans.modules.languages.hcl.ast;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -33,13 +34,7 @@ public class HCLBlock extends HCLContainer {
 
     public HCLBlock(List<HCLIdentifier> declaration) {
         this.declaration = Collections.unmodifiableList(declaration);
-        StringBuilder idb = new StringBuilder(100);
-        String delim = "";
-        for (HCLIdentifier hi : this.declaration) {
-            idb.append(delim).append(hi.id());
-            delim = ".";
-        }
-        id = idb.toString();
+        id = declaration.stream().map(d -> d.id()).collect(Collectors.joining("."));
     }
 
     

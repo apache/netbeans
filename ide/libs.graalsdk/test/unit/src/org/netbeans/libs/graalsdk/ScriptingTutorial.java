@@ -30,6 +30,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import static org.junit.Assume.assumeNotNull;
 import org.netbeans.api.scripting.Scripting;
 
 
@@ -224,6 +225,7 @@ public class ScriptingTutorial extends NbTestCase {
         ScriptEngine rEngine = manager.getEngineByMimeType("application/x-r");
         // @end region="allowAllAccess"
 
+        assumeNotNull(rEngine);
         final Object funcRaw = rEngine.eval("qbinom");
         BinomQuantile func = ((Invocable) rEngine).getInterface(funcRaw, BinomQuantile.class);
         assertEquals(4, func.qbinom(0.37, 10, 0.5));
@@ -232,6 +234,7 @@ public class ScriptingTutorial extends NbTestCase {
 
     public void testCallRFunctionFromJavaTheOldWay() throws Exception {
         ScriptEngine rEngine = Scripting.createManager().getEngineByMimeType("application/x-r");
+        assumeNotNull(rEngine);
         // FastR currently needs access to native libraries:
         rEngine.getContext().setAttribute("allowAllAccess", true, ScriptContext.GLOBAL_SCOPE);
 

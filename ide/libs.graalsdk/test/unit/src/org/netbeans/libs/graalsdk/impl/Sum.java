@@ -16,25 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.api.scripting;
+package org.netbeans.libs.graalsdk.impl;
 
-import javax.script.ScriptEngine;
-import static org.junit.Assume.assumeTrue;
-import org.netbeans.junit.NbTestCase;
+public class Sum {
+    public int sum;
+    public Object err;
 
-public class ScriptingTutorialTest extends NbTestCase {
-    public ScriptingTutorialTest(String name) {
-        super(name);
+    public void increment() {
+        sum++;
     }
 
-    public void testFourtyTwo() throws Exception {
-        // @start region="testFourtyTwo"
-        ScriptEngine js = Scripting.createManager().getEngineByMimeType("text/javascript");
-        assumeTrue(js != null || System.getProperty("java.vendor.version").contains("Graal"));
-
-        Number x = (Number) js.eval("6 * 7");
-
-        assert x.intValue() == 42;
-        // @end region="testFourtyTwo"
+    final void add(int x) {
+        sum += x;
     }
 }

@@ -16,30 +16,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.libs.graalsdk;
+package org.netbeans.libs.graalsdk.system;
 
-import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.junit.NbModuleSuite;
+import org.netbeans.junit.NbTestSuite;
 import org.openide.util.Lookup;
 
-public class JavaScriptEnginesTest {
-
-
-    public static final junit.framework.Test suite() {
+/**
+ *
+ * @author sdedic
+ */
+public class GraalEnginesTest {
+    public static Test suite() throws Exception {
         NbModuleSuite.Configuration cfg = NbModuleSuite.emptyConfiguration().
-                honorAutoloadEager(true).
-                gui(false);
-        
-        return cfg.clusters("platform|webcommon|ide").addTest(S.class).suite();
+            clusters("platform|webcommon|ide").
+            honorAutoloadEager(true).
+            gui(false);
+        return cfg.addTest(GraalEnginesTest.S.class).suite();
     }
-    
+
     public static class S extends TestSuite {
         public S() throws Exception {
-            ClassLoader ldr = Lookup.getDefault().lookup(ClassLoader.class);
-            Class c = ldr.loadClass("org.netbeans.libs.graalsdk.JavaScriptEnginesTest2");
-            Method m = c.getMethod("createTests", TestSuite.class);
-            m.invoke(null, this);
+            ClassLoader parent = Lookup.getDefault().lookup(ClassLoader.class);
+            URL u = getClass().getProtectionDomain().getCodeSource().getLocation();
+            ClassLoader ldr = new URLClassLoader(new URL[] { u }, parent);
+            Class c = ldr.loadClass("org.netbeans.libs.graalsdk.system.GraalEnginesTest2");
+            addTest(new NbTestSuite(c));
         }
     }
 }

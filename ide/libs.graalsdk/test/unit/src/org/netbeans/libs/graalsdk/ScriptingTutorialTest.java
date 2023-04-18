@@ -40,6 +40,7 @@ public class ScriptingTutorialTest extends NbTestCase {
 
         return NbModuleSuite.emptyConfiguration()
             .gui(false)
+            .clusters("platform|webcommon|ide")
             .honorAutoloadEager(true)
             .addTest(ScriptingTutorial.class)
             .suite();

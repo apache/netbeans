@@ -476,7 +476,7 @@ JRE is sufficient.
                 is required.
             </api>
 </li>            
-<li><api type='import' group='java' category='private' name='org.openide.options' url='../org-openide-options/overview-summary.html' >
+<!-- deprecated <li><api type='import' group='java' category='private' name='org.openide.options' url='../org-openide-options/overview-summary.html' >
             The module is needed for compilation. 
         
             The module is used during runtime. 
@@ -485,7 +485,8 @@ JRE is sufficient.
                 6.2
                 is required.
             </api>
-</li>            
+</li>
+-->
 <li><api type='import' group='java' category='official' name='EditorAPI' url='../org-openide-text/overview-summary.html' >
             The module is needed for compilation. 
         

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.openide.compat
-OpenIDE-Module-Specification-Version: 6.60
+OpenIDE-Module-Specification-Version: 6.61
 OpenIDE-Module-Deprecated: true
 OpenIDE-Module-Localizing-Bundle: org/openide/compat/Bundle.properties
 AutoUpdate-Essential-Module: true

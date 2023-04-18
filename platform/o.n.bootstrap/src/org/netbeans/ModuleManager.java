@@ -1305,7 +1305,7 @@ public final class ModuleManager extends Modules {
     private void enable(Set<Module> modules, boolean honorAutoloadEager) throws IllegalArgumentException, InvalidException {
         assertWritable();
         Util.err.log(Level.FINE, "enable: {0}", modules);
-        /* Consider eager modules:
+        /* Consider eager modules: 
         if (modules.isEmpty()) {
             return;
         }
@@ -1940,6 +1940,15 @@ public final class ModuleManager extends Modules {
                     }
                 }
                 if (!foundOne) return false;
+            } else if (dep.getType() == Dependency.TYPE_JAVA) {
+                if (! Util.checkJavaDependency(dep)) {
+                    return false;
+                }
+            } else if (dep.getType() == Dependency.TYPE_PACKAGE) {
+                // eager modules check only appclassloader
+                if (!Util.checkPackageDependency(dep, classLoader)) {
+                    return false;
+                }
             }
             // else some other dep type
         }

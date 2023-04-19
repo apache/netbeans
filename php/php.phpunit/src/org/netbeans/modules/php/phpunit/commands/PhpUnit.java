@@ -54,6 +54,7 @@ import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.util.UiUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.netbeans.modules.php.phpunit.PhpUnitVersion;
 import org.netbeans.modules.php.phpunit.options.PhpUnitOptions;
 import org.netbeans.modules.php.phpunit.options.PhpUnitOptionsValidator;
 import org.netbeans.modules.php.phpunit.preferences.PhpUnitPreferences;
@@ -406,7 +407,12 @@ public final class PhpUnit {
                 // standard suite
                 // #218607 - hotfix
                 //params.add(SUITE_NAME)
-                params.add(getNbSuite().getAbsolutePath());
+                if (PhpUnitPreferences.getPhpUnitVersion(phpModule) == PhpUnitVersion.PHP_UNIT_9) {
+                    params.add(getNbSuite().getAbsolutePath());
+                } else {
+                    // GH-5790 we can use NetBeansSuite.php no longer with PHPUnit 10
+                    params.add(FileUtil.toFile(startFiles.get(0)).getAbsolutePath());
+                }
                 // #254276
                 //params.add(PARAM_SEPARATOR);
                 //params.add(String.format(SUITE_RUN, joinPaths(startFiles, SUITE_PATH_DELIMITER)));

@@ -25,10 +25,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,6 +41,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.netbeans.modules.php.phpunit.PhpUnitVersion;
 import org.netbeans.modules.php.phpunit.commands.PhpUnit;
 import org.netbeans.modules.php.phpunit.preferences.PhpUnitPreferences;
 import org.netbeans.modules.php.phpunit.preferences.PhpUnitPreferencesValidator;
@@ -88,6 +91,7 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         runPhpUnitOnlyCheckBox.setSelected(PhpUnitPreferences.getRunPhpUnitOnly(phpModule));
         runTestUsingUnitCheckBox.setSelected(PhpUnitPreferences.getRunAllTestFiles(phpModule));
         askForTestGroupsCheckBox.setSelected(PhpUnitPreferences.getAskForTestGroups(phpModule));
+        initPhpUnitVersion();
 
         enableFile(bootstrapCheckBox.isSelected(), bootstrapLabel, bootstrapTextField, bootstrapGenerateButton, bootstrapBrowseButton, bootstrapForCreateTestsCheckBox);
         enableFile(configurationCheckBox.isSelected(), configurationLabel, configurationTextField, configurationGenerateButton, configurationBrowseButton);
@@ -150,6 +154,7 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         PhpUnitPreferences.setRunPhpUnitOnly(phpModule, runPhpUnitOnlyCheckBox.isSelected());
         PhpUnitPreferences.setRunAllTestFiles(phpModule, runTestUsingUnitCheckBox.isSelected());
         PhpUnitPreferences.setAskForTestGroups(phpModule, askForTestGroupsCheckBox.isSelected());
+        PhpUnitPreferences.setPhpUnitVersion(phpModule, (PhpUnitVersion) versionComboBox.getSelectedItem());
     }
 
     private void initFile(boolean enabled, String file, JCheckBox checkBox, JTextField textField) {
@@ -236,6 +241,12 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         return true;
     }
 
+    private void initPhpUnitVersion() {
+        PhpUnitVersion phpVersion = PhpUnitPreferences.getPhpUnitVersion(phpModule);
+        assert phpVersion != null;
+        versionComboBox.setModel(new PhpUnitVersionComboBoxModel(phpVersion));
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -268,6 +279,8 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         runPhpUnitOnlyCheckBox = new JCheckBox();
         runTestUsingUnitCheckBox = new JCheckBox();
         askForTestGroupsCheckBox = new JCheckBox();
+        versionLabel = new JLabel();
+        versionComboBox = new JComboBox<>();
 
         bootstrapLabel.setLabelFor(bootstrapTextField);
         Mnemonics.setLocalizedText(bootstrapLabel, NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.bootstrapLabel.text")); // NOI18N
@@ -349,6 +362,9 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
 
         Mnemonics.setLocalizedText(askForTestGroupsCheckBox, NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.askForTestGroupsCheckBox.text")); // NOI18N
 
+        versionLabel.setLabelFor(versionComboBox);
+        Mnemonics.setLocalizedText(versionLabel, NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.versionLabel.text")); // NOI18N
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -401,6 +417,10 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
                     .addComponent(scriptCheckBox)
                     .addComponent(runPhpUnitOnlyCheckBox))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(versionLabel)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(versionComboBox, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(SwingConstants.HORIZONTAL, new Component[] {bootstrapBrowseButton, bootstrapGenerateButton, configurationBrowseButton, configurationGenerateButton, scriptBrowseButton, suiteBrowseButton});
@@ -447,6 +467,10 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
                 .addComponent(runTestUsingUnitCheckBox)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(askForTestGroupsCheckBox)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(versionLabel)
+                    .addComponent(versionComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -482,6 +506,9 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         suiteBrowseButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.suiteBrowseButton.AccessibleContext.accessibleDescription")); // NOI18N
         suiteInfoLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.suiteInfoLabel.AccessibleContext.accessibleName")); // NOI18N
         suiteInfoLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.suiteInfoLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        versionLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.versionLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        versionComboBox.getAccessibleContext().setAccessibleName(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.versionComboBox.AccessibleContext.accessibleName")); // NOI18N
+        versionComboBox.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.versionComboBox.AccessibleContext.accessibleDescription")); // NOI18N
 
         getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.AccessibleContext.accessibleDescription")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
@@ -581,6 +608,8 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
     private JLabel suiteInfoLabel;
     private JLabel suiteLabel;
     private JTextField suiteTextField;
+    private JComboBox<PhpUnitVersion> versionComboBox;
+    private JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
 
     //~ Inner classes
@@ -600,6 +629,25 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         }
         private void processUpdate() {
             validateData();
+        }
+    }
+
+    private static class PhpUnitVersionComboBoxModel extends DefaultComboBoxModel<PhpUnitVersion> {
+
+        private static final long serialVersionUID = 5850175934190021687L;
+
+        public PhpUnitVersionComboBoxModel() {
+            this(null);
+        }
+
+        public PhpUnitVersionComboBoxModel(PhpUnitVersion preselected) {
+            super(PhpUnitVersion.values());
+
+            if (preselected != null) {
+                setSelectedItem(preselected);
+            } else {
+                setSelectedItem(PhpUnitVersion.getDefault());
+            }
         }
     }
 

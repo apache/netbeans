@@ -148,8 +148,7 @@ public abstract class Lookup {
         defaultLookup = misl.lookup(Lookup.class);
         LOG.log(Level.FINER, "Searching for {0} in {1} yields {2}", new Object[]{Lookup.class, misl, defaultLookup});
         if (defaultLookup != null) {
-            if (defaultLookup instanceof Lookup.Provider) {
-                defaultLookupProvider = (Lookup.Provider)defaultLookup;
+            if (defaultLookup instanceof Lookup.Provider defaultLookupProvider) {
                 Lookup lkp = defaultLookupProvider.getLookup();
                 if (lkp != null) {
                     return lkp;

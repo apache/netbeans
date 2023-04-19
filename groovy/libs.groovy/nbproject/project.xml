@@ -30,7 +30,6 @@
                 <friend>org.netbeans.modules.groovy.editor</friend>
                 <friend>org.netbeans.modules.groovy.refactoring</friend>
                 <friend>org.netbeans.modules.groovy.support</friend>
-                <package>groovy</package>
                 <package>groovy.beans</package>
                 <package>groovy.cli</package>
                 <package>groovy.grape</package>
@@ -49,6 +48,7 @@
                 <package>groovy.util.logging</package>
                 <package>groovy.xml</package>
                 <package>groovyjarjarantlr</package>
+                <package>groovyjarjarantlr.collections.impl</package>
                 <package>groovyjarjarasm.asm</package>
                 <package>org.codehaus.groovy</package>
                 <package>org.codehaus.groovy.ant</package>
@@ -72,8 +72,8 @@
                 <package>org.codehaus.groovy.tools</package>
                 <package>org.codehaus.groovy.transform</package>
                 <package>org.codehaus.groovy.transform.sc</package>
-                <package>org.codehaus.groovy.transform.trait</package>
                 <package>org.codehaus.groovy.transform.stc</package>
+                <package>org.codehaus.groovy.transform.trait</package>
             </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/groovy-3.0.8.jar</runtime-relative-path>

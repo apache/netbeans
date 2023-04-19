@@ -97,7 +97,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '17', '20-ea' ]
+        java: [ '11', '17', '21-ea' ]
       fail-fast: false
     steps:
         
@@ -121,7 +121,7 @@ jobs:
           restore-keys: ${{ runner.os }}-
 
       - name: Setup Gradle Daemon to run on JDK 11
-        if: ${{ matrix.java == '20-ea' }}
+        if: ${{ matrix.java == '21-ea' }}
         run: |
           mkdir -p ~/.gradle
           #uses a preinstalled JDK 11 from the runner
@@ -193,7 +193,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8', '11', '17', '20-ea' ]
+        java: [ '8', '11', '17', '21-ea' ]
       fail-fast: false
     steps:
 

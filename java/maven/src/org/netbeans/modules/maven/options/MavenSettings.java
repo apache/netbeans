@@ -548,11 +548,11 @@ public final class MavenSettings  {
 	 * <ul>
 	 * <li>MAVEN_HOME</li>
 	 * <li>M2_HOME</li>
-	 * <li>PATH</li></ul>
-	 * </p>
+	 * <li>PATH</li>
+	 * </ul>
 	 * <p>Only the first appereance will be appended.</p>
 	 *
-	 * @returns the default external Maven runtime on the path.
+	 * @return the default external Maven runtime on the path.
 	 */
     public static String getDefaultExternalMavenRuntime() {
         String paths = System.getenv("PATH"); // NOI18N

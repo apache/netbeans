@@ -100,6 +100,8 @@ public class WildFlyProperties {
     private final boolean wildfly;
 
     private final boolean servletOnly;
+    
+    private final boolean jakartaEE;
 
     /**
      * Creates a new instance of JBProperties
@@ -111,6 +113,7 @@ public class WildFlyProperties {
         version = manager.getServerVersion();
         wildfly = manager.isWildfly();
         servletOnly = WildflyPluginUtils.isWildFlyServlet(serverPath);
+        jakartaEE = WildflyPluginUtils.isWildFlyJakartaEE(serverPath);
     }
 
     public boolean isWildfly() {
@@ -138,6 +141,10 @@ public class WildFlyProperties {
 
     public boolean isVersion(Version targetVersion) {
         return (version != null && version.compareToIgnoreUpdate(targetVersion) >= 0); // NOI18N
+    }
+    
+    public boolean isJakartaEE() {
+        return jakartaEE;
     }
 
     public File getServerDir() {
@@ -250,8 +257,22 @@ public class WildFlyProperties {
     public List<URL> getJavadocs() {
         String path = ip.getProperty(PROP_JAVADOCS);
         if (path == null) {
-            ArrayList<URL> list = new ArrayList<URL>();
-            File j2eeDoc = InstalledFileLocator.getDefault().locate("docs/javaee-doc-api.jar", null, false); // NOI18N
+            ArrayList<URL> list = new ArrayList<>();
+            String eeDocs;
+            
+            if (getServerVersion().compareTo(WildflyPluginUtils.WILDFLY_27_0_0) >= 0) {
+                eeDocs = "docs/jakartaee10-doc-api.jar";
+            } else if (getServerVersion().compareTo(WildflyPluginUtils.WILDFLY_21_0_0) >= 0) {
+                if (isJakartaEE()) {
+                    eeDocs = "docs/jakartaee9-doc-api.jar";
+                } else {
+                    eeDocs = "docs/jakartaee8-doc-api.jar";
+                }
+            } else {
+                eeDocs = "docs/javaee-doc-api.jar";
+            }
+            
+            File j2eeDoc = InstalledFileLocator.getDefault().locate(eeDocs, null, false);
             if (j2eeDoc != null) {
                 addFileToList(list, j2eeDoc);
             }
@@ -285,13 +306,8 @@ public class WildFlyProperties {
             return;
         }
         Properties usersProps = new Properties();
-        try {
-            InputStream is = new BufferedInputStream(new FileInputStream(usersPropFile));
-            try {
-                usersProps.load(is);
-            } finally {
-                is.close();
-            }
+        try (InputStream is = new BufferedInputStream(new FileInputStream(usersPropFile))) {
+            usersProps.load(is);
         } catch (FileNotFoundException e) {
             LOGGER.log(Level.WARNING, usersPropFile + " not found.", e);
             return;

@@ -14,10 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-javac.compilerargs=-Xlint -Xlint:-serial
-javac.source=1.8
-release.external/javaee-api-6.0.jar=modules/ext/javaee-api-6.0.jar
-release.external/javaee-web-api-6.0.jar=modules/ext/javaee-web-api-6.0.jar
-release.external/jaxb-api-osgi-2.2.7.jar=modules/ext/javaee6-endorsed/jaxb-api-osgi.jar
-release.external/webservices-api-osgi-2.0.1.jar=modules/ext/javaee6-endorsed/webservices-api-osgi.jar
+934C04D3CFEF185A8008E7BF34331B79730A9D43 javax.annotation:javax.annotation-api:1.3.2

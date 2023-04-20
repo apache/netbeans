@@ -41,9 +41,7 @@ nbbuild/external/json-simple-1.1.1.jar ide/libs.json_simple/external/json-simple
 webcommon/javascript2.jade/external/jflex-1.4.3.jar webcommon/javascript2.lexer/external/jflex-1.4.3.jar
 
 # javax.annotation-api is used by multiple modules.
-enterprise/javaee.api/external/javax.annotation-api-1.2.jar java/maven.indexer/external/javax.annotation-api-1.2.jar
-enterprise/javaee7.api/external/javax.annotation-api-1.2.jar enterprise/javaee8.api/external/javax.annotation-api-1.2.jar
-enterprise/javaee8.api/external/javax.annotation-api-1.3.2.jar java/maven.embedder/external/apache-maven-3.9.1-bin.zip
+enterprise/libs.javax.annotation/external/javax.annotation-api-1.3.2.jar java/maven.embedder/external/apache-maven-3.9.1-bin.zip
 
 # jaxb-api-osgi is used by multiple modules.
 enterprise/javaee.api/external/jaxb-api-osgi-2.2.7.jar enterprise/javaee7.api/external/jaxb-api-osgi-2.2.7.jar

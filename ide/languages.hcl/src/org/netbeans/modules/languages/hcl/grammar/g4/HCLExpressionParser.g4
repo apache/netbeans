@@ -21,8 +21,9 @@ options { tokenVocab = HCLLexer; }
 
 expression
     : exprTerm
-    | operation
-    | <assoc=right> expression QUESTION expression COLON expression
+    | <assoc=right> unaryOperator expression
+    | expression binaryOperator expression
+    | expression QUESTION expression COLON expression
     ;
 
 exprTerm
@@ -149,17 +150,9 @@ fullSplat
     : LBRACK STAR RBRACK (getAttr | index)*
     ;
 
-operation
-    : unaryOp
-    | binaryOp
-    ;
-
-unaryOp
-    : (MINUS | NOT) exprTerm
-    ;
-
-binaryOp
-    : exprTerm binaryOperator exprTerm
+unaryOperator
+    : MINUS
+    | NOT
     ;
 
 binaryOperator

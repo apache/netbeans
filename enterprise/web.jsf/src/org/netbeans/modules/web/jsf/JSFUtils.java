@@ -325,6 +325,16 @@ public class JSFUtils {
         }
         return false;
     }
+    
+    public static boolean isJakartaEE9Plus(TemplateWizard wizard) {
+        Project project = Templates.getProject(wizard);
+        WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
+        if (wm != null) {
+            Profile profile = wm.getJ2eeProfile();
+            return profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
+        }
+        return false;
+    }
 
      /**
      * Logs usage statistics data.

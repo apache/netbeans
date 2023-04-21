@@ -19,20 +19,12 @@
 # Uses standard Ant pattern syntax, in ${nb_all} among modules included in cluster config.
 # (For ZIP entries, just list the containing ZIP, not the entry path.)
 
-# These are used quite independently (sharing in platform makes little sense).
-# apisupport does not even technically use it - it is only part of a sample app.
-apisupport.feedreader/external/jdom-1.0.jar mobility.deployment.webdav/external/jdom-1.0.jar
-
 # db.sql.visualeditor/external/javacc-7.0.10.jar is used at compile-time only
 ide/db.sql.visualeditor/external/javacc-7.0.10.jar java/performance/external/javacc-7.0.10.jar
 
 # It happens that maven 3.9.1 uses slf4j-api-1.7.36.jar, same as slf4j.api
 # These are used independently, different functional goals
 ide/slf4j.api/external/slf4j-api-1.7.36.jar java/maven.embedder/external/apache-maven-3.9.1-bin.zip
-
-# Contains test data (badPackageFileInJar.jar is packaged twice) - this is an
-# upstream problem
-nbbuild/external/langtools-9.zip nbbuild/external/langtools-9.zip
 
 # Used to parse data during build, but need to as a lib for ide cluster
 nbbuild/external/json-simple-1.1.1.jar ide/libs.json_simple/external/json-simple-1.1.1.jar
@@ -42,7 +34,6 @@ webcommon/javascript2.jade/external/jflex-1.4.3.jar webcommon/javascript2.lexer/
 
 # javax.annotation-api is used by multiple modules.
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar java/maven.indexer/external/javax.annotation-api-1.2.jar
-enterprise/javaee7.api/external/javax.annotation-api-1.2.jar enterprise/javaee8.api/external/javax.annotation-api-1.2.jar
 enterprise/javaee8.api/external/javax.annotation-api-1.3.2.jar java/maven.embedder/external/apache-maven-3.9.1-bin.zip
 
 # jaxb-api-osgi is used by multiple modules.
@@ -62,10 +53,8 @@ enterprise/web.core.syntax/external/struts-tiles-1.3.10.jar enterprise/web.strut
 
 # gradle is used at build-time, so we can ignore the duplicates
 extide/gradle/external/gradle-7.4-bin.zip enterprise/libs.amazon/external/ion-java-1.0.2.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/c.jcraft.jsch/external/jsch-0.1.55.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/c.jcraft.jzlib/external/jzlib-1.1.3.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/libs.commons_compress/external/commons-compress-1.23.0.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/libs.tomlj/external/tomlj-1.0.0.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/o.eclipse.jgit/external/org.eclipse.jgit-5.7.0.202003110725-r.jar
 extide/gradle/external/gradle-7.4-bin.zip java/debugger.jpda.truffle/external/antlr4-runtime-4.7.2.jar
@@ -76,16 +65,11 @@ extide/gradle/external/gradle-7.4-bin.zip platform/libs.testng/external/jcommand
 extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.io/external/commons-io-2.6.jar
 extide/gradle/external/gradle-7.4-bin.zip enterprise/cloud.oracle/external/jsr305-3.0.2.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.15.jar
-extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-9.4.jar
-extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-commons-9.4.jar
-extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-tree-9.4.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.batik.read/external/xml-apis-1.4.01.jar
 
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar enterprise/javaee7.api/external/javax.annotation-api-1.2.jar
 enterprise/javaee7.api/external/javax.annotation-api-1.2.jar java/maven.indexer/external/javax.annotation-api-1.2.jar
-enterprise/javaee7.api/external/jaxws-api-2.2.8.jar java/websvc.jaxws21api/external/jaxws-2.2.6-api.zip
-enterprise/javaee7.api/external/jsr181-api-1.0-MR1.jar java/websvc.jaxws21api/external/jaxws-2.2.6-api.zip
 
 # ide/lsp.client and java/java.lsp.server both use LSP libraries, but are independent:
 ide/lsp.client/external/org.eclipse.lsp4j-0.13.0.jar java/java.lsp.server/external/org.eclipse.lsp4j-0.13.0.jar
@@ -120,11 +104,6 @@ enterprise/jakartaee10.platform/external/generated-jakarta.jakartaee-api-10.0.0-
 
 # Jakarta Servlet API is used by both servletjspapi and websvc.restlib
 enterprise/servletjspapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websvc.restlib/external/jakarta.servlet-api-4.0.4.jar
-
-# rust/rust.grammar uses ANTLR4 to compile grammars at build time, but use the runtime libraries from ide/libs.antlr4.runtime - ignoring overlaps
-rust/rust.grammar/external/antlr4-4.11.1.jar ide/libs.antlr4.runtime/external/antlr4-4.11.1.jar 
-rust/rust.grammar/external/antlr4-runtime-4.11.1.jar ide/libs.antlr4.runtime/external/antlr4-runtime-4.11.1.jar 
-rust/rust.grammar/external/ST4-4.3.4.jar ide/libs.antlr4.runtime/external/ST4-4.3.4.jar 
 
 # The enterprise usage is for library - it is better to keep the two separate
 ide/servletapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websvc.restlib/external/jakarta.servlet-api-4.0.4.jar

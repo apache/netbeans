@@ -84,10 +84,10 @@ ide/db/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.14.2
 ide/derby/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.14.2.0.jar
 
 # Only used as testdata (not redistributed) and modules should be testable independed of each other
-webcommon/javascript2.doc/external/testfiles-jsdoc-1.zip webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip are identical
-webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip are identical
-webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip are identical
-webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.sdoc/external/testfiles-jsdoc-1.zip are identical</failure>
+webcommon/javascript2.doc/external/testfiles-jsdoc-1.zip webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip
+webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip
+webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip
+webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.sdoc/external/testfiles-jsdoc-1.zip
 
 # not part of the product:
 harness/apisupport.harness/external/launcher-12.5-distribution.zip platform/o.n.bootstrap/external/launcher-12.5-distribution.zip

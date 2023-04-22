@@ -18,7 +18,11 @@
  */
 package org.netbeans.modules.php.phpunit;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.netbeans.api.annotations.common.NonNull;
 import org.openide.util.NbBundle;
+import org.openide.util.Parameters;
 
 @NbBundle.Messages({
     "PhpUnitVersion.PHP_UNIT_9=PHPUnit 9 or earlier",
@@ -29,6 +33,9 @@ public enum PhpUnitVersion {
     PHP_UNIT_9(Bundle.PhpUnitVersion_PHP_UNIT_9()),
     PHP_UNIT_10(Bundle.PhpUnitVersion_PHP_UNIT_10()),
     ;
+
+    private static final Logger LOGGER = Logger.getLogger(PhpUnitVersion.class.getName());
+
     private final String displayName;
 
     private PhpUnitVersion(String displayName) {
@@ -40,8 +47,37 @@ public enum PhpUnitVersion {
         return phpUnitVersions[0];
     }
 
+    /**
+     * Get PhpUnitVersion from string.
+     * If the version is unexpected pattern, the default version is returned ({@link #getDefault()}).
+     *
+     * @param version the version (expected pattern: <major>.<minor>.<patch> e.g. 10.0.1)
+     * @return PhpUnitVersion
+     */
+    public static PhpUnitVersion fromString(@NonNull String version) {
+        Parameters.notNull("version", version); // NOI18N
+        String[] versions = version.split("\\."); // NOI18N
+        try {
+            int majorVersion = Integer.parseInt(versions[0]);
+            if (majorVersion >= 10) {
+                return PHP_UNIT_10;
+            } else if (majorVersion <= 9) {
+                return PHP_UNIT_9;
+            } else {
+                LOGGER.log(Level.WARNING, "Unexpected PHPUnit major version:{0} ({1})", new Object[]{majorVersion, version}); // NOI18N
+            }
+        } catch (NumberFormatException ex) {
+            // no-op
+        }
+        return getDefault();
+    }
+
     public String getDisplayName() {
         return displayName;
+    }
+
+    public boolean useNetBeansSuite() {
+        return this == PHP_UNIT_9;
     }
 
     @Override

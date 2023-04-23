@@ -56,7 +56,7 @@ public class SecureURLResourceRetrieverTest {
     @Test
     public void shouldAcceptWildcardCertificate() throws Exception {
         SecureURLResourceRetriever resourceRetriever = new SecureURLResourceRetriever();
-        resourceRetriever.retrieveDocument(null, "https://badssl.com/");
+        resourceRetriever.retrieveDocument(null, "https://wikipedia.org/");
 
         assertFalse(lookupMockDialogDisplayer().invoked);
     }

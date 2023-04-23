@@ -109,7 +109,7 @@ public class GradleCliCompletionProvider implements CompletionProvider {
 
                 Project project = null;
                 Object prop = doc.getProperty(GRADLE_PROJECT_PROPERTY);
-                if (prop != null && prop instanceof Project) {
+                if (prop instanceof Project) {
                     project = (Project) prop;
                 }
                 Matcher tokenMatcher = PROP_INPUT.matcher(filter);

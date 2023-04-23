@@ -182,7 +182,7 @@ public abstract class LayerGeneratingProcessor extends AbstractProcessor {
      * The regular body of {@link #process}.
      * In the last round, one of the layer-generating processors will write out generated-layer.xml.
      * <p>Do not attempt to read or write the layer file directly; just use {@link #layer}.
-     * You may however wish to create other resource files yourself: see {@link LayerBuilder.File#url} for syntax.
+     * You may however wish to create other resource files yourself: see {@link LayerBuilder.File#url(String)} for syntax.
      * @param annotations as in {@link #process}
      * @param roundEnv as in {@link #process}
      * @return as in {@link #process}

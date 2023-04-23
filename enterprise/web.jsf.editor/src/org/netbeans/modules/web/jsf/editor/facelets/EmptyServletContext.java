@@ -202,6 +202,11 @@ class EmptyServletContext implements ServletContext {
     public Dynamic addServlet(String string, Class<? extends Servlet> type) {
         return null;
     }
+    
+    @Override
+    public Dynamic addJspFile(String servletName, String jspFile) {
+        return null;
+    }
 
     @Override
     public <T extends Servlet> T createServlet(Class<T> type) throws ServletException {
@@ -301,6 +306,36 @@ class EmptyServletContext implements ServletContext {
     @Override
     public String getVirtualServerName() {
         return "";
+    }
+    
+    @Override
+    public int getSessionTimeout() {
+        return 0;
+    }
+      
+    @Override
+    public void setSessionTimeout(int sessionTimeout) {
+        
+    }
+    
+    @Override
+    public String getRequestCharacterEncoding() {
+        return "";
+    }
+    
+    @Override
+    public void setRequestCharacterEncoding(String encoding) {
+        
+    }
+    
+    @Override
+    public String getResponseCharacterEncoding() {
+        return "";
+    }
+    
+    @Override
+    public void setResponseCharacterEncoding(String encoding) {
+        
     }
 
 }

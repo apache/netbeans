@@ -45,7 +45,7 @@ public class ProjectWebServicesSupportProvider implements
 
     public WebServicesSupport findWebServicesSupport (FileObject file) {
         Project project = FileOwnerQuery.getOwner (file);
-        if (project != null && project instanceof EjbJarProject) {
+        if (project instanceof EjbJarProject) {
             return ((EjbJarProject) project).getAPIWebServicesSupport();
         }
         return null;
@@ -53,7 +53,7 @@ public class ProjectWebServicesSupportProvider implements
 
     public WebServicesClientSupport findWebServicesClientSupport (FileObject file) {
         Project project = FileOwnerQuery.getOwner (file);
-        if (project != null && project instanceof EjbJarProject) {
+        if (project instanceof EjbJarProject) {
             return ((EjbJarProject) project).getAPIWebServicesClientSupport();
         }
         return null;
@@ -61,7 +61,7 @@ public class ProjectWebServicesSupportProvider implements
     
     public JAXWSSupport findJAXWSSupport(FileObject file) {
         Project project = FileOwnerQuery.getOwner(file);
-        if (project != null && project instanceof EjbJarProject) {
+        if (project instanceof EjbJarProject) {
             return ((EjbJarProject) project).getAPIJAXWSSupport();
         }
         return null;
@@ -69,7 +69,7 @@ public class ProjectWebServicesSupportProvider implements
 
     public JAXWSClientSupport findJAXWSClientSupport(FileObject file) {
         Project project = FileOwnerQuery.getOwner(file);
-        if (project != null && project instanceof EjbJarProject) {
+        if (project instanceof EjbJarProject) {
             return ((EjbJarProject) project).getAPIJAXWSClientSupport();
         }
         return null;

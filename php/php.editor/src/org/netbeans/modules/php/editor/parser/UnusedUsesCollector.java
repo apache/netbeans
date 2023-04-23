@@ -102,9 +102,8 @@ public class UnusedUsesCollector extends DefaultVisitor {
                 namesToRemove.add(name);
             }
         }
-        for (String nameToRemove : namesToRemove) {
-            unusedUsesOffsetRanges.remove(nameToRemove);
-        }
+
+        unusedUsesOffsetRanges.keySet().removeAll(namesToRemove);
     }
 
     @Override

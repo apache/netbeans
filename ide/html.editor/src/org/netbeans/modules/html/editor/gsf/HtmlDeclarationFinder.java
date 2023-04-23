@@ -23,6 +23,9 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.Token;
@@ -68,6 +71,7 @@ import org.openide.util.RequestProcessor.Task;
  */
 public class HtmlDeclarationFinder implements DeclarationFinder {
 
+    private static final Logger LOG = Logger.getLogger(HtmlDeclarationFinder.class.getName());
     private static final RequestProcessor RP = new RequestProcessor(HtmlDeclarationFinder.class);
 
     /**
@@ -216,18 +220,54 @@ public class HtmlDeclarationFinder implements DeclarationFinder {
 
         } else if (ts.token().id() == HTMLTokenId.VALUE_CSS) {
             //css class or id hyperlinking
-            TokenSequence<CssTokenId> cssTs = ts.embedded(CssTokenId.language());
-            if (cssTs != null) {
-                cssTs.move(caretOffset);
-                if (cssTs.moveNext() || cssTs.movePrevious()) {
-                    if (cssTs.token().id() == CssTokenId.IDENT) {
-                        return new OffsetRange(cssTs.offset(), cssTs.offset() + cssTs.token().length());
-                    }
+            Object cssTokenType = ts.token().getProperty(HTMLTokenId.VALUE_CSS_TOKEN_TYPE_PROPERTY);
+            if(cssTokenType != null) {
+
+                OffsetRange offsetRange = getPointedRange(ts, hi, caretOffset);
+                if(offsetRange != null) {
+                    return offsetRange;
                 }
             }
         }
 
         return null;
+    }
+
+    private OffsetRange getPointedRange(TokenSequence<HTMLTokenId> ts, TokenHierarchy hi, int caretOffset) {
+        OffsetRange offsetRange = null;
+        List<? extends Token<HTMLTokenId>> parts = ts.token().joinedParts();
+        if(parts == null) {
+            parts = Collections.singletonList(ts.token());
+        }
+        for(Token<HTMLTokenId> partToken: parts) {
+            int tokenOffset = partToken.offset(hi);
+            int tokenLength = partToken.length();
+            int offsetIntoToken = caretOffset - tokenOffset;
+            if(offsetIntoToken > 0 && offsetIntoToken < tokenLength) {
+                CharSequence tokenText = partToken.text();
+                int startToken = offsetIntoToken;
+                int endToken = offsetIntoToken;
+                char currentChar = tokenText.charAt(offsetIntoToken);
+                if(currentChar != '"' && currentChar != '\'' && !Character.isWhitespace(currentChar)) {
+                    do {
+                        currentChar = tokenText.charAt(startToken - 1);
+                        if(currentChar == '"' || currentChar == '\'' || Character.isWhitespace(currentChar)) {
+                            break;
+                        }
+                        startToken--;
+                    } while(startToken > 0);
+                    do {
+                        currentChar = tokenText.charAt(endToken + 1);
+                        if(currentChar == '"' || currentChar == '\'' || Character.isWhitespace(currentChar)) {
+                            break;
+                        }
+                        endToken++;
+                    } while(endToken < tokenLength);
+                    offsetRange = new OffsetRange(tokenOffset + startToken, tokenOffset + endToken + 1);
+                }
+            }
+        }
+        return offsetRange;
     }
 
     private DeclarationLocation findCoreHtmlDeclaration(final ParserResult info, final int caretOffset) {
@@ -290,33 +330,30 @@ public class HtmlDeclarationFinder implements DeclarationFinder {
                         //seems to be valid and properly positioned
                         Token<HTMLTokenId> valueToken = ts.token();
                         if (valueToken.id() == HTMLTokenId.VALUE_CSS) {
-                            TokenSequence<CssTokenId> cssTs = ts.embedded(CssTokenId.language());
-                            if (cssTs != null) {
-                                cssTs.move(caretOffset);
-                                if (cssTs.moveNext() || cssTs.movePrevious()) {
-                                    if (cssTs.token().id() == CssTokenId.IDENT) {
-                                        unquotedValue.set(cssTs.token().text().toString());
-                                    }
+                            try {
+                                //the value_css token contains a metainfo about the type of its css embedding
+                                String cssTokenType = (String) valueToken.getProperty(HTMLTokenId.VALUE_CSS_TOKEN_TYPE_PROPERTY);
+                                if (cssTokenType == null) {
+                                    return;
                                 }
-                            }
-                            //the value_css token contains a metainfo about the type of its css embedding
-                            String cssTokenType = (String) valueToken.getProperty(HTMLTokenId.VALUE_CSS_TOKEN_TYPE_PROPERTY);
-                            if (cssTokenType == null) {
-                                return;
-                            }
-                            switch (cssTokenType) {
-                                case HTMLTokenId.VALUE_CSS_TOKEN_TYPE_CLASS:
-                                    //class selector
-                                    type.set(RefactoringElementType.CLASS);
-                                    break;
-                                case HTMLTokenId.VALUE_CSS_TOKEN_TYPE_ID:
-                                    // instances comparison is ok here!
-                                    //id selector
-                                    type.set(RefactoringElementType.ID);
-                                    break;
-                                default:
-                                    assert false;
-                                    break;
+                                OffsetRange offsetRange = getPointedRange(ts, hi, caretOffset);
+                                unquotedValue.set(doc.getText(offsetRange.getStart(), offsetRange.getLength()));
+                                switch (cssTokenType) {
+                                    case HTMLTokenId.VALUE_CSS_TOKEN_TYPE_CLASS:
+                                        //class selector
+                                        type.set(RefactoringElementType.CLASS);
+                                        break;
+                                    case HTMLTokenId.VALUE_CSS_TOKEN_TYPE_ID:
+                                        // instances comparison is ok here!
+                                        //id selector
+                                        type.set(RefactoringElementType.ID);
+                                        break;
+                                    default:
+                                        assert false;
+                                        break;
+                                }
+                            } catch (BadLocationException ex) {
+                                LOG.log(Level.WARNING, "Failed to get text for declaration", ex);
                             }
                         }
                     }

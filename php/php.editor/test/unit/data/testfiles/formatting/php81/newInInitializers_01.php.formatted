@@ -59,7 +59,6 @@ class Test {
     ) {
         
     }
-
 }
 
 class ParentClass {
@@ -71,5 +70,4 @@ class ChildClass {
     public static function method($self = new self, $parent = new parent) {
         
     }
-
 }

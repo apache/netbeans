@@ -25,13 +25,17 @@ import com.oracle.bmc.devops.requests.CreateBuildRunRequest;
 import com.oracle.bmc.devops.responses.CreateBuildRunResponse;
 import com.oracle.bmc.model.BmcException;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import org.netbeans.modules.cloud.oracle.OCIManager;
+import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.ContextAwareAction;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -44,7 +48,8 @@ import org.openide.util.NbBundle;
 )
 @ActionRegistration(
         displayName = "#CreateBuildRunAction",
-        asynchronous = true
+        asynchronous = true,
+        lazy = true
 )
 
 @ActionReferences(value = {
@@ -52,17 +57,30 @@ import org.openide.util.NbBundle;
 })
 @NbBundle.Messages({
     "CreateBuildRunAction=Run Build",})
-public class CreateBuildRunAction implements ActionListener {
+public class CreateBuildRunAction extends AbstractAction implements ContextAwareAction {
 
     private final BuildPipelineItem pipeline;
-
+    private final OCISessionInitiator session;
+            
     public CreateBuildRunAction(BuildPipelineItem pipeline) {
+        this.pipeline = pipeline;
+        this.session = OCIManager.getDefault().getActiveSession();
+    }
+
+    CreateBuildRunAction(OCISessionInitiator session, BuildPipelineItem pipeline) {
+        this.session = session;
         this.pipeline = pipeline;
     }
 
     @Override
+    public Action createContextAwareInstance(Lookup actionContext) {
+        OCISessionInitiator session = actionContext.lookup(OCISessionInitiator.class);
+        return new CreateBuildRunAction(session, pipeline);
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
-        try ( DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
+        try ( DevopsClient client = session.newClient(DevopsClient.class)) {
             CreateBuildRunDetails createBuildRunDetails = CreateBuildRunDetails.builder()
                     .buildPipelineId(pipeline.getKey().getValue()).build();
 

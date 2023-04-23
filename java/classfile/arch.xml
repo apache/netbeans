@@ -54,7 +54,7 @@
          category="stable">
     </api>
    The ClassFile library is an API to read Java classfiles, as described by
-   <a href="http://java.sun.com/docs/books/vmspec/2nd-edition/html/VMSpecTOC.doc.html">
+   <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/index.html">
    The Java Virtual Machine Specification</a>.  Given a file or stream reference to a Java
    classfile, the API provides read-only access to all of its class attributes, including 
    type information, methods and fields, generics support (if any), etc.
@@ -182,7 +182,7 @@
 -->
  <answer id="compat-standards">
   <p>
-   The module depends upon the <a href="http://java.sun.com/docs/books/vmspec/2nd-edition/html/VMSpecTOC.doc.html">
+   The module depends upon the <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/index.html">
    The Java Virtual Machine Specification</a>.  It does not implement or define any standards, however.
   </p>
  </answer>
@@ -704,7 +704,7 @@
  <answer id="perf-limit">
   <p>
    No, other than the limits defined for classfiles in 
-   <a href="http://java.sun.com/docs/books/vmspec/2nd-edition/html/VMSpecTOC.doc.html">
+   <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/index.html">
    The Java Virtual Machine Specification</a>.
   </p>
  </answer>

@@ -230,7 +230,11 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
 
     @Override
     public Collection<FileObject> getDependencyFiles() {
-        FileObject fo = FileUtil.toFileObject(gp.getGradleFiles().getBuildScript());
+        File f = gp.getGradleFiles().getBuildScript();
+        if (f == null) {
+            return Collections.emptyList();
+        }
+        FileObject fo = FileUtil.toFileObject(f);
         return fo == null ? Collections.emptyList() : Collections.singletonList(fo);
     }
     

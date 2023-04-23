@@ -84,7 +84,7 @@ public class CCParser {
             boolean currAttrQuated = false;
             int lparopened = 0;
             
-            List<NNAttr> attrs = new ArrayList<NNAttr>(5);
+            List<NNAttr> attrs = new ArrayList<>(5);
             //helper var
             int eqOffset = -1;
             
@@ -349,7 +349,7 @@ public class CCParser {
         }
         
         public Map<String,Object> getAttributes() {
-            HashMap<String,Object> map = new HashMap<String,Object>();
+            HashMap<String,Object> map = new HashMap<>();
             for(NNAttr nnattr : getAttributesList()) {
                 map.put(nnattr.getName(), nnattr.getValue());
             }

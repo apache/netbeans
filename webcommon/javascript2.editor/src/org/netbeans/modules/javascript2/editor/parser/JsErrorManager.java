@@ -64,7 +64,7 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
 
     private static final int MAX_MESSAGE_LENGTH = 100;
 
-    private static final boolean SHOW_BADGES_EMBEDDED = Boolean.getBoolean(JsErrorManager.class.getName() + ".showBadgesEmbedded");;
+    private static final boolean SHOW_BADGES_EMBEDDED = Boolean.getBoolean(JsErrorManager.class.getName() + ".showBadgesEmbedded");
 
     private static final Comparator<SimpleError> POSITION_COMPARATOR = (SimpleError o1, SimpleError o2) -> {
         if (o1.getStartPosition() < o2.getStartPosition()) {

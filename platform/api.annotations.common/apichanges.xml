@@ -84,7 +84,7 @@ is the proper place.
         <change id="language-annotation">
             <api name="common_annotations_api"/>
             <summary>Adding a new Language annotation</summary>
-            <version major="1" minor="48"/>
+            <version major="1" minor="50"/>
             <date day="31" month="12" year="2022"/>
             <author login="jlahoda"/>
             <compatibility addition="yes"/>

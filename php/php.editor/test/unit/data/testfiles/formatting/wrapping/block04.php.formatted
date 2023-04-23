@@ -37,13 +37,11 @@ function test() { echo "test"; }
 class Simple {
 
     public $field;
-
 }
 
 class Simple2 {
 
     function method() { echo "test"; }
-
 }
 
 ?>

@@ -251,7 +251,7 @@ public final class PrintPreferences {
      * @param alignment whether the header should be centered, left aligned, or right aligned.
      */
     public static void setHeaderAlignment(PrintPreferences.Alignment alignment) {
-        if (getHeaderAlignment().equals(alignment)) return;
+        if (getHeaderAlignment() == alignment) return;
         getPreferences().put(PROP_HEADER_ALIGNMENT, alignment.name());
     }
     
@@ -266,7 +266,7 @@ public final class PrintPreferences {
      * @param alignment whether the footer should be centered, left aligned, or right aligned.
      */
     public static void setFooterAlignment(PrintPreferences.Alignment alignment) {
-        if (getFooterAlignment().equals(alignment)) return;
+        if (getFooterAlignment() == alignment) return;
         getPreferences().put(PROP_FOOTER_ALIGNMENT, alignment.name());
     }
     
@@ -278,7 +278,7 @@ public final class PrintPreferences {
     }
     
     /** 
-     * @param <code>correction</code> the amount of vertical space to print between lines.
+     * @param correction the amount of vertical space to print between lines.
      * @exception IllegalArgumentException if <tt>correction</tt> is less than 0.
      */
     public static void setLineAscentCorrection(float correction) {

@@ -47,7 +47,7 @@ import org.openide.util.*;
  * &ldquo;remember&rdquo; where the user keeps particular types of files, and
  * saves the user from having to navigate through the same set of directories
  * every time they need to locate a file from a particular place.
- * <p/>
+ * <p>
  * <code>FileChooserBuilder</code>'s methods each return <code>this</code>, so
  * it is possible to chain invocations to simplify setting up a file chooser.
  * Example usage:
@@ -63,16 +63,16 @@ import org.openide.util.*;
  *          //do something
  *      }
  *</pre>
- * <p/>
+ * <p>
  * Instances of this class are intended to be thrown away after use.  Typically
  * you create a builder, set it to create file choosers as you wish, then
  * use it to show a dialog or create a file chooser you then do something
  * with.
- * <p/>
+ * <p>
  * Supports the most common subset of JFileChooser functionality;  if you
  * need to do something exotic with a file chooser, you are probably better
  * off creating your own.
- * <p/>
+ * <p>
  * <b>Note:</b> If you use the constructor that takes a <code>Class</code> object,
  * please use <code>new FileChooserBuilder(MyClass.class)</code>, not
  * <code>new FileChooserBuilder(getClass())</code>.  This avoids unexpected

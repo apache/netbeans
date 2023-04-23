@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ProxySelector;
@@ -95,7 +96,7 @@ import org.openide.util.NbBundle;
  * The {@link ProxyResult#configure(org.netbeans.modules.maven.execute.BeanRunConfig)} should be run before each maven online invocation to potentially replace the global settings file with a customized one,
  * that specifies the correct proxy.
  * <p>
- * When creating customized settings.xml files, the files are named like <code>settings-[hashcode of the oroginal]-[sanitized proxy host].xml. If the settings.xml file does not exist at all, "new" is used
+ * When creating customized settings.xml files, the files are named like <code>settings-[hashcode of the oroginal]-[sanitized proxy host].xml</code>. If the settings.xml file does not exist at all, "new" is used
  * instead of the hashcode. Proxy host sanitization just replaces weird characters by "_".
  * 
  * @author sdedic
@@ -589,13 +590,13 @@ public class MavenProxySupport {
 
     @NbBundle.Messages({
         "TITLE_MavenProxyMismatch=Possible Network Proxy Issue",
-        "# {0} - gradle proxy",
-        "MSG_ProxyMisconfiguredDirect=Maven is configured for a proxy {0}, but the system does not require a proxy for network connections. Proxy settings should be removed from user gradle.properties.",
+        "# {0} - maven proxy",
+        "MSG_ProxyMisconfiguredDirect=Maven is configured for a proxy {0}, but the system does not require a proxy for network connections. Proxy settings should be removed from maven settings.xml.",
         "# {0} - system proxy",
-        "MSG_ProxyMisconfiguredMissing=Maven is not configured to use a network proxy, but the proxy {0} seems to be required for network communication. User gradle.properties should be updated to specify a proxy.",
+        "MSG_ProxyMisconfiguredMissing=Maven is not configured to use a network proxy, but the proxy {0} seems to be required for network communication. Maven settings.xml should be updated to specify a proxy.",
         "# {0} - system proxy",
-        "# {1} - gradle proxy",
-        "MSG_ProxyMisconfiguredOther=Maven is configured to use a network proxy {1}, but the proxy {0} seems to be required for network communication. Proxy settings should be updated in user gradle.properties.",
+        "# {1} - maven proxy",
+        "MSG_ProxyMisconfiguredOther=Maven is configured to use a network proxy {1}, but the proxy {0} seems to be required for network communication. Proxy settings should be updated in maven settings.xml.",
         "MSG_AppendAskUpdate=\nUpdate Maven configuration ? Choose \"Override\" to apply detected proxy only to IDE operations.",
         "MSG_AppendAskUpdate2=\nUpdate Maven configuration ?",
         "ACTION_Override=Override",
@@ -871,7 +872,6 @@ public class MavenProxySupport {
     }
     
     static class LineAndColumn {
-        int offset = -1;
         int line;
         int column;
 
@@ -884,7 +884,7 @@ public class MavenProxySupport {
     static class TagInfo {
         String tagName;
         LineAndColumn  startTag;
-        LineAndColumn  content;
+        String  content;
         LineAndColumn  endTag;
 
         public TagInfo(String tagName, LineAndColumn start) {
@@ -916,8 +916,25 @@ public class MavenProxySupport {
         private ProxyInfo current;
         private int state = UNKNOWN;
 
+        private final Field posStartField;
+        private final Field posEndField;
+
         public XppDelegate(EntityReplacementMap entityReplacementMap) {
             super(entityReplacementMap);
+            
+            try {
+                posEndField = MXParser.class.getDeclaredField("posEnd");
+                posEndField.setAccessible(true);
+
+                posStartField = MXParser.class.getDeclaredField("posStart");
+                posStartField.setAccessible(true);
+            } catch (ReflectiveOperationException ex) {
+                throw new RuntimeException("code changed", ex);
+            }
+        }
+        
+        TextInfo getTextInfo() {
+            return textInfo;
         }
         
         @Override
@@ -935,7 +952,11 @@ public class MavenProxySupport {
         private LineAndColumn startPos() {
             int ln = getLineNumber();
             int col = getColumnNumber();
-            col -= (posEnd - posStart);
+            try {
+                col -= (posEndField.getInt(this) - posStartField.getInt(this));
+            } catch (IllegalAccessException ex) {
+                Exceptions.printStackTrace(ex);
+            }
             return new LineAndColumn(ln, col);
         }
 
@@ -943,9 +964,13 @@ public class MavenProxySupport {
             return new LineAndColumn(getLineNumber(), getColumnNumber());
         }
         
+        private StringBuilder tagText = new StringBuilder();
+        
         private int processToken(int token) {
-            
             switch (token) {
+                case XmlPullParser.TEXT:
+                    tagText.append(getText());
+                    break;
                 case XmlPullParser.END_TAG:
                     String en = getName();
                     if (state >= PROXY) {
@@ -956,8 +981,9 @@ public class MavenProxySupport {
                             break;
                         }
                         if (!tagStack.isEmpty()) {
-                            tagStack.getLast().endTag = startPos();
-                            tagStack.removeLast();
+                            TagInfo ti = tagStack.removeLast();
+                            ti.content = tagText.toString().trim();
+                            ti.endTag = startPos();
                         }
                     } else if (state == PROXIES && TAG_PROXIES.equals(en)) {
                         state = UNKNOWN;
@@ -967,6 +993,7 @@ public class MavenProxySupport {
                     break;
                 case XmlPullParser.START_TAG:
                     String n = getName();
+                    tagText = new StringBuilder();
                     if (state == UNKNOWN) {
                         if (TAG_PROXIES.equals(n)) {
                             state = 1;

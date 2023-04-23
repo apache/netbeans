@@ -110,6 +110,7 @@ public final class GsfUtilities {
      * @return indentation level, in characters.
      * @deprecated Use {@link #getLineIndent(javax.swing.text.Document, int) } instead.
      */
+    @Deprecated
     public static int getLineIndent(BaseDocument doc, int offset) {
         return getLineIndent((Document)doc, offset);
     }
@@ -121,6 +122,7 @@ public final class GsfUtilities {
      * Copied from Indent module's "modifyIndent"
      * @deprecated Use {@link #setLineIndentation(javax.swing.text.Document, int, int).
      */
+    @Deprecated
     public static int setLineIndentation(BaseDocument doc, int lineOffset, int newIndent) throws BadLocationException {
         return setLineIndentation((Document)doc, lineOffset, newIndent);
     }
@@ -234,6 +236,7 @@ public final class GsfUtilities {
      * @return document instance or {@code null} if not opened and {@code openIfNecessary} was false.
      * @deprecated Use {@link #getADocument(org.openide.filesystems.FileObject, boolean)}.
      */
+    @Deprecated
     public static BaseDocument getDocument(FileObject fileObject, boolean openIfNecessary) {
         return getDocument(fileObject, openIfNecessary, false);
     }
@@ -266,6 +269,7 @@ public final class GsfUtilities {
      * @return
      * @deprecated Use {@link #getADocument(org.openide.filesystems.FileObject, boolean, boolean)}.
      */
+    @Deprecated
     public static BaseDocument getDocument(FileObject fileObject, boolean openIfNecessary, boolean skipLarge) {
         if (skipLarge) {
             // Make sure we're not dealing with a huge file!

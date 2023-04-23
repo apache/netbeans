@@ -76,7 +76,7 @@ public class CloseViewActionTest extends NbTestCase {
      * Test getHelpCtx method. 
      */ 
     public void testGetHelpCtx() { 
-        HelpCtx expected = new HelpCtx(CloseViewAction.class);; 
+        HelpCtx expected = new HelpCtx(CloseViewAction.class);
         HelpCtx result   = instance.getHelpCtx(); 
          
         assertEquals(expected, result); 

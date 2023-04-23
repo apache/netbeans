@@ -44,7 +44,7 @@ import javax.swing.Icon;
  * <p>Hand-crafted painting code is a good design choice for icons that are simple, ubiqutious in
  * the UI (e.g. part of the Look-and-Feel), or highly parameterized. Swing's native Windows L&amp;F
  * uses this approach for many of its basic icons; see
- * {@link com.sun.java.swing.plaf.windows.WindowsIconFactory}.
+ * <a href="https://github.com/openjdk/jdk/blob/master/src/java.desktop/windows/classes/com/sun/java/swing/plaf/windows/WindowsIconFactory.java" >WindowsIconFactory</a>.
  *
  * <p>When developing new icons, or adjusting existing ones, use the {@code VectorIconTester}
  * utility found in
@@ -83,7 +83,7 @@ public abstract class VectorIcon implements Icon, Serializable {
         Object desktopHints =
                 Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
         Map<Object, Object> hints = new LinkedHashMap<Object, Object>();
-        if (desktopHints != null && desktopHints instanceof Map<?, ?>)
+        if (desktopHints instanceof Map<?, ?>)
             hints.putAll((Map<?, ?>) desktopHints);
         /* Enable antialiasing by default. Adding this is required in order to get non-text
         antialiasing on Windows. */

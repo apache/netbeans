@@ -1,0 +1,3 @@
+var mix1 = {property1: 10, |>MARK_OCCURRENCES:property2<|: "Hello"};
+console.log(target.|>MARK_OCCURRENCES:prop^erty2<|);
+console.log(target.|>MARK_OCCURRENCES:property2<|);

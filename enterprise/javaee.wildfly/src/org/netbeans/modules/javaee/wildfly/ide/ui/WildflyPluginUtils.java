@@ -89,6 +89,22 @@ public class WildflyPluginUtils {
 
     public static final Version WILDFLY_19_0_0 = new Version("19.0.0", true); // NOI18N
 
+    public static final Version WILDFLY_20_0_0 = new Version("20.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_21_0_0 = new Version("21.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_22_0_0 = new Version("22.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_23_0_0 = new Version("23.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_24_0_0 = new Version("24.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_25_0_0 = new Version("25.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_26_0_0 = new Version("26.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_27_0_0 = new Version("27.0.0", true); // NOI18N
+
     private static final Logger LOGGER = Logger.getLogger(WildflyPluginUtils.class.getName());
 
     public static final String LIB = "lib" + separatorChar;

@@ -40,12 +40,12 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="spParams" alignment="0" pref="419" max="32767" attributes="0"/>
-                  <Component id="spBody" alignment="0" pref="419" max="32767" attributes="0"/>
+                  <Component id="spParams" alignment="0" pref="826" max="32767" attributes="0"/>
+                  <Component id="spBody" alignment="0" pref="826" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="lName" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tfName" pref="362" max="32767" attributes="0"/>
+                      <Component id="tfName" pref="756" max="32767" attributes="0"/>
                   </Group>
                   <Component id="lParams" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="lBody" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -65,11 +65,11 @@
               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
               <Component id="lParams" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="spParams" min="-2" pref="101" max="-2" attributes="0"/>
+              <Component id="spParams" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
               <Component id="lBody" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="spBody" min="-2" pref="206" max="-2" attributes="0"/>
+              <Component id="spBody" min="-2" pref="262" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>

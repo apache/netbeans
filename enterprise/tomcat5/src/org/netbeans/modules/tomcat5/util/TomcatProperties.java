@@ -261,6 +261,18 @@ public class TomcatProperties {
         String prefix;
         String serverID;
         switch (tm.getTomcatVersion()) {
+            case TOMCAT_110:
+                prefix = "tomcat110"; // NIO18N
+                serverID = TomcatFactory.SERVER_ID_110;
+                break;
+            case TOMCAT_101:
+                prefix = "tomcat101"; // NIO18N
+                serverID = TomcatFactory.SERVER_ID_101;
+                break;
+            case TOMCAT_100:
+                prefix = "tomcat100"; // NIO18N
+                serverID = TomcatFactory.SERVER_ID_100;
+                break;
             case TOMCAT_90:
                 prefix = "tomcat90"; // NIO18N
                 serverID = TomcatFactory.SERVER_ID_90;
@@ -663,7 +675,7 @@ public class TomcatProperties {
             }
         }
 
-        if (tm.isTomcat60()) {
+        if (tm.getTomcatVersion().isAtLeast(TomcatVersion.TOMCAT_60)) {
             try {
                 retValue.add(new File(homeDir, "bin/tomcat-juli.jar").toURI().toURL()); // NOI18N
             } catch (MalformedURLException e) {
@@ -722,7 +734,22 @@ public class TomcatProperties {
                     addFileToList(list, jspApiDoc);
                     addFileToList(list, servletApiDoc);
                 } else {
-                    File j2eeDoc = InstalledFileLocator.getDefault().locate("docs/javaee-doc-api.jar", null, false); // NOI18N
+                    String eeDocs;
+                    switch (tm.getTomcatVersion()) {
+                        case TOMCAT_110:
+                        case TOMCAT_101:
+                           eeDocs = "docs/jakartaee10-doc-api.jar";
+                           break;
+                        case TOMCAT_100:
+                            eeDocs = "docs/jakartaee9-doc-api.jar";
+                            break;
+                        case TOMCAT_90:
+                            eeDocs = "docs/jakartaee8-doc-api.jar";
+                            break;
+                        default:
+                            eeDocs = "docs/javaee-doc-api.jar";
+                    }
+                    File j2eeDoc = InstalledFileLocator.getDefault().locate(eeDocs, null, false); // NOI18N
                     if (j2eeDoc != null) {
                         addFileToList(list, j2eeDoc);
                     }

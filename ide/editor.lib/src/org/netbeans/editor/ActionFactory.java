@@ -264,6 +264,7 @@ public class ActionFactory {
     /**
      * @deprecated use {@link CamelCaseInterceptor} instead
      */
+    @Deprecated
     public static class RemoveWordPreviousAction extends LocalBaseAction {
 
         public RemoveWordPreviousAction() {
@@ -303,6 +304,7 @@ public class ActionFactory {
     /**
      * @deprecated use {@link CamelCaseInterceptor} instead
      */
+    @Deprecated
     public static class RemoveWordNextAction extends LocalBaseAction {
 
         public RemoveWordNextAction() {
@@ -940,6 +942,7 @@ public class ActionFactory {
     /** Switch to overwrite mode or back to insert mode
      * @deprecated Replaced by ToggleTypingModeAction in editor.actions module
      */
+    @Deprecated
     public static class ToggleTypingModeAction extends LocalBaseAction {
 
         static final long serialVersionUID =-2431132686507799723L;
@@ -963,6 +966,7 @@ public class ActionFactory {
      * @deprecated Without any replacement. This action is not used anymore and
      * is no longer functional.
      */
+    @Deprecated
     public static class RunMacroAction extends BaseAction {
 
         static final long serialVersionUID =1L;
@@ -1094,6 +1098,7 @@ public class ActionFactory {
     /**
      * @deprecated Without any replacement. This action is not used anymore.
      */
+    @Deprecated
     public static class StartMacroRecordingAction extends LocalBaseAction {
     // Not registered by annotation since it's not actively used
 
@@ -1116,6 +1121,7 @@ public class ActionFactory {
      * @deprecated Without any replacement. This action is not used anymore and
      * is no longer functional.
      */
+    @Deprecated
     public static class StopMacroRecordingAction extends LocalBaseAction {
     // Not registered by annotation since it's not actively used
 
@@ -1148,6 +1154,7 @@ public class ActionFactory {
     }
 
     /** @deprecated Use Editor Code Templates API instead. */
+    @Deprecated
     public static class AbbrevExpandAction extends LocalBaseAction {
 
         static final long serialVersionUID =-2124569510083544403L;
@@ -1176,6 +1183,7 @@ public class ActionFactory {
     }
 
     /** @deprecated Use Editor Code Templates API instead. */
+    @Deprecated
     public static class AbbrevResetAction extends LocalBaseAction {
 
         static final long serialVersionUID =-2807497346060448395L;
@@ -2298,6 +2306,7 @@ public class ActionFactory {
      */
     //@EditorActionRegistration(name = BaseKit.toggleLineNumbersAction)
     // Registration in createActions() due to getPopupMenuItem()
+    @Deprecated
     public static class ToggleLineNumbersAction extends LocalBaseAction {
 
         static final long serialVersionUID =-3502499718130556526L;
@@ -2397,6 +2406,7 @@ public class ActionFactory {
     /** Expand a fold. Depends on the current caret position. 
      * @deprecated Implementation was adopted into editor.fold.nbui module. This implementation is kept for backward compatibility only
      */
+    @Deprecated
     public static class ExpandFold extends DeprecatedFoldAction {
         public ExpandFold() {
             super(BaseKit.expandFoldAction);
@@ -2576,7 +2586,6 @@ public class ActionFactory {
         /**
          * Construct new action.
          *
-         * @param toLineEnd whether cutting to line end instead of line begin.
          */
         public CutToLineBeginOrEndAction() {
             super(ABBREV_RESET | MAGIC_POSITION_RESET | UNDO_MERGE_RESET);

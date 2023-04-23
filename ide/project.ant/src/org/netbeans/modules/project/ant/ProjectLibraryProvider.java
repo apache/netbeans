@@ -604,9 +604,9 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
         for (String name : added) {
             libraries.put(name, newLibraries.get(name));
         }
-        for (String name : removed) {
-            libraries.remove(name);
-        }
+
+        libraries.keySet().removeAll(removed);
+
         return !added.isEmpty() || !removed.isEmpty();
     }
 

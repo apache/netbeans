@@ -987,7 +987,7 @@ public class HintTest {
         }
         /**Verifies that the current warning provides the given fixes.
          *
-         * @param fixes the {@link Fix#getText() } of the expected fixes
+         * @param expectedFixes the {@link Fix#getText() } of the expected fixes
          * @return itself
          * @throws AssertionError if the expected fixes do not match the provided fixes
          * @since 1.1
@@ -1009,7 +1009,7 @@ public class HintTest {
 
         /**Verifies that the current warning provides the given fixes.
          *
-         * @param fixes the {@link Fix#getText() } of the expected fixes
+         * @param bannedFixes the {@link Fix#getText() } of the expected fixes
          * @return itself
          * @throws AssertionError if the expected fixes do not match the provided fixes
          * @since 1.18
@@ -1187,7 +1187,6 @@ public class HintTest {
          * This method will compare the content of the file exactly with the provided
          * code.
          *
-         * @param fileName the name of the file that should be verified
          * @param code expected content of the resulting file.
          * @return the wrapper itself
          * @throws AssertionError if the result is not compilable

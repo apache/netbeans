@@ -181,7 +181,15 @@ public class JsCompletionItem implements CompletionProposal {
 
     @Override
     public Set<Modifier> getModifiers() {
-        Set<Modifier> modifiers = (getElement() == null || getElement().getModifiers().isEmpty() ? Collections.EMPTY_SET : EnumSet.copyOf(getElement().getModifiers()));
+        Set<Modifier> modifiers;
+
+        if (getElement() == null || getElement().getModifiers().isEmpty()) {
+            modifiers = Collections.EMPTY_SET;
+        } else {
+            modifiers = EnumSet.noneOf(Modifier.class);
+            modifiers.addAll(getElement().getModifiers());
+        }
+
         if (modifiers.contains(Modifier.PRIVATE) && (modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED))) {
             modifiers.remove(Modifier.PUBLIC);
             modifiers.remove(Modifier.PROTECTED);
@@ -198,7 +206,7 @@ public class JsCompletionItem implements CompletionProposal {
     @Override
     public int getSortPrioOverride() {
         int order = 100;
-        if (element != null && element instanceof JsElement) {
+        if (element instanceof JsElement) {
             if (((JsElement)element).isPlatform()) {
                 if (ModelUtils.PROTOTYPE.equals(element.getName())) { //NOI18N
                     order = 1;

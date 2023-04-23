@@ -34,6 +34,7 @@ import org.netbeans.modules.php.editor.model.impl.Type;
  * private int|float $number;,
  * public function setNumber(int|float $number): void {},
  * public function getNumber(): int|float {}
+ * public function dnf(): (X&Y)|Z {} // PHP 8.2 dnf types
  * </pre>
  */
 public class UnionType extends Expression {
@@ -61,7 +62,11 @@ public class UnionType extends Expression {
             if (sb.length() > 0) {
                 sb.append(Type.SEPARATOR);
             }
-            sb.append(type);
+            if (type instanceof IntersectionType) {
+                sb.append("(").append(type).append(")"); // NOI18N dnf type
+            } else {
+                sb.append(type);
+            }
         });
         return sb.toString();
     }

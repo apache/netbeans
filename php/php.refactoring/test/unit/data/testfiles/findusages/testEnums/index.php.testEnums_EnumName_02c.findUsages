@@ -1,0 +1,14 @@
+Display text: enum <b>EnumB</b>: string implements InterfaceB {
+File name: index.php
+Name: EnumB
+Position: BEGIN: 1290 END: 1295
+
+Display text: <b>EnumB</b>::A->publicMethod();
+File name: index.php
+Name: EnumB
+Position: BEGIN: 1617 END: 1622
+
+Display text: <b>EnumB</b>::A::publicStaticMethod();
+File name: index.php
+Name: EnumB
+Position: BEGIN: 1643 END: 1648

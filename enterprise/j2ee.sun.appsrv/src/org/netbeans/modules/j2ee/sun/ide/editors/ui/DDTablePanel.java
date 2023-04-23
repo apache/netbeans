@@ -272,8 +272,8 @@ public class DDTablePanel extends JPanel
 	    Component comp = cellR.getTableCellRendererComponent 
 				        (tab, c.getHeaderValue (), false, 
 					 false, -1, i);
-	    if ((comp != null) && (comp instanceof JComponent) 
-		 && i<toolTips.length) {
+	    if (comp instanceof JComponent
+			&& i < toolTips.length) {
     		JComponent jComp = (JComponent) comp;
     		jComp.setToolTipText (toolTips [i]);
 	    } 

@@ -129,7 +129,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
     }
 
     public static JavaCompletionItem createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars) {
-        if(elem.getKind().equals(ElementKind.RECORD)) {
+        if(elem.getKind() == ElementKind.RECORD) {
             return new RecordPatternItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew);
         }
         else {

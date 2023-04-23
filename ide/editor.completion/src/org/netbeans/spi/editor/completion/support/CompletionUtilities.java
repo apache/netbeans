@@ -79,7 +79,7 @@ public final class CompletionUtilities {
 
     /**
      * Get preferred width of the item by knowing its left and right html texts.
-     * <br/>
+     * <br>
      * It is supposed that the item will have an icon 16x16 and an appropriate
      * space is reserved for it.
      *
@@ -117,21 +117,21 @@ public final class CompletionUtilities {
      * 
      * @param leftHtmlText html text that will be displayed on the left side
      *  of the item's rendering area next to the icon.
-     *  <br/>
+     *  <br>
      *  It may be null which indicates that no left text will be displayed.
-     *  <br/>
+     *  <br>
      *  If there's not enough horizontal space in the rendering area
      *  the text will be shrinked and "..." will be displayed at the end.
      *
      * @param rightHtmlText html text that will be aligned to the right edge
      *  of the item's rendering area.
-     *  <br/>
+     *  <br>
      *  It may be null which means that no right text will be displayed.
-     *  <br/>
+     *  <br>
      *  The right text is always attempted to be fully displayed unlike
      *  the left text that may be shrinked if there's not enough rendering space
      *  in the horizontal direction.
-     *  <br/>
+     *  <br>
      *  If there's not enough space even for the right text it will be shrinked
      *  and "..." will be displayed at the end of the rendered string.
      * @param g non-null graphics through which the rendering happens.
@@ -186,7 +186,7 @@ public final class CompletionUtilities {
 
     /**
      * Builder for simple {@link CompletionItem} instances.
-     * <br/>
+     * <br>
      * Example usage:
      * <pre>
      * CompletionUtilities.newCompletionItemBuilder(insertText)

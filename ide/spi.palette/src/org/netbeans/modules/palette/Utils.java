@@ -199,7 +199,7 @@ public final class Utils {
     public static boolean isOpenedByUser( TopComponent tc ) {
         Object val = tc.getClientProperty( "userOpened" );
         tc.putClientProperty("userOpened", null);
-        return null != val && val instanceof Boolean && ((Boolean)val).booleanValue();
+        return val instanceof Boolean && ((Boolean) val).booleanValue();
     }
 
     /**

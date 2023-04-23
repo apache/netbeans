@@ -171,7 +171,7 @@ class RunConfigurationNode extends vscode.TreeItem {
 	}
 
 	getConfig(): vscode.WorkspaceConfiguration {
-		return vscode.workspace.getConfiguration('java8+.runConfig');
+		return vscode.workspace.getConfiguration('java+.runConfig');
 	}
 
 }

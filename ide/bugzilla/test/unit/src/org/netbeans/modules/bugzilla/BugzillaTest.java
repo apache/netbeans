@@ -296,7 +296,7 @@ public class BugzillaTest extends NbTestCase implements TestConstants {
         // Hours left
         taRemainingTime = data.getRoot().getMappedAttribute(BugzillaAttribute.REMAINING_TIME.getKey());
         taWorkTime = data.getRoot().createMappedAttribute(BugzillaAttribute.WORK_TIME.getKey());
-        taComment = data.getRoot().createMappedAttribute(TaskAttribute.COMMENT_NEW);;
+        taComment = data.getRoot().createMappedAttribute(TaskAttribute.COMMENT_NEW);
         
         taRemainingTime.setValue("2"); 
         taWorkTime.setValue("2"); 

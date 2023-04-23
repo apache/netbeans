@@ -290,6 +290,50 @@ public enum ServerDetails {
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.5/glassfish-6.2.5.zip", // NOI18N
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.5/glassfish-6.2.5.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 7.0.0
+     */
+    GLASSFISH_SERVER_7_0_0(NbBundle.getMessage(ServerDetails.class, "STR_700_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv700ee10", // NOI18N
+        700,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.0/glassfish-7.0.0.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.0/glassfish-7.0.0.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 7.0.1
+     */
+    GLASSFISH_SERVER_7_0_1(NbBundle.getMessage(ServerDetails.class, "STR_701_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv700ee10", // NOI18N
+        701,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.1/glassfish-7.0.1.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.1/glassfish-7.0.1.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 7.0.2
+     */
+    GLASSFISH_SERVER_7_0_2(NbBundle.getMessage(ServerDetails.class, "STR_702_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv700ee10", // NOI18N
+        702,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.2/glassfish-7.0.2.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.2/glassfish-7.0.2.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+
+    /**
+     * details for an instance of GlassFish Server 7.0.3
+     */
+    GLASSFISH_SERVER_7_0_3(NbBundle.getMessage(ServerDetails.class, "STR_703_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv700ee10", // NOI18N
+        703,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.3/glassfish-7.0.3.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.3/glassfish-7.0.3.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     );
 
     /**
@@ -301,6 +345,10 @@ public enum ServerDetails {
     public static WizardDescriptor.InstantiatingIterator
             getInstantiatingIterator() {
         return new ServerWizardIterator(new ServerDetails[]{
+                    GLASSFISH_SERVER_7_0_3,
+                    GLASSFISH_SERVER_7_0_2,
+                    GLASSFISH_SERVER_7_0_1,
+                    GLASSFISH_SERVER_7_0_0,
                     GLASSFISH_SERVER_6_2_5,
                     GLASSFISH_SERVER_6_2_4,
                     GLASSFISH_SERVER_6_2_3,
@@ -324,6 +372,10 @@ public enum ServerDetails {
                     GLASSFISH_SERVER_3_0_1,
                     GLASSFISH_SERVER_3},
                 new ServerDetails[]{
+                    GLASSFISH_SERVER_7_0_3,
+                    GLASSFISH_SERVER_7_0_2,
+                    GLASSFISH_SERVER_7_0_1,
+                    GLASSFISH_SERVER_7_0_0,
                     GLASSFISH_SERVER_6_2_5,
                     GLASSFISH_SERVER_6_2_4,
                     GLASSFISH_SERVER_6_2_3,
@@ -382,6 +434,10 @@ public enum ServerDetails {
                 case GF_6_2_3:   return GLASSFISH_SERVER_6_2_3.getVersion();
                 case GF_6_2_4:   return GLASSFISH_SERVER_6_2_4.getVersion();
                 case GF_6_2_5:   return GLASSFISH_SERVER_6_2_5.getVersion();
+                case GF_7_0_0:   return GLASSFISH_SERVER_7_0_0.getVersion();
+                case GF_7_0_1:   return GLASSFISH_SERVER_7_0_1.getVersion();
+                case GF_7_0_2:   return GLASSFISH_SERVER_7_0_2.getVersion();
+                case GF_7_0_3:   return GLASSFISH_SERVER_7_0_3.getVersion();
                 default:         return -1;
             }
         }

@@ -226,7 +226,7 @@ class RefactorVisitor extends DefaultSchemaVisitor {
         NamedComponentReference<GlobalSimpleType> ref = createReference(GlobalSimpleType.class, u);
         if (ref != null) {
             ArrayList<NamedComponentReference<GlobalSimpleType>> members = 
-                    new ArrayList(u.getMemberTypes());
+                    new ArrayList<>(u.getMemberTypes());
             for (int i=0; i<members.size(); i++) {
                 if (members.get(i).getRefString().indexOf(oldName) > -1) {
                     members.remove(i);

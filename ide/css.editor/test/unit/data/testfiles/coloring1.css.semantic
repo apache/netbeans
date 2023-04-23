@@ -1,0 +1,6 @@
+[|>CUSTOM1:type<|="checkbox"]|>CLASS::nth-child(2n)<|,
+[|>CUSTOM1:type<|="checkbox"]|>CLASS::not([|>CUSTOM1:<|hidden|>CLASS:<|])<|,
+[|>CUSTOM1:type<|="checkbox"]|>CLASS::not(|>METHOD:<|.active|>CLASS:<|)<|,
+[|>CUSTOM1:type<|="checkbox"]|>CLASS::not(|>CLASS:<|:checked|>CLASS:<|)<|,
+[|>CUSTOM1:type<|="checkbox"]|>CLASS::checked<| {
+}

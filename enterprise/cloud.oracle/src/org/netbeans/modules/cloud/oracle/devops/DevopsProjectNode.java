@@ -56,7 +56,6 @@ public class DevopsProjectNode extends OCINode {
    
     public static ChildrenProvider<CompartmentItem, DevopsProjectItem> listDevopsProjects() {
         return compartmentId -> {
-            System.out.println("COMPARTMENT " + compartmentId.getKey().getValue());
             try (
                 DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider());
             ) {

@@ -130,9 +130,11 @@ public class GradleHintsProvider {
             return;
         }
         List<ErrorDescription> hints = new ArrayList<>();
-        for (LineDocument doc : documentReports.keySet()) {
+        for (Map.Entry<LineDocument, List<GradleReport>> it : documentReports.entrySet()) {
+            LineDocument doc = it.getKey();
+
             doc.render(() -> {
-                for (GradleReport r : documentReports.get(doc)) {
+                for (GradleReport r : it.getValue()) {
                     hints.add(ErrorDescriptionFactory.createErrorDescription(Severity.ERROR, r.formatReportForHintOrProblem(false, null), doc, r.getLine()));
                 }
             });

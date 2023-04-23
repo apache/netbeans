@@ -32,7 +32,9 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
+import java.util.Arrays;
 import java.util.List;
+import java.util.EnumSet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -645,11 +647,8 @@ public class JavaSourceHelper {
 
     public static ModifiersTree createModifiersTree(WorkingCopy copy, Modifier[] modifiers, String[] annotations, Object[] annotationAttrs) {
         TreeMaker maker = copy.getTreeMaker();
-        Set<Modifier> modifierSet = new HashSet<Modifier>();
-
-        for (Modifier modifier : modifiers) {
-            modifierSet.add(modifier);
-        }
+        Set<Modifier> modifierSet = EnumSet.noneOf(Modifier.class);
+        modifierSet.addAll(Arrays.asList(modifiers));
 
         List<AnnotationTree> annotationTrees = createAnnotationTrees(copy, annotations, annotationAttrs);
 

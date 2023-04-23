@@ -30,7 +30,6 @@ class F {
             $value = (int) $value * 2;
         }
     }
-
 }
 
 $test = array(

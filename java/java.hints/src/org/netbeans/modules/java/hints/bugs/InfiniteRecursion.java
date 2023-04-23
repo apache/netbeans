@@ -21,12 +21,14 @@ package org.netbeans.modules.java.hints.bugs;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
@@ -38,6 +40,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.WhileLoopTree;
@@ -496,14 +499,23 @@ public class InfiniteRecursion {
         
         @Override
         public State visitSwitch(SwitchTree node, Void p) {
+            return handleSwitch(node, node.getExpression(), node.getCases(), p);
+        }
+
+        @Override
+        public State visitSwitchExpression(SwitchExpressionTree node, Void p) {
+            return handleSwitch(node, node.getExpression(), node.getCases(), p);
+        }
+
+        private State handleSwitch(Tree node, ExpressionTree expression, List<? extends CaseTree> cases, Void p) {
             registerBreakTarget(node);
             State s;
-            if (returnIfRecurse(s= scan(node.getExpression(), p))) {
+            if (returnIfRecurse(s= scan(expression, p))) {
                 return s;
             }
             // look for the default case, but cannot return immediately as some return / break inside could
             // slip unnoticed.
-            boolean defaultFound = false;
+            boolean exhaustive = false;
             
             Set<Tree> saveBreaks = breakContinueJumps;
             Set<Tree> collectBreaks = Collections.emptySet();
@@ -512,9 +524,9 @@ public class InfiniteRecursion {
             
             boolean saveDefinite = definitePath;
             definitePath = false;
-            for (CaseTree ct : node.getCases()) {
+            for (CaseTree ct : cases) {
                 if (ct.getExpression() == null) {
-                    defaultFound = true;
+                    exhaustive = true;
                 }
                 knownResult = null;
                 breakContinueJumps = new HashSet<Tree>();
@@ -530,7 +542,7 @@ public class InfiniteRecursion {
                     // cycles, those breaks must have been found before the recursion instruction. Any jumps to
                     // nested statements should have been cleared by scan().
                     boolean self = breakContinueJumps.remove(node);
-                    if (self || !breakContinueJumps.isEmpty()) {
+                    if (self || !breakContinueJumps.isEmpty() || (ct.getCaseKind() == CaseKind.RULE && s != State.MUST)) {
                         // at least one way out
                         saveBreaks.addAll(breakContinueJumps);
                         saveBreaks.addAll(collectBreaks);
@@ -543,7 +555,7 @@ public class InfiniteRecursion {
                 }
             }
             definitePath = saveDefinite;
-            if (defaultFound) {
+            if (exhaustive) {
                 return lastState;
             } else {
                 recursionPoints.clear();

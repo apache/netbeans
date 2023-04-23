@@ -76,7 +76,7 @@ public class LogViewer extends Thread {
     /**
      * List of listeners which are notified when the log viewer is stoped.
      */
-    private List/*<LogViewerStopListener>*/ stopListeners = Collections.synchronizedList(new LinkedList());
+    private List<LogViewerStopListener> stopListeners = Collections.synchronizedList(new LinkedList());
 
     private String displayName;
     

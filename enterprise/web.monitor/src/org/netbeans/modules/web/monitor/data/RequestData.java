@@ -251,7 +251,7 @@ public class RequestData extends BaseBean {
 			
 		String name = token.substring(0, i).trim();
 		if(name.equals(JSESSIONID)) {
-		    String value = token.substring(i+1, token.length()).trim();
+		    String value = token.substring(i+1).trim();
 		    return value=stripQuote(value);
 		}
 	    }
@@ -285,7 +285,7 @@ public class RequestData extends BaseBean {
 	    if (i > -1) {
 
 		String name = token.substring(0, i).trim();
-		String value = token.substring(i+1, token.length()).trim();
+		String value = token.substring(i+1).trim();
 		value=stripQuote(value);
 		cookies.addElement(new Param(name, value));
 		if(debug) log(name + "=" + value); 
@@ -437,7 +437,7 @@ public class RequestData extends BaseBean {
 		if (j > -1) {
 
 		    String name = token.substring(0, j).trim();
-		    String value = token.substring(j+1, token.length()).trim();
+		    String value = token.substring(j+1).trim();
 		    value=stripQuote(value);
 
 		    if(debug) log("Processing cookie: " + //NOI18N
@@ -505,7 +505,7 @@ public class RequestData extends BaseBean {
 		    else {
 			if(debug) log("Keep this cookie");//NOI18N
 			String value = 
-			    token.substring(j+1, token.length()).trim(); 
+			    token.substring(j+1).trim();
 			value=stripQuote(value);
 			buf.append(name);
 			buf.append("=");//NOI18N

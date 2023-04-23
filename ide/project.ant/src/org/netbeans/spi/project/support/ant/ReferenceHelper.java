@@ -397,15 +397,15 @@ public final class ReferenceHelper {
      * Adds a project property if necessary to refer to its location of the foreign
      * project - a shared property if the foreign project
      * is {@link CollocationQuery collocated} with this one, else a private property.
-     * This property is named <samp>project.<i>foreignProjectName</i></samp>.
-     * Example: <samp>project.mylib=../mylib</samp>
+     * This property is named <em>project.<i>foreignProjectName</i></em>.
+     * Example: <em>project.mylib=../mylib</em>
      * <p>
      * Adds a project property to refer to the artifact's location.
-     * This property is named <samp>reference.<i>foreignProjectName</i>.<i>targetName</i></samp>
-     * and will use <samp>${project.<i>foreignProjectName</i>}</samp> and be a shared
+     * This property is named <em>reference.<i>foreignProjectName</i>.<i>targetName</i></em>
+     * and will use <em>${project.<i>foreignProjectName</i>}</em> and be a shared
      * property - unless the artifact location is an absolute URI, in which case the property
      * will also be private.
-     * Example: <samp>reference.mylib.jar=${project.mylib}/dist/mylib.jar</samp>
+     * Example: <em>reference.mylib.jar=${project.mylib}/dist/mylib.jar</em>
      * <p>
      * Also records the artifact type, (relative) script path, and build and
      * clean target names.
@@ -941,7 +941,7 @@ public final class ReferenceHelper {
      * the behavior is identical to {@link #createForeignFileReference(AntArtifact)}.
      * <p>
      * Acquires write access.
-     * @param path a file path to refer to (need not currently exist)
+     * @param filepath a file path to refer to (need not currently exist)
      * @param expectedArtifactType the required {@link AntArtifact#getType}
      * @return a string which can refer to that file somehow
      *
@@ -1346,7 +1346,7 @@ public final class ReferenceHelper {
         EditableProperties priv = h.getProperties(AntProjectHelper.PRIVATE_PROPERTIES_PATH);
         
         File projectDir = FileUtil.toFile(h.getProjectDirectory());
-        
+
         List<String> pubRemove = new ArrayList<String>();
         List<String> privRemove = new ArrayList<String>();
         Map<String,String> pubAdd = new HashMap<String,String>();
@@ -1429,13 +1429,8 @@ public final class ReferenceHelper {
             }
         }
         
-        for (String s : pubRemove) {
-            pub.remove(s);
-        }
-        
-        for (String s : privRemove) {
-            priv.remove(s);
-        }
+        pub.keySet().removeAll(pubRemove);
+        priv.keySet().removeAll(privRemove);
         
         pub.putAll(pubAdd);
         priv.putAll(privAdd);

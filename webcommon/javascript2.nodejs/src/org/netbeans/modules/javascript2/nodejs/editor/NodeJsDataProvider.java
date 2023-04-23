@@ -345,12 +345,12 @@ public class NodeJsDataProvider {
         if (modules != null) {
             for (int i = 0; i < modules.size(); i++) {
                 jsonValue = modules.get(i);
-                if (jsonValue != null && jsonValue instanceof JSONObject) {
+                if (jsonValue instanceof JSONObject) {
                     JSONObject jsonModule = (JSONObject) jsonValue;
                     jsonValue = jsonModule.get(NAME);
-                    if (jsonValue != null && jsonValue instanceof String && moduleName.equals(((String) jsonValue).toLowerCase())) {
+                    if (jsonValue instanceof String && moduleName.equals(((String) jsonValue).toLowerCase())) {
                         jsonValue = jsonModule.get(DESCRIPTION);
-                        if (jsonValue != null && jsonValue instanceof String) {
+                        if (jsonValue instanceof String) {
                             return (String) jsonValue;
                         }
                     }
@@ -498,7 +498,7 @@ public class NodeJsDataProvider {
 
     private String getJSONStringProperty(final JSONObject object, final String property) {
         Object value = object.get(property);
-        if (value != null && value instanceof String) {
+        if (value instanceof String) {
             return (String) value;
         }
         return null;
@@ -506,7 +506,7 @@ public class NodeJsDataProvider {
 
     private JSONArray getJSONArrayProperty(final JSONObject object, final String property) {
         Object value = object.get(property);
-        if (value != null && value instanceof JSONArray) {
+        if (value instanceof JSONArray) {
             return (JSONArray) value;
         }
         return null;
@@ -553,7 +553,7 @@ public class NodeJsDataProvider {
             JSONObject root = (JSONObject) JSONValue.parse(content);
             if (root != null) {
                 Object jsonValue = root.get(MODULES);
-                if (jsonValue != null && jsonValue instanceof JSONArray) {
+                if (jsonValue instanceof JSONArray) {
                     return (JSONArray) jsonValue;
                 }
             }

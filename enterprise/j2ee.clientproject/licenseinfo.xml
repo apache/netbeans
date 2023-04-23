@@ -42,4 +42,11 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
+    
+    <fileset>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-9.xml</file>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-10.xml</file>
+        <license ref="EPL-v20" />
+        <comment type="CATEGORY_B" />
+    </fileset>
 </licenseinfo>

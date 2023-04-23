@@ -36,6 +36,9 @@ env:
     -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     -Dtest-unit-sys-prop.ignore.random.failures=true
 
+  # what to build and test, see nbbuild/cluster.properties
+  CLUSTER_CONFIG: 'full'
+
   # flags for conditional, long running steps or jobs configurable with labels. If this is not a PR, everything will run.
   # 'Java' label
   test_java: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
@@ -51,6 +54,9 @@ env:
 
   # 'Groovy' label
   test_groovy: ${{ contains(github.event.pull_request.labels.*.name, 'Groovy') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'Rust' label
+  test_rust: ${{ contains(github.event.pull_request.labels.*.name, 'Rust') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
   # 'Platform' label
   test_platform: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
@@ -91,7 +97,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '17', '20-ea' ]
+        java: [ '11', '17', '21-ea' ]
       fail-fast: false
     steps:
         
@@ -115,14 +121,14 @@ jobs:
           restore-keys: ${{ runner.os }}-
 
       - name: Setup Gradle Daemon to run on JDK 11
-        if: ${{ matrix.java == '20-ea' }}
+        if: ${{ matrix.java == '21-ea' }}
         run: |
           mkdir -p ~/.gradle
           #uses a preinstalled JDK 11 from the runner
           echo "org.gradle.java.home=$JAVA_HOME_11_X64" >> ~/.gradle/gradle.properties
 
       - name: Build NetBeans
-        run: ant -quiet -Dcluster.config=release build-nozip
+        run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG build-nozip
 
       - name: Prepare Artifact
         if: ${{ matrix.java == '11' }}
@@ -139,7 +145,7 @@ jobs:
           
       - name: Create Dev Build
         if: ${{ matrix.java == '11' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
-        run: ant -quiet zip-cluster-config -Dcluster.config=release
+        run: ant -quiet zip-cluster-config -Dcluster.config=$CLUSTER_CONFIG
 
       - name: Upload Dev Build
         if: ${{ matrix.java == '11' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
@@ -150,6 +156,34 @@ jobs:
           retention-days: 7
           if-no-files-found: error
 
+  nb-javac-smokecheck:
+    name: "NetBeans on nb-javac"
+    # Run test job only when the 'nb-javac' label is added
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'nb-javac') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+            distribution: 'zulu'
+            java-version: 8
+      - name: Caching dependencies
+        uses: actions/cache/restore@v3
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+      - name: Download External Binaries
+        run: ant download-all-extbins
+      - name: Build NetBeans with nb-javac
+        run: ant build -Dnbjavac.class.path=java/libs.javacapi/external/*.jar
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+      - name: Test with Commit Validation
+        run: ant commit-validation -Dnbjavac.class.path=java/libs.javacapi/external/*.jar
 
 # secondary jobs
   linux-commit-validation:
@@ -159,7 +193,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8', '11', '17', '20-ea' ]
+        java: [ '8', '11', '17', '21-ea' ]
       fail-fast: false
     steps:
 
@@ -183,23 +217,13 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Commit Validation tests
-        run: ant $OPTS -Dcluster.config=release commit-validation
+        run: ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
-          paths: "./nbbuild/build/test/commit-validation/results/*.xml"
-
-# the test-summary action above is currently only looking for failures and ignores errors,
-# this step can be removed as soon this is fixed upstream
-      - name: Upload Test Results
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: validation-log-linux-${{ matrix.java }}
-          path: /home/runner/work/netbeans/netbeans/nbbuild/build/test/commit-validation/results/
-          retention-days: 1
+          paths: "./nbbuild/build/test/commit-validation/results/TEST-*.xml"
 
 
   # commit related checks - some steps run even when the build is dissabled
@@ -295,12 +319,12 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Test Netbeans Build System
-        run: ant $OPTS -Dcluster.config=release localtest
+        run: ant $OPTS -Dcluster.config=$CLUSTER_CONFIG localtest
 
       - name: Build all Tests
         # runs only in PRs if requested, nowhere else (~18 min)
         if: env.test_tests == 'true' && github.event_name == 'pull_request' && success()
-        run: ant -quiet -Dcluster.config=release test -Dtest.includes=NoTestsJustBuild
+        run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG test -Dtest.includes=NoTestsJustBuild
 
 
   build-nbms:
@@ -481,17 +505,23 @@ jobs:
       - name: ide/html.custom
         run: ant $OPTS -f ide/html.custom test
 
-#      - name: ide/html.editor
-#        run: ant $OPTS -f ide/html.editor test
+      - name: ide/html.editor
+        run: ant $OPTS -f ide/html.editor test
 
-#      - name: ide/html.lexer
-#        run: ant $OPTS -f ide/html.lexer test
+      - name: ide/html.editor
+        run: ant $OPTS -f ide/html.editor.lib test
+
+      - name: ide/html.lexer
+        run: ant $OPTS -f ide/html.lexer test
 
       - name: ide/html.parser
         run: ant $OPTS -f ide/html.parser test
 
       - name: ide/html.validation
         run: ant $OPTS -f ide/html.validation test
+
+      - name: ide/httpserver
+        run: ant $OPTS -f ide/httpserver test
 
       - name: ide/hudson
         run: ant $OPTS -f ide/hudson test
@@ -523,6 +553,9 @@ jobs:
       - name: ide/lexer
         run: ant $OPTS -f ide/lexer test
 
+      - name: ide/lexer.antlr4
+        run: ant $OPTS -f ide/lexer.antlr4 test
+
       - name: ide/lib.terminalemulator
         run: ant $OPTS -f ide/lib.terminalemulator test
 
@@ -549,6 +582,9 @@ jobs:
 
       - name: ide/o.openidex.util
         run: ant $OPTS -f ide/o.openidex.util test
+
+      - name: ide/options.editor
+        run: .github/retry.sh ant $OPTS -f ide/options.editor test
 
 #      - name: ide/parsing.api
 #        run: ant $OPTS -f ide/parsing.api test
@@ -671,7 +707,7 @@ jobs:
         run: ant $OPTS -f ide/xsl test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -686,7 +722,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '11' ]
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
@@ -774,7 +810,7 @@ jobs:
         run: ant $OPTS -f extide/o.apache.tools.ant.module test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -977,7 +1013,7 @@ jobs:
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/netbinox test -Dtest.config=stableBTD
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1132,7 +1168,7 @@ jobs:
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/o.n.bootstrap test
  
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1200,27 +1236,21 @@ jobs:
         run: ant $OPTS -f nb/welcome test
         
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   java-modules-test:
-    name: Java Modules on Linux/JDK ${{ matrix.java }} (some on 11)
+    name: Java Modules on Linux/JDK ${{ matrix.java }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 100
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '11' ]
     steps:
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-          distribution: ${{ env.default_java_distribution }}
 
       - name: Set up JDK ${{ matrix.java }} 
         uses: actions/setup-java@v3
@@ -1241,9 +1271,6 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
-      - name: api.debugger.jpda
-        run: ant $OPTS -f java/api.debugger.jpda test
-
       - name: api.java
         run: ant $OPTS -f java/api.java test
 
@@ -1255,24 +1282,6 @@ jobs:
 
       - name: dbschema
         run: ant $OPTS -f java/dbschema test -Dtest.config=stable
-
-#      - name: debugger.jpda
-#        run: ant $OPTS -f java/debugger.jpda test
-
-      - name: debugger.jpda.js
-        run: ant $OPTS -f java/debugger.jpda.js test
-
-      - name: debugger.jpda.projects
-        run: ant $OPTS -f java/debugger.jpda.projects test
-
-      - name: debugger.jpda.projectsui
-        run: ant $OPTS -f java/debugger.jpda.projectsui test
-
-#      - name: debugger.jpda.truffle
-#        run: ant $OPTS -f java/debugger.jpda.truffle test
-
-#      - name: debugger.jpda.ui
-#        run: ant $OPTS -f java/debugger.jpda.ui test
 
       - name: editor.htmlui
         run: ant $OPTS -f java/editor.htmlui test
@@ -1334,8 +1343,9 @@ jobs:
       - name: java.source.queriesimpl
         run: ant $OPTS -f java/java.source.queriesimpl test
 
-#      - name: java.sourceui
-#        run: ant $OPTS -f java/java.sourceui test
+      - name: java.sourceui
+        if: env.test_java == 'true' && success()
+        run: ant $OPTS -f java/java.sourceui test
 
       - name: java.testrunner
         run: ant $OPTS -f java/java.testrunner test
@@ -1391,36 +1401,12 @@ jobs:
       - name: xml.jaxb
         run: ant $OPTS -f java/xml.jaxb test
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-          distribution: ${{ env.default_java_distribution }}
-
-      - name: Set up opts
-        run: echo "OPTS_11=-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true" >> $GITHUB_ENV
-
       - name: java.lexer
         run: ant $OPTS -f java/java.lexer test
 
-      - name: java.completion
-        if: env.test_java == 'true' && success()
-        run: ant $OPTS $OPTS_11 -f java/java.completion test
-
-      - name: java.editor
-        if: env.test_java == 'true' && success()
-        run: .github/retry.sh ant $OPTs $OPTS_11 -f java/java.editor test-unit
-
-      - name: java.source
-        run: ant $OPTS $OPTS_11 -f java/java.source test-unit
-
-      - name: java.source.base
-        if: env.test_java == 'true' && success()
-        run: .github/retry.sh ant $OPTS $OPTS_11 -f java/java.source.base test
-
       - name: refactoring.java
         if: env.test_java == 'true' && success()
-        run: ant $OPTS $OPTS_11 -f java/refactoring.java test-unit
+        run: ant $OPTS -f java/refactoring.java test-unit
 
       - name: form
         if: env.test_java == 'true' && success()
@@ -1431,7 +1417,7 @@ jobs:
         run: ant $OPTS -f java/javadoc test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1485,7 +1471,7 @@ jobs:
         run: ant $OPTS -f apisupport/timers test -Dtest.config=stable
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1536,7 +1522,67 @@ jobs:
         run: ant $OPTS -f java/spi.java.hints test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  java-debugger-test:
+    name: Java Debugger tests on Linux/JDK ${{ matrix.java }}
+    # equals env.test_java == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11', '17' ]
+      fail-fast: false
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: api.debugger.jpda
+        run: ant $OPTS -f java/api.debugger.jpda test
+
+      - name: debugger.jpda
+        run: .github/retry.sh ant $OPTS -f java/debugger.jpda test
+
+      - name: debugger.jpda.js
+        run: ant $OPTS -f java/debugger.jpda.js test
+
+      - name: debugger.jpda.projects
+        run: ant $OPTS -f java/debugger.jpda.projects test
+
+      - name: debugger.jpda.projectsui
+        run: ant $OPTS -f java/debugger.jpda.projectsui test
+
+#      - name: debugger.jpda.truffle
+#        run: ant $OPTS -f java/debugger.jpda.truffle test
+
+#      - name: debugger.jpda.ui
+#        run: ant $OPTS -f java/debugger.jpda.ui test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1578,7 +1624,7 @@ jobs:
         run: ant $OPTS -f profiler/profiler.oql test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1714,7 +1760,7 @@ jobs:
         run: ant $OPTS -f webcommon/web.inspect test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1724,7 +1770,7 @@ jobs:
     name: Tests on MacOS/JDK ${{ matrix.java }}
     needs: base-build
     runs-on: macos-11
-    timeout-minutes: 60
+    timeout-minutes: 90
     strategy:
       matrix:
         java: [ '11' ]
@@ -1752,15 +1798,15 @@ jobs:
         run: ant $OPTS -f platform/core.network test
 
       - name: Commit Validation tests
-        run: ant $OPTS -Dcluster.config=release commit-validation
+        run: ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: |
             "./*/*/build/test/*/results/TEST-*.xml"
-            "./nbbuild/build/test/commit-validation/results/*.xml"
+            "./nbbuild/build/test/commit-validation/results/TEST-*.xml"
 
 
   javafx-test:
@@ -1799,7 +1845,7 @@ jobs:
 #        run: ant $OPTS -f javafx/javafx2.project test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1855,7 +1901,54 @@ jobs:
 #        run: ant $OPTS -f groovy/groovy.kit test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  rust-test:
+    name: Rust on Linux/JDK ${{ matrix.java }}
+    # equals env.test_rust == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Rust') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: rust/rust.cargo
+        run: ant $OPTS -f rust/rust.cargo test
+
+      - name: rust/rust.grammar
+        run: ant $OPTS -f rust/rust.grammar test
+
+      - name: rust/rust.options
+        run: ant $OPTS -f rust/rust.options test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1896,6 +1989,9 @@ jobs:
       - name: spring.webmvc
         run: ant $OPTS -f enterprise/spring.webmvc test
 
+      - name: tomcat5
+        run: ant $OPTS -f enterprise/tomcat5 test
+
       - name: websvc.editor.hints
         run: ant $OPTS -f enterprise/websvc.editor.hints test
 
@@ -1906,7 +2002,7 @@ jobs:
         run: ant $OPTS -f enterprise/websvc.wsstackapi test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1971,7 +2067,7 @@ jobs:
           ant $OPTS -f ide/versioning test-qa-functional
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2028,7 +2124,7 @@ jobs:
         run: .github/retry.sh ant $OPTS $OPTS_TEST -f ide/db.mysql test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2046,7 +2142,7 @@ jobs:
       DISPLAY: ":99.0"
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '11' ]
         os: [ 'windows-2022', 'ubuntu-20.04' ]
       fail-fast: false
     steps:
@@ -2172,7 +2268,7 @@ jobs:
         run: ant $OPTS -f php/spellchecker.bindings.php test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2213,7 +2309,7 @@ jobs:
         run: .github/retry.sh ant $OPTS -f java/java.lsp.server test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2280,7 +2376,7 @@ jobs:
         run: .github/retry.sh ant $OPTS -f java/debugger.jpda.truffle test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2348,6 +2444,7 @@ jobs:
       - harness-modules-test
       - java-modules-test
       - java-hints-test
+      - java-debugger-test
       - profiler-test
       - apisupport-modules-test
       - build-tools
@@ -2356,6 +2453,7 @@ jobs:
       - php
       - javafx-test
       - groovy-test
+      - rust-test
       - enterprise-test
       - versioning-test
       - lsp-test

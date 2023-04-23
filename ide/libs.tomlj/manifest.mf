@@ -1,3 +1,3 @@
 OpenIDE-Module: org.netbeans.libs.tomlj/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/tomlj/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.1
+OpenIDE-Module-Specification-Version: 1.3

@@ -184,7 +184,7 @@ There are several testing areas covered:
     
 </ul>
 
-After fixing the <a href="http://www.netbeans.org/issues/show_bug.cgi?id=58941"> issue #58941 </a>
+After fixing the <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=58941"> issue #58941 </a>
 unit tests of template lookup should be added. All tests was rewritten and adjusted to newly introduced 
 MimePath.
 </answer>

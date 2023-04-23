@@ -192,13 +192,13 @@ public class ServerTasks {
         // Add debug parameters read from domain.xml.
         // It's important to add them before java options specified by user
         // in case user specified it by himslef.
-        if (mode.equals(StartMode.DEBUG)) {
+        if (mode == StartMode.DEBUG) {
             String debugOpts = propMap.get("debug-options");
             String[] debugOptsSplited = debugOpts.split("\\s+(?=-)");
             optList.addAll(Arrays.asList(debugOptsSplited));
         }
         // add profile parameters
-        if (mode.equals(StartMode.PROFILE)) {
+        if (mode == StartMode.PROFILE) {
         }
         // appending IDE specified options after the ones got from domain.xml
         // IDE specified are takind precedence this way

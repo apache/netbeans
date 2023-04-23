@@ -131,26 +131,21 @@ public class JpaControllerUtil {
         // read the config from resource first
         StringBuilder sbuffer = new StringBuilder();
         String lineSep = System.getProperty("line.separator");//NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding));
-        String line = br.readLine();
-        while (line != null) {
-            sbuffer.append(line);
-            sbuffer.append(lineSep);
-            line = br.readLine();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding))) {
+            String line = br.readLine();
+            while (line != null) {
+                sbuffer.append(line);
+                sbuffer.append(lineSep);
+                line = br.readLine();
+            }
         }
-        br.close();
         return sbuffer.toString();
     }
     
     public static void createFile(FileObject target, String content, String encoding) throws IOException{
-        FileLock lock = target.lock();
-        try {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(target.getOutputStream(lock), encoding));
+        try (FileLock lock = target.lock();
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(target.getOutputStream(lock), encoding))) {
             bw.write(content);
-            bw.close();
-            
-        } finally {
-            lock.releaseLock();
         }
     }
     
@@ -228,7 +223,7 @@ public class JpaControllerUtil {
     }
     
     public static List<AnnotationMirror> findNestedAnnotations(AnnotationMirror annotationMirror, String annotationFqn) {
-        List<AnnotationMirror> result = new ArrayList<AnnotationMirror>();
+        List<AnnotationMirror> result = new ArrayList<>();
         findNestedAnnotationsInternal(annotationMirror, annotationFqn, result);
         return result;
     }
@@ -282,10 +277,7 @@ public class JpaControllerUtil {
     }
     
     public static boolean isEmbeddableClass(TypeElement typeElement) {
-        if (JpaControllerUtil.isAnnotatedWith(typeElement, "javax.persistence.Embeddable")) {
-            return true;
-        }
-        return false;
+        return JpaControllerUtil.isAnnotatedWith(typeElement, "javax.persistence.Embeddable");
     }
     
     public static int isRelationship(ExecutableElement method, boolean isFieldAccess) {
@@ -385,7 +377,7 @@ public class JpaControllerUtil {
         String[] fieldAnnotationFqns = {"javax.persistence.ManyToOne", "javax.persistence.OneToOne", "javax.persistence.Basic"};
         Boolean isFieldOptionalBoolean = findAnnotationValueAsBoolean(fieldElement, fieldAnnotationFqns, "optional");
         if (isFieldOptionalBoolean != null) {
-            isFieldOptional = isFieldOptionalBoolean.booleanValue();
+            isFieldOptional = isFieldOptionalBoolean;
         }
         if (!isFieldOptional) {
             return false;
@@ -394,7 +386,7 @@ public class JpaControllerUtil {
         fieldAnnotationFqns = new String[]{"javax.persistence.Column", "javax.persistence.JoinColumn"};
         isFieldNullable = findAnnotationValueAsBoolean(fieldElement, fieldAnnotationFqns, "nullable");
         if (isFieldNullable != null) {
-            return isFieldNullable.booleanValue();
+            return isFieldNullable;
         }
         //new ballgame
         boolean result = true;
@@ -456,11 +448,7 @@ public class JpaControllerUtil {
             }
             typeElement = getSuperclassTypeElement(typeElement);
         }
-        if (!idDetected) {
-            return false;//
-        } else {
-            return true;
-        }
+        return idDetected;
     }
 
     public static ExecutableElement getIdGetter(final boolean isFieldAccess, final TypeElement typeElement) {
@@ -524,7 +512,7 @@ public class JpaControllerUtil {
         if (desiredMethodElement == null) {
             throw new IllegalArgumentException("Could not find " + methodName + " in " + fqClass);
         }
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         List<? extends TypeMirror> thrownTypes = desiredMethodElement.getThrownTypes();
         for (TypeMirror thrownType : thrownTypes) {
             if (thrownType.getKind() == TypeKind.DECLARED) {
@@ -544,7 +532,7 @@ public class JpaControllerUtil {
      * classes or mapped superclasses.
      */
     public static ExecutableElement[] getEntityMethods(TypeElement entityTypeElement) {
-        List<ExecutableElement> result = new LinkedList<ExecutableElement>();
+        List<ExecutableElement> result = new LinkedList<>();
         TypeElement typeElement = entityTypeElement;
         while (typeElement != null) {
             if (isAnnotatedWith(typeElement, "javax.persistence.Entity") || isAnnotatedWith(typeElement, "javax.persistence.MappedSuperclass")) { // NOI18N
@@ -552,7 +540,7 @@ public class JpaControllerUtil {
             }
             typeElement = getSuperclassTypeElement(typeElement);
         }
-        return result.toArray(new ExecutableElement[result.size()]);
+        return result.toArray(new ExecutableElement[0]);
     }
     
     public static VariableElement guessField(ExecutableElement getter) {
@@ -589,7 +577,7 @@ public class JpaControllerUtil {
     // ----------------------------------------------------------------------------------------- Nested Classes
     
     public static class EmbeddedPkSupport {
-        private Map<TypeElement,EmbeddedPkSupportInfo> typeToInfo = new HashMap<TypeElement,EmbeddedPkSupportInfo>();
+        private Map<TypeElement,EmbeddedPkSupportInfo> typeToInfo = new HashMap<>();
         
         public Set<ExecutableElement> getPkAccessorMethods(TypeElement type) {
             EmbeddedPkSupportInfo info = getInfo(type);
@@ -657,14 +645,14 @@ public class JpaControllerUtil {
     }
     
     private static class EmbeddedPkSupportInfo {
-        private Map<String,ExecutableElement> joinColumnNameToRelationshipMethod = new HashMap<String,ExecutableElement>();
-        private Map<ExecutableElement,List<String>> relationshipMethodToJoinColumnNames = new HashMap<ExecutableElement,List<String>>(); //used only in isRedundantWithPkFields
-        private Map<String,String> joinColumnNameToReferencedColumnName = new HashMap<String,String>();
-        private Map<String,String> columnNameToAccessorString = new HashMap<String,String>();
-        private Map<String,String> columnNameToSetterString = new HashMap<String,String>();
-        private Map<ExecutableElement,String> pkAccessorMethodToColumnName = new HashMap<ExecutableElement,String>();
-        private Map<ExecutableElement,String> pkSetterMethodToColumnName = new HashMap<ExecutableElement,String>();
-        private Map<ExecutableElement,String> pkAccessorMethodToPopulationCode = new HashMap<ExecutableElement,String>(); //derived
+        private Map<String,ExecutableElement> joinColumnNameToRelationshipMethod = new HashMap<>();
+        private Map<ExecutableElement,List<String>> relationshipMethodToJoinColumnNames = new HashMap<>(); //used only in isRedundantWithPkFields
+        private Map<String,String> joinColumnNameToReferencedColumnName = new HashMap<>();
+        private Map<String,String> columnNameToAccessorString = new HashMap<>();
+        private Map<String,String> columnNameToSetterString = new HashMap<>();
+        private Map<ExecutableElement,String> pkAccessorMethodToColumnName = new HashMap<>();
+        private Map<ExecutableElement,String> pkSetterMethodToColumnName = new HashMap<>();
+        private Map<ExecutableElement,String> pkAccessorMethodToPopulationCode = new HashMap<>(); //derived
         private boolean isFieldAccess;
         
         public Set<ExecutableElement> getPkAccessorMethods() {
@@ -913,14 +901,14 @@ public class JpaControllerUtil {
             TreeMaker make = wc.getTreeMaker();
             TypeInfo[] pTypes = mInfo.getParameterTypes();
             String[] pNames = mInfo.getParameterNames();
-            List<VariableTree> params = new ArrayList<VariableTree>();
+            List<VariableTree> params = new ArrayList<>();
             for (int i = 0 ; pTypes != null && i < pTypes.length; i++) {
                 VariableTree vtree = createVariable(wc, pNames[i], pTypes[i]);
                 params.add(vtree);
             }
             
             TypeInfo[] excepTypes = mInfo.getExceptionTypes();
-            List<ExpressionTree> throwsList = new ArrayList<ExpressionTree>();
+            List<ExpressionTree> throwsList = new ArrayList<>();
             for (int i = 0 ; excepTypes != null && i < excepTypes.length; i++) {
                 throwsList.add((ExpressionTree)createType(wc, excepTypes[i]));
             }
@@ -967,24 +955,36 @@ public class JpaControllerUtil {
             }
             
             TypeKind primitiveTypeKind = null;
-            if ("boolean".equals(rawType)) {           // NOI18N
-                primitiveTypeKind = TypeKind.BOOLEAN;
-            } else if ("byte".equals(rawType)) {       // NOI18N
-                primitiveTypeKind = TypeKind.BYTE;
-            } else if ("short".equals(rawType)) {      // NOI18N
-                primitiveTypeKind = TypeKind.SHORT;
-            } else if ("int".equals(rawType)) {        // NOI18N
-                primitiveTypeKind = TypeKind.INT;
-            } else if ("long".equals(rawType)) {       // NOI18N
-                primitiveTypeKind = TypeKind.LONG;
-            } else if ("char".equals(rawType)) {       // NOI18N
-                primitiveTypeKind = TypeKind.CHAR;
-            } else if ("float".equals(rawType)) {      // NOI18N
-                primitiveTypeKind = TypeKind.FLOAT;
-            } else if ("double".equals(rawType)) {     // NOI18N
-                primitiveTypeKind = TypeKind.DOUBLE;
-            } else if ("void".equals(rawType)) {
-                primitiveTypeKind = TypeKind.VOID;
+            switch (rawType) {
+                case "boolean": // NOI18N
+                    primitiveTypeKind = TypeKind.BOOLEAN;
+                    break;
+                case "byte": // NOI18N
+                    primitiveTypeKind = TypeKind.BYTE;
+                    break;
+                case "short": // NOI18N
+                    primitiveTypeKind = TypeKind.SHORT;
+                    break;
+                case "int": // NOI18N
+                    primitiveTypeKind = TypeKind.INT;
+                    break;
+                case "long": // NOI18N
+                    primitiveTypeKind = TypeKind.LONG;
+                    break;
+                case "char": // NOI18N
+                    primitiveTypeKind = TypeKind.CHAR;
+                    break;
+                case "float": // NOI18N
+                    primitiveTypeKind = TypeKind.FLOAT;
+                    break;
+                case "double": // NOI18N
+                    primitiveTypeKind = TypeKind.DOUBLE;
+                    break;
+                case "void": // NOI18N
+                    primitiveTypeKind = TypeKind.VOID;
+                    break;
+                default:
+                    break;
             }
             if (primitiveTypeKind != null) {
                 return make.PrimitiveType(primitiveTypeKind);
@@ -1035,14 +1035,14 @@ public class JpaControllerUtil {
                 return wc.getTreeMaker().Modifiers(flags, Collections.<AnnotationTree>emptyList());
             }
             GenerationUtils generationUtils = GenerationUtils.newInstance(wc);
-            List<AnnotationTree> annotationTrees = new ArrayList<AnnotationTree>();
+            List<AnnotationTree> annotationTrees = new ArrayList<>();
             for (AnnotationInfo annotation : annotations) {
                 //append an AnnotationTree
                 String[] argNames = annotation.getArgNames();
                 if (argNames != null && argNames.length > 0) {
                     //one or more args in this annotation
                     Object[] argValues = annotation.getArgValues();
-                    List<ExpressionTree> argTrees = new ArrayList<ExpressionTree>();
+                    List<ExpressionTree> argTrees = new ArrayList<>();
                     for (int i = 0; i < argNames.length; i++) {
                         ExpressionTree argTree = generationUtils.createAnnotationArgument(argNames[i], argValues[i]);
                         argTrees.add(argTree);

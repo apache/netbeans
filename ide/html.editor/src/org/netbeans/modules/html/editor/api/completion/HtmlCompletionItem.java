@@ -101,6 +101,10 @@ public class HtmlCompletionItem implements CompletionItem {
         return new CharRefItem(name, value, substitutionOffset, helpId);
     }
 
+    public static HtmlCompletionItem createCssValue(String value, int substitutionOffset, boolean related) {
+        return new HtmlCssValueCompletionItem(value, substitutionOffset, related);
+    }
+
     /**
      * @param file
      * @param substitutionOffset
@@ -121,6 +125,7 @@ public class HtmlCompletionItem implements CompletionItem {
     public static HtmlCompletionItem createGoUpFileCompletionItem(int substitutionOffset, Color color, ImageIcon icon) {
         return new GoUpFileAttributeValue(substitutionOffset, color, icon);
     }
+
     //------------------------------------------
     protected int substitutionOffset;
     protected String text, helpId;
@@ -247,7 +252,7 @@ public class HtmlCompletionItem implements CompletionItem {
         return result[0];
     }
 
-    private void reindent(JTextComponent component) {
+    void reindent(JTextComponent component) {
 
         final BaseDocument doc = (BaseDocument) component.getDocument();
         final int dotPos = component.getCaretPosition();
@@ -894,5 +899,57 @@ public class HtmlCompletionItem implements CompletionItem {
     
     private static String getHtmlColor(Color c) {
         return "<font color=#" + hexColorCode(c) + ">"; // NOI18N
+    }
+
+
+
+    public static class HtmlCssValueCompletionItem extends HtmlCompletionItem {
+        private static final ImageIcon ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/html/editor/resources/rule.png", false); //NOI18N
+        private static final String RELATED_SELECTOR_COLOR = "007c00"; //NOI18N
+        private static final String GRAY_COLOR_CODE = Integer.toHexString(Color.GRAY.getRGB()).substring(2);
+        private final boolean related;
+
+        private HtmlCssValueCompletionItem(
+                String value,
+                int substituteOffset,
+                boolean related) {
+            super(value, substituteOffset);
+            this.related = related;
+        }
+
+        @Override
+        protected String getLeftHtmlText() {
+            StringBuilder buf = new StringBuilder();
+            if (related) {
+                buf.append("<b><font color=#"); //NOI18N
+                buf.append(RELATED_SELECTOR_COLOR);
+            } else {
+                buf.append("<font color=#"); //NOI18N
+                buf.append(GRAY_COLOR_CODE);
+            }
+            buf.append(">");
+            buf.append(getItemText());
+            buf.append("</font>"); //NOI18N
+            if (related) {
+                buf.append("</b>"); //NOI18N
+            }
+
+            return buf.toString();
+        }
+
+        @Override
+        protected ImageIcon getIcon() {
+            return ICON;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return super.getSortPriority() - (related ? 1 : 0);
+        }
+
+        @Override
+        void reindent(JTextComponent component) {
+            // Don't reindent
+        }
     }
 }

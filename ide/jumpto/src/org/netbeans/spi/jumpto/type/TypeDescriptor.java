@@ -113,7 +113,7 @@ public abstract class TypeDescriptor extends Descriptor {
      * This will only be called when the dialog is opening the type, so
      * does not have to be as fast as the other descriptor attributes.
      * 
-     * @todo This method is intended to replace the open() call below.
+     * XXX This method is intended to replace the open() call below.
      *
      * @return The document offset of the type declaration in the declaration file
      */
@@ -121,7 +121,7 @@ public abstract class TypeDescriptor extends Descriptor {
      
     /**
      * Open the type declaration in the editor. 
-     * @todo Should we nuke this method and only have type declarations return
+     * XXX Should we nuke this method and only have type declarations return
      *   their offsets? I looked at the Java implementation and it's leveraging 
      *   some utility methods to open the type declaration; I have similar methods
      *   in Ruby. It might be more convenient

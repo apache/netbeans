@@ -87,7 +87,7 @@ class SamplesOutputStream {
 
                 tids.add(tid);
                 if (lastThread != null) {
-                    if (lastThread.getThreadState().equals(tinfo.getThreadState())) {
+                    if (lastThread.getThreadState() == tinfo.getThreadState()) {
                         StackTraceElement[] lastStack = lastThread.getStackTrace();
                         StackTraceElement[] stack = tinfo.getStackTrace();
 

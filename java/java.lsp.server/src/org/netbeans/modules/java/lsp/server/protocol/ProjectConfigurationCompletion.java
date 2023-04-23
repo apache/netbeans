@@ -30,6 +30,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import org.eclipse.lsp4j.CompletionItem;
+import org.eclipse.lsp4j.CompletionItemKind;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -46,7 +47,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = LaunchConfigurationCompletion.class, position = 100)
 public class ProjectConfigurationCompletion implements LaunchConfigurationCompletion {
 
-    private static final String CONFIG_TYPE = "java8+";     // NOI18N
+    private static final String CONFIG_TYPE = "java+";     // NOI18N
 
     @Override
     public CompletableFuture<List<CompletionItem>> configurations(Supplier<CompletableFuture<Project>> projectSupplier) {
@@ -68,7 +69,7 @@ public class ProjectConfigurationCompletion implements LaunchConfigurationComple
     }
 
     @NbBundle.Messages({"# {0} - Configuration name", "LBL_LaunchJavaConfig=Launch Java: {0}",
-                        "# {0} - Configuration name", "LBL_LaunchJavaConfig_desc=Launch a Java 8+ application using {0}."})
+                        "# {0} - Configuration name", "LBL_LaunchJavaConfig_desc=Launch a Java application using {0}."})
     private static List<CompletionItem> createConfigurationsCompletion(Project p) {
         Collection<ProjectConfiguration> configurations = getConfigurations(p);
         int size = configurations.size();
@@ -84,7 +85,8 @@ public class ProjectConfigurationCompletion implements LaunchConfigurationComple
             }
             String configDisplayName = c.getDisplayName();
             String launchName = Bundle.LBL_LaunchJavaConfig(configDisplayName);
-            CompletionItem ci = new CompletionItem("Java 8+: " + launchName);   // NOI18N
+            CompletionItem ci = new CompletionItem("Java+: " + launchName);   // NOI18N
+            ci.setKind(CompletionItemKind.Module);
             StringWriter sw = new StringWriter();
             try (JsonWriter w = new JsonWriter(sw)) {
                 w.setIndent("\t");                                          // NOI18N

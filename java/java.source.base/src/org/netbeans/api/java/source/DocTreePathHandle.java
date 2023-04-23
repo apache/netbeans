@@ -47,7 +47,7 @@ import org.openide.util.Parameters;
 /**
  * Represents a handle for {@link TreePath} which can be kept and later resolved
  * by another javac. The Javac {@link Element}s are valid only in the single
- * {@link javax.tools.CompilationTask} or single run of the
+ * {@link javax.tools.JavaCompiler.CompilationTask} or single run of the
  * {@link org.netbeans.api.java.source.CancellableTask}. If the client needs to
  * keep a reference to the {@link TreePath} and use it in the other
  * CancellableTask he has to serialize it into the {@link TreePathHandle}.
@@ -55,7 +55,7 @@ import org.openide.util.Parameters;
  * <p>
  * Typical usage of TreePathHandle enclElIsCorrespondingEl:
  * </p>
- * <pre>
+ * <pre>{@code
  * final TreePathHandle[] tpHandle = new TreePathHandle[1];
  * javaSource.runCompileControlTask(new CancellableTask<CompilationController>() {
  *     public void run(CompilationController compilationController) {
@@ -73,7 +73,7 @@ import org.openide.util.Parameters;
  *         ....
  *    }
  * },priority);
- * </pre>
+ * }</pre>
  * </div>
  *
  *
@@ -97,10 +97,10 @@ public final class DocTreePathHandle {
      * Resolves an {@link DocTreePath} from the {@link DocTreePathHandle}.
      *
      * @param compilationInfo representing the
-     * {@link javax.tools.CompilationTask}
+     * {@link javax.tools.JavaCompiler.CompilationTask}
      * @return resolved subclass of {@link DocTreePath} or null if the doctree does
      * not exist on the classpath/sourcepath of
-     * {@link javax.tools.CompilationTask}.
+     * {@link javax.tools.JavaCompiler.CompilationTask}.
      * @throws IllegalArgumentException when this {@link DocTreePathHandle} is not
      * created for a source represented by the compilationInfo.
      */
@@ -140,10 +140,10 @@ public final class DocTreePathHandle {
     }
 
     /**
-     * Returns the {@link DocTree.Kind} of this DocTreePathHandle, it returns the kind
-     * of the {@link DocTree} from which the handle was created.
+     * Returns the {@link com.sun.source.doctree.DocTree.Kind} of this DocTreePathHandle, it returns the kind
+     * of the {@link com.sun.source.doctree.DocTree} from which the handle was created.
      *
-     * @return {@link Tree.Kind}
+     * @return {@link com.sun.source.doctree.DocTree.Kind}
      */
     public DocTree.Kind getKind() {
         return this.delegate.getKind();
@@ -178,25 +178,6 @@ public final class DocTreePathHandle {
         int preferredPosition = position.getPreferredPosition();
         Position pos = preferredPosition >= 0 ? createPositionRef(treePathHandle.getFileObject(), preferredPosition, Bias.Forward) : null;
         return new DocTreePathHandle(new DocTreeDelegate(pos, new DocTreeDelegate.KindPath(docTreePath), treePathHandle));
-    }
-
-    private static boolean isSupported(Element el) {
-        switch (el.getKind()) {
-            case PACKAGE:
-            case CLASS:
-            case INTERFACE:
-            case ENUM:
-            case METHOD:
-            case CONSTRUCTOR:
-            case INSTANCE_INIT:
-            case STATIC_INIT:
-            case FIELD:
-            case ANNOTATION_TYPE:
-            case ENUM_CONSTANT:
-                return true;
-            default:
-                return false;
-        }
     }
     
         private static List<DocTree> listChildren(@NonNull DocTree t) {
@@ -266,10 +247,10 @@ public final class DocTreePathHandle {
          * Resolves an {@link TreePath} from the {@link TreePathHandle}.
          *
          * @param javac representing the
-         * {@link javax.tools.CompilationTask}
+         * {@link javax.tools.JavaCompiler.CompilationTask}
          * @return resolved subclass of {@link Element} or null if the element
          * does not exist on the classpath/sourcepath of
-         * {@link javax.tools.CompilationTask}.
+         * {@link javax.tools.JavaCompiler.CompilationTask}.
          * @throws IllegalArgumentException when this {@link TreePathHandle} is
          * not created for a source represented by the compilationInfo.
          */
@@ -350,7 +331,7 @@ public final class DocTreePathHandle {
 
         static class KindPath {
 
-            private ArrayList<DocTree.Kind> kindPath = new ArrayList();
+            private ArrayList<DocTree.Kind> kindPath = new ArrayList<>();
 
             KindPath(DocTreePath treePath) {
                 while (treePath != null) {

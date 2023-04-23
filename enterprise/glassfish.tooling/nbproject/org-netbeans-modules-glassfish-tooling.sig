@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.25
+#Version 1.26
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1411,6 +1411,7 @@ fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVer
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_2_3
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_2_4
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_2_5
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_0
 meth public boolean equals(org.netbeans.modules.glassfish.tooling.data.GlassFishVersion)
 meth public boolean equalsMajorMinor(org.netbeans.modules.glassfish.tooling.data.GlassFishVersion)
 meth public java.lang.String toFullString()
@@ -1431,7 +1432,7 @@ meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion 
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion[] values()
 supr java.lang.Enum<org.netbeans.modules.glassfish.tooling.data.GlassFishVersion>
-hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,GF_6_1_0_STR,GF_6_1_0_STR_NEXT,GF_6_2_0_STR,GF_6_2_0_STR_NEXT,GF_6_2_1_STR,GF_6_2_1_STR_NEXT,GF_6_2_2_STR,GF_6_2_2_STR_NEXT,GF_6_2_3_STR,GF_6_2_3_STR_NEXT,GF_6_2_4_STR,GF_6_2_4_STR_NEXT,GF_6_2_5_STR,GF_6_2_5_STR_NEXT,GF_6_STR,GF_6_STR_NEXT,build,major,minor,stringValuesMap,update,value
+hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,GF_6_1_0_STR,GF_6_1_0_STR_NEXT,GF_6_2_0_STR,GF_6_2_0_STR_NEXT,GF_6_2_1_STR,GF_6_2_1_STR_NEXT,GF_6_2_2_STR,GF_6_2_2_STR_NEXT,GF_6_2_3_STR,GF_6_2_3_STR_NEXT,GF_6_2_4_STR,GF_6_2_4_STR_NEXT,GF_6_2_5_STR,GF_6_2_5_STR_NEXT,GF_6_STR,GF_6_STR_NEXT,GF_7_0_0_STR,GF_7_0_0_STR_NEXT,build,major,minor,stringValuesMap,update,value
 
 CLSS public org.netbeans.modules.glassfish.tooling.data.IdeContext
  anno 0 java.lang.Deprecated()
@@ -1712,7 +1713,7 @@ meth public static java.net.URL getBuilderConfig(org.netbeans.modules.glassfish.
 meth public static org.netbeans.modules.glassfish.tooling.server.config.ConfigBuilder getBuilder(org.netbeans.modules.glassfish.tooling.data.GlassFishServer)
 meth public static void destroyBuilder(org.netbeans.modules.glassfish.tooling.data.GlassFishServer)
 supr java.lang.Object
-hfds CONFIG_V3,CONFIG_V4,CONFIG_V4_1,CONFIG_V5,CONFIG_V5_0_1,CONFIG_V5_1,CONFIG_V6,CONFIG_V6_1_0,CONFIG_V6_2_0,CONFIG_V6_2_1,CONFIG_V6_2_2,CONFIG_V6_2_3,CONFIG_V6_2_4,CONFIG_V6_2_5,builders,config
+hfds CONFIG_V3,CONFIG_V4,CONFIG_V4_1,CONFIG_V5,CONFIG_V5_0_1,CONFIG_V5_1,CONFIG_V6,CONFIG_V6_1_0,CONFIG_V6_2_0,CONFIG_V6_2_1,CONFIG_V6_2_2,CONFIG_V6_2_3,CONFIG_V6_2_4,CONFIG_V6_2_5,CONFIG_V7_0_0,builders,config
 
 CLSS public org.netbeans.modules.glassfish.tooling.server.config.ConfigUtils
 cons public init()
@@ -1753,6 +1754,8 @@ hfds lib
 CLSS public final !enum org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile
 fld public final static char TYPE_SEPARATOR = '-'
 fld public final static int length
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v10_0_0
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v10_0_0_web
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v1_2
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v1_3
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v1_4
@@ -1792,6 +1795,7 @@ hfds name
 
 CLSS public final static !enum org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version
  outer org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v10_0_0
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v1_2
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v1_3
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v1_4

@@ -61,7 +61,7 @@ import org.netbeans.api.annotations.common.NonNull;
 /**
  * Represents a handle for {@link TypeMirror} which can be kept and later resolved
  * by another javac. The Javac {@link TypeMirror}s are valid only in the single
- * {@link javax.tools.CompilationTask} or single run of the
+ * {@link javax.tools.JavaCompiler.CompilationTask} or single run of the
  * {@link org.netbeans.api.java.source.CancellableTask}. If the client needs to
  * keep a reference to the {@link TypeMirror} and use it in the other CancellableTask
  * he has to serialize it into the {@link TypeMirrorHandle}.
@@ -69,7 +69,7 @@ import org.netbeans.api.annotations.common.NonNull;
  * <p>
  ** Typical usage of TypeMirrorHandle is:
  * </p>
- * <pre>
+ * <pre>{@code
  * final TypeMirrorHandle[] typeMirrorHandle = new TypeMirrorHandle[1];
  * javaSource.runCompileControlTask(new CancellableTask<CompilationController>() {
  *     public void run(CompilationController compilationController) {
@@ -87,10 +87,10 @@ import org.netbeans.api.annotations.common.NonNull;
  *         ....
  *    }
  * },priority);
- * </pre>
+ * }</pre>
  * </div>
  * Currently, not all the {@link TypeMirror} {@link TypeKind kinds} are supported by handle.
- * The unsupported {@link TykeKind kinds} are: {@link TypeKind#EXECUTABLE}, {@link TypeKind#OTHER},
+ * The unsupported {@link TypeKind kinds} are: {@link TypeKind#EXECUTABLE}, {@link TypeKind#OTHER},
  * and {@link TypeKind#PACKAGE}.
  *
  * @author Jan Lahoda, Dusan Balek
@@ -109,9 +109,9 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
     
     /**
      * Factory method for creating {@link TypeMirrorHandle}.
-     * @param {@link TypeMirror} for which the {@link TypeMirrorHandle} should be created.
+     * @param tm for which the {@link TypeMirrorHandle} should be created.
      * Not all the {@link TypeMirror} {@link TypeKind kinds} are currently supported.
-     * The unsupported {@link TykeKind kinds} are: {@link TypeKind#EXECUTABLE}, {@link TypeKind#OTHER},
+     * The unsupported {@link TypeKind kinds} are: {@link TypeKind#EXECUTABLE}, {@link TypeKind#OTHER},
      * and {@link TypeKind#PACKAGE}.
      * @return a new {@link TypeMirrorHandle}
      * @throws IllegalArgumentException if the {@link TypeMirror} is of an unsupported
@@ -222,10 +222,10 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
     
     /**
      * Resolves an {@link TypeMirror} from the {@link TypeMirrorHandle}.
-     * @param {@link CompilationInfo} representing the {@link javax.tools.CompilationTask}
+     * @param info representing the {@link javax.tools.JavaCompiler.CompilationTask}
      * in which the {@link TypeMirror} should be resolved.
      * @return resolved subclass of {@link TypeMirror} or null if the type cannot be
-     * resolved in this {@link javax.tools.CompilationTask}.
+     * resolved in this {@link javax.tools.JavaCompiler.CompilationTask}.
      */
     public T resolve(@NonNull CompilationInfo info) {
         return resolve(info, new HashMap<TypeMirrorHandle, PlaceholderType>());

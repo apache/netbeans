@@ -235,6 +235,11 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                 isAcceptableSourceLevel("11", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
         }
+        // no warning if 11 is the default for jakartaee10
+        if ((j2eeProfile == Profile.JAKARTA_EE_10_FULL || j2eeProfile == Profile.JAKARTA_EE_10_WEB) &&
+                isAcceptableSourceLevel("11", sourceLevel, acceptableSourceLevels)) { // NOI18N
+            return null;
+        }
         
         if (j2eeProfile == Profile.JAVA_EE_5) {
             JavaPlatform[] java15Platforms = getJavaPlatforms("1.5"); //NOI18N
@@ -278,7 +283,8 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                     return WARN_JDK_8_REQUIRED;
                 }
             }
-        } else if (j2eeProfile == Profile.JAKARTA_EE_9_1_FULL || j2eeProfile == Profile.JAKARTA_EE_9_1_WEB) {
+        } else if (j2eeProfile == Profile.JAKARTA_EE_9_1_FULL || j2eeProfile == Profile.JAKARTA_EE_9_1_WEB
+                || j2eeProfile == Profile.JAKARTA_EE_10_FULL || j2eeProfile == Profile.JAKARTA_EE_10_WEB) {
             JavaPlatform[] java11Platforms = getJavaPlatforms("11"); //NOI18N
             if (java11Platforms.length > 0) {
                 return WARN_SET_JDK_11;

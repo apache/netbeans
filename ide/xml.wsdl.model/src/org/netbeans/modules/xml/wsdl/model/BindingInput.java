@@ -33,5 +33,6 @@ public interface BindingInput extends Nameable<WSDLComponent>, WSDLComponent {
     /**
      * @deprecated use setName() instead.
      */
+    @Deprecated
     void setInput(Reference<Input> inRef);
 }

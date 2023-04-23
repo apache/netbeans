@@ -20,58 +20,31 @@ package org.netbeans.modules.languages.toml;
 
 import org.antlr.v4.runtime.misc.IntegerStack;
 import org.netbeans.api.lexer.Token;
-import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
-import org.netbeans.spi.lexer.TokenFactory;
 
 import static org.tomlj.internal.TomlLexer.*;
 import static org.netbeans.modules.languages.toml.TomlTokenId.*;
+import org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge;
 
 /**
  *
  * @author lkishalmi
  */
-public final class TomlLexer implements Lexer<TomlTokenId> {
-
-    private final TokenFactory<TomlTokenId> tokenFactory;
-    private final org.tomlj.internal.TomlLexer lexer;
-    private final LexerInputCharStream input;
+public final class TomlLexer extends AbstractAntlrLexerBridge<org.tomlj.internal.TomlLexer, TomlTokenId> {
 
     public TomlLexer(LexerRestartInfo<TomlTokenId> info) {
-        this.tokenFactory = info.tokenFactory();
-        this.input = new LexerInputCharStream(info.input());
-        try {
-            this.lexer = new org.tomlj.internal.TomlLexer(input);
-            if (info.state() != null) {
-                ((LexerState) info.state()).restore(lexer);
-            }
-            input.markToken();
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-            throw ex;
-        }
+        super(info, org.tomlj.internal.TomlLexer::new);
     }
 
-    private org.antlr.v4.runtime.Token preFetchedToken = null;
-
     @Override
-    public org.netbeans.api.lexer.Token<TomlTokenId> nextToken() {
-        org.antlr.v4.runtime.Token nextToken;
-        if (preFetchedToken != null) {
-            nextToken = preFetchedToken;
-            lexer.getInputStream().seek(preFetchedToken.getStopIndex() + 1);
-            preFetchedToken = null;
-        } else {
-            nextToken = lexer.nextToken();
-        }
-        int tokenType = nextToken.getType();
-        switch (tokenType) {
+    protected Token<TomlTokenId> mapToken(org.antlr.v4.runtime.Token antlrToken) {
+        switch (antlrToken.getType()) {
             case EOF:
                 return null;
 
             case StringChar:
-                return collate(StringChar, STRING);
-                
+                return groupToken(STRING, StringChar);
+
             case TripleQuotationMark:
             case TripleApostrophe:
             case QuotationMark:
@@ -133,59 +106,28 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
         }
     }
 
-    protected org.netbeans.api.lexer.Token<TomlTokenId> collate(int tokenType, TomlTokenId tokenId) {
-        preFetchedToken = lexer.nextToken();
-        while (preFetchedToken.getType() == tokenType) {
-            preFetchedToken = lexer.nextToken();
-        }
-        lexer.getInputStream().seek(preFetchedToken.getStartIndex());
-        return token(tokenId);
-    }
-    
     @Override
     public Object state() {
         return new LexerState(lexer);
     }
 
-    @Override
-    public void release() {
-    }
-
-    private Token<TomlTokenId> token(TomlTokenId id) {
-        input.markToken();
-        return tokenFactory.createToken(id);
-    }
-
-    private static class LexerState {
-        final int state;
-        final int mode;
-        final IntegerStack modes;
-
+    private static class LexerState extends AbstractAntlrLexerBridge.LexerState<org.tomlj.internal.TomlLexer> {
         final int arrayDepth;
         final IntegerStack arrayDepthStack;
 
         LexerState(org.tomlj.internal.TomlLexer lexer) {
-            this.state= lexer.getState();
+            super(lexer);
 
-            this.mode = lexer._mode;
-            this.modes = new IntegerStack(lexer._modeStack);
             this.arrayDepth = lexer.arrayDepth;
             this.arrayDepthStack = new IntegerStack(lexer.arrayDepthStack);
         }
 
+        @Override
         public void restore(org.tomlj.internal.TomlLexer lexer) {
-            lexer.setState(state);
-            lexer._modeStack.addAll(modes);
-            lexer._mode = mode;
+            super.restore(lexer);
 
             lexer.arrayDepth = arrayDepth;
             lexer.arrayDepthStack.addAll(arrayDepthStack);
         }
-
-        @Override
-        public String toString() {
-            return String.valueOf(state);
-        }
-
     }
 }

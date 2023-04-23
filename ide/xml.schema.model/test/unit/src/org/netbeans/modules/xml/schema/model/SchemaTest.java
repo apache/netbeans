@@ -66,7 +66,7 @@ public class SchemaTest extends TestCase {
     
     
     public void testReadElements() throws Exception {
-        ArrayList<GlobalElement> elements = new ArrayList(schema.getElements());
+        ArrayList<GlobalElement> elements = new ArrayList<>(schema.getElements());
         assertEquals("Schema.getElements", 2, elements.size());
         assertEquals("Schema.getElements(1)",  "comment", elements.get(1).getName());
     }
@@ -111,7 +111,7 @@ public class SchemaTest extends TestCase {
         
         assertEquals("testGetBlockDefaultEffective.0", "#all", schema.getBlockDefaultEffective().toString());
 
-        ArrayList<GlobalComplexType> types = new ArrayList(schema.getComplexTypes());
+        ArrayList<GlobalComplexType> types = new ArrayList<>(schema.getComplexTypes());
         GlobalComplexType typePurchaseOrder = null;
         if (types.get(0).getName().equals("PurchaseOrderType")) {
             typePurchaseOrder = types.get(0);
@@ -199,7 +199,7 @@ public class SchemaTest extends TestCase {
     }
 
     public void testGetComplexTypes() {
-        ArrayList<GlobalComplexType> types = new ArrayList(schema.getComplexTypes());
+        ArrayList<GlobalComplexType> types = new ArrayList<>(schema.getComplexTypes());
         GlobalComplexType typePurchaseOrder = null;
         if (types.get(0).getName().equals("PurchaseOrderType")) {
             typePurchaseOrder = types.get(0);
@@ -211,7 +211,7 @@ public class SchemaTest extends TestCase {
         
         Sequence seq = (Sequence) ctd;
         assertEquals("getComplexTypes:PurchaseOrder:sequence count", 3, seq.getChildren().size());
-        ArrayList<SchemaComponent> elements = new ArrayList(seq.getChildren());
+        ArrayList<SchemaComponent> elements = new ArrayList<>(seq.getChildren());
         assertTrue("getComplexTypes:PurchaseOrder:sequence.element(0).name", elements.get(0) instanceof LocalElement);
         LocalElement e = (LocalElement) elements.get(1);
         assertNotNull("getComplexTypes:PurchaseOrder:billTo type null", e.getType());
@@ -287,8 +287,8 @@ public class SchemaTest extends TestCase {
        model.endTransaction();
        
        model.startTransaction();
-       ArrayList<GlobalComplexType> types = new ArrayList(schema.getComplexTypes());
-       ArrayList<GlobalElement> elements = new ArrayList(schema.getElements());
+       ArrayList<GlobalComplexType> types = new ArrayList<>(schema.getComplexTypes());
+       ArrayList<GlobalElement> elements = new ArrayList<>(schema.getElements());
        GlobalElement element = elements.get(0);
        
          if(element.getName().equals("purchaseOrder")) {
@@ -325,8 +325,8 @@ public class SchemaTest extends TestCase {
        
        int initialCount = schema.getElements().size();
        model.startTransaction();
-       ArrayList<GlobalComplexType> types = new ArrayList(schema.getComplexTypes());
-       ArrayList<GlobalElement> elements = new ArrayList(schema.getElements());
+       ArrayList<GlobalComplexType> types = new ArrayList<>(schema.getComplexTypes());
+       ArrayList<GlobalElement> elements = new ArrayList<>(schema.getElements());
        GlobalElement element = elements.get(0);
        
          if(element.getName().equals("purchaseOrder")) {

@@ -128,7 +128,8 @@ public final class WebProjectCreateData {
      * Gets Java EE version
      * @return Java EE version
      * @deprecated
-     */    
+     */
+    @Deprecated
     public String getJavaEEVersion() {
         return getJavaEEProfile().toPropertiesString();
     }
@@ -137,7 +138,8 @@ public final class WebProjectCreateData {
      * Sets Java EE version
      * @param javaEEVersion Java EE version. Cannot be null.
      * @deprecated
-     */    
+     */
+    @Deprecated
     public void setJavaEEVersion(String javaEEVersion) {
         setJavaEEProfile(Profile.fromPropertiesString(javaEEVersion));
     }

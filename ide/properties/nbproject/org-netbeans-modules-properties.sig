@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.73
+#Version 1.74
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -985,6 +985,7 @@ meth public final boolean canCut()
 meth public javax.swing.Action getPreferredAction()
 meth public org.netbeans.modules.properties.PresentableFileEntry getFileEntry()
 meth public org.openide.util.actions.SystemAction getDefaultAction()
+ anno 0 java.lang.Deprecated()
 meth public void destroy() throws java.io.IOException
 meth public void setName(java.lang.String)
 supr org.openide.nodes.AbstractNode
@@ -1068,6 +1069,7 @@ meth protected abstract org.openide.nodes.Node createNodeDelegate()
 meth protected final org.openide.nodes.CookieSet getCookieSet()
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected final void setCookieSet(org.openide.nodes.CookieSet)
+ anno 0 java.lang.Deprecated()
 meth public <%0 extends org.openide.nodes.Node$Cookie> {%%0} getCookie(java.lang.Class<{%%0}>)
 meth public abstract boolean isCopyAllowed()
 meth public abstract boolean isDeleteAllowed()

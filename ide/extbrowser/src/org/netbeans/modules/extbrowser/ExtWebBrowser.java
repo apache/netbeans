@@ -243,7 +243,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(ExtWebBrowser.PROP_BROWSER_EXECUTABLE)) {
             Object np = evt.getNewValue();
-            if ((np != null) && (np instanceof NbProcessDescriptor)) {
+            if (np instanceof NbProcessDescriptor) {
                 String processName = ((NbProcessDescriptor)np).getProcessName();
                 if (err.isLoggable(Level.FINE)) {
                     err.log(Level.FINE, "" + System.currentTimeMillis() + "> propertychange: " + processName);

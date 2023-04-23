@@ -221,6 +221,7 @@ public class BirdViewWindow extends JWindow implements MouseMotionListener {
 
     private class BirdViewComponent extends JComponent {
 
+        @Override
         public void paint (Graphics g) {
             Graphics2D gr = (Graphics2D) g;
             super.paint (g);

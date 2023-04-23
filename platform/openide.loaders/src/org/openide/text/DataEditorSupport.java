@@ -157,7 +157,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
     /** Factory method to create a bit more complicated CloneableEditorSupport for a given
      * entry of a given DataObject. The common use inside DataObject looks like
      * this:
-     * <pre>
+     * <pre>{@code
      *  getCookieSet().add((Node.Cookie) DataEditorSupport.create(
      *    this, getPrimaryEntry(), getCookieSet(),
      *    new Callable<Pane>() { 
@@ -166,7 +166,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
      *      }
      *    }
      *  ));
-     * </pre>
+     * }</pre>
      * The method can be used to instantiate <b>multi view</b> editor by returning
      * <a href="@org-netbeans-core-multiview@/org/netbeans/core/api/multiview/MultiViews.html">
      * MultiViews.createCloneableMultiView("text/yourmime", this)</a>.
@@ -435,7 +435,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
     }
     
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     protected void loadFromStreamToKit(StyledDocument doc, InputStream stream, EditorKit kit) throws IOException, BadLocationException {
@@ -512,7 +512,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     protected void saveFromKitToStream(StyledDocument doc, EditorKit kit, OutputStream stream) throws IOException, BadLocationException {
@@ -911,7 +911,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
          * <p><b>Note: There is a contract (better saying a curse)
          * that this method has to call {@link #takeLock} method
          * in order to keep working some special filesystem's feature.
-         * See <a href="http://www.netbeans.org/issues/show_bug.cgi?id=28212">issue #28212</a></b>.
+         * See <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=28212">issue #28212</a></b>.
         *
         * @exception IOException if the environment cannot be marked modified
         *   (for example when the file is readonly), when such exception

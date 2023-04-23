@@ -1332,7 +1332,9 @@
                                 <NamespaceName start='1873' end='1876' isCurrent='false' isGlobal='false'>
                                     <Identifier start='1873' end='1876' name='int'/>
                                 </NamespaceName>
-                                <Identifier start='1877' end='1882' name='array'/>
+                                <NamespaceName start='1877' end='1882' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1877' end='1882' name='array'/>
+                                </NamespaceName>
                             </UnionType>
                         </ParametrType>
                         <ParametrName>

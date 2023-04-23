@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.css.lib.nblexer;
 
+import org.netbeans.modules.css.lib.api.CssTokenId;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
 /**
@@ -26,7 +27,7 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
  */
 public class CaseInsensitiveNbLexerCHS extends NbLexerCharStream {
 
-    public CaseInsensitiveNbLexerCHS(LexerRestartInfo lri) {
+    public CaseInsensitiveNbLexerCHS(LexerRestartInfo<CssTokenId> lri) {
         super(lri);
     }
 

@@ -364,7 +364,7 @@ public class AppClientProxy implements AppClient {
             } catch (FileAlreadyLockedException ex) {
                 // trying to use OutputProvider for writing changes
                 org.openide.loaders.DataObject dobj = org.openide.loaders.DataObject.find(fo);
-                if (dobj!=null && dobj instanceof AppClientProxy.OutputProvider)
+                if (dobj instanceof OutputProvider)
                     ((AppClientProxy.OutputProvider)dobj).write(this);
                 else throw ex;
             }

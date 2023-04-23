@@ -33,6 +33,7 @@ import org.openide.util.NbBundle;
 public class URLEditor extends PropertyEditorSupport implements org.openide.explorer.propertysheet.editors.XMLPropertyEditor  {
 
     /** sets new value */
+    @Override
     public void setAsText(String s) {
         if ("null".equals(s)) { // NOI18N
             setValue(null);
@@ -54,16 +55,19 @@ public class URLEditor extends PropertyEditorSupport implements org.openide.expl
     }
 
     /** @return the current value as String */
+    @Override
     public String getAsText() {
         URL url = (URL)getValue();
         return url != null ? url.toString() : "null"; // NOI18N
     }
 
+    @Override
     public String getJavaInitializationString () {
         URL url = (URL) getValue ();
         return "new java.net.URL(\""+url.toString ()+"\")"; // NOI18N
     }
 
+    @Override
     public boolean supportsCustomEditor () {
         return false;
     }
@@ -79,7 +83,7 @@ public class URLEditor extends PropertyEditorSupport implements org.openide.expl
     * the value should be available via the getValue method.
     * An IOException should be thrown when the value cannot be restored from the specified XML element
     * @param element the XML DOM element representing a subtree of XML from which the value should be loaded
-    * @exception IOException thrown when the value cannot be restored from the specified XML element
+    * @exception java.io.IOException thrown when the value cannot be restored from the specified XML element
     */
     public void readFromXML (org.w3c.dom.Node element) throws java.io.IOException {
         if (!XML_URL.equals (element.getNodeName ())) {

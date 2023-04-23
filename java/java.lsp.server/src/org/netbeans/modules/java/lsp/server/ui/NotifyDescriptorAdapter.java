@@ -48,6 +48,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.modules.java.lsp.server.input.InputBoxStep;
 import org.netbeans.modules.java.lsp.server.input.InputCallbackParams;
 import org.netbeans.modules.java.lsp.server.input.InputService;
+import org.netbeans.modules.java.lsp.server.input.LspInputServiceImpl;
 import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.QuickPickStep;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
@@ -59,6 +60,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.Actions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  * Adapts a {@link NotifyDescriptor} to a {@link ShowMessageRequestParams} call.
@@ -66,6 +68,11 @@ import org.openide.util.NbBundle;
  */
 class NotifyDescriptorAdapter {
     private static final Logger LOG = Logger.getLogger(NotifyDescriptorAdapter.class.getName());
+    
+    /**
+     * Processor that handles requests to create input steps, which might block
+     */
+    private static final RequestProcessor RP = new RequestProcessor(NotifyDescriptorAdapter.class.getName(), 20);
     
     private final UIContext client;
     private final NotifyDescriptor  descriptor;
@@ -222,6 +229,12 @@ class NotifyDescriptorAdapter {
                     options = JUST_OK; 
                     break;
             }
+        }
+        Object[] add = descriptor.getAdditionalOptions();
+        if (add != null && add.length > 0) {
+            Object[] addOpts = Arrays.copyOf(add, add.length + options.length);
+            System.arraycopy(options, 0, addOpts, add.length, options.length);
+            options = addOpts;
         }
         for (Object o : options) {
             String text;
@@ -399,27 +412,41 @@ class NotifyDescriptorAdapter {
                 public CompletableFuture<Either<QuickPickStep, InputBoxStep>> step(InputCallbackParams params) {
                     String stepId = "ID:" + params.getStep();
                     updateData(params.getData(), data);
-                    NotifyDescriptor input = ci.createInput(params.getStep());
-                    if (input instanceof NotifyDescriptor.InputLine) {
-                        data.put(stepId, input);
-                        InputBoxStep step = new InputBoxStep(ci.getEstimatedNumberOfInputs(), stepId,
-                                null, input.getTitle(), ((NotifyDescriptor.InputLine) input).getInputText(),
-                                input instanceof NotifyDescriptor.PasswordLine);
-                        return CompletableFuture.completedFuture(Either.forRight(step));
-                    } else if (input instanceof NotifyDescriptor.QuickPick) {
-                        data.put(stepId, input);
-                        List<NotifyDescriptor.QuickPick.Item> qpItems = ((NotifyDescriptor.QuickPick) input).getItems();
-                        List<QuickPickItem> items = new ArrayList<>();
-                        for (int i = 0; i < qpItems.size(); i++) {
-                            NotifyDescriptor.QuickPick.Item item = qpItems.get(i);
-                            items.add(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), Integer.toString(i)));
+                    
+                    CompletableFuture<Either<QuickPickStep, InputBoxStep>> res = new CompletableFuture<>();
+                    // the ComposedInput.Callback may block gathering information for e.g. quickpick. Offload to a Requestprocessor, as 
+                    // the main LSP thread cannot be blocked by long operations.
+                    RP.post(() -> {
+                        try {
+                            NotifyDescriptor input = ci.createInput(params.getStep());
+                            if (input instanceof NotifyDescriptor.InputLine) {
+                                data.put(stepId, input);
+                                InputBoxStep step = new InputBoxStep(ci.getEstimatedNumberOfInputs(), stepId,
+                                        null, input.getTitle(), ((NotifyDescriptor.InputLine) input).getInputText(),
+                                        input instanceof NotifyDescriptor.PasswordLine);
+                                res.complete(Either.forRight(step));
+                            } else if (input instanceof NotifyDescriptor.QuickPick) {
+                                data.put(stepId, input);
+                                List<NotifyDescriptor.QuickPick.Item> qpItems = ((NotifyDescriptor.QuickPick) input).getItems();
+                                List<QuickPickItem> items = new ArrayList<>();
+                                for (int i = 0; i < qpItems.size(); i++) {
+                                    NotifyDescriptor.QuickPick.Item item = qpItems.get(i);
+                                    items.add(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), Integer.toString(i)));
+                                }
+                                QuickPickStep step = new QuickPickStep(ci.getEstimatedNumberOfInputs(), stepId,
+                                        null, input.getTitle(), ((NotifyDescriptor.QuickPick) input).isMultipleSelection(),
+                                        items);
+                                res.complete(Either.forLeft(step));
+                            } else {
+                                res.complete(null);
+                            }
+                        } catch (ThreadDeath td) {
+                            throw td;
+                        } catch (Throwable t) {
+                            res.completeExceptionally(t);
                         }
-                        QuickPickStep step = new QuickPickStep(ci.getEstimatedNumberOfInputs(), stepId,
-                                null, input.getTitle(), ((NotifyDescriptor.QuickPick) input).isMultipleSelection(),
-                                items);
-                        return CompletableFuture.completedFuture(Either.forLeft(step));
-                    }
-                    return CompletableFuture.completedFuture(null);
+                    });
+                    return res;
                 }
 
                 @Override

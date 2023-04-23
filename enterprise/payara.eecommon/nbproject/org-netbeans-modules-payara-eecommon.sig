@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.14.0
+#Version 2.15.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -896,19 +896,27 @@ supr java.lang.Object
 hfds destFolder,ext,name,result,source
 
 CLSS public final org.netbeans.modules.payara.eecommon.api.config.AppClientVersion
+fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_10_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_1_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_1_4
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_5_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_6_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_7_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_8_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_9_0
 meth public int compareTo(java.lang.Object)
 meth public static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion getAppClientVersion(java.lang.String)
 supr org.netbeans.modules.payara.eecommon.api.config.J2EEBaseVersion
 
 CLSS public final org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion
+fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_10_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_1_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_1_4
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_5_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_6_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_7_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_8_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_9_0
 meth public int compareTo(java.lang.Object)
 meth public static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion getApplicationVersion(java.lang.String)
 supr org.netbeans.modules.payara.eecommon.api.config.J2EEBaseVersion
@@ -1137,6 +1145,7 @@ hfds j2eeModuleVersion,numericModuleVersion,numericSpecVersion
 CLSS public final org.netbeans.modules.payara.eecommon.api.config.J2EEVersion
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion J2EE_1_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion J2EE_1_4
+fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_10_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_8_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_9_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_9_1

@@ -106,7 +106,7 @@ public final class ConstructorGenerator extends CodeActionsProvider {
             return Collections.emptyList();
         }
         TypeElement typeElement = (TypeElement) info.getTrees().getElement(tp);
-        if (typeElement == null || !typeElement.getKind().isClass() || NestingKind.ANONYMOUS.equals(typeElement.getNestingKind())) {
+        if (typeElement == null || !typeElement.getKind().isClass() || NestingKind.ANONYMOUS == typeElement.getNestingKind()) {
             return Collections.emptyList();
         }
         final Set<? extends VariableElement> uninitializedFields = info.getTreeUtilities().getUninitializedFields(tp);

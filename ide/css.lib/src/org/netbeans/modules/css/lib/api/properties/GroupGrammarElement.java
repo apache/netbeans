@@ -84,13 +84,14 @@ public class GroupGrammarElement extends GrammarElement {
 
     @Override
     public void accept(GrammarElementVisitor visitor) {
-        visitor.visit(this);
-        for(GrammarElement child : elements()) {
-            child.accept(visitor);
+        boolean recurse = visitor.visit(this);
+        if (recurse) {
+            for (GrammarElement child : elements()) {
+                child.accept(visitor);
+            }
         }
     }
 
-    
     /**
      * 
      * @return List of children elements
@@ -131,27 +132,6 @@ public class GroupGrammarElement extends GrammarElement {
      */
     public boolean isVisible() {
         return getName() != null && getName().charAt(0) != GrammarElement.INVISIBLE_PROPERTY_PREFIX;
-    }
-        
-    @Override
-    public String toString2(int level) {
-        StringBuilder sb = new StringBuilder();
-        String heading = toString();
-        heading = heading.substring(0, heading.length() - 1);
-        sb.append(indentString(level)).append(heading); //NOI18N
-        if (getName() != null) {
-            sb.append("(").append(getName()).append(") "); //NOI18N
-        }
-        
-        sb.append('\n');
-        for (GrammarElement e : elements()) {
-            sb.append(e.toString2(level + 1));
-            sb.append('\n');
-        }
-        sb.append(indentString(level));
-        sb.append(']');
-        sb.append(super.toString());
-        return sb.toString();
     }
 
     @Override

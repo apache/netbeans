@@ -246,6 +246,8 @@ public final class DDProvider {
             return new org.netbeans.modules.j2ee.dd.impl.application.model_8.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
         } else if (Application.VERSION_9.equals(version)) {
             return new org.netbeans.modules.j2ee.dd.impl.application.model_9.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+        }else if (Application.VERSION_10.equals(version)) {
+            return new org.netbeans.modules.j2ee.dd.impl.application.model_10.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
         }
         return jar;
     }

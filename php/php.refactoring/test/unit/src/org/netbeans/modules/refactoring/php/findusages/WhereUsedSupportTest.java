@@ -272,4 +272,116 @@ public class WhereUsedSupportTest extends FindUsagesTestBase {
         findUsages("echo $this->privateFi^eld;", "nb6087.php");
     }
 
+    public void testEnums_EnumName_01a() throws Exception {
+        findUsages("enum Enum^A {");
+    }
+
+    public void testEnums_EnumName_01b() throws Exception {
+        findUsages("use A\\Enu^mA;");
+    }
+
+    public void testEnums_EnumName_01c() throws Exception {
+        findUsages("    public const CONSTANT_B = Enu^mA::CONSTANT_A;");
+    }
+
+    public void testEnums_EnumName_01d() throws Exception {
+        findUsages("    case C = E^numA::Case1;");
+    }
+
+    public void testEnums_EnumName_02a() throws Exception {
+        findUsages("enum Enu^mB: string implements InterfaceB {");
+    }
+
+    public void testEnums_EnumName_02b() throws Exception {
+        findUsages("Enu^mB::A->publicMethod();");
+    }
+
+    public void testEnums_EnumName_02c() throws Exception {
+        findUsages("E^numB::A::publicStaticMethod();");
+    }
+
+    public void testEnums_Constant_01a() throws Exception {
+        findUsages("    public const CONSTA^NT_A = 1;");
+    }
+
+    public void testEnums_Constant_01b() throws Exception {
+        findUsages("    public const CONSTANT_B = EnumA::CONS^TANT_A;");
+    }
+
+    public void testEnums_Case_01a() throws Exception {
+        findUsages("    case Cas^e1;");
+    }
+
+    public void testEnums_Case_01b() throws Exception {
+        findUsages("    case C = EnumA::Cas^e1;");
+    }
+
+    public void testEnums_Case_02a() throws Exception {
+        findUsages("    case ^A = 'A';");
+    }
+
+    public void testEnums_Case_02b() throws Exception {
+        findUsages("EnumB::A^->publicMethod();");
+    }
+
+    public void testEnums_Case_02c() throws Exception {
+        findUsages("EnumB::^A::publicStaticMethod();");
+    }
+
+    public void testEnums_Method_01a() throws Exception {
+        findUsages("        $this->publicMeth^od();");
+    }
+
+    public void testEnums_Method_01b() throws Exception {
+        findUsages("    public function publicMet^hod(): void { // EnumA");
+    }
+
+    public void testEnums_Method_02a() throws Exception {
+        findUsages("    public function publicM^ethod(): void { // EnumB");
+    }
+
+    public void testEnums_Method_02b() throws Exception {
+        findUsages("EnumB::A->publicMet^hod();");
+    }
+
+    public void testEnums_StaticMethod_01a() throws Exception {
+        findUsages("        self::publicStaticMet^hod();");
+    }
+
+    public void testEnums_StaticMethod_01b() throws Exception {
+        findUsages("        static::publicStaticMe^thod();");
+    }
+
+    public void testEnums_StaticMethod_01c() throws Exception {
+        findUsages("    public static function publicStati^cMethod(): string { // EnumA");
+    }
+
+    public void testEnums_StaticMethod_02a() throws Exception {
+        findUsages("    public static function publicStatic^Method(): string { // EnumB");
+    }
+
+    public void testEnums_StaticMethod_02b() throws Exception {
+        findUsages("EnumB::A::publicStati^cMethod();");
+    }
+
+    public void testEnums_Interface_01a() throws Exception {
+        findUsages("interface Interfac^eB {");
+    }
+
+    public void testEnums_Interface_01b() throws Exception {
+        findUsages("enum EnumB: string implements Inter^faceB {");
+    }
+
+    public void testGH4382_01() throws Exception {
+        findUsages("    public function __constr^uct() {");
+    }
+
+    public void testGH4382_02() throws Exception {
+        findUsages("$alias = new ExampleAli^as();");
+    }
+
+    public void testGH4382_03() throws Exception {
+        findUsages("$example = new Examp^le();");
+    }
+
 }

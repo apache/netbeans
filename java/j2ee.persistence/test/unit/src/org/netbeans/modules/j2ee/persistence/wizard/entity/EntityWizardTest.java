@@ -34,6 +34,7 @@ public class EntityWizardTest extends SourceTestSupport{
         super(testName);
     }
     
+    @Override
     protected void setUp() throws Exception{
         super.setUp();
     }

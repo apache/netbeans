@@ -71,6 +71,7 @@ public final class RepositoryPreferences {
     /*index settings */
     public static final String PROP_INDEX_FREQ = "indexUpdateFrequency"; //NOI18N
     public static final String PROP_INDEX = "createIndex"; //NOI18N
+    public static final String PROP_DOWNLOAD_INDEX = "downloadIndex"; //NOI18N
     public static final String PROP_LAST_INDEX_UPDATE = "lastIndexUpdate"; //NOI18N
     public static final int FREQ_ONCE_WEEK = 0;
     public static final int FREQ_ONCE_DAY = 1;
@@ -201,9 +202,8 @@ public final class RepositoryPreferences {
                     ids.add(ri.getId());
                     urls.add(ri.getRepositoryUrl());
                 }
-                for (String g : gone) {
-                    infoCache.remove(g);
-                }
+                
+                infoCache.keySet().removeAll(gone);
             } catch (BackingStoreException x) {
                 LOG.log(Level.INFO, null, x);
             }
@@ -373,7 +373,40 @@ public final class RepositoryPreferences {
         "DEFAULT_CREATE_INDEX=true"
     })
     static boolean getDefaultIndexRepositories() {
-        return Boolean.valueOf(Bundle.DEFAULT_CREATE_INDEX());
+        return Boolean.parseBoolean(Bundle.DEFAULT_CREATE_INDEX());
+    }
+
+    /**
+     * @since 2.60
+     */
+    public static void setIndexDownloadEnabled(boolean enabled) {
+        getPreferences().putBoolean(PROP_DOWNLOAD_INDEX, enabled);
+    }
+
+    /**
+     * @since 2.60
+     */
+    public static boolean isIndexDownloadEnabled() {
+        return getPreferences().getBoolean(PROP_DOWNLOAD_INDEX, getDefaultDownloadIndexEnabled());
+    }
+
+    /**
+     * Downloading the remote index should only happen if indexing in general
+     * and downloading in particular are enabled.
+     *
+     * @since 2.60
+     * @return true if indexing and downloading are both enabled.
+     */
+    public static boolean isIndexDownloadEnabledEffective() {
+        return isIndexRepositories() && isIndexDownloadEnabled();
+    }
+
+    @NbBundle.Messages({
+        "# true or false:",
+        "DEFAULT_DOWNLOAD_INDEX=true"
+    })
+    static boolean getDefaultDownloadIndexEnabled() {
+        return Boolean.parseBoolean(Bundle.DEFAULT_DOWNLOAD_INDEX());
     }
 
     public static Date getLastIndexUpdate(String repoId) {

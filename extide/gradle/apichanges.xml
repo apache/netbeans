@@ -83,6 +83,31 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="java-runtime-manager">
+            <api name="general"/>
+            <summary>Adding JavaRuntimeManager abstracting the Gradle Runtime from Java Platform</summary>
+            <version major="2" minor="32"/>
+            <date day="13" month="1" year="2023"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                Introduced a <code><a href="@TOP@/org/netbeans/modules/gradle/spi/execute/JavaRuntimeManager.html">JavaRuntimeManager</a></code> to
+                create abstraction between the necessary runtime that Gradle needs (just a Java home) and the actual JavaPlatform which is provided by
+                the modules in the Java cluster.
+                </p>
+                <p>
+                    JavaRuntime is bound to be the root project of a project tree from now. The ID of the active rintime is stored in the <code>gradle.properties</code>
+                    of the root project under the property name <code>netbeans.hint.jdkPlatform</code>.
+                </p>
+                <p>
+                    There are two new methods provided in <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html">RunUtils</a></code> to get and set the
+                    active runtime of a project.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.spi.execute" name="JavaRuntimeManager"/>
+            <class package="org.netbeans.modules.gradle.api.execute" name="RunUtils"/>
+        </change>
         <change id="external-tasks">
             <api name="general"/>
             <summary>Representing external tasks</summary>
@@ -112,7 +137,7 @@ is the proper place.
                 </p>
                 <p>
                     Certain task and extension property values can be accessed by APIs, that allows NetBean plugins to access
-                    configuration of tasks within the script. See <a href="org-netbeans-modules-gradle/org/netbeans/modules/gradle/api/BuildPropertiesSupport.html">BuildPropertiesSupport</a>.
+                    configuration of tasks within the script. See <a href="@TOP@/org/netbeans/modules/gradle/api/BuildPropertiesSupport.html">BuildPropertiesSupport</a>.
                 </p>
             </description>
             <class package="org.netbeans.modules.gradle.api" name="GradleBaseProject"/>
@@ -152,7 +177,7 @@ is the proper place.
                     The new class <code>
                         <a href="@TOP@/org/netbeans/modules/gradle/api/GradleReport.html">GradleReport</a>
                     </code> that contain this information is available from
-                <code><a href="@TOP@/org/netbeans/modules/gradle/api/GradleBaseProject.html#getProblems">GradleBaseProject.getProblems()</a></code> method.
+                <code><a href="@TOP@/org/netbeans/modules/gradle/api/GradleBaseProject.html#getProblems--">GradleBaseProject.getProblems()</a></code> method.
                 </p>
             </description>
         </change>
@@ -181,7 +206,7 @@ is the proper place.
                 <a href="@TOP@/org/netbeans/modules/gradle/spi/GradleFiles.Kind.html#VERSION_CATALOG">GradleFiles.Kind.VERSION_CATALOG</a>
                 was addedd to represent <code>$rootDir/gradle.libs.versions.toml</code> file of the project.
                 <code>
-                    <a href="@TOP@/org-netbeans-modules-gradle/org/netbeans/modules/gradle/spi/GradleFiles.html#getFile-org.netbeans.modules.gradle.spi.GradleFiles.Kind-">GradleFiles.getKind(VERSION_CATALOG)</a>
+                    <a href="@TOP@/org/netbeans/modules/gradle/spi/GradleFiles.html#getFile-org.netbeans.modules.gradle.spi.GradleFiles.Kind-">GradleFiles.getKind(VERSION_CATALOG)</a>
                 </code> can be used to retrieve the represented file. (The file might not exists though.)
             </description>
             <class package="org.netbeans.modules.gradle.api" name="NbGradleProject"/>
@@ -286,16 +311,16 @@ is the proper place.
                     Concept of <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ProjectConfiguration.html">ProjectConfigurations</a> was implemented for
                     Gradle projects with <a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleExecConfiguration.html">GradleExecConfiguration</a> class. Configurations
                     can be created by the user and are stored in project private/shared configuration storage. Configurations can be contributed by Plugins using 
-                    <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/GradleActionsProvider.html#define-configuration">GradleActionsProvider</a>. A configuration 
-                    <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ProjectConfigurationProvider.html#setActiveConfiguration--">can be activated</a> or 
+                    <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/GradleActionsProvider.html">GradleActionsProvider</a>. A configuration 
+                    <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ProjectConfigurationProvider.html#setActiveConfiguration-C-">can be activated</a> or 
                     explicitly requested for <a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleExecConfiguration.html#request-for-invocation">action invocation.</a>.
                 </p>
                 <p>
-                    Actions can have different <a href="@TOP@/org/netbeans/modules/gradle/api/actions/ActionMapping.html">ActionMappings</a> in individual Configurations, user-defined
+                    Actions can have different <a href="@TOP@/org/netbeans/modules/gradle/api/execute/ActionMapping.html">ActionMappings</a> in individual Configurations, user-defined
                     or provided for specific configuration by <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/GradleActionsProvider.html">GradleActionsProvider</a>.
                 </p>
                 <p>
-                    Action providers can be added fully declarative, using XML layer: See <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/DefaultGradleActionsProvider.html##forProjectLayer-org.openide.filesystems.FileObject-">
+                    Action providers can be added fully declarative, using XML layer: See <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/DefaultGradleActionsProvider.html#forProjectLayer-org.openide.filesystems.FileObject-">
                     DefaultGradleActionsProvider.forProjectLayer</a>
                 </p>
                 
@@ -390,7 +415,7 @@ is the proper place.
                     utility method which can replace tokens provided in ActionMapping arguments.
                 </p>
                 <p>
-                    Finally to support this token replacement, <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/ReplacementTokenProvider.html">ReplacementTokenProvider</a>
+                    Finally to support this token replacement, <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/ReplaceTokenProvider.html">ReplaceTokenProvider</a>
                     got a new static method <code>replaceTokens</code>.
                 </p>
             </description>
@@ -418,7 +443,7 @@ is the proper place.
             <compatibility binary="compatible" source="compatible"/>
             <description>
                 <p>
-                    <code><a href="@TOP@/org/netbeans/modules/gradle/spi/GradleFiles.html#isBuildSrcProject()">GradleFiles.isBuildSrcProject()</a></code> was
+                    <code><a href="@TOP@/org/netbeans/modules/gradle/spi/GradleFiles.html#isBuildSrcProject--">GradleFiles.isBuildSrcProject()</a></code> was
                     added to detect if a project id a buildSrc project, and a new file Kind has been introduced <code>BUILD_SRC</code>.
                 </p>
             </description>
@@ -482,7 +507,7 @@ is the proper place.
                     replacement planned for these API functions.
                 </p>
                 <p>
-                    Added <code><a href="@TOP@/org/netbeans/modules/gradle/spi/exectute/GradleJavaPlatformProvider.html">GradleJavaPlatformProvider</a></code>
+                    Added <code><a href="@TOP@/org/netbeans/modules/gradle/spi/execute/GradleJavaPlatformProvider.html">GradleJavaPlatformProvider</a></code>
                     which can be put into the project lookup, to be able to specify the JDK
                     to be used for Gradle build execution.
                 </p>

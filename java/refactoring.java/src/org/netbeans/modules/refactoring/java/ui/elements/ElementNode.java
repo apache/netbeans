@@ -149,8 +149,8 @@ public class ElementNode extends AbstractNode {
 
     public ElementNode getNodeForElement(ElementHandle<Element> eh) {
 
-        if (getDescritption().elementHandle != null
-                && eh.signatureEquals(getDescritption().elementHandle)) {
+        if (getDescription().elementHandle != null
+                && eh.signatureEquals(getDescription().elementHandle)) {
             return this;
         }
 
@@ -219,7 +219,7 @@ public class ElementNode extends AbstractNode {
         fireIconChange(); // TODO: Strange
     }
 
-    public Description getDescritption() {
+    public Description getDescription() {
         return description;
     }
 

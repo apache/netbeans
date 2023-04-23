@@ -1807,7 +1807,9 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                     setServerLibraryModel(serverJsfLibraries);
                     if (serverJsfLibraries.isEmpty()) {
                         Library preferredLibrary;
-                        if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+                        if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_4_0_NAME);
+                        } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
                             preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_3_0_NAME);
                         } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAVA_EE_5)) {
                             preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_2_0_NAME);

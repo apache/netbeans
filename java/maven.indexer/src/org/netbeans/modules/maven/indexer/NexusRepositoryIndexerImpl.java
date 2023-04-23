@@ -22,29 +22,33 @@
 
 package org.netbeans.modules.maven.indexer;
 
-import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.nio.file.FileStore;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import java.util.zip.ZipError;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.codehaus.plexus.PlexusConstants;
 import org.apache.lucene.search.*;
+import org.apache.lucene.store.AlreadyClosedException;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.maven.artifact.Artifact;
@@ -92,6 +96,7 @@ import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
 import org.netbeans.modules.maven.indexer.api.QueryField;
 import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
+import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
 import org.netbeans.modules.maven.indexer.spi.ArchetypeQueries;
 import org.netbeans.modules.maven.indexer.spi.BaseQueries;
 import org.netbeans.modules.maven.indexer.spi.ChecksumQueries;
@@ -152,7 +157,16 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     private static final HashMap<String,Mutex> repoMutexMap = new HashMap<>(4);
 
     private static final Set<Mutex> indexingMutexes = new HashSet<>();
-    private static final RequestProcessor RP = new RequestProcessor("indexing", 1);
+
+    /**
+     * For local IO heavy repo indexing tasks and everything what does not involve downloads.
+     */
+    private static final RequestProcessor RP_LOCAL = new RequestProcessor("maven-local-indexing");
+
+    /**
+     * For remote repo download and indexing tasks.
+     */
+    private static final RequestProcessor RP_REMOTE = new RequestProcessor("maven-remote-indexing");
 
     @Override
     public boolean handlesRepository(RepositoryInfo repo) {
@@ -294,7 +308,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         }
         // At least one of the group caches could not be loaded, so rebuild it
         if(needGroupCacheRebuild) {
-            RP.submit(() -> {
+            RP_LOCAL.submit(() -> {
                 try {
                     context.rebuildGroups();
                     storeGroupCache(repo, context);
@@ -453,13 +467,18 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             removeIndexingContext(ic, false);
         }
     }
-    
-    @Messages({"# {0} - folder path",
-               "# {1} - repository name",
-               "MSG_NoSpace=There is not enough space in {0} to download and unpack the index for ''{1}''.",
-               "# {0} - folder path",
-               "# {1} - repository name",
-               "MSG_SeemsNoSpace=It seems that there is not enough space in {0} to download and unpack the index for ''{1}''."})
+
+    @Messages({"# {0} - repository name",
+               "# {1} - cache path",
+               "# {2} - cache free storage",
+               "# {3} - tmp path",
+               "# {4} - tmp free storage",
+               "MSG_NoSpace="
+                       +"<html>There is not enough space to download and unpack the index for ''{0}''.<br/><br/>"
+                       +"''{1}'' has {2} MB free<br/>"
+                       +"''{3}'' has {4} MB free<br/><br/>"
+                       +"Maven indexing is now disabled and can be enabled again in the maven settings.</html>",
+    })
     private void indexLoadedRepo(final RepositoryInfo repo, boolean updateLocal) throws IOException {
         Mutex mutex = getRepoMutex(repo);
         assert mutex.isWriteAccess();
@@ -514,10 +533,12 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                         p.setProperty("User-Agent", "netBeans/" + System.getProperty("netbeans.buildnumber"));
                         httpwagon.setHttpHeaders(p);
                     }
-                            
+
+                    Path tmpStorage = Files.createTempDirectory("index-extraction");
                     ResourceFetcher fetcher = createFetcher(wagon, listener, wagonAuth, wagonProxy);
                     listener.setFetcher(fetcher);
                     IndexUpdateRequest iur = new IndexUpdateRequest(indexingContext, fetcher);
+                    iur.setIndexTempDir(tmpStorage.toFile());
                     
                     NotifyingIndexCreator nic = null;
                     for (IndexCreator ic : indexingContext.getIndexCreators()) {
@@ -534,23 +555,20 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                         Files.deleteIfExists(getRootGroupCacheFile(repo));
                         remoteIndexUpdater.fetchAndUpdateIndex(iur);
                         storeGroupCache(repo, indexingContext);
-                    } catch (IllegalArgumentException ex) {
-                        // This exception is raised from the maven-indexer.
-                        // maven-indexer supported two formats:
-                        // - legacy/zip: zipped lucene (v2.3) index files
-                        // - gz: maven-indexer specific file format
-                        // The legacy format is no longer supported and when
-                        // the indexer encounters old index files it raises
-                        // this exception
-                        //
-                        // Convert to IOException to utilize the existing error
-                        // handling paths
+                    } catch (IOException | AlreadyClosedException | IllegalArgumentException ex) {
+                        // AlreadyClosedException can happen in low storage situations when lucene is trying to handle IOEs
+                        // IllegalArgumentException signals remote archive format problems
                         fetchFailed = true;
                         throw new IOException("Failed to load maven-index for: " + indexingContext.getRepositoryUrl(), ex);
-                    } catch (IOException ex) {
-                        fetchFailed = true;
-                        throw ex;
                     } finally {
+                        if (fetchFailed) {
+                            try{
+                                // make sure no big files remain after extraction failure
+                                cleanupDir(tmpStorage);
+                            } catch (IOException ex) {
+                                LOGGER.log(Level.WARNING, "cleanup failed");
+                            }
+                        }
                         if (nic != null) {
                             nic.end();
                         }
@@ -576,45 +594,33 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                     }
                 }
             }
-        } catch (IOException e) {            
+        } catch (IOException e) {
             if(e.getCause() instanceof ResourceDoesNotExistException) {
                 fireChange(repo, () -> repo.fireNoIndex());
             }
-            File tmpFolder = Places.getCacheDirectory();
-            // see also issue #250365
-            String noSpaceLeftMsg = null;
-            if(e.getMessage() != null && e.getMessage().contains("No space left on device")) {
-                noSpaceLeftMsg = Bundle.MSG_NoSpace(tmpFolder.getAbsolutePath(), repo.getName());
-            }
-            
-            long downloaded = listener != null ? listener.getUnits() * 1024 : -1;
-            long usableSpace = -1;
-            try {
-                FileStore store = Files.getFileStore(tmpFolder.toPath());
-                usableSpace = store.getUsableSpace();                    
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            LOGGER.log(Level.INFO, "Downloaded maven index file has size {0} (zipped). The usable space in {1} is {2}.", new Object[]{downloaded, tmpFolder, usableSpace});
+            Path tmpFolder = Paths.get(System.getProperty("java.io.tmpdir"));
+            Path cacheFolder = Places.getCacheDirectory().toPath();
 
-            // still might be a problem with a too small tmp,
-            // let's try to figure out ...
-            if(noSpaceLeftMsg == null && downloaded > -1 && downloaded * 15 > usableSpace) {
-                noSpaceLeftMsg = Bundle.MSG_SeemsNoSpace(tmpFolder.getAbsolutePath(), repo.getName());
-            }
+            long freeTmpSpace = getFreeSpaceInMB(tmpFolder);
+            long freeCacheSpace = getFreeSpaceInMB(cacheFolder);
 
-            if(noSpaceLeftMsg != null) {
-                LOGGER.log(Level.INFO, null, e);
+            if (isNoSpaceLeftOnDevice(e) || freeCacheSpace < 1000 || freeTmpSpace < 1000) {
+
+                long downloaded = listener != null ? listener.getUnits() * 1024 : -1;
+                LOGGER.log(Level.INFO, "Downloaded maven index file has size {0} (zipped). The usable space in {1} is {2} and in {3} MB is {4} MB.",
+                        new Object[] {downloaded, cacheFolder, freeCacheSpace, tmpFolder, freeTmpSpace});
+                LOGGER.log(Level.WARNING, "Download/Extraction failed due to low storage, indexing is now disabled.", e);
+
+                // disable indexing and tell user about it
+                RepositoryPreferences.setIndexRepositories(false);
+
                 IndexingNotificationProvider np = Lookup.getDefault().lookup(IndexingNotificationProvider.class);
                 if(np != null) {
-                    np.notifyError(noSpaceLeftMsg);
-                    unloadIndexingContext(repo.getId());
-                } else {
-                    throw e;
+                    np.notifyError(Bundle.MSG_NoSpace(repo.getName(), cacheFolder.toString(), freeCacheSpace, tmpFolder.toString(), freeTmpSpace));
                 }
-            } else {
-                throw e;
+                unloadIndexingContext(repo.getId());
             }
+            throw e;
         } catch (Cancellation x) {
             throw new IOException("canceled indexing", x);
         } catch (ComponentLookupException x) {
@@ -631,13 +637,32 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         }
     }
 
+    private static boolean isNoSpaceLeftOnDevice(Throwable ex) {
+        String msg = ex.getMessage();
+        Throwable cause = ex.getCause();
+        Throwable[] suppressed = ex.getSuppressed();
+        return (msg != null && msg.contains("No space left on device"))
+            || (cause != null && isNoSpaceLeftOnDevice(cause))
+            || (suppressed.length > 0 && Stream.of(suppressed).anyMatch(NexusRepositoryIndexerImpl::isNoSpaceLeftOnDevice));
+    }
+
     private static boolean isDiag() {
         return Boolean.getBoolean("maven.indexing.diag");
     }
 
     //spawn the indexing into a separate thread..
-    private void spawnIndexLoadedRepo(final RepositoryInfo repo) {
-        RP.post(() -> {
+    private boolean spawnIndexLoadedRepo(final RepositoryInfo repo) {
+
+        if (!RepositoryPreferences.isIndexDownloadEnabledEffective() && repo.isRemoteDownloadable()) {
+            LOGGER.log(Level.FINE, "Skipping remote index request for {0}", repo);
+            return false;
+        }
+
+        // 2 RPs allow concurrent local repo indexing during remote index downloads
+        // while also largely avoiding to run two disk-IO heavy tasks at once.
+        RequestProcessor rp = repo.isLocal() ? RP_LOCAL : RP_REMOTE;
+
+        rp.post(() -> {
             getRepoMutex(repo).writeAccess((Mutex.Action<Void>) () -> {
                 try {
                     indexLoadedRepo(repo, true);
@@ -647,10 +672,16 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                 return null;
             });
         });
+        return true;
     }    
 
     @Override
     public void indexRepo(final RepositoryInfo repo) {
+        
+        if (!RepositoryPreferences.isIndexDownloadEnabledEffective() && repo.isRemoteDownloadable()) {
+            LOGGER.log(Level.FINE, "Skipping remote index request for {0}", repo);
+            return;
+        }
         LOGGER.log(Level.FINER, "Indexing Context: {0}", repo);
         try {
             RemoteIndexTransferListener.addToActive(Thread.currentThread());
@@ -924,8 +955,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                             if (!RepositoryPreferences.isIndexRepositories()) {
                                 return null;
                             }
-                            actionSkip.run(repo, null);
-                            spawnIndexLoadedRepo(repo);
+                            boolean spawned = spawnIndexLoadedRepo(repo);
+                            if (spawned) {
+                                actionSkip.run(repo, null);
+                            }
                             return null;
                         }
                         IndexingContext context = getIndexingContexts().get(repo.getId());
@@ -1701,6 +1734,30 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         } finally {
             Files.deleteIfExists(tempAllCache);
             Files.deleteIfExists(tempRootCache);
+        }
+    }
+
+    private static void cleanupDir(Path path) throws IOException {
+        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.deleteIfExists(dir);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.deleteIfExists(file);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    private long getFreeSpaceInMB(Path path) {
+        try {
+            return Files.getFileStore(path).getUsableSpace() / (1024 * 1024);
+        } catch (IOException ignore) {
+            return -1;
         }
     }
 

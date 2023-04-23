@@ -82,7 +82,7 @@ public final class GradleJavaCompatProblemsProvider implements ProjectProblemsPr
                 + "The IDE will attempt to use Gradle {3} to gather the project information.<p>"
                 + "Possible solutions:"
                 + "<ul><li>Upgrade your Gradle version on your project"
-                + "<li>Select Java Platform {1} (or below), on Build&nbsp;>&nbsp;Compile settings, to avoid this problem!"
+                + "<li>Select Java Runtime {1} (or below), on Build&nbsp;>&nbsp;Gradle&nbsp;Execution settings, to avoid this problem!"
                 + "</ul>"
     })
     @Override
@@ -143,8 +143,13 @@ public final class GradleJavaCompatProblemsProvider implements ProjectProblemsPr
 
             }
             String javaVersion = releasePros.getProperty("JAVA_VERSION"); //NOI18N
+            // This should look like "17" or "17.0.9"
+            //TODO: Use Runtime.Version (when we move to Java 11)
             if ((javaVersion != null) && javaVersion.startsWith("\"") && javaVersion.endsWith("\"")) {
-                javaVersion = javaVersion.substring(1, javaVersion.indexOf('.'));
+                int dot = javaVersion.indexOf('.');
+                javaVersion = dot > 0
+                        ? javaVersion.substring(1, javaVersion.indexOf('.'))
+                        : javaVersion.substring(1, javaVersion.length() - 1);
                 try {
                     ret = Integer.parseInt(javaVersion);
                 } catch (NumberFormatException ex) {

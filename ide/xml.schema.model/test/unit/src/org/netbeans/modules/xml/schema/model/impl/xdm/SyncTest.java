@@ -387,7 +387,7 @@ public class SyncTest extends TestCase {
         UndoManager ur = new UndoManager();
         model.addUndoableEditListener(ur);
         
-        ArrayList<GlobalComplexType> types = new ArrayList(model.getSchema().getComplexTypes());
+        ArrayList<GlobalComplexType> types = new ArrayList<>(model.getSchema().getComplexTypes());
         GlobalComplexType type = types.get(1);
         assertEquals("USAddress", type.getName());
         Sequence seq = (Sequence) type.getDefinition();

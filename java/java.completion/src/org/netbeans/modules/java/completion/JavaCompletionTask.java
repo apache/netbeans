@@ -3262,7 +3262,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         final Elements elements = controller.getElements();
         TypeMirror tm = controller.getTreeUtilities().parseType(env.getPrefix(), env.getScope().getEnclosingClass());
         TypeElement e = (TypeElement) ((DeclaredType) tm).asElement();
-        if (e.getSimpleName().toString().contentEquals(env.getPrefix()) && (e.getKind().equals(ElementKind.RECORD))) {
+        if (e.getSimpleName().toString().contentEquals(env.getPrefix()) && (e.getKind() == ElementKind.RECORD)) {
             results.add(((RecordPatternItemFactory<T>) itemFactory).createRecordPatternItem(env.getController(), e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass()));
         }
     }
@@ -4253,7 +4253,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         for (TypeElement e : controller.getElementUtilities().getGlobalTypes(acceptor)) {
             Tree iot = env.getPath().getLeaf();
             TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, iot, env.getOffset());
-            if (env.getPrefix() != null && e.getSimpleName().toString().contentEquals(env.getPrefix()) && (e.getKind().equals(ElementKind.RECORD))
+            if (env.getPrefix() != null && e.getSimpleName().toString().contentEquals(env.getPrefix()) && (e.getKind() == ElementKind.RECORD)
                     && ts != null && ts.token().id() == JavaTokenId.INSTANCEOF) {
                 results.add(((RecordPatternItemFactory<T>) itemFactory).createRecordPatternItem(controller, e, (DeclaredType) e.asType(), anchorOffset, null, controller.getElements().isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass()));
             } else {

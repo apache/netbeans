@@ -80,7 +80,11 @@ public class RemoveInvalidModifier implements ErrorRule<Void> {
         //support multiple invalid modifiers
         Collection<Modifier> modss=convertToModifiers(invalidMod.split(","));
         TreePath modifierTreePath = TreePath.getPath(treePath, getModifierTree(treePath));
-        Fix removeModifiersFix = FixFactory.removeModifiersFix(compilationInfo, modifierTreePath, new HashSet<>(modss), NbBundle.getMessage(RemoveInvalidModifier.class, "FIX_RemoveInvalidModifier", invalidMod, modss.size()));
+
+        EnumSet<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
+        modifiers.addAll(modss);
+
+        Fix removeModifiersFix = FixFactory.removeModifiersFix(compilationInfo, modifierTreePath, modifiers, NbBundle.getMessage(RemoveInvalidModifier.class, "FIX_RemoveInvalidModifier", invalidMod, modss.size()));
         return Arrays.asList(removeModifiersFix);
     }
     

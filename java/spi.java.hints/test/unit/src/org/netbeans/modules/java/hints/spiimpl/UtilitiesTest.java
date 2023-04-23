@@ -234,7 +234,7 @@ public class UtilitiesTest extends TestBase {
 
         assertTrue(result.getKind().name(), result.getKind() == Kind.TRY);
 
-        String golden = "try ($t$ final $type $name = $init) { $stmts$; }$catches$";
+        String golden = "try ($t$ $type $name = $init) { $stmts$; }$catches$";
         String resultString = result.toString();
         //nb-javac: nb-javac and JDK's javac produce different semicolons for the TWR resources:
         resultString = resultString.replace("$t$;", "$t$");
@@ -250,7 +250,7 @@ public class UtilitiesTest extends TestBase {
 
         assertTrue(result.getKind().name(), result.getKind() == Kind.TRY);
 
-        String golden = "try (final $t $n = $init$) { $stmts$; }$catches$";
+        String golden = "try ($t $n = $init$) { $stmts$; }$catches$";
         String resultString = result.toString();
         //nb-javac: nb-javac and JDK's javac produce different semicolons for the TWR resources:
         resultString = resultString.replace("$init$;", "$init$");

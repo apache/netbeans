@@ -49,7 +49,8 @@ public class AquaSeparatorUI extends SeparatorUI {
     public static ComponentUI createUI(JComponent c) {
         return separatorui;
     }
-    
+
+    @Override
     public void paint( Graphics g, JComponent c ) {
         Dimension s = c.getSize();
 
@@ -61,7 +62,8 @@ public class AquaSeparatorUI extends SeparatorUI {
             g.drawLine(0, 1, 0, s.height - 2);
         }
     }
-    
+
+    @Override
     public Dimension getPreferredSize(JComponent c) {
         if (((JSeparator) c).getOrientation() == JSeparator.HORIZONTAL) {
             return new Dimension( 0, 12 );
@@ -69,7 +71,9 @@ public class AquaSeparatorUI extends SeparatorUI {
             return new Dimension( 1, 11 );
         }
     }
-    
+
+    @Override
     public Dimension getMinimumSize( JComponent c ) { return null; }
+    @Override
     public Dimension getMaximumSize( JComponent c ) { return null; }
 }

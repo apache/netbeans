@@ -184,6 +184,10 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
                 
                 for (GradleDependency dep : cfg.getDependencies()) {
                     this.cfg = cfg.getDependencyOrigin(dep);
+                    if (this.cfg == null) {
+                        // safeguard: we cannot determine the origin, so let's assume this configuration defines the dependency
+                        this.cfg = cfg;
+                    }
                     List<Dependency> ch = processLevel(cfg, dep, new HashSet<>());
                     Dependency n = createDependency(dep, ch);
                     rootDeps.add(n);

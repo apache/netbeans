@@ -63,6 +63,7 @@ public final class SlideBarActionEvent extends ActionEvent {
         return slideOperation;
     }
 
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer("SlideBarActionEvent:"); //NOI18N
         sb.append ("Tab " + tabIndex + " " + getActionCommand()); //NOI18N

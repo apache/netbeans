@@ -40,6 +40,7 @@ import org.openide.util.WeakListeners;
  * @author vita
  * @deprecated Please use {@link MemoryPreferences} API instead
  */
+@Deprecated
 public final class ProxyPreferences extends Preferences implements PreferenceChangeListener, NodeChangeListener {
     
     private final MemoryPreferences delegateRoot;

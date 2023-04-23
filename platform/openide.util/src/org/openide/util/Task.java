@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 * to finish.
 * <P>
 * For example:
-* <p><code><PRE>
+* <PRE><code>
 * Runnable r = new Runnable () {
 *   public void run () {
 *     // do something
@@ -38,7 +38,7 @@ import java.util.logging.Logger;
 * };
 * Task task = new Task (r);
 * RequestProcessor.postRequest (task);
-* </PRE></code>
+* </code></PRE>
 * <p>In a different thread one can then test <CODE>task.isFinished ()</CODE>
 * or wait for it with <CODE>task.waitFinished ()</CODE>.
 *
@@ -193,7 +193,7 @@ public class Task extends Object implements Runnable {
     }
 
     /** Notify all waiters that this task has finished.
-    * @see #run
+    * @see #run()
     */
     protected final void notifyFinished() {
         Iterator<TaskListener> it;

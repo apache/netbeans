@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.6
+#Version 8.0.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -33,6 +33,8 @@ meth public boolean isBuildCacheDebugLogging()
 meth public boolean isBuildCacheEnabled()
 meth public boolean isBuildProjectDependencies()
 meth public boolean isBuildScan()
+meth public boolean isConfigurationCacheRequested()
+ anno 0 org.gradle.api.Incubating()
 meth public boolean isConfigureOnDemand()
  anno 0 org.gradle.api.Incubating()
 meth public boolean isContinueOnFailure()

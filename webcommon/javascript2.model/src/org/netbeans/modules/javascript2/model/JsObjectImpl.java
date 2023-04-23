@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.javascript2.model;
 
-import org.netbeans.modules.javascript2.model.api.Occurrence;
 import org.netbeans.modules.javascript2.model.api.ModelUtils;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -192,7 +191,17 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
         return parent;
     }
 
+    @SuppressWarnings({"NestedAssignment", "AssertWithSideEffects"})
     public void setParent(JsObject newParent) {
+        boolean assertionsEnabled = false;
+        assert assertionsEnabled = true;
+        if (assertionsEnabled) {
+            for (JsObject checkParent = newParent; checkParent != null; checkParent = checkParent.getParent()) {
+                if (checkParent == this) {
+                    throw new AssertionError("Cycle detected in " + getFileObject().getPath());
+                }
+            }
+        }
         this.parent = newParent;
     }
 

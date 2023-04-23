@@ -51,7 +51,7 @@ import org.openide.util.Parameters;
         path = "Projects/org-netbeans-modules-myproject/Actions")
 })
  * </pre>
- * </p>
+ * 
  * </div>
  *
  * @see org.netbeans.spi.project.ui.support.ProjectProblemsProviderSupport
@@ -279,7 +279,7 @@ public interface ProjectProblemsProvider {
         }
 
         /**
-         * {@inheritdoc}
+         * {@inheritDoc}
          */
         @Override
         public int hashCode() {
@@ -291,7 +291,7 @@ public interface ProjectProblemsProvider {
         }
 
         /**
-         * {@inheritdoc}
+         * {@inheritDoc}
          */
         @Override
         public String toString() {

@@ -197,7 +197,7 @@ public class StringArrayEditor implements XMLPropertyEditor, StringArrayCustomiz
      * the specified XML element
      * @param element the XML DOM element representing a subtree of XML from
      *                which the value should be loaded
-     * @exception IOException thrown when the value cannot be restored from
+     * @exception java.io.IOException thrown when the value cannot be restored from
                   the specified XML element
      */
     public void readFromXML(org.w3c.dom.Node element) throws java.io.IOException {

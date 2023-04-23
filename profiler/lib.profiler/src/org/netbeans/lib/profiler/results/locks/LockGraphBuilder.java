@@ -39,17 +39,17 @@ public class LockGraphBuilder extends BaseCallGraphBuilder implements LockProfil
 
     static final Logger LOG = Logger.getLogger(LockGraphBuilder.class.getName());
     private final ThreadInfos threadInfos = new ThreadInfos();
-    private Map<Integer, MonitorInfo> monitorInfos = new HashMap();
+    private Map<Integer, MonitorInfo> monitorInfos = new HashMap<>();
     private final TransactionalSupport transaction = new TransactionalSupport();
 
     @Override
     protected RuntimeCCTNode getAppRootNode() {
-        Map<ThreadInfo, List<List<ThreadInfo.MonitorDetail>>> threadsCopy = new HashMap(threadInfos.threadInfos.length);
-        Map<MonitorInfo, List<List<MonitorInfo.ThreadDetail>>> monitorsCopy = new HashMap(monitorInfos.size());
+        Map<ThreadInfo, List<List<ThreadInfo.MonitorDetail>>> threadsCopy = new HashMap<>(threadInfos.threadInfos.length);
+        Map<MonitorInfo, List<List<MonitorInfo.ThreadDetail>>> monitorsCopy = new HashMap<>(monitorInfos.size());
 
         for (ThreadInfo ti : threadInfos.threadInfos) {
             if (ti != null) {
-                List<List<ThreadInfo.MonitorDetail>> monitors = new ArrayList(2);
+                List<List<ThreadInfo.MonitorDetail>> monitors = new ArrayList<>(2);
                 
                 if (!ti.isEmpty()) {
                     monitors.add(ti.cloneWaitMonitorDetails());
@@ -59,7 +59,7 @@ public class LockGraphBuilder extends BaseCallGraphBuilder implements LockProfil
             }
         }
         for (MonitorInfo mi : monitorInfos.values()) {
-            List<List<MonitorInfo.ThreadDetail>> threads = new ArrayList(2);
+            List<List<MonitorInfo.ThreadDetail>> threads = new ArrayList<>(2);
             
             threads.add(mi.cloneWaitThreadDetails());
             threads.add(mi.cloneOwnerThreadDetails());
@@ -89,7 +89,7 @@ public class LockGraphBuilder extends BaseCallGraphBuilder implements LockProfil
 
             try {
                 threadInfos.reset();
-                monitorInfos = new HashMap();
+                monitorInfos = new HashMap<>();
             } finally {
                 transaction.endTrans();
             }
@@ -99,7 +99,7 @@ public class LockGraphBuilder extends BaseCallGraphBuilder implements LockProfil
     @Override
     protected void doShutdown() {
         threadInfos.reset();
-        monitorInfos = new HashMap();
+        monitorInfos = new HashMap<>();
     }
 
     @Override

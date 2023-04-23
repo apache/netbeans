@@ -1,0 +1,59 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n\n
+token #6 PHP_READONLY readonly
+token #7 WHITESPACE  
+token #8 PHP_CLASS class
+token #9 WHITESPACE  
+token #10 PHP_STRING ReadonlyClass
+token #11 WHITESPACE  
+token #12 PHP_CURLY_OPEN {
+token #13 PHP_CURLY_CLOSE }
+token #14 WHITESPACE \n
+token #15 PHP_ABSTRACT abstract
+token #16 WHITESPACE  
+token #17 PHP_READONLY readonly
+token #18 WHITESPACE  
+token #19 PHP_CLASS class
+token #20 WHITESPACE  
+token #21 PHP_STRING AbstractReadonlyClass
+token #22 WHITESPACE  
+token #23 PHP_CURLY_OPEN {
+token #24 PHP_CURLY_CLOSE }
+token #25 WHITESPACE \n
+token #26 PHP_READONLY readonly
+token #27 WHITESPACE  
+token #28 PHP_ABSTRACT abstract
+token #29 WHITESPACE  
+token #30 PHP_CLASS class
+token #31 WHITESPACE  
+token #32 PHP_STRING ReadonlyAbstractClass
+token #33 WHITESPACE  
+token #34 PHP_CURLY_OPEN {
+token #35 PHP_CURLY_CLOSE }
+token #36 WHITESPACE \n
+token #37 PHP_FINAL final
+token #38 WHITESPACE  
+token #39 PHP_READONLY readonly
+token #40 WHITESPACE  
+token #41 PHP_CLASS class
+token #42 WHITESPACE  
+token #43 PHP_STRING FinalReadonlyClass
+token #44 WHITESPACE  
+token #45 PHP_CURLY_OPEN {
+token #46 PHP_CURLY_CLOSE }
+token #47 WHITESPACE \n
+token #48 PHP_READONLY readonly
+token #49 WHITESPACE  
+token #50 PHP_FINAL final
+token #51 WHITESPACE  
+token #52 PHP_CLASS class
+token #53 WHITESPACE  
+token #54 PHP_STRING ReadonlyFinalClass
+token #55 WHITESPACE  
+token #56 PHP_CURLY_OPEN {
+token #57 PHP_CURLY_CLOSE }
+token #58 WHITESPACE \n

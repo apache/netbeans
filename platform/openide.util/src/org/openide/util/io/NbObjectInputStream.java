@@ -60,6 +60,7 @@ public class NbObjectInputStream extends ObjectInputStream {
     /* Uses NetBeans module classloader to load the class.
      * @param v description of the class to load
      */
+    @Override
     protected Class resolveClass(ObjectStreamClass v) throws IOException, ClassNotFoundException {
         ClassLoader cl = getNBClassLoader();
 
@@ -88,7 +89,7 @@ public class NbObjectInputStream extends ObjectInputStream {
      * This method deals with some of this incompatibilites and provides the
      * module owners a way how to fix some of them.
      * <P>
-     * When a class is read, the <link>Utilities.translate</link> is consulted
+     * When a class is read, the {@link org.openide.util.BaseUtilities#translate(String)} is consulted
      * to find out what whether the name of the class is listed there and
      * what new value is assigned to it. This allows complete rename of the
      * serialized class. For example:
@@ -101,16 +102,17 @@ public class NbObjectInputStream extends ObjectInputStream {
      * <code>serialVersionUID</code>. This was causing us a lot of problems,
      * because people were forgetting to specify the <code>serialVersionUID</code>
      * field in their sources and then it was hard to recover from it. Right
-     * now we have a solution: Just use <link>Utilities.translate</link> framework
+     * now we have a solution: Just use {@link org.openide.util.BaseUtilities#translate(String)} framework
      * to assing your class <code>org.yourpackage.YourClass</code> the same
      * name as it had e.g. <code>org.yourpackage.YourClass</code>. This will
      * be interpreted by this method as a hit to suppress <code>serialVersionUID</code>
      * and the <code>NbObjectInputStream</code> will ignore its value.
      * <P>
-     * Please see <link>Utilities.translate</link> to learn how your module
+     * Please see {@link org.openide.util.BaseUtilities#translate(String)} to learn how your module
      * can provide list of classes that changed name or want to suppress <code>serialVersionUID</code>.
      *
      */
+    @Override
     protected ObjectStreamClass readClassDescriptor() throws IOException, ClassNotFoundException {
         ObjectStreamClass ose = super.readClassDescriptor();
 

@@ -38,7 +38,7 @@ import org.openide.util.Utilities;
  * <li>context menus - <code>path="Loaders/text/xml"</code>, and other mime types</li>
  * </ul>
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 7.27
  */
 @Retention(RetentionPolicy.SOURCE)

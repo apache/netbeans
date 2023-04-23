@@ -164,7 +164,7 @@ public class KeyMapOperator extends JDialogOperator {
         String _scStr;
         for (int i = 0; i < tm.getRowCount(); i++) {
             _str = tm.getValueAt(i, 0).toString();
-            if (_str.toLowerCase().equals(actionName.toLowerCase()) || _str.toLowerCase().equals(actionName.toLowerCase() + " (alternative shortcut)")) {
+            if (_str.equalsIgnoreCase(actionName) || _str.equalsIgnoreCase(actionName + " (alternative shortcut)")) {
                 _scStr = tm.getValueAt(i, 1).toString().toLowerCase();
                 lstr.add(_scStr);
                 System.out.println("[TEST_DEBUG]  -> found action \"" + _str + "\" with shortcut " + _scStr);
@@ -192,7 +192,7 @@ public class KeyMapOperator extends JDialogOperator {
         for (int i = 0; i < tab.getRowCount(); i++) {
             _str = tm.getValueAt(i, 0).toString();
             System.out.println("[TEST_DEBUG]  Examining action \"" + _str + "\", which is no. " + (i + 1) + " in the table...");
-            if (_str.toLowerCase().equals(actionName.toLowerCase())) {
+            if (_str.equalsIgnoreCase(actionName)) {
                 System.out.println("[TEST_DEBUG]  -> action \"" + _str + "\" (" + actionName + ") was found");
                 sleep(100);
                 tab.clickForEdit(i, 1);
@@ -232,7 +232,7 @@ public class KeyMapOperator extends JDialogOperator {
         for (int i = 0; i < tab.getRowCount(); i++) {
             _str = tm.getValueAt(i, 0).toString();
             System.out.println("[TEST_DEBUG]  Examining action " + _str + ", which is no. " + (i + 1) + "in the table...");
-            if (_str.toLowerCase().equals(actionName.toLowerCase())) {
+            if (_str.equalsIgnoreCase(actionName)) {
                 System.out.println("[TEST_DEBUG]  Action " + actionName + "was found");
                 JListOperator jli = clickShortcutEllipsisButton(tab, i);
                 retval = true;
@@ -271,7 +271,7 @@ public class KeyMapOperator extends JDialogOperator {
         for (int i = 0; i < tab.getRowCount(); i++) {
             _str = tm.getValueAt(i, 0).toString();
             System.out.println("[TEST_DEBUG]  Examining action " + _str + ", which is no. " + (i + 1) + "in the table...");
-            if (_str.toLowerCase().startsWith(actionName.toLowerCase()) && tm.getValueAt(i, 1).toString().toLowerCase().equals(shortcutStr.toLowerCase())) {
+            if (_str.toLowerCase().startsWith(actionName.toLowerCase()) && tm.getValueAt(i, 1).toString().equalsIgnoreCase(shortcutStr)) {
                 System.out.println("[TEST_DEBUG]  Action " + actionName + "was found");
                 JListOperator jli = clickShortcutEllipsisButton(tab, i);
                 jli.clickOnItem("Clear");

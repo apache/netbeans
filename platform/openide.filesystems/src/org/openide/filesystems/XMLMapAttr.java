@@ -255,7 +255,7 @@ final class XMLMapAttr implements Map {
     }
 
     synchronized Object put(final Object p1, final Object p2, boolean decode) {
-        if ((p1 == null) || !(p1 instanceof String)) {
+        if (!(p1 instanceof String)) {
             return null;
         }
 
@@ -712,7 +712,7 @@ final class XMLMapAttr implements Map {
         }
 
         final String getKeyForPrint() {
-            if ((obj != null) && obj instanceof ModifiedAttribute) {
+            if (obj instanceof ModifiedAttribute) {
                 Attr modifAttr = (Attr) ((ModifiedAttribute) obj).getValue();
                 int keyIdx = Attr.isValid("SERIALVALUE"); //NOI18N
 
@@ -729,7 +729,7 @@ final class XMLMapAttr implements Map {
         }
 
         final String getAttrNameForPrint(String attrName) {
-            if ((obj != null) && obj instanceof ModifiedAttribute) {
+            if (obj instanceof ModifiedAttribute) {
                 Object[] retVal = ModifiedAttribute.revert(attrName, obj);
 
                 return encode((String) retVal[0]);
@@ -1156,7 +1156,7 @@ final class XMLMapAttr implements Map {
          * This method is opposite to method translateInto
          */
         static Object[] revert(String attrName, Object value) {
-            if (!(value instanceof ModifiedAttribute) || (value == null)) {
+            if (!(value instanceof ModifiedAttribute)) {
                 return new Object[] { attrName, value };
             }
 
@@ -1294,6 +1294,7 @@ final class XMLMapAttr implements Map {
                     return new FOEntry(fo, s);
                 }
 
+                @Override
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }

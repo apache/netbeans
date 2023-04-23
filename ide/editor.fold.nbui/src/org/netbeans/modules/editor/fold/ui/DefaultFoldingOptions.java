@@ -23,10 +23,8 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +64,7 @@ implements PreferenceChangeListener, ChangeListener, CustomizerWithDefaults, Ite
     
     public static final String PREF_OVERRIDE_DEFAULTS = FoldUtilitiesImpl.PREF_OVERRIDE_DEFAULTS;
     
-    private static Set<FoldType> LEGACY_FOLD_TYPES = new HashSet<FoldType>();
+    private static Set<FoldType> LEGACY_FOLD_TYPES = new HashSet<>();
     
     static {
         LEGACY_FOLD_TYPES.add(FoldType.CODE_BLOCK);
@@ -102,7 +100,7 @@ implements PreferenceChangeListener, ChangeListener, CustomizerWithDefaults, Ite
     /**
      * Checkbox controls for collapse-* options
      */
-    private Collection<JCheckBox> controls = new ArrayList<JCheckBox>();
+    private Collection<JCheckBox> controls = new ArrayList<>();
 
     private PreferenceChangeListener weakL;
     
@@ -127,7 +125,7 @@ implements PreferenceChangeListener, ChangeListener, CustomizerWithDefaults, Ite
         
         String parentMime = MimePath.parse(mime).getInheritedType();
         if (parentMime != null) {
-            parentFoldTypes = new HashSet<String>(13);
+            parentFoldTypes = new HashSet<>(13);
             for (FoldType ft : FoldUtilities.getFoldTypes(parentMime).values()) {
                 parentFoldTypes.add(ft.code());
             }
@@ -164,7 +162,7 @@ implements PreferenceChangeListener, ChangeListener, CustomizerWithDefaults, Ite
      */
     private void filterUsedMimeTypes() {
         Set<String> mimeTypes = EditorSettings.getDefault().getAllMimeTypes();
-        Set<String> codes = new HashSet<String>();
+        Set<String> codes = new HashSet<>();
         for (String mt : mimeTypes) {
             Collection<? extends FoldType> fts = FoldUtilities.getFoldTypes(mt).values();
             for (FoldType ft : fts) {
@@ -186,7 +184,7 @@ implements PreferenceChangeListener, ChangeListener, CustomizerWithDefaults, Ite
     }
     
     private void load() {
-        types = new ArrayList<FoldType>(FoldUtilities.getFoldTypes(mimeType).values());
+        types = new ArrayList<>(FoldUtilities.getFoldTypes(mimeType).values());
         if ("".equals(mimeType)) { // NOI18N
             filterUsedMimeTypes();
         }
@@ -253,11 +251,7 @@ implements PreferenceChangeListener, ChangeListener, CustomizerWithDefaults, Ite
         // the inherited legacy 'method' fold setting in "" mime type is changed in the same Swing event
         // as the real 'member' setting, so updating in the next event should read the already changed value.
         // similar for javadoc and inner classes.
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                fireChanged(updateCheckers(evt));
-            }
-        });
+        SwingUtilities.invokeLater(() -> fireChanged(updateCheckers(evt)));
     }
     
     private void updateValueState() {
@@ -420,11 +414,7 @@ implements PreferenceChangeListener, ChangeListener, CustomizerWithDefaults, Ite
         if (ignoreStateChange) {
             return;
         }
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                updatePref(e);
-            }
-        });
+        SwingUtilities.invokeLater(() -> updatePref(e));
     }
     
     private void updatePref(ItemEvent e) {
@@ -468,20 +458,35 @@ implements PreferenceChangeListener, ChangeListener, CustomizerWithDefaults, Ite
         localSwitchboard = new javax.swing.JPanel();
 
         collapseContainer.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(DefaultFoldingOptions.class, "DefaultFoldingOptions.collapseContainer.border.title"))); // NOI18N
-        collapseContainer.setLayout(new java.awt.BorderLayout());
 
         localSwitchboard.setLayout(null);
-        collapseContainer.add(localSwitchboard, java.awt.BorderLayout.CENTER);
+
+        javax.swing.GroupLayout collapseContainerLayout = new javax.swing.GroupLayout(collapseContainer);
+        collapseContainer.setLayout(collapseContainerLayout);
+        collapseContainerLayout.setHorizontalGroup(
+            collapseContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(collapseContainerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(localSwitchboard, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        collapseContainerLayout.setVerticalGroup(
+            collapseContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(collapseContainerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(localSwitchboard, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(collapseContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+            .addComponent(collapseContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(collapseContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+            .addComponent(collapseContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

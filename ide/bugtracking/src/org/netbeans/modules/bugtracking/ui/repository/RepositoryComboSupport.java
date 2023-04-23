@@ -651,7 +651,7 @@ public final class RepositoryComboSupport implements ItemListener, Runnable {
             pingNBRepository(refFile);
         }
         Collection<RepositoryImpl> repoImpls = RepositoryRegistry.getInstance().getKnownRepositories(true);
-        List<Repository> repos = new ArrayList(repoImpls.size());
+        List<Repository> repos = new ArrayList<>(repoImpls.size());
         for (RepositoryImpl impl : repoImpls) {
             boolean hidden = hideLocalRepository && BugtrackingManager.isLocalConnectorID(impl.getConnectorId());
             if ( !hidden && 

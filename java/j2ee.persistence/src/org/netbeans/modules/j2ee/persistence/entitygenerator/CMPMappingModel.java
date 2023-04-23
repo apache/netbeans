@@ -101,11 +101,7 @@ public class CMPMappingModel {
 
             ColumnData other = (ColumnData) o;
             
-            if(this.columnName.equals(other.columnName)) {
-                return true;
-            } else {
-                return false;
-            }
+            return this.columnName.equals(other.columnName);
         }
 
         @Override

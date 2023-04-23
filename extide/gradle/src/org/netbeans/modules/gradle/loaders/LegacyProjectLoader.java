@@ -362,39 +362,29 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         return Collections.singletonList(createReport(t.getCause()));
     }
     
-    /**
-     * Accessor for the 'location' property on LocationAwareException
-     */
-    private static Method locationAccessor;
-
-    /**
-     * Accessor for the 'lineNumber' property on LocationAwareException
-     */
-    private static Method lineNumberAccessor;
-    
     private static String getLocation(Throwable locationAwareEx) {
         try {
-            if (locationAccessor == null) {
-                locationAccessor = locationAwareEx.getClass().getMethod("getLocation"); // NOI18N
-            }
+            Method locationAccessor = locationAwareEx.getClass().getMethod("getLocation"); // NOI18N
             return (String)locationAccessor.invoke(locationAwareEx);
         } catch (ReflectiveOperationException ex) {
             LOG.log(Level.FINE,"Error getting location", ex);
-            return null;
+        } catch (IllegalArgumentException iae) {
+            LOG.log(Level.FINE, "This probably should not happen: " + locationAwareEx.getClass().getName(), iae);
         }
+        return null;
     }
 
     private static int getLineNumber(Throwable locationAwareEx) {
         try {
-            if (lineNumberAccessor == null) {
-                lineNumberAccessor = locationAwareEx.getClass().getMethod("getLineNumber"); // NOI18N
-            }
+            Method lineNumberAccessor = locationAwareEx.getClass().getMethod("getLineNumber"); // NOI18N
             Integer i = (Integer)lineNumberAccessor.invoke(locationAwareEx);
             return i != null ? i : -1;
         } catch (ReflectiveOperationException ex) {
             LOG.log(Level.FINE,"Error getting line number", ex);
-            return -1;
+        } catch (IllegalArgumentException iae) {
+            LOG.log(Level.FINE, "This probably should not happen: " + locationAwareEx.getClass().getName(), iae);
         }
+        return -1;
     }
 
     /**

@@ -60,7 +60,7 @@ public class ListTypeTreeNode extends AbstractParameterTreeNode {
         }
         
         DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) this.getParent();
-        if (parentNode != null && parentNode instanceof ParameterTreeNode) {
+        if (parentNode instanceof ParameterTreeNode) {
             ((ParameterTreeNode)parentNode).updateValueFromChildren(data);
         }
     }

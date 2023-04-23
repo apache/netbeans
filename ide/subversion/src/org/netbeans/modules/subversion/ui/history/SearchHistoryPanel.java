@@ -754,7 +754,7 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
                 for (RepositoryRevision repositoryRevision : results) {
                     String author = repositoryRevision.getLog().getAuthor();
                     if(author != null && !author.isEmpty()) {
-                        if(!kenaiUsersMap.keySet().contains(author)) {
+                        if(!kenaiUsersMap.containsKey(author)) {
                             VCSKenaiAccessor.KenaiUser kenaiUser = SvnKenaiAccessor.getInstance().forName(author, url.toString());
                             if(kenaiUser != null) {
                                 kenaiUsersMap.put(author, kenaiUser);

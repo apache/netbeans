@@ -33,7 +33,7 @@ import org.openide.util.NbBundle.Messages;
 
 @ActionID(
         category = "Tools",
-        id = "org.netbeans.modules.cloud.oracle.OpenServiceConsoleAction"
+        id = "org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction"
 )
 @ActionRegistration(
         displayName = "#CTL_OpenServiceConsoleAction"

@@ -51,7 +51,7 @@ import org.openide.util.Task;
  * Recent Searches items storage and its persistance
  *
  * @author Jan Becicka
- * @authoe Max Sauer
+ * @author Max Sauer
  */
 public class RecentSearches {
     

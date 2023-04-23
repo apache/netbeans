@@ -47,7 +47,7 @@ import org.openide.util.Parameters;
  * <p>
  * The file build request will be forwarded to {@link CreateFromTemplateHandler}s; if none
  * {@link CreateFromTemplateHandler#accept}s the request, the default procedure takes place,
- * depending on the {@link #defaultMode} setting (default: {@link Mode#COPY}).
+ * depending on the {@code #defaultMode} setting (default: {@link Mode#COPY}).
  * <p>
  * There are several values predefined:<ul>
  * <li>name - the created filename without extension

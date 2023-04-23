@@ -366,7 +366,6 @@ public class J2SEProjectBuilder {
     /**
      * Sets default module system properties if they are not set.
      * @param ep the {@link EditableProperties} to write the properties into.
-     * @param boolean isModular true if the project is JDK 9 modular project
      * @since 1.85
      */
     public static void createDefaultModuleProperties(

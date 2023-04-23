@@ -586,6 +586,23 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
 
         performCompletionTest(code, "end:");
     }
+    
+    public void testSummaryCompletionForMethod() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {@sum|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "    Clazz() {\n" +
+                "    }\n" +
+                "}\n";
+        performCompletionTest(code, "@summary:");
+    }    
+    
+    
 
     private static String stripHTML(String from) {
         StringBuilder result = new StringBuilder();

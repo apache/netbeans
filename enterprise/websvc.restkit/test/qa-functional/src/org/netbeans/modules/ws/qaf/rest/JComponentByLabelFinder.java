@@ -42,7 +42,7 @@ public class JComponentByLabelFinder implements ComponentChooser {
         if (c instanceof JComponent) {
             JComponent jc = (JComponent) c;
             Object o = jc.getClientProperty("labeledBy"); //NOI18N
-            if (o != null && o instanceof JLabel) {
+            if (o instanceof JLabel) {
                 JLabel lbl = (JLabel) o;
                 return label.equals(lbl.getText().trim());
             }

@@ -223,7 +223,7 @@ public final class WebLogicDDWizardIterator implements WizardDescriptor.Instanti
     private String[] createSteps() {
         String[] beforeSteps = null;
         Object prop = wizard.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         

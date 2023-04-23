@@ -29,7 +29,6 @@ class Implement extends ImplementMethodTest {
     public function testMethod(Foo&Bar $param): Foo&Bar {
         
     }
-
 }
 
 class Foo {}

@@ -204,7 +204,7 @@ public class Customizer extends JTabbedPane {
 
         private synchronized List getData() {
             if (data == null) {
-                data = new ArrayList();
+                data = new ArrayList<>();
                 LibraryImplementation[] libImpl = platform.getLibraries();
                 for (int i = 0; i < libImpl.length; i++) {
                     data.addAll(libImpl[i].getContent(type));

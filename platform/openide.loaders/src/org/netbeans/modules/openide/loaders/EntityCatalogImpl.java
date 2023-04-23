@@ -96,6 +96,7 @@ public final class EntityCatalogImpl extends EntityCatalog {
 
         // DefaultHandler extension
 
+        @Override
         public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
             if ("public".equals(qName)) {  //NOI18N
                 String key = atts.getValue("publicId");  //NOI18N
@@ -109,6 +110,7 @@ public final class EntityCatalogImpl extends EntityCatalog {
             }
         }
 
+        @Override
         public InputSource resolveEntity(String pid, String sid) {
             if (EntityCatalog.PUBLIC_ID.equals(pid)) {
                 // Don't use a nbres: URL here; can deadlock NbURLStreamHandlerFactory during startup

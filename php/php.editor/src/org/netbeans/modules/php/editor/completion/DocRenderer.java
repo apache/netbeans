@@ -257,7 +257,7 @@ final class DocRenderer {
             LINK_TAGS.add("@use"); // NOI18N
         }
         private final CCDocHtmlFormatter header;
-        private final StringBuilder phpDoc = new StringBuilder();;
+        private final StringBuilder phpDoc = new StringBuilder();
         private final PhpElement indexedElement;
         private final List<String> links = new ArrayList<>();
         private final ASTNode node;
@@ -366,7 +366,7 @@ final class DocRenderer {
                 } else {
                     if (node instanceof PHPDocVarTypeTag) {
                         PHPDocVarTypeTag varTypeTag = (PHPDocVarTypeTag) node;
-                        String type = composeType(varTypeTag.getTypes());
+                        String type = composeType(varTypeTag.getTypes(), getTypeKind(varTypeTag));
                         phpDoc.append(processPhpDoc(String.format("%s<br /><table><tr><th align=\"left\">Type:</th><td>%s</td></tr></table>", // NOI18N
                                 varTypeTag.getDocumentation(),
                                 type)));
@@ -394,7 +394,7 @@ final class DocRenderer {
                 }
             }
 
-            returnValue.append(composeTypesAndDescription(methodTag.getTypes(), null));
+            returnValue.append(composeTypesAndDescription(methodTag.getTypes(), null, methodTag));
 
             phpDoc.append(composeFunctionDoc(description, params.toString(), returnValue.toString(), null));
         }
@@ -422,7 +422,7 @@ final class DocRenderer {
                     returns.add(returnTag);
                 } else if (kind.equals(PHPDocTag.Type.VAR)) {
                     PHPDocTypeTag typeTag = (PHPDocTypeTag) tag;
-                    others.append(composeTypesAndDescription(typeTag.getTypes(), typeTag.getDocumentation()));
+                    others.append(composeTypesAndDescription(typeTag.getTypes(), typeTag.getDocumentation(), typeTag));
                 } else if (kind.equals(PHPDocTag.Type.DEPRECATED)) {
                     String oline = String.format("<tr><th align=\"left\">%s</th><td>%s</td></tr>%n", //NOI18N
                             processPhpDoc(tag.getKind().getName()), processPhpDoc(tag.getDocumentation(), "")); //NOI18N
@@ -439,8 +439,8 @@ final class DocRenderer {
                 }
             }
 
-            // field without phpdoc
-            if (phpDocBlock == null
+            // field without phpdoc or with but without @var tag
+            if ((phpDocBlock == null || !tagInTagsList(tags, PHPDocTag.Type.VAR))
                     && indexedElement instanceof FieldElement) {
                 FieldElement fieldElement = (FieldElement) indexedElement;
                 Set<TypeResolver> types = fieldElement.getInstanceTypes();
@@ -452,6 +452,20 @@ final class DocRenderer {
                     composeParamTags(params, inheritedComments),
                     composeReturnTags(returns, inheritedComments),
                     others.toString()));
+        }
+
+        private boolean tagInTagsList(List<PHPDocTag> tags, AnnotationParsedLine tagKind) {
+            boolean hasVarTag = false;
+
+            for (PHPDocTag tag : tags) {
+                AnnotationParsedLine kind = tag.getKind();
+                if (kind.equals(tagKind)) {
+                    hasVarTag = true;
+                    break;
+                }
+            }
+
+            return hasVarTag;
         }
 
         protected String processDescription(String text) {
@@ -517,11 +531,11 @@ final class DocRenderer {
         }
 
         private String composeParameterLine(PHPDocVarTypeTag param) {
-            return composeParameterLine(param.getTypes(), param.getVariable().getValue(), param.getDocumentation());
+            return composeParameterLine(param, param.getDocumentation());
         }
 
-        private String composeParameterLine(List<PHPDocTypeNode> types, String variableValue, String documentation) {
-            return composeParameterLine(composeType(types), variableValue, documentation);
+        private String composeParameterLine(PHPDocVarTypeTag param, String documentation) {
+            return composeParameterLine(composeType(param.getTypes(), getTypeKind(param)), param.getVariable().getValue(), documentation);
         }
 
         private String composeParameterLine(String type, String variableValue, String documentation) {
@@ -535,8 +549,8 @@ final class DocRenderer {
             return pline;
         }
 
-        private String composeTypesAndDescription(List<PHPDocTypeNode> types, String description) {
-            return composeTypesAndDescription(composeType(types), description);
+        private String composeTypesAndDescription(List<PHPDocTypeNode> types, String description, PHPDocTypeTag tag) {
+            return composeTypesAndDescription(composeType(types, getTypeKind(tag)), description);
         }
 
         @NbBundle.Messages({
@@ -558,17 +572,20 @@ final class DocRenderer {
         }
 
         /**
-         * Create a string from the list of types;
+         * Create a string from the list of types.
          *
-         * @param tag
-         * @return
+         * @param types types
+         * @param typeKind type kind
+         * @return types separated with "|" or "&"
          */
-        private String composeType(List<PHPDocTypeNode> types) {
+        private String composeType(List<PHPDocTypeNode> types, Type.Kind typeKind) {
             StringBuilder type = new StringBuilder();
             if (types != null) {
                 for (PHPDocTypeNode typeNode : types) {
-                    if (type.length() > 0) {
-                        type.append(" | "); //NOI18N
+                    if (type.length() > 0
+                            && (typeKind == Type.Kind.UNION
+                            || typeKind == Type.Kind.INTERSECTION)) {
+                        type.append(" ").append(typeKind.getSign()).append(" "); //NOI18N
                     }
                     type.append(typeNode.getValue());
                     if (typeNode.isArray()) {
@@ -591,9 +608,15 @@ final class DocRenderer {
                 if (type.isResolved()) {
                     QualifiedName typeName = type.getTypeName(true);
                     if (typeName != null) {
-                        if (sb.length() > 0
-                                && (typeKind == Type.Kind.UNION || typeKind == Type.Kind.INTERSECTION)) {
-                            sb.append(" ").append(typeKind.getSign()).append(" "); // NOI18N
+                        if (sb.length() > 0) {
+                                if (typeKind == Type.Kind.INTERSECTION) {
+                                    sb.append(" ").append(typeKind.getSign()).append(" "); // NOI18N
+                                } else {
+                                    //GH-5355: If a function returns multiple types
+                                    //and doesn't have a declared return type,
+                                    //it's always a union type.
+                                    sb.append(" ").append(Type.Kind.UNION.getSign()).append(" "); // NOI18N
+                                }
                         }
                         if (type.isNullableType()) {
                             sb.append(CodeUtils.NULLABLE_TYPE_PREFIX);
@@ -698,7 +721,7 @@ final class DocRenderer {
                     // append line
                     if (param != null) {
                         String paramDescription = composeParamTagDescription(param, inheritedComments);
-                        String paramLine = composeParameterLine(param.getTypes(), param.getVariable().getValue(), paramDescription);
+                        String paramLine = composeParameterLine(param, paramDescription);
                         params.append(paramLine);
                     } else {
                         // use actual parameter types
@@ -766,7 +789,7 @@ final class DocRenderer {
                 }
             }
             for (PHPDocTypeTag fallback : fallbacks) {
-                returnValue.append(composeTypesAndDescription(fallback.getTypes(), fallback.getDocumentation()));
+                returnValue.append(composeTypesAndDescription(fallback.getTypes(), fallback.getDocumentation(), fallback));
             }
 
             if (fallbacks.isEmpty()) {
@@ -808,6 +831,15 @@ final class DocRenderer {
                 kind = Type.Kind.UNION;
             }
             return kind;
+        }
+
+        private Type.Kind getTypeKind(PHPDocTypeTag tag) {
+            String value = tag.getValue().trim();
+            String[] values = value.split(" "); // NOI18N
+            if (values.length > 0) {
+                return Type.Kind.fromTypes(values[0]);
+            }
+            return Type.Kind.NORMAL;
         }
 
         private List<PhpElement> getInheritedElements() {
@@ -1030,6 +1062,11 @@ final class DocRenderer {
         }
 
         private static void getOverriddenConstants(TypeConstantElement constant, List<TypeConstantElement> constants) {
+            if (constant.isMagic()) {
+                // e.g. A::class
+                // prevent NPE in getIndex()
+                return;
+            }
             Set<TypeConstantElement> overriddenConstants = getOverriddenConstants(constant);
             constants.addAll(overriddenConstants);
             for (TypeConstantElement overriddenConstant : overriddenConstants) {

@@ -303,7 +303,7 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
     }
 
     /**
-     * takes the input stream and a map, and for each occurence of ${<mapKey>}, replaces it with map entry value..
+     * takes the input stream and a map, and for each occurence of {@code ${<mapKey>} }, replaces it with map entry value..
      * @param replaceMap
      * @param in
      * @return 
@@ -337,22 +337,22 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
      * {@code resourceURL} parameter identifies a {@code nbactions.xml}-format resource which
      * can add/define actions in the default configuration. It can also <b>contribute</b>
      * configurations (profiles) using the nested {@code &lt;profile>} element.
-     * <p/>
-     * Actions in the contributed configuration profiles are merged; multiple {@link MavenActionProviders}
+     * <p>
+     * Actions in the contributed configuration profiles are merged; multiple {@link MavenActionsProvider}s
      * created by {@link #fromNbActions(org.netbeans.api.project.Project, java.net.URL)} can supply their
      * actions. The first definition of a given {@code actionName} counts, subsequent definitions from 
-     * {@link MavenActionProviders} further in the project's Lookup are ignored.
-     * <p/>
+     * {@link MavenActionsProvider} further in the project's Lookup are ignored.
+     * <p>
      * Note: at the moment it is not possible to build the <b>default configuration</b> actions 
-     * from multiple {@link MavenActionProviders}. 
-     * <p/>
-     * <b>This is a part of Maven module's friend API. If possible, use se  
-     * <a href="@org-netbeans-api-maven@/org/netbeans/spi/maven/MavenActions.html">MavenActions</a> to register
+     * from multiple {@link MavenActionsProvider}s. 
+     * <p>
+     * <b>This is a part of Maven module's friend API.</b> If possible, use se  
+     * <a href="@org-netbeans-api-maven@/org/netbeans/api/maven/MavenActions.html">MavenActions</a> to register
      * actions declaratively, using module layers.
      * 
      * @param mavenProject the maven project. 
      * @param resourceURL action definitions.
-     * @return new {@link MavenActionProvider} instance.
+     * @return new {@link MavenActionsProvider} instance.
      * @since 2.148
      */
     public static MavenActionsProvider fromNbActions(Project mavenProject, URL resourceURL) {

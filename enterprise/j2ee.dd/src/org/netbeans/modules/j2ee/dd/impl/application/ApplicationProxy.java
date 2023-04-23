@@ -399,7 +399,7 @@ public class ApplicationProxy implements Application {
             } catch (org.openide.filesystems.FileAlreadyLockedException ex) {
                 // trying to use OutputProvider for writing changes
                 org.openide.loaders.DataObject dobj = org.openide.loaders.DataObject.find(fo);
-                if (dobj!=null && dobj instanceof ApplicationProxy.OutputProvider)
+                if (dobj instanceof OutputProvider)
                     ((ApplicationProxy.OutputProvider)dobj).write(this);
                 else throw ex;
             }

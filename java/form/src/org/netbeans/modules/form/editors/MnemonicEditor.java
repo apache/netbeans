@@ -94,7 +94,7 @@ public class MnemonicEditor extends PropertyEditorSupport implements NamedProper
                 case 'r': value = '\r'; break;
                 case '\\': value = '\\' ; break;
                 case 'u' :
-                    String num = text.substring(2,text.length());
+                    String num = text.substring(2);
                     if (num.length () > 4) {
                         // ignore longer strings
                         return;

@@ -31,6 +31,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.filesystems.FileUtil;
@@ -47,7 +48,10 @@ import org.openide.util.Utilities;
  */
 @ActionID(id = "org.netbeans.core.ui.sysopen.SystemOpenAction", category = "Edit")
 @ActionRegistration(displayName = "#CTL_SystemOpenAction", lazy=false)
-@ActionReference(path = "Loaders/content/unknown/Actions", position = 200)
+@ActionReferences ({
+    @ActionReference(path = "UI/ToolActions/Files", position = 2045),
+    @ActionReference(path = "Projects/Actions", position = 101) 
+})
 public final class SystemOpenAction extends AbstractAction implements ContextAwareAction {
     
     private static final RequestProcessor PROC = new RequestProcessor(SystemOpenAction.class);

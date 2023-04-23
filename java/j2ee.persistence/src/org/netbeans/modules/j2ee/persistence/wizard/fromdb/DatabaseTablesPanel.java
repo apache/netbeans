@@ -46,7 +46,6 @@ import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.db.explorer.JDBCDriverManager;
 import org.netbeans.api.db.explorer.support.DatabaseExplorerUIs;
-import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -64,7 +63,6 @@ import org.netbeans.modules.j2ee.persistence.spi.server.ServerStatusProvider2;
 import org.netbeans.modules.j2ee.persistence.unit.PUDataObject;
 import org.netbeans.modules.j2ee.persistence.util.SourceLevelChecker;
 import org.netbeans.modules.j2ee.persistence.wizard.Util;
-import org.netbeans.modules.j2ee.persistence.wizard.entity.EntityWizardDescriptor;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -115,12 +113,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
     public DatabaseTablesPanel() {
         initComponents();
         initInitial();
-        ListSelectionListener selectionListener = new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                updateButtons();
-            }
-        };
+        ListSelectionListener selectionListener = ( (ListSelectionEvent e) -> updateButtons() );
         availableTablesList.getSelectionModel().addListSelectionListener(selectionListener);
         selectedTablesList.getSelectionModel().addListSelectionListener(selectionListener);
     }
@@ -140,31 +133,28 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
     
     private void initSubComponents(){
 
-        changeListener = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                    if (project != null && ProviderUtil.isValidServerInstanceOrNone(project)) {
-                        // stop listening once a server was set
-                        serverStatusProvider.removeChangeListener(changeListener);
-                        if (!Util.isContainerManaged(project)) {
-                            // if selected server does not support DataSource then
-                            // swap the combo to DB Connection selection
-                            datasourceComboBox.setModel(new DefaultComboBoxModel());
-                            initializeWithDbConnections();
-                            // notify user about result of server selection:
-                            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(DatabaseTablesPanel.class, "WRN_Server_Does_Not_Support_DS")));
-                        } else {
-                            // #190671 - because of hacks around server set in maven
-                            // listen and update data sources after server was set here again.
-                            // In theory this should not be necessary and
-                            // j2ee.common.DatasourceUIHelper.performServerSelection should have done
-                            // everything necessary but often at that time
-                            // PersistenceProviderSupplier.supportsDefaultProvider() is still false
-                            // (server change was not propagated there yet). In worst case combo model will be set twice:
-                            datasourceComboBox.setModel(new DefaultComboBoxModel());
-                            initializeWithDatasources();
-                        }
-                    }
+        changeListener = (ChangeEvent e) -> {
+            if (project != null && ProviderUtil.isValidServerInstanceOrNone(project)) {
+                // stop listening once a server was set
+                serverStatusProvider.removeChangeListener(changeListener);
+                if (!Util.isContainerManaged(project)) {
+                    // if selected server does not support DataSource then
+                    // swap the combo to DB Connection selection
+                    datasourceComboBox.setModel(new DefaultComboBoxModel());
+                    initializeWithDbConnections();
+                    // notify user about result of server selection:
+                    DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(DatabaseTablesPanel.class, "WRN_Server_Does_Not_Support_DS")));
+                } else {
+                    // #190671 - because of hacks around server set in maven
+                    // listen and update data sources after server was set here again.
+                    // In theory this should not be necessary and
+                    // j2ee.common.DatasourceUIHelper.performServerSelection should have done
+                    // everything necessary but often at that time
+                    // PersistenceProviderSupplier.supportsDefaultProvider() is still false
+                    // (server change was not propagated there yet). In worst case combo model will be set twice:
+                    datasourceComboBox.setModel(new DefaultComboBoxModel());
+                    initializeWithDatasources();
+                }
             }
         };
 
@@ -206,12 +196,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         // is called wizard dialog might be non-visible, so the progress dialog
         // would be displayed before the wizard dialog.
         sourceSchemaUpdateEnabled = true;
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                updateSourceSchema();
-            }
-        });        
+        SwingUtilities.invokeLater( () -> updateSourceSchema() );
     }
     
     private void initInitial(){
@@ -307,8 +292,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         boolean puExists = false;
         try {
             puExists = ProviderUtil.persistenceExists(project, targetFolder);
-        } catch (InvalidPersistenceXmlException ex) {
-        } catch (RuntimeException ex) {
+        } catch (InvalidPersistenceXmlException | RuntimeException ex) {
         }
 
         if(puExists){
@@ -370,13 +354,13 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         if (databaseUrl == null || user == null) {
             return Collections.emptyList();
         }
-        List<DatabaseConnection> result = new ArrayList<DatabaseConnection>();
+        List<DatabaseConnection> result = new ArrayList<>();
         for (DatabaseConnection dbconn : ConnectionManager.getDefault().getConnections()) {
             if (databaseUrl.equals(dbconn.getDatabaseURL()) && user.equals(dbconn.getUser())) {
                 result.add(dbconn);
             }
         }
-        if (result.size() > 0) {
+        if (!result.isEmpty()) {
             return Collections.unmodifiableList(result);
         } else {
             return Collections.emptyList();
@@ -507,7 +491,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
             JPADataSource jpaDS = dsProvider != null ? dsProvider.toJPADataSource(item) : null;
             if (jpaDS != null) {
                 List<DatabaseConnection> dbconns = findDatabaseConnections(jpaDS);
-                if (dbconns.size() > 0) {
+                if (!dbconns.isEmpty()) {
                     dbconn = dbconns.get(0);
                 } else {
                     String drvClass = jpaDS.getDriverClassName();
@@ -586,12 +570,12 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         Set<Table> allSelectedTables = TableUISupport.getSelectedTables(availableTablesList, false);
         addButton.setEnabled(tableClosure.canAddAllTables(addTables));
 
-        addAllButton.setEnabled(TableUISupport.getEnabledTables(availableTablesList).size()>0);
+        addAllButton.setEnabled(!TableUISupport.getEnabledTables(availableTablesList).isEmpty());
 
         Set<Table> tables = TableUISupport.getSelectedTables(selectedTablesList);
         removeButton.setEnabled(tableClosure.canRemoveAllTables(tables));
 
-        removeAllButton.setEnabled(tableClosure.getSelectedTables().size() > 0);
+        removeAllButton.setEnabled(!tableClosure.getSelectedTables().isEmpty());
         String problems = "";
         for (Table t : allSelectedTables) {
             if (t.isDisabled()) {
@@ -1120,20 +1104,16 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         @Override
         public boolean isValid() {
 
-
             // TODO: RETOUCHE
             //            if (JavaMetamodel.getManager().isScanInProgress()) {
             if (false){
                 if (!waitingForScan) {
                     waitingForScan = true;
-                    RequestProcessor.Task task = RequestProcessor.getDefault().create(new Runnable() {
-                        @Override
-                        public void run() {
-                            // TODO: RETOUCHE
-                            //                            JavaMetamodel.getManager().waitScanFinished();
-                            waitingForScan = false;
-                            changeSupport.fireChange();
-                        }
+                    RequestProcessor.Task task = RequestProcessor.getDefault().create( () -> {
+                        // TODO: RETOUCHE
+                        // JavaMetamodel.getManager().waitScanFinished();
+                        waitingForScan = false;
+                        changeSupport.fireChange();
                     });
                     setErrorMessage(NbBundle.getMessage(DatabaseTablesPanel.class, "scanning-in-progress"));
                     task.schedule(0);
@@ -1215,6 +1195,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
     }
     private static class ItemListCellRenderer extends DefaultListCellRenderer {
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
             Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);

@@ -404,7 +404,7 @@ public class MercurialAnnotator extends VCSAnnotator implements PropertyChangeLi
         name = htmlEncode(name);
         
         String textAnnotation;
-        boolean annotationsVisible = VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false);
+        boolean annotationsVisible = VersioningSupport.isTextAnnotationVisible();
         int status = mostImportantInfo.getStatus();
         
         if (annotationsVisible && mostImportantFile != null && (status & STATUS_TEXT_ANNOTABLE) != 0) {
@@ -508,7 +508,7 @@ public class MercurialAnnotator extends VCSAnnotator implements PropertyChangeLi
         if (mostImportantInfo.getStatus() == FileInformation.STATUS_NOTVERSIONED_EXCLUDED){
             return getAnnotationProvider().EXCLUDED_FILE.getFormat().format(new Object [] { nameHtml, ""}); // NOI18N
         }
-        boolean annotationsVisible = VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false);
+        boolean annotationsVisible = VersioningSupport.isTextAnnotationVisible();
         MessageFormat uptodateFormat = getAnnotationProvider().UP_TO_DATE_FILE.getFormat();
 
         final Set<File> rootFiles = context.getRootFiles();
@@ -689,7 +689,7 @@ public class MercurialAnnotator extends VCSAnnotator implements PropertyChangeLi
     }
 
     private Image addToolTip (Image icon, VCSContext context) {
-        if (!VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false)) {
+        if (!VersioningSupport.isTextAnnotationVisible()) {
             return icon;
         }
         File root = null;

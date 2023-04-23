@@ -18,6 +18,7 @@
  */
 package org.netbeans.swing.laf.flatlaf;
 
+import java.awt.Color;
 import java.util.prefs.Preferences;
 import org.openide.util.NbPreferences;
 
@@ -27,6 +28,7 @@ import org.openide.util.NbPreferences;
  */
 class FlatLafPrefs {
 
+    private static final String ACCENT_COLOR = "accentColor";
     private static final String USE_WINDOW_DECORATIONS = "useWindowDecorations";
     private static final String UNIFIED_TITLE_BAR = "unifiedTitleBar";
     private static final String MENU_BAR_EMBEDDED = "menuBarEmbedded";
@@ -34,6 +36,28 @@ class FlatLafPrefs {
     private static final String ALWAYS_SHOW_MNEMONICS = "alwaysShowMnemonics";
 
     private static final Preferences prefs = NbPreferences.forModule(FlatLafPrefs.class);
+
+    static Color getAccentColor() {
+        return parseColor(prefs.get(ACCENT_COLOR, null));
+    }
+
+    static Color parseColor(String s) {
+        try {
+            return (s != null && s.startsWith("#"))
+                    ? new Color(Integer.parseInt(s.substring(1), 16))
+                    : null;
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    static void setAccentColor(Color accentColor) {
+        if (accentColor != null) {
+            prefs.put(ACCENT_COLOR, String.format("#%06x", accentColor.getRGB() & 0xffffff));
+        } else {
+            prefs.remove(ACCENT_COLOR);
+        }
+    }
 
     static boolean isUseWindowDecorations() {
         return prefs.getBoolean(USE_WINDOW_DECORATIONS, true);

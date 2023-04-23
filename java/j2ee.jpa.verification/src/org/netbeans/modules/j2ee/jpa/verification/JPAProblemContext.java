@@ -106,7 +106,7 @@ public class JPAProblemContext extends ProblemContext {
 
     public void addCancelListener(CancelListener aThis) {
         if(cListeners == null) {
-            cListeners = new HashSet();
+            cListeners = new HashSet<>();
         }
         synchronized(cListenersLock) {
             cListeners.add(aThis);

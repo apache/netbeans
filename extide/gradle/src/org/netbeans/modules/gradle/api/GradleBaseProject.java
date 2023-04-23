@@ -47,7 +47,7 @@ import org.openide.util.Utilities;
  * Note: Caching / storing this object inn a member field is discouraged. Use
  * {@link GradleBaseProject#get(Project)} instead.
  * </p>
- * @see @see <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html">org.gradle.api.Project</a>
+ * @see <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html">org.gradle.api.Project</a>
  * @since 1.0
  * @author Laszlo Kishalmi
  */

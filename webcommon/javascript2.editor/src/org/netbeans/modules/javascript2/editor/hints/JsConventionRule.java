@@ -21,6 +21,7 @@ package org.netbeans.modules.javascript2.editor.hints;
 import com.oracle.js.parser.TokenType;
 import com.oracle.js.parser.ir.BinaryNode;
 import com.oracle.js.parser.ir.Block;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.ForNode;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.IfNode;
@@ -605,6 +606,15 @@ public class JsConventionRule extends JsAstRule {
                 return false;
             }
             return super.enterPropertyNode(propertyNode);
+        }
+
+        @Override
+        public boolean enterClassElement(ClassElement classElement) {
+            ClassNode enclosingClass = classDefinitionHierarchie.isEmpty() ? null : classDefinitionHierarchie.get(classDefinitionHierarchie.size() - 1);
+            if(enclosingClass != null && classElement.getToken() == enclosingClass.getToken()) {
+                return false;
+            }
+            return super.enterClassElement(classElement);
         }
 
         private List<ClassNode> classDefinitionHierarchie = new ArrayList<>();

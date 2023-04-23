@@ -276,6 +276,7 @@ public class NbEditorKit extends ExtKit implements Callable {
      */
     //@EditorActionRegistration(name = toggleToolbarAction)
     // Registration in createActions() due to getPopupMenuItem()
+    @Deprecated
     public static class ToggleToolbarAction extends BaseAction {
 
         public ToggleToolbarAction() {
@@ -766,7 +767,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                     } else {
                         item.setEnabled(action.isEnabled());
                         Object helpID = action.getValue ("helpID"); // NOI18N
-                        if (helpID != null && (helpID instanceof String)) {
+                        if ((helpID instanceof String)) {
                             item.putClientProperty ("HelpID", helpID); // NOI18N
                         }
                         assignAccelerator(component.getKeymap(), action, item);
@@ -855,6 +856,7 @@ public class NbEditorKit extends ExtKit implements Callable {
     /**
      * @deprecated Without any replacement. This class is no longer functional.
      */
+    @Deprecated
     public class NbStopMacroRecordingAction extends ActionFactory.StopMacroRecordingAction {
         protected @Override MacroDialogSupport getMacroDialogSupport(Class kitClass){
             return super.getMacroDialogSupport(kitClass);
@@ -905,6 +907,7 @@ public class NbEditorKit extends ExtKit implements Callable {
      */
     //@EditorActionRegistration(name = BaseKit.toggleLineNumbersAction)
     // Registration in createActions() due to getPopupMenuItem() in predecessor
+    @Deprecated
     public static final class NbToggleLineNumbersAction extends ActionFactory.ToggleLineNumbersAction {
 
         public NbToggleLineNumbersAction() {
@@ -1060,7 +1063,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                         Mnemonics.setLocalizedText(item, itemText);
                         addAcceleretors(a, item, target);
                         Object helpID = a.getValue ("helpID"); // NOI18N
-                        if (helpID != null && (helpID instanceof String))
+                        if ((helpID instanceof String))
                             item.putClientProperty ("HelpID", helpID); // NOI18N
                     }
                 }
@@ -1243,7 +1246,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                     addAcceleretors(nonContextAction, item, target);
                     item.setEnabled(action.isEnabled());
                     Object helpID = action.getValue ("helpID"); // NOI18N
-                    if (helpID != null && (helpID instanceof String)) {
+                    if (helpID instanceof String) {
                         item.putClientProperty ("HelpID", helpID); // NOI18N
                     }
                 }

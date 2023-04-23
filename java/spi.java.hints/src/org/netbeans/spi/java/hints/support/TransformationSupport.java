@@ -54,7 +54,7 @@ import org.openide.util.Exceptions;
 
 /**
  * Static utility classes for processing jackpot patterns.
- * <a href="https://bitbucket.org/jlahoda/jackpot30/wiki/RulesLanguage">Rules Language</a>
+ * <a href="https://github.com/apache/netbeans-jackpot30/tree/master/cmdline">Rules Language</a>
  * @author Jan Becicka
  * @since 1.1
  */
@@ -130,7 +130,7 @@ public final class TransformationSupport {
 
     /**
      * Transformer callback which is called for each occurrence during processing 
-     * of {@link #performTransformation(java.lang.String, org.netbeans.spi.java.hints.support.JackpotSupport.Transformer, java.util.concurrent.atomic.AtomicBoolean)    
+     * of {@link #performTransformation(java.lang.String, org.netbeans.spi.java.hints.support.JackpotSupport.Transformer, java.util.concurrent.atomic.AtomicBoolean) }
      */
     public interface Transformer {
 

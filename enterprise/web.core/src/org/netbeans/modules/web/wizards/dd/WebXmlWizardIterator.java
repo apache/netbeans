@@ -148,7 +148,7 @@ public final class WebXmlWizardIterator implements WizardDescriptor.Instantiatin
     private String[] createSteps() {
         String[] beforeSteps = null;
         Object prop = wizard.getProperty(WizardDescriptor.PROP_CONTENT_DATA);
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
 

@@ -193,7 +193,7 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
     public void readSettings (WizardDescriptor settings) {
         wd = settings;
         Object o = settings.getProperty (FeatureOnDemandWizardIterator.CHOSEN_TEMPLATE);
-        assert o != null && o instanceof FileObject : o + " is not null and instanceof FileObject.";
+        assert o instanceof FileObject : o + " is not null and instanceof FileObject.";
         FileObject fileObject = (FileObject) o;
         info = FoDLayersProvider.getInstance ().whichProvides(fileObject);
         assert info != null : "No info for " + fileObject;
@@ -214,7 +214,7 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
 
     private void waitForDelegateWizard (final boolean fire) {
         Object o = wd.getProperty (FeatureOnDemandWizardIterator.CHOSEN_TEMPLATE);
-        assert o != null && o instanceof FileObject :
+        assert o instanceof FileObject :
             o + " is not null and instanceof FileObject";
         String templateResource = ((FileObject) o).getPath ();
         FileObject fo = null;
@@ -383,7 +383,7 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
             };
         }
 
-        assert o != null && o instanceof WizardDescriptor.InstantiatingIterator :
+        assert o instanceof InstantiatingIterator :
             o + " is not null and instanceof WizardDescriptor.InstantiatingIterator";
         return (WizardDescriptor.InstantiatingIterator<?>)o;
     }

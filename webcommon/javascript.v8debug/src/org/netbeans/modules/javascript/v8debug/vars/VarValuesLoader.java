@@ -154,10 +154,10 @@ public class VarValuesLoader {
                 Map<Long, V8Value> valuesByHandle = lrb.getValuesByHandle();
                 //LOG.fine("Lookup values by handle: "+valuesByHandle);
                 synchronized (varQueue) {
-                    for (Long ref : valuesByHandle.keySet()) {
-                        Variable var = varsByRef.get(ref);
+                    for (Map.Entry<Long, V8Value> entry : valuesByHandle.entrySet()) {
+                        Variable var = varsByRef.get(entry.getKey());
                         if (var != null) {
-                            var.setValue(valuesByHandle.get(ref));
+                            var.setValue(entry.getValue());
                             //LOG.fine("Setting value to var '"+var.getName()+"' "+var+" : "+valuesByHandle.get(ref));
                         }
                     }

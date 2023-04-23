@@ -38,6 +38,10 @@ public final class PhpModifiers extends Modifier {
     public static final String VISIBILITY_PRIVATE = "private"; // NOI18N
     public static final String VISIBILITY_PROTECTED = "protected"; // NOI18N
 
+    public static final String FINAL_MODIFIER = "final"; // NOI18N
+    public static final String ABSTRACT_MODIFIER = "abstract"; // NOI18N
+    public static final String READONLY_MODIFIER = "readonly"; // NOI18N
+
     public static PhpModifiers noModifiers() {
         return fromBitMask(new int[]{});
     }

@@ -492,7 +492,7 @@ public class ChartComponent extends InteractiveCanvasComponent {
     }
 
     protected void itemsRemoved(List<ChartItem> removedItems) {
-        List<ItemPainter> painters = new ArrayList(removedItems.size());
+        List<ItemPainter> painters = new ArrayList<>(removedItems.size());
 
         // Try to resolve painters for all removed items
         for (ChartItem item : removedItems) {
@@ -532,7 +532,7 @@ public class ChartComponent extends InteractiveCanvasComponent {
 
     protected void itemsChanged(List<ChartItemChange> itemChanges) {
         // Resolve painters for changedItems
-        List<ItemPainter> painters = new ArrayList(itemChanges.size());
+        List<ItemPainter> painters = new ArrayList<>(itemChanges.size());
         for (ChartItemChange change : itemChanges)
             painters.add(paintersModel.getPainter(change.getItem()));
 
@@ -587,7 +587,7 @@ public class ChartComponent extends InteractiveCanvasComponent {
     }
 
     protected void paintersChanged(List<ItemPainter> changedPainters) {
-        Set<ChartItem> changedItems = new HashSet();
+        Set<ChartItem> changedItems = new HashSet<>();
 
         // Update chart size
         LongRect oldBounds = new LongRect(dataBounds);

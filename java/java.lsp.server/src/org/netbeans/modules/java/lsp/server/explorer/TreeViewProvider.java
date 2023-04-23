@@ -476,9 +476,7 @@ public abstract class TreeViewProvider {
 
     public final CompletionStage<Node[]> getChildren(Node nodeOrNull) {
         Node node = getNodeOrRoot(nodeOrNull);
-        return CompletableFuture.supplyAsync(() -> {
-            return node.getChildren().getNodes(true);
-        }, INITIALIZE);
+        return CompletableFuture.completedFuture(node.getChildren().getNodes());
     }
 
     public final CompletionStage<Node> getParent(Node node) {

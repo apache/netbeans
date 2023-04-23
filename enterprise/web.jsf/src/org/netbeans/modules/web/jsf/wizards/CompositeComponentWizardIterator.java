@@ -119,7 +119,7 @@ public final class CompositeComponentWizardIterator implements TemplateWizard.It
 
         Object prop = wizard.getProperty (WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
         String[] steps = Utilities.createSteps(beforeSteps, panels);

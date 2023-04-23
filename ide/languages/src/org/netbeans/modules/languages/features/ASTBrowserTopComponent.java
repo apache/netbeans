@@ -244,7 +244,7 @@ final class ASTBrowserTopComponent extends TopComponent {
             lastPane = pane;
         }
         Document document = editorCookie.getDocument ();
-        if (document == null || !(document instanceof NbEditorDocument)) return null;
+        if (!(document instanceof NbEditorDocument)) return null;
         return ParserManagerImpl.getImpl (document).getAST ();
     }
 

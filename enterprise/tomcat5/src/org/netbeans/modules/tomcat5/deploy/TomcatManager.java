@@ -71,11 +71,44 @@ import org.openide.util.NbBundle;
  */
 public class TomcatManager implements DeploymentManager {
 
-    public enum TomcatVersion {TOMCAT_50, TOMCAT_55, TOMCAT_60, TOMCAT_70, TOMCAT_80, TOMCAT_90};
+    public enum TomcatVersion {
+        TOMCAT_50(50), TOMCAT_55(55), TOMCAT_60(60), TOMCAT_70(70), 
+        TOMCAT_80(80), TOMCAT_90(90), TOMCAT_100(100), TOMCAT_101(101),
+        TOMCAT_110(110);
+        
+        TomcatVersion(int version) { this.version = version; }
+        private final int version;
+        public int version() { return version; }
+        /**
+         * 
+         * @param tv TomcatVersion
+         * @return true if the version is equal or greater, false otherwise
+         */
+        public boolean isAtLeast(TomcatVersion tv) {
+            int comparisonResult = this.compareTo(tv);
+            return (comparisonResult >= 0);
+        }
+    }
 
-    public enum TomEEVersion {TOMEE_15, TOMEE_16, TOMEE_17};
+    public enum TomEEVersion {
+        TOMEE_15(15), TOMEE_16(16), TOMEE_17(17), TOMEE_70(70), 
+        TOMEE_71(71), TOMEE_80(80), TOMEE_90(90);
+        
+        TomEEVersion(int version) { this.version = version; }
+        private final int version;
+        public int version() { return version; }
+        /**
+         * 
+         * @param tv TomEEVersion
+         * @return true if the version is equal or greater, false otherwise
+         */
+        public boolean isAtLeast(TomEEVersion teev) {
+            int comparisonResult = this.compareTo(teev);
+            return (comparisonResult >= 0);
+        }
+    };
 
-    public enum TomEEType {TOMEE_WEB, TOMEE_JAXRS, TOMEE_PLUS};
+    public enum TomEEType {TOMEE_OPENEJB, TOMEE_WEBPROFILE, TOMEE_JAXRS, TOMEE_MICROPROFILE, TOMEE_PLUS, TOMEE_PLUME};
 
     public static final String KEY_UUID = "NB_EXEC_TOMCAT_START_PROCESS_UUID"; //NOI18N
 
@@ -227,6 +260,12 @@ public class TomcatManager implements DeploymentManager {
      */
     public String getUri () {
         switch (tomcatVersion) {
+            case TOMCAT_110:
+                return TomcatFactory.TOMCAT_URI_PREFIX_110 + uri;
+            case TOMCAT_101:
+                return TomcatFactory.TOMCAT_URI_PREFIX_101 + uri;
+            case TOMCAT_100:
+                return TomcatFactory.TOMCAT_URI_PREFIX_100 + uri;
             case TOMCAT_90:
                 return TomcatFactory.TOMCAT_URI_PREFIX_90 + uri;
             case TOMCAT_80:
@@ -247,7 +286,7 @@ public class TomcatManager implements DeploymentManager {
      * @return URI without home and base specification
      */
     public String getPlainUri () {
-        if (isAboveTomcat70()) {
+        if (tomcatVersion.isAtLeast(TomcatVersion.TOMCAT_70)) {
             return "http://" + tp.getHost() + ":" + getCurrentServerPort() + "/manager/text/"; //NOI18N
         }
         return "http://" + tp.getHost() + ":" + getCurrentServerPort() + "/manager/"; //NOI18N
@@ -401,11 +440,21 @@ public class TomcatManager implements DeploymentManager {
 
         return false;
     }
-
+   
     public boolean isAboveTomcat70() {
-        return tomcatVersion == TomcatVersion.TOMCAT_70
-                || tomcatVersion == TomcatVersion.TOMCAT_80
-                || tomcatVersion == TomcatVersion.TOMCAT_90;
+        return tomcatVersion .isAtLeast(TomcatVersion.TOMCAT_70);
+    }
+    
+    public boolean isTomcat110() {
+        return tomcatVersion == TomcatVersion.TOMCAT_110;
+    }
+    
+    public boolean isTomcat101() {
+        return tomcatVersion == TomcatVersion.TOMCAT_101;
+    }
+    
+    public boolean isTomcat100() {
+        return tomcatVersion == TomcatVersion.TOMCAT_100;
     }
     
     public boolean isTomcat90() {
@@ -438,14 +487,58 @@ public class TomcatManager implements DeploymentManager {
     }
 
     public synchronized boolean isTomEEJaxRS() {
-        loadTomEEInfo();
-        return TomEEType.TOMEE_JAXRS.equals(tomEEType) || TomEEType.TOMEE_PLUS.equals(tomEEType);
+        switch (tomEEType) {
+            case TOMEE_PLUME:
+            case TOMEE_PLUS:
+            case TOMEE_MICROPROFILE:
+            case TOMEE_WEBPROFILE:
+            case TOMEE_JAXRS:
+                return true;
+            default:
+                return false;
+        }
+    }
+    
+    public boolean isTomEE9() {
+        return tomEEVersion == TomEEVersion.TOMEE_90;
+    }
+    
+    public boolean isTomEE8() {
+        return tomEEVersion == TomEEVersion.TOMEE_80;
+    }
+    
+    public boolean isTomEEplume() {
+        return tomEEType == TomEEType.TOMEE_PLUME;
+    }
+    
+    public boolean isJpa30() {
+        return isTomEE9();
     }
 
-    /** Returns Tomcat lib folder: "lib" for  Tomcat 6.0 and "common/lib" for Tomcat 5.x */
+    public boolean isJpa31() {
+        return false;
+    }
+
+    public boolean isJpa22() {
+        return isTomEE8();
+    }
+    
+    public boolean isJpa21() {
+        return tomEEVersion.isAtLeast(TomEEVersion.TOMEE_70) && !isTomEE9();
+    }
+    
+    public boolean isJpa20() {
+        return tomEEVersion.isAtLeast(TomEEVersion.TOMEE_15) && !isTomEE9();
+    }
+    
+    public boolean isJpa10() {
+        return isJpa20(); // All TomEE versions up to 8 support JPA 1.0
+    }
+
+    /** Returns Tomcat lib folder: "lib" for  Tomcat 6.0 or greater and "common/lib" for Tomcat 5.x or less*/
     public String libFolder() {
         // Tomcat 5.x and 6.0 uses different lib folder
-        return isTomcat50() || isTomcat55() ? "common/lib" : "lib"; // NOI18N
+        return tomcatVersion.isAtLeast(TomcatVersion.TOMCAT_60) ? "lib" : "common/lib"; // NOI18N
     }
 
     public TomcatVersion getTomcatVersion() {
@@ -456,12 +549,16 @@ public class TomcatManager implements DeploymentManager {
         loadTomEEInfo();
         return tomEEVersion;
     }
+    
+    public synchronized TomEEType getTomEEType() {
+        loadTomEEInfo();
+        return tomEEType;
+    }
 
     public void loadTomEEInfo() {
         boolean fireListener = false;
         synchronized (this) {
             if (tomEEChecked) {
-                LOGGER.log(Level.INFO, "TomEE version {0}, type {1}", new Object[] {tomEEVersion, tomEEType});
                 return;
             }
             assert tomEEWarListener == null;

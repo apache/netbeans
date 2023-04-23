@@ -39,7 +39,6 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
-import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -443,8 +442,8 @@ public class Tiny {
                 } 
                 // attempt to resolve a simple-qualified identifier; assuming the user already has an import in the source
                 Element outer = el.getEnclosingElement();
-                if (outer != null && (outer.getKind() == ElementKind.CLASS || outer.getKind() == ElementKind.INTERFACE ||
-                        outer.getKind() == ElementKind.ENUM)) {
+                if (outer != null && (outer.getKind() == ElementKind.CLASS || outer.getKind() == ElementKind.INTERFACE
+                                   || outer.getKind() == ElementKind.RECORD || outer.getKind() == ElementKind.ENUM)) {
                     TypeElement tel = (TypeElement)outer;
                     String x =  tel.getSimpleName() + "." + l.toString();
                     if (tryResolveIdentifier(info, lPath, m, resolved, x)) {

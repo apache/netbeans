@@ -37,6 +37,7 @@ import org.openide.util.NbBundle;
 public class PropertiesEditor extends PropertyEditorSupport {
 
     /** Overrides superclass method. */
+    @Override
     public String getAsText() {
         Object value = getValue();
         
@@ -64,6 +65,7 @@ public class PropertiesEditor extends PropertyEditorSupport {
     /** Overrides superclass method.
      * @exception IllegalArgumentException if <code>null</code> value
      * is passes in or some io problem by converting occured */
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
         try {
             if(text == null) {
@@ -88,14 +90,17 @@ public class PropertiesEditor extends PropertyEditorSupport {
         }
     }
 
+    @Override
     public String getJavaInitializationString () {
         return null; // does not generate any code
     }
 
+    @Override
     public boolean supportsCustomEditor () {
         return true;
     }
 
+    @Override
     public java.awt.Component getCustomEditor () {
         return new PropertiesCustomEditor (this);
     }

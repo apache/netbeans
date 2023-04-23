@@ -76,7 +76,7 @@ public final class SimpleSearchInfoDefinition extends SearchInfoDefinition {
     /**
      * Creates a new instance of SimpleSearchInfo
      *
-     * @param folder <!-- PENDING -->
+     * @param rootFile <!-- PENDING -->
      * @param filters <!-- PENDING, accepts null -->
      * @exception java.lang.IllegalArgumentException if the
      * <code>folder</code> argument is

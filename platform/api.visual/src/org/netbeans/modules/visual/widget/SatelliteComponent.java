@@ -41,6 +41,7 @@ public final class SatelliteComponent extends JComponent implements MouseListene
         addMouseMotionListener (this);
     }
 
+    @Override
     public void addNotify () {
         super.addNotify ();
         scene.addSceneListener (this);
@@ -51,12 +52,14 @@ public final class SatelliteComponent extends JComponent implements MouseListene
         repaint ();
     }
 
+    @Override
     public void removeNotify () {
         scene.getView ().removeComponentListener (this);
         scene.removeSceneListener (this);
         super.removeNotify ();
     }
 
+    @Override
     public void paint (Graphics g) {
         Graphics2D gr = (Graphics2D) g;
         super.paint (g);

@@ -33,7 +33,6 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.spi.project.libraries.support.LibrariesSupport;
 import org.openide.DialogDisplayer;
@@ -44,6 +43,7 @@ import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle;
 import org.netbeans.spi.project.libraries.LibraryImplementation;
 import org.openide.util.Exceptions;
+import org.openide.util.Utilities;
 
 /**
  * This class is copy from j2seplatform
@@ -64,11 +64,13 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
         this.setName (NbBundle.getMessage(J2SEVolumeCustomizer.class,"TXT_"+volumeType));
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         this.addButton.requestFocus();
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         this.addButton.setEnabled(enabled);
@@ -129,15 +131,14 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
             this.addButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(J2SEVolumeCustomizer.class,"AD_AddSources"));
             this.message.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(J2SEVolumeCustomizer.class,"AD_ContentSources"));
         }
-        this.content.addListSelectionListener(new ListSelectionListener () {
-            public void valueChanged(ListSelectionEvent e) {
-                if (e.getValueIsAdjusting())
-                    return;
-                int[] indices = content.getSelectedIndices();
-                removeButton.setEnabled(indices.length > 0);
-                downButton.setEnabled(indices.length > 0 && indices[indices.length-1]<model.getSize()-1);
-                upButton.setEnabled(indices.length>0 && indices[0]>0);
+        this.content.addListSelectionListener( (ListSelectionEvent e) -> {
+            if (e.getValueIsAdjusting()) {
+                return;
             }
+            int[] indices = content.getSelectedIndices();
+            removeButton.setEnabled(indices.length > 0);
+            downButton.setEnabled(indices.length > 0 && indices[indices.length-1]<model.getSize()-1);
+            upButton.setEnabled(indices.length>0 && indices[0]>0);
         });
     }
 
@@ -375,7 +376,7 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
                     f = parent;
                 }
             }
-            URL url = f.toURI().toURL();
+            URL url = Utilities.toURI(f).toURL();
             if (FileUtil.isArchiveFile(url)) {
                 url = FileUtil.getArchiveRoot(url);
             } else if (!url.toExternalForm().endsWith("/")){
@@ -404,6 +405,7 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
         }
     }
     
+    @Override
     public void setObject(Object bean) {
         if (bean instanceof LibraryImplementation) {
             LibrariesSupport.createLibraryImplementation(PersistenceLibrarySupport.LIBRARY_TYPE, PersistenceLibrarySupport.VOLUME_TYPES);
@@ -431,17 +433,21 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
             this.extensions = Arrays.asList(extensions);
         }
         
+        @Override
         public boolean accept(File f) {
-            if (f.isDirectory())
+            if (f.isDirectory()) {
                 return true;
+            }
             String name = f.getName();
             int index = name.lastIndexOf('.');   //NOI18N
-            if (index <= 0 || index==name.length()-1)
+            if (index <= 0 || index==name.length()-1) {
                 return false;
+            }
             String extension = name.substring(index+1).toUpperCase();
             return this.extensions.contains(extension);
         }
         
+        @Override
         public String getDescription() {
             return this.description;
         }
@@ -464,6 +470,7 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
     
     private static class ContentRenderer extends DefaultListCellRenderer {
                 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             String displayName = null;
             Color color = null;

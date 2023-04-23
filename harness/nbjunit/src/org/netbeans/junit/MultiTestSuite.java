@@ -36,6 +36,7 @@ public abstract class MultiTestSuite extends NbTestSuite{
     
     /**
      * Constructs a MultiTestSuite with the given name.
+     * @param name name of the test suite
      */
     public MultiTestSuite(String name){
         super(name);
@@ -44,11 +45,13 @@ public abstract class MultiTestSuite extends NbTestSuite{
     /**
      * Factory method returns a new instance of a testcases.
      * Should return null if there are no more testcases to be executed.
+     * @return test case
      */
     protected abstract MultiTestCase nextTestCase();
     
     /**
      * Runs the tests and collects their result in a TestResult.
+     * @param result collector for result
      */
     public void run(TestResult result) {
         if(isPrepared()){
@@ -61,6 +64,7 @@ public abstract class MultiTestSuite extends NbTestSuite{
     
     /**
      * Creates all testcases and runs them.
+     * @param result collector for result
      */
     protected void runAllTests(TestResult result){
         MultiTestCase testCase = null;

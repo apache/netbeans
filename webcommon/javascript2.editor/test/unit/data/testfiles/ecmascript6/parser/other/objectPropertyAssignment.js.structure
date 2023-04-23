@@ -1,0 +1,10 @@
+target:CLASS:[PUBLIC]:ESCAPED{target}:
+  method1:METHOD:[PUBLIC]:ESCAPED{method1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  property1:FIELD:[PUBLIC]:ESCAPED{property1}<font color="#999999">ESCAPED{ : }Number</font>:
+  property2:FIELD:[PUBLIC]:ESCAPED{property2}<font color="#999999">ESCAPED{ : }String</font>:
+mix1:CLASS:[PUBLIC]:ESCAPED{mix1}:
+  property1:FIELD:[PUBLIC]:ESCAPED{property1}<font color="#999999">ESCAPED{ : }Number</font>:
+  property2:FIELD:[PUBLIC]:ESCAPED{property2}<font color="#999999">ESCAPED{ : }String</font>:
+mix2:CLASS:[PUBLIC]:ESCAPED{mix2}:
+  method1:METHOD:[PUBLIC]:ESCAPED{method1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  property1:FIELD:[PUBLIC]:ESCAPED{property1}<font color="#999999">ESCAPED{ : }Number</font>:

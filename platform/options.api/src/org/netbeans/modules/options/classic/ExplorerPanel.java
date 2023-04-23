@@ -42,10 +42,14 @@ public class ExplorerPanel extends JPanel implements ExplorerManager.Provider {
     public ExplorerManager getExplorerManager() {
         return manager;
     }
+
+    @Override
     public void addNotify() {
         super.addNotify();
         ExplorerUtils.activateActions(manager, true);
     }
+
+    @Override
     public void removeNotify() {
         ExplorerUtils.activateActions(manager, false);
         super.removeNotify();

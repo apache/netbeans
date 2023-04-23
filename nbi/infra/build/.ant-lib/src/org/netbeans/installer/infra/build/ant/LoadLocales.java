@@ -23,7 +23,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.netbeans.installer.infra.build.ant.utils.Utils;
@@ -88,10 +90,11 @@ public class LoadLocales extends Task {
             Properties properties = new Properties();
             
             properties.load(new FileInputStream(file));
-            for (Object key: properties.keySet()) {
+
+            for (Map.Entry<Object, Object> entry: properties.entrySet()) {
                 getProject().setProperty(
-                        key + ".default", // NOI18N
-                        properties.get(key).toString());
+                        entry.getKey() + ".default", // NOI18N
+                        entry.getValue().toString());
             }
             
             for (Locale locale: Locale.getAvailableLocales()) {
@@ -100,11 +103,11 @@ public class LoadLocales extends Task {
                     locales += " " + locale; // NOI18N
                     properties = new Properties();
                     properties.load(new FileInputStream(file));
-                    
-                    for (Object key: properties.keySet()) {
+
+                    for (Map.Entry<Object, Object> entry: properties.entrySet()) {
                         getProject().setProperty(
-                                "" + key + "." + locale, // NOI18N
-                                properties.get(key).toString());
+                                "" + entry.getKey() + "." + locale, // NOI18N
+                                entry.getValue().toString());
                     }
                 }
             }

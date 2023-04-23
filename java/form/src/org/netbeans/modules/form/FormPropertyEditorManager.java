@@ -267,7 +267,7 @@ public final class FormPropertyEditorManager {
 
     private static Map<Class,Class> getEditorClassCache(String key) {
         if (editorClassCache == null) {
-            editorClassCache = new HashMap();
+            editorClassCache = new HashMap<>();
         }
         Map<Class, Class> classCache = editorClassCache.get(key);
         if (classCache == null) {

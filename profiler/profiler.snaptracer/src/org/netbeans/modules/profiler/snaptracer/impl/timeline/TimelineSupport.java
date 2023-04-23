@@ -75,15 +75,15 @@ public final class TimelineSupport {
     private final TimelineLegendOverlay legend;
     private final TimelineUnitsOverlay units;
 
-    private final List<TracerProbe> probes = new ArrayList();
-    private final List<TimelineChart.Row> rows = new ArrayList();
+    private final List<TracerProbe> probes = new ArrayList<>();
+    private final List<TimelineChart.Row> rows = new ArrayList<>();
     private final DescriptorResolver descriptorResolver;
 
-    private final Set<ValuesListener> valuesListeners = new HashSet();
+    private final Set<ValuesListener> valuesListeners = new HashSet<>();
 
-    private final Set<Integer> selectedTimestamps = new HashSet();
-    private final List<Integer> selectedIntervals = new ArrayList();
-    private final Set<SelectionListener> selectionListeners = new HashSet();
+    private final Set<Integer> selectedTimestamps = new HashSet<>();
+    private final List<Integer> selectedIntervals = new ArrayList<>();
+    private final Set<SelectionListener> selectionListeners = new HashSet<>();
 
     private final IdeSnapshot snapshot;
 
@@ -460,7 +460,7 @@ public final class TimelineSupport {
                                      TimeAxisUtils.TIME_DATE_FORMAT, new Object[] {
                                      TimeAxisUtils.TIME_MSEC, TimeAxisUtils.DATE_YEAR}));
 
-        final List<ProbeItemDescriptor> probeDescriptors = new ArrayList(columnsCount);
+        final List<ProbeItemDescriptor> probeDescriptors = new ArrayList<>(columnsCount);
         for (TracerProbe probe : probes)
             probeDescriptors.addAll(Arrays.asList(probe.getItemDescriptors()));
         final ValueItemDescriptor[] descriptors = new ValueItemDescriptor[columnsCount];
@@ -717,7 +717,7 @@ public final class TimelineSupport {
     private void updateSelectedItems() {
         List<SynchronousXYItem> selectedItems = getSelectedItems();
         List<ItemSelection> selections =
-                new ArrayList(selectedItems.size() * selectedTimestamps.size());
+                new ArrayList<>(selectedItems.size() * selectedTimestamps.size());
 
         for (int selectedIndex : selectedTimestamps)
             for (SynchronousXYItem selectedItem : selectedItems)
@@ -795,7 +795,7 @@ public final class TimelineSupport {
 
     private List<SynchronousXYItem> getSelectedItems() {
         List<TimelineChart.Row> selectedRows = chart.getSelectedRows();
-        List<SynchronousXYItem> selectedItems = new ArrayList();
+        List<SynchronousXYItem> selectedItems = new ArrayList<>();
         for (TimelineChart.Row selectedRow : selectedRows)
             selectedItems.addAll(Arrays.asList(selectedRow.getItems()));
         return selectedItems;

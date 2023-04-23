@@ -39,7 +39,6 @@ class ExtendingClass5 extends AbstractClass2 {
     public function abstractBar() {
         
     }
-
 }
 
 interface InterfaceName {

@@ -43,7 +43,6 @@ import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
-import org.netbeans.modules.j2ee.persistence.action.GenerationOptions.*;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
 import org.openide.util.Parameters;
@@ -120,7 +119,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         {
             found=false;
             for(Tree membr:members) {
-                if(Tree.Kind.METHOD.equals(membr.getKind())){
+                if(Tree.Kind.METHOD == membr.getKind()) {
                     MethodTree mt = membr instanceof MethodTree ? (MethodTree) membr : null;
                     if(mt!=null && name.equals(mt.getName().toString())) {
                         found = true;
@@ -185,7 +184,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         
         TypeElement annotationType = asTypeElement(annotationTypeFqn);
         TypeElement classElement = getClassElement();
-        List<Element> elements = new ArrayList<Element>();
+        List<Element> elements = new ArrayList<>();
         elements.add(classElement);
         elements.addAll(ElementFilter.fieldsIn(classElement.getEnclosedElements()));
         elements.addAll(ElementFilter.methodsIn(classElement.getEnclosedElements()));
@@ -242,7 +241,13 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
      */
     protected String generateCallLines(String emName) {
         String version = Persistence.VERSION_1_0;
-        if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {// we have persistence unit with specific version, should use it
+        if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {// we have persistence unit with specific version, should use it
+            version =  Persistence.VERSION_3_1;
+        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) {// we have persistence unit with specific version, should use it
+            version =  Persistence.VERSION_3_0;
+        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) {// we have persistence unit with specific version, should use it
+            version =  Persistence.VERSION_2_2;
+        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {// we have persistence unit with specific version, should use it
             version =  Persistence.VERSION_2_1;
         } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {// we have persistence unit with specific version, should use it
             version =  Persistence.VERSION_2_0;
@@ -292,7 +297,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         
         ClassTree result = getClassTree();
         
-        List<AnnotationTree> anns = new ArrayList<AnnotationTree>();
+        List<AnnotationTree> anns = new ArrayList<>();
         ExpressionTree expressionTree = null;
         String emfName = ENTITY_MANAGER_FACTORY_DEFAULT_NAME;
         
@@ -391,6 +396,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return treeMaker;
     }
     
+    @Override
     public void setTreeMaker(TreeMaker treeMaker) {
         this.treeMaker = treeMaker;
     }
@@ -399,6 +405,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return classTree;
     }
     
+    @Override
     public void setClassTree(ClassTree classTree) {
         this.classTree = classTree;
     }
@@ -407,6 +414,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return workingCopy;
     }
     
+    @Override
     public void setWorkingCopy(WorkingCopy workingCopy) {
         this.workingCopy = workingCopy;
     }
@@ -418,6 +426,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return genUtils;
     }
     
+    @Override
     public void setGenUtils(GenerationUtils genUtils) {
         this.genUtils = genUtils;
     }
@@ -426,6 +435,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return persistenceUnit;
     }
     
+    @Override
     public void setPersistenceUnit(PersistenceUnit persistenceUnit) {
         this.persistenceUnit = persistenceUnit;
     }
@@ -434,6 +444,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return generationOptions;
     }
     
+    @Override
     public void setGenerationOptions(GenerationOptions generationOptions) {
         this.generationOptions = generationOptions;
     }

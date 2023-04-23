@@ -25,6 +25,30 @@
         <apidef name="filesystems">Filesystems API</apidef>
     </apidefs>
     <changes>
+        <change id="fileutil.copyposixperms">
+            <api name="filesystems"/>
+            <summary>FileObject copy preserves source posix permissions.</summary>
+            <version major="9" minor="32"/>
+            <date day="12" month="1" year="2023"/>
+            <author login="lkishalmi"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <a href="@TOP@/org/openide/filesystems/FileUtil.html#copyFile-org.openide.filesystems.FileObject-org.openide.filesystems.FileObject-java.lang.String-java.lang.String-">FileUtil.copyFile(...)</a> now preserve ATTRIBUTES and POSIX permissions.
+            </description>
+            <class name="FileUtil" package="org.openide.filesystems"/>
+        </change>
+        <change id="fileutil.niofilepath">
+            <api name="filesystems"/>
+            <summary>FileUtil can convert FileObject to/from java.nio.file.Path.</summary>
+            <version major="9" minor="32"/>
+            <date day="12" month="1" year="2023"/>
+            <author login="lkishalmi"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <a href="@TOP@/org/openide/filesystems/FileUtil.html#">FileUtil</a> has a <code>toPath(FileObject fo)</code> and <code>toFileObject(Path path)</code> utility methods.
+            </description>
+            <class name="FileUtil" package="org.openide.filesystems"/>
+        </change>
         <change id="fileutil.copyattr.trasnform">
             <api name="filesystems"/>
             <summary>Allow to filter or transform attribute values during copying.</summary>

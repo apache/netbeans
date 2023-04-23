@@ -29,6 +29,8 @@ import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -122,6 +124,7 @@ public class TreeNavigatorProviderImpl implements NavigatorPanel {
     public void panelDeactivated() {
         TreeNavigatorJavaSourceFactory.getInstance().setLookup(Lookup.EMPTY, null);
         TreeNavigatorJavaSourceFactory.CaretAwareFactoryImpl.getInstance().setTask(null);
+        setHighlights(null, null);
     }
 
     static OffsetsBag getBag(Document doc) {
@@ -133,50 +136,63 @@ public class TreeNavigatorProviderImpl implements NavigatorPanel {
         
         return bag;
     }
-    
-    static void setHighlights(FileObject file, ExplorerManager manager) {
-        if (file == null) {
+
+    private static Reference<FileObject> lastFile = null;
+    static synchronized void setHighlights(FileObject file, ExplorerManager manager) {
+        FileObject last = lastFile != null ? lastFile.get() : null;
+        Document lastDoc = documentFor(last);
+
+        if (lastDoc != null) {
+            getBag(lastDoc).clear();
+        }
+
+        Document doc = documentFor(file);
+
+        if (doc == null) {
             return;
         }
-        try {
-            DataObject od = DataObject.find(file);
 
-            EditorCookie ec = od.getLookup().lookup(EditorCookie.class);
+        OffsetsBag bag = new OffsetsBag(doc, true);
 
-            if (ec == null) {
-                return;
-            }
-            Document doc = ec.getDocument();
+        for (Node n : manager.getSelectedNodes()) {
+            if (n instanceof OffsetProvider) {
+                OffsetProvider p = (OffsetProvider) n;
+                final int start = p.getStart();
+                final int end = p.getEnd();
+                final int pref = p.getPreferredPosition();
 
-            if (doc == null) {
-                return;
-            }
-            OffsetsBag bag = new OffsetsBag(doc, true);
+                if (start >= 0 && end >= 0) {
+                    bag.addHighlight(start, end, HIGHLIGHT);
+                }
 
-            for (Node n : manager.getSelectedNodes()) {
-                if (n instanceof OffsetProvider) {
-                    OffsetProvider p = (OffsetProvider) n;
-                    final int start = p.getStart();
-                    final int end = p.getEnd();
-                    final int pref = p.getPreferredPosition();
-                    
-                    if (start >= 0 && end >= 0) {
-                        bag.addHighlight(start, end, HIGHLIGHT);
-                    }
-                    
-                    if (pref >= 0) {
-                        bag.addHighlight(pref, pref+1, HIGHLIGHT_PREF);
-                    }
+                if (pref >= 0) {
+                    bag.addHighlight(pref, pref+1, HIGHLIGHT_PREF);
                 }
             }
+        }
 
-            getBag(doc).setHighlights(bag);
-        } catch (DataObjectNotFoundException ex) {
-            Logger.getLogger(TreeNavigatorProviderImpl.class.getName()).log(Level.FINE, null, ex);
+        getBag(doc).setHighlights(bag);
+
+        if (last != file) {
+            lastFile = new WeakReference<>(file);
         }
     }
-    
-    private static final AttributeSet HIGHLIGHT = AttributesUtilities.createImmutable(StyleConstants.Background, new Color(150, 190, 180));
+
+    private static Document documentFor(FileObject file) {
+        if (file == null) {
+            return null;
+        }
+
+        EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+
+        if (ec == null) {
+            return null;
+        }
+
+        return ec.getDocument();
+    }
+
+    private static final AttributeSet HIGHLIGHT = AttributesUtilities.createImmutable(StyleConstants.Background, new Color(220, 220, 220));
     private static final AttributeSet HIGHLIGHT_PREF = AttributesUtilities.createImmutable(StyleConstants.Underline, new Color(30, 255, 0));
     
     private final class TaskImpl implements CancellableTask<CompilationInfo> {

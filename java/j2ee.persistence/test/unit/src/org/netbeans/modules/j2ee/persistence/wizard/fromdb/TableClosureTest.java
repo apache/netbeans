@@ -40,8 +40,9 @@ public class TableClosureTest extends TestCase {
         super(testName);
     }
 
+    @Override
     public void setUp() {
-        Map<String, Set<String>> tablesAndRefs = new HashMap<String, Set<String>>();
+        Map<String, Set<String>> tablesAndRefs = new HashMap<>();
         Set<String> empty = Collections.emptySet();
 
         tablesAndRefs.put("A", Collections.singleton("B"));
@@ -56,6 +57,7 @@ public class TableClosureTest extends TestCase {
         closure = new TableClosure(provider);
     }
 
+    @Override
     public void tearDown() {
         closure = null;
     }

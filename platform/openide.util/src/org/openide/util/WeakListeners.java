@@ -40,8 +40,9 @@ import javax.swing.event.DocumentListener;
  * The examples are written for ChangeListener. The <code>Utilities</code>
  * have factory methods for the most common listeners used in NetBeans
  * and also one universal factory method you can use for other listeners.
- *
- * <H2>How to use it:</H2>
+ * <p>
+ * <strong>How to use it:</strong>
+ * <p>
  * Here is an example how to write a listener/observer and make it listen
  * on some source:
  * <pre>
@@ -95,8 +96,9 @@ import javax.swing.event.DocumentListener;
  *      }
  *  }
  * </pre>
- *
- * <H2>How to <font color=red>not</font> use it:</H2>
+ * <p>
+ * <strong>How to <span style="color:red">not</span> use it:</strong>
+ * <p>
  * Here are examples of a common mistakes done when using <em>weak listener</em>:
  * <pre>
  *  public class Observer {
@@ -127,8 +129,8 @@ import javax.swing.event.DocumentListener;
  * </pre>
  * Mistake: The weak listener is unable to unregister itself from the source
  * once the listener is freed. For explanation, read below.
- *
- <H2>How does it work:</H2>
+ * <p>
+ * <strong>How does it work:</strong>
  * <P>The <em>weak listener</em> is used as a reference-weakening wrapper
  *  around the listener. It is itself strongly referenced from the implementation
  *  of the source (e.g. from its <code>EventListenerList</code>) but it references
@@ -177,7 +179,7 @@ public final class WeakListeners {
 
     /** Generic factory method to create weak listener for any listener
      * interface.
-     *
+     * @param <T> type of listener
      * @param lType the type of listener to create. It can be any interface,
      *     but only interfaces are allowed.
      * @param l the listener to delegate to, <CODE>l</CODE> must be an instance
@@ -217,7 +219,7 @@ public final class WeakListeners {
      * This will correctly create <code>ObjectChangeListener</code>
      * and unregister it by
      * calling <code>removeNamingListener</code>.
-     *
+     * @param <T> type of listener
      * @param lType the type the listener shall implement. It can be any interface,
      *     but only interfaces are allowed.
      * @param apiType the interface the returned object will be used as. It

@@ -1228,6 +1228,7 @@ final class CompletionContextFinder {
                 || id == PHPTokenId.PHP_STATIC
                 || id == PHPTokenId.PHP_NULL
                 || id == PHPTokenId.PHP_FALSE
+                || id == PHPTokenId.PHP_TRUE
                 || id == PHPTokenId.PHP_ARRAY
                 || id == PHPTokenId.PHP_ITERABLE
                 || id == PHPTokenId.PHP_CALLABLE;
@@ -1285,8 +1286,12 @@ final class CompletionContextFinder {
                     break;
                 }
                 Token<PHPTokenId> cToken = tokenSequence.token();
-                if (cToken.id() == PHPTokenId.WHITESPACE
-                        && TokenUtilities.indexOf(cToken.text(), '\n') != -1) { // NOI18N
+                if ((cToken.id() == PHPTokenId.WHITESPACE
+                        && TokenUtilities.indexOf(cToken.text(), '\n') != -1) // NOI18N
+                        || cToken.id() == PHPTokenId.PHP_LINE_COMMENT) {
+                    // e.g.
+                    // public bool $bool = true; // line comment
+                    // public tru^e $true = true;
                     break;
                 }
                 tokens.addLast(cToken);

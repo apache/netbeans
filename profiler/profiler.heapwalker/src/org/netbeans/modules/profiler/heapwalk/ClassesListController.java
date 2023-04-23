@@ -468,7 +468,7 @@ public class ClassesListController extends AbstractController {
         if (compareRetained) classesController.getHeapFragmentWalker().
                              computeRetainedSizes(false, false);
         
-        Map<String, DiffJavaClass> classes = new HashMap();
+        Map<String, DiffJavaClass> classes = new HashMap<>();
         
         List<JavaClass> classes1 = h1.getAllClasses();
         for (JavaClass jc1 : classes1) {

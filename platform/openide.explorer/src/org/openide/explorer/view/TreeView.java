@@ -1782,7 +1782,7 @@ public abstract class TreeView extends JScrollPane {
         public void updateUI() {
             super.updateUI();
             setBorder(BorderFactory.createEmptyBorder());
-            if( getTransferHandler() != null && getTransferHandler() instanceof UIResource ) {
+            if( getTransferHandler() instanceof UIResource ) {
                 //we handle drag and drop in our own way, so let's just fool the UI with a dummy
                 //TransferHandler to ensure that multiple selection is not lost when drag starts
                 setTransferHandler( new DummyTransferHandler() );

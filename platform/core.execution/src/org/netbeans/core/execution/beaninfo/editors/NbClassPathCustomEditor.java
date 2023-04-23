@@ -180,6 +180,7 @@ class NbClassPathCustomEditor extends javax.swing.JPanel {
         innerPanel.add(removeButton, gridBagConstraints);
 
         pathList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 pathListMouseClicked(evt);
             }

@@ -1,0 +1,4 @@
+BackedEnumInt::Case1->introduceMet^hod();
+---------------------------------------
+HINT:Introduce Hint
+FIX:Create Method " introduceMethod()" in Enum "BackedEnumInt" (testEnumMethods.php)

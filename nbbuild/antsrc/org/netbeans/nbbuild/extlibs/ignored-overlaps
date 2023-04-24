@@ -65,7 +65,7 @@ extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/hamcrest
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/junit-4.13.2.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.testng/external/jcommander-1.78.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.io/external/commons-io-2.6.jar
-extide/gradle/external/gradle-7.4-bin.zip enterprise/cloud.oracle/external/jsr305-3.0.2.jar
+extide/gradle/external/gradle-7.4-bin.zip enterprise/cloud.oracle/external/httpclient-4.5.13.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.15.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.batik.read/external/xml-apis-1.4.01.jar
 

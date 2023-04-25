@@ -43,9 +43,20 @@
         <chmod file="${lsp.build.dir}/java/maven/bin/mvn" perm="u+x" />
 
         <property name="3rdparty.modules" value=".*externalcodeformatter.*"/>
-        <autoupdate todir="${lsp.build.dir}/extra" updatecenter="https://netbeans.apache.org/nb/plugins/14/catalog.xml.gz">
+        <autoupdate todir="${lsp.build.dir}/extra" updatecenter="https://netbeans.apache.org/nb/plugins/17/catalog.xml.gz">
             <modules includes="${3rdparty.modules}"/>
         </autoupdate>
+    </target>
+    <target name="add-extra-modules" depends="build-lsp-server" if="extra.modules">
+        <ant dir="../../nbbuild" target="build-nbms" inheritall="false" inheritrefs="false">
+            <property name="cluster.config" value="basic"/>
+        </ant>
+        <ant dir="../../nbbuild" target="generate-uc-catalog" inheritall="false" inheritrefs="false"/>
+        <makeurl file="../../nbbuild/nbms/updates.xml.gz" property="update.center.url"/>
+        <autoupdate installdir="${lsp.build.dir}" updatecenter="${update.center.url}">
+            <modules includes="${extra.modules}"/>
+        </autoupdate>
+        <delete file="../../nbbuild/nbms/tasks.jar"/>
     </target>
     <target name="-set-use-jdk-javac">
         <property name="test.use.jdk.javac" value="true" />
@@ -56,7 +67,7 @@
         <delete dir="vscode/out" />
         <ant dir="nbcode" target="clean" inheritall="false" inheritrefs="false"/>
     </target>
-    <target name="build-vscode-ext" depends="build-lsp-server" description="Build the Visual Studio Code extension.">
+    <target name="build-vscode-ext" depends="add-extra-modules" description="Build the Visual Studio Code extension.">
         <taskdef name="gitbranchhash" classname="org.netbeans.nbbuild.GitBranchHash" classpath="${nbantext.jar}" />
         <gitbranchhash file="." branchproperty="metabuild.branch" hashproperty="metabuild.hash" />
         <condition property="metabuild.hash" value="master" >

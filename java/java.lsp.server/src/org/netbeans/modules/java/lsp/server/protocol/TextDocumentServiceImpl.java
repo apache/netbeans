@@ -1005,43 +1005,45 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                             }
                         }
-                        //introduce hints:
-                        CompilationController cc = CompilationController.get(resultIterator.getParserResult());
-                        if (cc != null) {
-                            cc.toPhase(JavaSource.Phase.RESOLVED);
-                            if (!range.getStart().equals(range.getEnd())) {
-                                for (ErrorDescription err : IntroduceHint.computeError(cc, startOffset, endOffset, new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
-                                    for (Fix fix : err.getFixes().getFixes()) {
-                                        if (fix instanceof IntroduceFixBase) {
-                                            try {
-                                                ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
-                                                if (changes != null) {
-                                                    List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                                                    Set<? extends FileObject> fos = changes.getModifiedFileObjects();
-                                                    if (fos.size() == 1) {
-                                                        FileObject fileObject = fos.iterator().next();
-                                                        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
-                                                        if (diffs != null) {
-                                                            List<TextEdit> edits = new ArrayList<>();
-                                                            for (ModificationResult.Difference diff : diffs) {
-                                                                String newText = diff.getNewText();
-                                                                edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
-                                                                        Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
-                                                                        newText != null ? newText : ""));
+                        if (client.getNbCodeCapabilities().wantsJavaSupport()) {
+                            //introduce hints:
+                            CompilationController cc = CompilationController.get(resultIterator.getParserResult());
+                            if (cc != null) {
+                                cc.toPhase(JavaSource.Phase.RESOLVED);
+                                if (!range.getStart().equals(range.getEnd())) {
+                                    for (ErrorDescription err : IntroduceHint.computeError(cc, startOffset, endOffset, new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
+                                        for (Fix fix : err.getFixes().getFixes()) {
+                                            if (fix instanceof IntroduceFixBase) {
+                                                try {
+                                                    ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
+                                                    if (changes != null) {
+                                                        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                                                        Set<? extends FileObject> fos = changes.getModifiedFileObjects();
+                                                        if (fos.size() == 1) {
+                                                            FileObject fileObject = fos.iterator().next();
+                                                            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
+                                                            if (diffs != null) {
+                                                                List<TextEdit> edits = new ArrayList<>();
+                                                                for (ModificationResult.Difference diff : diffs) {
+                                                                    String newText = diff.getNewText();
+                                                                    edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
+                                                                            Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
+                                                                            newText != null ? newText : ""));
+                                                                }
+                                                                documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
                                                             }
-                                                            documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
+                                                            CodeAction codeAction = new CodeAction(fix.getText());
+                                                            codeAction.setKind(CodeActionKind.RefactorExtract);
+                                                            codeAction.setEdit(new WorkspaceEdit(documentChanges));
+                                                            int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
+                                                            if (renameOffset >= 0) {
+                                                                codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
+                                                            }
+                                                            result.add(Either.forRight(codeAction));
                                                         }
-                                                        CodeAction codeAction = new CodeAction(fix.getText());
-                                                        codeAction.setKind(CodeActionKind.RefactorExtract);
-                                                        codeAction.setEdit(new WorkspaceEdit(documentChanges));
-                                                        int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
-                                                        if (renameOffset >= 0) {
-                                                            codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
-                                                        }
-                                                        result.add(Either.forRight(codeAction));
                                                     }
+                                                } catch (GeneratorUtils.DuplicateMemberException dme) {
                                                 }
-                                            } catch (GeneratorUtils.DuplicateMemberException dme) {
                                             }
                                         }
                                     }

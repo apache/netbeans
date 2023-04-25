@@ -24,6 +24,7 @@
 #-org.netbeans.modules.java.lsp.server.protocol.ImplementOverrideMethodGenerator
 #-org.netbeans.modules.java.lsp.server.protocol.SurroundWithHint
 #-org.netbeans.modules.java.lsp.server.protocol.OrganizeImportsCodeAction
+#-org.netbeans.modules.java.lsp.server.protocol.TestClassGenerator
 #-org.netbeans.modules.java.lsp.server.refactoring.MoveRefactoring
 #-org.netbeans.modules.java.lsp.server.refactoring.ExtractSuperclassOrInterfaceRefactoring
 #-org.netbeans.modules.java.lsp.server.refactoring.PullUpRefactoring

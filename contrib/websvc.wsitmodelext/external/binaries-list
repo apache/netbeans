@@ -15,6 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-B25C73E8D8EA62540AEF3628AAD90F1C20FF8C1D websvc.wsitmodelext-glassfish-resources.zip
-869FC2D6F1DA13E7B1C1CD104F66D82BEF378939 websvc.wsitmodelext-oasis-resources.zip
-27AF1531AE4894FC8303A965F583E61C0EB3654F websvc.wsitmodelext-w3c-resources.zip
+LEGACY B25C73E8D8EA62540AEF3628AAD90F1C20FF8C1D websvc.wsitmodelext-glassfish-resources.zip
+LEGACY 869FC2D6F1DA13E7B1C1CD104F66D82BEF378939 websvc.wsitmodelext-oasis-resources.zip
+LEGACY 27AF1531AE4894FC8303A965F583E61C0EB3654F websvc.wsitmodelext-w3c-resources.zip

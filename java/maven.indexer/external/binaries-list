@@ -14,9 +14,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-68C3815F7327714D8A75426C30855C960E94AAD5 org.apache.maven.indexer:indexer-core:6.2.2
-75DCF930ECE95581AF3F31AF5692E4963FC7AD8E org.apache.lucene:lucene-core:8.11.1
-558A389A0D68AA7CC4C26B9128C72D0D269D471F org.apache.lucene:lucene-highlighter:8.11.1
-5A44DF2CB26FA1E0E64BE53FE474C7F1D5A3E634 org.apache.lucene:lucene-queryparser:8.11.1
-E50AF506F271A3F7246DA054A2569B42FF73ABB2 org.apache.lucene:lucene-analyzers-common:8.11.1
-479C1E06DB31C432330183F5CAE684163F186146 javax.annotation:javax.annotation-api:1.2
+MC 68C3815F7327714D8A75426C30855C960E94AAD5 org.apache.maven.indexer:indexer-core:6.2.2
+MC 75DCF930ECE95581AF3F31AF5692E4963FC7AD8E org.apache.lucene:lucene-core:8.11.1
+MC 558A389A0D68AA7CC4C26B9128C72D0D269D471F org.apache.lucene:lucene-highlighter:8.11.1
+MC 5A44DF2CB26FA1E0E64BE53FE474C7F1D5A3E634 org.apache.lucene:lucene-queryparser:8.11.1
+MC E50AF506F271A3F7246DA054A2569B42FF73ABB2 org.apache.lucene:lucene-analyzers-common:8.11.1
+MC 479C1E06DB31C432330183F5CAE684163F186146 javax.annotation:javax.annotation-api:1.2

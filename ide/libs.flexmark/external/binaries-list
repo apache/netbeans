@@ -14,9 +14,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-9B6A3169E240EE48800EA215DDF033EBFB221097 com.vladsch.flexmark:flexmark:0.50.36
-4C77069222E80816F73B6277F09F742382E14E30 com.vladsch.flexmark:flexmark-html2md-converter:0.50.36
-FF0452A9FF56D164C9FA1B880562ED1FC8F93F57 com.vladsch.flexmark:flexmark-util:0.50.36
-983105CC5A42FF82979C742FB6BE525AB1FED8E9 com.vladsch.flexmark:flexmark-ext-emoji:0.50.36
-A01A46E369E0C4A271A519481C422206D54A60D1 com.vladsch.flexmark:flexmark-formatter:0.50.36
-36DA09A8F68484523FA2AAA100399D612B247D67 org.jsoup:jsoup:1.11.3
+MC 9B6A3169E240EE48800EA215DDF033EBFB221097 com.vladsch.flexmark:flexmark:0.50.36
+MC 4C77069222E80816F73B6277F09F742382E14E30 com.vladsch.flexmark:flexmark-html2md-converter:0.50.36
+MC FF0452A9FF56D164C9FA1B880562ED1FC8F93F57 com.vladsch.flexmark:flexmark-util:0.50.36
+MC 983105CC5A42FF82979C742FB6BE525AB1FED8E9 com.vladsch.flexmark:flexmark-ext-emoji:0.50.36
+MC A01A46E369E0C4A271A519481C422206D54A60D1 com.vladsch.flexmark:flexmark-formatter:0.50.36
+MC 36DA09A8F68484523FA2AAA100399D612B247D67 org.jsoup:jsoup:1.11.3

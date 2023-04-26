@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-CD9CD41361C155F3AF0F653009DCECB08D8B4AFD org.antlr:antlr-runtime:3.5.2
-7ABF224F627594A3F4AE37FCFFF296730F3F4EDD org.antlr:antlr-complete:3.5.2
+MC CD9CD41361C155F3AF0F653009DCECB08D8B4AFD org.antlr:antlr-runtime:3.5.2
+MC 7ABF224F627594A3F4AE37FCFFF296730F3F4EDD org.antlr:antlr-complete:3.5.2

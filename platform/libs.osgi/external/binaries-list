@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-4FA9F239A60AECA4A27648DF329D112D562A350C org.osgi:osgi.cmpn:7.0.0
-DAA42A0E96C3B881E8C330A413813983E92D2426 org.osgi:osgi.core:8.0.0
+MC 4FA9F239A60AECA4A27648DF329D112D562A350C org.osgi:osgi.cmpn:7.0.0
+MC DAA42A0E96C3B881E8C330A413813983E92D2426 org.osgi:osgi.core:8.0.0

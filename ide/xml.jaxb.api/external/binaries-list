@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-74548703F9851017CE2F556066659438019E7EB5 com.sun.activation:jakarta.activation:1.2.2
-48E3B9CFC10752FBA3521D6511F4165BEA951801 jakarta.xml.bind:jakarta.xml.bind-api:2.3.3
+MC 74548703F9851017CE2F556066659438019E7EB5 com.sun.activation:jakarta.activation:1.2.2
+MC 48E3B9CFC10752FBA3521D6511F4165BEA951801 jakarta.xml.bind:jakarta.xml.bind-api:2.3.3

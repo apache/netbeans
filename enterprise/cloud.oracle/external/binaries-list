@@ -15,20 +15,20 @@
 # specific language governing permissions and limitations
 # under the License.
 
-DB39E0A216BDCF38156BBE0179641D462BB62647 com.oracle.oci.sdk:oci-java-sdk-common:2.27.0
-C51EF1AA99B091AE01ADD0FFE16E04226A46A87F com.oracle.oci.sdk:oci-java-sdk-database:2.27.0
-F15AAE27A41CC0771DC77FE242EAAE9C652A91AB com.oracle.oci.sdk:oci-java-sdk-identity:2.27.0
-07468545ED99239202283D08CC3B81C7F75795F3 com.oracle.oci.sdk:oci-java-sdk-circuitbreaker:2.27.0
-0CFEAB32956965D25DFAB4C3EC2F14B9064B4D99 com.oracle.oci.sdk:oci-java-sdk-workrequests:2.27.0
-0FF864DC94B63D4248B2DBFA595C68ABEDF1D360 com.oracle.oci.sdk:oci-java-sdk-devops:2.27.0
-36746680FE0C804CE33B947B4DBB092E1E9D2322 com.oracle.oci.sdk:oci-java-sdk-adm:2.27.0
-CACECE66244150F252B5C58E0A38FEA0D5015665 com.nimbusds:nimbus-jose-jwt:9.11.1
-25EA2E8B0C338A877313BD4672D3FE056EA78F0D com.google.code.findbugs:jsr305:3.0.2
-52C3DCE0E910EB8F7CE649F44EFADA7E26D8996A org.glassfish.jersey.media:jersey-media-json-jackson:2.34
-FEC563E0FC3650846BA8D2A2B815569FFE0AB519 org.glassfish.jersey.connectors:jersey-apache-connector:2.34
-562A587FACE36EC7EFF2DB7F2FC95425C6602BC1 jakarta.activation:jakarta.activation-api:1.2.1
+MC DB39E0A216BDCF38156BBE0179641D462BB62647 com.oracle.oci.sdk:oci-java-sdk-common:2.27.0
+MC C51EF1AA99B091AE01ADD0FFE16E04226A46A87F com.oracle.oci.sdk:oci-java-sdk-database:2.27.0
+MC F15AAE27A41CC0771DC77FE242EAAE9C652A91AB com.oracle.oci.sdk:oci-java-sdk-identity:2.27.0
+MC 07468545ED99239202283D08CC3B81C7F75795F3 com.oracle.oci.sdk:oci-java-sdk-circuitbreaker:2.27.0
+MC 0CFEAB32956965D25DFAB4C3EC2F14B9064B4D99 com.oracle.oci.sdk:oci-java-sdk-workrequests:2.27.0
+MC 0FF864DC94B63D4248B2DBFA595C68ABEDF1D360 com.oracle.oci.sdk:oci-java-sdk-devops:2.27.0
+MC 36746680FE0C804CE33B947B4DBB092E1E9D2322 com.oracle.oci.sdk:oci-java-sdk-adm:2.27.0
+MC CACECE66244150F252B5C58E0A38FEA0D5015665 com.nimbusds:nimbus-jose-jwt:9.11.1
+MC 25EA2E8B0C338A877313BD4672D3FE056EA78F0D com.google.code.findbugs:jsr305:3.0.2
+MC 52C3DCE0E910EB8F7CE649F44EFADA7E26D8996A org.glassfish.jersey.media:jersey-media-json-jackson:2.34
+MC FEC563E0FC3650846BA8D2A2B815569FFE0AB519 org.glassfish.jersey.connectors:jersey-apache-connector:2.34
+MC 562A587FACE36EC7EFF2DB7F2FC95425C6602BC1 jakarta.activation:jakarta.activation-api:1.2.1
 
-EBEC09ED06111475434BC41D7B47BF51457E5D41 io.github.resilience4j:resilience4j-circuitbreaker:1.2.0
-82DCE5BA9F0CCA3BBB694581ABAE0124ECCEB828 io.github.resilience4j:resilience4j-core:1.2.0
-DFD5101B17DA36C32AE024B984E0B72712F01A35 io.vavr:vavr:0.10.2
-68F1AF10052713FDA01BFB1E5B831DCF6D826AB2 io.vavr:vavr-match:0.10.2
+MC EBEC09ED06111475434BC41D7B47BF51457E5D41 io.github.resilience4j:resilience4j-circuitbreaker:1.2.0
+MC 82DCE5BA9F0CCA3BBB694581ABAE0124ECCEB828 io.github.resilience4j:resilience4j-core:1.2.0
+MC DFD5101B17DA36C32AE024B984E0B72712F01A35 io.vavr:vavr:0.10.2
+MC 68F1AF10052713FDA01BFB1E5B831DCF6D826AB2 io.vavr:vavr-match:0.10.2

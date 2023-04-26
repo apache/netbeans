@@ -15,6 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-529FE0136BE92861E5A255FBC99146F1943C4332 jakarta.xml.ws:jakarta.xml.ws-api:2.3.3
-4F71FA8CA30BE4D04BA658339DF3C927FA21209A jakarta.xml.soap:jakarta.xml.soap-api:1.4.2
-7D283EF13E49C1422701E30639371EDCA788C609 jakarta.jws:jakarta.jws-api:2.1.0
+MC 529FE0136BE92861E5A255FBC99146F1943C4332 jakarta.xml.ws:jakarta.xml.ws-api:2.3.3
+MC 4F71FA8CA30BE4D04BA658339DF3C927FA21209A jakarta.xml.soap:jakarta.xml.soap-api:1.4.2
+MC 7D283EF13E49C1422701E30639371EDCA788C609 jakarta.jws:jakarta.jws-api:2.1.0

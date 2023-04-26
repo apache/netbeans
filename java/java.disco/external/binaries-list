@@ -14,6 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-4FCCADF37F1C61A0895BAC3D42FE0C530438826C org.checkerframework:checker-qual:3.9.1
-CE10D968585304A7463430DD53254E6D6893DF16 io.foojay.api:discoclient:2.0.24
-F66F9FC72A84FCAB1579202728EE572BDBB46DD7 eu.hansolo:jdktools:11.0.11
+MC 4FCCADF37F1C61A0895BAC3D42FE0C530438826C org.checkerframework:checker-qual:3.9.1
+MC CE10D968585304A7463430DD53254E6D6893DF16 io.foojay.api:discoclient:2.0.24
+MC F66F9FC72A84FCAB1579202728EE572BDBB46DD7 eu.hansolo:jdktools:11.0.11

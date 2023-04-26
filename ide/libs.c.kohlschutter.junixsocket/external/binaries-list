@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-4A19CA3071BFAA7CB30AAD62D6F93FAA080EA9E8 com.kohlschutter.junixsocket:junixsocket-native-common:2.5.1
-87515D51236AFD95693FDC6F2233A98F9C1429B1 com.kohlschutter.junixsocket:junixsocket-common:2.5.1
+MC 4A19CA3071BFAA7CB30AAD62D6F93FAA080EA9E8 com.kohlschutter.junixsocket:junixsocket-native-common:2.5.1
+MC 87515D51236AFD95693FDC6F2233A98F9C1429B1 com.kohlschutter.junixsocket:junixsocket-common:2.5.1

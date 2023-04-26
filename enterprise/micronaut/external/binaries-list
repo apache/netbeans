@@ -15,5 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 
-5F7BD843949ED9DEF4A13632D11C6ABE4EDBBE09 org.springframework.boot:spring-boot-configuration-metadata:2.4.4
-FA26D351FE62A6A17F5CDA1287C1C6110DEC413F com.vaadin.external.google:android-json:0.0.20131108.vaadin1
+MC 5F7BD843949ED9DEF4A13632D11C6ABE4EDBBE09 org.springframework.boot:spring-boot-configuration-metadata:2.4.4
+MC FA26D351FE62A6A17F5CDA1287C1C6110DEC413F com.vaadin.external.google:android-json:0.0.20131108.vaadin1

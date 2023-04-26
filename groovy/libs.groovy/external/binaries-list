@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-43A7ECF3B8A9D7DD9FC8D468AE96B97CFF4616DF org.codehaus.groovy:groovy:3.0.8
-3077166ED6635F777064AD79C8CA080AB8DC3247 org.codehaus.groovy:groovy-ant:3.0.8
+MC 43A7ECF3B8A9D7DD9FC8D468AE96B97CFF4616DF org.codehaus.groovy:groovy:3.0.8
+MC 3077166ED6635F777064AD79C8CA080AB8DC3247 org.codehaus.groovy:groovy-ant:3.0.8

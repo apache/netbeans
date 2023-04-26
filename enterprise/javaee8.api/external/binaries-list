@@ -14,17 +14,17 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-515A40C1F19802A18A187F59BFBE445A62218A04 javax:javaee-api:8.0.1
-876355210738C6F2ECAF75E84FE59B9957CDD496 javax:javaee-web-api:8.0.1
-934C04D3CFEF185A8008E7BF34331B79730A9D43 javax.annotation:javax.annotation-api:1.3.2
-2A642453AB5CE7A506B46164DE8258EE463A9197 javax.faces:javax.faces-api:2.3
-5FAAA3864FF6025CE69809B60D65BDA3E358610C javax.jms:javax.jms-api:2.0.1
-935151EB71BEFF17A2FFAC15DD80184A99A0514F com.sun.mail:javax.mail:1.6.2
-F86B4D697ECD992EC6C4C6053736DB16D41DC57F javax.resource:javax.resource-api:1.7.1
-0901948EA655DDE5127EC8B14069ED98D84AC669 javax.management.j2ee:javax.management.j2ee-api:1.1.2
-841BCEA36398EE4C25E7A79A8E8391B78AAD750A javax.security.jacc:javax.security.jacc-api:1.6
-CC4240956C4E8A7231AADD919FDEE8FE39A2E50D javax.enterprise.concurrent:javax.enterprise.concurrent-api:1.1
-2562072EF44E364529EBF7C48CF44E4568CBD8F5 javax.batch:javax.batch-api:1.0.1
-DE2D1B615E9E027ADBDD467F4223162EF35404AB javax.enterprise.deploy:javax.enterprise.deploy-api:1.7
-E3C69DEDAEA3D9B8D286DE02FE792D1E2525A971 javax.xml.registry:javax.xml.registry-api:1.0.8
-CA48388F25715BA40058CE8C20712636F6ECE617 javax.xml.rpc:javax.xml.rpc-api:1.1.2
+MC 515A40C1F19802A18A187F59BFBE445A62218A04 javax:javaee-api:8.0.1
+MC 876355210738C6F2ECAF75E84FE59B9957CDD496 javax:javaee-web-api:8.0.1
+MC 934C04D3CFEF185A8008E7BF34331B79730A9D43 javax.annotation:javax.annotation-api:1.3.2
+MC 2A642453AB5CE7A506B46164DE8258EE463A9197 javax.faces:javax.faces-api:2.3
+MC 5FAAA3864FF6025CE69809B60D65BDA3E358610C javax.jms:javax.jms-api:2.0.1
+MC 935151EB71BEFF17A2FFAC15DD80184A99A0514F com.sun.mail:javax.mail:1.6.2
+MC F86B4D697ECD992EC6C4C6053736DB16D41DC57F javax.resource:javax.resource-api:1.7.1
+MC 0901948EA655DDE5127EC8B14069ED98D84AC669 javax.management.j2ee:javax.management.j2ee-api:1.1.2
+MC 841BCEA36398EE4C25E7A79A8E8391B78AAD750A javax.security.jacc:javax.security.jacc-api:1.6
+MC CC4240956C4E8A7231AADD919FDEE8FE39A2E50D javax.enterprise.concurrent:javax.enterprise.concurrent-api:1.1
+MC 2562072EF44E364529EBF7C48CF44E4568CBD8F5 javax.batch:javax.batch-api:1.0.1
+MC DE2D1B615E9E027ADBDD467F4223162EF35404AB javax.enterprise.deploy:javax.enterprise.deploy-api:1.7
+MC E3C69DEDAEA3D9B8D286DE02FE792D1E2525A971 javax.xml.registry:javax.xml.registry-api:1.0.8
+MC CA48388F25715BA40058CE8C20712636F6ECE617 javax.xml.rpc:javax.xml.rpc-api:1.1.2

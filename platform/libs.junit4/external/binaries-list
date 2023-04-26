@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-8AC9E16D933B6FB43BC7F576336B8F4D7EB5BA12 junit:junit:4.13.2
-42A25DC3219429F0E5D060061F71ACB49BF010A0 org.hamcrest:hamcrest-core:1.3
+MC 8AC9E16D933B6FB43BC7F576336B8F4D7EB5BA12 junit:junit:4.13.2
+MC 42A25DC3219429F0E5D060061F71ACB49BF010A0 org.hamcrest:hamcrest-core:1.3

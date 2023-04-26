@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-93A352D21C1D95061BDFE5C86A91F946F3A3E605 com.oracle.truffle:truffle-sl:1.0.0-rc6
-E27D8AB4F984F9D186F54DA984A6AB1CCCAC755E org.antlr:antlr4-runtime:4.7.2
+MC 93A352D21C1D95061BDFE5C86A91F946F3A3E605 com.oracle.truffle:truffle-sl:1.0.0-rc6
+MC E27D8AB4F984F9D186F54DA984A6AB1CCCAC755E org.antlr:antlr4-runtime:4.7.2

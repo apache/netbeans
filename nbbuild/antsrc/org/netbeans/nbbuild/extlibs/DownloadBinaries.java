@@ -157,20 +157,30 @@ public class DownloadBinaries extends Task {
                             if (line.trim().length() == 0) {
                                 continue;
                             }
-                            String[] hashAndFile = line.split(" ", 2);
-                            if (hashAndFile.length < 2) {
+                            String[] hashAndFile = line.split(" ", 3);
+                            if (hashAndFile.length < 3) {
                                 throw new BuildException("Bad line '" + line + "' in " + manifest, getLocation());
                             }
-
-                            Matcher urlMatcher = URL_PATTERN.matcher(hashAndFile[1]);
+                            if ("MC".equals(hashAndFile[0])) {
+                                MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[2]);
+                                success &= fillInFile(hashAndFile[1], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
+                            } else if ("LEGACY".equals(hashAndFile[0])) {
+                                Matcher urlMatcher = URL_PATTERN.matcher(hashAndFile[2]);
+                                if (urlMatcher.matches()) {
+                                    success &= fillInFile(hashAndFile[1], urlMatcher.group(2), manifest, () -> downloadFromServer(this, new URL(urlMatcher.group(1))));
+                                } else {
+                                    success &= fillInFile(hashAndFile[1], hashAndFile[2], manifest, () -> legacyDownload(hashAndFile[1] + "-" + hashAndFile[2]));
+                                }
+                            }
+                            /*Matcher urlMatcher = URL_PATTERN.matcher(hashAndFile[1]);
                             if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
-                                MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
-                                success &= fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
+                                //MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
+                                //success &= fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
                             } else if (urlMatcher.matches()) {
                                 success &= fillInFile(hashAndFile[0], urlMatcher.group(2), manifest, () -> downloadFromServer(this, new URL(urlMatcher.group(1))));
                             } else {
                                 success &= fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
-                            }
+                            }*/
                         }
                     }
                 } catch (IOException x) {

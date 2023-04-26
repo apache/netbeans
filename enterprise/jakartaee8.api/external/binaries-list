@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-5983B3E05328AA17EFA9A5EA91F3DE474E60342F jakarta.platform:jakarta.jakartaee-api:8.0.0
-D8B6BC85DEEFD37299341F6B8D88938CCF12A9CE jakarta.platform:jakarta.jakartaee-web-api:8.0.0
+MC 5983B3E05328AA17EFA9A5EA91F3DE474E60342F jakarta.platform:jakarta.jakartaee-api:8.0.0
+MC D8B6BC85DEEFD37299341F6B8D88938CCF12A9CE jakarta.platform:jakarta.jakartaee-web-api:8.0.0

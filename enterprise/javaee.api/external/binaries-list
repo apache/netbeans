@@ -14,8 +14,8 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-D6F416983EA13C334D5C599A9045414ECAF5D66D javax:javaee-api:6.0
-EBEC44255251E6D3B8DDBAF701F732DAF0238CBF javax:javaee-web-api:6.0
-479C1E06DB31C432330183F5CAE684163F186146 javax.annotation:javax.annotation-api:1.2
-45EBA8B0520A70787D5DD2EA154ACE152F817C0D javax.xml.bind:jaxb-api-osgi:2.2.7
-203E8BEEA41131255439441068C3FD1FE9EFC190 javax.xml:webservices-api-osgi:2.0.1
+MC D6F416983EA13C334D5C599A9045414ECAF5D66D javax:javaee-api:6.0
+MC EBEC44255251E6D3B8DDBAF701F732DAF0238CBF javax:javaee-web-api:6.0
+MC 479C1E06DB31C432330183F5CAE684163F186146 javax.annotation:javax.annotation-api:1.2
+MC 45EBA8B0520A70787D5DD2EA154ACE152F817C0D javax.xml.bind:jaxb-api-osgi:2.2.7
+MC 203E8BEEA41131255439441068C3FD1FE9EFC190 javax.xml:webservices-api-osgi:2.0.1

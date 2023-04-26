@@ -14,6 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-E486AD917028B52265610206FB5A1E2B5914B94B org.apache.xmlrpc:xmlrpc-client:3.1.3
-415DAF1F1473A947452588906DC9F5B3575FB44D org.apache.xmlrpc:xmlrpc-common:3.1.3
-E4DDF1852CB162139230EF733223633E362CF301 org.apache.xmlrpc:xmlrpc-server:3.1.3
+MC E486AD917028B52265610206FB5A1E2B5914B94B org.apache.xmlrpc:xmlrpc-client:3.1.3
+MC 415DAF1F1473A947452588906DC9F5B3575FB44D org.apache.xmlrpc:xmlrpc-common:3.1.3
+MC E4DDF1852CB162139230EF733223633E362CF301 org.apache.xmlrpc:xmlrpc-server:3.1.3

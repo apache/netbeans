@@ -14,9 +14,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-16398550402B27F81CD0D508CEF54B3E47A4A6DA org.apache.rat:apache-rat:0.12
-A8E7C929F046F3890F4A986F3D7EE8E4C4253C6B org.apidesign.javadoc:codesnippet-doclet:0.82
-B8A142EBDE0CDC071A347B2E93C8548C2A5D09B0 org.netbeans.tools:sigtest-maven-plugin:1.4
-C9AD4A0850AB676C5C64461A05CA524CDFFF59F1 com.googlecode.json-simple:json-simple:1.1.1
-3A4E4ECCF553036BB0DDBA675486D574B62A01D8 org.apache.netbeans.modules.jackpot30:tool:12.3
-F6E1D8A8819F854B681C8EAA57FD59A42329E10C org.jsoup:jsoup:1.15.3
+MC 16398550402B27F81CD0D508CEF54B3E47A4A6DA org.apache.rat:apache-rat:0.12
+MC A8E7C929F046F3890F4A986F3D7EE8E4C4253C6B org.apidesign.javadoc:codesnippet-doclet:0.82
+MC B8A142EBDE0CDC071A347B2E93C8548C2A5D09B0 org.netbeans.tools:sigtest-maven-plugin:1.4
+MC C9AD4A0850AB676C5C64461A05CA524CDFFF59F1 com.googlecode.json-simple:json-simple:1.1.1
+MC 3A4E4ECCF553036BB0DDBA675486D574B62A01D8 org.apache.netbeans.modules.jackpot30:tool:12.3
+MC F6E1D8A8819F854B681C8EAA57FD59A42329E10C org.jsoup:jsoup:1.15.3

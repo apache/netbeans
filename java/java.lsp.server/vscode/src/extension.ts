@@ -344,23 +344,36 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     function checkConflict(): void {
         let conf = workspace.getConfiguration();
-        if (conf.get("netbeans.conflict.check") && conf.get("netbeans.javaSupport.enabled")) {
-            const e : boolean | undefined = shouldEnableConflictingJavaSupport();
-            if (!e && vscode.extensions.getExtension('redhat.java')) {
-                if (e === false) {
-                    // do not ask, an extension wants us to disable on conflict
-                    conf.update("netbeans.javaSupport.enabled", false, true);
-                } else {
-                    const DISABLE_EXTENSION = `Manually disable extension`;
-                    const DISABLE_JAVA = `Disable Java in Apache NetBeans Language Server`;
-                    vscode.window.showInformationMessage(`Another Java support extension is already installed. It is recommended to use only one Java support per workspace.`, DISABLE_EXTENSION, DISABLE_JAVA).then((selected) => {
-                        if (DISABLE_EXTENSION === selected) {
-                            vscode.commands.executeCommand('workbench.extensions.action.showInstalledExtensions');
-                        } else if (DISABLE_JAVA === selected) {
-                            conf.update("netbeans.javaSupport.enabled", false, true);
-                        }
-                    });
+        if (conf.get("netbeans.conflict.check")) {
+            if (conf.get("netbeans.javaSupport.enabled")) {
+                const e : boolean | undefined = shouldEnableConflictingJavaSupport();
+                if (!e && vscode.extensions.getExtension('redhat.java')) {
+                    if (e === false) {
+                        // do not ask, an extension wants us to disable on conflict
+                        conf.update("netbeans.javaSupport.enabled", false, true);
+                    } else {
+                        const DISABLE_EXTENSION = `Manually disable extension`;
+                        const DISABLE_JAVA = `Disable Java in Apache NetBeans Language Server`;
+                        vscode.window.showInformationMessage(`Another Java support extension is already installed. It is recommended to use only one Java support per workspace.`, DISABLE_EXTENSION, DISABLE_JAVA).then((selected) => {
+                            if (DISABLE_EXTENSION === selected) {
+                                vscode.commands.executeCommand('workbench.extensions.action.showInstalledExtensions');
+                            } else if (DISABLE_JAVA === selected) {
+                                conf.update("netbeans.javaSupport.enabled", false, true);
+                            }
+                        });
+                    }
                 }
+            } else if (!vscode.extensions.getExtension('redhat.java')) {
+                workspace.findFiles(`**/*.java`, undefined, 1).then(files => {
+                    if (files.length) {
+                        const ENABLE_JAVA = `Enable Java in Apache NetBeans Language Server`;
+                        vscode.window.showInformationMessage(`Java in Apache NetBeans Language Server is disabled and no other Java support extension is currently installed.`, ENABLE_JAVA).then((selected) => {
+                            if (ENABLE_JAVA === selected) {
+                                conf.update("netbeans.javaSupport.enabled", true, true);
+                            }
+                        });
+                    }
+                });
             }
         }
     }

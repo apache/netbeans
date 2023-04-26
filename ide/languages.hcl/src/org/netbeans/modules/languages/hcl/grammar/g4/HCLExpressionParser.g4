@@ -21,8 +21,12 @@ options { tokenVocab = HCLLexer; }
 
 expression
     : exprTerm
-    | operation
-    | <assoc=right> expression QUESTION expression COLON expression
+    | <assoc=right> op=(NOT | MINUS) right=expression
+    | left=expression op=(STAR | SLASH | PERCENT) right=expression
+    | left=expression op=(PLUS | MINUS) right=expression
+    | left=expression op=(AND | OR) right=expression
+    | left=expression op=(LTE | GTE | LT | GT | EQUALS | NOT_EQUALS) right=expression
+    | exprCond=expression QUESTION (exprTrue=expression COLON exprFalse=expression)
     ;
 
 exprTerm
@@ -147,45 +151,4 @@ attrSplat
 
 fullSplat
     : LBRACK STAR RBRACK (getAttr | index)*
-    ;
-
-operation
-    : unaryOp
-    | binaryOp
-    ;
-
-unaryOp
-    : (MINUS | NOT) exprTerm
-    ;
-
-binaryOp
-    : exprTerm binaryOperator exprTerm
-    ;
-
-binaryOperator
-    : compareOperator
-    | arithmeticOperator
-    | logicOperator
-    ;
-
-compareOperator
-    : EQUALS
-    | NOT_EQUALS
-    | LT
-    | GT
-    | LTE
-    | GTE
-    ;
-
-arithmeticOperator
-    : PLUS
-    | MINUS
-    | STAR
-    | SLASH
-    | PERCENT
-    ;
-
-logicOperator
-    : AND
-    | OR
     ;

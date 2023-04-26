@@ -51,13 +51,13 @@ public abstract class HCLHereDocAdaptor extends Lexer {
     protected boolean heredocEndAhead(String partialHeredoc) {
         int n = 1;
         int c = _input.LA(1);
-        if (c == '\n') {
-            //NewLines are part of heredoc content
-            return false;
-        }
-        // heredoc marker and it's leading space are not part of the heredoc content
-        while (Character.isWhitespace(c)) {
+        // NewLines are part of heredoc content, but
+        // heredoc marker and it's leading space are not
+        while (Character.isWhitespace(c) && c != '\n') {
             c = _input.LA(++n);
+        }
+        if (c == '\n') {
+            return false;
         }
         for (int v = 0; v < currentHereDocVar.length(); v++) {
           if (this._input.LA(n + v) != currentHereDocVar.charAt(v)) {

@@ -107,6 +107,8 @@ public final class TerraformHCLLexer extends AbstractHCLLexer {
             case PERCENT:
             case PLUS:
             case QUESTION:
+            case SLASH:
+            case STAR:
                 return token(OPERATOR);
 
             case QUOTE:

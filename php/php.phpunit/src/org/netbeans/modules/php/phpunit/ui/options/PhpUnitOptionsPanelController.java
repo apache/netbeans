@@ -26,14 +26,18 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.util.UiUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.netbeans.modules.php.phpunit.commands.PhpUnit;
 import org.netbeans.modules.php.phpunit.commands.SkeletonGenerator;
 import org.netbeans.modules.php.phpunit.options.PhpUnitOptions;
 import org.netbeans.modules.php.phpunit.options.PhpUnitOptionsValidator;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 @UiUtils.PhpOptionsPanelRegistration(
     id=PhpUnitOptionsPanelController.ID,
@@ -48,11 +52,14 @@ public class PhpUnitOptionsPanelController extends OptionsPanelController implem
     public static final String OPTIONS_PATH = UiUtils.OPTIONS_PATH + "/" + OPTIONS_SUB_PATH; // NOI18N
 
     private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    private static final RequestProcessor RP = new RequestProcessor(PhpUnitOptionsPanelController.class);
 
     // @GuardedBy("EDT")
     private PhpUnitOptionsPanel phpUnitOptionsPanel = null;
     private volatile boolean changed = false;
     private boolean firstOpening = true;
+    private String previousPhpUnitPath;
+    private String previousSkeletonGeneratorPath;
 
 
     @Override
@@ -62,6 +69,7 @@ public class PhpUnitOptionsPanelController extends OptionsPanelController implem
             firstOpening = false;
             getPhpUnitOptionsPanel().setPhpUnit(getPhpUnitOptions().getPhpUnitPath());
             getPhpUnitOptionsPanel().setPhpUnitSkelGen(getPhpUnitOptions().getSkeletonGeneratorPath());
+            updatePhpUnitVersion();
         }
 
         changed = false;
@@ -76,7 +84,7 @@ public class PhpUnitOptionsPanelController extends OptionsPanelController implem
 
                 getPhpUnitOptions().setPhpUnitPath(getPhpUnitOptionsPanel().getPhpUnit());
                 getPhpUnitOptions().setSkeletonGeneratorPath(getPhpUnitOptionsPanel().getPhpUnitSkelGen());
-
+                PhpUnit.resetVersions();
                 changed = false;
             }
         });
@@ -93,6 +101,7 @@ public class PhpUnitOptionsPanelController extends OptionsPanelController implem
     @Override
     public boolean isValid() {
         assert EventQueue.isDispatchThread();
+        setPhpUnitVersion();
         PhpUnitOptionsPanel panel = getPhpUnitOptionsPanel();
         ValidationResult result = new PhpUnitOptionsValidator()
                 .validate(panel.getPhpUnit(), panel.getPhpUnitSkelGen())
@@ -112,15 +121,48 @@ public class PhpUnitOptionsPanelController extends OptionsPanelController implem
         return true;
     }
 
+    @NbBundle.Messages({
+        "PhpUnitOptionsPanelController.getting.phpUnit.version=Getting the version...",
+        "PhpUnitOptionsPanelController.notFound.phpUnit.version=PHPUnit version not found"
+    })
+    private void updatePhpUnitVersion() {
+        String phpUnitPath = getPhpUnitOptionsPanel().getPhpUnit();
+        if (!StringUtils.hasText(phpUnitPath)) {
+            SwingUtilities.invokeLater(() -> getPhpUnitOptionsPanel().setVersion(Bundle.PhpUnitOptionsPanelController_notFound_phpUnit_version()));
+            return;
+        }
+        SwingUtilities.invokeLater(() -> getPhpUnitOptionsPanel().setVersion(Bundle.PhpUnitOptionsPanelController_getting_phpUnit_version()));
+        RP.post(() -> {
+            String versionLine = PhpUnit.getVersionLine(phpUnitPath);
+            SwingUtilities.invokeLater(() -> getPhpUnitOptionsPanel().setVersion(versionLine));
+        });
+    }
+
+    private void setPhpUnitVersion() {
+        PhpUnitOptionsPanel panel = getPhpUnitOptionsPanel();
+        ValidationResult phpUnitPathResult = new PhpUnitOptionsValidator()
+                .validatePhpUnitPath(panel.getPhpUnit())
+                .getResult();
+        if (!phpUnitPathResult.hasErrors() && !phpUnitPathResult.hasWarnings()) {
+            updatePhpUnitVersion();
+        } else {
+            panel.setVersion(Bundle.PhpUnitOptionsPanelController_notFound_phpUnit_version());
+        }
+    }
+
     @Override
     public boolean isChanged() {
-        String saved = getPhpUnitOptions().getPhpUnitPath();
+        // to avoid calling isValid() infinitely
+        // use the previous path as a saved path instead of getPhpUnitOptions().getPhpUnitPath();
+        String saved = previousPhpUnitPath;
         String current = getPhpUnitOptionsPanel().getPhpUnit().trim();
+        previousPhpUnitPath = current;
         if(saved == null ? !current.isEmpty() : !saved.equals(current)) {
             return true;
         }
-        saved = getPhpUnitOptions().getSkeletonGeneratorPath();
+        saved = previousSkeletonGeneratorPath;
         current = getPhpUnitOptionsPanel().getPhpUnitSkelGen().trim();
+        previousSkeletonGeneratorPath = current;
         return saved == null ? !current.isEmpty() : !saved.equals(current);
     }
 

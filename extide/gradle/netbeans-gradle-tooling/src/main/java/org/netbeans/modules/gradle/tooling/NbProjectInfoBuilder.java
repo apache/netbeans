@@ -733,8 +733,12 @@ class NbProjectInfoBuilder {
             String k = it.getKey();
             String newPrefix = prefix + "." + k + "."; // NOI18N
             Object v = it.getValue();
-            defaultValues.put(prefix + "." + k, Objects.toString(v)); // NOI18N
-            inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+            if (v == null) {
+                defaultValues.put(prefix + "." + k, null); // NOI18N
+            } else {
+                defaultValues.put(prefix + "." + k, Objects.toString(v)); // NOI18N
+                inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+            }
         }
     }
     
@@ -766,8 +770,12 @@ class NbProjectInfoBuilder {
             for (String k : m.keySet()) {
                 newPrefix = prefix + "." + k + "."; // NOI18N
                 Object v = m.get(k);
-                defaultValues.put(prefix + "." + k, Objects.toString(v)); // NOI18N
-                inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+                if (v == null) {
+                    defaultValues.put(prefix + "." + k, null); // NOI18N
+                } else {
+                    defaultValues.put(prefix + "." + k, Objects.toString(v)); // NOI18N
+                    inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+                }
             }
             dumped = true;
         } else if (Iterable.class.isAssignableFrom(t)) {
@@ -794,8 +802,12 @@ class NbProjectInfoBuilder {
                 try {
                     for (Object o : (Iterable)value) {
                         String newPrefix = prefix + "[" + index + "]."; // NOI18N
-                        defaultValues.put(prefix + "[" + index + "]", Objects.toString(o)); //NOI18N
-                        inspectObjectAndValues(o.getClass(), o, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+                        if (o == null) {
+                            defaultValues.put(prefix + "[" + index + "]", null); //NOI18N
+                        } else {
+                            defaultValues.put(prefix + "[" + index + "]", Objects.toString(o)); //NOI18N
+                            inspectObjectAndValues(o.getClass(), o, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+                        }
                         index++;
                     }
                 } catch (RuntimeException ex) {
@@ -838,8 +850,12 @@ class NbProjectInfoBuilder {
                     String k = o.toString();
                     String newPrefix = prefix + "[" + k + "]"; // NOI18N
                     Object v = mvalue.get(o);
-                    defaultValues.put(newPrefix, Objects.toString(v)); // NOI18N
-                    inspectObjectAndValues(v.getClass(), v, newPrefix + ".", globalTypes, propertyTypes, defaultValues, null, itemClass == null);
+                    if (v == null) {
+                        defaultValues.put(newPrefix, null); // NOI18N
+                    } else {
+                        defaultValues.put(newPrefix, Objects.toString(v)); // NOI18N
+                        inspectObjectAndValues(v.getClass(), v, newPrefix + ".", globalTypes, propertyTypes, defaultValues, null, itemClass == null);
+                    }
                 }
                 dumped = true;
             }

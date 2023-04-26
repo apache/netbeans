@@ -352,6 +352,78 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/issueGH5355.php", "testFunctio^n(null);", false, "");
     }
 
+    public void testIssueGH5881_01a() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$prop1 = $test->pr^op_aa_bbb;");
+    }
+
+    public void testIssueGH5881_01b() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$prop1 = $test->prop_aa^_bbb;");
+    }
+
+    public void testIssueGH5881_01c() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$prop1 = $test->prop_aa_bb^b;");
+    }
+
+    public void testIssueGH5881_01d() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$prop1 = $test->^prop_aa_bbb;");
+    }
+
+    public void testIssueGH5881_02a() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$prop2 = $test->pr^op_aa_bb_cc;");
+    }
+
+    public void testIssueGH5881_02b() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$prop2 = $test->prop_aa^_bb_cc;");
+    }
+
+    public void testIssueGH5881_02c() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$prop2 = $test->prop_aa_bb^_cc;");
+    }
+
+    public void testIssueGH5881_02d() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$prop2 = $test->prop_aa_bb_cc^;");
+    }
+
+    public void testIssueGH5881_02e() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$prop2 = $test->^prop_aa_bb_cc;");
+    }
+
+    public void testIssueGH5881_03a() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$test->meth^od_aa_bbb();");
+    }
+
+    public void testIssueGH5881_03b() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$test->method_aa^_bbb();");
+    }
+
+    public void testIssueGH5881_03c() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$test->method_aa_bb^b();");
+    }
+
+    public void testIssueGH5881_03d() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$test->^method_aa_bbb();");
+    }
+
+    public void testIssueGH5881_04a() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$test->me^thod_aa_bb_cc();");
+    }
+
+    public void testIssueGH5881_04b() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$test->method_aa^_bb_cc();");
+    }
+
+    public void testIssueGH5881_04c() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$test->method_aa_bb^_cc();");
+    }
+
+    public void testIssueGH5881_04d() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$test->method_aa_bb_cc^();");
+    }
+
+    public void testIssueGH5881_04e() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$test->method_aa_bb_cc^();");
+    }
+
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");

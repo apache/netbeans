@@ -22,6 +22,7 @@ package org.netbeans.modules.maven.customizer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -100,6 +101,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
         comJavaPlatform.setRenderer(new PlatformsRenderer());
 
         origComPlatformFore = comJavaPlatform.getForeground();
+        /* @TODO reinstate if a new link created, or remove
         btnLearnMore.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnLearnMore.addActionListener(new ActionListener() {
             @Override
@@ -111,6 +113,8 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                 }
             }
         });
+        */
+        btnLearnMore.setVisible(false);
         initValues();
     }
 
@@ -162,15 +166,18 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
             public void setValue(Boolean v) {
                 handle.removePOMModification(operation);
                 modifiedValue = null;
-                String value = v != null ? (v ? "all" : "none") : "all";
+                boolean cosEnabled = v != null ? v : getDefaultValue();
+                String value = cosEnabled ? "all" : "none";
                 if ("all".equals(value)) {
                     if (!warningShown && DontShowAgainSettings.getDefault().showWarningAboutApplicationCoS()) {
-                        WarnPanel panel = new WarnPanel(NbBundle.getMessage(CompilePanel.class, "HINT_ApplicationCoS"));
-                        NotifyDescriptor dd = new NotifyDescriptor.Message(panel, NotifyDescriptor.PLAIN_MESSAGE);
-                        DialogDisplayer.getDefault().notify(dd);
-                        if (panel.disabledWarning()) {
-                            DontShowAgainSettings.getDefault().dontshowWarningAboutApplicationCoSAnymore();
-                        }
+                        EventQueue.invokeLater(() -> {
+                            WarnPanel panel = new WarnPanel(NbBundle.getMessage(CompilePanel.class, "HINT_ApplicationCoS"));
+                            NotifyDescriptor dd = new NotifyDescriptor.Message(panel, NotifyDescriptor.PLAIN_MESSAGE);
+                            DialogDisplayer.getDefault().notify(dd);
+                            if (panel.disabledWarning()) {
+                                DontShowAgainSettings.getDefault().dontshowWarningAboutApplicationCoSAnymore();
+                            }
+                        });
                         warningShown = true;
                     }
                 }

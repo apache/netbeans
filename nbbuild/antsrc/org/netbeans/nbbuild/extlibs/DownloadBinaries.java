@@ -171,16 +171,14 @@ public class DownloadBinaries extends Task {
                                 } else {
                                     success &= fillInFile(hashAndFile[1], hashAndFile[2], manifest, () -> legacyDownload(hashAndFile[1] + "-" + hashAndFile[2]));
                                 }
+                            } else if ("NPM".equals(hashAndFile[0])) {
+                                success &= false; // get it via npm ? java tools
+                            } else if ("MAVEN".equals(hashAndFile[0])) {
+                                // MAVEN hash url snapshots coordinate
+                                // MAVEN 32132131 https://repository.apache.org/content/repositories/orgapachenetbeans-1127/ false org.apache.rat:apache-rat:0.12
+                                // MAVEN 0(not worth checking) https://repository.apache.org/snapshots/ true org.apache.rat:apache-rat:0.12-SNAPSHOT
+                                success &= false; 
                             }
-                            /*Matcher urlMatcher = URL_PATTERN.matcher(hashAndFile[1]);
-                            if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
-                                //MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
-                                //success &= fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
-                            } else if (urlMatcher.matches()) {
-                                success &= fillInFile(hashAndFile[0], urlMatcher.group(2), manifest, () -> downloadFromServer(this, new URL(urlMatcher.group(1))));
-                            } else {
-                                success &= fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
-                            }*/
                         }
                     }
                 } catch (IOException x) {

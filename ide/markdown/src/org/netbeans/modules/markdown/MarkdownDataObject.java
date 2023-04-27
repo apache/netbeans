@@ -41,7 +41,7 @@ import org.openide.windows.TopComponent;
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_Markdown_LOADER",
         mimeType = MarkdownDataObject.MIME_TYPE,
-        extension = {"md"},
+        extension = {"md", "MD", "markdown"},
         position = 20367
 )
 @DataObject.Registration(

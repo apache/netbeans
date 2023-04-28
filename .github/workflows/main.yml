@@ -193,7 +193,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8', '11', '17', '21-ea' ]
+        java: [ '11', '17', '21-ea' ]
       fail-fast: false
     steps:
 
@@ -787,7 +787,10 @@ jobs:
 
       - name: java/api.maven
         run: ant $OPTS -f java/api.maven test
-        
+
+      - name: maven.apisupport
+        run: ant $OPTS -f apisupport/maven.apisupport test
+
       - name: java/hudson.maven
         run: ant $OPTS -f java/hudson.maven test
 
@@ -1186,7 +1189,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '11' ]
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
@@ -1466,9 +1469,6 @@ jobs:
 
       - name: apisupport.wizards
         run: ant $OPTS -f apisupport/apisupport.wizards test
-
-      - name: maven.apisupport
-        run: ant $OPTS -f apisupport/maven.apisupport test
 
       - name: timers
         run: ant $OPTS -f apisupport/timers test -Dtest.config=stable
@@ -2286,7 +2286,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '11' ]
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
@@ -2394,7 +2394,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '11' ]
 
     steps:
       - name: Set up JDK ${{ matrix.java }}

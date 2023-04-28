@@ -254,20 +254,43 @@ public final class CodeUtils {
         } else if (typeName instanceof NullableType) {
             return NULLABLE_TYPE_PREFIX + extractUnqualifiedName(((NullableType) typeName).getType());
         } else if (typeName instanceof UnionType) {
-            UnionType unionType = (UnionType) typeName;
-            StringBuilder sb = new StringBuilder();
-            for (Expression type : unionType.getTypes()) {
-                if (sb.length() > 0) {
-                    sb.append(Type.SEPARATOR);
-                }
-                sb.append(extractUnqualifiedName(type));
-            }
-            return sb.toString();
+            return extractUnqualifiedName((UnionType) typeName);
+        } else if (typeName instanceof IntersectionType) {
+            return extractUnqualifiedName((IntersectionType) typeName);
         }
 
         //TODO: php5.3 !!!
         //assert false : "[php5.3] className Expression instead of Identifier"; //NOI18N
         return null;
+    }
+
+    private static String extractUnqualifiedName(UnionType unionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : unionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR);
+            }
+            boolean isIntersectionType = type instanceof IntersectionType;
+            if (isIntersectionType) {
+                sb.append("("); // NOI18N
+            }
+            sb.append(extractUnqualifiedName(type));
+            if (isIntersectionType) {
+                sb.append(")"); // NOI18N
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String extractUnqualifiedName(IntersectionType intersectionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : intersectionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR_INTERSECTION);
+            }
+            sb.append(extractUnqualifiedName(type));
+        }
+        return sb.toString();
     }
 
     /**
@@ -292,28 +315,41 @@ public final class CodeUtils {
         } else if (typeName instanceof ExpressionArrayAccess) {
             return extractQualifiedName(((ExpressionArrayAccess) typeName).getExpression());
         } else if (typeName instanceof UnionType) {
-            UnionType unionType = (UnionType) typeName;
-            StringBuilder sb = new StringBuilder();
-            for (Expression type : unionType.getTypes()) {
-                if (sb.length() > 0) {
-                    sb.append(Type.SEPARATOR);
-                }
-                sb.append(extractQualifiedName(type));
-            }
-            return sb.toString();
+            return extractQualifiedName((UnionType) typeName);
         } else if (typeName instanceof IntersectionType) {
-            IntersectionType intersectionType = (IntersectionType) typeName;
-            StringBuilder sb = new StringBuilder();
-            for (Expression type : intersectionType.getTypes()) {
-                if (sb.length() > 0) {
-                    sb.append(Type.SEPARATOR_INTERSECTION);
-                }
-                sb.append(extractQualifiedName(type));
-            }
-            return sb.toString();
+            return extractQualifiedName((IntersectionType) typeName);
         }
         assert false : typeName.getClass();
         return null;
+    }
+
+    private static String extractQualifiedName(UnionType unionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : unionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR);
+            }
+            boolean isIntersectionType = type instanceof IntersectionType;
+            if (isIntersectionType) {
+                sb.append("("); // NOI18N
+            }
+            sb.append(extractQualifiedName(type));
+            if (isIntersectionType) {
+                sb.append(")"); // NOI18N
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String extractQualifiedName(IntersectionType intersectionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : intersectionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR_INTERSECTION);
+            }
+            sb.append(extractQualifiedName(type));
+        }
+        return sb.toString();
     }
 
     // XXX not only class name anymore in php7+

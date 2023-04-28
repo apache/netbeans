@@ -23,7 +23,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.api.ElementQuery;
@@ -209,6 +212,11 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
     }
 
     @Override
+    public String getDeclaredReturnType() {
+        return functionSupport.getDeclaredReturnType();
+    }
+
+    @Override
     public boolean isReturnUnionType() {
         return functionSupport.isReturnUnionType();
     }
@@ -259,8 +267,8 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
     @Override
     public String getSignature() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getName().toLowerCase()).append(Separator.SEMICOLON); //NOI18N
-        sb.append(getName()).append(Separator.SEMICOLON); //NOI18N
+        sb.append(getName().toLowerCase(Locale.ROOT)).append(Separator.SEMICOLON); // 0: lower case name
+        sb.append(getName()).append(Separator.SEMICOLON); // 1: name
         sb.append(getSignatureLastPart());
         checkSignature(sb);
         return sb.toString();
@@ -277,26 +285,27 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
 
     private String getSignatureLastPart() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getOffset()).append(Separator.SEMICOLON);
+        sb.append(getOffset()).append(Separator.SEMICOLON); // 2: offset
         List<ParameterElement> parameterList = getParameters();
         for (int idx = 0; idx < parameterList.size(); idx++) {
             ParameterElementImpl parameter = (ParameterElementImpl) parameterList.get(idx);
             if (idx > 0) {
                 sb.append(Separator.COMMA);
             }
-            sb.append(parameter.getSignature());
+            sb.append(parameter.getSignature()); // 3: parameter
         }
         sb.append(Separator.SEMICOLON);
         for (TypeResolver typeResolver : getReturnTypes()) {
             TypeResolverImpl resolverImpl = (TypeResolverImpl) typeResolver;
-            sb.append(resolverImpl.getSignature());
+            sb.append(resolverImpl.getSignature()); // 4: return types
         }
         sb.append(Separator.SEMICOLON);
-        sb.append(getPhpModifiers().toFlags()).append(Separator.SEMICOLON);
-        sb.append(isDeprecated() ? 1 : 0).append(Separator.SEMICOLON);
-        sb.append(getFilenameUrl()).append(Separator.SEMICOLON);
-        sb.append(isReturnUnionType()? 1 : 0).append(Separator.SEMICOLON);
-        sb.append(isReturnIntersectionType() ? 1 : 0).append(Separator.SEMICOLON);
+        sb.append(getPhpModifiers().toFlags()).append(Separator.SEMICOLON); // 5: flags
+        sb.append(isDeprecated() ? 1 : 0).append(Separator.SEMICOLON); // 6: isDeprecated
+        sb.append(getFilenameUrl()).append(Separator.SEMICOLON); // 7: file name URL
+        sb.append(isReturnUnionType()? 1 : 0).append(Separator.SEMICOLON); // 8: isReturnUnionType
+        sb.append(isReturnIntersectionType() ? 1 : 0).append(Separator.SEMICOLON); // 9: isReturnIntersectionType
+        sb.append(getDeclaredReturnType()).append(Separator.SEMICOLON); // 10: declared return type
         return sb.toString();
     }
 
@@ -378,6 +387,10 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
         boolean isIntersectionType() {
             return signature.integer(9) == 1;
         }
+
+        String getDeclaredReturnType() {
+            return signature.string(10);
+        }
     }
 
     private void checkSignature(StringBuilder sb) {
@@ -391,6 +404,7 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
             assert getPhpModifiers().toFlags() == parser.getFlags();
             assert getParameters().size() == parser.getParameters().size();
             assert getReturnTypes().size() == parser.getReturnTypes().size();
+            assert getDeclaredReturnType().equals(parser.getDeclaredReturnType());
         }
     }
 
@@ -431,11 +445,14 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
         private Set<TypeResolver> retrievedReturnTypes = null;
         private final boolean isUnionType;
         private final boolean isIntersectionType;
+        @NullAllowed
+        private final String declaredReturnType;
 
         public ReturnTypesFromSignature(MethodSignatureParser methodSignatureParser) {
             this.methodSignatureParser = methodSignatureParser;
             this.isUnionType = methodSignatureParser.isUnionType();
             this.isIntersectionType = methodSignatureParser.isIntersectionType();
+            this.declaredReturnType = methodSignatureParser.getDeclaredReturnType();
         }
 
         @Override
@@ -456,5 +473,10 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
             return isIntersectionType;
         }
 
+        @CheckForNull
+        @Override
+        public String getDeclaredReturnType() {
+            return declaredReturnType;
+        }
     }
 }

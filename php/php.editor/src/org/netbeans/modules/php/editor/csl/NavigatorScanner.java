@@ -34,6 +34,7 @@ import org.netbeans.modules.csl.api.HtmlFormatter;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.NameKind;
@@ -419,7 +420,10 @@ public final class NavigatorScanner {
                 formatter.appendHtml(CLOSE_FONT);
             }
             Collection<? extends String> returnTypes = function.getReturnTypeNames();
-            if (!returnTypes.isEmpty()) {
+            String declaredReturnType = function.getDeclaredReturnType();
+            if (StringUtils.hasText(declaredReturnType)) {
+                processReturnTypes(function, formatter, declaredReturnType);
+            } else if (!returnTypes.isEmpty()) {
                 processReturnTypes(function, formatter, returnTypes);
             }
         }
@@ -480,6 +484,41 @@ public final class NavigatorScanner {
                 }
             }
             formatter.appendHtml(CLOSE_FONT);
+        }
+
+        private void processReturnTypes(FunctionScope function, HtmlFormatter formatter, String declaredReturnType) {
+            formatter.appendHtml(FONT_GRAY_COLOR + ":"); //NOI18N
+            StringBuilder sb = new StringBuilder(declaredReturnType.length());
+            for (int i = 0; i < declaredReturnType.length(); i++) {
+                char c = declaredReturnType.charAt(i);
+                switch (c) {
+                    case '(': // no break
+                    case '?':
+                        formatter.appendText(String.valueOf(c));
+                        break;
+                    case ')': // no break
+                    case '|': // no break
+                    case '&':
+                        processTypeName(sb, function, formatter);
+                        formatter.appendText(String.valueOf(c));
+                        break;
+                    default:
+                        sb.append(c);
+                        break;
+                }
+            }
+            if (sb.length() > 0) {
+                processTypeName(sb, function, formatter);
+            }
+            formatter.appendHtml(CLOSE_FONT);
+        }
+    }
+
+    private void processTypeName(StringBuilder sb, FunctionScope function, HtmlFormatter formatter) {
+        String type = sb.toString();
+        if (sb.length() > 0) {
+            sb.delete(0, sb.length());
+            processTypeName(type, function, formatter);
         }
     }
 

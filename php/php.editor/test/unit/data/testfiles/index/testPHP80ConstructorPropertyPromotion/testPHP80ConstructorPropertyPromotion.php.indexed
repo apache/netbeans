@@ -5,11 +5,11 @@ Searchable Keys:
   clz : #anon#testphp80constructorpropertypromotion_php#1;#anon#testPHP80ConstructorPropertyPromotion_php#1;2162;;;;1;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;;
   field : x;x;2231;1;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
   field : y;y;2254;1;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  method : __construct;__construct;2198;$x:int:1::1:0:0:0:1:0,$y:int:1:0:0:0:0:0:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;
+  method : __construct;__construct;2198;$x:int:1::1:0:0:0:1:0,$y:int:1:0:0:0:0:0:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;
   top : #anon#testphp80constructorpropertypromotion_php#1
 
 Not Searchable Keys:
-  constructor : #anon#testphp80constructorpropertypromotion_php#1;#anon#testPHP80ConstructorPropertyPromotion_php#1;2198;$x:int:1::1:0:0:0:1:0,$y:int:1:0:0:0:0:0:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;
+  constructor : #anon#testphp80constructorpropertypromotion_php#1;#anon#testPHP80ConstructorPropertyPromotion_php#1;2198;$x:int:1::1:0:0:0:1:0,$y:int:1:0:0:0:0:0:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;;
 
 
 Document 1
@@ -22,11 +22,11 @@ Searchable Keys:
   field : param5;param5;1039;2;?string;?string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
   field : param6;param6;1077;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
   field : param7;param7;1130;1;string|int;string|int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  method : __construct;__construct;874;$param1::0::1:0:0:0:1:0,$param2:int:1::1:0:0:0:4:0,$param3:int|string:1::1:0:0:1:2:0,$param4:float:1:1:0:1:0:0:2:0,$param5:?string:1:null:0:0:0:0:2:0,$param6:string:1:"default value":0:0:0:0:1:0,$param7:string|int:1:"default value":0:0:0:1:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;
+  method : __construct;__construct;874;$param1::0::1:0:0:0:1:0,$param2:int:1::1:0:0:0:4:0,$param3:int|string:1::1:0:0:1:2:0,$param4:float:1:1:0:1:0:0:2:0,$param5:?string:1:null:0:0:0:0:2:0,$param6:string:1:"default value":0:0:0:0:1:0,$param7:string|int:1:"default value":0:0:0:1:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;
   top : constructorpropertypromotion
 
 Not Searchable Keys:
-  constructor : $param2:int:1::1:0:0:0:4:0,$param3:int|string:1::1:0:0:1:2:0,$param4:float:1:1:0:1:0:0:2:0,$param5:?string:1:null:0:0:0:0:2:0,$param6:string:1:"default value":0:0:0:0:1:0,$param7:string|int:1:"default value":0:0:0:1:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;,constructorpropertypromotion;ConstructorPropertyPromotion;874;$param1::0::1:0:0:0:1:0
+  constructor : $param2:int:1::1:0:0:0:4:0,$param3:int|string:1::1:0:0:1:2:0,$param4:float:1:1:0:1:0:0:2:0,$param5:?string:1:null:0:0:0:0:2:0,$param6:string:1:"default value":0:0:0:0:1:0,$param7:string|int:1:"default value":0:0:0:1:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;;,constructorpropertypromotion;ConstructorPropertyPromotion;874;$param1::0::1:0:0:0:1:0
 
 
 Document 2
@@ -34,11 +34,11 @@ Searchable Keys:
   clz : constructorpropertypromotionclass2;ConstructorPropertyPromotionClass2;1929;;;;1;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;;
   field : param2;param2;2037;1;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
   field : param4;param4;2110;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  method : __construct;__construct;1987;$param1::0::1:0:0:0:0:0,$param2:int:1::1:0:0:0:1:0,$param3:string:1:"default value":0:0:0:0:0:0,$param4:string:1:"default value":0:0:0:0:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;
+  method : __construct;__construct;1987;$param1::0::1:0:0:0:0:0,$param2:int:1::1:0:0:0:1:0,$param3:string:1:"default value":0:0:0:0:0:0,$param4:string:1:"default value":0:0:0:0:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;
   top : constructorpropertypromotionclass2
 
 Not Searchable Keys:
-  constructor : $param2:int:1::1:0:0:0:1:0,$param3:string:1:"default value":0:0:0:0:0:0,$param4:string:1:"default value":0:0:0:0:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;,constructorpropertypromotionclass2;ConstructorPropertyPromotionClass2;1987;$param1::0::1:0:0:0:0:0
+  constructor : $param2:int:1::1:0:0:0:1:0,$param3:string:1:"default value":0:0:0:0:0:0,$param4:string:1:"default value":0:0:0:0:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;;,constructorpropertypromotionclass2;ConstructorPropertyPromotionClass2;1987;$param1::0::1:0:0:0:0:0
 
 
 Document 3
@@ -51,11 +51,11 @@ Searchable Keys:
   field : param5;param5;1360;2;?string;?string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
   field : param6;param6;1387;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
   field : param7;param7;1418;1;string|int;string|int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  method : __construct;__construct;1447;$param1::0::1:0:0:0:0:0,$param2:int:1::1:0:0:0:0:0,$param3:int|string:1::1:0:0:1:0:0,$param4:float:1:1:0:1:0:0:0:0,$param5:?string:1:null:0:0:0:0:0:0,$param6:string:1:"default value":0:0:0:0:0:0,$param7:string|int:1:"default value":0:0:0:1:0:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;
+  method : __construct;__construct;1447;$param1::0::1:0:0:0:0:0,$param2:int:1::1:0:0:0:0:0,$param3:int|string:1::1:0:0:1:0:0,$param4:float:1:1:0:1:0:0:0:0,$param5:?string:1:null:0:0:0:0:0:0,$param6:string:1:"default value":0:0:0:0:0:0,$param7:string|int:1:"default value":0:0:0:1:0:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;
   top : legacysyntax
 
 Not Searchable Keys:
-  constructor : $param2:int:1::1:0:0:0:0:0,$param3:int|string:1::1:0:0:1:0:0,$param4:float:1:1:0:1:0:0:0:0,$param5:?string:1:null:0:0:0:0:0:0,$param6:string:1:"default value":0:0:0:0:0:0,$param7:string|int:1:"default value":0:0:0:1:0:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;,legacysyntax;LegacySyntax;1447;$param1::0::1:0:0:0:0:0
+  constructor : $param2:int:1::1:0:0:0:0:0,$param3:int|string:1::1:0:0:1:0:0,$param4:float:1:1:0:1:0:0:0:0,$param5:?string:1:null:0:0:0:0:0:0,$param6:string:1:"default value":0:0:0:0:0:0,$param7:string|int:1:"default value":0:0:0:1:0:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;;,legacysyntax;LegacySyntax;1447;$param1::0::1:0:0:0:0:0
 
 
 Document 4
@@ -67,12 +67,12 @@ Searchable Keys:
   field : param5;param5;2507;2;?string;?string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
   field : param6;param6;2545;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
   field : param7;param7;2598;1;string|int;string|int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  method : __construct;__construct;2342;$param1::0::1:0:0:0:1:0,$param2:int:1::1:0:0:0:4:0,$param3:int|string:1::1:0:0:1:2:0,$param4:float:1:1:0:1:0:0:2:0,$param5:?string:1:null:0:0:0:0:2:0,$param6:string:1:"default value":0:0:0:0:1:0,$param7:string|int:1:"default value":0:0:0:1:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;
+  method : __construct;__construct;2342;$param1::0::1:0:0:0:1:0,$param2:int:1::1:0:0:0:4:0,$param3:int|string:1::1:0:0:1:2:0,$param4:float:1:1:0:1:0:0:2:0,$param5:?string:1:null:0:0:0:0:2:0,$param6:string:1:"default value":0:0:0:0:1:0,$param7:string|int:1:"default value":0:0:0:1:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;
   top : constructorpropertypromotiontrait
   trait : constructorpropertypromotiontrait;ConstructorPropertyPromotionTrait;2285;;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;
 
 Not Searchable Keys:
-  constructor : $param2:int:1::1:0:0:0:4:0,$param3:int|string:1::1:0:0:1:2:0,$param4:float:1:1:0:1:0:0:2:0,$param5:?string:1:null:0:0:0:0:2:0,$param6:string:1:"default value":0:0:0:0:1:0,$param7:string|int:1:"default value":0:0:0:1:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;,constructorpropertypromotiontrait;ConstructorPropertyPromotionTrait;2342;$param1::0::1:0:0:0:1:0
+  constructor : $param2:int:1::1:0:0:0:4:0,$param3:int|string:1::1:0:0:1:2:0,$param4:float:1:1:0:1:0:0:2:0,$param5:?string:1:null:0:0:0:0:2:0,$param6:string:1:"default value":0:0:0:0:1:0,$param7:string|int:1:"default value":0:0:0:1:1:0;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;;,constructorpropertypromotiontrait;ConstructorPropertyPromotionTrait;2342;$param1::0::1:0:0:0:1:0
 
 
 Document 5

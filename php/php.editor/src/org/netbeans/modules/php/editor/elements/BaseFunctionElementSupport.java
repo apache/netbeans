@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.api.util.StringUtils;
@@ -39,6 +40,7 @@ import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 
@@ -62,6 +64,10 @@ public class BaseFunctionElementSupport  {
 
     public final Collection<TypeResolver> getReturnTypes() {
         return returnTypes.getReturnTypes();
+    }
+
+    public final String getDeclaredReturnType() {
+        return returnTypes.getDeclaredReturnType();
     }
 
     public final boolean isReturnUnionType() {
@@ -337,11 +343,18 @@ public class BaseFunctionElementSupport  {
             public boolean isIntersectionType() {
                 return false;
             }
+
+            @Override
+            public String getDeclaredReturnType() {
+                return null;
+            }
         };
 
         Set<TypeResolver> getReturnTypes();
         boolean isUnionType();
         boolean isIntersectionType();
+        @CheckForNull
+        String getDeclaredReturnType();
     }
 
     public static final class ReturnTypesImpl implements ReturnTypes {
@@ -349,20 +362,28 @@ public class BaseFunctionElementSupport  {
         private final Set<TypeResolver> returnTypes;
         private final boolean isUnionType;
         private final boolean isIntersectionType;
+        @NullAllowed
+        private final String declaredReturnType;
 
-        public static ReturnTypes create(Set<TypeResolver> returnTypes, ASTNode node) {
+        public static ReturnTypes create(Set<TypeResolver> returnTypes, Expression node) {
             return new ReturnTypesImpl(returnTypes, node);
         }
 
-        private ReturnTypesImpl(Set<TypeResolver> returnTypes, ASTNode node) {
+        private ReturnTypesImpl(Set<TypeResolver> returnTypes, Expression node) {
             this.returnTypes = returnTypes;
             this.isUnionType = node instanceof UnionType;
             this.isIntersectionType = node instanceof IntersectionType;
+            this.declaredReturnType = CodeUtils.extractQualifiedName(node);
         }
 
         @Override
         public Set<TypeResolver> getReturnTypes() {
             return Collections.unmodifiableSet(returnTypes);
+        }
+
+        @Override
+        public String getDeclaredReturnType() {
+            return declaredReturnType;
         }
 
         @Override

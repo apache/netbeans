@@ -20,48 +20,35 @@
 class X {}
 class Y {}
 class Z {}
+/**
+ * @deprecated
+ */
+class DeprecatedType {}
 
-function paramType(X&Y $test): void {
-    
-}
-
-function returnType(): X&Y {
-    
+function returnType(): (X&Y&DeprecatedType)|(X&Z)|DeprecatedType {
 }
 
 class TestClass {
-    private X&Y $test;
-
-    public function paramType(X&Y $test): void {
-        $this->test = $test;
-    }
-
-    public function returnType(): X&Y {
+    public function returnType(): (DeprecatedType&Y)|Z|X {
         return $this->test;
     }
 }
 
 trait TestTrait {
-    private X&Y $test;
-
-    public function paramType(X&Y $test1, X&Y&Z $test2): void {
-        $this->test = $test;
-    }
-
-    public function returnType(): X&Y {
+    public function returnType(): (X&Y)|(Y&Z&DeprecatedType) {
         return $this->test;
     }
 }
 
 interface TestInterface {
-
-    public function paramType(X&Y&Z $test);
-    public function returnType(): X&Y&Z;
-
+    public function returnType(): X|(X&Y&Z)|DeprecatedType;
 }
 
-$closure = function(X&Y&Z $test1, Y&Z $test2): void {};
-$closure = function(int $test): X&Y&Z {};
+enum TestEnum {
+    case Case1;
+    public function returnType(): (X&Y)|DeprecatedType {}
+}
 
-$arrow = fn(X&Y $test) => $test;
-$arrow = fn(X&Y $test): X&Y => $test;
+$closure = function(int $test): (X&Y&Z)|(DeprecatedType&Z) {};
+
+$arrow = fn($test): (X&DeprecatedType)|(Y&Z)|(X&Z) => $test;

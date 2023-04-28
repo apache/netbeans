@@ -13,7 +13,7 @@ Searchable Keys:
   enum : attributes;Attributes;1491;;int;Iface|\Iface;1;;0;<TESTURL>/testGetEnums.php;
   enum.case : a;A;1545;1;0;<TESTURL>/testGetEnums.php;1;
   enum.case : b;B;1571;2;0;<TESTURL>/testGetEnums.php;1;
-  method : implmethod;implMethod;1685;$test:Test:1::1:0:0:0:0:0;void;1;0;<TESTURL>/testGetEnums.php;0;0;
+  method : implmethod;implMethod;1685;$test:Test:1::1:0:0:0:0:0;void;1;0;<TESTURL>/testGetEnums.php;0;0;void;
   superiface : iface;Iface;
   top : attributes
 
@@ -74,7 +74,7 @@ Searchable Keys:
   enum.case : a;A;1392;?;0;<TESTURL>/testGetEnums.php;1;
   enum.case : b;B;1404;?;0;<TESTURL>/testGetEnums.php;1;
   enum.case : c;C;1416;?;0;<TESTURL>/testGetEnums.php;1;
-  method : implmethod;implMethod;1440;$test:Test:1::1:0:0:0:0:0;void;1;0;<TESTURL>/testGetEnums.php;0;0;
+  method : implmethod;implMethod;1440;$test:Test:1::1:0:0:0:0:0;void;1;0;<TESTURL>/testGetEnums.php;0;0;void;
   superiface : iface1;Iface1;
   superiface : iface2;Iface2;
   top : impl
@@ -108,7 +108,7 @@ Searchable Keys:
   enum : withtrait;WithTrait;1805;;;;1;\TestTrait;0;<TESTURL>/testGetEnums.php;
   enum.case : a;A;1846;?;0;<TESTURL>/testGetEnums.php;1;
   enum.case : b;B;1858;?;0;<TESTURL>/testGetEnums.php;1;
-  method : staticmethod;staticMethod;1889;;void;9;0;<TESTURL>/testGetEnums.php;0;0;
+  method : staticmethod;staticMethod;1889;;void;9;0;<TESTURL>/testGetEnums.php;0;0;void;
   top : withtrait
   usedtrait : testtrait;TestTrait;
 
@@ -197,7 +197,7 @@ Not Searchable Keys:
 
 Document 11
 Searchable Keys:
-  method : test;test;1776;;void;9;0;<TESTURL>/testGetEnums.php;0;0;
+  method : test;test;1776;;void;9;0;<TESTURL>/testGetEnums.php;0;0;void;
   top : testtrait
   trait : testtrait;TestTrait;1737;;;0;<TESTURL>/testGetEnums.php;
 

@@ -132,4 +132,8 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/php82/constantsInTraits");
     }
 
+    public void testDNFReturnTypes() throws Exception {
+        performTest("structure/php82/dnfReturnTypes");
+    }
+
 }

@@ -21,47 +21,30 @@ class X {}
 class Y {}
 class Z {}
 
-function paramType(X&Y $test): void {
-    
-}
-
-function returnType(): X&Y {
-    
+function returnType(): (X&Y)|(X&Z) {
 }
 
 class TestClass {
-    private X&Y $test;
-
-    public function paramType(X&Y $test): void {
-        $this->test = $test;
-    }
-
-    public function returnType(): X&Y {
+    public function returnType(): (X&Y)|Z|X {
         return $this->test;
     }
 }
 
 trait TestTrait {
-    private X&Y $test;
-
-    public function paramType(X&Y $test1, X&Y&Z $test2): void {
-        $this->test = $test;
-    }
-
-    public function returnType(): X&Y {
+    public function returnType(): (X&Y)|(Y&Z) {
         return $this->test;
     }
 }
 
-interface TestInterface {
-
-    public function paramType(X&Y&Z $test);
-    public function returnType(): X&Y&Z;
-
+interface TestInterfase {
+    public function returnType(): X|(X&Y&Z)|Z;
 }
 
-$closure = function(X&Y&Z $test1, Y&Z $test2): void {};
-$closure = function(int $test): X&Y&Z {};
+enum TestEnum {
+    case Case1;
+    public function returnType(): (X&Y)|Z {}
+}
 
-$arrow = fn(X&Y $test) => $test;
-$arrow = fn(X&Y $test): X&Y => $test;
+$closure = function(int $test): (X&Y&Z)|(X&Z) {};
+
+$arrow = fn(): (X&Y)|(Y&Z)|(X&Z) => $test;

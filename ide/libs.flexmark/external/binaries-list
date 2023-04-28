@@ -14,9 +14,18 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-9B6A3169E240EE48800EA215DDF033EBFB221097 com.vladsch.flexmark:flexmark:0.50.36
-4C77069222E80816F73B6277F09F742382E14E30 com.vladsch.flexmark:flexmark-html2md-converter:0.50.36
-FF0452A9FF56D164C9FA1B880562ED1FC8F93F57 com.vladsch.flexmark:flexmark-util:0.50.36
-983105CC5A42FF82979C742FB6BE525AB1FED8E9 com.vladsch.flexmark:flexmark-ext-emoji:0.50.36
-A01A46E369E0C4A271A519481C422206D54A60D1 com.vladsch.flexmark:flexmark-formatter:0.50.36
+606A88E1D15AA8DEBD97CB5DFDF788DDC6FB5B5E com.vladsch.flexmark:flexmark:0.62.2
+55631AD20431C090D404C3945B692EACEEDB6FC5 com.vladsch.flexmark:flexmark-html2md-converter:0.62.2
+C0B998D5570295F104A4FFEE4F8EEC305D7DB327 com.vladsch.flexmark:flexmark-util-ast:0.62.2
+22C85EFB51D4AA25540B8B0D880BE7AD4A8BAEC1 com.vladsch.flexmark:flexmark-util-builder:0.62.2
+85253A62761533CE7709F81B0C581C8473F825EC com.vladsch.flexmark:flexmark-util-collection:0.62.2
+2DF8CE1ABAB2E40EDC7D340962025EE1DD09FE02 com.vladsch.flexmark:flexmark-util-data:0.62.2
+AE5AFA76A669E06B3A65255C2ED775EDE5CD3EB1 com.vladsch.flexmark:flexmark-util-dependency:0.62.2
+058548BE1FC0682698721C0C278451A41F361D3A com.vladsch.flexmark:flexmark-util-format:0.62.2
+6D830CB37E48FD9DCA44BF15FBC3A86AA7D82C5A com.vladsch.flexmark:flexmark-util-html:0.62.2
+18133DD81887C512E2F56FEB3C14A8A1210F30EA com.vladsch.flexmark:flexmark-util-misc:0.62.2
+87AF2803A63B5B07CC42D9C1D98F8ECD4F83FBCC com.vladsch.flexmark:flexmark-util-sequence:0.62.2
+CA49BD94860A5CCEDD82BDE96ECE831F16C66FF1 com.vladsch.flexmark:flexmark-util-visitor:0.62.2
+C1F1B1909BFB6C0F4301A9227745A3AB33B0D08F com.vladsch.flexmark:flexmark-ext-emoji:0.62.2
+3AA453B87258A448DFD8D01010D94E3A2832884D com.vladsch.flexmark:flexmark-ext-anchorlink:0.62.2
 36DA09A8F68484523FA2AAA100399D612B247D67 org.jsoup:jsoup:1.11.3

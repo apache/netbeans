@@ -23,6 +23,7 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
+import java.awt.BorderLayout;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -30,17 +31,22 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.event.HyperlinkEvent;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
+import org.openide.awt.HtmlBrowser;
 import org.openide.awt.UndoRedo;
+import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
@@ -55,7 +61,7 @@ import org.openide.windows.TopComponent;
         mimeType = "text/x-markdown",
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "MarkdownViewer",
-        position = 1100
+        position = 900
 )
 @Messages("LBL_MarkdownViewer=Preview")
 public class MarkdownViewerElement implements MultiViewElement {
@@ -67,6 +73,7 @@ public class MarkdownViewerElement implements MultiViewElement {
 
     private transient JComponent component;
     private transient JEditorPane viewer;
+    private transient MultiViewElementCallback callback;
 
     static final DataHolder OPTIONS = new MutableDataSet()
             .set(Parser.EXTENSIONS, Arrays.asList(AnchorLinkExtension.create()))
@@ -97,7 +104,11 @@ public class MarkdownViewerElement implements MultiViewElement {
             viewer.setContentType("text/html");
             viewer.setEditable(false);
             viewer.addHyperlinkListener(this::linkHandler);
-            component = new JScrollPane(viewer);
+            
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.add(new JScrollPane(viewer), BorderLayout.CENTER);
+
+            component = panel;
         }
         return component;
     }
@@ -112,7 +123,7 @@ public class MarkdownViewerElement implements MultiViewElement {
 
     @Override
     public Action[] getActions() {
-        return new Action[0];
+        return callback.createDefaultActions();
     }
 
     @Override
@@ -122,8 +133,9 @@ public class MarkdownViewerElement implements MultiViewElement {
 
     @Override
     public void componentOpened() {
-        dataObject.getPrimaryFile().addFileChangeListener(fcl);
-        updateView();
+        FileObject fo = dataObject.getPrimaryFile();
+        fo.addFileChangeListener(fcl);
+        callback.updateTitle(fo.getNameExt());
     }
 
     @Override
@@ -133,6 +145,7 @@ public class MarkdownViewerElement implements MultiViewElement {
 
     @Override
     public void componentShowing() {
+        updateView();
     }
 
     @Override
@@ -154,6 +167,7 @@ public class MarkdownViewerElement implements MultiViewElement {
 
     @Override
     public void setMultiViewCallback(MultiViewElementCallback callback) {
+        this.callback = callback;
     }
 
     @Override
@@ -179,9 +193,28 @@ public class MarkdownViewerElement implements MultiViewElement {
         if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
             String dsc = evt.getDescription();
             if ((evt.getURL() == null) && (dsc != null)) {
-                if (dsc.startsWith("#")) {
-                    viewer.scrollToReference(dsc.substring(1));
+                String parts[] = dsc.split("#");
+                if (parts.length == 1) {
+                    //Probably a link to relative file
+                    FileObject parent = dataObject.getPrimaryFile().getParent();
+                    FileObject fo = parent.getFileObject(parts[0]);
+                    if (fo != null) {
+                        DataObject dat;
+                        try {
+                            dat = DataObject.find(fo);
+                            OpenCookie open = dat.getLookup().lookup(OpenCookie.class);
+                            open.open();
+                        } catch (DataObjectNotFoundException ex) {
+                            // Got unlucky do nothing
+                        }
+                    }
+                } else {
+                    if (parts[0].isEmpty() && !parts[1].isEmpty()) {
+                        viewer.scrollToReference(parts[1]);
+                    }
                 }
+            } else if (evt.getURL() != null) {
+                HtmlBrowser.URLDisplayer.getDefault().showURL(evt.getURL());
             }
         }
     }

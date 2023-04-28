@@ -18,10 +18,13 @@
  */
 package org.netbeans.modules.markdown;
 
+import com.vladsch.flexmark.ext.anchorlink.AnchorLinkExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -29,6 +32,7 @@ import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.event.HyperlinkEvent;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -64,6 +68,16 @@ public class MarkdownViewerElement implements MultiViewElement {
     private transient JComponent component;
     private transient JEditorPane viewer;
 
+    static final DataHolder OPTIONS = new MutableDataSet()
+            .set(Parser.EXTENSIONS, Arrays.asList(AnchorLinkExtension.create()))
+            // JEditorPane search for the name attribute
+            .set(AnchorLinkExtension.ANCHORLINKS_SET_NAME, true)
+            .set(AnchorLinkExtension.ANCHORLINKS_SET_ID, false)
+            .toImmutable();
+
+    final Parser parser = Parser.builder(OPTIONS).build();
+    final HtmlRenderer renderer = HtmlRenderer.builder(OPTIONS).build();
+
     private final FileChangeListener fcl = new FileChangeAdapter() {
         @Override
         public void fileChanged(FileEvent fe) {
@@ -82,6 +96,7 @@ public class MarkdownViewerElement implements MultiViewElement {
             viewer = new JEditorPane();
             viewer.setContentType("text/html");
             viewer.setEditable(false);
+            viewer.addHyperlinkListener(this::linkHandler);
             component = new JScrollPane(viewer);
         }
         return component;
@@ -150,15 +165,23 @@ public class MarkdownViewerElement implements MultiViewElement {
     private void updateView() {
         FileObject fo = dataObject.getPrimaryFile();
         if ((fo != null) && (viewer != null)) {
-            MutableDataSet options = new MutableDataSet();
-            Parser parser = Parser.builder(options).build();
-            HtmlRenderer renderer = HtmlRenderer.builder(options).build();
             try {
                 String html = renderer.render(parser.parse(fo.asText("UTF-8")));
                 viewer.setText(html);
             } catch (IOException ex) {
                 viewer.setText(Bundle.TXT_MarkdownViewerElement_Error());
                 LOG.log(Level.WARNING, "Could not parse markdown!", ex);
+            }
+        }
+    }
+
+    private void linkHandler(HyperlinkEvent evt) {
+        if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            String dsc = evt.getDescription();
+            if ((evt.getURL() == null) && (dsc != null)) {
+                if (dsc.startsWith("#")) {
+                    viewer.scrollToReference(dsc.substring(1));
+                }
             }
         }
     }

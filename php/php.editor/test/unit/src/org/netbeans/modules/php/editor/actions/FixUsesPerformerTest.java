@@ -611,7 +611,91 @@ public class FixUsesPerformerTest extends PHPTestBase {
         performTest("class Exam^ple {", selections, true, true, options);
     }
 
-    private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final boolean putInPSR12Order, final Options options) throws Exception {
+    public void testAppendUse_existPrefix01() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\C\\D", ItemVariant.Type.CLASS));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performAppendTest("return new D^", selections, false, options);
+    }
+
+    public void testAppendUse_existPrefix02() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\G\\L", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performAppendTest("return L^", selections, false, options);
+    }
+
+    public void testAppendUse_existPrefix03() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\O\\Q", ItemVariant.Type.CONST));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performAppendTest("return Q^", selections, false, options);
+    }
+
+    public void testAppendUse_newPrefix01() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\C\\F", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performAppendTest("return F^", selections, false, options);
+    }
+
+    public void testAppendUse_newPrefix02() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\O\\P", ItemVariant.Type.CONST));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performAppendTest("return P^", selections, false, options);
+    }
+
+    public void testAppendUse_newPrefix03() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\C\\H", ItemVariant.Type.CLASS));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performAppendTest("return new H^", selections, false, options);
+    }
+
+    public void testAppendUse_newPrefix04() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\C\\H", ItemVariant.Type.CLASS));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performAppendTest("return new H^", selections, false, options);
+    }
+
+    public void testAppendUse_newPsr12Prefix01() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\C\\E", ItemVariant.Type.CLASS));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performAppendTest("return new E^", selections, true, options);
+    }
+
+    public void testAppendUse_newPsr12Prefix02() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\G\\L", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performAppendTest("return L^", selections, true, options);
+    }
+
+    public void testAppendUse_newPsr12Prefix03() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\G\\L", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, false, false, false, PhpVersion.PHP_81);
+        performAppendTest("return L^", selections, true, options);
+    }
+
+    public void testAppendUse_regroupPrefix01() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\G\\L", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, true, false, false, PhpVersion.PHP_81);
+        performAppendTest("return L^", selections, false, options);
+    }
+
+    public void testAppendUse_regroupPrefix02() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\G\\L", ItemVariant.Type.FUNCTION));
+        Options options = new Options(false, false, true, false, false, PhpVersion.PHP_81);
+        performAppendTest("return L^", selections, false, options);
+    }
+
+    private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final boolean putInPSR12Order, final boolean append, final Options options) throws Exception {
         FileObject testFile = getTestFile(fileName);
 
         Source testSource = getTestSource(testFile);
@@ -664,7 +748,11 @@ public class FixUsesPerformerTest extends PHPTestBase {
                     }
                     importData.caretPosition = caretOffset;
                     FixUsesPerformer fixUsesPerformer = new FixUsesPerformer(phpResult, importData, properSelections, removeUnusedUses, putInPSR12Order, currentOptions);
-                    fixUsesPerformer.perform();
+                    if (append) {
+                        fixUsesPerformer.performAppend();
+                    } else {
+                        fixUsesPerformer.perform();
+                    }
                     result[0] = document.getText(0, document.getLength());
                 }
             }
@@ -686,7 +774,13 @@ public class FixUsesPerformerTest extends PHPTestBase {
 
     private void performTest(final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, boolean putInPSR12Order, final Options options) throws Exception {
         String exactFileName = getTestPath();
-        String result = getTestResult(exactFileName, caretLine, selections, removeUnusedUses, putInPSR12Order, options);
+        String result = getTestResult(exactFileName, caretLine, selections, removeUnusedUses, putInPSR12Order, false, options);
+        assertDescriptionMatches(exactFileName, result, false, ".fixUses");
+    }
+
+    private void performAppendTest(final String caretLine, final List<Selection> selections, boolean putInPSR12Order, final Options options) throws Exception {
+        String exactFileName = getTestPath();
+        String result = getTestResult(exactFileName, caretLine, selections, false, putInPSR12Order, true, options);
         assertDescriptionMatches(exactFileName, result, false, ".fixUses");
     }
 

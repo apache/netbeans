@@ -22,8 +22,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -53,6 +56,7 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.UnusedUsesCollector;
 import org.netbeans.modules.php.editor.parser.UnusedUsesCollector.UnusedOffsetRanges;
 import org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.GroupUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
@@ -86,6 +90,7 @@ public class FixUsesPerformer {
     private final boolean removeUnusedUses;
     private final boolean putInPSR12Order;
     private final Options options;
+    private boolean isEdited = false;
     private EditList editList;
     private BaseDocument baseDocument;
     private NamespaceScope namespaceScope;
@@ -105,24 +110,44 @@ public class FixUsesPerformer {
         this.options = options;
     }
 
-    public void perform() {
+    private void perform(boolean append) {
         final Document document = parserResult.getSnapshot().getSource().getDocument(false);
         if (document instanceof BaseDocument) {
             baseDocument = (BaseDocument) document;
             editList = new EditList(baseDocument);
             namespaceScope = ModelUtils.getNamespaceScope(parserResult.getModel().getFileScope(), importData.caretPosition);
             assert namespaceScope != null;
-            processSelections();
+            processSelections(append);
             editList.apply();
         }
     }
 
+    public void perform()
+    {
+        perform(false);
+    }
+
+    public void performAppend()
+    {
+        assert this.selections.size() == 1;
+        perform(true);
+    }
+
     @NbBundle.Messages("FixUsesPerformer.noChanges=Fix imports: No Changes")
-    private void processSelections() {
+    private void processSelections(boolean append) {
         final List<ImportData.DataItem> dataItems = resolveDuplicateSelections();
         TreeMap<Integer, List<UsePart>> usePartsMap = new TreeMap<>();
         assert selections.size() <= dataItems.size()
                 : "The selections size must not be larger than the dataItems size. selections size: " + selections.size() + " > dataItems size: " + dataItems.size(); // NOI18N
+
+        CheckVisitor visitor = new CheckVisitor();
+        Program program = parserResult.getProgram();
+        if (program != null) {
+            program.accept(visitor);
+        }
+
+        UsesInsertStringHelper usesInsertStringHelper = new UsesInsertStringHelper(visitor.getUsedRanges(), visitor.hasMultipleUses(), append, 0);
+
         for (int i = 0; i < selections.size(); i++) {
             ItemVariant itemVariant = selections.get(i);
             // we shouldn't use itemVariant if there is no any real dataItem related to it
@@ -130,11 +155,11 @@ public class FixUsesPerformer {
                 NamespaceScope currentScope = dataItems.get(i).getUsedNamespaceNames().get(0).getInScope();
                 int mapKey = currentScope.getBlockRange().getStart();
                 if (usePartsMap.get(mapKey) == null) {
-                    usePartsMap.put(mapKey, processScopeDeclaredUses(currentScope, new ArrayList<>()));
+                    usePartsMap.put(mapKey, processScopeDeclaredUses(currentScope, new ArrayList<>(), usesInsertStringHelper));
                 }
 
                 SanitizedUse sanitizedUse = new SanitizedUse(
-                        new UsePart(modifyUseName(itemVariant.getName()), UsePart.Type.create(itemVariant.getType()), itemVariant.isFromAliasedElement()),
+                        new UsePart(modifyUseName(itemVariant.getName()), UsePart.Type.create(itemVariant.getType()), 0, itemVariant.isFromAliasedElement()),
                         usePartsMap.get(mapKey),
                         createAliasStrategy(i, usePartsMap.get(mapKey), selections));
                 if (sanitizedUse.shouldBeUsed()) {
@@ -147,14 +172,6 @@ public class FixUsesPerformer {
         }
         replaceUnimportedItems();
 
-        CheckVisitor visitor = new CheckVisitor();
-        Program program = parserResult.getProgram();
-        if (program != null) {
-            program.accept(visitor);
-        }
-
-        boolean emptyString = true;
-        int lastUsedRangeIndex = 0;
         int lastDeclareIndex = 0;
         List<NamespaceScope> declaredNamespaces;
         if (namespaceScope.isDefaultNamespace()) {
@@ -167,31 +184,13 @@ public class FixUsesPerformer {
         for (NamespaceScope currentScope : declaredNamespaces) {
             int mapKey = currentScope.getBlockRange().getStart();
             if (usePartsMap.get(mapKey) == null) {
-                usePartsMap.put(mapKey, processScopeDeclaredUses(currentScope, new ArrayList<>()));
+                usePartsMap.put(mapKey, processScopeDeclaredUses(currentScope, new ArrayList<>(), usesInsertStringHelper));
             }
 
             int startOffset = getNamespaceScopeOffset(currentScope);
             int endOffset = currentScope.isDefaultNamespace() && visitor.getGlobalNamespaceEndOffset() > 0
                     ? visitor.getGlobalNamespaceEndOffset()
                     : currentScope.getBlockRange().getEnd();
-
-            int compareStringOffsetStart = 0;
-            List <OffsetRange> replace = new ArrayList();
-            for (int i = lastUsedRangeIndex; i < visitor.getUsedRanges().size(); i++) {
-                OffsetRange offsetRange = visitor.getUsedRanges().get(i);
-                if (endOffset < offsetRange.getStart()) {
-                    break;
-                }
-                lastUsedRangeIndex = i;
-                if (startOffset > offsetRange.getStart()) {
-                    continue;
-                }
-
-                compareStringOffsetStart = compareStringOffsetStart > 0 ? compareStringOffsetStart : offsetRange.getStart();
-                int useStartOffset = getOffsetWithoutLeadingWhitespaces(offsetRange.getStart());
-                replace.add(new OffsetRange(useStartOffset, offsetRange.getEnd()));
-                startOffset = offsetRange.getEnd();
-            }
 
             // because only declare(strict_types=1) should go first, but declare(ticks=1) could be everywhere
             // we have to restrict declare start offset to prevent wrong USE placement after declare in cases such
@@ -215,52 +214,52 @@ public class FixUsesPerformer {
                 startOffset = Math.max(startOffset, visitor.getDeclareStatements().get(j).getEndOffset());
                 lastDeclareIndex = j;
             }
+            usesInsertStringHelper.namespaceChange(startOffset);
+            insertString(usePartsMap.get(mapKey), usesInsertStringHelper);
+        }
 
-            String insertString = createInsertString(usePartsMap.get(mapKey));
-            // avoid being recognized as a modified file
-            if (insertString.isEmpty()) {
-                // remove unused namespaces if exists
-                for (OffsetRange offsetRange : replace) {
-                    editList.replace(offsetRange.getStart(), offsetRange.getLength(), EMPTY_STRING, false, 0);
-                    emptyString = false;
+        // it could be safely deleted after because editList offsets have no overlaps with old ones
+        for (Map.Entry<Integer, Integer> entry : usesInsertStringHelper.getUsesToRemove().entrySet()) {
+            int useStartOffset;
+            if (usesInsertStringHelper.needToSaveHeadingWhitespace(entry.getKey())) {
+                useStartOffset = entry.getKey();
+            } else {
+                useStartOffset = getOffsetWithoutLeadingWhitespaces(entry.getKey());
+                if (usesInsertStringHelper.needToReplaceFollowingWhitespace(useStartOffset)) {
+                    usesInsertStringHelper.skipFollowingWhitespaceReplace(useStartOffset);
                 }
-                continue;
             }
-
-            try {
-                // get -2/+2 for new lines before string
-                String replaceString = compareStringOffsetStart > 1 ? baseDocument.getText(compareStringOffsetStart - 2, startOffset - compareStringOffsetStart + 2) : "";
-                if (replaceString.equals(insertString)) {
-                    continue;
-                }
-
-                for (OffsetRange offsetRange : replace) {
-                    editList.replace(offsetRange.getStart(), offsetRange.getLength(), EMPTY_STRING, false, 0);
-                }
-                editList.replace(startOffset, 0, insertString, false, 0);
-                if (shouldAppendLineAfter(startOffset)) {
-                    editList.replace(startOffset, 0, NEW_LINE, false, 0);
-                }
-                emptyString = false;
-            } catch (BadLocationException ex) {
-                Exceptions.printStackTrace(ex);
+            isEdited = true;
+            editList.replace(useStartOffset, entry.getValue() - useStartOffset, EMPTY_STRING, false, 0);
+        }
+        // we have to change following whitespaces to one new line if there was appended new use
+        // and wasn't removed old, which was first before
+        for (Integer entry : usesInsertStringHelper.getFollowingWhitespaceReplaceOffsets()) {
+            int useEndOffset = getOffsetWithoutFollowingWhitespaces(entry);
+            if (useEndOffset != entry) {
+                isEdited = true;
+                editList.replace(entry, useEndOffset - entry, NEW_LINE, false, 0);
             }
         }
 
-        if (emptyString) {
+        if (!isEdited) {
             StatusDisplayer.getDefault().setStatusText(Bundle.FixUsesPerformer_noChanges());
         }
     }
 
-    private List<UsePart> processScopeDeclaredUses(NamespaceScope namespaceScope, List<UsePart> useParts) {
+    private List<UsePart> processScopeDeclaredUses(NamespaceScope namespaceScope, List<UsePart> useParts, UsesInsertStringHelper usesInsertStringHelper) {
         for (GroupUseScope groupUseElement : namespaceScope.getDeclaredGroupUses()) {
             for (UseScope useElement : groupUseElement.getUseScopes()) {
-                processUseElement(useElement, useParts);
+                if (!processUseElement(useElement, useParts)) {
+                    usesInsertStringHelper.addToRemoveMap(useElement.getOffset());
+                }
             }
         }
         for (UseScope useElement : namespaceScope.getDeclaredSingleUses()) {
             assert !useElement.isPartOfGroupUse() : useElement;
-            processUseElement(useElement, useParts);
+            if (!processUseElement(useElement, useParts)) {
+                usesInsertStringHelper.addToRemoveMap(useElement.getOffset());
+            }
         }
         return useParts;
     }
@@ -277,7 +276,7 @@ public class FixUsesPerformer {
                 if (ts != null) {
                     LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_OPENTAG, PHPTokenId.PHPDOC_COMMENT_END));
                     if (ts.token().id().equals(PHPTokenId.PHP_OPENTAG) || ts.token().id().equals(PHPTokenId.PHPDOC_COMMENT_END)) {
-                        useScopeStart = ts.offset() + ts.token().length() + 1;
+                        useScopeStart = ts.offset() + ts.token().length();
                     }
                 }
             } finally {
@@ -312,6 +311,7 @@ public class FixUsesPerformer {
         for (ImportData.DataItem dataItem : importData.getItemsToReplace()) {
             ItemVariant defaultVariant = dataItem.getDefaultVariant();
             for (UsedNamespaceName usedNamespaceName : dataItem.getUsedNamespaceNames()) {
+                isEdited = true;
                 editList.replace(usedNamespaceName.getOffset(), usedNamespaceName.getReplaceLength(), defaultVariant.getName(), false, 0);
             }
         }
@@ -360,19 +360,23 @@ public class FixUsesPerformer {
         return createAliasStrategy;
     }
 
-    private void processUseElement(final UseScope useElement, final List<UsePart> useParts) {
+    private boolean processUseElement(final UseScope useElement, final List<UsePart> useParts) {
         if (isUsed(useElement) || !removeUnusedUses) {
             AliasedName aliasedName = useElement.getAliasedName();
             if (aliasedName != null) {
                 useParts.add(new UsePart(
                         modifyUseName(aliasedName.getRealName().toString()) + AS_CONCAT + aliasedName.getAliasName(),
-                        UsePart.Type.create(useElement.getType())));
+                        UsePart.Type.create(useElement.getType()),
+                        useElement.getOffset()));
             } else {
                 useParts.add(new UsePart(
                         modifyUseName(useElement.getName()),
-                        UsePart.Type.create(useElement.getType())));
+                        UsePart.Type.create(useElement.getType()),
+                        useElement.getOffset()));
             }
+            return true;
         }
+        return false;
     }
 
     private String modifyUseName(final String useName) {
@@ -396,8 +400,11 @@ public class FixUsesPerformer {
         return result;
     }
 
-    private String createInsertString(final List<UsePart> useParts) {
-        StringBuilder insertString = new StringBuilder();
+    private void insertString(final List<UsePart> useParts, final UsesInsertStringHelper usesInsertStringHelper) {
+        if (useParts.isEmpty()) {
+            return;
+        }
+
         if (putInPSR12Order) {
             Collections.sort(useParts, (u1, u2) -> {
                 int result = 0;
@@ -425,9 +432,7 @@ public class FixUsesPerformer {
         } else {
             Collections.sort(useParts);
         }
-        if (!useParts.isEmpty()) {
-            insertString.append(NEW_LINE);
-        }
+
         String indentString = null;
         if (options.preferGroupUses()
                 || options.preferMultipleUseStatementsCombined()) {
@@ -435,18 +440,36 @@ public class FixUsesPerformer {
             indentString = IndentUtils.createIndentString(codeStyle.getIndentSize(), codeStyle.expandTabToSpaces(), codeStyle.getTabSize());
         }
 
-        if (options.preferGroupUses()
+        usesInsertStringHelper.setWrapInNewLinesOnAppend(useParts.size() == 1);
+        if (options.preferGroupUses() && usesInsertStringHelper.canGroupUses()
                 && options.getPhpVersion().compareTo(PhpVersion.PHP_70) >= 0) {
-            insertString.append(createStringForGroupUse(useParts, indentString));
+            createStringForGroupUse(useParts, indentString, usesInsertStringHelper);
         } else if (options.preferMultipleUseStatementsCombined()) {
-            insertString.append(createStringForMultipleUse(useParts, indentString));
+            createStringForMultipleUse(useParts, indentString, usesInsertStringHelper);
         } else {
-            insertString.append(createStringForCommonUse(useParts));
+            createStringForCommonUse(useParts, usesInsertStringHelper);
         }
-        return insertString.toString();
+
+        if (!usesInsertStringHelper.isAppendUses()) {
+            try {
+                String replaceString = baseDocument.getText(usesInsertStringHelper.getInitialStartOffset(), usesInsertStringHelper.getStartOffset() - usesInsertStringHelper.getInitialStartOffset());
+                if (replaceString.equals(usesInsertStringHelper.getResultString())) {
+                    usesInsertStringHelper.resetResultString();
+                    return;
+                }
+            } catch (BadLocationException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            this.isEdited = true;
+            usesInsertStringHelper.confirmResultString();
+
+            if (shouldAppendLineAfter(usesInsertStringHelper.getStartOffset())) {
+                editList.replace(usesInsertStringHelper.getStartOffset(), 0, NEW_LINE, false, 0);
+            }
+        }
     }
 
-    private String createStringForGroupUse(List<UsePart> useParts, String indentString) {
+    private void createStringForGroupUse(List<UsePart> useParts, String indentString, final UsesInsertStringHelper usesInsertStringHelper) {
         List<UsePart> typeUseParts = new ArrayList<>(useParts.size());
         List<UsePart> constUseParts = new ArrayList<>(useParts.size());
         List<UsePart> functionUseParts = new ArrayList<>(useParts.size());
@@ -465,33 +488,31 @@ public class FixUsesPerformer {
                     assert false : "Unknown type: " + usePart.getType();
             }
         }
-        StringBuilder insertString = new StringBuilder();
         // types
-        createStringForGroupUse(insertString, indentString, USE_PREFIX, typeUseParts);
+        boolean isFirstNewType = typeUseParts.size() == 1 && typeUseParts.get(0).getOffset() == 0;
+        usesInsertStringHelper.setWrapInNewLinesOnAppend(useParts.size() > 1 && isFirstNewType && putInPSR12Order);
+        createStringForGroupUse(indentString, USE_PREFIX, typeUseParts, usesInsertStringHelper);
         if (putInPSR12Order) {
-            if (!functionUseParts.isEmpty()) {
-                appendNewLine(insertString);
+            if (!functionUseParts.isEmpty() && usesInsertStringHelper.getResultString().length() > 0) {
+                usesInsertStringHelper.appendToResultString(NEW_LINE);
             }
             // functions
-            createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, functionUseParts);
+            boolean isFirstNewFunction = functionUseParts.size() == 1 && functionUseParts.get(0).getOffset() == 0;
+            usesInsertStringHelper.setWrapInNewLinesOnAppend(isFirstNewFunction);
+            createStringForGroupUse(indentString, USE_FUNCTION_PREFIX, functionUseParts, usesInsertStringHelper);
 
-            if (!constUseParts.isEmpty()) {
-                appendNewLine(insertString);
+            if (!constUseParts.isEmpty() && usesInsertStringHelper.getResultString().length() > 0) {
+                usesInsertStringHelper.appendToResultString(NEW_LINE);
             }
             // constants
-            createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, constUseParts);
+            boolean isFirstNewConst = constUseParts.size() == 1 && constUseParts.get(0).getOffset() == 0;
+            usesInsertStringHelper.setWrapInNewLinesOnAppend(isFirstNewConst);
+            createStringForGroupUse(indentString, USE_CONST_PREFIX, constUseParts, usesInsertStringHelper);
         } else {
             // constants
-            createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, constUseParts);
+            createStringForGroupUse(indentString, USE_CONST_PREFIX, constUseParts, usesInsertStringHelper);
             // functions
-            createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, functionUseParts);
-        }
-        return insertString.toString();
-    }
-
-    private void appendNewLine(StringBuilder insertString) {
-        if (insertString.length() > 0) {
-            insertString.append(NEW_LINE);
+            createStringForGroupUse(indentString, USE_FUNCTION_PREFIX, functionUseParts, usesInsertStringHelper);
         }
     }
 
@@ -501,7 +522,7 @@ public class FixUsesPerformer {
                 .collect(Collectors.toList());
     }
 
-    private void createStringForGroupUse(StringBuilder insertString, String indentString, String usePrefix, List<UsePart> useParts) {
+    private void createStringForGroupUse(String indentString, String usePrefix, List<UsePart> useParts, final UsesInsertStringHelper usesInsertStringHelper) {
         List<UsePart> groupedUseParts = new ArrayList<>(useParts.size());
         List<UsePart> nonGroupedUseParts = new ArrayList<>(useParts.size());
         List<String> prefixes = CodeUtils.getCommonNamespacePrefixes(usePartsToNamespaces(useParts));
@@ -518,42 +539,56 @@ public class FixUsesPerformer {
             if (groupUsePrefix != null) {
                 if (lastGroupUsePrefix != null
                         && !lastGroupUsePrefix.equals(groupUsePrefix)) {
-                    processGroupedUseParts(insertString, indentString, usePrefix, lastGroupUsePrefix, groupedUseParts);
+                    processGroupedUseParts(indentString, usePrefix, lastGroupUsePrefix, groupedUseParts, usesInsertStringHelper);
                 }
                 lastGroupUsePrefix = groupUsePrefix;
-                processNonGroupedUseParts(insertString, indentString, nonGroupedUseParts);
+                processNonGroupedUseParts(indentString, nonGroupedUseParts, usesInsertStringHelper);
                 groupedUseParts.add(usePart);
             } else {
-                processGroupedUseParts(insertString, indentString, usePrefix, lastGroupUsePrefix, groupedUseParts);
+                processGroupedUseParts(indentString, usePrefix, lastGroupUsePrefix, groupedUseParts, usesInsertStringHelper);
                 nonGroupedUseParts.add(usePart);
             }
         }
-        processNonGroupedUseParts(insertString, indentString, nonGroupedUseParts);
-        processGroupedUseParts(insertString, indentString, usePrefix, lastGroupUsePrefix, groupedUseParts);
+        processNonGroupedUseParts(indentString, nonGroupedUseParts, usesInsertStringHelper);
+        processGroupedUseParts(indentString, usePrefix, lastGroupUsePrefix, groupedUseParts, usesInsertStringHelper);
     }
 
-    private void processNonGroupedUseParts(StringBuilder insertString, String indentString, List<UsePart> nonGroupedUseParts) {
+    private void processNonGroupedUseParts(String indentString, List<UsePart> nonGroupedUseParts, final UsesInsertStringHelper usesInsertStringHelper) {
         if (nonGroupedUseParts.isEmpty()) {
             return;
         }
-        if (options.preferMultipleUseStatementsCombined()) {
-            insertString.append(createStringForMultipleUse(nonGroupedUseParts, indentString));
+        // it is hard to handle multiple use and group at once on appendUses
+        // because there is a probability of recursive changes, so we just fallback
+        // to common use insertion in such case to avoid complexity of code
+        if (options.preferMultipleUseStatementsCombined() && !usesInsertStringHelper.isAppendUses()) {
+            createStringForMultipleUse(nonGroupedUseParts, indentString, usesInsertStringHelper);
         } else {
-            insertString.append(createStringForCommonUse(nonGroupedUseParts));
+            createStringForCommonUse(nonGroupedUseParts, usesInsertStringHelper);
         }
         nonGroupedUseParts.clear();
     }
 
-    private void processGroupedUseParts(StringBuilder insertString, String indentString, String usePrefix, String groupUsePrefix, List<UsePart> groupedUseParts) {
+    private void processGroupedUseParts(String indentString, String usePrefix, String groupUsePrefix, List<UsePart> groupedUseParts, final UsesInsertStringHelper usesInsertStringHelper) {
         if (groupedUseParts.isEmpty()) {
             return;
         }
+        StringBuilder insertString = new StringBuilder();
         assert groupUsePrefix != null : groupedUseParts;
         String properGroupUsePrefix = modifyUseName(groupUsePrefix);
         insertString.append(usePrefix).append(properGroupUsePrefix).append(CURLY_OPEN).append(NEW_LINE);
         boolean first = true;
         int prefixLength = properGroupUsePrefix.length();
+        boolean hasChanges = false;
+        int firstElementOffset = 0;
         for (UsePart groupUsePart : groupedUseParts) {
+            usesInsertStringHelper.addToPossibleRemoveMap(groupUsePart.getOffset());
+            usesInsertStringHelper.moveEndOffset(groupUsePart.getOffset());
+            if (groupUsePart.getOffset() == 0) {
+                hasChanges = true;
+            } else {
+                firstElementOffset = groupUsePart.getOffset() == 0 || firstElementOffset != 0 && firstElementOffset < groupUsePart.getOffset()
+                    ? firstElementOffset : groupUsePart.getOffset();
+            }
             if (first) {
                 first = false;
             } else {
@@ -562,19 +597,55 @@ public class FixUsesPerformer {
             insertString.append(indentString).append(groupUsePart.getTextPart().substring(prefixLength));
         }
         insertString.append(NEW_LINE).append(CURLY_CLOSE).append(SEMICOLON);
+        if (usesInsertStringHelper.isAppendUses()) {
+            if (hasChanges) {
+                usesInsertStringHelper.applyDirectChangeAt(firstElementOffset, insertString.toString());
+            } else {
+                usesInsertStringHelper.resetPossibleRemoves();
+                usesInsertStringHelper.moveStartOffsetToTheEnd();
+            }
+        } else {
+            usesInsertStringHelper.appendToResultString(insertString.toString());
+        }
         groupedUseParts.clear();
     }
 
-    private String createStringForMultipleUse(List<UsePart> useParts, String indentString) {
+    private void createStringForMultipleUse(List<UsePart> useParts, String indentString, final UsesInsertStringHelper usesInsertStringHelper) {
+        if (useParts.isEmpty()) {
+            return;
+        }
         StringBuilder insertString = new StringBuilder();
         UsePart.Type lastUsePartType = null;
+        boolean hasChanges = false;
+        int firstElementOffset = 0;
         for (Iterator<UsePart> it = useParts.iterator(); it.hasNext(); ) {
             UsePart usePart = it.next();
+            usesInsertStringHelper.addToPossibleRemoveMap(usePart.getOffset());
+            usesInsertStringHelper.moveEndOffset(usePart.getOffset());
+            if (usePart.getOffset() == 0) {
+                hasChanges = true;
+            } else {
+                firstElementOffset = usePart.getOffset() == 0 || firstElementOffset != 0 && firstElementOffset < usePart.getOffset()
+                    ? firstElementOffset : usePart.getOffset();
+            }
             if (lastUsePartType != null) {
                 if (lastUsePartType == usePart.getType()) {
                     insertString.append(COMMA).append(NEW_LINE).append(indentString);
                 } else {
                     insertString.append(SEMICOLON);
+                    if (usesInsertStringHelper.isAppendUses()) {
+                        if (hasChanges) {
+                            usesInsertStringHelper.applyDirectChangeAt(firstElementOffset, insertString.toString());
+                        } else {
+                            usesInsertStringHelper.resetPossibleRemoves();
+                            usesInsertStringHelper.moveStartOffsetToTheEnd();
+                            firstElementOffset = 0;
+                        }
+                    } else {
+                        usesInsertStringHelper.appendToResultString(insertString.toString());
+                    }
+                    hasChanges = false;
+                    insertString = new StringBuilder();
                 }
             }
             if (lastUsePartType != usePart.getType()) {
@@ -595,23 +666,78 @@ public class FixUsesPerformer {
             }
             insertString.append(usePart.getTextPart());
         }
-        if (!useParts.isEmpty()) {
-            insertString.append(SEMICOLON);
+        insertString.append(SEMICOLON);
+        if (usesInsertStringHelper.isAppendUses()) {
+            if (hasChanges) {
+                usesInsertStringHelper.applyDirectChangeAt(firstElementOffset, insertString.toString());
+            } else {
+                usesInsertStringHelper.resetPossibleRemoves();
+                usesInsertStringHelper.moveStartOffsetToTheEnd();
+            }
+        } else {
+            usesInsertStringHelper.appendToResultString(insertString.toString());
         }
-        return insertString.toString();
     }
 
-    private String createStringForCommonUse(List<UsePart> useParts) {
-        StringBuilder result = new StringBuilder();
+    private void createStringForCommonUse(List<UsePart> useParts, final UsesInsertStringHelper usesInsertStringHelper) {
+        StringBuilder insertString = new StringBuilder();
         UsePart.Type lastUseType = null;
+        boolean hasChanges = false;
+        int typeElementsCount = 0;
+        int firstElementOffset = 0;
         for (UsePart usePart : useParts) {
             if (putInPSR12Order && lastUseType != null && lastUseType != usePart.getType()) {
-                appendNewLine(result);
+                if (usesInsertStringHelper.isAppendUses()) {
+                    if (hasChanges) {
+                        usesInsertStringHelper.setWrapInNewLinesOnAppend(typeElementsCount == 1);
+                        usesInsertStringHelper.confirmResultStringAt(firstElementOffset);
+                    } else {
+                        usesInsertStringHelper.resetResultString();
+                        usesInsertStringHelper.moveStartOffsetToTheEnd();
+                        firstElementOffset = 0;
+                    }
+                    hasChanges = false;
+                } else {
+                    usesInsertStringHelper.appendToResultString(NEW_LINE);
+                }
+                typeElementsCount = 0;
             }
-            result.append(usePart.getUsePrefix()).append(usePart.getTextPart()).append(SEMICOLON);
+            // here we check changes in whole type block for PSR12Order
+            hasChanges = hasChanges || usePart.getOffset() == 0;
+            firstElementOffset = usePart.getOffset() == 0 || firstElementOffset != 0 && firstElementOffset < usePart.getOffset()
+                    ? firstElementOffset : usePart.getOffset();
             lastUseType = usePart.getType();
+            typeElementsCount++;
+
+            insertString.append(usePart.getUsePrefix()).append(usePart.getTextPart()).append(SEMICOLON);
+            if (usesInsertStringHelper.isAppendUses() && !putInPSR12Order) {
+                if (usesInsertStringHelper.moveEndOffset(usePart.getOffset())) {
+                    usesInsertStringHelper.addToPossibleRemoveMap(usePart.getOffset());
+                    usesInsertStringHelper.moveStartOffsetToTheEnd();
+                }
+                // here we check inline change only
+                hasChanges = usePart.getOffset() == 0;
+                if (hasChanges) {
+                    usesInsertStringHelper.applyDirectChange(insertString.toString());
+                } else {
+                    usesInsertStringHelper.resetPossibleRemoves();
+                }
+            } else {
+                usesInsertStringHelper.addToPossibleRemoveMap(usePart.getOffset());
+                usesInsertStringHelper.moveEndOffset(usePart.getOffset());
+                usesInsertStringHelper.appendToResultString(insertString.toString());
+            }
+            insertString = new StringBuilder();
         }
-        return result.toString();
+        if (putInPSR12Order && usesInsertStringHelper.isAppendUses()) {
+            if (hasChanges) {
+                usesInsertStringHelper.setWrapInNewLinesOnAppend(typeElementsCount == 1);
+                usesInsertStringHelper.confirmResultStringAt(firstElementOffset);
+            } else {
+                usesInsertStringHelper.resetResultString();
+                usesInsertStringHelper.moveStartOffsetToTheEnd();
+            }
+        }
     }
 
     private int getOffsetWithoutLeadingWhitespaces(final int startOffset) {
@@ -631,13 +757,221 @@ public class FixUsesPerformer {
         return result;
     }
 
+    private int getOffsetWithoutFollowingWhitespaces(final int endOffset) {
+        int result = endOffset;
+        baseDocument.readLock();
+        try {
+            TokenSequence<PHPTokenId> ts = LexUtilities.getPHPTokenSequence(baseDocument, endOffset);
+            if (ts != null) {
+                ts.move(endOffset);
+                while (ts.moveNext() && ts.token().id().equals(PHPTokenId.WHITESPACE)) {
+                    result = ts.offset() + ts.token().length();
+                }
+            }
+        } finally {
+            baseDocument.readUnlock();
+        }
+        return result;
+    }
+
+    private class UsesInsertStringHelper {
+        private final Map<Integer, OffsetRange> usedRanges;
+        private final boolean appendUses;
+        private final boolean hasMultipleUses;
+        private StringBuilder resultString = new StringBuilder();
+        private Set<Integer> followingWhitespaceReplaceOffset = new HashSet<>();
+        private Set<Integer> savedHeadingWhitespaceOffset = new HashSet<>();
+        private int startOffset;
+        private int initialStartOffset;
+        private int endOffset;
+        private boolean wrapInNewLines = false;
+        private Map<Integer, Integer> usesToRemove = new HashMap<>();
+        private List<Integer> usesToRemoveOffsetTmp = new ArrayList<>();
+
+        UsesInsertStringHelper(Map<Integer, OffsetRange> usedRanges, boolean hasMultipleUses, boolean appendUses, int startOffset) {
+            this.usedRanges = usedRanges;
+            this.startOffset = startOffset;
+            this.initialStartOffset = startOffset;
+            this.hasMultipleUses = hasMultipleUses;
+            this.appendUses = appendUses;
+        }
+
+        public OffsetRange getUsedRangeOffset(int offset) {
+            return usedRanges.get(offset);
+        }
+
+        public void addToPossibleRemoveMap(int offset) {
+            if (usedRanges.get(offset) != null) {
+                usesToRemoveOffsetTmp.add(offset);
+            }
+        }
+
+        public Map<Integer, Integer> getUsesToRemove() {
+            return usesToRemove;
+        }
+
+        public int getStartOffset() {
+            return startOffset;
+        }
+
+        public int getInitialStartOffset() {
+            return initialStartOffset;
+        }
+
+        public void namespaceChange(int startOffset) {
+            this.startOffset = startOffset;
+            this.initialStartOffset = startOffset;
+            this.endOffset = startOffset;
+        }
+
+        public java.util.Set<Integer> getFollowingWhitespaceReplaceOffsets() {
+            return followingWhitespaceReplaceOffset;
+        }
+
+        public boolean needToSaveHeadingWhitespace(int offset) {
+            return savedHeadingWhitespaceOffset.contains(offset);
+        }
+
+        public boolean needToReplaceFollowingWhitespace(int offset) {
+            return followingWhitespaceReplaceOffset.contains(offset);
+        }
+
+        public void skipFollowingWhitespaceReplace(int offset) {
+            followingWhitespaceReplaceOffset.remove((Integer) offset);
+        }
+
+        public boolean moveEndOffset(int removedUseOffset) {
+            OffsetRange removed = this.getUsedRangeOffset(removedUseOffset);
+            if (removed != null) {
+                this.endOffset = removed.getEnd() > endOffset ? removed.getEnd() : endOffset;
+                return true;
+            }
+            return false;
+        }
+
+        public void moveStartOffsetToTheEnd() {
+            this.startOffset = this.endOffset;
+        }
+
+        public void applyDirectChangeAt(int offset, String insertString) {
+            if (offset == 0 || this.getUsedRangeOffset(offset) == null) {
+                applyDirectChange(insertString);
+                return;
+            }
+            int currentStart = this.startOffset;
+            this.startOffset = this.getUsedRangeOffset(offset).getEnd();
+            savedHeadingWhitespaceOffset.add(this.getUsedRangeOffset(offset).getStart());
+            // remove new line because of insert on existing place
+            insertString = insertString.substring(1);
+            applyDirectChange(insertString);
+            this.startOffset = currentStart;
+        }
+
+        public void applyDirectChange(String insertString)
+        {
+            for (Integer offset : usesToRemoveOffsetTmp) {
+                addToRemoveMap(offset);
+            }
+
+            if (shouldAppendLineBefore()) {
+                editList.replace(getStartOffset(), 0, NEW_LINE, false, 0);
+                followingWhitespaceReplaceOffset.add(getStartOffset());
+                editList.replace(getStartOffset(), 0, insertString, false, 0);
+            } else {
+                editList.replace(getStartOffset(), 0, insertString, false, 0);
+            }
+
+            if (wrapInNewLines) {
+                editList.replace(getStartOffset(), 0, NEW_LINE, false, 0);
+                wrapInNewLines = false;
+            }
+        }
+
+        public void setWrapInNewLinesOnAppend(boolean value) {
+            wrapInNewLines = value;
+        }
+
+        public void resetPossibleRemoves() {
+            usesToRemoveOffsetTmp.clear();
+        }
+
+        public void confirmResultStringAt(int offset) {
+            if (offset == 0 || this.getUsedRangeOffset(offset) == null) {
+                confirmResultString();
+                return;
+            }
+            int currentStart = this.startOffset;
+            this.startOffset = this.getUsedRangeOffset(offset).getEnd();
+            savedHeadingWhitespaceOffset.add(this.getUsedRangeOffset(offset).getStart());
+            // remove new line because of insert on existing place
+            this.resultString.deleteCharAt(0);
+            confirmResultString();
+            this.startOffset = currentStart;
+        }
+
+        public void confirmResultString() {
+            if (resultString.length() > 0) {
+                for (Integer offset : usesToRemoveOffsetTmp) {
+                    addToRemoveMap(offset);
+                }
+                if (appendUses && shouldAppendLineBefore()) {
+                    editList.replace(getStartOffset(), 0, NEW_LINE, false, 0);
+                    followingWhitespaceReplaceOffset.add(getStartOffset());
+                }
+                editList.replace(getStartOffset(), 0, resultString.toString(), false, 0);
+                if (appendUses && wrapInNewLines) {
+                    editList.replace(getStartOffset(), 0, NEW_LINE, false, 0);
+                    wrapInNewLines = false;
+                }
+                resultString = new StringBuilder();
+            }
+        }
+
+        public void resetResultString() {
+            resetPossibleRemoves();
+            resultString = new StringBuilder();
+        }
+
+        public boolean isAppendUses() {
+            return appendUses;
+        }
+
+        public boolean canGroupUses() {
+            return !appendUses || (appendUses && !hasMultipleUses);
+        }
+
+        public void addToRemoveMap(int offset) {
+            if (usedRanges.get(offset) == null) {
+                return;
+            }
+            usesToRemove.put(usedRanges.get(offset).getStart(), usedRanges.get(offset).getEnd());
+        }
+
+        public String getResultString() {
+            return resultString.toString();
+        }
+
+        public void appendToResultString(String insertString) {
+            if (resultString.length() == 0 && !appendUses) {
+                resultString.append(NEW_LINE);
+            }
+            resultString.append(insertString);
+        }
+
+        private boolean shouldAppendLineBefore() {
+            return (startOffset == initialStartOffset && !followingWhitespaceReplaceOffset.contains(initialStartOffset))
+                    || (wrapInNewLines && appendUses);
+        }
+    }
+
     //~ inner classes
     private static class CheckVisitor extends DefaultVisitor {
 
         private List<DeclareStatement> declareStatements = new ArrayList<>();
         private List<NamespaceDeclaration> globalNamespaceDeclarations = new ArrayList<>();
-        private final List<OffsetRange> usedRanges = new LinkedList<>();
+        private final Map<Integer, OffsetRange> usedRanges = new HashMap<>();
         private int globalNamespaceEndOffset = 0;
+        private boolean hasMultipleUses = false;
 
         public List<DeclareStatement> getDeclareStatements() {
             return Collections.unmodifiableList(declareStatements);
@@ -647,12 +981,16 @@ public class FixUsesPerformer {
             return Collections.unmodifiableList(globalNamespaceDeclarations);
         }
 
-        public List<OffsetRange> getUsedRanges() {
-            return Collections.unmodifiableList(usedRanges);
+        public Map<Integer, OffsetRange> getUsedRanges() {
+            return Collections.unmodifiableMap(usedRanges);
         }
 
         public int getGlobalNamespaceEndOffset() {
             return globalNamespaceEndOffset;
+        }
+
+        public boolean hasMultipleUses() {
+            return hasMultipleUses;
         }
 
         @Override
@@ -660,7 +998,17 @@ public class FixUsesPerformer {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            usedRanges.add(new OffsetRange(node.getStartOffset(), node.getEndOffset()));
+            if (node.getParts().size() > 1) {
+                hasMultipleUses = true;
+            }
+            if (node.getParts().get(0) instanceof GroupUseStatementPart) {
+                GroupUseStatementPart part = (GroupUseStatementPart) node.getParts().get(0);
+                if (part.getItems().size() > 0) {
+                    usedRanges.put(part.getItems().get(0).getStartOffset(), new OffsetRange(node.getStartOffset(), node.getEndOffset()));
+                }
+            } else {
+                usedRanges.put(node.getParts().get(0).getStartOffset(), new OffsetRange(node.getStartOffset(), node.getEndOffset()));
+            }
             super.visit(node);
         }
 
@@ -797,7 +1145,7 @@ public class FixUsesPerformer {
         }
 
         public UsePart getSanitizedUsePart() {
-            return new UsePart(hasAlias() ? usePartToSanitization.getTextPart() + AS_CONCAT + alias : usePartToSanitization.getTextPart(), usePartToSanitization.getType(), usePartToSanitization.isFromAliasedElement());
+            return new UsePart(hasAlias() ? usePartToSanitization.getTextPart() + AS_CONCAT + alias : usePartToSanitization.getTextPart(), usePartToSanitization.getType(), usePartToSanitization.getOffset(), usePartToSanitization.isFromAliasedElement());
         }
 
         private boolean hasAlias() {
@@ -890,15 +1238,17 @@ public class FixUsesPerformer {
         private final String textPart;
         private final Type type;
         private final boolean isFromAliasedElement;
+        private final int offset;
 
-        private UsePart(String textPart, Type type, boolean isFromAliasedElement) {
+        private UsePart(String textPart, Type type, int offset, boolean isFromAliasedElement) {
             this.textPart = textPart;
             this.type = type;
+            this.offset = offset;
             this.isFromAliasedElement = isFromAliasedElement;
         }
 
-        private UsePart(String textPart, Type type) {
-            this(textPart, type, false);
+        private UsePart(String textPart, Type type, int offset) {
+            this(textPart, type, offset, false);
         }
 
         public String getTextPart() {
@@ -907,6 +1257,10 @@ public class FixUsesPerformer {
 
         public Type getType() {
             return type;
+        }
+
+        public int getOffset() {
+            return offset;
         }
 
         public String getUsePrefix() {

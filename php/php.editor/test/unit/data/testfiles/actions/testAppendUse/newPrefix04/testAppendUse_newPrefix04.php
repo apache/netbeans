@@ -16,28 +16,42 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */ 
-// test
-?>
+ */
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title></title>
-    </head>
-    <body>
-        <?php 
-            declare(ticks=1);
-        
-            /** 
-             * this is phpDoc block which go after declare
-             * and use statement should go after docBlock
-             */
+namespace A {
 
-use NS1\B;
 
-            new B;
-        ?>
-    </body>
-</html>
+
+
+
+class B {
+        public function x () {
+            return new H;
+        }
+    }
+}
+
+namespace C {
+    class D {}
+    class E {}
+    function F() {}
+    class H {}
+}
+
+namespace G {
+    class H {}
+    function K() {}
+    function L() {}
+    function M() {}
+}
+
+namespace O {
+    const P = 1;
+    const Q = 1;
+    const R = 1;
+}
+
+namespace X {
+    function Y() {}
+    class Z {}
+}

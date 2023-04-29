@@ -29,8 +29,8 @@
     <body>
         <?php
 
-
 use NS1\B;
+
             new B;
         ?>
     </body>

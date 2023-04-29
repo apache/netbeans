@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -70,7 +72,7 @@ import org.openide.util.NbBundle;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 public class FixUsesPerformer {
-
+    private static final Logger LOGGER = Logger.getLogger(FixUsesPerformer.class.getName());
     private static final String NEW_LINE = "\n"; //NOI18N
     private static final char SEMICOLON = ';'; //NOI18N
     private static final char SPACE = ' '; //NOI18N
@@ -122,14 +124,12 @@ public class FixUsesPerformer {
         }
     }
 
-    public void perform()
-    {
+    public void perform() {
         perform(false);
     }
 
-    public void performAppend()
-    {
-        assert this.selections.size() == 1;
+    public void performAppend() {
+        assert this.selections.size() == 1 : "Expected size == 1 but got: " + selections.size();
         perform(true);
     }
 
@@ -146,7 +146,7 @@ public class FixUsesPerformer {
             program.accept(visitor);
         }
 
-        UsesInsertStringHelper usesInsertStringHelper = new UsesInsertStringHelper(visitor.getUsedRanges(), visitor.hasMultipleUses(), append, 0);
+        UsesInsertStringHelper usesInsertStringHelper = new UsesInsertStringHelper(editList, visitor.getUsedRanges(), visitor.hasMultipleUses(), append, 0);
 
         for (int i = 0; i < selections.size(); i++) {
             ItemVariant itemVariant = selections.get(i);
@@ -215,7 +215,7 @@ public class FixUsesPerformer {
                 lastDeclareIndex = j;
             }
             usesInsertStringHelper.namespaceChange(startOffset);
-            insertString(usePartsMap.get(mapKey), usesInsertStringHelper);
+            insertString(usesInsertStringHelper, usePartsMap.get(mapKey));
         }
 
         // it could be safely deleted after because editList offsets have no overlaps with old ones
@@ -400,7 +400,7 @@ public class FixUsesPerformer {
         return result;
     }
 
-    private void insertString(final List<UsePart> useParts, final UsesInsertStringHelper usesInsertStringHelper) {
+    private void insertString(final UsesInsertStringHelper usesInsertStringHelper, final List<UsePart> useParts) {
         if (useParts.isEmpty()) {
             return;
         }
@@ -443,11 +443,11 @@ public class FixUsesPerformer {
         usesInsertStringHelper.setWrapInNewLinesOnAppend(useParts.size() == 1);
         if (options.preferGroupUses() && usesInsertStringHelper.canGroupUses()
                 && options.getPhpVersion().compareTo(PhpVersion.PHP_70) >= 0) {
-            createStringForGroupUse(useParts, indentString, usesInsertStringHelper);
+            createStringForGroupUse(usesInsertStringHelper, useParts, indentString);
         } else if (options.preferMultipleUseStatementsCombined()) {
-            createStringForMultipleUse(useParts, indentString, usesInsertStringHelper);
+            createStringForMultipleUse(usesInsertStringHelper, useParts, indentString);
         } else {
-            createStringForCommonUse(useParts, usesInsertStringHelper);
+            createStringForCommonUse(usesInsertStringHelper, useParts);
         }
 
         if (!usesInsertStringHelper.isAppendUses()) {
@@ -458,7 +458,7 @@ public class FixUsesPerformer {
                     return;
                 }
             } catch (BadLocationException ex) {
-                Exceptions.printStackTrace(ex);
+                LOGGER.log(Level.WARNING, "Incorrect offset for uses replacement: {0}", ex.offsetRequested()); // NOI18N
             }
             this.isEdited = true;
             usesInsertStringHelper.confirmResultString();
@@ -469,7 +469,7 @@ public class FixUsesPerformer {
         }
     }
 
-    private void createStringForGroupUse(List<UsePart> useParts, String indentString, final UsesInsertStringHelper usesInsertStringHelper) {
+    private void createStringForGroupUse(final UsesInsertStringHelper usesInsertStringHelper, List<UsePart> useParts, String indentString) {
         List<UsePart> typeUseParts = new ArrayList<>(useParts.size());
         List<UsePart> constUseParts = new ArrayList<>(useParts.size());
         List<UsePart> functionUseParts = new ArrayList<>(useParts.size());
@@ -491,7 +491,7 @@ public class FixUsesPerformer {
         // types
         boolean isFirstNewType = typeUseParts.size() == 1 && typeUseParts.get(0).getOffset() == 0;
         usesInsertStringHelper.setWrapInNewLinesOnAppend(useParts.size() > 1 && isFirstNewType && putInPSR12Order);
-        createStringForGroupUse(indentString, USE_PREFIX, typeUseParts, usesInsertStringHelper);
+        createStringForGroupUse(usesInsertStringHelper, indentString, USE_PREFIX, typeUseParts);
         if (putInPSR12Order) {
             if (!functionUseParts.isEmpty() && usesInsertStringHelper.getResultString().length() > 0) {
                 usesInsertStringHelper.appendToResultString(NEW_LINE);
@@ -499,7 +499,7 @@ public class FixUsesPerformer {
             // functions
             boolean isFirstNewFunction = functionUseParts.size() == 1 && functionUseParts.get(0).getOffset() == 0;
             usesInsertStringHelper.setWrapInNewLinesOnAppend(isFirstNewFunction);
-            createStringForGroupUse(indentString, USE_FUNCTION_PREFIX, functionUseParts, usesInsertStringHelper);
+            createStringForGroupUse(usesInsertStringHelper, indentString, USE_FUNCTION_PREFIX, functionUseParts);
 
             if (!constUseParts.isEmpty() && usesInsertStringHelper.getResultString().length() > 0) {
                 usesInsertStringHelper.appendToResultString(NEW_LINE);
@@ -507,12 +507,12 @@ public class FixUsesPerformer {
             // constants
             boolean isFirstNewConst = constUseParts.size() == 1 && constUseParts.get(0).getOffset() == 0;
             usesInsertStringHelper.setWrapInNewLinesOnAppend(isFirstNewConst);
-            createStringForGroupUse(indentString, USE_CONST_PREFIX, constUseParts, usesInsertStringHelper);
+            createStringForGroupUse(usesInsertStringHelper, indentString, USE_CONST_PREFIX, constUseParts);
         } else {
             // constants
-            createStringForGroupUse(indentString, USE_CONST_PREFIX, constUseParts, usesInsertStringHelper);
+            createStringForGroupUse(usesInsertStringHelper, indentString, USE_CONST_PREFIX, constUseParts);
             // functions
-            createStringForGroupUse(indentString, USE_FUNCTION_PREFIX, functionUseParts, usesInsertStringHelper);
+            createStringForGroupUse(usesInsertStringHelper, indentString, USE_FUNCTION_PREFIX, functionUseParts);
         }
     }
 
@@ -522,7 +522,7 @@ public class FixUsesPerformer {
                 .collect(Collectors.toList());
     }
 
-    private void createStringForGroupUse(String indentString, String usePrefix, List<UsePart> useParts, final UsesInsertStringHelper usesInsertStringHelper) {
+    private void createStringForGroupUse(final UsesInsertStringHelper usesInsertStringHelper, String indentString, String usePrefix, List<UsePart> useParts) {
         List<UsePart> groupedUseParts = new ArrayList<>(useParts.size());
         List<UsePart> nonGroupedUseParts = new ArrayList<>(useParts.size());
         List<String> prefixes = CodeUtils.getCommonNamespacePrefixes(usePartsToNamespaces(useParts));
@@ -539,21 +539,21 @@ public class FixUsesPerformer {
             if (groupUsePrefix != null) {
                 if (lastGroupUsePrefix != null
                         && !lastGroupUsePrefix.equals(groupUsePrefix)) {
-                    processGroupedUseParts(indentString, usePrefix, lastGroupUsePrefix, groupedUseParts, usesInsertStringHelper);
+                    processGroupedUseParts(usesInsertStringHelper, indentString, usePrefix, lastGroupUsePrefix, groupedUseParts);
                 }
                 lastGroupUsePrefix = groupUsePrefix;
-                processNonGroupedUseParts(indentString, nonGroupedUseParts, usesInsertStringHelper);
+                processNonGroupedUseParts(usesInsertStringHelper, indentString, nonGroupedUseParts);
                 groupedUseParts.add(usePart);
             } else {
-                processGroupedUseParts(indentString, usePrefix, lastGroupUsePrefix, groupedUseParts, usesInsertStringHelper);
+                processGroupedUseParts(usesInsertStringHelper, indentString, usePrefix, lastGroupUsePrefix, groupedUseParts);
                 nonGroupedUseParts.add(usePart);
             }
         }
-        processNonGroupedUseParts(indentString, nonGroupedUseParts, usesInsertStringHelper);
-        processGroupedUseParts(indentString, usePrefix, lastGroupUsePrefix, groupedUseParts, usesInsertStringHelper);
+        processNonGroupedUseParts(usesInsertStringHelper, indentString, nonGroupedUseParts);
+        processGroupedUseParts(usesInsertStringHelper, indentString, usePrefix, lastGroupUsePrefix, groupedUseParts);
     }
 
-    private void processNonGroupedUseParts(String indentString, List<UsePart> nonGroupedUseParts, final UsesInsertStringHelper usesInsertStringHelper) {
+    private void processNonGroupedUseParts(final UsesInsertStringHelper usesInsertStringHelper, String indentString, List<UsePart> nonGroupedUseParts) {
         if (nonGroupedUseParts.isEmpty()) {
             return;
         }
@@ -561,14 +561,14 @@ public class FixUsesPerformer {
         // because there is a probability of recursive changes, so we just fallback
         // to common use insertion in such case to avoid complexity of code
         if (options.preferMultipleUseStatementsCombined() && !usesInsertStringHelper.isAppendUses()) {
-            createStringForMultipleUse(nonGroupedUseParts, indentString, usesInsertStringHelper);
+            createStringForMultipleUse(usesInsertStringHelper, nonGroupedUseParts, indentString);
         } else {
-            createStringForCommonUse(nonGroupedUseParts, usesInsertStringHelper);
+            createStringForCommonUse(usesInsertStringHelper, nonGroupedUseParts);
         }
         nonGroupedUseParts.clear();
     }
 
-    private void processGroupedUseParts(String indentString, String usePrefix, String groupUsePrefix, List<UsePart> groupedUseParts, final UsesInsertStringHelper usesInsertStringHelper) {
+    private void processGroupedUseParts(final UsesInsertStringHelper usesInsertStringHelper, String indentString, String usePrefix, String groupUsePrefix, List<UsePart> groupedUseParts) {
         if (groupedUseParts.isEmpty()) {
             return;
         }
@@ -586,7 +586,7 @@ public class FixUsesPerformer {
             if (groupUsePart.getOffset() == 0) {
                 hasChanges = true;
             } else {
-                firstElementOffset = groupUsePart.getOffset() == 0 || firstElementOffset != 0 && firstElementOffset < groupUsePart.getOffset()
+                firstElementOffset = (groupUsePart.getOffset() == 0 || (firstElementOffset != 0 && firstElementOffset < groupUsePart.getOffset()))
                     ? firstElementOffset : groupUsePart.getOffset();
             }
             if (first) {
@@ -597,20 +597,11 @@ public class FixUsesPerformer {
             insertString.append(indentString).append(groupUsePart.getTextPart().substring(prefixLength));
         }
         insertString.append(NEW_LINE).append(CURLY_CLOSE).append(SEMICOLON);
-        if (usesInsertStringHelper.isAppendUses()) {
-            if (hasChanges) {
-                usesInsertStringHelper.applyDirectChangeAt(firstElementOffset, insertString.toString());
-            } else {
-                usesInsertStringHelper.resetPossibleRemoves();
-                usesInsertStringHelper.moveStartOffsetToTheEnd();
-            }
-        } else {
-            usesInsertStringHelper.appendToResultString(insertString.toString());
-        }
+        usesInsertStringHelper.applyDirectChangeAtOrAppend(firstElementOffset, hasChanges, insertString.toString());
         groupedUseParts.clear();
     }
 
-    private void createStringForMultipleUse(List<UsePart> useParts, String indentString, final UsesInsertStringHelper usesInsertStringHelper) {
+    private void createStringForMultipleUse(final UsesInsertStringHelper usesInsertStringHelper, List<UsePart> useParts, String indentString) {
         if (useParts.isEmpty()) {
             return;
         }
@@ -625,7 +616,7 @@ public class FixUsesPerformer {
             if (usePart.getOffset() == 0) {
                 hasChanges = true;
             } else {
-                firstElementOffset = usePart.getOffset() == 0 || firstElementOffset != 0 && firstElementOffset < usePart.getOffset()
+                firstElementOffset = (usePart.getOffset() == 0 || (firstElementOffset != 0 && firstElementOffset < usePart.getOffset()))
                     ? firstElementOffset : usePart.getOffset();
             }
             if (lastUsePartType != null) {
@@ -633,19 +624,11 @@ public class FixUsesPerformer {
                     insertString.append(COMMA).append(NEW_LINE).append(indentString);
                 } else {
                     insertString.append(SEMICOLON);
-                    if (usesInsertStringHelper.isAppendUses()) {
-                        if (hasChanges) {
-                            usesInsertStringHelper.applyDirectChangeAt(firstElementOffset, insertString.toString());
-                        } else {
-                            usesInsertStringHelper.resetPossibleRemoves();
-                            usesInsertStringHelper.moveStartOffsetToTheEnd();
-                            firstElementOffset = 0;
-                        }
-                    } else {
-                        usesInsertStringHelper.appendToResultString(insertString.toString());
+                    if (!usesInsertStringHelper.applyDirectChangeAtOrAppend(firstElementOffset, hasChanges, insertString.toString())) {
+                        firstElementOffset = 0;
                     }
                     hasChanges = false;
-                    insertString = new StringBuilder();
+                    insertString.setLength(0);
                 }
             }
             if (lastUsePartType != usePart.getType()) {
@@ -667,19 +650,10 @@ public class FixUsesPerformer {
             insertString.append(usePart.getTextPart());
         }
         insertString.append(SEMICOLON);
-        if (usesInsertStringHelper.isAppendUses()) {
-            if (hasChanges) {
-                usesInsertStringHelper.applyDirectChangeAt(firstElementOffset, insertString.toString());
-            } else {
-                usesInsertStringHelper.resetPossibleRemoves();
-                usesInsertStringHelper.moveStartOffsetToTheEnd();
-            }
-        } else {
-            usesInsertStringHelper.appendToResultString(insertString.toString());
-        }
+        usesInsertStringHelper.applyDirectChangeAtOrAppend(firstElementOffset, hasChanges, insertString.toString());
     }
 
-    private void createStringForCommonUse(List<UsePart> useParts, final UsesInsertStringHelper usesInsertStringHelper) {
+    private void createStringForCommonUse(final UsesInsertStringHelper usesInsertStringHelper, List<UsePart> useParts) {
         StringBuilder insertString = new StringBuilder();
         UsePart.Type lastUseType = null;
         boolean hasChanges = false;
@@ -693,7 +667,7 @@ public class FixUsesPerformer {
                         usesInsertStringHelper.confirmResultStringAt(firstElementOffset);
                     } else {
                         usesInsertStringHelper.resetResultString();
-                        usesInsertStringHelper.moveStartOffsetToTheEnd();
+                        usesInsertStringHelper.moveStartOffsetToEnd();
                         firstElementOffset = 0;
                     }
                     hasChanges = false;
@@ -704,7 +678,7 @@ public class FixUsesPerformer {
             }
             // here we check changes in whole type block for PSR12Order
             hasChanges = hasChanges || usePart.getOffset() == 0;
-            firstElementOffset = usePart.getOffset() == 0 || firstElementOffset != 0 && firstElementOffset < usePart.getOffset()
+            firstElementOffset = (usePart.getOffset() == 0 || (firstElementOffset != 0 && firstElementOffset < usePart.getOffset()))
                     ? firstElementOffset : usePart.getOffset();
             lastUseType = usePart.getType();
             typeElementsCount++;
@@ -713,7 +687,7 @@ public class FixUsesPerformer {
             if (usesInsertStringHelper.isAppendUses() && !putInPSR12Order) {
                 if (usesInsertStringHelper.moveEndOffset(usePart.getOffset())) {
                     usesInsertStringHelper.addToPossibleRemoveMap(usePart.getOffset());
-                    usesInsertStringHelper.moveStartOffsetToTheEnd();
+                    usesInsertStringHelper.moveStartOffsetToEnd();
                 }
                 // here we check inline change only
                 hasChanges = usePart.getOffset() == 0;
@@ -727,7 +701,7 @@ public class FixUsesPerformer {
                 usesInsertStringHelper.moveEndOffset(usePart.getOffset());
                 usesInsertStringHelper.appendToResultString(insertString.toString());
             }
-            insertString = new StringBuilder();
+            insertString.setLength(0);
         }
         if (putInPSR12Order && usesInsertStringHelper.isAppendUses()) {
             if (hasChanges) {
@@ -735,7 +709,7 @@ public class FixUsesPerformer {
                 usesInsertStringHelper.confirmResultStringAt(firstElementOffset);
             } else {
                 usesInsertStringHelper.resetResultString();
-                usesInsertStringHelper.moveStartOffsetToTheEnd();
+                usesInsertStringHelper.moveStartOffsetToEnd();
             }
         }
     }
@@ -774,21 +748,24 @@ public class FixUsesPerformer {
         return result;
     }
 
-    private class UsesInsertStringHelper {
+    //~ inner classes
+    private static class UsesInsertStringHelper {
+        private final EditList editList;
         private final Map<Integer, OffsetRange> usedRanges;
         private final boolean appendUses;
         private final boolean hasMultipleUses;
-        private StringBuilder resultString = new StringBuilder();
-        private Set<Integer> followingWhitespaceReplaceOffset = new HashSet<>();
-        private Set<Integer> savedHeadingWhitespaceOffset = new HashSet<>();
+        private final StringBuilder resultString = new StringBuilder();
+        private final Set<Integer> followingWhitespaceReplaceOffset = new HashSet<>();
+        private final Set<Integer> savedHeadingWhitespaceOffset = new HashSet<>();
+        private final Map<Integer, Integer> usesToRemove = new HashMap<>();
+        private final List<Integer> usesToRemoveOffsetTmp = new ArrayList<>();
         private int startOffset;
         private int initialStartOffset;
         private int endOffset;
         private boolean wrapInNewLines = false;
-        private Map<Integer, Integer> usesToRemove = new HashMap<>();
-        private List<Integer> usesToRemoveOffsetTmp = new ArrayList<>();
 
-        UsesInsertStringHelper(Map<Integer, OffsetRange> usedRanges, boolean hasMultipleUses, boolean appendUses, int startOffset) {
+        UsesInsertStringHelper(EditList editList, Map<Integer, OffsetRange> usedRanges, boolean hasMultipleUses, boolean appendUses, int startOffset) {
+            this.editList = editList;
             this.usedRanges = usedRanges;
             this.startOffset = startOffset;
             this.initialStartOffset = startOffset;
@@ -807,7 +784,7 @@ public class FixUsesPerformer {
         }
 
         public Map<Integer, Integer> getUsesToRemove() {
-            return usesToRemove;
+            return Collections.unmodifiableMap(usesToRemove);
         }
 
         public int getStartOffset() {
@@ -824,8 +801,8 @@ public class FixUsesPerformer {
             this.endOffset = startOffset;
         }
 
-        public java.util.Set<Integer> getFollowingWhitespaceReplaceOffsets() {
-            return followingWhitespaceReplaceOffset;
+        public Set<Integer> getFollowingWhitespaceReplaceOffsets() {
+            return Collections.unmodifiableSet(followingWhitespaceReplaceOffset);
         }
 
         public boolean needToSaveHeadingWhitespace(int offset) {
@@ -849,8 +826,23 @@ public class FixUsesPerformer {
             return false;
         }
 
-        public void moveStartOffsetToTheEnd() {
+        public void moveStartOffsetToEnd() {
             this.startOffset = this.endOffset;
+        }
+
+        public boolean applyDirectChangeAtOrAppend(int firstElementOffset, boolean hasChanges, String insertString) {
+            if (isAppendUses()) {
+                if (hasChanges) {
+                    applyDirectChangeAt(firstElementOffset, insertString);
+                } else {
+                    resetPossibleRemoves();
+                    moveStartOffsetToEnd();
+                    return false;
+                }
+            } else {
+                appendToResultString(insertString);
+            }
+            return true;
         }
 
         public void applyDirectChangeAt(int offset, String insertString) {
@@ -862,13 +854,11 @@ public class FixUsesPerformer {
             this.startOffset = this.getUsedRangeOffset(offset).getEnd();
             savedHeadingWhitespaceOffset.add(this.getUsedRangeOffset(offset).getStart());
             // remove new line because of insert on existing place
-            insertString = insertString.substring(1);
-            applyDirectChange(insertString);
+            applyDirectChange(insertString.substring(1));
             this.startOffset = currentStart;
         }
 
-        public void applyDirectChange(String insertString)
-        {
+        public void applyDirectChange(String insertString) {
             for (Integer offset : usesToRemoveOffsetTmp) {
                 addToRemoveMap(offset);
             }
@@ -923,13 +913,13 @@ public class FixUsesPerformer {
                     editList.replace(getStartOffset(), 0, NEW_LINE, false, 0);
                     wrapInNewLines = false;
                 }
-                resultString = new StringBuilder();
+                resultString.setLength(0);
             }
         }
 
         public void resetResultString() {
             resetPossibleRemoves();
-            resultString = new StringBuilder();
+            resultString.setLength(0);
         }
 
         public boolean isAppendUses() {
@@ -964,7 +954,6 @@ public class FixUsesPerformer {
         }
     }
 
-    //~ inner classes
     private static class CheckVisitor extends DefaultVisitor {
 
         private List<DeclareStatement> declareStatements = new ArrayList<>();

@@ -19,11 +19,12 @@
 package org.netbeans.modules.php.editor.verification;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import javax.swing.text.BadLocationException;
+import java.util.Map;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.EditList;
@@ -31,37 +32,30 @@ import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.UiUtils;
+import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
-import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
-import org.netbeans.modules.php.editor.api.elements.ClassElement;
-import org.netbeans.modules.php.editor.api.elements.ConstantElement;
-import org.netbeans.modules.php.editor.api.elements.FullyQualifiedElement;
-import org.netbeans.modules.php.editor.api.elements.FunctionElement;
-import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.UseScope;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
-import org.netbeans.modules.php.editor.NavUtils;
+import org.netbeans.modules.php.editor.actions.FixUsesAction;
+import org.netbeans.modules.php.editor.actions.FixUsesPerformer;
+import org.netbeans.modules.php.editor.actions.ImportData;
+import org.netbeans.modules.php.editor.actions.ImportData.DataItem;
+import org.netbeans.modules.php.editor.actions.ImportData.ItemVariant;
+import org.netbeans.modules.php.editor.actions.ImportDataCreator;
+import org.netbeans.modules.php.editor.actions.UsedNamespaceName;
+import org.netbeans.modules.php.editor.api.AliasedName;
+import org.netbeans.modules.php.editor.indent.CodeStyle;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
-import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
-import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
-import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
-import org.netbeans.modules.php.editor.parser.astnodes.FunctionName;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
-import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
-import org.netbeans.modules.php.editor.parser.astnodes.Scalar.Type;
-import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
-import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
-import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultTreePathVisitor;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -109,7 +103,9 @@ public class AddUseImportSuggestion extends SuggestionRule {
         final BaseDocument doc = context.doc;
         OffsetRange lineBounds = VerificationUtils.createLineBounds(caretOffset, doc);
         if (lineBounds.containsInclusive(caretOffset)) {
-            CheckVisitor checkVisitor = new CheckVisitor(context, doc, lineBounds);
+            CodeStyle codeStyle = CodeStyle.get(context.doc);
+            FixUsesAction.Options fixOptions = new FixUsesAction.Options(codeStyle, context.parserResult.getSnapshot().getSource().getFileObject());
+            CheckVisitor checkVisitor = new CheckVisitor(context, doc, lineBounds, fixOptions);
             phpParseResult.getProgram().accept(checkVisitor);
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
@@ -123,11 +119,13 @@ public class AddUseImportSuggestion extends SuggestionRule {
         private final PHPRuleContext context;
         private final Collection<Hint> hints = new ArrayList<>();
         private final OffsetRange lineBounds;
+        private final FixUsesAction.Options fixOptions;
 
-        CheckVisitor(PHPRuleContext context, BaseDocument doc, OffsetRange lineBounds) {
+        CheckVisitor(PHPRuleContext context, BaseDocument doc, OffsetRange lineBounds, FixUsesAction.Options fixOptions) {
             this.doc = doc;
             this.lineBounds = lineBounds;
             this.context = context;
+            this.fixOptions = fixOptions;
         }
 
         public Collection<Hint> getHints() {
@@ -152,134 +150,81 @@ public class AddUseImportSuggestion extends SuggestionRule {
             if (lineBounds.containsInclusive(node.getStartOffset())) {
                 NamespaceDeclaration currenNamespace = null;
                 List<ASTNode> path = getPath();
-                ASTNode parentNode = path.get(0);
                 for (ASTNode oneNode : path) {
                     if (oneNode instanceof NamespaceDeclaration) {
                         currenNamespace = (NamespaceDeclaration) oneNode;
                     }
                 }
-                if (isFunctionName(parentNode)) {
-                    final QualifiedName nodeName = QualifiedName.create(node);
-                    if (!nodeName.getKind().isFullyQualified()) {
-                        Set<FunctionElement> functions = context.getIndex().getFunctions(NameKind.exact(nodeName));
-                        for (FunctionElement indexedFunction : functions) {
-                            addImportHints(indexedFunction, nodeName, currenNamespace, node);
-                        }
-                    }
-                    super.visit(node);
-                } else if (isClassName(parentNode)) {
-                    final QualifiedName nodeName = QualifiedName.create(node);
-                    if (!nodeName.getKind().isFullyQualified()) {
-                        Set<ClassElement> classes = context.getIndex().getClasses(NameKind.exact(nodeName));
-                        for (ClassElement indexedClass : classes) {
-                            addImportHints(indexedClass, nodeName, currenNamespace, node);
-                        }
-                    }
-                    super.visit(node);
-                } else {
-                    final QualifiedName nodeName = QualifiedName.create(node);
-                    if (!nodeName.getKind().isFullyQualified()) {
-                        Set<ConstantElement> constants = context.getIndex().getConstants(NameKind.exact(nodeName));
-                        for (ConstantElement cnst : constants) {
-                            addImportHints(cnst, nodeName, currenNamespace, node);
-                        }
-                    }
-                    super.visit(node);
-                }
-            }
-        }
-
-        @Override
-        public void visit(Scalar node) {
-            if (CancelSupport.getDefault().isCancelled()) {
-                return;
-            }
-            if (lineBounds.containsInclusive(node.getStartOffset())) {
-                NamespaceDeclaration currenNamespace = null;
-                for (ASTNode oneNode : getPath()) {
-                    if (oneNode instanceof NamespaceDeclaration) {
-                        currenNamespace = (NamespaceDeclaration) oneNode;
-                    }
-                }
-                String stringValue = node.getStringValue();
-                if (stringValue != null && stringValue.trim().length() > 0 && node.getScalarType() == Type.STRING && !NavUtils.isQuoted(stringValue)) {
-                    final QualifiedName nodeName = QualifiedName.create(stringValue);
-                    if (!nodeName.getKind().isFullyQualified()) {
-                        Set<ConstantElement> constants = context.getIndex().getConstants(NameKind.exact(nodeName));
-                        for (ConstantElement cnst : constants) {
-                            addImportHints(cnst, nodeName, currenNamespace, node);
-                        }
-                    }
-                }
-            }
-            super.visit(node);
-        }
-
-        private void addImportHints(FullyQualifiedElement idxElement, final QualifiedName nodeName, NamespaceDeclaration currenNamespace, ASTNode node) {
-            if (CancelSupport.getDefault().isCancelled()) {
-                return;
-            }
-            final QualifiedName indexedName = idxElement.getFullyQualifiedName(); //getQualifiedName() used before
-            QualifiedName importName = QualifiedName.getPrefix(indexedName, nodeName, true);
-
-            if (importName != null && context.fileScope != null) {
-                final String retvalStr = importName.toString();
                 NamespaceScope currentScope = ModelUtils.getNamespaceScope(currenNamespace, context.fileScope);
-
-                if (currentScope != null) {
-                    // #258480 - check if element is not from the current namespace
-                    if (indexedName.getNamespaceName().equals(currentScope.getNamespaceName().toString())) {
-                        return;
-                    }
-
-                    Collection<? extends UseScope> declaredUses = currentScope.getAllDeclaredSingleUses();
-                    List<? extends UseScope> suitableUses = ModelUtils.filter(declaredUses, new ModelUtils.ElementFilter<UseScope>() {
-
-                        @Override
-                        public boolean isAccepted(UseScope element) {
-                            return element.getName().equalsIgnoreCase(retvalStr);
+                Map<String, List<UsedNamespaceName>> names = new HashMap<>();
+                final UsedNamespaceName usedName = new UsedNamespaceName(node, currentScope);
+                UseScope suitableUse = ModelUtils.getFirst(ModelUtils.filter(currentScope.getAllDeclaredSingleUses(), new ModelUtils.ElementFilter<UseScope>() {
+                    @Override
+                    public boolean isAccepted(UseScope element) {
+                        AliasedName aliasName = element.getAliasedName();
+                        if (aliasName != null) {
+                            if (usedName.getName().equals(aliasName.getAliasName())) {
+                                return true;
+                            }
+                        } else {
+                            if (element.getName().endsWith(usedName.getName())) {
+                                return true;
+                            }
                         }
-                    });
-                    if (suitableUses.isEmpty()) {
-                        if (idxElement instanceof ClassElement || !nodeName.getKind().isUnqualified()) {
-                            AddImportFix importFix = new AddImportFix(doc, currentScope, importName);
-                            hints.add(new Hint(AddUseImportSuggestion.this,
+                        return false;
+                    }
+                }));
+                if (suitableUse != null) {
+                    return;
+                }
+                names.put(usedName.getName(), Arrays.asList(usedName));
+                ImportData importData = new ImportDataCreator(names, context.getIndex(), currentScope.getQualifiedName(), this.fixOptions).create();
+                for (DataItem di : importData.getItems()) {
+                    if (!di.getDefaultVariant().canBeUsed()) {
+                        continue;
+                    }
+                    QualifiedName idxName = QualifiedName.create(di.getDefaultVariant().getName());
+                    // check if the name isn't shodowed by other wider namespace
+                    QualifiedName testSuffix = QualifiedName.getSuffix(idxName, QualifiedName.create(currentScope), false);
+                    if (testSuffix != null && testSuffix.toString().equals(usedName.getName())) {
+                        continue;
+                    }
+                    QualifiedName importName = QualifiedName.getPrefix(idxName, QualifiedName.create(usedName.getName()), true);
+                    List<ItemVariant> selection = Arrays.asList(new ItemVariant(
+                        importName.toString(), ItemVariant.UsagePolicy.CAN_BE_USED, di.getDefaultVariant().getType(), di.getDefaultVariant().isFromAliasedElement()));
+                    AddImportFix importFix = new AddImportFix(context.parserResult, importData, selection, fixOptions);
+                    hints.add(new Hint(AddUseImportSuggestion.this,
                                     importFix.getDescription(),
                                     context.parserResult.getSnapshot().getSource().getFileObject(),
                                     new OffsetRange(node.getStartOffset(), node.getEndOffset()),
                                     Collections.<HintFix>singletonList(importFix), 500));
-                        }
 
-                        QualifiedName name = VariousUtils.getPreferredName(indexedName, currentScope);
-                        if (name != null) {
-                            ChangeNameFix changeNameFix = new ChangeNameFix(doc, node, currentScope, name, nodeName);
-                            hints.add(new Hint(AddUseImportSuggestion.this,
-                                    changeNameFix.getDescription(),
-                                    context.parserResult.getSnapshot().getSource().getFileObject(),
-                                    new OffsetRange(node.getStartOffset(), node.getEndOffset()),
-                                    Collections.<HintFix>singletonList(changeNameFix), 500));
-                        }
+                    QualifiedName name = VariousUtils.getPreferredName(idxName, currentScope);
+                    if (name != null) {
+                        ChangeNameFix changeNameFix = new ChangeNameFix(doc, node, currentScope, name, QualifiedName.create(usedName.getName()));
+                        hints.add(new Hint(AddUseImportSuggestion.this,
+                                changeNameFix.getDescription(),
+                                context.parserResult.getSnapshot().getSource().getFileObject(),
+                                new OffsetRange(node.getStartOffset(), node.getEndOffset()),
+                                Collections.<HintFix>singletonList(changeNameFix), 500));
                     }
-
                 }
+                super.visit(node);
             }
-
         }
     }
 
-    static class AddImportFix implements HintFix {
-        private final BaseDocument doc;
-        private final NamespaceScope scope;
-        private final QualifiedName importName;
+    private static class AddImportFix implements HintFix {
+        private final ParserResult parserResult;
+        private final ImportData importData;
+        private final List<ItemVariant> selections;
+        private final FixUsesAction.Options fixOptions;
 
-        public AddImportFix(BaseDocument doc, NamespaceScope scope, QualifiedName importName) {
-            this.doc = doc;
-            this.importName = importName;
-            this.scope = scope;
-        }
-
-        OffsetRange getOffsetRange() {
-            return new OffsetRange(getOffset(), getOffset() + getGeneratedCode().length());
+        public AddImportFix(ParserResult parserResult, ImportData importData, List<ItemVariant> selections, FixUsesAction.Options fixOptions) {
+            this.parserResult = parserResult;
+            this.importData = importData;
+            this.selections = selections;
+            this.fixOptions = fixOptions;
         }
 
         @Override
@@ -298,40 +243,13 @@ public class AddUseImportSuggestion extends SuggestionRule {
             "AddUseImportFix_Description=Generate \"{0}\""
         })
         public String getDescription() {
-            return Bundle.AddUseImportFix_Description(getGeneratedCode());
+            String desc = "use " + selections.get(0).getName() + ';'; //NOI18N
+            return Bundle.AddUseImportFix_Description(desc);
         }
 
         @Override
         public void implement() throws Exception {
-            int templateOffset = getOffset();
-            EditList edits = new EditList(doc);
-            edits.replace(templateOffset, 0, "\n" + getGeneratedCode(), true, 0); //NOI18N
-            edits.apply();
-            UiUtils.open(scope.getFileObject(), LineDocumentUtils.getLineStart(doc, getOffsetRange().getEnd()));
-        }
-
-        private String getGeneratedCode() {
-            return "use " + importName.toString() + ";"; //NOI18N
-            }
-
-        private int getOffset() {
-            try {
-                return LineDocumentUtils.getLineEnd(doc, getReferenceElement().getOffset());
-            } catch (BadLocationException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            return 0;
-        }
-
-        private ModelElement getReferenceElement() {
-            ModelElement offsetElement = null;
-            Collection<? extends UseScope> declaredUses = scope.getAllDeclaredSingleUses();
-            for (UseScope useElement : declaredUses) {
-                if (offsetElement == null || offsetElement.getOffset() < useElement.getOffset()) {
-                    offsetElement = useElement;
-                }
-            }
-            return (offsetElement != null) ? offsetElement : scope;
+            new FixUsesPerformer((PHPParseResult) parserResult, importData, selections, false, false, fixOptions).performAppend();
         }
     }
 
@@ -390,14 +308,5 @@ public class AddUseImportSuggestion extends SuggestionRule {
         private int getOffset() {
             return node.getStartOffset();
         }
-    }
-
-    private static boolean isClassName(ASTNode parentNode) {
-        return parentNode instanceof ClassName || parentNode instanceof FormalParameter || parentNode instanceof StaticConstantAccess
-                || parentNode instanceof StaticMethodInvocation || parentNode instanceof StaticFieldAccess || parentNode instanceof ClassDeclaration;
-    }
-
-    private static boolean isFunctionName(ASTNode parentNode) {
-        return parentNode instanceof FunctionName;
     }
 }

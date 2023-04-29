@@ -2,5 +2,5 @@ $x = date2();^
      -----
 HINT:Fix Name To "\TestMe\date2"
 FIX:Fix Name To "\TestMe\date2"
-HINT:Fix Name To "\TestMe\date2"
-FIX:Fix Name To "\TestMe\date2"
+HINT:Generate "use TestMe\date2;"
+FIX:Generate "use TestMe\date2;"

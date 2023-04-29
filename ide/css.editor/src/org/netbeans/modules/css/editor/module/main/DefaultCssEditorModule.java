@@ -105,7 +105,8 @@ public class DefaultCssEditorModule extends CssEditorModule {
         module("alignment", "http://www.w3.org/TR/css-align-3"), //NOI18N
         module("fragmentation", "http://www.w3.org/TR/css-break-3"), //NOI18N
         module("positioning", "http://www.w3.org/TR/css-position-3"), //NOI18N
-        module("sizing", "http://www.w3.org/TR/css-sizing-3") //NOI18N
+        module("sizing", "http://www.w3.org/TR/css-sizing-3"), //NOI18N
+        module("other", null) //NOI18N
     };
     private static Map<String, PropertyDefinition> propertyDescriptors;
 

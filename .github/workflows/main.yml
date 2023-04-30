@@ -128,7 +128,7 @@ jobs:
           echo "org.gradle.java.home=$JAVA_HOME_11_X64" >> ~/.gradle/gradle.properties
 
       - name: Build NetBeans
-        run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG build-nozip
+        run: ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG build-nozip
 
       - name: Prepare Artifact
         if: ${{ matrix.java == '11' }}
@@ -145,7 +145,7 @@ jobs:
           
       - name: Create Dev Build
         if: ${{ matrix.java == '11' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
-        run: ant -quiet zip-cluster-config -Dcluster.config=$CLUSTER_CONFIG
+        run: ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG zip-cluster-config
 
       - name: Upload Dev Build
         if: ${{ matrix.java == '11' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
@@ -175,15 +175,15 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
           restore-keys: ${{ runner.os }}-
       - name: Download External Binaries
-        run: ant download-all-extbins
+        run: ant $OPTS download-all-extbins
       - name: Build NetBeans with nb-javac
-        run: ant build -Dnbjavac.class.path=java/libs.javacapi/external/*.jar
+        run: ant $OPTS build -Dnbjavac.class.path=java/libs.javacapi/external/*.jar
       - name: Setup Xvfb
         run: |
           echo "DISPLAY=:99.0" >> $GITHUB_ENV
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
       - name: Test with Commit Validation
-        run: ant commit-validation -Dnbjavac.class.path=java/libs.javacapi/external/*.jar
+        run: ant $OPTS commit-validation -Dnbjavac.class.path=java/libs.javacapi/external/*.jar
 
 # secondary jobs
   linux-commit-validation:
@@ -262,7 +262,7 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           nbbuild/travis/check-line-endings.sh
-          ant -quiet build-source-config
+          ant $OPTS -quiet build-source-config
           mkdir scratch && cd scratch
           unzip -qq ../nbbuild/build/release-src*
           ant $OPTS -quiet rat -Drat-report.haltonfailure=true
@@ -995,9 +995,9 @@ jobs:
 
       - name: platform build from platform-src zip
         run: |
-          ant -quiet build-source-config -Dcluster.config=platform
+          ant $OPTS -quiet build-source-config -Dcluster.config=platform
           mkdir tmpplatform && cd tmpplatform && unzip -qq ../nbbuild/build/platform-src*
-          ant build -Dcluster.config=platform
+          ant $OPTS build -Dcluster.config=platform
 
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v3
@@ -1010,7 +1010,7 @@ jobs:
         run: |
           cp -r platform/ _platform/ && cp -r harness/ _harness/ && cp nbbuild/build/nbantext.jar .
           cp -r nbbuild/netbeans/platform/ _nb_platform/ && cp -r nbbuild/netbeans/harness/ _nb_harness/
-          ant -quiet clean && rm -Rf platform/ && rm -Rf harness/
+          ant $OPTS -quiet clean && rm -Rf platform/ && rm -Rf harness/
           mkdir nbbuild/build && mkdir nbbuild/netbeans
           mv _platform/ platform/ && mv _harness/ harness/ && mv nbantext.jar nbbuild/build/
           mv _nb_platform/ nbbuild/netbeans/platform/ && mv _nb_harness/ nbbuild/netbeans/harness/
@@ -2424,12 +2424,12 @@ jobs:
       - name: build-vscode-ext
         run: |
           cd java/java.lsp.server
-          ant build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*
+          ant $OPTS build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*
 
       - name: test-vscode-ext
         run: |
           cd java/java.lsp.server
-          ant test-vscode-ext
+          ant $OPTS test-vscode-ext
  
 
 # last job depends on everything so that it is forced to run last even if a long job fails early

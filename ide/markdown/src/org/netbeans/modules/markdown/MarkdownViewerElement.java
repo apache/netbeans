@@ -61,7 +61,7 @@ import org.openide.windows.TopComponent;
         mimeType = "text/x-markdown",
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "MarkdownViewer",
-        position = 900
+        position = 2000
 )
 @Messages("LBL_MarkdownViewer=Preview")
 public class MarkdownViewerElement implements MultiViewElement {

@@ -150,7 +150,7 @@
 
     <property name="metabuild.releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
     <!-- get all json info we have on apache gitbox  -->
-    <condition property="metabuild.jsonurl" value="https://gitbox.apache.org/repos/asf?p=netbeans-jenkins-lib.git;a=blob_plain;f=meta/netbeansrelease.json">
+    <condition property="metabuild.jsonurl" value="https://netbeans.apache.org/nbbuild/netbeansrelease.json">
         <not>
             <isset property="metabuild.jsonurl"/>
         </not>

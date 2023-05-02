@@ -1083,13 +1083,36 @@ class NbProjectInfoBuilder {
                         String langId = lang.toLowerCase();
                         Task compileTask = project.getTasks().findByName(sourceSet.getCompileTaskName(langId));
                         if (compileTask != null) {
-                            model.getInfo().put(
-                                    propBase + lang + "_source_compatibility",
-                                    compileTask.property("sourceCompatibility"));
-                            model.getInfo().put(
-                                    propBase + lang + "_target_compatibility",
-                                    compileTask.property("targetCompatibility"));
+                            Object o = null;
 
+                            // try to get from Kotlin options; breaking change in kotlinCompile 1.7+ does not derive from
+                            // SourceTask and does not have source/targetCompatibility. It reportedly ignores those options
+                            // even before 1.7
+                            if ("KOTLIN".equals(lang)) {
+                                o = getProperty(compileTask, "kotlinOptions", "languageVersion");
+                            } 
+                            if (o == null && compileTask.hasProperty("sourceCompatibility")) {
+                                o = getProperty(compileTask, "sourceCompatibility");
+                            }
+                            if (o != null) {
+                                model.getInfo().put(
+                                    propBase + lang + "_source_compatibility",
+                                    o.toString()
+                                );
+                            }
+                            o = null;
+                            if ("KOTLIN".equals(lang)) {
+                                o = getProperty(compileTask, "kotlinOptions", "jvmTarget");
+                            } 
+                            if (o == null && compileTask.hasProperty("targetCompatibility")) {
+                                o = getProperty(compileTask, "targetCompatibility");
+                            }
+                            if (o != null) {
+                                model.getInfo().put(
+                                        propBase + lang + "_target_compatibility",
+                                        o.toString()
+                                );
+                            }
                             List<String> compilerArgs;
 
                             compilerArgs = (List<String>) getProperty(compileTask, "options", "allCompilerArgs");

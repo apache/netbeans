@@ -15,6 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 606A88E1D15AA8DEBD97CB5DFDF788DDC6FB5B5E com.vladsch.flexmark:flexmark:0.62.2
+3AA453B87258A448DFD8D01010D94E3A2832884D com.vladsch.flexmark:flexmark-ext-anchorlink:0.62.2
+C1F1B1909BFB6C0F4301A9227745A3AB33B0D08F com.vladsch.flexmark:flexmark-ext-emoji:0.62.2
+C95068A1450835C2695750ECE82C996A7B57BBD3 com.vladsch.flexmark:flexmark-ext-tables:0.62.2
 55631AD20431C090D404C3945B692EACEEDB6FC5 com.vladsch.flexmark:flexmark-html2md-converter:0.62.2
 C0B998D5570295F104A4FFEE4F8EEC305D7DB327 com.vladsch.flexmark:flexmark-util-ast:0.62.2
 22C85EFB51D4AA25540B8B0D880BE7AD4A8BAEC1 com.vladsch.flexmark:flexmark-util-builder:0.62.2
@@ -26,6 +29,4 @@ AE5AFA76A669E06B3A65255C2ED775EDE5CD3EB1 com.vladsch.flexmark:flexmark-util-depe
 18133DD81887C512E2F56FEB3C14A8A1210F30EA com.vladsch.flexmark:flexmark-util-misc:0.62.2
 87AF2803A63B5B07CC42D9C1D98F8ECD4F83FBCC com.vladsch.flexmark:flexmark-util-sequence:0.62.2
 CA49BD94860A5CCEDD82BDE96ECE831F16C66FF1 com.vladsch.flexmark:flexmark-util-visitor:0.62.2
-C1F1B1909BFB6C0F4301A9227745A3AB33B0D08F com.vladsch.flexmark:flexmark-ext-emoji:0.62.2
-3AA453B87258A448DFD8D01010D94E3A2832884D com.vladsch.flexmark:flexmark-ext-anchorlink:0.62.2
 36DA09A8F68484523FA2AAA100399D612B247D67 org.jsoup:jsoup:1.11.3

@@ -86,6 +86,10 @@
                 <binary-origin>external/flexmark-ext-anchorlink-0.62.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
+                <runtime-relative-path>ext/flexmark-ext-tables-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-ext-tables-0.62.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
                 <runtime-relative-path>ext/flexmark-0.62.2.jar</runtime-relative-path>
                 <binary-origin>external/flexmark-0.62.2.jar</binary-origin>
             </class-path-extension>

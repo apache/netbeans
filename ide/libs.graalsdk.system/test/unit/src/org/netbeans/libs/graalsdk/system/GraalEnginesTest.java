@@ -16,32 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.libs.graaljs;
+package org.netbeans.libs.graalsdk.system;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.junit.NbModuleSuite;
-import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.openide.util.Lookup;
 
-public final class GraalJSTest extends NbTestCase {
-    public GraalJSTest(String name) {
-        super(name);
-    }
-
+/**
+ *
+ * @author sdedic
+ */
+public class GraalEnginesTest {
     public static Test suite() throws Exception {
         NbModuleSuite.Configuration cfg = NbModuleSuite.emptyConfiguration().
             clusters("platform|webcommon|ide").
             honorAutoloadEager(true).
             gui(false);
-        return cfg.addTest(GraalJSTest2.class).suite();
+        return cfg.addTest(GraalEnginesTest.S.class).suite();
     }
 
     public static class S extends TestSuite {
         public S() throws Exception {
             ClassLoader parent = Lookup.getDefault().lookup(ClassLoader.class);
-            Class c = parent.loadClass("org.netbeans.libs.graaljs.GraalJSTest2");
+            URL u = getClass().getProtectionDomain().getCodeSource().getLocation();
+            ClassLoader ldr = new URLClassLoader(new URL[] { u }, parent);
+            Class c = ldr.loadClass("org.netbeans.libs.graalsdk.system.GraalEnginesTest2");
             addTest(new NbTestSuite(c));
         }
     }

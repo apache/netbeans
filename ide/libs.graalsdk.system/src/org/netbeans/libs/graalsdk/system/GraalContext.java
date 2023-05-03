@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.libs.graalsdk.impl;
+package org.netbeans.libs.graalsdk.system;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -86,11 +86,7 @@ final class GraalContext implements ScriptContext {
             } else {
                 b.allowHostAccess(SANDBOX);
             }
-            // allow hosts access to all available classes
-            b.hostClassLoader(Thread.currentThread().getContextClassLoader());
-            // but ensure the context classsloader during build() is the 'correct one' - see
-            // Context javadocs.
-            ctx = executeWithClassLoader(() -> b.build(), languagesClassLoader);
+            ctx = b.build();
             if (globals != null) {
                 for (String k : globals.keySet()) {
                     if (!ALLOW_ALL_ACCESS.equals(k)) {

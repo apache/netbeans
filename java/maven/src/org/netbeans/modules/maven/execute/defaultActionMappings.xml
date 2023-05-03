@@ -104,6 +104,7 @@
         <properties>
             <test>DummyToSkipUnitTests</test>
             <failIfNoTests>false</failIfNoTests>
+            <surefire.failIfNoSpecifiedTests>false</surefire.failIfNoSpecifiedTests>
             <it.test>${packageClassName}</it.test>
         </properties>
     </action>
@@ -209,6 +210,7 @@
         <properties>
             <test>DummyToSkipUnitTests</test>
             <failIfNoTests>false</failIfNoTests>
+            <surefire.failIfNoSpecifiedTests>false</surefire.failIfNoSpecifiedTests>
             <it.test>${packageClassName}</it.test>
             <forkMode>once</forkMode>
             <maven.failsafe.debug>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</maven.failsafe.debug>

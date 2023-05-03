@@ -28,6 +28,7 @@ import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
+import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
@@ -72,6 +73,31 @@ public class DefaultReplaceTokenProviderTest extends NbTestCase {
         assertEquals(null, ActionProviderImpl.replacements(p, ActionProvider.COMMAND_RUN, Lookup.EMPTY).get(DefaultReplaceTokenProvider.CLASSNAME));
         assertEquals(null, ActionProviderImpl.replacements(p, ActionProvider.COMMAND_RUN, Lookup.EMPTY).get(DefaultReplaceTokenProvider.CLASSNAME_EXT));
 
+    }
+    
+    public void testTestNotIT_GH4587() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
+                + "<groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
+        TestFileUtils.writeFile(d, "src/test/java/p1/FirstTest.java", "package p1; class FirstTest {}");
+        TestFileUtils.writeFile(d, "src/test/java/p1/FirstIT.java", "package p1; class FirstIT {}");
+        Project p = ProjectManager.getDefault().findProject(d);
+        DefaultReplaceTokenProvider instance = new DefaultReplaceTokenProvider(p);
+        FileObject file = d.getFileObject("src/test/java/p1/FirstTest.java");
+        String converted = instance.convert(ActionProvider.COMMAND_TEST_SINGLE, Lookups.singleton(file));
+        assertNull(converted);
+        converted = instance.convert(ActionProvider.COMMAND_DEBUG_TEST_SINGLE, Lookups.singleton(file));
+        assertNull(converted);
+        DataObject dob = DataObject.find(file);
+        converted = instance.convert(ActionProvider.COMMAND_TEST_SINGLE, Lookups.singleton(dob));
+        assertNull(converted);
+        converted = instance.convert(ActionProvider.COMMAND_DEBUG_TEST_SINGLE, Lookups.singleton(dob));
+        assertNull(converted);
+        file = d.getFileObject("src/test/java/p1/FirstIT.java");
+        converted = instance.convert(ActionProvider.COMMAND_TEST_SINGLE, Lookups.singleton(file));
+        assertEquals(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE, converted);
+        dob = DataObject.find(file);
+        converted = instance.convert(ActionProvider.COMMAND_TEST_SINGLE, Lookups.singleton(dob));
+        assertEquals(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE, converted);
     }
 
     public void testNgSingle() throws Exception {

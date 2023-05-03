@@ -19,12 +19,16 @@
 package org.netbeans.modules.markdown;
 
 import com.vladsch.flexmark.ext.anchorlink.AnchorLinkExtension;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.awt.BorderLayout;
+import java.awt.Rectangle;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +39,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.event.HyperlinkEvent;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -76,10 +84,28 @@ public class MarkdownViewerElement implements MultiViewElement {
     private transient MultiViewElementCallback callback;
 
     static final DataHolder OPTIONS = new MutableDataSet()
-            .set(Parser.EXTENSIONS, Arrays.asList(AnchorLinkExtension.create()))
+            .set(Parser.EXTENSIONS, Arrays.asList(
+                    AnchorLinkExtension.create(),
+                    TablesExtension.create()
+            ))
+
+            .set(HtmlRenderer.INDENT_SIZE, 2)
+            .set(HtmlRenderer.RENDER_HEADER_ID, true)
+            .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "")
+
             // JEditorPane search for the name attribute
             .set(AnchorLinkExtension.ANCHORLINKS_SET_NAME, true)
             .set(AnchorLinkExtension.ANCHORLINKS_SET_ID, false)
+            .set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "")
+            .set(AnchorLinkExtension.ANCHORLINKS_TEXT_PREFIX, "")
+
+            // Make the table generation SWING Friendly
+            .set(TablesExtension.COLUMN_SPANS, false)
+            .set(TablesExtension.MIN_HEADER_ROWS, 1)
+            .set(TablesExtension.MAX_HEADER_ROWS, 1)
+            .set(TablesExtension.APPEND_MISSING_COLUMNS, true)
+            .set(TablesExtension.DISCARD_EXTRA_COLUMNS, true)
+            .set(TablesExtension.HEADER_SEPARATOR_COLUMN_MATCH, true)
             .toImmutable();
 
     final Parser parser = Parser.builder(OPTIONS).build();
@@ -181,10 +207,19 @@ public class MarkdownViewerElement implements MultiViewElement {
         if ((fo != null) && (viewer != null)) {
             try {
                 String html = renderer.render(parser.parse(fo.asText("UTF-8")));
-                viewer.setText(html);
+                Reader htmlReader = new StringReader(html);
+                HTMLEditorKit kit = new HTMLEditorKit();
+                HTMLDocument doc = (HTMLDocument) viewer.getDocument();
+                if (doc == null) {
+                    doc = (HTMLDocument) kit.createDefaultDocument();
+                }
+                doc.remove(0, doc.getLength());
+                kit.read(htmlReader, doc, 0);
             } catch (IOException ex) {
                 viewer.setText(Bundle.TXT_MarkdownViewerElement_Error());
                 LOG.log(Level.WARNING, "Could not parse markdown!", ex);
+            } catch (BadLocationException ex) {
+                viewer.setText(Bundle.TXT_MarkdownViewerElement_Error());
             }
         }
     }

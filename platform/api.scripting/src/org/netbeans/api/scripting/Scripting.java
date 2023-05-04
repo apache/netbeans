@@ -162,9 +162,6 @@ public final class Scripting {
                     it.set(new GraalJSWrapperFactory(f));
                 }
             }
-            // reverse the list: as later engines override the earlier ones in MIME mappings, so
-            // they should be enumerated first, to give them higher precedence
-            Collections.reverse(all);
             return all;
         }
 

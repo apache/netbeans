@@ -126,8 +126,6 @@ public class ConsistencyVerifier {
                 if (autoload) {
                     // discard dependency on JDK: will allow other modules, dependent on these autoloads, to enable
                     man.remove(new Attributes.Name("OpenIDE-Module-Java-Dependencies"));
-                    // ignore package dependencies
-                    man.remove(new Attributes.Name("OpenIDE-Module-Package-Dependencies"));
                 }
                 Module mod = mgr.createFixed(m, null, ClassLoader.getSystemClassLoader(), autoload, eager);
                 mods.add(mod);

@@ -18,31 +18,100 @@
  */
 package org.netbeans.libs.graaljs;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
 import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.graalvm.polyglot.Context;
+import org.junit.AssumptionViolatedException;
+import org.netbeans.api.scripting.Scripting;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.junit.NbTestSuite;
-import org.openide.util.Lookup;
+import org.netbeans.libs.graalsdk.JavaScriptEnginesTest;
 
 public final class GraalJSTest extends NbTestCase {
     public GraalJSTest(String name) {
         super(name);
     }
 
-    public static Test suite() throws Exception {
-        NbModuleSuite.Configuration cfg = NbModuleSuite.emptyConfiguration().
-            clusters("platform|webcommon|ide").
+    public static Test suite() {
+        return NbModuleSuite.createConfiguration(GraalJSTest.class).
             honorAutoloadEager(true).
-            gui(false);
-        return cfg.addTest(GraalJSTest2.class).suite();
+            gui(false).
+            suite();
     }
 
-    public static class S extends TestSuite {
-        public S() throws Exception {
-            ClassLoader parent = Lookup.getDefault().lookup(ClassLoader.class);
-            Class c = parent.loadClass("org.netbeans.libs.graaljs.GraalJSTest2");
-            addTest(new NbTestSuite(c));
+
+    public void testDirectEvaluationOfGraalJS() {
+        Context ctx = Context.newBuilder("js").build();
+        int fourtyTwo = ctx.eval("js", "6 * 7").asInt();
+        assertEquals(42, fourtyTwo);
+    }
+
+    public void testJavaScriptEngineIsGraalJS() {
+        ScriptEngineManager m = Scripting.createManager();
+        StringBuilder sb = new StringBuilder();
+        for (ScriptEngineFactory f : m.getEngineFactories()) {
+            sb.append("\nf: ").append(f.getEngineName()).append(" ext: ").append(f.getMimeTypes());
         }
+        ScriptEngine text = m.getEngineByMimeType("text/javascript");
+        assertEquals(sb.toString(), "GraalVM:js", text.getFactory().getEngineName());
+
+        ScriptEngine app = m.getEngineByMimeType("application/javascript");
+        assertEquals(sb.toString(), "GraalVM:js", app.getFactory().getEngineName());
+    }
+
+    public void testDeleteASymbol() throws Exception {
+        ScriptEngine eng = Scripting.createManager().getEngineByName("GraalVM:js");
+        Object function = eng.eval("typeof isFinite");
+        eng.eval("delete isFinite");
+        Object undefined = eng.eval("typeof isFinite");
+
+        assertEquals("Defined at first", "function", function);
+        assertEquals("Deleted later", "undefined", undefined);
+    }
+
+    public void testAllJavaScriptEnginesTest() throws Throwable {
+        StringWriter w = new StringWriter();
+        PrintWriter pw = new PrintWriter(w);
+        boolean err = false;
+        Method[] testMethods = JavaScriptEnginesTest.class.getMethods();
+        for (Method m : testMethods) {
+            final org.junit.Test ann = m.getAnnotation(org.junit.Test.class);
+            if (ann == null) {
+                continue;
+            }
+            ScriptEngine eng = Scripting.createManager().getEngineByName("GraalVM:js");
+            err |= invokeTestMethod(eng, false, pw, m, ann);
+            ScriptEngine engAllow = Scripting.newBuilder().allowAllAccess(true).build().getEngineByName("GraalVM:js");
+            err |= invokeTestMethod(engAllow, true, pw, m, ann);
+        }
+        pw.flush();
+        if (err) {
+            fail(w.toString());
+        }
+    }
+
+    private static boolean invokeTestMethod(ScriptEngine eng, final boolean allowAllAccess, PrintWriter pw, Method m, final org.junit.Test ann) throws IllegalAccessException, IllegalArgumentException {
+        JavaScriptEnginesTest instance = new JavaScriptEnginesTest("GraalVM:js", null, null, eng, allowAllAccess);
+        try {
+            pw.println("Invoking " + m.getName() + " allowAllAccess: " + allowAllAccess);
+            m.invoke(instance);
+        } catch (InvocationTargetException invEx) {
+            if (invEx.getCause() instanceof AssumptionViolatedException) {
+                return false;
+            }
+            if (ann.expected().equals(invEx.getCause().getClass())) {
+                pw.println("Expected exception received " + ann.expected().getName());
+            } else {
+                invEx.getCause().printStackTrace(pw);
+                return true;
+            }
+        }
+        return false;
     }
 }

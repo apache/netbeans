@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.libs.graalsdk.impl;
+package org.netbeans.libs.graalsdk;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -25,7 +25,6 @@ import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import org.junit.Assume;
 import org.junit.Test;
 import org.netbeans.api.scripting.Scripting;
 
@@ -37,7 +36,6 @@ public class GraalContextTest {
     @Test
     public void setReaderWords() throws Exception {
         ScriptEngine js = Scripting.createManager().getEngineByMimeType("text/javascript");
-        Assume.assumeNotNull("Need js", js);
         String jsName = js.getFactory().getEngineName();
         Reader my = new StringReader("Hello\nthere\n!");
         js.getContext().setReader(my);

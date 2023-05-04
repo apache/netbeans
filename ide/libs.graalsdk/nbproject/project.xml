@@ -34,14 +34,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.openide.modules</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>7.68</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.openide.util</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -74,14 +66,6 @@
                         <code-name-base>org.netbeans.api.scripting</code-name-base>
                         <recursive/>
                         <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.libs.graaljs</code-name-base>
-                        <recursive/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.libs.graalsdk.system</code-name-base>
-                        <recursive/>
                     </test-dependency>
                 </test-type>
             </test-dependencies>

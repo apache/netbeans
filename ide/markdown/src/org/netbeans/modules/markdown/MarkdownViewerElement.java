@@ -18,27 +18,48 @@
  */
 package org.netbeans.modules.markdown;
 
+import com.vladsch.flexmark.ext.anchorlink.AnchorLinkExtension;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
+import java.awt.BorderLayout;
+import java.awt.Rectangle;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.StyledDocument;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
+import org.openide.awt.HtmlBrowser;
 import org.openide.awt.UndoRedo;
-import org.openide.filesystems.FileChangeAdapter;
-import org.openide.filesystems.FileChangeListener;
-import org.openide.filesystems.FileEvent;
+import org.openide.cookies.EditorCookie;
+import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.RequestProcessor;
+import org.openide.util.RequestProcessor.Task;
 import org.openide.windows.TopComponent;
 
 /**
@@ -51,26 +72,69 @@ import org.openide.windows.TopComponent;
         mimeType = "text/x-markdown",
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "MarkdownViewer",
-        position = 1100
+        position = 2000
 )
 @Messages("LBL_MarkdownViewer=Preview")
 public class MarkdownViewerElement implements MultiViewElement {
 
     private static final Logger LOG = Logger.getLogger(MarkdownViewerElement.class.getName());
+    private static final RequestProcessor RP = new RequestProcessor(MarkdownViewerElement.class);
+    private static final int UPDATE_DELAY = 500;
 
     private final MarkdownDataObject dataObject;
     private transient JToolBar toolbar;
 
     private transient JComponent component;
     private transient JEditorPane viewer;
+    private transient MultiViewElementCallback callback;
 
-    private final FileChangeListener fcl = new FileChangeAdapter() {
+    static final DataHolder OPTIONS = new MutableDataSet()
+            .set(Parser.EXTENSIONS, Arrays.asList(
+                    AnchorLinkExtension.create(),
+                    TablesExtension.create()
+            ))
+
+            .set(HtmlRenderer.INDENT_SIZE, 2)
+            .set(HtmlRenderer.RENDER_HEADER_ID, true)
+            .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "")
+
+            // JEditorPane search for the name attribute
+            .set(AnchorLinkExtension.ANCHORLINKS_SET_NAME, true)
+            .set(AnchorLinkExtension.ANCHORLINKS_SET_ID, false)
+            .set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "")
+            .set(AnchorLinkExtension.ANCHORLINKS_TEXT_PREFIX, "")
+
+            // Make the table generation SWING Friendly
+            .set(TablesExtension.COLUMN_SPANS, false)
+            .set(TablesExtension.MIN_HEADER_ROWS, 1)
+            .set(TablesExtension.MAX_HEADER_ROWS, 1)
+            .set(TablesExtension.APPEND_MISSING_COLUMNS, true)
+            .set(TablesExtension.DISCARD_EXTRA_COLUMNS, true)
+            .set(TablesExtension.HEADER_SEPARATOR_COLUMN_MATCH, true)
+            .toImmutable();
+
+    final Parser parser = Parser.builder(OPTIONS).build();
+    final HtmlRenderer renderer = HtmlRenderer.builder(OPTIONS).build();
+
+    final DocumentListener dl = new DocumentListener() {
         @Override
-        public void fileChanged(FileEvent fe) {
-            updateView();
+        public void insertUpdate(DocumentEvent e) {
+            updater.schedule(UPDATE_DELAY);
         }
-    
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updater.schedule(UPDATE_DELAY);
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updater.schedule(UPDATE_DELAY);
+        }
     };
+
+    private final Task updater = RP.create(MarkdownViewerElement.this::updateView);
+    private StyledDocument source;
 
     public MarkdownViewerElement(Lookup lookup) {
         dataObject = lookup.lookup(MarkdownDataObject.class);
@@ -82,7 +146,12 @@ public class MarkdownViewerElement implements MultiViewElement {
             viewer = new JEditorPane();
             viewer.setContentType("text/html");
             viewer.setEditable(false);
-            component = new JScrollPane(viewer);
+            viewer.addHyperlinkListener(this::linkHandler);
+            
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.add(new JScrollPane(viewer), BorderLayout.CENTER);
+
+            component = panel;
         }
         return component;
     }
@@ -97,7 +166,7 @@ public class MarkdownViewerElement implements MultiViewElement {
 
     @Override
     public Action[] getActions() {
-        return new Action[0];
+        return callback.createDefaultActions();
     }
 
     @Override
@@ -107,21 +176,35 @@ public class MarkdownViewerElement implements MultiViewElement {
 
     @Override
     public void componentOpened() {
-        dataObject.getPrimaryFile().addFileChangeListener(fcl);
-        updateView();
+        FileObject fo = dataObject.getPrimaryFile();
+        callback.updateTitle(fo.getNameExt());
     }
 
     @Override
     public void componentClosed() {
-        dataObject.getPrimaryFile().removeFileChangeListener(fcl);
     }
 
     @Override
     public void componentShowing() {
+        EditorCookie ec = getLookup().lookup(EditorCookie.class);
+        if (ec != null) {
+            RP.post(() -> {
+                try {
+                    source = ec.openDocument();
+                    source.addDocumentListener(dl);
+                    updateView();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            });
+        }
     }
 
     @Override
     public void componentHidden() {
+        if (source != null) {
+            source.removeDocumentListener(dl);
+        }
     }
 
     @Override
@@ -139,6 +222,7 @@ public class MarkdownViewerElement implements MultiViewElement {
 
     @Override
     public void setMultiViewCallback(MultiViewElementCallback callback) {
+        this.callback = callback;
     }
 
     @Override
@@ -146,19 +230,62 @@ public class MarkdownViewerElement implements MultiViewElement {
         return CloseOperationState.STATE_OK;
     }
 
+
     @Messages("TXT_MarkdownViewerElement_Error=<html>Something happened during markdown parsing.")
-    private void updateView() {
-        FileObject fo = dataObject.getPrimaryFile();
-        if ((fo != null) && (viewer != null)) {
-            MutableDataSet options = new MutableDataSet();
-            Parser parser = Parser.builder(options).build();
-            HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+    public void updateView() {
+        if ((source != null) && (viewer != null)) {
             try {
-                String html = renderer.render(parser.parse(fo.asText("UTF-8")));
-                viewer.setText(html);
+                Rectangle vis = viewer.getVisibleRect();
+
+                String content = source.getText(0, source.getLength());
+                String html = renderer.render(parser.parse(content));
+
+                Reader htmlReader = new StringReader(html);
+                HTMLEditorKit kit = new HTMLEditorKit();
+
+                HTMLDocument doc = (HTMLDocument) viewer.getDocument();
+
+                // Would be better to create some diff and update the changed elemets
+                doc.remove(0, doc.getLength());
+                kit.read(htmlReader, doc, 0);
+                
+                viewer.scrollRectToVisible(vis);
+
             } catch (IOException ex) {
                 viewer.setText(Bundle.TXT_MarkdownViewerElement_Error());
-                LOG.log(Level.WARNING, "Could not parse markdown!", ex);
+                LOG.log(Level.WARNING, "Could not parse markdown!", ex); //NOI18N
+            } catch (BadLocationException ex) {
+                viewer.setText(Bundle.TXT_MarkdownViewerElement_Error());
+            }
+        }
+    }
+
+    private void linkHandler(HyperlinkEvent evt) {
+        if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            String dsc = evt.getDescription();
+            if ((evt.getURL() == null) && (dsc != null)) {
+                String parts[] = dsc.split("#");
+                if (parts.length == 1) {
+                    //Probably a link to relative file
+                    FileObject parent = dataObject.getPrimaryFile().getParent();
+                    FileObject fo = parent.getFileObject(parts[0]);
+                    if (fo != null) {
+                        DataObject dat;
+                        try {
+                            dat = DataObject.find(fo);
+                            OpenCookie open = dat.getLookup().lookup(OpenCookie.class);
+                            open.open();
+                        } catch (DataObjectNotFoundException ex) {
+                            // Got unlucky do nothing
+                        }
+                    }
+                } else {
+                    if (parts[0].isEmpty() && !parts[1].isEmpty()) {
+                        viewer.scrollToReference(parts[1]);
+                    }
+                }
+            } else if (evt.getURL() != null) {
+                HtmlBrowser.URLDisplayer.getDefault().showURL(evt.getURL());
             }
         }
     }

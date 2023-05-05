@@ -175,24 +175,24 @@
                 <package>org.netbeans.modules.maven.indexer.spi.impl</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/indexer-core-6.2.2.jar</runtime-relative-path>
-                <binary-origin>external/indexer-core-6.2.2.jar</binary-origin>
+                <runtime-relative-path>ext/maven/indexer-core-7.0.1.jar</runtime-relative-path>
+                <binary-origin>external/indexer-core-7.0.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-core-8.11.1.jar</runtime-relative-path>
-                <binary-origin>external/lucene-core-8.11.1.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-core-9.5.0.jar</runtime-relative-path>
+                <binary-origin>external/lucene-core-9.5.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-highlighter-8.11.1.jar</runtime-relative-path>
-                <binary-origin>external/lucene-highlighter-8.11.1.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-highlighter-9.5.0.jar</runtime-relative-path>
+                <binary-origin>external/lucene-highlighter-9.5.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-queryparser-8.11.1.jar</runtime-relative-path>
-                <binary-origin>external/lucene-queryparser-8.11.1.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-queryparser-9.5.0.jar</runtime-relative-path>
+                <binary-origin>external/lucene-queryparser-9.5.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-analyzers-common-8.11.1.jar</runtime-relative-path>
-                <binary-origin>external/lucene-analyzers-common-8.11.1.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-analysis-common-9.5.0.jar</runtime-relative-path>
+                <binary-origin>external/lucene-analysis-common-9.5.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/maven/javax.annotation-api-1.2.jar</runtime-relative-path>

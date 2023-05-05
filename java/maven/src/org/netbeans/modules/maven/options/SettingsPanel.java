@@ -30,10 +30,14 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JSeparator;
@@ -42,6 +46,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.AbstractTableModel;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.platform.PlatformsCustomizer;
@@ -54,6 +59,7 @@ import org.netbeans.modules.maven.execute.NbGlobalActionGoalProvider;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;
 import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Reader;
 import org.netbeans.modules.maven.indexer.api.RepositoryIndexer;
+import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -63,10 +69,11 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import static org.netbeans.modules.maven.options.Bundle.*;
 import org.netbeans.modules.options.java.api.JavaOptions;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.NbBundle.Messages;
+
+import static org.netbeans.modules.maven.options.Bundle.*;
 
 /**
  * The visual panel that displays in the Options dialog. Some properties
@@ -130,6 +137,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         comSource.setModel(new DefaultComboBoxModel(downloads));
         comMavenHome.setModel(mavenHomeDataModel);
         comJdkHome.setModel(jdkHomeDataModel);
+        
+        updatePermissionsTable();
 
         ListCellRenderer rend = new DefaultListCellRenderer() {
             @Override
@@ -172,7 +181,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 lastSelected = selected;
             }
         };
-        initValues();
+        comIndex.setSelectedIndex(0);
         listener = new ActionListenerImpl();
         comIndex.addActionListener(listener);
         completer = new TextValueCompleter(getGlobalOptions(), txtOptions, " "); //NOI18N
@@ -189,6 +198,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         rbOutputTabId.addActionListener(listener);
         rbOutputTabName.addActionListener(listener);
         cbEnableIndexing.addActionListener(listener);
+        cbEnableMultiThreading.addActionListener(listener);
         cbEnableIndexDownload.addActionListener(listener);
         cbPreferWrapper.addActionListener(listener);
         cbUseBestMaven.addActionListener(listener);
@@ -270,10 +280,6 @@ public class SettingsPanel extends javax.swing.JPanel {
         return Arrays.asList(AVAILABLE_OPTIONS);
     }
 
-    private void initValues() {
-        comIndex.setSelectedIndex(0);
-    }
-    
     private String getSelectedRuntime(int selected) {
         if (selected < 0) {
             return null;
@@ -331,8 +337,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 new String[] { 
             org.openide.util.NbBundle.getMessage(SettingsPanel.class, "FREQ_weekly"), 
             org.openide.util.NbBundle.getMessage(SettingsPanel.class, "FREQ_Daily"),
-            org.openide.util.NbBundle.getMessage(SettingsPanel.class, "FREQ_Always"),
-            org.openide.util.NbBundle.getMessage(SettingsPanel.class, "FREQ_Never") });
+            org.openide.util.NbBundle.getMessage(SettingsPanel.class, "FREQ_Always")});
         
     }
     
@@ -368,6 +373,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         comIndex = new javax.swing.JComboBox();
         btnIndex = new javax.swing.JButton();
         javax.swing.JLabel descriptionLabel = new javax.swing.JLabel();
+        javax.swing.JScrollPane permissionsTableScrollPane = new javax.swing.JScrollPane();
+        permissionsTable = new javax.swing.JTable();
+        cbEnableMultiThreading = new javax.swing.JCheckBox();
         plnExperimental = new javax.swing.JPanel();
         javax.swing.JPanel experimentalPanel = new javax.swing.JPanel();
         cbUseBestMaven = new javax.swing.JCheckBox();
@@ -549,6 +557,11 @@ public class SettingsPanel extends javax.swing.JPanel {
         });
 
         org.openide.awt.Mnemonics.setLocalizedText(cbEnableIndexDownload, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbEnableIndexDownload.text")); // NOI18N
+        cbEnableIndexDownload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbEnableIndexDownloadActionPerformed(evt);
+            }
+        });
 
         lblIndex.setLabelFor(comIndex);
         org.openide.awt.Mnemonics.setLocalizedText(lblIndex, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lblIndex.text")); // NOI18N
@@ -565,6 +578,18 @@ public class SettingsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(descriptionLabel, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.descriptionLabel.text")); // NOI18N
         descriptionLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        permissionsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Repository URL", "Permission"
+            }
+        ));
+        permissionsTableScrollPane.setViewportView(permissionsTable);
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbEnableMultiThreading, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbEnableMultiThreading.text")); // NOI18N
+
         javax.swing.GroupLayout indexerPanelLayout = new javax.swing.GroupLayout(indexerPanel);
         indexerPanel.setLayout(indexerPanelLayout);
         indexerPanelLayout.setHorizontalGroup(
@@ -572,18 +597,20 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(indexerPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(indexerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(permissionsTableScrollPane)
                     .addComponent(descriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(indexerPanelLayout.createSequentialGroup()
                         .addComponent(lblIndex)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comIndex, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(comIndex, 0, 234, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnIndex))
                     .addGroup(indexerPanelLayout.createSequentialGroup()
-                        .addGroup(indexerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbEnableIndexing)
-                            .addComponent(cbEnableIndexDownload))
-                        .addGap(0, 234, Short.MAX_VALUE)))
+                        .addGroup(indexerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cbEnableIndexing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbEnableIndexDownload)
+                            .addComponent(cbEnableMultiThreading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         indexerPanelLayout.setVerticalGroup(
@@ -593,13 +620,17 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addComponent(cbEnableIndexing)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbEnableIndexDownload)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbEnableMultiThreading)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(indexerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblIndex)
                     .addComponent(comIndex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnIndex))
                 .addGap(18, 18, 18)
-                .addComponent(descriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                .addComponent(permissionsTableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(descriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -905,18 +936,14 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     private void btnIndexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIndexActionPerformed
         btnIndex.setEnabled(false);
-        new RequestProcessor("Maven Repo Index Transfer/Scan").post(new Runnable() {
-            @Override
-            public void run() {
-                //TODO shall we iterate all "local" repositories??
-                RepositoryIndexer.indexRepo(RepositoryPreferences.getInstance().getLocalRepository());
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        btnIndex.setEnabled(true);
-                    }
-                });
+        new RequestProcessor("Maven Repo Index Transfer/Scan").post(() -> {
+            RepositoryPreferences.continueIndexDownloads();
+            for (RepositoryInfo repo : RepositoryPreferences.getInstance().getRepositoryInfos()) {
+                RepositoryIndexer.indexRepo(repo);
             }
+            SwingUtilities.invokeLater(() -> {
+                btnIndex.setEnabled(true);
+            });
         });
     }//GEN-LAST:event_btnIndexActionPerformed
     
@@ -990,11 +1017,19 @@ public class SettingsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_comManageJdksActionPerformed
 
     private void cbEnableIndexingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbEnableIndexingActionPerformed
-        updateCheckboxes();
+        updateIndexingControls();
     }//GEN-LAST:event_cbEnableIndexingActionPerformed
 
-    private void updateCheckboxes() {
+    private void cbEnableIndexDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbEnableIndexDownloadActionPerformed
+        updateIndexingControls();
+    }//GEN-LAST:event_cbEnableIndexDownloadActionPerformed
+
+    private void updateIndexingControls() {
         cbEnableIndexDownload.setEnabled(cbEnableIndexing.isSelected());
+        cbEnableMultiThreading.setEnabled(cbEnableIndexing.isSelected() && cbEnableIndexDownload.isSelected());
+        comIndex.setEnabled(cbEnableIndexing.isSelected() && cbEnableIndexDownload.isSelected());
+        lblIndex.setEnabled(cbEnableIndexing.isSelected() && cbEnableIndexDownload.isSelected());
+        btnIndex.setEnabled(cbEnableIndexing.isSelected());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1008,6 +1043,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbCollapseSuccessFolds;
     private javax.swing.JCheckBox cbEnableIndexDownload;
     private javax.swing.JCheckBox cbEnableIndexing;
+    private javax.swing.JCheckBox cbEnableMultiThreading;
     private javax.swing.JComboBox<NetworkProxySettings> cbNetworkProxy;
     private javax.swing.JCheckBox cbOutputTabShowConfig;
     private javax.swing.JCheckBox cbPreferWrapper;
@@ -1040,6 +1076,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblOutputTab;
     private javax.swing.JLabel lblSource;
     private javax.swing.JList lstCategory;
+    private javax.swing.JTable permissionsTable;
     private javax.swing.JPanel plnExperimental;
     private javax.swing.JPanel pnlAppearance;
     private javax.swing.JPanel pnlCards;
@@ -1184,6 +1221,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         comIndex.setSelectedIndex(RepositoryPreferences.getIndexUpdateFrequency());
         cbEnableIndexing.setSelected(RepositoryPreferences.isIndexRepositories());
         cbEnableIndexDownload.setSelected(RepositoryPreferences.isIndexDownloadEnabled());
+        cbEnableMultiThreading.setSelected(RepositoryPreferences.isMultiThreadedIndexExtractionEnabled());
         comBinaries.setSelectedItem(MavenSettings.getDefault().getBinaryDownloadStrategy());
         comJavadoc.setSelectedItem(MavenSettings.getDefault().getJavadocDownloadStrategy());
         comSource.setSelectedItem(MavenSettings.getDefault().getSourceDownloadStrategy());
@@ -1198,7 +1236,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbAlternateLocation.setSelected(MavenSettings.getDefault().isUseBestMavenAltLocation());
         txtDirectory.setText(MavenSettings.getDefault().getBestMavenAltLocation());
 
-        updateCheckboxes();
+        updateIndexingControls();
+        updatePermissionsTable();
 
         if (MavenSettings.OutputTabName.PROJECT_NAME.equals(MavenSettings.getDefault().getOutputTabName())) {
             rbOutputTabName.setSelected(true);
@@ -1266,6 +1305,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         RepositoryPreferences.setIndexUpdateFrequency(comIndex.getSelectedIndex());
         RepositoryPreferences.setIndexRepositories(cbEnableIndexing.isSelected());
         RepositoryPreferences.setIndexDownloadEnabled(cbEnableIndexDownload.isSelected());
+        RepositoryPreferences.setMultiThreadedIndexExtractionEnabled(cbEnableMultiThreading.isSelected());
+        RepositoryPreferences.setIndexDownloadPermissions(((IndexDownloadPermissionTableModel)permissionsTable.getModel()).getPermissions());
         MavenSettings.getDefault().setBinaryDownloadStrategy((MavenSettings.DownloadStrategy) comBinaries.getSelectedItem());
         MavenSettings.getDefault().setJavadocDownloadStrategy((MavenSettings.DownloadStrategy) comJavadoc.getSelectedItem());
         MavenSettings.getDefault().setSourceDownloadStrategy((MavenSettings.DownloadStrategy) comSource.getSelectedItem());
@@ -1334,9 +1375,11 @@ public class SettingsPanel extends javax.swing.JPanel {
         } else {
             isChanged |= !mavenHome.equals(command == null ? EmbedderFactory.getDefaultMavenHome() : command);
         }
+        isChanged |= !((IndexDownloadPermissionTableModel) permissionsTable.getModel()).getPermissions().equals(RepositoryPreferences.getIndexDownloadPermissions());
         isChanged |= RepositoryPreferences.getIndexUpdateFrequency() != comIndex.getSelectedIndex();
         isChanged |= RepositoryPreferences.isIndexRepositories() != cbEnableIndexing.isSelected();
         isChanged |= RepositoryPreferences.isIndexDownloadEnabled() != cbEnableIndexDownload.isSelected();
+        isChanged |= RepositoryPreferences.isMultiThreadedIndexExtractionEnabled() != cbEnableMultiThreading.isSelected();
         isChanged |= MavenSettings.getDefault().getBinaryDownloadStrategy().compareTo((MavenSettings.DownloadStrategy) comBinaries.getSelectedItem()) != 0;
         isChanged |= MavenSettings.getDefault().getJavadocDownloadStrategy().compareTo((MavenSettings.DownloadStrategy) comJavadoc.getSelectedItem()) != 0;
         isChanged |= MavenSettings.getDefault().getSourceDownloadStrategy().compareTo((MavenSettings.DownloadStrategy) comSource.getSelectedItem()) != 0;
@@ -1423,5 +1466,87 @@ public class SettingsPanel extends javax.swing.JPanel {
             fireChanged();
         }
         
+    }
+
+    private void updatePermissionsTable() {
+        permissionsTable.setModel(new IndexDownloadPermissionTableModel());
+        permissionsTable.getModel().addTableModelListener(e -> fireChanged());
+        permissionsTable.getColumnModel().getColumn(1).setCellEditor(
+                new DefaultCellEditor(new JComboBox<>(new String[] {
+                    TXT_PermissionTable_Permission_allow(),
+                    TXT_PermissionTable_Permission_deny(),
+                    TXT_PermissionTable_Permission_remove()
+                })));
+    }
+
+    @Messages({
+        "TXT_PermissionTableHeader_RepoUrl=Repository URL",
+        "TXT_PermissionTableHeader_Permission=Permission",
+        "TXT_PermissionTable_Permission_allow=allow",
+        "TXT_PermissionTable_Permission_deny=deny",
+        "TXT_PermissionTable_Permission_remove=ask again"
+    })
+    private static final class IndexDownloadPermissionTableModel extends AbstractTableModel {
+        
+        private final List<Map.Entry<String, Boolean>> model;
+        
+        private IndexDownloadPermissionTableModel() {
+            model = new ArrayList<>(RepositoryPreferences.getIndexDownloadPermissions().entrySet());
+            model.sort((e1, e2) -> e1.getKey().compareTo(e2.getKey()));
+        }
+ 
+        @Override
+        public String getColumnName(int column) {
+            return column == 0 ? TXT_PermissionTableHeader_RepoUrl() : TXT_PermissionTableHeader_Permission();
+        }
+
+        @Override
+        public int getRowCount() {
+            return model.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 2;
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return column == 1;
+        }
+
+        @Override
+        public void setValueAt(Object value, int row, int column) {
+            if (column == 1) {
+                String str = value.toString();
+                if (str.equals(TXT_PermissionTable_Permission_allow())) {
+                    model.get(row).setValue(true);
+                } else if (str.equals(TXT_PermissionTable_Permission_deny())) {
+                    model.get(row).setValue(false);
+                } else {
+                    model.get(row).setValue(null);
+                }
+                fireTableDataChanged();
+            }
+        }
+
+        private String getValueString(Boolean value) {
+            if (value == null) {
+                return TXT_PermissionTable_Permission_remove();
+            }
+            return value ? TXT_PermissionTable_Permission_allow() : TXT_PermissionTable_Permission_deny();
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Map.Entry<String, Boolean> entry = model.get(rowIndex);
+            return columnIndex == 0 ? entry.getKey() : getValueString(entry.getValue());
+        }
+        
+        public Map<String, Boolean> getPermissions() {
+            return model.stream()
+                        .filter(e -> e.getValue() != null)
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        }
     }
 }

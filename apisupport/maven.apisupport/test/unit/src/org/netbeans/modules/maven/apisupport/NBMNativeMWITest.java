@@ -30,8 +30,11 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.api.archetype.ProjectInfo;
+import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
+import org.netbeans.modules.maven.indexer.spi.impl.IndexingNotificationProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.lookup.ServiceProvider;
 
 public class NBMNativeMWITest extends NbTestCase {
 
@@ -191,7 +194,7 @@ public class NBMNativeMWITest extends NbTestCase {
         assertEquals(0, model.getRepositories().size());
     }
 
-    private String POMCOMPILER
+    private final String POMCOMPILER
             = "<project>\n"
             + "<modelVersion>4.0.0</modelVersion>"
             + "<build>"
@@ -206,7 +209,7 @@ public class NBMNativeMWITest extends NbTestCase {
             + "</build>"
             + "</project>";
 
-    private String POMJAR
+    private final String POMJAR
             = "<project>\n"
             + "<modelVersion>4.0.0</modelVersion>"
             + "<build>"
@@ -220,4 +223,15 @@ public class NBMNativeMWITest extends NbTestCase {
             + "</pluginManagement>"
             + "</build>"
             + "</project>";
+
+    @ServiceProvider(service=IndexingNotificationProvider.class, position=1)
+    public static class NoOpNotificationProvider implements IndexingNotificationProvider {
+        @Override
+        public void notifyError(String message) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void requestPermissionsFor(RepositoryInfo repo) {}
+    }
 }

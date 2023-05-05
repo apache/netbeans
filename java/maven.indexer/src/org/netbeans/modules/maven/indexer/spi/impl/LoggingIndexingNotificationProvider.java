@@ -18,13 +18,31 @@
  */
 package org.netbeans.modules.maven.indexer.spi.impl;
 
+import java.util.logging.Logger;
 import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
+import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
- * used internally.
- * @author Tomas Stupka
+ * Dummy impl to retain old behavior.
+ * 
+ * Can be removed once all maven-indexer users have their own implementation.
+ * 
+ * @author mbien
  */
-public interface IndexingNotificationProvider {
-    public void notifyError(String message);
-    public void requestPermissionsFor(RepositoryInfo repo);
+@ServiceProvider(service=IndexingNotificationProvider.class, position=Integer.MAX_VALUE)
+public class LoggingIndexingNotificationProvider implements IndexingNotificationProvider {
+
+    private static final Logger LOG = Logger.getLogger(LoggingIndexingNotificationProvider.class.getName());
+    
+    @Override
+    public void notifyError(String message) {
+        LOG.severe(message);
+    }
+
+    @Override
+    public void requestPermissionsFor(RepositoryInfo repo) {
+        RepositoryPreferences.allowIndexDownloadFor(repo); // old behavior did simply allow all downloads
+    }
+
 }

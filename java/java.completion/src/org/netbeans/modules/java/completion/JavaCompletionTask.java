@@ -6059,6 +6059,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     break;
                 case BLOCK:
                     return null;
+                default:
+                    if (tree.getKind() == TEMPLATE) {
+                        //TODO:can there be good smart types?
+                        //(how about incomplete String templates?)
+                        return null;
+                    }
+                    break;
             }
             lastTree = tree;
             path = path.getParentPath();
@@ -6486,4 +6493,16 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         return kind;
     }
+
+    private static final Kind TEMPLATE;
+    static {
+        Kind template;
+        try {
+            template = Kind.valueOf("TEMPLATE");
+        } catch (IllegalArgumentException ex) {
+            template = null;
+        }
+        TEMPLATE = template;
+    }
+
 }

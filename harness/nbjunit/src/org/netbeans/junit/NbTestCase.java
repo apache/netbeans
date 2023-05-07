@@ -467,7 +467,12 @@ public abstract class NbTestCase extends TestCase implements NbTest {
             // need to have timeout because previous test case can block AWT thread
             setUp.waitFinished(computeTimeOut());
         } else {
-            setUp();
+            try {
+                setUp();
+            } catch (AssumptionViolatedException ex) {
+                // ignore, the test is assumed to be meaningless.
+                return;
+            }
         }
         try {
             // runTest

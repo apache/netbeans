@@ -86,14 +86,18 @@ final class GraalContext implements ScriptContext {
             } else {
                 b.allowHostAccess(SANDBOX);
             }
-            ctx = b.build();
-            if (globals != null) {
-                for (String k : globals.keySet()) {
-                    if (!ALLOW_ALL_ACCESS.equals(k)) {
-                        ctx.getPolyglotBindings().putMember(k, globals.get(k));
+            
+            executeWithClassLoader(() -> {
+                ctx = b.build();
+                if (globals != null) {
+                    for (String k : globals.keySet()) {
+                        if (!ALLOW_ALL_ACCESS.equals(k)) {
+                            ctx.getPolyglotBindings().putMember(k, globals.get(k));
+                        }
                     }
                 }
-            }
+                return null;
+            }, org.graalvm.polyglot.Engine.class.getClassLoader());
         }
         return ctx;
     }
@@ -130,7 +134,10 @@ final class GraalContext implements ScriptContext {
     public Bindings getBindings(int scope) {
         assertGlobalScope(scope);
         if (bindings == null) {
-            Map<String,Object> map = ctx().getPolyglotBindings().as(Map.class);
+            Map<String,Object> map = executeWithClassLoader(
+                    () -> ctx().getPolyglotBindings().as(Map.class),
+                    org.graalvm.polyglot.Engine.class.getClassLoader()
+            );
             bindings = new SimpleBindings(map);
         }
         return bindings;

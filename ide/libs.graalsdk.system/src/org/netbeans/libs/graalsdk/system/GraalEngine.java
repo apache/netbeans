@@ -24,6 +24,7 @@ import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
@@ -63,7 +64,9 @@ final class GraalEngine implements ScriptEngine, Invocable {
     }
     
     private Value handleException(ScriptAction r) throws ScriptException {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
         try {
+            Thread.currentThread().setContextClassLoader(Engine.class.getClassLoader());
             return r.run();
         } catch (PolyglotException e) {
             if (e.isHostException()) {
@@ -72,6 +75,8 @@ final class GraalEngine implements ScriptEngine, Invocable {
             }
             // avoid exposing polyglot stack frames - might be confusing.
             throw new ScriptException(e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(cl);
         }
     }
 
@@ -118,7 +123,8 @@ final class GraalEngine implements ScriptEngine, Invocable {
 
     @Override
     public Bindings getBindings(int scope) {
-        return getContext().getBindings(scope);
+        return GraalContext.executeWithClassLoader(() ->getContext().getBindings(scope),
+                Engine.class.getClassLoader());
     }
 
     @Override

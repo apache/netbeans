@@ -94,6 +94,9 @@ public final class GraalEnginesProvider implements EngineProvider {
             added = false;
             for (Iterator<? extends ModuleInfo> it = modules.iterator(); it.hasNext(); ) {
                 ModuleInfo m = it.next();
+                if (!m.isEnabled()) {
+                    continue;
+                }
                 for (Dependency d : m.getDependencies()) {
                     if (d.getType() == Dependency.TYPE_MODULE) {
                         if (dependentsOfSDK.keySet().contains(d.getName())) {
@@ -137,6 +140,15 @@ public final class GraalEnginesProvider implements EngineProvider {
     private void enumerateLanguages(List<ScriptEngineFactory> arr, Bindings globals) {
         ClassLoader langLoader = createGraalDependentClassLoader();
         final GraalContext ctx = new GraalContext(globals, langLoader);
+        String specVersion = System.getProperty("java.specification.version"); //NOI18N
+        String vmVersion = System.getProperty("java.vm.version"); //NOI18N
+        if ("1.8".equals(specVersion) && vmVersion.contains("jvmci-")) { //NOI18N
+            // this is GraalVM 8, whose JVMCI support returns a PolyglotImpl from the system classloader
+            // incompatible with PolyglotImpl bundled in this module's libraries.
+            // GraalVM 8 always contains (mandatory) JS implementation, so the JS is loaded by libs.graalsdk.system module.
+            // No need to offer a bundled GraalVM implementation and in fact, it is not even possible.
+            return;
+        }
         GraalContext.executeWithClassLoader(() -> {
             try (Engine engine = Engine.newBuilder().build()) {
                 for (Map.Entry<String, Language> entry : engine.getLanguages().entrySet()) {

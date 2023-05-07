@@ -19,7 +19,11 @@
 package org.netbeans.libs.graaljs;
 
 import junit.framework.Test;
+import static junit.framework.TestCase.assertEquals;
 import junit.framework.TestSuite;
+import org.graalvm.polyglot.Context;
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
@@ -31,13 +35,35 @@ public final class GraalJSTest extends NbTestCase {
     }
 
     public static Test suite() throws Exception {
+        TestSuite ts = new TestSuite();
+        
         NbModuleSuite.Configuration cfg = NbModuleSuite.emptyConfiguration().
             clusters("platform|webcommon|ide").
             honorAutoloadEager(true).
             gui(false);
-        return cfg.addTest(GraalJSTest2.class).suite();
+        ts.addTest(cfg.addTest(S.class).suite());
+        ts.addTestSuite(GraalJSTest.class);
+        return ts;
     }
-
+    
+    /**
+     * Checks direct JS invocation through polyglot API, using classpath
+     * @throws Exception 
+     */
+    public void testDirectEvaluationOfGraalJS() throws Exception {
+        try {
+            Context ctx = Context.newBuilder("js").build();
+            assumeTrue(ctx.getEngine().getLanguages().keySet().contains("js"));
+            int fourtyTwo = ctx.eval("js", "6 * 7").asInt();
+            assertEquals(42, fourtyTwo);
+        } catch (NoClassDefFoundError ex) {
+            // this should not be necessary; graal.js and graal.sdk libraries are on test classpath:
+            // either those libraries, or the system will win, this classloader delegates to parent first.
+            assumeFalse(System.getProperty("java.vm.version").contains("jvmci-"));
+            throw ex;
+        }
+    }
+    
     public static class S extends TestSuite {
         public S() throws Exception {
             ClassLoader parent = Lookup.getDefault().lookup(ClassLoader.class);

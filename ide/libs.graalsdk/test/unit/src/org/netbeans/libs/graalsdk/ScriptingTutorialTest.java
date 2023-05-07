@@ -33,11 +33,6 @@ public class ScriptingTutorialTest extends NbTestCase {
     }
 
     public static Test suite() {
-        ScriptEngine engine = Scripting.createManager().getEngineByName("Graal.js");
-        if (engine == null) {
-            return new ScriptingTutorialTest("testEmpty");
-        }
-
         return NbModuleSuite.emptyConfiguration()
             .gui(false)
             .clusters("platform|webcommon|ide")

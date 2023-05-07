@@ -16,11 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.libs.graalsdk.system;
+package org.netbeans.libs.graalsdk.impl;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Map;
 import javax.script.Bindings;
@@ -29,10 +27,12 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
+import junit.framework.TestCase;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Value;
+import org.junit.Assert;
 import org.junit.Assume;
 import static org.junit.Assume.assumeNotNull;
-import static org.junit.Assume.assumeTrue;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.netbeans.api.scripting.Scripting;
 import org.netbeans.junit.NbTestCase;
@@ -43,8 +43,7 @@ public final class GraalEnginesTest2 extends NbTestCase {
         super(name);
     }
     
-    @BeforeClass
-    public static void skipIfNoPolyglotFound() {
+    public void setUp() {
         try {
             Class.forName("org.graalvm.polyglot.Engine").getMethod("create").invoke(null);
         } catch (ClassNotFoundException ex) {
@@ -53,57 +52,9 @@ public final class GraalEnginesTest2 extends NbTestCase {
             Assume.assumeNoException("Error when initializing Engine", ex);
         }
     }
-    
-    void assumePythonAndJsInteroperable() {
-        ScriptEngineManager man = Scripting.createManager();
-        ScriptEngine js = man.getEngineByName("GraalVM:js");
-        ScriptEngine python = man.getEngineByName("GraalVM:python");
-        assumeNotNull("Need python", python);
-        assumeNotNull("Need js", js);
-        assumeTrue("Both Python and JS must come from the GraalVM JDK", js.getClass().getName().contains("graalsdk.system"));
-    }
-    
-    /**
-     * Checks that in the presence of GraalVM JS implementation the JDK implementation wins in both
-     * enumeration AND extension registrations.
-     * Succeeds if just 1 JS is available (non-GraalVM JDKs)
-     */
-    public void testJDKImplementationFirstOnGraalVM() throws Exception {
-        ScriptEngineManager man = Scripting.createManager();
-        List<ScriptEngineFactory> factories = man.getEngineFactories().stream().filter(sf -> sf.getEngineName().equals("GraalVM:js")).collect(Collectors.toList());
-        assumeTrue("Need GraalVM and bundled implementation", factories.size() > 1);
-        
-        Object o = getEngineLanguage(factories.get(0));
-        assertTrue("GraalVM JDK JS implementation should take precedence", 
-                o.getClass().getProtectionDomain().getCodeSource().getLocation().toString().startsWith("jrt:/"));
-        ScriptEngine jsEngine = man.getEngineByExtension("js");
-        assertNotNull(jsEngine);
-        
-        Field f = jsEngine.getClass().getDeclaredField("factory");
-        f.setAccessible(true);
-        assertSame(factories.get(0), f.get(jsEngine));
-    }
-    
-    
-    /**
-     * Must access using reflection, as the production code is loaded by a proper module classloader, 
-     * while this test code is loaded by SystemClassLoader. Something could change in the testing infrastructure....
-     * 
-     * @param sf
-     * @return
-     * @throws Exception 
-     */
-    private static Object getEngineLanguage(ScriptEngineFactory sf) throws Exception {
-        if (!sf.getClass().getName().endsWith("GraalEngineFactory")) {
-            return null;
-        }
-        Field f = sf.getClass().getDeclaredField("language");
-        f.setAccessible(true);
-        return f.get(sf);
-    }
 
     @Test
-    public void testInvokeEngineViaGeneratedScriptEngine() throws Exception {
+    public void testInvokeEngineViaGeneratedScriptEngine() {
         ScriptEngineManager man = Scripting.createManager();
         ScriptEngine llvm = man.getEngineByName("GraalVM:llvm");
         assumeNotNull("Need llvm. Found: " + man.getEngineFactories(), llvm);
@@ -126,22 +77,17 @@ public final class GraalEnginesTest2 extends NbTestCase {
             }
             if (types.contains("text/javascript")) {
                 if (factory.getEngineName().startsWith("GraalVM:")) {
-                    if (graalvmJsFactory != null) {
-                        Object l = getEngineLanguage(graalvmJsFactory);
-                        assertTrue("GraalVM JDK JS implementation should take precedence", 
-                                l.getClass().getProtectionDomain().getCodeSource().getLocation().toString().startsWith("jrt:/"));
-                    }
+                    // assertNull("No previous generic GraalVM javascript factory: " + graalvmJsFactory, graalvmJsFactory);
                     graalvmJsFactory = factory;
                 } else if (!factory.getEngineName().equalsIgnoreCase("Oracle Nashorn")) {
-                    assertNull("No previous javascript factory: " + jsFactory, jsFactory);
+                    // assertNull("No previous javascript factory: " + jsFactory, jsFactory);
                     jsFactory = factory;
                 }
             }
         }
 
         assertNotNull("llvm factory found: " + log, llvmFactory);
-        // nashorn no longer exists...
-        // assertNotNull("js factory found: " + log, jsFactory);
+        assertNotNull("js factory found: " + log, jsFactory);
         assertNotNull("Generic GraalVM js factory found: " + log, graalvmJsFactory);
     }
 
@@ -151,9 +97,7 @@ public final class GraalEnginesTest2 extends NbTestCase {
         + "mul\n"
         + "\n";
 
-    /**
-    This test cannot work now, as it finds the lib.graalsdk's Context that has no connection to GraalVM JVM's Context that actually
-    serves Python.
+    @Test
     public void testPythonDirect() throws Exception {
         assumeNotNull("Need python", Scripting.createManager().getEngineByMimeType("text/x-python"));
         final Context ctx = Context.newBuilder().allowAllAccess(true).build();
@@ -161,7 +105,6 @@ public final class GraalEnginesTest2 extends NbTestCase {
         Value fourtyTwo = mul.execute(6, 7);
         Assert.assertEquals("Fourty two", 42, fourtyTwo.asInt());
     }
-    */
 
     public static interface Mul {
         public int multiplyTwoNumbers(int x, int y);
@@ -274,7 +217,6 @@ public final class GraalEnginesTest2 extends NbTestCase {
 
         ArrLike like = ((Invocable) js).getInterface(raw, ArrLike.class);
         assertNotNull("Array like " + like, like);
-        
         // known bug in GraalJS 20.3.0
         // assertEquals("Length of five", 5, like.length());
 
@@ -318,11 +260,10 @@ public final class GraalEnginesTest2 extends NbTestCase {
 
     @Test
     public void testAccessPolyglotBindings() throws Exception {
-        assumePythonAndJsInteroperable();
-
         ScriptEngineManager man = Scripting.createManager();
         ScriptEngine js = man.getEngineByName("GraalVM:js");
         ScriptEngine python = man.getEngineByName("GraalVM:python");
+        assumeNotNull("Need python", python);
         
         List<Integer> scopes = js.getContext().getScopes();
         assertEquals(2, scopes.size());
@@ -353,11 +294,10 @@ public final class GraalEnginesTest2 extends NbTestCase {
 
     @Test
     public void testAccessPolyglotBindings2() throws Exception {
-        assumePythonAndJsInteroperable();
-        
         ScriptEngineManager man = Scripting.createManager();
         ScriptEngine python = man.getEngineByName("GraalVM:python");
         ScriptEngine js = man.getEngineByName("GraalVM:js");
+        assumeNotNull("Need python", python);
         
         python.eval("\n"
                 + "import polyglot;\n"
@@ -391,12 +331,12 @@ public final class GraalEnginesTest2 extends NbTestCase {
      */
     @Test
     public void testPolyglotBindingsAsAttributes() throws Exception {
-        assumePythonAndJsInteroperable();
-        
         ScriptEngineManager man = Scripting.newBuilder().build();
 
         ScriptEngine snake = man.getEngineByName("GraalVM:python");
         ScriptEngine js = man.getEngineByName("GraalVM:js");
+        assumeNotNull("Need python", snake);
+        assumeNotNull("Need js", js);
         
         snake.getContext().setAttribute("preSnake", 1111, ScriptContext.GLOBAL_SCOPE);
         js.getContext().setAttribute("preJs", 2222, ScriptContext.GLOBAL_SCOPE);

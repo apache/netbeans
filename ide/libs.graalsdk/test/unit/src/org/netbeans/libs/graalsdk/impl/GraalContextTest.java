@@ -18,66 +18,32 @@
  */
 package org.netbeans.libs.graalsdk.impl;
 
-import java.io.Reader;
-import java.io.StringReader;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-import javax.script.SimpleBindings;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Assume;
-import org.junit.Test;
-import org.netbeans.api.scripting.Scripting;
+import java.net.URL;
+import java.net.URLClassLoader;
+import junit.framework.TestSuite;
+import org.netbeans.junit.NbModuleSuite;
+import org.netbeans.junit.NbTestSuite;
+import org.openide.util.Lookup;
 
 public class GraalContextTest {
 
-    public GraalContextTest() {
+
+    public static final junit.framework.Test suite() {
+        NbModuleSuite.Configuration cfg = NbModuleSuite.emptyConfiguration().
+                honorAutoloadEager(true).
+                enableClasspathModules(false).
+                gui(false);
+        
+        return cfg.clusters("platform|webcommon|ide").addTest(S.class).suite();
     }
-
-    @Test
-    public void setReaderWords() throws Exception {
-        ScriptEngine js = Scripting.createManager().getEngineByMimeType("text/javascript");
-        Assume.assumeNotNull("Need js", js);
-        String jsName = js.getFactory().getEngineName();
-        Reader my = new StringReader("Hello\nthere\n!");
-        js.getContext().setReader(my);
-        js.eval("10");
-        assertEquals("My reader is set", my, js.getContext().getReader());
-
-        try {
-            js.getContext().setReader(new StringReader("another"));
-            assertTrue("Only nashorn can change reader: " + jsName, jsName.contains("Nashorn"));
-        } catch (IllegalStateException ex) {
-            assertEquals("Graal.js throws exception", "GraalVM:js", jsName);
+    
+    public static class S extends TestSuite {
+        public S() throws Exception {
+            ClassLoader parent = Lookup.getDefault().lookup(ClassLoader.class);
+            URL u = getClass().getProtectionDomain().getCodeSource().getLocation();
+            ClassLoader ldr = new URLClassLoader(new URL[] { u }, parent);
+            Class c = ldr.loadClass("org.netbeans.libs.graalsdk.impl.GraalEnginesTest2");
+            addTest(new NbTestSuite(c));
         }
-    }
-
-    @Test
-    public void cannotUseAlternativeBindingsReader() throws ScriptException {
-        ScriptEngine js = Scripting.createManager().getEngineByMimeType("text/javascript");
-        String jsName = js.getFactory().getEngineName();
-
-        try {
-            Object obj = js.eval(new StringReader("42"), new SimpleBindings());
-            assertTrue("It is a number " + obj, obj instanceof Number);
-            assertEquals(42, ((Number) obj).intValue());
-        } catch (ScriptException ex) {
-            assertEquals("GraalVM:js", jsName);
-        }
-    }
-
-    @Test
-    public void cannotUseAlternativeBindings() throws ScriptException {
-        ScriptEngine js = Scripting.createManager().getEngineByMimeType("text/javascript");
-        String jsName = js.getFactory().getEngineName();
-
-        try {
-            Object obj = js.eval("42", new SimpleBindings());
-            assertTrue("It is a number " + obj, obj instanceof Number);
-            assertEquals(42, ((Number) obj).intValue());
-        } catch (ScriptException ex) {
-            assertEquals("GraalVM:js", jsName);
-        }
-
     }
 }

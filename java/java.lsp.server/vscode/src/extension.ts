@@ -409,10 +409,6 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java+', debugDescriptionFactory));
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('nativeimage', debugDescriptionFactory));
 
-    // register content provider
-    let sourceForContentProvider = new NetBeansSourceForContentProvider(context);
-    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('sourceFor', sourceForContentProvider));
-
     // initialize Run Configuration
     initializeRunConfiguration().then(initialized => {
 		if (initialized) {
@@ -484,7 +480,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         wrapProjectActionWithProgress('clean', undefined, 'Cleaning...', log, true, args);
     }));
     context.subscriptions.push(commands.registerCommand('java.open.type', () => {
-        wrapCommandWithProgress('java.quick.open', 'Opening type...', log, true);
+        wrapCommandWithProgress('java.quick.open', 'Opening type...', log, true).then(() => {
+            commands.executeCommand('workbench.action.focusActiveEditorGroup');
+        });
     }));
     context.subscriptions.push(commands.registerCommand('java.goto.super.implementation', async () => {
         if (window.activeTextEditor?.document.languageId !== "java") {
@@ -1464,32 +1462,5 @@ class NetBeansConfigurationNativeResolver implements vscode.DebugConfigurationPr
         }
 
         return config;
-    }
-}
-
-class NetBeansSourceForContentProvider implements vscode.TextDocumentContentProvider {
-
-    private uri: vscode.Uri | undefined;
-
-    constructor(context: ExtensionContext) {
-        context.subscriptions.push(vscode.window.onDidChangeVisibleTextEditors(eds => {
-            eds.forEach(ed => {
-                if (this.uri && this.uri.toString() === ed.document.uri.toString()) {
-                    ed.hide();
-                    this.uri = undefined;
-                }
-            });
-        }));
-    }
-
-    provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<string> {
-        this.uri = uri;
-        vscode.window.withProgress({location: ProgressLocation.Notification, title: 'Finding source...', cancellable: false}, () => {
-            return vscode.commands.executeCommand('java.source.for', uri.toString()).then(() => {
-            }, (reason: any) => {
-                vscode.window.showErrorMessage(reason.data);
-            });
-        });
-        return Promise.resolve('');
     }
 }

@@ -74,6 +74,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditListener;
@@ -170,6 +171,8 @@ import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.queries.CompilerOptionsQuery;
+import org.netbeans.api.java.queries.CompilerOptionsQuery.Result;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -238,6 +241,7 @@ import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.modules.java.lsp.server.URITranslator;
+import org.netbeans.modules.parsing.impl.SourceAccessor;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.lsp.CallHierarchyProvider;
@@ -297,7 +301,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private void reRunDiagnostics() {
         for (String doc : server.getOpenedDocuments().getUris()) {
-            runDiagnosticTasks(doc);
+            runDiagnosticTasks(doc, true);
         }
     }
 
@@ -948,7 +952,15 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             }
                             action.setKind(kind(err.getSeverity()));
                             if (inputAction.getCommand() != null) {
-                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand(), Arrays.asList(params.getTextDocument().getUri())));
+                                List<Object> commandParams = new ArrayList<>();
+
+                                commandParams.add(params.getTextDocument().getUri());
+
+                                if (inputAction.getCommand().getArguments() != null) {
+                                    commandParams.addAll(inputAction.getCommand().getArguments());
+                                }
+
+                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand(), commandParams));
                             }
                             if (inputAction.getEdit() != null) {
                                 org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getEdit();
@@ -1750,9 +1762,23 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     private void runDiagnosticTasks(String uri) {
+        runDiagnosticTasks(uri, false);
+    }
+
+    private void runDiagnosticTasks(String uri, boolean force) {
         if (server.openedProjects().getNow(null) == null) {
             return;
         }
+
+        if (force) {
+            Document originalDoc = server.getOpenedDocuments().getDocument(uri);
+
+            if (originalDoc != null) {
+                //invalidate the source, so that's it is parsed again:
+                SourceAccessor.getINSTANCE().invalidate(Source.create(originalDoc), true);
+            }
+        }
+
         diagnosticTasks.computeIfAbsent(uri, u -> {
             return BACKGROUND_TASKS.create(() -> {
                 Document originalDoc = server.getOpenedDocuments().getDocument(uri);

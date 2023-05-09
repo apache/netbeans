@@ -112,6 +112,8 @@ import org.netbeans.modules.csl.api.IndexSearcher;
 import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
+import org.netbeans.modules.java.hints.spi.preview.PreviewEnabler;
+import org.netbeans.modules.java.hints.spi.preview.PreviewEnabler.Factory;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
@@ -595,6 +597,28 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     }
                 }
                 return (CompletableFuture<Object>)(CompletableFuture<?>)new ProjectInfoWorker(locations, projectStructure, recursive, actions).process();
+            }
+            case Server.JAVA_ENABLE_PREVIEW: {
+                String source = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                String newSourceLevel = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsString()
+                                                                         : null;
+                FileObject file;
+                try {
+                    file = URLMapper.findFileObject(new URL(source));
+                    if (file != null) {
+                        for (Factory factory : Lookup.getDefault().lookupAll(Factory.class)) {
+                            PreviewEnabler enabler = factory.enablerFor(file);
+                            if (enabler != null) {
+                                enabler.enablePreview(newSourceLevel);
+                                break;
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                return CompletableFuture.completedFuture(true);
             }
             default:
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {

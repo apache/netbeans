@@ -796,7 +796,8 @@ public final class Server {
                         JAVA_SUPER_IMPLEMENTATION,
                         JAVA_CLEAR_PROJECT_CACHES,
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH,
-                        JAVA_PROJECT_INFO
+                        JAVA_PROJECT_INFO,
+                        JAVA_ENABLE_PREVIEW
                 ));
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
@@ -1007,6 +1008,11 @@ public final class Server {
      * Syntax: nbls.project.info(locations : String | String[], options? : { projectStructure? : boolean; actions? : boolean; recursive? : boolean }) : LspProjectInfo
      */
     public static final String JAVA_PROJECT_INFO = "nbls.project.info";
+
+    /**
+     * Provides enable preview for given project
+     */
+    public static final String JAVA_ENABLE_PREVIEW = "java.project.enable.preview";
 
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";

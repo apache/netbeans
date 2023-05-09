@@ -30,7 +30,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import org.junit.Assume;
 import static org.junit.Assume.assumeNotNull;
+import static org.junit.Assume.assumeTrue;
 import org.netbeans.api.scripting.Scripting;
 
 
@@ -65,6 +67,8 @@ public class ScriptingTutorial extends NbTestCase {
             }
         }
         // @end region="listAll"
+        Assume.assumeTrue("Need Javascript", found != null);
+        Assume.assumeTrue("Need Python", manager.getEngineByMimeType("text/x-python") != null);
         return found;
     }
 
@@ -118,6 +122,9 @@ public class ScriptingTutorial extends NbTestCase {
     }
 
     public void testHelloWorldInPythonAndJavaScript() throws Exception {
+        // only execute this test, if JS comes from GraalVM JDK, not from bundled impl:
+        assumeTrue("Need GraalVM-provided JS to be interoperable with Python", 
+                Scripting.createManager().getEngineByMimeType("text/javascript").getClass().getName().contains("graalsdk.system"));
         // @start region="testHelloWorldInPythonAndJavaScript"
         // creates a single shared manager for two languages
         final ScriptEngineManager manager = Scripting.createManager();

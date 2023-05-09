@@ -59,7 +59,9 @@ final class LangContext implements ScriptContext {
                 Context c = global.ctx();
                 synchronized (this) {
                     if (langBindings == null) {
-                        langBindings = new SimpleBindings(c.getBindings(langId).as(Map.class));
+                        langBindings = new SimpleBindings(
+                                GraalContext.executeWithClassLoader(() -> c.getBindings(langId).as(Map.class),
+                                        org.graalvm.polyglot.Engine.class.getClassLoader()));
                     }
                 }
             }

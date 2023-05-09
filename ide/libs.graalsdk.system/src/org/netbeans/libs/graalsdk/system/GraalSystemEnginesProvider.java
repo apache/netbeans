@@ -57,10 +57,14 @@ public final class GraalSystemEnginesProvider implements EngineProvider {
     
     private void enumerateLanguages(List<ScriptEngineFactory> arr, Bindings globals) {
         final GraalContext ctx = new GraalContext(globals, Lookup.getDefault().lookup(ClassLoader.class));
-        try (Engine engine = Engine.newBuilder().build()) {
-            for (Map.Entry<String, Language> entry : engine.getLanguages().entrySet()) {
-                arr.add(new GraalEngineFactory(ctx, entry.getKey(), entry.getValue()));
+        GraalContext.executeWithClassLoader(() -> {
+            Engine.Builder b = Engine.newBuilder();
+            try (Engine engine = b.build()) {
+                for (Map.Entry<String, Language> entry : engine.getLanguages().entrySet()) {
+                    arr.add(new GraalEngineFactory(ctx, entry.getKey(), entry.getValue()));
+                }
             }
-        }
+            return null;
+        }, Engine.class.getClassLoader());
     }
 }

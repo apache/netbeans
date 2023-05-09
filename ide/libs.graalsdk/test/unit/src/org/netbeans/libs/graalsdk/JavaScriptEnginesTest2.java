@@ -212,9 +212,7 @@ public class JavaScriptEnginesTest2 extends NbTestCase {
 
     @Test
     public void classOfString() throws Exception {
-        if (!allowAllAccess) {
-            return;
-        }
+        Assume.assumeFalse(allowAllAccess);
         Object clazz = engine.eval("\n"
             + "var s = '';\n"
             + "var n;\n"
@@ -255,9 +253,7 @@ public class JavaScriptEnginesTest2 extends NbTestCase {
 
     @Test
     public void classOfSum() throws Exception {
-        if (!allowAllAccess) {
-            return;
-        }
+        Assume.assumeFalse(allowAllAccess);
         Assume.assumeFalse("GraalJSScriptEngine".equals(engine.getClass().getSimpleName()));
 
         Object fn = engine.eval("(function(obj) {\n"
@@ -305,7 +301,7 @@ public class JavaScriptEnginesTest2 extends NbTestCase {
 
     @Test
     public void returnArrayInJS() throws Exception {
-        Assume.assumeFalse("Broken in GraalVM 20.3.0 fixed in GraalVM 21.1.0", "25.272-b10-jvmci-20.3-b06".equals(System.getProperty("java.vm.version")));
+        Assume.assumeFalse("Broken in GraalVM 20.3.0 fixed in GraalVM 21.1.0", System.getProperty("java.vm.version").contains("jvmci-20.3"));
 
         Object fn = engine.eval("(function(obj) {\n"
                 + "  return [ 1, 2, 'a', Math.PI, obj ];\n"

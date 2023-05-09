@@ -23,6 +23,9 @@ import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.concurrent.Callable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,7 +35,10 @@ import java.util.function.BiFunction;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
+import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
 import org.graalvm.polyglot.Context;
+import static org.junit.Assume.assumeFalse;
 import org.junit.AssumptionViolatedException;
 import org.netbeans.api.scripting.Scripting;
 import org.netbeans.junit.NbTestCase;
@@ -80,8 +86,13 @@ public final class GraalJSTest2 extends NbTestCase {
         
         ClassLoader created;
         try {
-            BiFunction<String, ClassLoader, Boolean> decideDelegation = (n, c) -> c == null ? false : true;
-            
+            BiFunction<String, ClassLoader, Boolean> decideDelegation = (n, c) -> {
+                System.err.println(n);
+                if (n.startsWith("java/") || n.startsWith("junit/")) {
+                    return true;
+                }
+                return c != null;
+            };
             // this is a hack that allows to use good implementation of a classloader ...
             // there should have to be an API for this in the module system.
             Class pcl = Class.forName("org.netbeans.ProxyClassLoader", true, allLoader);
@@ -100,13 +111,34 @@ public final class GraalJSTest2 extends NbTestCase {
         return created;
     }
     
-    public void testDirectEvaluationOfGraalJS() {
-        // must use a special trick with a ClassLoader, so that the context builder gathers appropriate things from the modules.
-        // The code must be the same as in GraalEngineProvider
-        Thread.currentThread().setContextClassLoader(createGraalDependentClassLoader());
-        Context ctx = Context.newBuilder("js").build();
-        int fourtyTwo = ctx.eval("js", "6 * 7").asInt();
-        assertEquals(42, fourtyTwo);
+    /**
+     * Checks direct invocation of JS using Polyglot API from within module system. Works only on GraalVM 11+
+     * @throws Exception 
+     */
+    public void testDirectEvaluationOfGraalJS() throws Exception {
+        // GraalVM 8 JVMCI creates directly Polyglot Impl from the JDK, for GraalVM 8, must be tested elsewhere:
+        String specVersion = System.getProperty("java.specification.version"); //NOI18N
+        String vmVersion = System.getProperty("java.vm.version"); //NOI18N
+        assumeFalse("GraalVM 8 requires direct testing from app classloader", "1.8".equals(specVersion) && vmVersion.contains("jvmci-"));
+
+        ClassLoader ldr = createGraalDependentClassLoader();
+        Thread.currentThread().setContextClassLoader(ldr);
+        
+        // the test code itself HAS to use the module system to load appropriate Engine.
+        URL u = getClass().getProtectionDomain().getCodeSource().getLocation();
+        ClassLoader ldr2 = new URLClassLoader(new URL[] { u }, ldr);
+        Callable c = (Callable)ldr2.loadClass(getClass().getName() + "$T").newInstance();
+        c.call();
+    }
+    
+    public static class T implements Callable {
+        @Override
+        public Object call() throws Exception {
+            Context ctx = Context.newBuilder("js").build();
+            int fourtyTwo = ctx.eval("js", "6 * 7").asInt();
+            assertEquals(42, fourtyTwo);
+            return null;
+        }
     }
     
     public void testJavaScriptEngineIsGraalJS() {

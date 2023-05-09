@@ -399,50 +399,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementations(uri, pos);
-            case Server.JAVA_SOURCE_FOR: {
-                CompletableFuture<Object> result = new CompletableFuture<>();
-                try {
-                    String sourceUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-                    if (sourceUri == null || !sourceUri.startsWith(SOURCE_FOR)) {
-                        throw new IllegalArgumentException("Invalid uri: " + sourceUri);
-                    }
-                    sourceUri = URLDecoder.decode(sourceUri.substring(SOURCE_FOR.length()), StandardCharsets.UTF_8.toString());
-                    int qIdx = sourceUri.lastIndexOf('?');
-                    int hIdx = sourceUri.lastIndexOf('#');
-                    if (qIdx < 0 || hIdx < 0 || hIdx <= qIdx) {
-                        throw new IllegalArgumentException("Invalid uri: " + sourceUri);
-                    }
-                    String rootUri = sourceUri.substring(0, qIdx);
-                    FileObject root = URLMapper.findFileObject(URI.create(rootUri).toURL());
-                    if (root == null) {
-                        throw new IllegalStateException("Unable to find root: " + rootUri);
-                    }
-                    ElementHandle typeHandle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(sourceUri.substring(qIdx + 1, hIdx)), sourceUri.substring(hIdx + 1));
-                    CompletableFuture<ElementOpen.Location> location = ElementOpen.getLocation(ClasspathInfo.create(root), typeHandle, typeHandle.getQualifiedName().replace('.', '/') + ".class");
-                    location.exceptionally(ex -> {
-                        result.completeExceptionally(ex);
-                        return null;
-                    }).thenAccept(loc -> {
-                        if (loc != null) {
-                            ShowDocumentParams sdp = new ShowDocumentParams(Utils.toUri(loc.getFileObject()));
-                            Position position = Utils.createPosition(loc.getFileObject(), loc.getStartOffset());
-                            sdp.setSelection(new Range(position, position));
-                            client.showDocument(sdp).thenAccept(res -> {
-                                if (res.isSuccess()) {
-                                    result.complete(null);
-                                } else {
-                                    result.completeExceptionally(new IllegalStateException("Cannot open source for: " + typeHandle.getQualifiedName()));
-                                }
-                            });
-                        } else if (!result.isCompletedExceptionally()) {
-                            result.completeExceptionally(new IllegalStateException("Cannot find source for: " + typeHandle.getQualifiedName()));
-                        }
-                    });
-                } catch (Throwable t) {
-                    result.completeExceptionally(t);
-                }
-                return result;
-            }
             case Server.JAVA_FIND_PROJECT_CONFIGURATIONS: {
                 String fileUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 
@@ -1056,6 +1012,53 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 result.completeExceptionally(t);
             }
         });
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<WorkspaceSymbol> resolveWorkspaceSymbol(WorkspaceSymbol workspaceSymbol) {
+        String sourceUri = workspaceSymbol.getLocation().isLeft() ? workspaceSymbol.getLocation().getLeft().getUri() : workspaceSymbol.getLocation().getRight().getUri();
+        if (!sourceUri.startsWith(SOURCE_FOR)) {
+            return CompletableFuture.completedFuture(workspaceSymbol);
+        }
+        CompletableFuture<WorkspaceSymbol> result = new CompletableFuture<>();
+        try {
+            sourceUri = URLDecoder.decode(sourceUri.substring(SOURCE_FOR.length()), StandardCharsets.UTF_8.toString());
+            int qIdx = sourceUri.lastIndexOf('?');
+            int hIdx = sourceUri.lastIndexOf('#');
+            if (qIdx < 0 || hIdx < 0 || hIdx <= qIdx) {
+                throw new IllegalArgumentException("Invalid uri: " + sourceUri);
+            }
+            String rootUri = sourceUri.substring(0, qIdx);
+            FileObject root = URLMapper.findFileObject(URI.create(rootUri).toURL());
+            if (root == null) {
+                throw new IllegalStateException("Unable to find root: " + rootUri);
+            }
+            ElementHandle typeHandle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(sourceUri.substring(qIdx + 1, hIdx)), sourceUri.substring(hIdx + 1));
+            CompletableFuture<ElementOpen.Location> location = ElementOpen.getLocation(ClasspathInfo.create(root), typeHandle, typeHandle.getQualifiedName().replace('.', '/') + ".class");
+            location.exceptionally(ex -> {
+                result.completeExceptionally(ex);
+                return null;
+            }).thenAccept(loc -> {
+                if (loc != null) {
+                    ShowDocumentParams sdp = new ShowDocumentParams(Utils.toUri(loc.getFileObject()));
+                    Position position = Utils.createPosition(loc.getFileObject(), loc.getStartOffset());
+                    sdp.setSelection(new Range(position, position));
+                    client.showDocument(sdp).thenAccept(res -> {
+                        if (res.isSuccess()) {
+                            workspaceSymbol.setLocation(Either.forLeft(new Location(Utils.toUri(loc.getFileObject()), new Range(position, position))));
+                            result.complete(workspaceSymbol);
+                        } else {
+                            result.completeExceptionally(new IllegalStateException("Cannot open source for: " + typeHandle.getQualifiedName()));
+                        }
+                    });
+                } else if (!result.isCompletedExceptionally()) {
+                    result.completeExceptionally(new IllegalStateException("Cannot find source for: " + typeHandle.getQualifiedName()));
+                }
+            });
+        } catch (Throwable t) {
+            result.completeExceptionally(t);
+        }
         return result;
     }
 

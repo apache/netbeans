@@ -76,6 +76,7 @@ import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.WorkspaceFoldersOptions;
 import org.eclipse.lsp4j.WorkspaceServerCapabilities;
+import org.eclipse.lsp4j.WorkspaceSymbolOptions;
 import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
@@ -793,7 +794,6 @@ public final class Server {
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
                         JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS,
                         JAVA_SUPER_IMPLEMENTATION,
-                        JAVA_SOURCE_FOR,
                         JAVA_CLEAR_PROJECT_CACHES,
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH,
                         JAVA_PROJECT_INFO
@@ -802,7 +802,9 @@ public final class Server {
                     commands.addAll(codeActionsProvider.getCommands());
                 }
                 capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(new ArrayList<>(commands)));
-                capabilities.setWorkspaceSymbolProvider(true);
+                WorkspaceSymbolOptions wsOpts = new WorkspaceSymbolOptions();
+                wsOpts.setResolveProvider(true);
+                capabilities.setWorkspaceSymbolProvider(wsOpts);
                 capabilities.setCodeLensProvider(new CodeLensOptions(false));
                 RenameOptions renOpt = new RenameOptions();
                 renOpt.setPrepareProvider(true);
@@ -965,7 +967,6 @@ public final class Server {
     public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";
     public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
-    public static final String JAVA_SOURCE_FOR =  "java.source.for";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
     public static final String JAVA_RUN_PROJECT_ACTION = "java.project.run.action";
 

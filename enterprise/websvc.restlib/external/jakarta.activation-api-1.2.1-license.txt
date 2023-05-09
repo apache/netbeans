@@ -1,9 +1,9 @@
-Name: jersey
-Version: 2.34
-Description: REST framework that provides a JAX-RS (JSR-370) implementation and more
+Name: Jakarta Activation API
+Version: 1.2.1
+Description: Jakarta Activation API
 License: EPL-v20
-Origin: Eclipse Foundation (https://eclipse-ee4j.github.io/jersey/)
-Files: jersey-client-2.34.jar, jersey-common-2.34.jar, jersey-container-servlet-2.34.jar, jersey-container-servlet-core-2.34.jar, jersey-entity-filtering-2.34.jar, jersey-hk2-2.34.jar, jersey-media-moxy-2.34.jar, jersey-server-2.34.jar
+Origin: https://projects.eclipse.org/projects/ee4j.jaf
+Files: jakarta.activation-api-1.2.1.jar
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
@@ -91,3 +91,4 @@ Simply including a copy of this Agreement, including this Exhibit A is not suffi
 If it is not possible or desirable to put the notice in a particular file, then You may include the notice in a location (such as a LICENSE file in a relevant directory) where a recipient would be likely to look for such a notice.
 
 You may add additional accurate notices of copyright ownership.
+

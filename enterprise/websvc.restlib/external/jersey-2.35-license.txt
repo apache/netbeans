@@ -1,9 +1,9 @@
-Name: Jakarta Annotations API
-Version: 1.3.5
-Description: Jakarta Annotations API
+Name: jersey
+Version: 2.35
+Description: REST framework that provides a JAX-RS (JSR-370) implementation and more
 License: EPL-v20
-Origin: https://projects.eclipse.org/projects/ee4j.ca
-Files: jakarta.annotation-api-1.3.5.jar
+Origin: Eclipse Foundation (https://eclipse-ee4j.github.io/jersey/)
+Files: jersey-apache-connector-2.35.jar, jersey-client-2.35.jar, jersey-common-2.35.jar, jersey-container-servlet-2.35.jar, jersey-container-servlet-core-2.35.jar, jersey-entity-filtering-2.35.jar, jersey-hk2-2.35.jar, jersey-media-json-jackson-2.35.jar, jersey-media-moxy-2.35.jar, jersey-server-2.35.jar
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

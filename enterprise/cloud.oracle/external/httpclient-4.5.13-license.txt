@@ -1,9 +1,9 @@
-Name: JSR 305
-Description: Annotations for Software Defect Detection in Java
-Origin: https://code.google.com/archive/p/jsr-305
-Version: 3.0.2
+Name: Apache HttpClient
+Description: Apache HttpComponents Client
+Origin: http://hc.apache.org/httpcomponents-client-ga
+Version: 4.5.13
 License: Apache-2.0
-
+Files: httpclient-4.5.13.jar
 
                                  Apache License
                            Version 2.0, January 2004
@@ -206,7 +206,3 @@ License: Apache-2.0
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
-
-
-

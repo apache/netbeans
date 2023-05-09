@@ -44,6 +44,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.netbeans.modules.cloud.oracle.items.OCID;
@@ -78,6 +80,7 @@ public final class OCIProfile implements OCISessionInitiator {
     private ConfigFileAuthenticationDetailsProvider configProvider;
     private IOException initError;
     private Tenancy tenancyOpt;
+    private static final Logger LOG = Logger.getLogger(OCIProfile.class.getName());
 
     OCIProfile(Path configPath, String id) {
         this(configPath, id, true);
@@ -114,8 +117,10 @@ public final class OCIProfile implements OCISessionInitiator {
             configProvider = new ConfigFileAuthenticationDetailsProvider(configFile);
             fileStamp = stamp;
         } catch (IOException ex) {
+            LOG.log(Level.INFO, "init()", ex);
             initError = ex;
         } catch (Throwable ex) {
+            LOG.log(Level.INFO, "init()", ex);
             initError = new IOException(ex);
         }
     }
@@ -165,6 +170,7 @@ public final class OCIProfile implements OCISessionInitiator {
                 return tenancyOpt = tenancy;
             }
         } catch (Throwable t) {
+            LOG.log(Level.INFO, "getTenancyData()", t);            
             initError = new IOException(t);
         }
         return null;

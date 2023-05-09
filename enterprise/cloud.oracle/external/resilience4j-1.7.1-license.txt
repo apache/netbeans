@@ -1,9 +1,9 @@
 Name: Resilience4j
 Description: Resilience4j is a fault tolerance library designed for Java8 and functional programming
 Origin: https://github.com/resilience4j/resilience4j
-Version: 1.2.0
+Version: 1.7.1
 License: Apache-2.0
-Files: resilience4j-circuitbreaker-1.2.0.jar, resilience4j-core-1.2.0.jar
+Files: resilience4j-circuitbreaker-1.7.1.jar, resilience4j-core-1.7.1.jar
 
 
                                  Apache License

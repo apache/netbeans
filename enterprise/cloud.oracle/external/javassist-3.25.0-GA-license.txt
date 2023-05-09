@@ -1,9 +1,9 @@
-Name: Nimbus JOSE + JWT
-Description: Nimbus JOSE+JWT is an open source (Apache 2.0) Java library that implements the Javascript Object Signing and Encryption (JOSE) spec suite and the closely related JSON Web Token (JWT) spec.
-Origin: https://bitbucket.org/connect2id/nimbus-jose-jwt/src/master/
-Version: 9.11.1
+Name: javassist
+Description: Javassist (JAVA programming ASSISTant) makes Java bytecode manipulation simple.  It is a class library for editing bytecodes in Java.
+Origin: http://www.javassist.org
+Version: 3.25.0-GA
 License: Apache-2.0
-
+Files: javassist-3.25.0-GA.jar
 
                                  Apache License
                            Version 2.0, January 2004
@@ -206,6 +206,3 @@ License: Apache-2.0
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
-
-

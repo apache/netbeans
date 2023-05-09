@@ -1,9 +1,9 @@
-Name: Jersey
-Description: Jersey is a REST framework that provides JAX-RS Reference Implementation and more.
-Origin: https://github.com/eclipse-ee4j/jersey
-Version: 2.34
+Name: Jakarta Annotations API
+Version: 2.1.1
+Description: Jakarta Annotations API
 License: EPL-v20
-Files: jersey-apache-connector-2.34.jar, jersey-media-json-jackson-2.34.jar
+Origin: https://projects.eclipse.org/projects/ee4j.ca
+Files: jakarta.annotation-api-2.1.1.jar
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

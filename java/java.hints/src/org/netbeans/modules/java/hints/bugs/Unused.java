@@ -87,7 +87,10 @@ public class Unused {
             case NOT_WRITTEN: message = Bundle.ERR_NotWritten(name);
                 break;
             case NOT_READ: message = Bundle.ERR_NotRead(name);
-                fix = JavaFixUtilities.safelyRemoveFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath);
+                //unclear what can be done with unused binding variables currently (before "_"):
+                if (ud.unusedElementPath.getParentPath().getLeaf().getKind() != Kind.BINDING_PATTERN) {
+                    fix = JavaFixUtilities.safelyRemoveFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath);
+                }
                 break;
             case NOT_USED:
                 if (ud.unusedElement.getKind() == ElementKind.CONSTRUCTOR) {

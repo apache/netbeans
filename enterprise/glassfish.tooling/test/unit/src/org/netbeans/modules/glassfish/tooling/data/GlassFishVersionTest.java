@@ -105,6 +105,8 @@ public class GlassFishVersionTest {
                 GlassFishVersion.GF_7_0_2_STR_NEXT);
         verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_3,
                 GlassFishVersion.GF_7_0_3_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_4,
+                GlassFishVersion.GF_7_0_4_STR_NEXT);
     }
 
     /**
@@ -127,7 +129,8 @@ public class GlassFishVersionTest {
             GlassFishVersion.GF_6_2_2, GlassFishVersion.GF_6_2_3,
             GlassFishVersion.GF_6_2_4, GlassFishVersion.GF_6_2_5,
             GlassFishVersion.GF_7_0_0, GlassFishVersion.GF_7_0_1,
-            GlassFishVersion.GF_7_0_2, GlassFishVersion.GF_7_0_3
+            GlassFishVersion.GF_7_0_2, GlassFishVersion.GF_7_0_3,
+            GlassFishVersion.GF_7_0_4
         };
         String strings[] = {
             "1.0.1.4", "2.0.1.5", "2.1.0.3", "2.1.1.7",
@@ -137,7 +140,7 @@ public class GlassFishVersionTest {
             "5.0.1.0", "5.1.0.0", "6.0.0.0", "6.1.0.0",
             "6.2.0.0", "6.2.1.0", "6.2.2.0", "6.2.3.0",
             "6.2.4.0", "6.2.5.0", "7.0.0.0", "7.0.1.0",
-            "7.0.2.0", "7.0.3.0"
+            "7.0.2.0", "7.0.3.0", "7.0.4.0"
         };
         for (int i = 0; i < versions.length; i++) {
             GlassFishVersion version = GlassFishVersion.toValue(strings[i]);

@@ -33,7 +33,6 @@ env:
 
   # note to self: don't remove the minus again
   OPTS: >-
-    -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     -Dtest-unit-sys-prop.ignore.random.failures=true
 
   # what to build and test, see nbbuild/cluster.properties

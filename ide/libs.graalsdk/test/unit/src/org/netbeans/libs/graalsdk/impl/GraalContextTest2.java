@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.libs.graalsdk;
+package org.netbeans.libs.graalsdk.impl;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -25,17 +25,19 @@ import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.junit.Assume;
 import org.junit.Test;
 import org.netbeans.api.scripting.Scripting;
 
-public class GraalContextTest {
+public class GraalContextTest2 {
 
-    public GraalContextTest() {
+    public GraalContextTest2() {
     }
 
     @Test
-    public void setReaderWords() throws Exception {
+    public void testSetReaderWords() throws Exception {
         ScriptEngine js = Scripting.createManager().getEngineByMimeType("text/javascript");
+        Assume.assumeNotNull("Need js", js);
         String jsName = js.getFactory().getEngineName();
         Reader my = new StringReader("Hello\nthere\n!");
         js.getContext().setReader(my);
@@ -51,7 +53,7 @@ public class GraalContextTest {
     }
 
     @Test
-    public void cannotUseAlternativeBindingsReader() throws ScriptException {
+    public void testCannotUseAlternativeBindingsReader() throws ScriptException {
         ScriptEngine js = Scripting.createManager().getEngineByMimeType("text/javascript");
         String jsName = js.getFactory().getEngineName();
 
@@ -65,7 +67,7 @@ public class GraalContextTest {
     }
 
     @Test
-    public void cannotUseAlternativeBindings() throws ScriptException {
+    public void testCannotUseAlternativeBindings() throws ScriptException {
         ScriptEngine js = Scripting.createManager().getEngineByMimeType("text/javascript");
         String jsName = js.getFactory().getEngineName();
 

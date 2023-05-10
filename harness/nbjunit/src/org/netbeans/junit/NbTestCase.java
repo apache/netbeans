@@ -61,6 +61,7 @@ import java.util.regex.Pattern;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
+import org.junit.AssumptionViolatedException;
 import org.junit.Ignore;
 import org.netbeans.insane.live.LiveReferences;
 import org.netbeans.insane.live.Path;
@@ -74,6 +75,7 @@ import org.netbeans.junit.internal.NbModuleLogHandler;
  * Adds various abilities such as comparing golden files, getting a working
  * directory for test files, testing memory usage, etc.
  */
+
 public abstract class NbTestCase extends TestCase implements NbTest {
     static {
         MethodOrder.initialize();
@@ -465,7 +467,12 @@ public abstract class NbTestCase extends TestCase implements NbTest {
             // need to have timeout because previous test case can block AWT thread
             setUp.waitFinished(computeTimeOut());
         } else {
-            setUp();
+            try {
+                setUp();
+            } catch (AssumptionViolatedException ex) {
+                // ignore, the test is assumed to be meaningless.
+                return;
+            }
         }
         try {
             // runTest
@@ -474,6 +481,8 @@ public abstract class NbTestCase extends TestCase implements NbTest {
                     long now = System.nanoTime();
                     try {
                         runTest();
+                    } catch (AssumptionViolatedException ex) {
+                        // ignore, the test is assumed to be meaningless.
                     } catch (Throwable t) {
                         noteWorkDir(workdirNoCreate());
                         throw noteRandomness(t);

@@ -50,4 +50,19 @@ public class UnusedTest extends NbTestCase {
                                 "5:26-5:37:verifier:" + Bundle.ERR_NotRead("unusedParam"),
                                 "7:12-7:16:verifier:" + Bundle.ERR_NotUsedConstructor());
     }
+
+    public void testNoFixForBindings() throws Exception {
+        HintTest
+                .create()
+                .sourceLevel("17")
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    boolean test(Object o) {\n" +
+                       "        return o instanceof String s;\n" +
+                       "    }\n" +
+                       "}\n")
+                .run(Unused.class)
+                .findWarning("3:35-3:36:verifier:Variable s is never read")
+                .assertFixes();
+    }
 }

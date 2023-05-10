@@ -1305,7 +1305,7 @@ public final class ModuleManager extends Modules {
     private void enable(Set<Module> modules, boolean honorAutoloadEager) throws IllegalArgumentException, InvalidException {
         assertWritable();
         Util.err.log(Level.FINE, "enable: {0}", modules);
-        /* Consider eager modules:
+        /* Consider eager modules: 
         if (modules.isEmpty()) {
             return;
         }
@@ -1765,6 +1765,7 @@ public final class ModuleManager extends Modules {
     private Module addedBecauseOfDependent;
     private boolean eagerActivation;
     private Set<Module> reported = new HashSet<>();
+    private Set<Module> reportedProblems = new HashSet<>();
     
     private void maybeAddToEnableList(Set<Module> willEnable, Set<Module> mightEnable, Module m, boolean okToFail, String reason) {
         if (! missingDependencies(m).isEmpty()) {
@@ -1784,7 +1785,7 @@ public final class ModuleManager extends Modules {
                         + " " + m.getCodeNameBase() + '"');
             }
         }
-
+        
         if (!willEnable.add(m)) {
             // Already there, done.
             return;
@@ -1838,6 +1839,13 @@ public final class ModuleManager extends Modules {
                     }
                     // All disabled. So add them all to the enable list.
                     for (Module other : providers) {
+                        // do not include providing autoloads with problems. This check is possibly done in maybeAddToEnableList, but also checks package dependency
+                        if (!other.getProblems().isEmpty() && other.isAutoload()) {
+                            if (reportedProblems.add(other)) {
+                                Util.err.log(Level.FINE, "Not enabling {0} providing {2} because of unsatisfied requirement: {1}", new Object[] { other.getCodeNameBase(), other.getProblems(), dep.getName() });
+                            }
+                            continue;
+                        }
                         // It is OK if one of them fails.
                         maybeAddToEnableList(willEnable, mightEnable, other, true, (dep.getName().startsWith("cnb.") ? null : "Provides " + dep.getName()));
                         // But we still check to ensure that at least one did not!
@@ -1848,6 +1856,15 @@ public final class ModuleManager extends Modules {
                     }
                     // Logic is that missingDependencies(m) should contain dep in this case.
                     assert foundOne || dep.getType() == Dependency.TYPE_RECOMMENDS : "Should have found a nonproblematic provider of " + dep + " among " + providers + " with willEnable=" + willEnable + " mightEnable=" + mightEnable;
+                } else if (dep.getType() == Dependency.TYPE_JAVA) {
+                    if (okToFail && !Util.checkJavaDependency(dep)) {
+                        return;
+                    }
+                } else if (dep.getType() == Dependency.TYPE_PACKAGE) {
+                    // eager modules check only appclassloader
+                    if (okToFail && !Util.checkPackageDependency(dep, classLoader)) {
+                        return;
+                    }
                 }
                 // else some other kind of dependency that does not concern us
             }
@@ -1940,6 +1957,15 @@ public final class ModuleManager extends Modules {
                     }
                 }
                 if (!foundOne) return false;
+            } else if (dep.getType() == Dependency.TYPE_JAVA) {
+                if (! Util.checkJavaDependency(dep)) {
+                    return false;
+                }
+            } else if (dep.getType() == Dependency.TYPE_PACKAGE) {
+                // eager modules check only appclassloader
+                if (!Util.checkPackageDependency(dep, classLoader)) {
+                    return false;
+                }
             }
             // else some other dep type
         }
@@ -2152,11 +2178,28 @@ public final class ModuleManager extends Modules {
                 }
                 probs.add(PROBING_IN_PROCESS);
                 mP.put(probed, probs);
+                
                 for (Dependency dep : probed.getDependenciesArray()) {
-                    if (dep.getType() == Dependency.TYPE_PACKAGE) {
+                    if ((dep.getType() == Dependency.TYPE_PACKAGE || dep.getType() == Dependency.TYPE_JAVA) && !withNeeds) {
                         // Can't check it in advance. Assume it is OK; if not
                         // a problem will be indicated during an actual installation
                         // attempt.
+                        // Note the failures with optional modules, that enable themselves based on
+                        // external requirements: eagers and autoloading providers.
+                        boolean optional = probed.isEager();
+                        if (!optional && probed.isAutoload()) {
+                            String[] p = probed.getProvides();
+                            if (p != null) {
+                                String cnbToken = "cnb." + probed.getCodeNameBase();
+                                // provides more than its codenamebase
+                                optional = p.length > (Arrays.asList(p).indexOf(cnbToken) != -1 ? 1 : 0);
+                            }
+                        }
+                        // check with the default classloader:
+                        if (optional && !(dep.getType() == Dependency.TYPE_PACKAGE ? Util.checkPackageDependency(dep, classLoader) : Util.checkJavaDependency(dep))) {
+                            // but check at least with autoload and eager modules. that conditionally enable themselves
+                            probs.add(Union2.<Dependency,InvalidException>createFirst(dep));
+                        }
                     } else if (dep.getType() == Dependency.TYPE_MODULE) {
                         // Look for the corresponding module.
                         Object[] depParse = Util.parseCodeName(dep.getName());

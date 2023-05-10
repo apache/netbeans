@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.Enumerations;
@@ -65,6 +66,8 @@ public class ProxyClassLoader extends ClassLoader {
 
     /** keeps information about parent classloaders, system classloader, etc.*/
     volatile ProxyClassParents parents;
+    
+    private BiFunction<String, ClassLoader, Boolean> delegatingPredicate;
 
     /** Create a multi-parented classloader.
      * @param parents all direct parents of this classloader, except system one.
@@ -74,6 +77,17 @@ public class ProxyClassLoader extends ClassLoader {
     public ProxyClassLoader(ClassLoader[] parents, boolean transitive) {
         super(TOP_CL);
         this.parents = ProxyClassParents.coalesceParents(this, parents, TOP_CL, transitive);
+    }
+    
+    /** Create a multi-parented classloader.
+     * @param parents all direct parents of this classloader, except system one.
+     * @param transitive whether other PCLs depending on this one will
+     *                   automatically search through its parent list
+     */
+    public ProxyClassLoader(ClassLoader[] parents, boolean transitive, BiFunction<String, ClassLoader, Boolean> delegatingPredicate) {
+        super(TOP_CL);
+        this.parents = ProxyClassParents.coalesceParents(this, parents, TOP_CL, transitive);
+        this.delegatingPredicate = delegatingPredicate;
     }
     
     protected final void addCoveredPackages(Iterable<String> coveredPackages) {
@@ -549,7 +563,11 @@ public class ProxyClassLoader extends ClassLoader {
     }
     
     protected boolean shouldDelegateResource(String pkg, ClassLoader parent) {
-         return true;
+         if (delegatingPredicate != null) {
+             return delegatingPredicate.apply(pkg, parent);
+         } else {
+             return true;
+         }
     }
 
     /** Called before releasing the classloader so it can itself unregister

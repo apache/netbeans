@@ -65,6 +65,11 @@ import org.apache.maven.index.expr.StringSearchExpression;
 import org.apache.maven.index.updater.IndexUpdateRequest;
 import org.apache.maven.index.updater.IndexUpdater;
 import org.apache.maven.index.updater.ResourceFetcher;
+import org.apache.maven.search.SearchRequest;
+import org.apache.maven.search.backend.smo.SmoSearchBackend;
+import org.apache.maven.search.backend.smo.SmoSearchBackendFactory;
+import org.apache.maven.search.request.FieldQuery;
+import org.apache.maven.search.request.Paging;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.crypto.DefaultSettingsDecryptionRequest;
@@ -167,6 +172,8 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
      * For remote repo download and indexing tasks.
      */
     private static final RequestProcessor RP_REMOTE = new RequestProcessor("maven-remote-indexing");
+    
+    private final SmoSearchBackend smo = new SmoSearchBackendFactory().createDefault();
 
     @Override
     public boolean handlesRepository(RepositoryInfo repo) {
@@ -1196,12 +1203,30 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
 
     @Override
     public ResultImplementation<NBVersionInfo> findVersionsByClass(final String className, List<RepositoryInfo> repos) {
-        ResultImpl<NBVersionInfo> result = new ResultImpl<>((ResultImpl<NBVersionInfo> result1) -> {
-            findVersionsByClass(className, result1, result1.getSkipped(), false);
-        });
-        return findVersionsByClass(className, result, repos, true);
+
+        Optional<RepositoryInfo> central = repos.stream()
+                .filter(repo -> repo.getId().equals(smo.getRepositoryId()))
+                .findFirst();
+
+        // remote index contains no class data -> use web service
+        if (central.isPresent()) {
+            List<RepositoryInfo> otherRepos = new ArrayList<>(repos);
+            otherRepos.remove(central.get());
+
+            SearchRequest request = new SearchRequest(new Paging(128), 
+                    FieldQuery.fieldQuery(className.contains(".") ?
+                            org.apache.maven.search.MAVEN.FQ_CLASS_NAME
+                          : org.apache.maven.search.MAVEN.CLASS_NAME, className));
+
+            return new CompositeResult<>(findVersionsByClass(className, otherRepos), new SMORequestResult(smo, request));
+        } else {
+            ResultImpl<NBVersionInfo> result = new ResultImpl<>((ResultImpl<NBVersionInfo> result1) -> {
+                findVersionsByClass(className, result1, result1.getSkipped(), false);
+            });
+            return findVersionsByClass(className, result, repos, true);
+        }
     }
-    
+
     private ResultImplementation<NBVersionInfo> findVersionsByClass(final String className, final ResultImpl<NBVersionInfo> result, List<RepositoryInfo> repos, final boolean skipUnIndexed) {
         final List<NBVersionInfo> infos = new ArrayList<>(result.getResults());
         final SkippedAction skipAction = new SkippedAction(result);
@@ -1345,14 +1370,28 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         }
     }
     
-    
-
     @Override
     public ResultImplementation<NBVersionInfo> findBySHA1(final String sha1, List<RepositoryInfo> repos) {
-        ResultImpl<NBVersionInfo> result = new ResultImpl<>((ResultImpl<NBVersionInfo> result1) -> {
-            findBySHA1(sha1, result1, result1.getSkipped(), false);
-        });
-        return findBySHA1(sha1, result, repos, true);
+
+        Optional<RepositoryInfo> central = repos.stream()
+            .filter(repo -> repo.getId().equals(smo.getRepositoryId()))
+            .findFirst();
+
+        // remote index contains no sh1 data -> use web service
+        if (central.isPresent()) {
+            List<RepositoryInfo> otherRepos = new ArrayList<>(repos);
+            otherRepos.remove(central.get());
+
+            SearchRequest request = new SearchRequest(new Paging(8), 
+                    FieldQuery.fieldQuery(org.apache.maven.search.MAVEN.SHA1, sha1));
+
+            return new CompositeResult<>(findBySHA1(sha1, otherRepos), new SMORequestResult(smo, request));
+        } else {
+            ResultImpl<NBVersionInfo> result = new ResultImpl<>((ResultImpl<NBVersionInfo> result1) -> {
+                findBySHA1(sha1, result1, result1.getSkipped(), false);
+            });
+            return findBySHA1(sha1, result, repos, true);
+        }
     }
     
     private ResultImplementation<NBVersionInfo> findBySHA1(final String sha1, final ResultImpl<NBVersionInfo> result, List<RepositoryInfo> repos, final boolean skipUnIndexed) {

@@ -246,7 +246,7 @@ public class WildflyPluginUtils {
         return defaultPort;
     }
 
-     public static String getManagementConnectorPort(String configFile) {
+    public static String getManagementConnectorPort(String configFile) {
         String defaultPort = "9990"; // NOI18N
         return defaultPort;
     }

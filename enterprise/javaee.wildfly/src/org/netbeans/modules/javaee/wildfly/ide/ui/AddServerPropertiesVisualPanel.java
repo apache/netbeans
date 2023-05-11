@@ -61,6 +61,8 @@ public class AddServerPropertiesVisualPanel extends JPanel {
     private javax.swing.JTextField portField;
     private javax.swing.JLabel     managementPortLabel;
     private javax.swing.JTextField managementPortField;
+    private javax.swing.JLabel     portOffsetLabel;
+    private javax.swing.JTextField portOffsetField;
     private javax.swing.JLabel     userLabel;
     private javax.swing.JTextField userField;
     private javax.swing.JLabel     passwordLabel;
@@ -111,6 +113,10 @@ public class AddServerPropertiesVisualPanel extends JPanel {
 
     public String getPort(){
         return portField.getText().trim();
+    }
+ 
+    public String getPortOffSet(){
+        return portOffsetField.getText().trim();
     }
 
     public String getManagementPort(){
@@ -261,6 +267,17 @@ public class AddServerPropertiesVisualPanel extends JPanel {
 
         managementPortLabel.setLabelFor(managementPortField);
 
+        portOffsetLabel = new JLabel();
+        org.openide.awt.Mnemonics.setLocalizedText(portOffsetLabel, NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Port_Offset")); // NOI18N
+
+        portOffsetField = new JTextField();
+        portOffsetField.setColumns(20);
+        portOffsetField.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Port_Offset"));
+        portOffsetField.getAccessibleContext().setAccessibleName(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Port_Offset"));
+        portOffsetField.addKeyListener(new SomeChangesListener());
+
+        portOffsetLabel.setLabelFor(portOffsetField);
+
         userLabel = new JLabel(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_User"));//NOI18N
         userField = new JTextField();
         userField.addKeyListener(new SomeChangesListener());
@@ -374,6 +391,21 @@ public class AddServerPropertiesVisualPanel extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 12, 0);
         add(managementPortField, gridBagConstraints);
 
+        //-------------- port offset ---------------
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 12, 6);
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        add(portOffsetLabel, gridBagConstraints);
+
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 12, 0);
+        add(portOffsetField, gridBagConstraints);
+
 
         //-------------- User ---------------
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -384,7 +416,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
 
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 12, 0);
@@ -401,7 +433,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
 
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 12, 0);
@@ -430,6 +462,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
 
         hostField.setText("localhost");//NOI18N
         portField.setText(WildflyPluginUtils.getHTTPConnectorPort(domainPathField.getText()));//NOI18N
+        portOffsetField.setText("0");//NOI18N
         domainChanged();
 
     }

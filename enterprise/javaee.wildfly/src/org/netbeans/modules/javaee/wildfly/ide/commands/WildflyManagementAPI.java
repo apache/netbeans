@@ -45,14 +45,24 @@ public class WildflyManagementAPI {
     private static final String SASL_DISALLOWED_MECHANISMS = "SASL_DISALLOWED_MECHANISMS";
     private static final String JBOSS_LOCAL_USER = "JBOSS-LOCAL-USER";
 
-    private static final Map<String, String> DISABLED_LOCAL_AUTH = Collections.singletonMap(SASL_DISALLOWED_MECHANISMS, JBOSS_LOCAL_USER);
     private static final Map<String, String> ENABLED_LOCAL_AUTH = Collections.emptyMap();
     private static final int TIMEOUT = 1000;
 
     static Object createClient(WildflyDeploymentFactory.WildFlyClassLoader cl, Version version, final String serverAddress, final int serverPort,
             final CallbackHandler handler) throws ClassNotFoundException, NoSuchMethodException,
-            IllegalAccessException, InvocationTargetException, NoSuchAlgorithmException {
+            IllegalAccessException, InvocationTargetException, NoSuchAlgorithmException, InstantiationException {
         Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.ModelControllerClient$Factory"); // NOI18N
+        if (version.compareTo(WildflyPluginUtils.WILDFLY_26_0_0) >= 0) {
+            Class<?> configurationBuilderClazz = cl.loadClass("org.jboss.as.controller.client.ModelControllerClientConfiguration$Builder");
+            Object configurationBuilder = configurationBuilderClazz.getConstructor().newInstance();
+            configurationBuilderClazz.getDeclaredMethod("setHostName", String.class).invoke(configurationBuilder, serverAddress);
+            configurationBuilderClazz.getDeclaredMethod("setPort", int.class).invoke(configurationBuilder, serverPort);
+            configurationBuilderClazz.getDeclaredMethod("setHandler", CallbackHandler.class).invoke(configurationBuilder, handler);
+            configurationBuilderClazz.getDeclaredMethod("setConnectionTimeout", int.class).invoke(configurationBuilder, TIMEOUT);
+            configurationBuilderClazz.getDeclaredMethod("setSaslOptions", Map.class).invoke(configurationBuilder, ENABLED_LOCAL_AUTH);
+            Method method = clazz.getDeclaredMethod("create", cl.loadClass("org.jboss.as.controller.client.ModelControllerClientConfiguration"));
+            return method.invoke(null, configurationBuilderClazz.getDeclaredMethod("build").invoke(configurationBuilder));
+        }
         if (version.compareTo(WildflyPluginUtils.WILDFLY_9_0_0) >= 0) {
             Method method = clazz.getDeclaredMethod("create", String.class, int.class, CallbackHandler.class, SSLContext.class, int.class, Map.class);
             return method.invoke(null, serverAddress, serverPort, handler, SSLContext.getDefault(), TIMEOUT, ENABLED_LOCAL_AUTH);

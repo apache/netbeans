@@ -124,6 +124,7 @@ import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.parsing.lucene.support.Queries;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -396,6 +397,47 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     }
                     return future;
                 });
+            }
+            case Server.JAVA_RESOLVE_STACKTRACE_LOCATION: {
+                CompletableFuture<Object> future = new CompletableFuture<>();
+                try {
+                    String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                    String methodName = ((JsonPrimitive) params.getArguments().get(1)).getAsString();
+                    String fileName = ((JsonPrimitive) params.getArguments().get(2)).getAsString();
+
+                    FileObject fo = Utils.fromUri(uri);
+                    ClassPath classPath = ClassPathSupport.createProxyClassPath(new ClassPath[] {
+                        ClassPath.getClassPath(fo, ClassPath.EXECUTE),
+                        ClassPath.getClassPath(fo, ClassPath.BOOT)
+                    });
+
+                    String name = fileName.substring(0, fileName.lastIndexOf('.'));
+                    String packageName = methodName.substring(0, methodName.indexOf(name)).replace('.', '/');
+                    String resourceName = packageName + name + ".class";
+                    List<FileObject> resources = classPath.findAllResources(resourceName);
+                    if (resources != null) {
+                        for (FileObject resource : resources) {
+                            FileObject root = classPath.findOwnerRoot(resource);
+                            if (root != null) {
+                                URL url = URLMapper.findURL(root, URLMapper.INTERNAL);
+                                SourceForBinaryQuery.Result res = SourceForBinaryQuery.findSourceRoots(url);
+                                FileObject[] rootz = res.getRoots();
+                                for (int i = 0; i < rootz.length; i++) {
+                                    String path = packageName + fileName;
+                                    FileObject sourceFo = rootz[i].getFileObject(path);
+                                    if (sourceFo != null) {
+                                        future.complete(Utils.toUri(sourceFo));
+                                        return future;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    future.complete(null);
+                } catch (Exception ex) {
+                    future.completeExceptionally(ex);
+                }
+                return future;
             }
             case Server.JAVA_SUPER_IMPLEMENTATION:
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();

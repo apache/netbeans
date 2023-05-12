@@ -789,6 +789,7 @@ public final class Server {
                         JAVA_GET_PROJECT_PACKAGES,
                         JAVA_GET_PROJECT_SOURCE_ROOTS,
                         JAVA_LOAD_WORKSPACE_TESTS,
+                        JAVA_RESOLVE_STACKTRACE_LOCATION,
                         JAVA_NEW_FROM_TEMPLATE,
                         JAVA_NEW_PROJECT,
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
@@ -967,6 +968,7 @@ public final class Server {
     public static final String JAVA_GET_PROJECT_CLASSPATH = "java.get.project.classpath";
     public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";
     public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
+    public static final String JAVA_RESOLVE_STACKTRACE_LOCATION =  "java.resolve.stacktrace.location";
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
     public static final String JAVA_RUN_PROJECT_ACTION = "java.project.run.action";

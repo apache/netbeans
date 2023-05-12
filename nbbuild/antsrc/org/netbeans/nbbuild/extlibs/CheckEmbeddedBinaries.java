@@ -87,7 +87,7 @@ public class CheckEmbeddedBinaries extends Task {
 
                     if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
                         MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
-                        shamap.put(hashAndFile[0], hashAndFile[1]);
+                        shamap.put(hashAndFile[0], mc.toArtifactFilename());
                     } else {
                         throw new BuildException("Invalid manifest entry should be Maven coordinate", getLocation());
                     }
@@ -101,9 +101,12 @@ public class CheckEmbeddedBinaries extends Task {
             StringBuilder errorList = new StringBuilder();
             list.forEach((t) -> {
                         String sha1 = hash(t.toFile());
-                        if (!shamap.containsKey(sha1)) {
-                            errorList.append("No sha1 (expected ").append(sha1).append(" for file: ").append(t).append("\n");
-                        }                          
+                        String filename = shamap.get(sha1);
+                        if (filename == null) {
+                            errorList.append("No sha1 (expected ").append(sha1).append(" for file: ").append(t.getFileName()).append("\n");
+                        } else if (!filename.equals(t.getFileName().toString())) {
+                            errorList.append("Wrong filename for hash (expected ").append(filename).append(" but got: ").append(t.getFileName()).append("\n");
+                        }
                     });
             if (errorList.toString().length()>0) {
                 log(""+errorList.toString());

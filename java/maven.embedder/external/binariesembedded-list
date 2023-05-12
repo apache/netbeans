@@ -15,19 +15,19 @@
 # specific language governing permissions and limitations
 # under the License.
 
-0235BA8B489512805AC13A8F9EA77A1CA5EBE3E8;org.aopalliance:aopalliance:1.0
+0235BA8B489512805AC13A8F9EA77A1CA5EBE3E8;aopalliance:aopalliance:1.0
 1194890E6F56EC29177673F2F12D0B8E627DEC98;org.apache.httpcomponents:httpclient:4.5.14
-7F2E0C573EAA7A74BAC2E89B359E1F73D92A0A1D;org.apache.httpcomponents:httpcore:4.5.15
+7F2E0C573EAA7A74BAC2E89B359E1F73D92A0A1D;org.apache.httpcomponents:httpcore:4.4.15
 1DCF1DE382A0BF95A3D8B0849546C88BAC1292C9;com.google.guava:failureaccess:1.0.1
 C51C00206BB913CD8612B24ABD9FA98AE89719B1;commons-cli:commons-cli:1.4
-3ACB4705652E16236558F0F4F2192CC33C3BD189;org.apache.commons:commons-codec:1.11
+3ACB4705652E16236558F0F4F2192CC33C3BD189;commons-codec:commons-codec:1.11
 6505A72A097D9270F7A9E7BF42C4238283247755;org.apache.commons:commons-lang3:3.8.1
 00D0C3CE2311C9E36E73228DA25A6E99B2AB826F;com.google.guava:guava:30.1-jre
 DA25056C694C54BA16E78E4FC35F17FC60F0D1B4;com.google.inject:guice:5.1.0
 321C614F85F1DEA6BB08C1817C60D53B7F3552FD;org.fusesource.jansi:jansi:2.4.0
 6975DA39A7040257BD51D21A231B76C915872D38;javax.inject:javax.inject:1
 D877E195A05ACA4A2F1AD2FF14BFEC1393AF4B5E;org.slf4j:jcl-over-slf4j:1.7.36
-934C04D3CFEF185A8008E7BF34331B79730A9D43;javax.annotation:javax.annotation.api:1.3.2
+934C04D3CFEF185A8008E7BF34331B79730A9D43;javax.annotation:javax.annotation-api:1.3.2
 09F8307F12F2E65066DCC4122D92126F46A6EA40;org.apache.maven:maven-artifact:3.9.1
 C473898FB22699AA713FFA2C9192F911E281FF9D;org.apache.maven:maven-builder-support:3.9.1
 1F9608E1146F5239DCE9068263B2D6C6D584D0BD;org.apache.maven:maven-compat:3.9.1
@@ -41,7 +41,7 @@ C44B96287CFAEC6049349C4E9A549389CC5D39AF;org.apache.maven:maven-plugin-api:3.9.1
 3F1523254B400F89E290C3274C4458BA111E6D57;org.apache.maven.resolver:maven-resolver-connector-basic:1.9.7
 56F6BABFB1FA6D34849E834433B572FB743E7F4D;org.apache.maven.resolver:maven-resolver-impl:1.9.7
 8F6C65FF4C677E45B0907BBA3CEC3449D21135FF;org.apache.maven.resolver:maven-resolver-named-locks:1.9.7
-52247F9AD0371371A4ACA00E4AC10602E876846B;org.apache.maven:resolver:maven-resolver-provider:3.9.1
+52247F9AD0371371A4ACA00E4AC10602E876846B;org.apache.maven:maven-resolver-provider:3.9.1
 5E273840DAF376DC188C0F71D027DF400DE215C2;org.apache.maven.resolver:maven-resolver-spi:1.9.7
 6690B4934DE8D3A448CC5649776C2B326A10F614;org.apache.maven.resolver:maven-resolver-transport-http:1.9.7
 BCCD6C18A08EFCDBF662DCE7A0FABCF0F0D2A694;org.apache.maven.resolver:maven-resolver-transport-wagon:1.9.7

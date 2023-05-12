@@ -328,7 +328,6 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     }    
 
     private boolean loadIndexingContext(final RepositoryInfo info) throws IOException {
-        boolean index = false;
         LOAD: {
             assert getRepoMutex(info).isWriteAccess();
             initIndexer();
@@ -375,9 +374,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             try {
                 addIndexingContextForced(info, creators);
                 LOGGER.log(Level.FINE, "using index creators: {0}", creators);
-            } catch (IOException ex) {
-                LOGGER.log(Level.INFO, "Found a broken index at " + getIndexDirectory(info) + " with loaded contexts " + getIndexingContexts().keySet(), ex);
-                break LOAD;
+            } catch (IOException | IllegalArgumentException ex) { // IAE thrown by lucene on index version incompatibilites
+                LOGGER.log(Level.WARNING, "Found an incompatible or broken index at " + getIndexDirectory(info) + " with loaded contexts " + getIndexingContexts().keySet()+", resetting.", ex);
+                removeDir(getIndexDirectory(info));
+//                break LOAD;  // todo: too dangerous to loop here
             }
         }
 
@@ -403,11 +403,11 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         
         Path indexDir = getIndexDirectory(info);
         if (!indexExists(indexDir)) {
-            index = true;
             LOGGER.log(Level.FINER, "Index Not Available: {0} at: {1}", new Object[]{info.getId(), indexDir.toAbsolutePath()});
+            return true;
+        } else {
+            return false;
         }
-        
-        return index;
     }
 
     private @CheckForNull IteratorSearchResponse repeatedPagedSearch(Query q, final List<IndexingContext> contexts, int count) throws IOException {
@@ -568,6 +568,16 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                         // IllegalArgumentException signals remote archive format problems
                         fetchFailed = true;
                         throw new IOException("Failed to load maven-index for: " + indexingContext.getRepositoryUrl(), ex);
+                    } catch (RuntimeException ex) {
+                        // thread pools, like the one used in maven-indexer's IndexDataReader, may suppress cancellation exceptions
+                        // lets try to find them again
+                        if (isCancellation(ex)) {
+                            Cancellation cancellation = new Cancellation();
+                            cancellation.addSuppressed(ex);
+                            throw cancellation;
+                        } else {
+                            throw ex;
+                        }
                     } finally {
                         if (nic != null) {
                             nic.end();
@@ -629,7 +639,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             throw e;
         } catch (Cancellation x) {
             pauseRemoteRepoIndexing(120); // pause a while
-            throw new IOException("canceled indexing", x);
+            LOGGER.log(Level.INFO, "user canceled indexing", x);
         } catch (ComponentLookupException x) {
             throw new IOException("could not find protocol handler for " + repo.getRepositoryUrl(), x);
         } finally {
@@ -656,6 +666,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         return (msg != null && msg.contains("No space left on device"))
             || (cause != null && isNoSpaceLeftOnDevice(cause))
             || (suppressed.length > 0 && Stream.of(suppressed).anyMatch(NexusRepositoryIndexerImpl::isNoSpaceLeftOnDevice));
+    }
+
+    private static boolean isCancellation(Throwable ex) {
+        return Stream.of(ex.getSuppressed()).anyMatch(s -> s instanceof Cancellation);
     }
 
     private static boolean isDiag() {

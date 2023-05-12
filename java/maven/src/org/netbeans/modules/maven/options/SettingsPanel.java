@@ -197,6 +197,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbOutputTabShowConfig.addActionListener(listener);
         rbOutputTabId.addActionListener(listener);
         rbOutputTabName.addActionListener(listener);
+        rbFullIndex.addActionListener(listener);
+        rb5Years.addActionListener(listener);
+        rb2Years.addActionListener(listener);
         cbEnableIndexing.addActionListener(listener);
         cbEnableMultiThreading.addActionListener(listener);
         cbEnableIndexDownload.addActionListener(listener);
@@ -350,6 +353,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        bgIndexFilter = new javax.swing.ButtonGroup();
         pnlCards = new javax.swing.JPanel();
         pnlAppearance = new javax.swing.JPanel();
         javax.swing.JPanel appearancePanel = new javax.swing.JPanel();
@@ -376,6 +380,10 @@ public class SettingsPanel extends javax.swing.JPanel {
         javax.swing.JScrollPane permissionsTableScrollPane = new javax.swing.JScrollPane();
         permissionsTable = new javax.swing.JTable();
         cbEnableMultiThreading = new javax.swing.JCheckBox();
+        lblIndexFilter = new javax.swing.JLabel();
+        rbFullIndex = new javax.swing.JRadioButton();
+        rb5Years = new javax.swing.JRadioButton();
+        rb2Years = new javax.swing.JRadioButton();
         plnExperimental = new javax.swing.JPanel();
         javax.swing.JPanel experimentalPanel = new javax.swing.JPanel();
         cbUseBestMaven = new javax.swing.JCheckBox();
@@ -437,7 +445,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(appearancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtProjectNodeNameCustomPattern)
-                    .addComponent(cbProjectNodeNameMode, 0, 332, Short.MAX_VALUE))
+                    .addComponent(cbProjectNodeNameMode, 0, 377, Short.MAX_VALUE))
                 .addContainerGap())
         );
         appearancePanelLayout.setVerticalGroup(
@@ -494,7 +502,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addGroup(dependenciesPanelLayout.createSequentialGroup()
                         .addComponent(lblJavadoc)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comJavadoc, 0, 339, Short.MAX_VALUE))
+                        .addComponent(comJavadoc, 0, 384, Short.MAX_VALUE))
                     .addGroup(dependenciesPanelLayout.createSequentialGroup()
                         .addComponent(lblBinaries)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -590,6 +598,18 @@ public class SettingsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(cbEnableMultiThreading, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbEnableMultiThreading.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(lblIndexFilter, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lblIndexFilter.text")); // NOI18N
+
+        bgIndexFilter.add(rbFullIndex);
+        rbFullIndex.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(rbFullIndex, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.rbFullIndex.text")); // NOI18N
+
+        bgIndexFilter.add(rb5Years);
+        org.openide.awt.Mnemonics.setLocalizedText(rb5Years, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.rb5Years.text")); // NOI18N
+
+        bgIndexFilter.add(rb2Years);
+        org.openide.awt.Mnemonics.setLocalizedText(rb2Years, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.rb2Years.text")); // NOI18N
+
         javax.swing.GroupLayout indexerPanelLayout = new javax.swing.GroupLayout(indexerPanel);
         indexerPanel.setLayout(indexerPanelLayout);
         indexerPanelLayout.setHorizontalGroup(
@@ -602,7 +622,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addGroup(indexerPanelLayout.createSequentialGroup()
                         .addComponent(lblIndex)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comIndex, 0, 234, Short.MAX_VALUE)
+                        .addComponent(comIndex, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnIndex))
                     .addGroup(indexerPanelLayout.createSequentialGroup()
@@ -610,18 +630,31 @@ public class SettingsPanel extends javax.swing.JPanel {
                             .addComponent(cbEnableIndexing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cbEnableIndexDownload)
                             .addComponent(cbEnableMultiThreading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblIndexFilter)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(indexerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rbFullIndex)
+                            .addComponent(rb5Years)
+                            .addComponent(rb2Years))))
                 .addContainerGap())
         );
         indexerPanelLayout.setVerticalGroup(
             indexerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(indexerPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cbEnableIndexing)
+                .addGroup(indexerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbEnableIndexing)
+                    .addComponent(lblIndexFilter)
+                    .addComponent(rbFullIndex))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbEnableIndexDownload)
+                .addGroup(indexerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbEnableIndexDownload)
+                    .addComponent(rb5Years))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbEnableMultiThreading)
+                .addGroup(indexerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbEnableMultiThreading)
+                    .addComponent(rb2Years))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(indexerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblIndex)
@@ -680,7 +713,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                         .addGroup(experimentalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbUseBestMaven)
                             .addComponent(cbAlternateLocation))
-                        .addGap(0, 134, Short.MAX_VALUE))
+                        .addGap(0, 179, Short.MAX_VALUE))
                     .addGroup(experimentalPanelLayout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addGroup(experimentalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -920,8 +953,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCategory))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlCards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(pnlCards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1030,9 +1062,14 @@ public class SettingsPanel extends javax.swing.JPanel {
         comIndex.setEnabled(cbEnableIndexing.isSelected() && cbEnableIndexDownload.isSelected());
         lblIndex.setEnabled(cbEnableIndexing.isSelected() && cbEnableIndexDownload.isSelected());
         btnIndex.setEnabled(cbEnableIndexing.isSelected());
+        lblIndexFilter.setEnabled(cbEnableIndexing.isSelected() && cbEnableIndexDownload.isSelected());
+        rbFullIndex.setEnabled(cbEnableIndexing.isSelected() && cbEnableIndexDownload.isSelected());
+        rb5Years.setEnabled(cbEnableIndexing.isSelected() && cbEnableIndexDownload.isSelected());
+        rb2Years.setEnabled(cbEnableIndexing.isSelected() && cbEnableIndexDownload.isSelected());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup bgIndexFilter;
     private javax.swing.JButton btnDirectory;
     private javax.swing.JButton btnGoals;
     private javax.swing.JButton btnIndex;
@@ -1070,6 +1107,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblExternalVersion;
     private javax.swing.JLabel lblHint;
     private javax.swing.JLabel lblIndex;
+    private javax.swing.JLabel lblIndexFilter;
     private javax.swing.JLabel lblJavadoc;
     private javax.swing.JLabel lblJdkHome;
     private javax.swing.JLabel lblOptions;
@@ -1083,14 +1121,20 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JPanel pnlDependencies;
     private javax.swing.JPanel pnlExecution;
     private javax.swing.JPanel pnlIndex;
+    private javax.swing.JRadioButton rb2Years;
+    private javax.swing.JRadioButton rb5Years;
+    private javax.swing.JRadioButton rbFullIndex;
     private javax.swing.JRadioButton rbOutputTabId;
     private javax.swing.JRadioButton rbOutputTabName;
     private javax.swing.JTextField txtDirectory;
     private javax.swing.JTextField txtOptions;
     private javax.swing.JTextField txtProjectNodeNameCustomPattern;
     // End of variables declaration//GEN-END:variables
-    
-    
+
+    private int getDateCutoffFilterValue() {
+        return rb5Years.isSelected() ? 5 : rb2Years.isSelected() ? 2 : 0;
+    }
+
     private DefaultComboBoxModel getProjectNodeModel() {
         return new javax.swing.DefaultComboBoxModel(new String[] { 
             NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lblDefault.text"), // NOI18N
@@ -1217,11 +1261,15 @@ public class SettingsPanel extends javax.swing.JPanel {
                 });
             }
         });
-        
         comIndex.setSelectedIndex(RepositoryPreferences.getIndexUpdateFrequency());
         cbEnableIndexing.setSelected(RepositoryPreferences.isIndexRepositories());
         cbEnableIndexDownload.setSelected(RepositoryPreferences.isIndexDownloadEnabled());
         cbEnableMultiThreading.setSelected(RepositoryPreferences.isMultiThreadedIndexExtractionEnabled());
+        switch (RepositoryPreferences.getIndexDateCutoffFilter()) {
+            case 5: rb5Years.setSelected(true); break;
+            case 2: rb2Years.setSelected(true); break;
+            default: rbFullIndex.setSelected(true); break;
+        }
         comBinaries.setSelectedItem(MavenSettings.getDefault().getBinaryDownloadStrategy());
         comJavadoc.setSelectedItem(MavenSettings.getDefault().getJavadocDownloadStrategy());
         comSource.setSelectedItem(MavenSettings.getDefault().getSourceDownloadStrategy());
@@ -1306,6 +1354,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         RepositoryPreferences.setIndexRepositories(cbEnableIndexing.isSelected());
         RepositoryPreferences.setIndexDownloadEnabled(cbEnableIndexDownload.isSelected());
         RepositoryPreferences.setMultiThreadedIndexExtractionEnabled(cbEnableMultiThreading.isSelected());
+        RepositoryPreferences.setIndexDateCutoffFilter(getDateCutoffFilterValue());
         RepositoryPreferences.setIndexDownloadPermissions(((IndexDownloadPermissionTableModel)permissionsTable.getModel()).getPermissions());
         MavenSettings.getDefault().setBinaryDownloadStrategy((MavenSettings.DownloadStrategy) comBinaries.getSelectedItem());
         MavenSettings.getDefault().setJavadocDownloadStrategy((MavenSettings.DownloadStrategy) comJavadoc.getSelectedItem());
@@ -1380,6 +1429,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         isChanged |= RepositoryPreferences.isIndexRepositories() != cbEnableIndexing.isSelected();
         isChanged |= RepositoryPreferences.isIndexDownloadEnabled() != cbEnableIndexDownload.isSelected();
         isChanged |= RepositoryPreferences.isMultiThreadedIndexExtractionEnabled() != cbEnableMultiThreading.isSelected();
+        isChanged |= RepositoryPreferences.getIndexDateCutoffFilter() != getDateCutoffFilterValue();
         isChanged |= MavenSettings.getDefault().getBinaryDownloadStrategy().compareTo((MavenSettings.DownloadStrategy) comBinaries.getSelectedItem()) != 0;
         isChanged |= MavenSettings.getDefault().getJavadocDownloadStrategy().compareTo((MavenSettings.DownloadStrategy) comJavadoc.getSelectedItem()) != 0;
         isChanged |= MavenSettings.getDefault().getSourceDownloadStrategy().compareTo((MavenSettings.DownloadStrategy) comSource.getSelectedItem()) != 0;

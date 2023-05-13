@@ -40,6 +40,7 @@ import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.languages.hcl.ast.ASTBuilderListener;
 import org.netbeans.modules.languages.hcl.ast.HCLDocument;
+import org.netbeans.modules.languages.hcl.ast.SourceRef;
 import org.netbeans.modules.languages.hcl.grammar.HCLLexer;
 import org.netbeans.modules.languages.hcl.grammar.HCLParser;
 import org.netbeans.modules.languages.hcl.grammar.HCLParserBaseListener;
@@ -59,6 +60,7 @@ public class HCLParserResult  extends ParserResult {
     public final Map<String,List<OffsetRange>> folds = new HashMap<>();
 
     private HCLDocument document;
+    private SourceRef references;
 
     public HCLParserResult(Snapshot snapshot) {
         super(snapshot);
@@ -84,7 +86,7 @@ public class HCLParserResult  extends ParserResult {
             lexer.reset();
             
         }
-        processDocument(document);
+        processDocument(document, references);
 
         finished = true;
     }
@@ -126,13 +128,14 @@ public class HCLParserResult  extends ParserResult {
 
         parser.addParseListener(createFoldListener());
 
-        ASTBuilderListener astListener = new ASTBuilderListener();
+        ASTBuilderListener astListener = new ASTBuilderListener(getSnapshot());
         parser.addParseListener(astListener);
 
         document = astListener.getDocument();
+        references = astListener.getReferences();
     }
 
-    protected void processDocument(HCLDocument doc) {
+    protected void processDocument(HCLDocument doc, SourceRef references) {
     }
 
     private void addFold(FoldType ft, Token token) {

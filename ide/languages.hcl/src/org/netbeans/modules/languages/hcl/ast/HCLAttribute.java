@@ -24,16 +24,19 @@ package org.netbeans.modules.languages.hcl.ast;
  */
 public final class HCLAttribute extends HCLElement {
 
-    final HCLIdentifier name;
+    HCLIdentifier name;
 
-    public HCLAttribute(HCLIdentifier name) {
-        this.name = name;
+    public HCLAttribute(HCLContainer parent) {
+        super(parent);
     }
-    
+ 
     @Override
     public String id() {
         return name.id();
     }
 
+    public HCLIdentifier getName() {
+        return name;
+    }
 
 }

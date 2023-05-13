@@ -20,11 +20,8 @@ package org.netbeans.modules.languages.hcl.ast;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -36,19 +33,34 @@ public abstract class HCLContainer extends HCLElement {
     final List<HCLBlock> blocks = new LinkedList<>();
     final List<HCLAttribute> attributes = new LinkedList<>();
 
+    public HCLContainer(HCLContainer parent) {
+        super(parent);
+    }
+
     public void add(HCLBlock block) {
-        block.parent = this;
         elements.add(block);
         blocks.add(block);
     }
 
     public void add(HCLAttribute attr) {
-        attr.parent = this;
         elements.add(attr);
         attributes.add(attr);
     }
 
+    @Override
+    public HCLContainer getContainer() {
+        return (HCLContainer) parent;
+    }
+
     public Collection<? extends HCLBlock> getBlocks() {
         return Collections.unmodifiableCollection(blocks);
+    }
+
+    public Collection<? extends HCLAttribute> getAttributes() {
+        return Collections.unmodifiableCollection(attributes);
+    }
+
+    public boolean hasAttributes() {
+        return !attributes.isEmpty();
     }
 }

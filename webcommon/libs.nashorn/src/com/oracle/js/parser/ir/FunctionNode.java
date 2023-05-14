@@ -173,6 +173,9 @@ public final class FunctionNode extends LexicalContextExpression implements Flag
     /** Does this function have nested declarations? */
     public static final int HAS_FUNCTION_DECLARATIONS = 1 << 10;
 
+    /** The function entry is generated (for example default constructor) */
+    public static final int IS_GENERATED = 1 << 11;
+
     /** Are we vararg, but do we just pass the arguments along to apply or call */
     public static final int HAS_APPLY_TO_CALL_SPECIALIZATION = 1 << 12;
 
@@ -779,5 +782,9 @@ public final class FunctionNode extends LexicalContextExpression implements Flag
 
     public boolean isAsync() {
         return getFlag(IS_ASYNC);
+    }
+
+    public boolean isGenerated() {
+        return getFlag(IS_GENERATED);
     }
 }

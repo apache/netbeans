@@ -1412,6 +1412,7 @@ loop:
 
         function.setFlag(FunctionNode.IS_METHOD);
         function.setFlag(FunctionNode.IS_CLASS_CONSTRUCTOR);
+        function.setFlag(FunctionNode.IS_GENERATED);
         if (subclass) {
             function.setFlag(FunctionNode.IS_SUBCLASS_CONSTRUCTOR);
             function.setFlag(FunctionNode.HAS_DIRECT_SUPER);

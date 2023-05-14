@@ -95,10 +95,11 @@ public class JavaLexer implements Lexer<JavaTokenId> {
     private static final class ComplexState {
         public final JavaTokenId pendingStringLiteral;
         public final int pendingBraces;
-        public final List<LiteralHistory> literalHistory;
+        public final LiteralHistoryNode literalHistory;
         public final Integer state;
 
-        public ComplexState(JavaTokenId pendingStringLiteral, int pendingBraces, List<LiteralHistory> literalHistory, Integer state) {
+        public ComplexState(JavaTokenId pendingStringLiteral, int pendingBraces,
+                            LiteralHistoryNode literalHistory, Integer state) {
             this.pendingStringLiteral = pendingStringLiteral;
             this.pendingBraces = pendingBraces;
             this.literalHistory = literalHistory;
@@ -142,7 +143,7 @@ public class JavaLexer implements Lexer<JavaTokenId> {
     }
     public Object state() {
         if (pendingStringLiteral != null) {
-            return new ComplexState(pendingStringLiteral, 0, new ArrayList<>(literalHistory), state);
+            return new ComplexState(pendingStringLiteral, 0, literalHistory, state);
         }
         return state;
     }
@@ -222,19 +223,24 @@ public class JavaLexer implements Lexer<JavaTokenId> {
         if (nextChar() != '\n') backup(1);
     }
 
-    JavaTokenId pendingStringLiteral;
-    int pendingBraces;
-    private class LiteralHistory {
+    private JavaTokenId pendingStringLiteral;
+    private int pendingBraces;
+
+    private class LiteralHistoryNode {
         public final JavaTokenId pendingStringLiteral;
         public final int pendingBraces;
+        public final LiteralHistoryNode next;
 
-        public LiteralHistory(JavaTokenId pendingStringLiteral, int pendingBraces) {
+        public LiteralHistoryNode(JavaTokenId pendingStringLiteral, int pendingBraces, LiteralHistoryNode next) {
             this.pendingStringLiteral = pendingStringLiteral;
             this.pendingBraces = pendingBraces;
+            this.next = next;
         }
 
     }
-    List<LiteralHistory> literalHistory = new ArrayList<>();
+
+    LiteralHistoryNode literalHistory = null;
+
     public Token<JavaTokenId> nextToken() {
         boolean stringLiteralContinuation = false;
         while(true) {
@@ -279,7 +285,7 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                                 switch (nextChar()) {
                                     case '{':
                                         if (pendingStringLiteral != null) {
-                                            literalHistory.add(new LiteralHistory(pendingStringLiteral, pendingBraces));
+                                            literalHistory = new LiteralHistoryNode(pendingStringLiteral, pendingBraces, literalHistory);
                                         }
                                         pendingStringLiteral = lookupId;
                                         pendingBraces = 0;
@@ -535,13 +541,13 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                 case '}':
                     if (pendingStringLiteral != null && pendingBraces-- == 0) {
                         lookupId = pendingStringLiteral;
-                        if (literalHistory.isEmpty()) {
+                        if (literalHistory == null) {
                             pendingStringLiteral = null;
                             pendingBraces = 0;
                         } else {
-                            LiteralHistory history = literalHistory.remove(literalHistory.size() - 1);
-                            pendingStringLiteral = history.pendingStringLiteral;
-                            pendingBraces = history.pendingBraces;
+                            pendingStringLiteral = literalHistory.pendingStringLiteral;
+                            pendingBraces = literalHistory.pendingBraces;
+                            literalHistory = literalHistory.next;
                         }
                         stringLiteralContinuation = true;
                         break;

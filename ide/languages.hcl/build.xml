@@ -40,7 +40,6 @@
             <arg value="org.netbeans.modules.languages.hcl.grammar"/>
             <arg value="HCLLexer.g4"/>
             <arg value="TerraformLexer.g4"/>
-            <arg value="HCLExpressionParser.g4"/>
             <arg value="HCLParser.g4"/>
         </java>
 

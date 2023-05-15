@@ -18,7 +18,7 @@
  */
 'use strict';
 
-import { commands, debug, tests, workspace, CancellationToken, TestController, TestItem, TestRunProfileKind, TestRunRequest, Uri, TestRun, TestMessage, Location, Position } from "vscode";
+import { commands, debug, tests, workspace, CancellationToken, TestController, TestItem, TestRunProfileKind, TestRunRequest, Uri, TestRun, TestMessage, Location, Position, MarkdownString } from "vscode";
 import * as path from 'path';
 import { asRange, TestCase, TestSuite } from "./protocol";
 
@@ -163,7 +163,7 @@ export class NbTestAdapter {
                                 }
                                 let message: TestMessage | undefined;
                                 if (test.stackTrace) {
-                                    message = new TestMessage(test.stackTrace.join('\n'));
+                                    message = new TestMessage(this.stacktrace2Message(currentTest?.uri?.toString(), test.stackTrace));
                                     if (currentTest) {
                                         const testUri = currentTest.uri || currentTest.parent?.uri;
                                         if (testUri) {
@@ -220,7 +220,7 @@ export class NbTestAdapter {
             let currentTest = currentSuite?.children.get(test.id);
             const testUri = test.file ? Uri.parse(test.file) : undefined;
             if (currentTest) {
-                if (currentTest.uri?.toString() !== testUri?.toString()) {
+                if (testUri && currentTest.uri?.toString() !== testUri?.toString()) {
                     currentTest = this.testController.createTestItem(test.id, test.name, testUri);
                     currentSuite?.children.add(currentTest);
                 }
@@ -295,5 +295,24 @@ export class NbTestAdapter {
             }
         });
         return ret;
+    }
+
+    stacktrace2Message(currentTestUri: string | undefined, stacktrace: string[]): MarkdownString {
+        const regExp: RegExp = /(\s*at\s+(?:[\w$\\.]+\/)?((?:[\w$]+\.)+[\w\s$<>]+))\(((.*):(\d+))\)/;
+        const message = new MarkdownString();
+        message.isTrusted = true;
+        message.supportHtml = true;
+        for (const line of stacktrace) {
+            if (message.value.length) {
+                message.appendMarkdown('<br/>');
+            }
+            const result = regExp.exec(line);
+            if (result) {
+                message.appendText(result[1]).appendText('(').appendMarkdown(`[${result[3]}](command:java.open.stacktrace?${encodeURIComponent(JSON.stringify([currentTestUri, result[2], result[4], +result[5]]))})`).appendText(')');
+            } else {
+                message.appendText(line);
+            }
+        }
+        return message;
     }
 }

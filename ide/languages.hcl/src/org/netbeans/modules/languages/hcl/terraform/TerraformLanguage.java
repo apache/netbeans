@@ -24,6 +24,7 @@ import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
+import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.languages.hcl.HCLLanguage;
 import org.netbeans.modules.languages.hcl.HCLTokenId;
@@ -72,6 +73,16 @@ public final class TerraformLanguage extends HCLLanguage {
     @Override
     public Parser getParser() {
         return new NbHCLParser<TerraformParserResult>(TerraformParserResult::new);
+    }
+
+    @Override
+    public StructureScanner getStructureScanner() {
+        return super.getStructureScanner();
+    }
+
+    @Override
+    public boolean hasStructureScanner() {
+        return true;
     }
 
     private static final Language<HCLTokenId> language = new LanguageHierarchy<HCLTokenId>() {

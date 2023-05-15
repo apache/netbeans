@@ -118,6 +118,14 @@ public class HCLParserResult  extends ParserResult {
         return errors;
     }
 
+    public final HCLDocument getDocument() {
+        return document;
+    }
+
+    public final SourceRef getReferences() {
+        return references;
+    }
+
     @Override
     protected void invalidate() {
     }

@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -49,6 +50,9 @@ public class SourceRef {
         add(e, new OffsetRange(startOffset, endOffset));
     }
 
+    public FileObject getFileObject() {
+        return source.getSource().getFileObject();
+    }
     public Optional<OffsetRange> getOffsetRange(HCLElement e) {
         return Optional.ofNullable(elementOffsets.get(e));
     }

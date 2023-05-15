@@ -83,6 +83,7 @@ public class ASTBuilderListener extends HCLParserBaseListener {
 
         current = current.getContainer();
         current.add(block);
+        addReference(block, ctx);
     }
 
     @Override

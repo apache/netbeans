@@ -24,6 +24,7 @@ import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
+import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.languages.hcl.HCLTokenId;
 import org.netbeans.modules.languages.hcl.BasicHCLLexer;
@@ -69,6 +70,16 @@ public final class TFVarsLanguage extends HCLLanguage {
     @Override
     public String getPreferredExtension() {
         return "tfvars";
+    }
+
+    @Override
+    public boolean hasStructureScanner() {
+        return true;
+    }
+
+    @Override
+    public StructureScanner getStructureScanner() {
+        return super.getStructureScanner();
     }
 
     @Override

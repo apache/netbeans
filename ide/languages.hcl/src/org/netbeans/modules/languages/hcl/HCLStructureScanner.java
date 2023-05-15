@@ -18,28 +18,25 @@
  */
 package org.netbeans.modules.languages.hcl;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.netbeans.api.editor.fold.FoldType;
-import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.languages.hcl.HCLParserResult;
-import org.netbeans.spi.editor.fold.FoldTypeProvider;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
-public class HCLStructureScanner implements StructureScanner{
+public class HCLStructureScanner implements StructureScanner {
     @Override
     public List<? extends StructureItem> scan(ParserResult info) {
-        return Collections.emptyList();
+        HCLParserResult hclInfo = (HCLParserResult) info;
+
+        HCLStructureItem root = new HCLStructureItem(hclInfo.getDocument(), hclInfo.getReferences());
+        return root.getNestedItems();
     }
 
     @Override

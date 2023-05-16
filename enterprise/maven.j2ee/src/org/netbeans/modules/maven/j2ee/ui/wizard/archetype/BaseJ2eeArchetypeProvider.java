@@ -45,9 +45,6 @@ abstract class BaseJ2eeArchetypeProvider {
      *
      * It's possible to use {@link #addMojoArchetype} method for creating
      * new archetypes with groupId set to org.codehaus.mojo.archetypes or we can add archetypes directly to the map
-     *
-     * If we want to create the same archetype for all possible profiles, we can use
-     * {@link #addSameMojoArchetypeForAllProfiles} method
      */
     protected abstract void setUpProjectArchetypes();
 
@@ -67,51 +64,6 @@ abstract class BaseJ2eeArchetypeProvider {
                 NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,groupId),
                 NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,version),
                 NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,artifactId)));
-    }
-
-    protected void addSameMojoArchetypeForAllProfiles(String version, String artifactId) {
-        Archetype archetype = createMojoArchetype(version, artifactId);
-        map.put(Profile.J2EE_14, archetype);
-        map.put(Profile.JAVA_EE_5, archetype);
-        map.put(Profile.JAVA_EE_6_FULL, archetype);
-        map.put(Profile.JAVA_EE_6_WEB, archetype);
-        map.put(Profile.JAVA_EE_7_FULL, archetype);
-        map.put(Profile.JAVA_EE_7_WEB, archetype);
-        Archetype javaEE8Archetype = createArchetype(
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeGroupId.JavaEE8"),
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JavaEE8"),
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JavaEE8")
-        );
-        Archetype jakartaEE8Archetype = createArchetype(
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeGroupId.JakartaEE8"),
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE8"),
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE8"));
-
-        Archetype jakartaEE9Archetype = createArchetype(
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeGroupId.JakartaEE9"),
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE9"),
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE9"));
-
-        Archetype jakartaEE9_1Archetype = createArchetype(
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeGroupId.JakartaEE9_1"),
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE9_1"),
-               NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE9_1"));
-
-        Archetype jakartaEE10_0Archetype = createArchetype(
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeGroupId.JakartaEE10_0"),
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE10_0"),
-               NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE10_0"));
-
-        map.put(Profile.JAVA_EE_8_FULL, javaEE8Archetype);
-        map.put(Profile.JAVA_EE_8_WEB, javaEE8Archetype);
-        map.put(Profile.JAKARTA_EE_8_FULL, jakartaEE8Archetype);
-        map.put(Profile.JAKARTA_EE_8_WEB, jakartaEE8Archetype);
-        map.put(Profile.JAKARTA_EE_9_FULL, jakartaEE9Archetype);
-        map.put(Profile.JAKARTA_EE_9_WEB, jakartaEE9Archetype);
-        map.put(Profile.JAKARTA_EE_9_1_FULL, jakartaEE9_1Archetype);
-        map.put(Profile.JAKARTA_EE_9_1_WEB, jakartaEE9_1Archetype);
-        map.put(Profile.JAKARTA_EE_10_FULL, jakartaEE10_0Archetype);
-        map.put(Profile.JAKARTA_EE_10_WEB, jakartaEE10_0Archetype);
     }
 
     private Archetype createMojoArchetype(String version, String artifactId) {

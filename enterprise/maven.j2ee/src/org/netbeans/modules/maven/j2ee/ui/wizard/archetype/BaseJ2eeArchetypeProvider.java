@@ -103,14 +103,6 @@ abstract class BaseJ2eeArchetypeProvider {
     }
 
     /**
-     * Returns whole map which contains <key = Profile, value = Archetype> pairs.
-     * @return complete archetype map
-     */
-    public Map<Profile, Archetype> getArchetypeMap() {
-        return map;
-    }
-
-    /**
      * Returns any Archetype saved in the map.
      * Could be used if we want to have the same Archetype for every Profile
      *

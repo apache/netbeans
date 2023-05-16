@@ -83,10 +83,6 @@ public final class J2eeArchetypeFactory {
         return getProvider(projectType).getAnyArchetype();
     }
 
-    public Map<Profile, Archetype> getArchetypeMap(J2eeModule.Type projectType) {
-        return getProvider(projectType).getArchetypeMap();
-    }
-
     private static class AppClientArchetypes extends BaseJ2eeArchetypeProvider {
         @Override
         protected void setUpProjectArchetypes() {

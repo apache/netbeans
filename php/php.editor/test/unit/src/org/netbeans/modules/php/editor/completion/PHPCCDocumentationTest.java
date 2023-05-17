@@ -424,6 +424,22 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionOnlyDocumentation("testfiles/completion/documentation/issueGH5881.php", "$test->method_aa_bb_cc^();");
     }
 
+    public void testGuessingNullReturnType_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/guessingNullReturnType.php", "$this->testGuessingNullMetho^d(null);", false, "");
+    }
+
+    public void testGuessingNullReturnType_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/guessingNullReturnType.php", "testGuessingNullFunctio^n(null);", false, "");
+    }
+
+    public void testNullConstant_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/nullConstant.php", "$a = TEST_CON^ST;", false, "");
+    }
+
+    public void testNullConstant_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/nullConstant.php", "$b = TestConst::TEST_CLASS_CON^ST;", false, "");
+    }
+
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");

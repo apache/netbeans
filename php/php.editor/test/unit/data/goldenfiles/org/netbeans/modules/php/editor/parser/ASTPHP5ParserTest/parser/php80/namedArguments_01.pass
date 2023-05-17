@@ -944,9 +944,7 @@
                                         </Variable>
                                     </ParametrName>
                                     <DefaultValue>
-                                        <NamespaceName start='1276' end='1280' isCurrent='false' isGlobal='false'>
-                                            <Identifier start='1276' end='1280' name='null'/>
-                                        </NamespaceName>
+                                        <Scalar start='1276' end='1280' type='STRING' value='null'/>
                                     </DefaultValue>
                                 </FormalParameter>
                             </FormalParameters>

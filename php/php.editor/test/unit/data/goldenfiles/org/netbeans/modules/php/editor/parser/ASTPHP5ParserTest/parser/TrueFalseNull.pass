@@ -1,0 +1,1723 @@
+<testresult testFile='TrueFalseNull.php'>
+    <scanner>
+        <token id='T_DEFINE' start='815' end='821'>
+            <text>define</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='821' end='822'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='822' end='834'>
+            <text>&apos;CONST_TRUE&apos;</text>
+        </token>
+        <token id='T_COMMA' start='834' end='835'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='836' end='841'>
+            <text>false</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='841' end='842'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='842' end='843'>
+            <text>;</text>
+        </token>
+        <token id='T_DEFINE' start='844' end='850'>
+            <text>define</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='850' end='851'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='851' end='864'>
+            <text>&apos;CONST_FALSE&apos;</text>
+        </token>
+        <token id='T_COMMA' start='864' end='865'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='866' end='870'>
+            <text>true</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='870' end='871'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='871' end='872'>
+            <text>;</text>
+        </token>
+        <token id='T_DEFINE' start='873' end='879'>
+            <text>define</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='879' end='880'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='880' end='892'>
+            <text>&apos;CONST_NULL&apos;</text>
+        </token>
+        <token id='T_COMMA' start='892' end='893'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='894' end='898'>
+            <text>null</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='898' end='899'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='899' end='900'>
+            <text>;</text>
+        </token>
+        <token id='T_CLASS' start='902' end='907'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='908' end='921'>
+            <text>ConstantClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='922' end='923'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='928' end='933'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='934' end='938'>
+            <text>TRUE</text>
+        </token>
+        <token id='T_EQUAL' start='939' end='940'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='941' end='945'>
+            <text>true</text>
+        </token>
+        <token id='T_SEMICOLON' start='945' end='946'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='951' end='956'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='957' end='962'>
+            <text>FALSE</text>
+        </token>
+        <token id='T_EQUAL' start='963' end='964'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='965' end='970'>
+            <text>false</text>
+        </token>
+        <token id='T_SEMICOLON' start='970' end='971'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='976' end='981'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='982' end='986'>
+            <text>NULL</text>
+        </token>
+        <token id='T_EQUAL' start='987' end='988'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='989' end='993'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='993' end='994'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='995' end='996'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='998' end='1011'>
+            <text>ConstantClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1011' end='1013'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1013' end='1017'>
+            <text>TRUE</text>
+        </token>
+        <token id='T_SEMICOLON' start='1017' end='1018'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1019' end='1032'>
+            <text>ConstantClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1032' end='1034'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1034' end='1039'>
+            <text>FALSE</text>
+        </token>
+        <token id='T_SEMICOLON' start='1039' end='1040'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1041' end='1054'>
+            <text>ConstantClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1054' end='1056'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1056' end='1060'>
+            <text>NULL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1060' end='1061'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1063' end='1065'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='1066' end='1067'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1068' end='1072'>
+            <text>true</text>
+        </token>
+        <token id='T_SEMICOLON' start='1072' end='1073'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1074' end='1076'>
+            <text>$b</text>
+        </token>
+        <token id='T_EQUAL' start='1077' end='1078'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1079' end='1084'>
+            <text>false</text>
+        </token>
+        <token id='T_SEMICOLON' start='1084' end='1085'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1086' end='1088'>
+            <text>$c</text>
+        </token>
+        <token id='T_EQUAL' start='1089' end='1090'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1091' end='1095'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='1095' end='1096'>
+            <text>;</text>
+        </token>
+        <token id='T_CLASS' start='1098' end='1103'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1104' end='1113'>
+            <text>testClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1114' end='1115'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1120' end='1126'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='1127' end='1129'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='1130' end='1131'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1132' end='1136'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='1136' end='1137'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1142' end='1148'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='1149' end='1151'>
+            <text>$z</text>
+        </token>
+        <token id='T_EQUAL' start='1152' end='1153'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1154' end='1158'>
+            <text>true</text>
+        </token>
+        <token id='T_SEMICOLON' start='1158' end='1159'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1164' end='1170'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='1171' end='1173'>
+            <text>$y</text>
+        </token>
+        <token id='T_EQUAL' start='1174' end='1175'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1176' end='1181'>
+            <text>false</text>
+        </token>
+        <token id='T_SEMICOLON' start='1181' end='1182'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1188' end='1194'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1195' end='1199'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='1200' end='1202'>
+            <text>$n</text>
+        </token>
+        <token id='T_SEMICOLON' start='1202' end='1203'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1208' end='1214'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1215' end='1219'>
+            <text>true</text>
+        </token>
+        <token id='T_VARIABLE' start='1220' end='1222'>
+            <text>$t</text>
+        </token>
+        <token id='T_SEMICOLON' start='1222' end='1223'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1228' end='1234'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1235' end='1240'>
+            <text>false</text>
+        </token>
+        <token id='T_VARIABLE' start='1241' end='1243'>
+            <text>$f</text>
+        </token>
+        <token id='T_SEMICOLON' start='1243' end='1244'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1250' end='1256'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1257' end='1265'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1266' end='1268'>
+            <text>m1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1268' end='1269'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1269' end='1272'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1272' end='1273'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1273' end='1277'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='1278' end='1280'>
+            <text>$z</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1280' end='1281'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1281' end='1282'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1283' end='1286'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1286' end='1287'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1287' end='1291'>
+            <text>null</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1296' end='1297'>
+            <text>{</text>
+        </token>
+        <token id='T_IF' start='1306' end='1308'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1309' end='1310'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1310' end='1312'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1312' end='1313'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1314' end='1315'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1328' end='1334'>
+            <text>return</text>
+        </token>
+        <token id='T_LNUMBER' start='1335' end='1336'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1336' end='1337'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1346' end='1347'>
+            <text>}</text>
+        </token>
+        <token id='T_ELSE' start='1348' end='1352'>
+            <text>else</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1353' end='1354'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1367' end='1373'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1374' end='1378'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='1378' end='1379'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1388' end='1389'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1394' end='1395'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1401' end='1407'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1408' end='1416'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1417' end='1419'>
+            <text>m2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1419' end='1420'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1420' end='1425'>
+            <text>false</text>
+        </token>
+        <token id='T_VARIABLE' start='1426' end='1428'>
+            <text>$z</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1428' end='1429'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1429' end='1430'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1431' end='1436'>
+            <text>false</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1441' end='1442'>
+            <text>{</text>
+        </token>
+        <token id='T_IF' start='1451' end='1453'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1454' end='1455'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1455' end='1457'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1457' end='1458'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1459' end='1460'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1473' end='1479'>
+            <text>return</text>
+        </token>
+        <token id='T_LNUMBER' start='1480' end='1481'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1481' end='1482'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1491' end='1492'>
+            <text>}</text>
+        </token>
+        <token id='T_ELSE' start='1493' end='1497'>
+            <text>else</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1498' end='1499'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1512' end='1518'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1519' end='1524'>
+            <text>false</text>
+        </token>
+        <token id='T_SEMICOLON' start='1524' end='1525'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1534' end='1535'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1540' end='1541'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1547' end='1553'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1554' end='1562'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1563' end='1565'>
+            <text>m3</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1565' end='1566'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1566' end='1570'>
+            <text>true</text>
+        </token>
+        <token id='T_VARIABLE' start='1571' end='1573'>
+            <text>$z</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1573' end='1574'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1574' end='1575'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1576' end='1580'>
+            <text>true</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1585' end='1586'>
+            <text>{</text>
+        </token>
+        <token id='T_IF' start='1595' end='1597'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1598' end='1599'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1599' end='1601'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1601' end='1602'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1603' end='1604'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1617' end='1623'>
+            <text>return</text>
+        </token>
+        <token id='T_LNUMBER' start='1624' end='1625'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1625' end='1626'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1635' end='1636'>
+            <text>}</text>
+        </token>
+        <token id='T_ELSE' start='1637' end='1641'>
+            <text>else</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1642' end='1643'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1656' end='1662'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1663' end='1667'>
+            <text>true</text>
+        </token>
+        <token id='T_SEMICOLON' start='1667' end='1668'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1677' end='1678'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1683' end='1684'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1690' end='1696'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1697' end='1705'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1706' end='1708'>
+            <text>m4</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1708' end='1709'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1709' end='1711'>
+            <text>$z</text>
+        </token>
+        <token id='T_EQUAL' start='1712' end='1713'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1714' end='1718'>
+            <text>true</text>
+        </token>
+        <token id='T_COMMA' start='1718' end='1719'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1720' end='1722'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='1723' end='1724'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1725' end='1730'>
+            <text>false</text>
+        </token>
+        <token id='T_COMMA' start='1730' end='1731'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1732' end='1734'>
+            <text>$y</text>
+        </token>
+        <token id='T_EQUAL' start='1735' end='1736'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1737' end='1741'>
+            <text>null</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1741' end='1742'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1743' end='1744'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1744' end='1745'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1746' end='1747'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='1749' end='1757'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1758' end='1760'>
+            <text>s1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1760' end='1761'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1761' end='1764'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1764' end='1765'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1765' end='1769'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='1770' end='1772'>
+            <text>$z</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1772' end='1773'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1773' end='1774'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1775' end='1778'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1778' end='1779'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1779' end='1783'>
+            <text>null</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1784' end='1785'>
+            <text>{</text>
+        </token>
+        <token id='T_IF' start='1790' end='1792'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1793' end='1794'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1794' end='1796'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1796' end='1797'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1798' end='1799'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1808' end='1814'>
+            <text>return</text>
+        </token>
+        <token id='T_LNUMBER' start='1815' end='1816'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1816' end='1817'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1822' end='1823'>
+            <text>}</text>
+        </token>
+        <token id='T_ELSE' start='1824' end='1828'>
+            <text>else</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1829' end='1830'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1839' end='1845'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1846' end='1850'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='1850' end='1851'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1856' end='1857'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1858' end='1859'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='1861' end='1869'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1870' end='1872'>
+            <text>s2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1872' end='1873'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1873' end='1878'>
+            <text>false</text>
+        </token>
+        <token id='T_VARIABLE' start='1879' end='1881'>
+            <text>$z</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1881' end='1882'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1882' end='1883'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1884' end='1889'>
+            <text>false</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1890' end='1891'>
+            <text>{</text>
+        </token>
+        <token id='T_IF' start='1896' end='1898'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1899' end='1900'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1900' end='1902'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1902' end='1903'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1904' end='1905'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1914' end='1920'>
+            <text>return</text>
+        </token>
+        <token id='T_LNUMBER' start='1921' end='1922'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1922' end='1923'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1928' end='1929'>
+            <text>}</text>
+        </token>
+        <token id='T_ELSE' start='1930' end='1934'>
+            <text>else</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1935' end='1936'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1945' end='1951'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1952' end='1957'>
+            <text>false</text>
+        </token>
+        <token id='T_SEMICOLON' start='1957' end='1958'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1963' end='1964'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1965' end='1966'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='1968' end='1976'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1977' end='1979'>
+            <text>s3</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1979' end='1980'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1980' end='1984'>
+            <text>true</text>
+        </token>
+        <token id='T_VARIABLE' start='1985' end='1987'>
+            <text>$z</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1987' end='1988'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1988' end='1989'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1990' end='1994'>
+            <text>true</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1995' end='1996'>
+            <text>{</text>
+        </token>
+        <token id='T_IF' start='2001' end='2003'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2004' end='2005'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='2005' end='2007'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2007' end='2008'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2009' end='2010'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='2019' end='2025'>
+            <text>return</text>
+        </token>
+        <token id='T_LNUMBER' start='2026' end='2027'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='2027' end='2028'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2033' end='2034'>
+            <text>}</text>
+        </token>
+        <token id='T_ELSE' start='2035' end='2039'>
+            <text>else</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2040' end='2041'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='2050' end='2056'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='2057' end='2061'>
+            <text>true</text>
+        </token>
+        <token id='T_SEMICOLON' start='2061' end='2062'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2067' end='2068'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2069' end='2070'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='2072' end='2080'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2081' end='2083'>
+            <text>s4</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2083' end='2084'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='2084' end='2086'>
+            <text>$z</text>
+        </token>
+        <token id='T_EQUAL' start='2087' end='2088'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2089' end='2093'>
+            <text>true</text>
+        </token>
+        <token id='T_COMMA' start='2093' end='2094'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='2095' end='2097'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='2098' end='2099'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2100' end='2105'>
+            <text>false</text>
+        </token>
+        <token id='T_COMMA' start='2105' end='2106'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='2107' end='2109'>
+            <text>$y</text>
+        </token>
+        <token id='T_EQUAL' start='2110' end='2111'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2112' end='2116'>
+            <text>null</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2116' end='2117'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2118' end='2119'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2119' end='2120'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='2122' end='2126'>
+            <text>true</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='2127' end='2128'>
+            <text>?</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2129' end='2135'>
+            <text>&apos;true&apos;</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2136' end='2137'>
+            <text>:</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2138' end='2145'>
+            <text>&apos;false&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='2145' end='2146'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='2147' end='2152'>
+            <text>false</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='2153' end='2154'>
+            <text>?</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2155' end='2161'>
+            <text>&apos;true&apos;</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2162' end='2163'>
+            <text>:</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2164' end='2171'>
+            <text>&apos;false&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='2171' end='2172'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='2173' end='2177'>
+            <text>null</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='2178' end='2179'>
+            <text>?</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2180' end='2186'>
+            <text>&apos;true&apos;</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2187' end='2188'>
+            <text>:</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2189' end='2196'>
+            <text>&apos;false&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='2196' end='2197'>
+            <text>;</text>
+        </token>
+        <token id='T_IF' start='2199' end='2201'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2202' end='2203'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='2203' end='2205'>
+            <text>$x</text>
+        </token>
+        <token id='T_IS_EQUAL' start='2206' end='2208'>
+            <text>==</text>
+        </token>
+        <token id='T_STRING' start='2209' end='2213'>
+            <text>true</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2213' end='2214'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2214' end='2215'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2215' end='2216'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='2216' end='2217'>
+            <text>;</text>
+        </token>
+        <token id='T_IF' start='2218' end='2220'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2221' end='2222'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='2222' end='2224'>
+            <text>$x</text>
+        </token>
+        <token id='T_IS_EQUAL' start='2225' end='2227'>
+            <text>==</text>
+        </token>
+        <token id='T_STRING' start='2228' end='2233'>
+            <text>false</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2233' end='2234'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2234' end='2235'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2235' end='2236'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='2236' end='2237'>
+            <text>;</text>
+        </token>
+        <token id='T_IF' start='2238' end='2240'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2241' end='2242'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='2242' end='2244'>
+            <text>$x</text>
+        </token>
+        <token id='T_IS_EQUAL' start='2245' end='2247'>
+            <text>==</text>
+        </token>
+        <token id='T_STRING' start='2248' end='2252'>
+            <text>null</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2252' end='2253'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2253' end='2254'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2254' end='2255'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='2255' end='2256'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='2257' end='2257'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='2257'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='843'>
+                <FunctionInvocation start='815' end='842'>
+                    <FucntionName start='815' end='821'>
+                        <NamespaceName start='815' end='821' isCurrent='false' isGlobal='false'>
+                            <Identifier start='815' end='821' name='define'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='822' end='834' type='STRING' value='&apos;CONST_TRUE&apos;'/>
+                        <Scalar start='836' end='841' type='STRING' value='false'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='844' end='872'>
+                <FunctionInvocation start='844' end='871'>
+                    <FucntionName start='844' end='850'>
+                        <NamespaceName start='844' end='850' isCurrent='false' isGlobal='false'>
+                            <Identifier start='844' end='850' name='define'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='851' end='864' type='STRING' value='&apos;CONST_FALSE&apos;'/>
+                        <Scalar start='866' end='870' type='STRING' value='true'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='873' end='900'>
+                <FunctionInvocation start='873' end='899'>
+                    <FucntionName start='873' end='879'>
+                        <NamespaceName start='873' end='879' isCurrent='false' isGlobal='false'>
+                            <Identifier start='873' end='879' name='define'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='880' end='892' type='STRING' value='&apos;CONST_NULL&apos;'/>
+                        <Scalar start='894' end='898' type='STRING' value='null'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ClassDeclaration start='902' end='996' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='908' end='921' name='ConstantClass'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='922' end='996' isCurly='true'>
+                    <ClassConstantDeclaration start='928' end='946' modifier='public'>
+                        <Names>
+                            <Identifier start='934' end='938' name='TRUE'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='941' end='945' type='STRING' value='true'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='951' end='971' modifier='public'>
+                        <Names>
+                            <Identifier start='957' end='962' name='FALSE'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='965' end='970' type='STRING' value='false'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='976' end='994' modifier='public'>
+                        <Names>
+                            <Identifier start='982' end='986' name='NULL'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='989' end='993' type='STRING' value='null'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='998' end='1018'>
+                <StaticConstantAccess start='998' end='1017'>
+                    <NamespaceName start='998' end='1011' isCurrent='false' isGlobal='false'>
+                        <Identifier start='998' end='1011' name='ConstantClass'/>
+                    </NamespaceName>
+                    <Constant>
+                        <Identifier start='1013' end='1017' name='TRUE'/>
+                    </Constant>
+                    <Member>
+                        <Identifier start='1013' end='1017' name='TRUE'/>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1019' end='1040'>
+                <StaticConstantAccess start='1019' end='1039'>
+                    <NamespaceName start='1019' end='1032' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1019' end='1032' name='ConstantClass'/>
+                    </NamespaceName>
+                    <Constant>
+                        <Identifier start='1034' end='1039' name='FALSE'/>
+                    </Constant>
+                    <Member>
+                        <Identifier start='1034' end='1039' name='FALSE'/>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1041' end='1061'>
+                <StaticConstantAccess start='1041' end='1060'>
+                    <NamespaceName start='1041' end='1054' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1041' end='1054' name='ConstantClass'/>
+                    </NamespaceName>
+                    <Constant>
+                        <Identifier start='1056' end='1060' name='NULL'/>
+                    </Constant>
+                    <Member>
+                        <Identifier start='1056' end='1060' name='NULL'/>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1063' end='1073'>
+                <Assignment start='1063' end='1072' operator='EQUAL'>
+                    <Variable start='1063' end='1065' isDollared='true'>
+                        <Identifier start='1064' end='1065' name='a'/>
+                    </Variable>
+                    <Scalar start='1068' end='1072' type='STRING' value='true'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1074' end='1085'>
+                <Assignment start='1074' end='1084' operator='EQUAL'>
+                    <Variable start='1074' end='1076' isDollared='true'>
+                        <Identifier start='1075' end='1076' name='b'/>
+                    </Variable>
+                    <Scalar start='1079' end='1084' type='STRING' value='false'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1086' end='1096'>
+                <Assignment start='1086' end='1095' operator='EQUAL'>
+                    <Variable start='1086' end='1088' isDollared='true'>
+                        <Identifier start='1087' end='1088' name='c'/>
+                    </Variable>
+                    <Scalar start='1091' end='1095' type='STRING' value='null'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ClassDeclaration start='1098' end='1747' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='1104' end='1113' name='testClass'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1114' end='1747' isCurly='true'>
+                    <FieldsDeclaration start='1120' end='1137' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1127' end='1129' isDollared='true'>
+                                <Identifier start='1128' end='1129' name='x'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='1132' end='1136' type='STRING' value='null'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1142' end='1159' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1149' end='1151' isDollared='true'>
+                                <Identifier start='1150' end='1151' name='z'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='1154' end='1158' type='STRING' value='true'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1164' end='1182' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1171' end='1173' isDollared='true'>
+                                <Identifier start='1172' end='1173' name='y'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='1176' end='1181' type='STRING' value='false'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1188' end='1203' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1195' end='1199' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1195' end='1199' name='null'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1200' end='1202' isDollared='true'>
+                                <Identifier start='1201' end='1202' name='n'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1208' end='1223' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1215' end='1219' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1215' end='1219' name='true'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1220' end='1222' isDollared='true'>
+                                <Identifier start='1221' end='1222' name='t'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1228' end='1244' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1235' end='1240' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1235' end='1240' name='false'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1241' end='1243' isDollared='true'>
+                                <Identifier start='1242' end='1243' name='f'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='1250' end='1395' modifiers='public'>
+                        <FunctionDeclaration start='1257' end='1395' isReference='false'>
+                            <Identifier start='1266' end='1268' name='m1'/>
+                            <FormalParameters>
+                                <FormalParameter start='1269' end='1280' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1269' end='1277'>
+                                            <NamespaceName start='1269' end='1272' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1269' end='1272' name='int'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='1273' end='1277' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1273' end='1277' name='null'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1278' end='1280' isDollared='true'>
+                                            <Identifier start='1279' end='1280' name='z'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='1283' end='1291'>
+                                <NamespaceName start='1283' end='1286' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1283' end='1286' name='int'/>
+                                </NamespaceName>
+                                <NamespaceName start='1287' end='1291' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1287' end='1291' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                            <Block start='1296' end='1395' isCurly='true'>
+                                <IfStatement start='1306' end='1389'>
+                                    <Condition>
+                                        <Variable start='1310' end='1312' isDollared='true'>
+                                            <Identifier start='1311' end='1312' name='x'/>
+                                        </Variable>
+                                    </Condition>
+                                    <Then>
+                                        <Block start='1314' end='1347' isCurly='true'>
+                                            <ReturnStatement start='1328' end='1337'>
+                                                <Scalar start='1335' end='1336' type='INT' value='1'/>
+                                            </ReturnStatement>
+                                        </Block>
+                                    </Then>
+                                    <Else>
+                                        <Block start='1353' end='1389' isCurly='true'>
+                                            <ReturnStatement start='1367' end='1379'>
+                                                <Scalar start='1374' end='1378' type='STRING' value='null'/>
+                                            </ReturnStatement>
+                                        </Block>
+                                    </Else>
+                                </IfStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1401' end='1541' modifiers='public'>
+                        <FunctionDeclaration start='1408' end='1541' isReference='false'>
+                            <Identifier start='1417' end='1419' name='m2'/>
+                            <FormalParameters>
+                                <FormalParameter start='1420' end='1428' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1420' end='1425' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1420' end='1425' name='false'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1426' end='1428' isDollared='true'>
+                                            <Identifier start='1427' end='1428' name='z'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1431' end='1436' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1431' end='1436' name='false'/>
+                            </NamespaceName>
+                            <Block start='1441' end='1541' isCurly='true'>
+                                <IfStatement start='1451' end='1535'>
+                                    <Condition>
+                                        <Variable start='1455' end='1457' isDollared='true'>
+                                            <Identifier start='1456' end='1457' name='x'/>
+                                        </Variable>
+                                    </Condition>
+                                    <Then>
+                                        <Block start='1459' end='1492' isCurly='true'>
+                                            <ReturnStatement start='1473' end='1482'>
+                                                <Scalar start='1480' end='1481' type='INT' value='1'/>
+                                            </ReturnStatement>
+                                        </Block>
+                                    </Then>
+                                    <Else>
+                                        <Block start='1498' end='1535' isCurly='true'>
+                                            <ReturnStatement start='1512' end='1525'>
+                                                <Scalar start='1519' end='1524' type='STRING' value='false'/>
+                                            </ReturnStatement>
+                                        </Block>
+                                    </Else>
+                                </IfStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1547' end='1684' modifiers='public'>
+                        <FunctionDeclaration start='1554' end='1684' isReference='false'>
+                            <Identifier start='1563' end='1565' name='m3'/>
+                            <FormalParameters>
+                                <FormalParameter start='1566' end='1573' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1566' end='1570' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1566' end='1570' name='true'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1571' end='1573' isDollared='true'>
+                                            <Identifier start='1572' end='1573' name='z'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1576' end='1580' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1576' end='1580' name='true'/>
+                            </NamespaceName>
+                            <Block start='1585' end='1684' isCurly='true'>
+                                <IfStatement start='1595' end='1678'>
+                                    <Condition>
+                                        <Variable start='1599' end='1601' isDollared='true'>
+                                            <Identifier start='1600' end='1601' name='x'/>
+                                        </Variable>
+                                    </Condition>
+                                    <Then>
+                                        <Block start='1603' end='1636' isCurly='true'>
+                                            <ReturnStatement start='1617' end='1626'>
+                                                <Scalar start='1624' end='1625' type='INT' value='1'/>
+                                            </ReturnStatement>
+                                        </Block>
+                                    </Then>
+                                    <Else>
+                                        <Block start='1642' end='1678' isCurly='true'>
+                                            <ReturnStatement start='1656' end='1668'>
+                                                <Scalar start='1663' end='1667' type='STRING' value='true'/>
+                                            </ReturnStatement>
+                                        </Block>
+                                    </Else>
+                                </IfStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1690' end='1745' modifiers='public'>
+                        <FunctionDeclaration start='1697' end='1745' isReference='false'>
+                            <Identifier start='1706' end='1708' name='m4'/>
+                            <FormalParameters>
+                                <FormalParameter start='1709' end='1718' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1709' end='1711' isDollared='true'>
+                                            <Identifier start='1710' end='1711' name='z'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1714' end='1718' type='STRING' value='true'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1720' end='1730' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1720' end='1722' isDollared='true'>
+                                            <Identifier start='1721' end='1722' name='x'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1725' end='1730' type='STRING' value='false'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1732' end='1741' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1732' end='1734' isDollared='true'>
+                                            <Identifier start='1733' end='1734' name='y'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1737' end='1741' type='STRING' value='null'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='1743' end='1745' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <FunctionDeclaration start='1749' end='1859' isReference='false'>
+                <Identifier start='1758' end='1760' name='s1'/>
+                <FormalParameters>
+                    <FormalParameter start='1761' end='1772' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <UnionType start='1761' end='1769'>
+                                <NamespaceName start='1761' end='1764' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1761' end='1764' name='int'/>
+                                </NamespaceName>
+                                <NamespaceName start='1765' end='1769' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1765' end='1769' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1770' end='1772' isDollared='true'>
+                                <Identifier start='1771' end='1772' name='z'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <UnionType start='1775' end='1783'>
+                    <NamespaceName start='1775' end='1778' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1775' end='1778' name='int'/>
+                    </NamespaceName>
+                    <NamespaceName start='1779' end='1783' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1779' end='1783' name='null'/>
+                    </NamespaceName>
+                </UnionType>
+                <Block start='1784' end='1859' isCurly='true'>
+                    <IfStatement start='1790' end='1857'>
+                        <Condition>
+                            <Variable start='1794' end='1796' isDollared='true'>
+                                <Identifier start='1795' end='1796' name='x'/>
+                            </Variable>
+                        </Condition>
+                        <Then>
+                            <Block start='1798' end='1823' isCurly='true'>
+                                <ReturnStatement start='1808' end='1817'>
+                                    <Scalar start='1815' end='1816' type='INT' value='1'/>
+                                </ReturnStatement>
+                            </Block>
+                        </Then>
+                        <Else>
+                            <Block start='1829' end='1857' isCurly='true'>
+                                <ReturnStatement start='1839' end='1851'>
+                                    <Scalar start='1846' end='1850' type='STRING' value='null'/>
+                                </ReturnStatement>
+                            </Block>
+                        </Else>
+                    </IfStatement>
+                </Block>
+            </FunctionDeclaration>
+            <FunctionDeclaration start='1861' end='1966' isReference='false'>
+                <Identifier start='1870' end='1872' name='s2'/>
+                <FormalParameters>
+                    <FormalParameter start='1873' end='1881' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <NamespaceName start='1873' end='1878' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1873' end='1878' name='false'/>
+                            </NamespaceName>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1879' end='1881' isDollared='true'>
+                                <Identifier start='1880' end='1881' name='z'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <NamespaceName start='1884' end='1889' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1884' end='1889' name='false'/>
+                </NamespaceName>
+                <Block start='1890' end='1966' isCurly='true'>
+                    <IfStatement start='1896' end='1964'>
+                        <Condition>
+                            <Variable start='1900' end='1902' isDollared='true'>
+                                <Identifier start='1901' end='1902' name='x'/>
+                            </Variable>
+                        </Condition>
+                        <Then>
+                            <Block start='1904' end='1929' isCurly='true'>
+                                <ReturnStatement start='1914' end='1923'>
+                                    <Scalar start='1921' end='1922' type='INT' value='1'/>
+                                </ReturnStatement>
+                            </Block>
+                        </Then>
+                        <Else>
+                            <Block start='1935' end='1964' isCurly='true'>
+                                <ReturnStatement start='1945' end='1958'>
+                                    <Scalar start='1952' end='1957' type='STRING' value='false'/>
+                                </ReturnStatement>
+                            </Block>
+                        </Else>
+                    </IfStatement>
+                </Block>
+            </FunctionDeclaration>
+            <FunctionDeclaration start='1968' end='2070' isReference='false'>
+                <Identifier start='1977' end='1979' name='s3'/>
+                <FormalParameters>
+                    <FormalParameter start='1980' end='1987' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <NamespaceName start='1980' end='1984' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1980' end='1984' name='true'/>
+                            </NamespaceName>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1985' end='1987' isDollared='true'>
+                                <Identifier start='1986' end='1987' name='z'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <NamespaceName start='1990' end='1994' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1990' end='1994' name='true'/>
+                </NamespaceName>
+                <Block start='1995' end='2070' isCurly='true'>
+                    <IfStatement start='2001' end='2068'>
+                        <Condition>
+                            <Variable start='2005' end='2007' isDollared='true'>
+                                <Identifier start='2006' end='2007' name='x'/>
+                            </Variable>
+                        </Condition>
+                        <Then>
+                            <Block start='2009' end='2034' isCurly='true'>
+                                <ReturnStatement start='2019' end='2028'>
+                                    <Scalar start='2026' end='2027' type='INT' value='1'/>
+                                </ReturnStatement>
+                            </Block>
+                        </Then>
+                        <Else>
+                            <Block start='2040' end='2068' isCurly='true'>
+                                <ReturnStatement start='2050' end='2062'>
+                                    <Scalar start='2057' end='2061' type='STRING' value='true'/>
+                                </ReturnStatement>
+                            </Block>
+                        </Else>
+                    </IfStatement>
+                </Block>
+            </FunctionDeclaration>
+            <FunctionDeclaration start='2072' end='2120' isReference='false'>
+                <Identifier start='2081' end='2083' name='s4'/>
+                <FormalParameters>
+                    <FormalParameter start='2084' end='2093' isMandatory='false' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='2084' end='2086' isDollared='true'>
+                                <Identifier start='2085' end='2086' name='z'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                            <Scalar start='2089' end='2093' type='STRING' value='true'/>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='2095' end='2105' isMandatory='false' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='2095' end='2097' isDollared='true'>
+                                <Identifier start='2096' end='2097' name='x'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                            <Scalar start='2100' end='2105' type='STRING' value='false'/>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='2107' end='2116' isMandatory='false' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='2107' end='2109' isDollared='true'>
+                                <Identifier start='2108' end='2109' name='y'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                            <Scalar start='2112' end='2116' type='STRING' value='null'/>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='2118' end='2120' isCurly='true'>
+                </Block>
+            </FunctionDeclaration>
+            <ExpressionStatement start='2122' end='2146'>
+                <ConditionalExpression start='2122' end='2145'>
+                    <Condition>
+                        <Scalar start='2122' end='2126' type='STRING' value='true'/>
+                    </Condition>
+                    <Then>
+                        <Scalar start='2129' end='2135' type='STRING' value='&apos;true&apos;'/>
+                    </Then>
+                    <Else>
+                        <Scalar start='2138' end='2145' type='STRING' value='&apos;false&apos;'/>
+                    </Else>
+                </ConditionalExpression>
+            </ExpressionStatement>
+            <ExpressionStatement start='2147' end='2172'>
+                <ConditionalExpression start='2147' end='2171'>
+                    <Condition>
+                        <Scalar start='2147' end='2152' type='STRING' value='false'/>
+                    </Condition>
+                    <Then>
+                        <Scalar start='2155' end='2161' type='STRING' value='&apos;true&apos;'/>
+                    </Then>
+                    <Else>
+                        <Scalar start='2164' end='2171' type='STRING' value='&apos;false&apos;'/>
+                    </Else>
+                </ConditionalExpression>
+            </ExpressionStatement>
+            <ExpressionStatement start='2173' end='2197'>
+                <ConditionalExpression start='2173' end='2196'>
+                    <Condition>
+                        <Scalar start='2173' end='2177' type='STRING' value='null'/>
+                    </Condition>
+                    <Then>
+                        <Scalar start='2180' end='2186' type='STRING' value='&apos;true&apos;'/>
+                    </Then>
+                    <Else>
+                        <Scalar start='2189' end='2196' type='STRING' value='&apos;false&apos;'/>
+                    </Else>
+                </ConditionalExpression>
+            </ExpressionStatement>
+            <IfStatement start='2199' end='2216'>
+                <Condition>
+                    <InfixExpression start='2203' end='2213' operator='IS_EQUAL'>
+                        <Variable start='2203' end='2205' isDollared='true'>
+                            <Identifier start='2204' end='2205' name='x'/>
+                        </Variable>
+                        <Scalar start='2209' end='2213' type='STRING' value='true'/>
+                    </InfixExpression>
+                </Condition>
+                <Then>
+                    <Block start='2214' end='2216' isCurly='true'>
+                    </Block>
+                </Then>
+                <Else>
+                </Else>
+            </IfStatement>
+            <EmptyStatement start='2216' end='2217'/>
+            <IfStatement start='2218' end='2236'>
+                <Condition>
+                    <InfixExpression start='2222' end='2233' operator='IS_EQUAL'>
+                        <Variable start='2222' end='2224' isDollared='true'>
+                            <Identifier start='2223' end='2224' name='x'/>
+                        </Variable>
+                        <Scalar start='2228' end='2233' type='STRING' value='false'/>
+                    </InfixExpression>
+                </Condition>
+                <Then>
+                    <Block start='2234' end='2236' isCurly='true'>
+                    </Block>
+                </Then>
+                <Else>
+                </Else>
+            </IfStatement>
+            <EmptyStatement start='2236' end='2237'/>
+            <IfStatement start='2238' end='2255'>
+                <Condition>
+                    <InfixExpression start='2242' end='2252' operator='IS_EQUAL'>
+                        <Variable start='2242' end='2244' isDollared='true'>
+                            <Identifier start='2243' end='2244' name='x'/>
+                        </Variable>
+                        <Scalar start='2248' end='2252' type='STRING' value='null'/>
+                    </InfixExpression>
+                </Condition>
+                <Then>
+                    <Block start='2253' end='2255' isCurly='true'>
+                    </Block>
+                </Then>
+                <Else>
+                </Else>
+            </IfStatement>
+            <EmptyStatement start='2255' end='2256'/>
+        </Statements>
+    </Program>
+</testresult>

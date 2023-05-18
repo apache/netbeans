@@ -47,7 +47,10 @@ public class JavaHoverProvider implements HoverProvider {
             JavaDocumentationTask<CompletableFuture<String>> task = JavaDocumentationTask.create(offset, null, new JavaDocumentationTask.DocumentationFactory<CompletableFuture<String>>() {
                 @Override
                 public CompletableFuture<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
-                    return (CompletableFuture<String>) ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
+                    ElementJavadoc doc = ElementJavadoc.create(compilationInfo, element, cancel);
+                    return ((CompletableFuture<String>) doc.getTextAsync()).thenApply(content -> {
+                        return Utilities.resolveLinks(content, doc);
+                    });
                 }
             }, () -> false);
             ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {

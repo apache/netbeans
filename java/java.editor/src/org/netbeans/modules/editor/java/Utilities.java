@@ -44,12 +44,13 @@ import com.sun.source.util.Trees;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 
 import java.awt.Color;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.lang.model.SourceVersion;
@@ -62,7 +63,6 @@ import javax.swing.text.JTextComponent;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyleUtils;
@@ -72,6 +72,7 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.TypeUtilities.TypeNameOptions;
 import org.netbeans.api.java.source.support.ReferencesCount;
+import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
@@ -93,6 +94,7 @@ import org.openide.util.WeakListeners;
 public final class Utilities {
     
     private static final String ERROR = "<error>"; //NOI18N
+    private static final Pattern LINK_PATTERN = Pattern.compile("<a href='(\\*\\d+)'>(.*?)<\\/a>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
     private static boolean guessMethodArguments = CodeCompletionPanel.GUESS_METHOD_ARGUMENTS_DEFAULT;
     private static boolean autoPopupOnJavaIdentifierPart = CodeCompletionPanel.JAVA_AUTO_POPUP_ON_IDENTIFIER_PART_DEFAULT;
@@ -572,7 +574,11 @@ public final class Utilities {
                 if ("Iterator".equals(tn)) //NOI18N
                     al.add("it"); //NOI18N
                 while((tn = nextName(tn)).length() > 0) {
-                    al.add(tn);
+                    if (SourceVersion.isKeyword(tn)) {
+                        al.add('a' + tn.substring(0, 1).toUpperCase() + tn.substring(1));
+                    } else {
+                        al.add(tn);
+                    }
                     sb.append(tn.charAt(0));
                 }
                 if (sb.length() > 0) {
@@ -592,7 +598,11 @@ public final class Utilities {
                 if ("Iterator".equals(tn)) //NOI18N
                     al.add("it"); //NOI18N
                 while((tn = nextName(tn)).length() > 0) {
-                    al.add(tn);
+                    if (SourceVersion.isKeyword(tn)) {
+                        al.add('a' + tn.substring(0, 1).toUpperCase() + tn.substring(1));
+                    } else {
+                        al.add(tn);
+                    }
                     sb.append(tn.charAt(0));
                 }
                 if (iterable != null && types.isSubtype(type, iterable)) {
@@ -1064,6 +1074,22 @@ public final class Utilities {
         }
 
         return found;
+    }
+
+    static String resolveLinks(String content, ElementJavadoc doc) {
+        Matcher matcher = LINK_PATTERN.matcher(content);
+        String updatedContent = matcher.replaceAll(result -> {
+            if (result.groupCount() == 2) {
+                ElementJavadoc link = doc.resolveLink(result.group(1));
+                URL url = link != null ? link.getURL() : null;
+                if (url != null) {
+                    return "<a href='" + url.toString() + "'>" + result.group(2) + "</a>";
+                }
+                return result.group(2);
+            }
+            return result.group();
+        });
+        return updatedContent;
     }
 
     private Utilities() {

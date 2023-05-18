@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -160,7 +161,10 @@ public class JavaCompletionCollector implements CompletionCollector {
                 JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(offset, handle, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
                     @Override
                     public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
-                        return ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
+                        ElementJavadoc doc = ElementJavadoc.create(compilationInfo, element, cancel);
+                        return ((CompletableFuture<String>) doc.getTextAsync()).thenApply(content -> {
+                            return Utilities.resolveLinks(content, doc);
+                        });
                     }
                 }, () -> false);
                 ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
@@ -890,8 +894,10 @@ public class JavaCompletionCollector implements CompletionCollector {
                 }
                 cnt++;
                 String paramTypeName = Utilities.getTypeName(info, tm, false, desc.isVarArgs() && !tIt.hasNext()).toString();
-                String paramName = it.next().getSimpleName().toString();
-                label.append(paramTypeName).append(' ').append(paramName);
+                VariableElement var = it.next();
+                List<String> varNames = Utilities.varNamesSuggestions(tm, var.getKind(), Collections.emptySet(), null, null, info.getTypes(), info.getElements(), Collections.emptyList(), CodeStyle.getDefault(info.getFileObject()));
+                String paramName = varNames.isEmpty() ? var.getSimpleName().toString() : varNames.get(0);
+                label.append(paramName);
                 insertText.append("${").append(cnt).append(":").append(paramName).append("}");
                 sortText.append(paramTypeName);
             }

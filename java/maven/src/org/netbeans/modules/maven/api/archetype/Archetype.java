@@ -64,6 +64,7 @@ public final class Archetype {
     private String groupId;
     private String version;
     private String name;
+    private Map<String, String> properties;
     private String description;
     private String repository;
     public final boolean deletable;
@@ -120,6 +121,14 @@ public final class Archetype {
     
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Map<String, String> getProperties() {
+        return Collections.unmodifiableMap(properties);
+    }
+
+    public void setProperties(Map<String, String> properties) {
+        this.properties = properties;
     }
     
     public String getDescription() {

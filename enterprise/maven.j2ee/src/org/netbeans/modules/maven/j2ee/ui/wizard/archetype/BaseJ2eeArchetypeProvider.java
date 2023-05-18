@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.maven.j2ee.ui.wizard.archetype;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -32,8 +34,51 @@ import org.openide.util.NbBundle;
  */
 abstract class BaseJ2eeArchetypeProvider {
 
+    private final static String JAKARTA_EE_WEB = "jakartaee-web";
+    private final static String JAKARTA_EE_FULL = "jakartaee";
+
+    private final static String JAKARTA_EE_8 = "8.0.0";
+    private final static String JAKARTA_EE_9 = "9.0.0";
+    private final static String JAKARTA_EE_9_1 = "9.1.0";
+    private final static String JAKARTA_EE_10 = "10.0.0";
+
     protected Map<Profile, Archetype> map;
 
+    private static final Map<Profile, Archetype> ALL_JAKARTA_EE_ARCHETYPES;
+    static {
+        Map<Profile, Archetype> map = new HashMap<>();
+        map.put(Profile.JAKARTA_EE_8_WEB, jakartaEEArchetype( JAKARTA_EE_8, JAKARTA_EE_WEB));
+        map.put(Profile.JAKARTA_EE_8_FULL, jakartaEEArchetype( JAKARTA_EE_8, JAKARTA_EE_FULL));
+
+        map.put(Profile.JAKARTA_EE_9_WEB, jakartaEEArchetype( JAKARTA_EE_9, JAKARTA_EE_WEB));
+        map.put(Profile.JAKARTA_EE_9_FULL, jakartaEEArchetype( JAKARTA_EE_9, JAKARTA_EE_FULL));
+
+        map.put(Profile.JAKARTA_EE_9_1_WEB, jakartaEEArchetype( JAKARTA_EE_9_1, JAKARTA_EE_WEB));
+        map.put(Profile.JAKARTA_EE_9_1_FULL, jakartaEEArchetype( JAKARTA_EE_9_1, JAKARTA_EE_FULL));
+
+        map.put(Profile.JAKARTA_EE_10_WEB, jakartaEEArchetype( JAKARTA_EE_10, JAKARTA_EE_WEB));
+        map.put(Profile.JAKARTA_EE_10_FULL, jakartaEEArchetype( JAKARTA_EE_10, JAKARTA_EE_FULL));
+
+        ALL_JAKARTA_EE_ARCHETYPES = Collections.unmodifiableMap(map);
+    }
+
+    private static Archetype jakartaEEArchetype(String jakartaEEVersion, String jakarteEEVariant) {
+        Archetype jakartaEEArchetype = new Archetype();
+        jakartaEEArchetype.setGroupId(NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeGroupId.JakartaEE"));
+        jakartaEEArchetype.setArtifactId(NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE"));
+        jakartaEEArchetype.setVersion(NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE"));
+
+        Map<String, String> properties = new HashMap<>(2);
+        properties.put("jakartaEEVariant", jakarteEEVariant);
+        properties.put("jakartaEEVersion", jakartaEEVersion);
+        jakartaEEArchetype.setProperties(properties);
+
+        return jakartaEEArchetype;
+    }
+
+    protected void importProfile(Profile profile) {
+        map.put(profile, ALL_JAKARTA_EE_ARCHETYPES.get(profile));
+    }
 
     protected BaseJ2eeArchetypeProvider() {
         map = new TreeMap<Profile, Archetype>(Profile.UI_COMPARATOR);
@@ -59,11 +104,12 @@ abstract class BaseJ2eeArchetypeProvider {
                 NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,artifactId)));
     }
 
-    protected void addJakartaEEArchetype(Profile j2eeProfile, String groupId, String version, String artifactId) {
+    protected void addJakartaEEArchetype(Profile j2eeProfile, String jakartaEEVersion, String jakartaEEVariant) {
         map.put(j2eeProfile, createArchetype(
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,groupId),
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,version),
-                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,artifactId)));
+                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeGroupId.JakartaEE"),
+                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE"),
+                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE"))
+        );
     }
 
     private Archetype createMojoArchetype(String version, String artifactId) {
@@ -76,10 +122,15 @@ abstract class BaseJ2eeArchetypeProvider {
     }
 
     private Archetype createArchetype(String groupId, String version, String artifactId) {
+        return createArchetype(groupId, version, artifactId, null);
+    }
+
+    private Archetype createArchetype(String groupId, String version, String artifactId, Map<String, String> properties) {
         Archetype archetype = new Archetype();
         archetype.setGroupId(groupId); //NOI18N
         archetype.setVersion(version);
         archetype.setArtifactId(artifactId);
+        archetype.setProperties(properties);
 
         return archetype;
     }

@@ -185,7 +185,7 @@ public class ParameterInfo {
         } else if (type == Float.class || type == Float.TYPE) {
             return 0F;
         } else if (type == Double.class || type == Double.TYPE) {
-            return new Double(0);
+            return 0D;
         } else if (type == Boolean.class || type == Boolean.TYPE) {
             return Boolean.FALSE;
         } else if (type == Character.class || type == Character.TYPE) {

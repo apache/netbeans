@@ -25,7 +25,9 @@ import java.util.TreeMap;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.j2ee.core.Profile;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.modules.maven.api.archetype.Archetype;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.NbBundle;
 
 /**
@@ -41,6 +43,8 @@ abstract class BaseJ2eeArchetypeProvider {
     private final static String JAKARTA_EE_9 = "9.0.0";
     private final static String JAKARTA_EE_9_1 = "9.1.0";
     private final static String JAKARTA_EE_10 = "10.0.0";
+
+    private final static SpecificationVersion JAVA_17_SPECIFICATION_VERSION = new SpecificationVersion("17");
 
     protected Map<Profile, Archetype> map;
 
@@ -68,9 +72,17 @@ abstract class BaseJ2eeArchetypeProvider {
         jakartaEEArchetype.setArtifactId(NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE"));
         jakartaEEArchetype.setVersion(NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE"));
 
-        Map<String, String> properties = new HashMap<>(2);
+        // As application servers most likely use java lts versions use 17 or 11 depending on used jdk.
+        SpecificationVersion javaSpecVersion = JavaPlatform.getDefault().getSpecification().getVersion();
+        String javaVersion = "17";
+        if (JAVA_17_SPECIFICATION_VERSION.compareTo(javaSpecVersion) < 0) {
+            javaVersion = "11";
+        }
+
+        Map<String, String> properties = new HashMap<>(3);
         properties.put("jakartaEEVariant", jakarteEEVariant);
         properties.put("jakartaEEVersion", jakartaEEVersion);
+        properties.put("javaVersion", javaVersion);
         jakartaEEArchetype.setProperties(properties);
 
         return jakartaEEArchetype;

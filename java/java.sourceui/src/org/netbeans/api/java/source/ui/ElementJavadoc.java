@@ -524,7 +524,7 @@ public class ElementJavadoc {
             }
         } else {
             PackageElement pkg = elements.getPackageOf(el);
-            if (pkg != null) {
+            if (pkg != null && !pkg.isUnnamed()) {
                 sb.append("<font size='+0'><b>"); //NOI18N
                 createLink(sb, pkg, makeNameLineBreakable(pkg.getQualifiedName().toString()));
                 sb.append("</b></font>"); //NOI18N)
@@ -703,7 +703,11 @@ public class ElementJavadoc {
         pdoc.getAnnotationMirrors().forEach((annotationDesc) -> {
             appendAnnotation(sb, annotationDesc, true);
         });
-        sb.append("package <b>").append(pdoc.getQualifiedName()).append("</b>"); //NOI18N
+        if (pdoc.isUnnamed()) {
+            sb.append("package <b>&lt;unnamed&gt;</b>"); //NOI18N
+        } else {
+            sb.append("package <b>").append(pdoc.getQualifiedName()).append("</b>"); //NOI18N
+        }
         sb.append("</pre>"); //NOI18N
         return sb;
     }

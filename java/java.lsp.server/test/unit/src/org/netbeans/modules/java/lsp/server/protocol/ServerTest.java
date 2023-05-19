@@ -400,7 +400,7 @@ public class ServerTest extends NbTestCase {
         assertEquals(Arrays.asList("Method:test() : void"), actualItems);
         assertEquals(null, actualCompletionItem.get(0).getDocumentation());
         CompletionItem resolvedItem = server.getTextDocumentService().resolveCompletionItem(actualCompletionItem.get(0)).get();
-        assertEquals("**[Test](*0)**\n" +
+        assertEquals("**Test**\n" +
                      "\n" +
                      "```\n" +
                      "public void test()\n" +
@@ -1386,9 +1386,7 @@ public class ServerTest extends NbTestCase {
         MarkupContent content = hover.getContents().getRight();
         assertNotNull(content);
         assertEquals(content.getKind(), "markdown");
-        assertEquals(content.getValue(), "**[](*0)**\n" +
-                "\n" +
-                "```\n" +
+        assertEquals(content.getValue(), "```\n" +
                 "public class Test\n" +
                 "extends Object\n" +
                 "```\n" +

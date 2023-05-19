@@ -1080,11 +1080,13 @@ public final class Utilities {
         Matcher matcher = LINK_PATTERN.matcher(content);
         String updatedContent = matcher.replaceAll(result -> {
             if (result.groupCount() == 2) {
-                ElementJavadoc link = doc.resolveLink(result.group(1));
-                URL url = link != null ? link.getURL() : null;
-                if (url != null) {
-                    return "<a href='" + url.toString() + "'>" + result.group(2) + "</a>";
-                }
+                try {
+                    ElementJavadoc link = doc.resolveLink(result.group(1));
+                    URL url = link != null ? link.getURL() : null;
+                    if (url != null) {
+                        return "<a href='" + url.toString() + "'>" + result.group(2) + "</a>";
+                    }
+                } catch (Exception ex) {}
                 return result.group(2);
             }
             return result.group();

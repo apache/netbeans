@@ -119,6 +119,7 @@ import javax.tools.SimpleJavaFileObject;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
+import javax.lang.model.element.RecordComponentElement;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
 import org.netbeans.api.java.source.ui.snippet.MarkupTagProcessor;
@@ -484,10 +485,15 @@ public class ElementJavadoc {
                     sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
                     sb.append(getFieldHeader((VariableElement)element));
                     break;
+                case RECORD_COMPONENT:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
+                    sb.append(getRecordComponentHeader((RecordComponentElement)element));
+                    break;
                 case CLASS:
                 case INTERFACE:
                 case ENUM:
                 case ANNOTATION_TYPE:
+                case RECORD:
                     sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
                     sb.append(getClassHeader((TypeElement)element));
                     break;
@@ -512,11 +518,12 @@ public class ElementJavadoc {
         StringBuilder sb = new StringBuilder();
         TypeElement cls = eu.enclosingTypeElement(el);
         if (cls != null) {
-            switch(cls.getEnclosingElement().getKind()) {
+            switch(cls.getKind()) {
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                 case PACKAGE:
                     sb.append("<font size='+0'><b>"); //NOI18N
                     createLink(sb, cls, makeNameLineBreakable(cls.getQualifiedName().toString()));
@@ -629,6 +636,18 @@ public class ElementJavadoc {
         sb.append("</pre>"); //NOI18N
         return sb;
     }
+
+    private StringBuilder getRecordComponentHeader(RecordComponentElement rcdoc) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<pre>"); //NOI18N
+        rcdoc.getAnnotationMirrors().forEach((annotationDesc) -> {
+            appendAnnotation(sb, annotationDesc, true);
+        });
+        appendType(sb, rcdoc.asType(), false, false, false);
+        sb.append(" <b>").append(rcdoc.getSimpleName()).append("</b>"); //NOI18N
+        sb.append("</pre>"); //NOI18N
+        return sb;
+    }
     
     private StringBuilder getClassHeader(TypeElement cdoc) {
         StringBuilder sb = new StringBuilder();
@@ -640,6 +659,10 @@ public class ElementJavadoc {
             switch(cdoc.getKind()) {
                 case ENUM:
                     if (modifier == Modifier.FINAL)
+                        continue;
+                    break;
+                case RECORD:
+                    if (modifier == Modifier.FINAL || modifier == Modifier.STATIC)
                         continue;
                     break;
                 case INTERFACE:
@@ -660,6 +683,9 @@ public class ElementJavadoc {
             case INTERFACE:
                 sb.append("interface "); //NOI18N
                 break;
+            case RECORD:
+                sb.append("record "); //NOI18N
+                break;
             default:
                 sb.append("class "); //NOI18N            
         }
@@ -676,7 +702,7 @@ public class ElementJavadoc {
             sb.append("&gt;"); //NOI18N
         }
         sb.append("</b>"); //NOi18N
-        if (cdoc.getKind() != ElementKind.ANNOTATION_TYPE) {
+        if (cdoc.getKind() != ElementKind.ANNOTATION_TYPE && cdoc.getKind() != ElementKind.RECORD) {
             TypeMirror supercls = cdoc.getSuperclass();
             if (supercls != null && supercls.getKind() != TypeKind.NONE) {
                 sb.append("<br>extends "); //NOI18N

@@ -1423,7 +1423,7 @@ public class GoToSupportTest extends NbTestCase {
         }, true, false);
 
         toolTip = toolTip.replace(source.toURI().toString(), "FILE");
-        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test.&#x200B;R</a></b></font>", toolTip);
+        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test.&#x200B;R</a></b></font><pre>int <b>ff</b></pre>", toolTip);
     }
 
     public void testRecords3() throws Exception {
@@ -1457,7 +1457,7 @@ public class GoToSupportTest extends NbTestCase {
         }, true, false);
 
         toolTip = toolTip.replace(source.toURI().toString(), "FILE");
-        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font>", toolTip);
+        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public record <b>RR</b></pre>", toolTip);
     }
 
     public void testRecords4() throws Exception {

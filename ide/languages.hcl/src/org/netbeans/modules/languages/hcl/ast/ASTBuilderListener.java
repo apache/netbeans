@@ -92,7 +92,7 @@ public class ASTBuilderListener extends HCLParserBaseListener {
             HCLAttribute attr = new HCLAttribute(current);
             attr.name = new HCLIdentifier.SimpleId(attr, actx.IDENTIFIER().getText());
             addReference(attr.name, actx.IDENTIFIER().getSymbol());
-            addReference(attr, ctx);
+            addReference(attr, actx);
             current.add(attr);
         }
     }

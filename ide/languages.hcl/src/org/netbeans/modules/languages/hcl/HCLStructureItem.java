@@ -21,7 +21,6 @@ package org.netbeans.modules.languages.hcl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import org.netbeans.modules.csl.api.ElementHandle;
@@ -46,6 +45,7 @@ public class HCLStructureItem implements ElementHandle, StructureItem {
 
     final HCLElement element;
     final SourceRef references;
+    private List<? extends StructureItem> nestedCache;
 
     public HCLStructureItem(HCLElement element, SourceRef references) {
         this.element = element;
@@ -85,8 +85,7 @@ public class HCLStructureItem implements ElementHandle, StructureItem {
 
     @Override
     public OffsetRange getOffsetRange(ParserResult result) {
-        Optional<OffsetRange> range = references.getOffsetRange(element);
-        return range.isPresent() ? range.get(): OffsetRange.NONE;
+        return references.getOffsetRange(element).orElse(OffsetRange.NONE);
     }
 
     @Override
@@ -111,19 +110,22 @@ public class HCLStructureItem implements ElementHandle, StructureItem {
 
     @Override
     public List<? extends StructureItem> getNestedItems() {
-        if (element instanceof HCLContainer) {
-            HCLContainer c = (HCLContainer) element;
-            List<HCLStructureItem> nested = new ArrayList<>();
-            for (HCLBlock block : c.getBlocks()) {
-                nested.add(new HCLStructureItem(block, references));
+        if (nestedCache == null) {
+            if (element instanceof HCLContainer) {
+                HCLContainer c = (HCLContainer) element;
+                List<HCLStructureItem> nested = new ArrayList<>();
+                for (HCLBlock block : c.getBlocks()) {
+                    nested.add(new HCLStructureItem(block, references));
+                }
+                for (HCLAttribute attribute : c.getAttributes()) {
+                    nested.add(new HCLStructureItem(attribute, references));
+                }
+                nestedCache = Collections.unmodifiableList(nested);
+            } else {
+                nestedCache = Collections.emptyList();
             }
-            for (HCLAttribute attribute : c.getAttributes()) {
-                nested.add(new HCLStructureItem(attribute, references));
-            }
-            return nested;
-        } else {
-            return Collections.emptyList();
         }
+        return nestedCache;
     }
 
     @Override

@@ -48,7 +48,7 @@ public class JavaHoverProvider implements HoverProvider {
                 @Override
                 public CompletableFuture<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
                     ElementJavadoc doc = ElementJavadoc.create(compilationInfo, element, cancel);
-                    return ((CompletableFuture<String>) doc.getTextAsync()).thenApply(content -> {
+                    return ((CompletableFuture<String>) doc.getTextAsync()).thenApplyAsync(content -> {
                         return Utilities.resolveLinks(content, doc);
                     });
                 }

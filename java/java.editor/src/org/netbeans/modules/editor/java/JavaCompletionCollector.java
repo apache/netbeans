@@ -162,7 +162,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     @Override
                     public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
                         ElementJavadoc doc = ElementJavadoc.create(compilationInfo, element, cancel);
-                        return ((CompletableFuture<String>) doc.getTextAsync()).thenApply(content -> {
+                        return ((CompletableFuture<String>) doc.getTextAsync()).thenApplyAsync(content -> {
                             return Utilities.resolveLinks(content, doc);
                         });
                     }

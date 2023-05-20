@@ -235,8 +235,11 @@ abstract class BaseTask extends UserTask {
                             ts.token().id().primaryCategory().startsWith("string") || //NOI18N
                             ts.token().id().primaryCategory().equals("literal")) //NOI18N
                     { //TODO: Use isKeyword(...) when available
-                        prefix = ts.token().text().toString().substring(0, len);
-                        offset = ts.offset();
+                        String prefixInToken = ts.token().text().toString().substring(0, len);
+                        if (!ts.token().id().primaryCategory().startsWith("string") || !prefixInToken.endsWith("\\{")) {
+                            prefix = prefixInToken;
+                            offset = ts.offset();
+                        }
                     } else if ((ts.token().id() == JavaTokenId.DOUBLE_LITERAL
                             || ts.token().id() == JavaTokenId.FLOAT_LITERAL
                             || ts.token().id() == JavaTokenId.FLOAT_LITERAL_INVALID

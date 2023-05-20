@@ -502,6 +502,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 break;
             case PARENTHESIZED_PATTERN:
                 insideParenthesizedPattern(env);
+            default:
+                insideStringTemplate(env);
                 break;
         }
     }
@@ -3276,6 +3278,16 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (pt.getKind() == Tree.Kind.BINDING_PATTERN && env.getController().getSourceVersion().compareTo(RELEASE_19) >= 0
                 && sp.getEndPosition(path.getCompilationUnit(), pt) < offset) {
             addKeyword(env, WHEN_KEYWORD, SPACE, false);
+        }
+    }
+
+    private void insideStringTemplate(Env env) throws IOException {
+        final int offset = env.getOffset();
+        final TreePath path = env.getPath();
+        TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, path.getLeaf(), offset);
+        if (ts.token().id() == JavaTokenId.STRING_LITERAL || ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+            localResult(env);
+            addValueKeywords(env);
         }
     }
 

@@ -61,6 +61,11 @@ public class StringTemplatesTest extends CompletionTestBase {
         performTest("StringTemplates", 922, "\"\\{\"\\{str.", "stringContent.pass", getLatestSource());
     }
 
+    public void testStringTemplates4() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("StringTemplates", 922, "\"\\{", "templateStart.pass", getLatestSource());
+    }
+
     public void testStringTemplatesBlock1() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("StringTemplates", 922, "\"\"\"\n\\{str.", "stringContent.pass", getLatestSource());

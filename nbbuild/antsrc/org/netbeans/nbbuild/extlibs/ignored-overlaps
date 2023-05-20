@@ -24,7 +24,7 @@ ide/db.sql.visualeditor/external/javacc-7.0.10.jar java/performance/external/jav
 
 # bundled maven conflicts with other libraries
 java/maven.embedder/external/apache-maven-3.9.2-bin.zip ide/slf4j.api/external/slf4j-api-1.7.36.jar
-java/maven.embedder/external/apache-maven-3.9.2-bin.zip platform/o.apache.commons.lang3/external/commons-lang3-3.12.0.jar 
+java/maven.embedder/external/apache-maven-3.9.2-bin.zip platform/o.apache.commons.lang3/external/commons-lang3-3.12.0.jar
 
 # Used to parse data during build, but need to as a lib for ide cluster
 nbbuild/external/json-simple-1.1.1.jar ide/libs.json_simple/external/json-simple-1.1.1.jar
@@ -75,6 +75,8 @@ enterprise/javaee7.api/external/javax.annotation-api-1.2.jar java/maven.indexer/
 
 # ide/lsp.client and java/java.lsp.server both use LSP libraries, but are independent:
 ide/lsp.client/external/org.eclipse.lsp4j-0.13.0.jar java/java.lsp.server/external/org.eclipse.lsp4j-0.13.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j.debug-0.13.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.debug-0.13.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j.jsonrpc.debug-0.13.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.jsonrpc.debug-0.13.0.jar
 ide/lsp.client/external/org.eclipse.lsp4j.generator-0.13.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.generator-0.13.0.jar
 ide/lsp.client/external/org.eclipse.lsp4j.jsonrpc-0.13.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.jsonrpc-0.13.0.jar
 ide/lsp.client/external/org.eclipse.xtend.lib-2.24.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib-2.24.0.jar

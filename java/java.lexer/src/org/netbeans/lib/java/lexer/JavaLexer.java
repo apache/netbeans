@@ -243,9 +243,9 @@ public class JavaLexer implements Lexer<JavaTokenId> {
 
     public Token<JavaTokenId> nextToken() {
         boolean stringLiteralContinuation = false;
+        JavaTokenId lookupId = null;
         while(true) {
             int c = stringLiteralContinuation ? '"' : nextChar();
-            JavaTokenId lookupId = null;
             switch (c) {
                 case '#':
                     //Support for exotic identifiers has been removed 6999438
@@ -256,11 +256,11 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                         switch (nextChar()) {
                             case '"': // NOI18N
                                 String text = input.readText().toString();
-                                if (text.length() == 2) {
+                                if (text.length() == 2 && !stringLiteralContinuation) {
                                     int mark = input.readLength();
                                     if (nextChar() != '"') {
                                         input.backup(1); //TODO: EOF???
-                                        return token(lookupId, stringLiteralContinuation ? PartType.END : PartType.COMPLETE);
+                                        return token(lookupId);
                                     }
                                     int c2 = nextChar();
                                     while (Character.isWhitespace(c2) && c2 != '\n') {
@@ -268,12 +268,12 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                                     }
                                     if (c2 != '\n') {
                                         input.backup(input.readLengthEOF()- mark);
-                                        return token(lookupId, stringLiteralContinuation ? PartType.END : PartType.COMPLETE);
+                                        return token(lookupId);
                                     }
                                     lookupId = JavaTokenId.MULTILINE_STRING_LITERAL;
                                 }
                                 if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
-                                    if (text.endsWith("\"\"\"") && !text.endsWith("\\\"\"\"") && text.length() > 6) {
+                                    if (text.endsWith("\"\"\"") && !text.endsWith("\\\"\"\"") && (text.length() > 6 || stringLiteralContinuation)) {
                                         return token(lookupId, stringLiteralContinuation ? PartType.END : PartType.COMPLETE);
                                     } else {
                                         break;

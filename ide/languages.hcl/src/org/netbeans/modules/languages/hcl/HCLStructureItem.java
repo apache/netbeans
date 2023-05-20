@@ -120,7 +120,7 @@ public class HCLStructureItem implements ElementHandle, StructureItem {
                 for (HCLAttribute attribute : c.getAttributes()) {
                     nested.add(new HCLStructureItem(attribute, references));
                 }
-                nestedCache = Collections.unmodifiableList(nested);
+                nestedCache = nested;
             } else {
                 nestedCache = Collections.emptyList();
             }

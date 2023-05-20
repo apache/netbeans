@@ -108,7 +108,7 @@ public class HCLExpressionParserTest {
 
     }
 
-    private static HCLParser.ExpressionContext parse(String expr){
+    private static ExpressionContext parse(String expr){
         HCLLexer lexer = new HCLLexer(CharStreams.fromString(expr));
         HCLParser parser = new HCLParser(new CommonTokenStream(lexer));
         return parser.expression();

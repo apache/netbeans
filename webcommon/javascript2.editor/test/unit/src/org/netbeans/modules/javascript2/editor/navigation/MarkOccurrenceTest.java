@@ -2248,6 +2248,18 @@ public class MarkOccurrenceTest extends JsTestBase {
         checkOccurrences("testfiles/markoccurences/issueGH5184_01.js", "export {te^st2};", true);
     }
 
+    public void testIssueGH4376() throws Exception {
+        checkStructure("testfiles/markoccurences/issueGH4376.js");
+    }
+
+    public void testIssueGH4376_01() throws Exception {
+        checkOccurrences("testfiles/markoccurences/issueGH4376.js", "		this.b^ar = {};  //Line 5", true);
+    }
+
+    public void testIssueGH4376_02() throws Exception {
+        checkOccurrences("testfiles/markoccurences/issueGH4376.js", "			this.ba^r[val] = 1;  //Line 7", true);
+    }
+
     private String getTestName() {
         String name = getName();
         int indexOf = name.indexOf("_");

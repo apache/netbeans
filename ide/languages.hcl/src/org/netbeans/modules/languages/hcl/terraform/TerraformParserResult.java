@@ -23,10 +23,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.languages.hcl.HCLParserResult;
+import org.netbeans.modules.languages.hcl.ast.HCLAttribute;
 import org.netbeans.modules.languages.hcl.ast.HCLBlock;
+import org.netbeans.modules.languages.hcl.ast.HCLContainer;
 import org.netbeans.modules.languages.hcl.ast.HCLDocument;
 import org.netbeans.modules.languages.hcl.ast.HCLIdentifier;
 import org.netbeans.modules.languages.hcl.ast.SourceRef;
@@ -75,6 +78,7 @@ public class TerraformParserResult extends HCLParserResult {
         super(snapshot);
     }
 
+
     @Override
     @Messages({
         "# {0} - Block type name",
@@ -83,31 +87,56 @@ public class TerraformParserResult extends HCLParserResult {
         "# {0} - Block type name",
         "UNKNOWN_BLOCK=Unknown block: {0}",
         "# {0} - Block ID",
-        "DUPLICATE_BLOCK=Duplicate Block Definition: {0}"
+        "DUPLICATE_BLOCK=Duplicate Block Definition: {0}",
+        "# {0} - Attribute name",
+        "DUPLICATE_ATTRIBUTE=Attribute {0} has already defined"
     })
-    protected void processDocument(HCLDocument doc) {
+    protected void processDocument(HCLDocument doc, SourceRef references) {
         Set<String> defined = new HashSet<>();
         for (HCLBlock block : doc.getBlocks()) {
             List<HCLIdentifier> decl = block.getDeclaration();
             HCLIdentifier type = decl.get(0);
 
             BlockType bt = BlockType.get(type.id());
-            SourceRef src = type.getSourceRef().get();
             if (bt != null) {
                 if (decl.size() != bt.definitionLength) {
-                    DefaultError error = new DefaultError(null, Bundle.INVALID_BLOCK_DECLARATION(bt.type, bt.definitionLength - 1), null, getFileObject(), src.startOffset , src.endOffset, Severity.ERROR);
-                    errors.add(error);
+                    references.getOffsetRange(type).ifPresent((range) -> addError(Bundle.INVALID_BLOCK_DECLARATION(bt.type, bt.definitionLength - 1), range));
                 } else {
-                    if ((bt.definitionLength > 1) && !defined.add(block.id())) {
-                        errors.add(new DefaultError(null, Bundle.DUPLICATE_BLOCK(block.id()), null, getFileObject(), src.startOffset , src.endOffset, Severity.ERROR));
+                    if (!defined.add(block.id())) {
+                        switch (bt) {
+                            case DATA:
+                            case MODULE:
+                            case OUTPUT:
+                            case RESOURCE:
+                            case VARIABLE:
+                                references.getOffsetRange(type).ifPresent((range) -> addError(Bundle.DUPLICATE_BLOCK(block.id()), range));
+                        }
                     }
                 }
             } else {
-                DefaultError error = new DefaultError(null, Bundle.UNKNOWN_BLOCK(type.id()), null, getFileObject(), src.startOffset , src.endOffset, Severity.ERROR);
-                errors.add(error);
+                references.getOffsetRange(type).ifPresent((range) -> addError(Bundle.UNKNOWN_BLOCK(type.id()), range));
             }
-
         }
+        checkDuplicateAttribute(doc, references);
+    }
+
+    private void checkDuplicateAttribute(HCLContainer c, SourceRef references) {
+        for (HCLBlock block : c.getBlocks()) {
+            checkDuplicateAttribute(block, references);
+        }
+        if (c.hasAttributes()) {
+            Set<String> defined = new HashSet<>();
+            for (HCLAttribute attr : c.getAttributes()) {
+                if (!defined.add(attr.id())) {
+                    references.getOffsetRange(attr.getName()).ifPresent((range) -> addError(Bundle.DUPLICATE_ATTRIBUTE(attr.id()), range));
+                }
+            }
+        }
+    }
+
+    private void addError(String message, OffsetRange range) {
+        DefaultError error = new DefaultError(null, message, null, getFileObject(), range.getStart() , range.getEnd(), Severity.ERROR);
+        errors.add(error);
     }
 
 }

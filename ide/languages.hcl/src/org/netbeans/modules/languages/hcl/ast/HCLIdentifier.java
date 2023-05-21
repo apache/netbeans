@@ -26,8 +26,8 @@ public abstract class HCLIdentifier extends HCLElement {
 
     final String id;
 
-    public HCLIdentifier(SourceRef src, String id) {
-        super(src);
+    public HCLIdentifier(HCLElement parent, String id) {
+        super(parent);
         this.id = id;
     }
 
@@ -38,8 +38,8 @@ public abstract class HCLIdentifier extends HCLElement {
 
     public final static class SimpleId extends HCLIdentifier {
 
-        public SimpleId(SourceRef src, String id) {
-            super(src, id);
+        public SimpleId(HCLElement parent, String id) {
+            super(parent, id);
         }
 
         @Override
@@ -50,8 +50,8 @@ public abstract class HCLIdentifier extends HCLElement {
 
     public final static class StringId extends HCLIdentifier {
 
-        public StringId(SourceRef src, String id) {
-            super(src, id);
+        public StringId(HCLElement parent, String id) {
+            super(parent, id);
         }
 
         @Override

@@ -16,31 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.languages.hcl.ast;
+package org.netbeans.modules.languages.hcl;
 
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-public abstract class HCLElement {
+public class HCLStructureTest extends HCLTestBase {
 
-    final HCLElement parent;
-
-    public HCLElement(HCLElement parent) {
-        this.parent = parent;
+    public HCLStructureTest(String testName) {
+        super(testName);
     }
 
-    public final HCLElement getParent() {
-        return parent;
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
     }
 
-    public HCLContainer getContainer() {
-        HCLElement e = parent;
-        while (e != null && !(e instanceof HCLContainer)) {
-            e = e.parent;
-        }
-        return (HCLContainer) e;
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
     }
 
-    public abstract String id();
+    public void testEmpty() throws Exception {
+        checkStructure("testfiles/empty.hcl");
+    }
+
+    public void testAttributes() throws Exception {
+        checkStructure("testfiles/attributes.hcl");
+    }
+
+    public void testBlocks() throws Exception {
+        checkStructure("testfiles/blocks.hcl");
+    }
 }

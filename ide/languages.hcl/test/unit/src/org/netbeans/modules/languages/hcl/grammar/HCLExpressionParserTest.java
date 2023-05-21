@@ -22,7 +22,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.netbeans.modules.languages.hcl.grammar.HCLExpressionParser.ExpressionContext;
+import org.netbeans.modules.languages.hcl.grammar.HCLParser.ExpressionContext;
 
 /**
  *
@@ -108,9 +108,9 @@ public class HCLExpressionParserTest {
 
     }
 
-    private static HCLExpressionParser.ExpressionContext parse(String expr){
+    private static ExpressionContext parse(String expr){
         HCLLexer lexer = new HCLLexer(CharStreams.fromString(expr));
-        HCLExpressionParser parser = new HCLExpressionParser(new CommonTokenStream(lexer));
+        HCLParser parser = new HCLParser(new CommonTokenStream(lexer));
         return parser.expression();
     }
 }

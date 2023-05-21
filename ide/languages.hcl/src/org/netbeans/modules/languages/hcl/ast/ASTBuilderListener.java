@@ -19,11 +19,12 @@
 package org.netbeans.modules.languages.hcl.ast;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.netbeans.modules.languages.hcl.grammar.HCLParser;
 import org.netbeans.modules.languages.hcl.grammar.HCLParserBaseListener;
+import org.netbeans.modules.parsing.api.Snapshot;
 
 /**
  *
@@ -32,48 +33,73 @@ import org.netbeans.modules.languages.hcl.grammar.HCLParserBaseListener;
 public class ASTBuilderListener extends HCLParserBaseListener {
 
     final HCLDocument document = new HCLDocument();
+    final SourceRef references;
+
+    private HCLContainer current = document;
+    
+    public ASTBuilderListener(Snapshot source) {
+        this.references = new SourceRef(source);
+    }
 
     public HCLDocument getDocument() {
         return document;
     }
 
-    int blockDepth = 0;
+    public SourceRef getReferences() {
+        return references;
+    }
+
+    
+    private void addReference(HCLElement e, Token token) {
+        references.add(e, token.getStartIndex(), token.getStopIndex() + 1);
+    }
+
+    private void addReference(HCLElement e, ParserRuleContext ctx) {
+        
+        references.add(e, ctx.start.getStartIndex(), ctx.stop.getStopIndex() + 1);
+    }
+
 
     @Override
     public void exitBlock(HCLParser.BlockContext ctx) {
-        if (blockDepth == 1) {
-            ArrayList<HCLIdentifier> decl = new ArrayList<>(4);
-            for (TerminalNode idn : ctx.IDENTIFIER()) {
-                Token token = idn.getSymbol();
-                SourceRef src = new SourceRef(null, token.getStartIndex(), token.getStopIndex());
-                HCLIdentifier id = new HCLIdentifier.SimpleId(src, token.getText());
-                decl.add(id);
-            }
-            for (HCLParser.StringLitContext idn : ctx.stringLit()) {
-                String sid = idn.getText();
-                sid = sid.substring(1, sid.length() - (sid.endsWith("\"") ? 1 : 0));
-                SourceRef src = new SourceRef(null, idn.getStart().getStartIndex(), idn.getStop().getStopIndex());
-                /*
-                StringBuilder sb = new StringBuilder(idn.getStop().getStopIndex() - idn.getStart().getStartIndex());
-                for (HCLParser.StringContentContext scontent : idn.stringContent()) {
-                    for (TerminalNode tn : scontent.STRING_CONTENT()) {
-                        sb.append(tn.getText());
-                    }
-                }
-                HCLIdentifier id = new HCLIdentifier.StringId(src, sb.toString());
-                */
-                HCLIdentifier id = new HCLIdentifier.StringId(src, sid);
-                decl.add(id);
-            }
-            Collections.sort(decl, HCLElement.SOURCE_ORDER);
-            document.add(new HCLBlock(decl));
+        HCLBlock block = (HCLBlock) current;
+
+        ArrayList<HCLIdentifier> decl = new ArrayList<>(4);
+
+        for (TerminalNode idn : ctx.IDENTIFIER()) {
+            Token token = idn.getSymbol();
+            HCLIdentifier id = new HCLIdentifier.SimpleId(block, token.getText());
+            addReference(id, token);
+            decl.add(id);
         }
-        blockDepth--;
+        for (HCLParser.StringLitContext idn : ctx.stringLit()) {
+            String sid = idn.getText();
+            sid = sid.substring(1, sid.length() - (sid.endsWith("\"") ? 1 : 0));
+            HCLIdentifier id = new HCLIdentifier.StringId(block, sid);
+            addReference(id, idn);
+            decl.add(id);
+        }
+        block.setDeclaration(references.sortBySource(decl));
+
+        current = current.getContainer();
+        current.add(block);
+        addReference(block, ctx);
+    }
+
+    @Override
+    public void exitBody(HCLParser.BodyContext ctx) {
+        for (HCLParser.AttributeContext actx : ctx.attribute()) {
+            HCLAttribute attr = new HCLAttribute(current);
+            attr.name = new HCLIdentifier.SimpleId(attr, actx.IDENTIFIER().getText());
+            addReference(attr.name, actx.IDENTIFIER().getSymbol());
+            addReference(attr, actx);
+            current.add(attr);
+        }
     }
 
     @Override
     public void enterBlock(HCLParser.BlockContext ctx) {
-        blockDepth++;
+        current = new HCLBlock(current);
     }
 
     

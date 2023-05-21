@@ -18,7 +18,16 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -26,12 +35,31 @@ import org.netbeans.modules.parsing.api.Snapshot;
  */
 public class SourceRef {
     public final Snapshot source;
-    public final int startOffset;
-    public final int endOffset;
+    private Map<HCLElement, OffsetRange> elementOffsets = new HashMap<>();
+    private final Comparator<HCLElement> sourceOrder = Comparator.comparing((HCLElement e) -> elementOffsets.get(e));
 
-    public SourceRef(Snapshot source, int startOffset, int endOffset) {
+    public SourceRef(Snapshot source) {
         this.source = source;
-        this.startOffset = startOffset;
-        this.endOffset = endOffset;
+    }
+
+    void add(HCLElement e, OffsetRange r) {
+        elementOffsets.put(e, r);
+    }
+
+    void add(HCLElement e, int startOffset, int endOffset) {
+        add(e, new OffsetRange(startOffset, endOffset));
+    }
+
+    public FileObject getFileObject() {
+        return source.getSource().getFileObject();
+    }
+    public Optional<OffsetRange> getOffsetRange(HCLElement e) {
+        return Optional.ofNullable(elementOffsets.get(e));
+    }
+    
+    <E extends HCLElement> List<E> sortBySource(List<? extends E> elements) {
+        List<E> ret = new ArrayList<>(elements);
+        Collections.sort(ret, sourceOrder);
+        return ret;
     }
 }

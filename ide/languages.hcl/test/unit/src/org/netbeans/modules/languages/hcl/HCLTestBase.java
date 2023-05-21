@@ -16,31 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.languages.hcl.ast;
+package org.netbeans.modules.languages.hcl;
+
+import org.netbeans.modules.csl.api.Formatter;
+import org.netbeans.modules.csl.api.test.CslTestBase;
+import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-public abstract class HCLElement {
+public class HCLTestBase extends CslTestBase {
 
-    final HCLElement parent;
-
-    public HCLElement(HCLElement parent) {
-        this.parent = parent;
+    public HCLTestBase(String testName) {
+        super(testName);
     }
 
-    public final HCLElement getParent() {
-        return parent;
+    @Override
+    protected DefaultLanguageConfig getPreferredLanguage() {
+        return new HCLLanguage();
     }
 
-    public HCLContainer getContainer() {
-        HCLElement e = parent;
-        while (e != null && !(e instanceof HCLContainer)) {
-            e = e.parent;
-        }
-        return (HCLContainer) e;
+    @Override
+    protected String getPreferredMimeType() {
+        return HCLLanguage.MIME_TYPE;
     }
 
-    public abstract String id();
+    @Override
+    protected Formatter getFormatter(IndentPrefs preferences) {
+        return null;
+    }
+
+    @Override
+    protected void checkStructure(String relFilePath) throws Exception {
+        super.checkStructure(relFilePath, false, false, true);
+    }
+
+    
 }

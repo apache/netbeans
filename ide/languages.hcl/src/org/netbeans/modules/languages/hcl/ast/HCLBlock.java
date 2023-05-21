@@ -28,11 +28,14 @@ import java.util.stream.Collectors;
  */
 public class HCLBlock extends HCLContainer {
 
-    final List<HCLIdentifier> declaration;
-    final String id;
+    List<HCLIdentifier> declaration;
+    String id;
 
+    public HCLBlock(HCLContainer parent) {
+        super(parent);
+    }
 
-    public HCLBlock(List<HCLIdentifier> declaration) {
+    public void setDeclaration(List<HCLIdentifier> declaration) {
         this.declaration = Collections.unmodifiableList(declaration);
         id = declaration.stream().map(d -> d.id()).collect(Collectors.joining("."));
     }

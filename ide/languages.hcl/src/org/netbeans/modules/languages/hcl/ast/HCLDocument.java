@@ -22,8 +22,11 @@ package org.netbeans.modules.languages.hcl.ast;
  *
  * @author Laszlo Kishalmi
  */
-public class HCLDocument extends HCLContainer {
+public final class HCLDocument extends HCLContainer {
 
+    public HCLDocument() {
+        super(null);
+    }
 
     @Override
     public String id() {

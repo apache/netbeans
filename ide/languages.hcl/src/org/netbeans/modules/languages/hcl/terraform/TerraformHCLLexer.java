@@ -126,7 +126,7 @@ public final class TerraformHCLLexer extends AbstractHCLLexer {
                 return groupToken(INTERPOLATION, INTERPOLATION_CONTENT);
 
             case TEMPLATE_CONTENT:
-                return groupToken(ERROR, TEMPLATE_CONTENT);
+                return groupToken(INTERPOLATION, TEMPLATE_CONTENT);
             case WS:
             case NL:
                 return token(WHITESPACE);

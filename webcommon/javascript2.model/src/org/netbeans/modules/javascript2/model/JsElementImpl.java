@@ -39,6 +39,7 @@ import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.CONSTRUC
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.FIELD;
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.FUNCTION;
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.METHOD;
+import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.ARROW_FUNCTION;
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.OBJECT;
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.OBJECT_LITERAL;
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.PROPERTY;
@@ -214,6 +215,7 @@ public abstract class JsElementImpl implements JsElement {
             case PROPERTY_GETTER:
             case PROPERTY_SETTER:
             case GENERATOR:
+            case ARROW_FUNCTION:
                 result = ElementKind.METHOD;
                 break;
             case OBJECT:

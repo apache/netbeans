@@ -197,7 +197,7 @@ public class ModelUtils {
                 JsElement.Kind kind = property.getJSKind();
                 if (kind == JsElement.Kind.OBJECT || kind == JsElement.Kind.ANONYMOUS_OBJECT || kind == JsElement.Kind.OBJECT_LITERAL
                         || kind == JsElement.Kind.FUNCTION || kind == JsElement.Kind.METHOD || kind == JsElement.Kind.CONSTRUCTOR
-                        || kind == JsElement.Kind.WITH_OBJECT) {
+                        || kind == JsElement.Kind.WITH_OBJECT || kind == JsElement.Kind.ARROW_FUNCTION) {
                     if (!visited.contains(property.getFullyQualifiedName())) {
                         tmpObject = findJsObject(property, offset, visited);
                     }
@@ -637,6 +637,7 @@ public class ModelUtils {
                 parent = object;
             }
         }
+        // @todo: Handle Arrow Function
         if (parent != null && (parent.getJSKind() == JsElement.Kind.FUNCTION || parent.getJSKind() == JsElement.Kind.METHOD)) {
             if (parent.getParent().getJSKind() != JsElement.Kind.FILE) {
                 JsObject grandParent = parent.getParent();

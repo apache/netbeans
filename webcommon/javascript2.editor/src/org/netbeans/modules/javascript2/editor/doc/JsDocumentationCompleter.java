@@ -343,8 +343,11 @@ public class JsDocumentationCompleter {
             for (JsObject property : jsObject.getProperties().values()) {
                 JsElement.Kind kind = property.getJSKind();
                 if (kind == JsElement.Kind.OBJECT
-                        || kind == JsElement.Kind.FUNCTION || kind == JsElement.Kind.METHOD || kind == JsElement.Kind.CONSTRUCTOR
-                        || kind == JsElement.Kind.VARIABLE) {
+                        || kind == JsElement.Kind.FUNCTION
+                        || kind == JsElement.Kind.METHOD
+                        || kind == JsElement.Kind.CONSTRUCTOR
+                        || kind == JsElement.Kind.VARIABLE
+                        || kind == JsElement.Kind.ARROW_FUNCTION) {
                     tmpObject = findJsObjectFunctionVariable(property, offset);
                 }
                 if (tmpObject != null) {

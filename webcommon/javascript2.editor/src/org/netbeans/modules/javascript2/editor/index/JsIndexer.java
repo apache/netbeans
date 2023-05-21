@@ -345,7 +345,7 @@ public class JsIndexer extends EmbeddingIndexer {
     public static final class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "js"; // NOI18N
-        public static final int VERSION = 16;
+        public static final int VERSION = 17;
         private static final int PRIORITY = 100;
 
         private static final ThreadLocal<Collection<Runnable>> postScanTasks = new ThreadLocal<>();

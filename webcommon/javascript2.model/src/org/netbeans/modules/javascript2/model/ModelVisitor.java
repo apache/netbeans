@@ -1115,6 +1115,11 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
             }
         }
 
+        if (fn.getKind() == FunctionNode.Kind.ARROW) {
+            // marking the function as an arrow function
+            jsFunction.setJsKind(JsElement.Kind.ARROW_FUNCTION);
+        }
+
         if (fn.getKind() == FunctionNode.Kind.GENERATOR) {
             // marking the function as generator
             jsFunction.setJsKind(JsElement.Kind.GENERATOR);

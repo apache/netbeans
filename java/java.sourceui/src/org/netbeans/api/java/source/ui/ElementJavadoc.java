@@ -119,6 +119,7 @@ import javax.tools.SimpleJavaFileObject;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
+import javax.lang.model.element.RecordComponentElement;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
 import org.netbeans.api.java.source.ui.snippet.MarkupTagProcessor;
@@ -394,11 +395,15 @@ public class ElementJavadoc {
     public Action getGotoSourceAction() {
         return goToSource;
     }
-    
+
     private ElementJavadoc(CompilationInfo compilationInfo, Element element, final URL url, final Callable<Boolean> cancel) {
         this.cpInfo = compilationInfo.getClasspathInfo();
         this.fileObject = compilationInfo.getFileObject();
-        this.handle = element == null ? null : ElementHandle.create(element);
+        ElementHandle<Element> eh = null;
+        try {
+            eh = element == null ? null : ElementHandle.create(element);
+        } catch (IllegalArgumentException iae) {}
+        this.handle = eh;
         this.cancel = cancel;
         this.packageName = compilationInfo.getCompilationUnit().getPackageName() != null ? compilationInfo.getCompilationUnit().getPackageName().toString()
                                                                                          : "";
@@ -406,6 +411,10 @@ public class ElementJavadoc {
         this.className = compilationInfo.getCompilationUnit().getSourceFile().getName().replaceFirst("[.][^.]+$", "");
 
         final StringBuilder header = getElementHeader(element, compilationInfo);
+        if (handle == null) {
+            this.content = CompletableFuture.completedFuture(header.toString());
+            return;
+        }
         try {
             //Optimisitic no http
             CharSequence doc = getElementDoc(element, compilationInfo, header, url, true);
@@ -465,21 +474,34 @@ public class ElementJavadoc {
     private StringBuilder getElementHeader(final Element element, final CompilationInfo info) {
         final StringBuilder sb = new StringBuilder();
         if (element != null) {
-            sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
             switch(element.getKind()) {
                 case METHOD:
                 case CONSTRUCTOR:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
                     sb.append(getMethodHeader((ExecutableElement)element));
                     break;
                 case FIELD:
                 case ENUM_CONSTANT:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
                     sb.append(getFieldHeader((VariableElement)element));
+                    break;
+                case RECORD_COMPONENT:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
+                    sb.append(getRecordComponentHeader((RecordComponentElement)element));
                     break;
                 case CLASS:
                 case INTERFACE:
                 case ENUM:
                 case ANNOTATION_TYPE:
+                case RECORD:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
                     sb.append(getClassHeader((TypeElement)element));
+                    break;
+                case LOCAL_VARIABLE:
+                case PARAMETER:
+                case EXCEPTION_PARAMETER:
+                case RESOURCE_VARIABLE:
+                    sb.append(getFieldHeader((VariableElement)element));
                     break;
                 case PACKAGE:
                     sb.append(getPackageHeader((PackageElement)element));
@@ -494,26 +516,25 @@ public class ElementJavadoc {
     
     private StringBuilder getContainingClassOrPackageHeader(Element el, Elements elements, ElementUtilities eu) {
         StringBuilder sb = new StringBuilder();
-        if (el.getKind() != ElementKind.PACKAGE && el.getKind() != ElementKind.MODULE) {
-            TypeElement cls = eu.enclosingTypeElement(el);
-            if (cls != null) {
-                switch(cls.getEnclosingElement().getKind()) {
-                    case ANNOTATION_TYPE:
-                    case CLASS:
-                    case ENUM:
-                    case INTERFACE:
-                    case PACKAGE:
-                        sb.append("<font size='+0'><b>"); //NOI18N
-                        createLink(sb, cls, makeNameLineBreakable(cls.getQualifiedName().toString()));
-                        sb.append("</b></font>"); //NOI18N)
-                }
-            } else {
-                PackageElement pkg = elements.getPackageOf(el);
-                if (pkg != null) {
+        TypeElement cls = eu.enclosingTypeElement(el);
+        if (cls != null) {
+            switch(cls.getKind()) {
+                case ANNOTATION_TYPE:
+                case CLASS:
+                case ENUM:
+                case INTERFACE:
+                case RECORD:
+                case PACKAGE:
                     sb.append("<font size='+0'><b>"); //NOI18N
-                    createLink(sb, pkg, makeNameLineBreakable(pkg.getQualifiedName().toString()));
+                    createLink(sb, cls, makeNameLineBreakable(cls.getQualifiedName().toString()));
                     sb.append("</b></font>"); //NOI18N)
-                }
+            }
+        } else {
+            PackageElement pkg = elements.getPackageOf(el);
+            if (pkg != null && !pkg.isUnnamed()) {
+                sb.append("<font size='+0'><b>"); //NOI18N
+                createLink(sb, pkg, makeNameLineBreakable(pkg.getQualifiedName().toString()));
+                sb.append("</b></font>"); //NOI18N)
             }
         }
         return sb;
@@ -615,6 +636,18 @@ public class ElementJavadoc {
         sb.append("</pre>"); //NOI18N
         return sb;
     }
+
+    private StringBuilder getRecordComponentHeader(RecordComponentElement rcdoc) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<pre>"); //NOI18N
+        rcdoc.getAnnotationMirrors().forEach((annotationDesc) -> {
+            appendAnnotation(sb, annotationDesc, true);
+        });
+        appendType(sb, rcdoc.asType(), false, false, false);
+        sb.append(" <b>").append(rcdoc.getSimpleName()).append("</b>"); //NOI18N
+        sb.append("</pre>"); //NOI18N
+        return sb;
+    }
     
     private StringBuilder getClassHeader(TypeElement cdoc) {
         StringBuilder sb = new StringBuilder();
@@ -626,6 +659,10 @@ public class ElementJavadoc {
             switch(cdoc.getKind()) {
                 case ENUM:
                     if (modifier == Modifier.FINAL)
+                        continue;
+                    break;
+                case RECORD:
+                    if (modifier == Modifier.FINAL || modifier == Modifier.STATIC)
                         continue;
                     break;
                 case INTERFACE:
@@ -646,6 +683,9 @@ public class ElementJavadoc {
             case INTERFACE:
                 sb.append("interface "); //NOI18N
                 break;
+            case RECORD:
+                sb.append("record "); //NOI18N
+                break;
             default:
                 sb.append("class "); //NOI18N            
         }
@@ -662,7 +702,7 @@ public class ElementJavadoc {
             sb.append("&gt;"); //NOI18N
         }
         sb.append("</b>"); //NOi18N
-        if (cdoc.getKind() != ElementKind.ANNOTATION_TYPE) {
+        if (cdoc.getKind() != ElementKind.ANNOTATION_TYPE && cdoc.getKind() != ElementKind.RECORD) {
             TypeMirror supercls = cdoc.getSuperclass();
             if (supercls != null && supercls.getKind() != TypeKind.NONE) {
                 sb.append("<br>extends "); //NOI18N
@@ -689,7 +729,11 @@ public class ElementJavadoc {
         pdoc.getAnnotationMirrors().forEach((annotationDesc) -> {
             appendAnnotation(sb, annotationDesc, true);
         });
-        sb.append("package <b>").append(pdoc.getQualifiedName()).append("</b>"); //NOI18N
+        if (pdoc.isUnnamed()) {
+            sb.append("package <b>&lt;unnamed&gt;</b>"); //NOI18N
+        } else {
+            sb.append("package <b>").append(pdoc.getQualifiedName()).append("</b>"); //NOI18N
+        }
         sb.append("</pre>"); //NOI18N
         return sb;
     }
@@ -2126,12 +2170,14 @@ public class ElementJavadoc {
             if (docURL == null && goToSource == null) {
                 content.insert(0, "<base href=\"" + fo.toURL() + "\"></base>"); //NOI18N
             }
-            goToSource = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    ElementOpen.open(fo, handle);
-                }
-            };
+            if (handle != null) {
+                goToSource = new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        ElementOpen.open(fo, handle);
+                    }
+                };
+            }
         }
         if (url != null) {
             docURL = url;

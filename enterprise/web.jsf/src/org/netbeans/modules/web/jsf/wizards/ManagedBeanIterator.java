@@ -34,7 +34,6 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.beans.CdiUtil;
 import org.netbeans.modules.web.jsf.JSFConfigUtilities;
 import org.netbeans.modules.web.jsf.JSFUtils;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
@@ -165,8 +164,19 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
         if (isAnnotate && (Utilities.isJavaEE6Plus(wizard) || (JSFUtils.isJSF20Plus(wm, true) && JSFUtils.isJavaEE5(wizard)))) {
             Map<String, Object> templateProperties = new HashMap<String, Object>();
             String targetName = Templates.getTargetName(wizard);
-            CdiUtil cdiUtil = project.getLookup().lookup(CdiUtil.class);
-            if (cdiUtil != null && cdiUtil.isCdiEnabled()) {
+            boolean isCdiEnabled = false;
+            if(JSFUtils.isJakartaEE9Plus(wizard)) {
+                org.netbeans.modules.jakarta.web.beans.CdiUtil cdiUtil = project.getLookup().lookup(org.netbeans.modules.jakarta.web.beans.CdiUtil.class);
+                if(cdiUtil != null && cdiUtil.isCdiEnabled()){
+                    isCdiEnabled = true;
+                }
+            } else {
+                org.netbeans.modules.web.beans.CdiUtil cdiUtil = project.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
+                if(cdiUtil != null && cdiUtil.isCdiEnabled()){
+                    isCdiEnabled = true;
+                }
+            }
+            if (isCdiEnabled) {
                 templateProperties.put("cdiEnabled", true);
                 templateProperties.put("classAnnotation", "@Named(value=\"" + beanName + "\")");   //NOI18N
                 templateProperties.put("scope", ScopeEntry.getFor(scope));    //NOI18N

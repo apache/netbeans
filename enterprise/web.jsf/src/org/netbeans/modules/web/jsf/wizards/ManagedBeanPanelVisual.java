@@ -41,6 +41,7 @@ import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.FacesConfig;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import org.netbeans.modules.web.jsf.api.facesmodel.ManagedBean;
+import org.netbeans.modules.web.jsf.palette.items.JsfLibrariesSupport;
 import org.netbeans.modules.web.jsf.wizards.ManagedBeanIterator.NamedScope;
 import org.netbeans.modules.web.wizards.Utilities;
 import org.netbeans.spi.project.ui.templates.support.Templates;
@@ -66,6 +67,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
         boolean addToFacesConfig = false;
 
         WebModule wm = WebModule.getWebModule(proj.getProjectDirectory());
+        Profile profile = null;
         if (wm != null){
             String[] configFiles = JSFConfigUtilities.getConfigFiles(wm);
             if (configFiles.length > 0){
@@ -83,7 +85,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
                 addToConfigCheckBox.setEnabled(false);
                 jComboBoxConfigFile.setEnabled(false);
             } else {
-                Profile profile = wm.getJ2eeProfile();
+                profile = wm.getJ2eeProfile();
                 if (profile != null && !profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
                     addToFacesConfig = true;
                     addToConfigCheckBox.setSelected(true);
@@ -93,8 +95,13 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
             }
         }
         Object[] scopes;
-        CdiUtil cdiUtil = proj.getLookup().lookup(CdiUtil.class);
-        isCDIEnabled = cdiUtil != null && cdiUtil.isCdiEnabled();
+        if(profile != null && (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB))){
+            org.netbeans.modules.jakarta.web.beans.CdiUtil cdiUtil = proj.getLookup().lookup(org.netbeans.modules.jakarta.web.beans.CdiUtil.class);
+            isCDIEnabled = cdiUtil != null && cdiUtil.isCdiEnabled();
+        } else {
+            org.netbeans.modules.web.beans.CdiUtil cdiUtil = proj.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
+            isCDIEnabled = cdiUtil != null && cdiUtil.isCdiEnabled();
+        }
         if (isCDIEnabled && !addToFacesConfig) {
             scopes = ManagedBeanIterator.NamedScope.values();
         } else {

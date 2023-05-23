@@ -612,6 +612,9 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .kind(Completion.Kind.Constructor)
                     .sortText(String.format("%04d%s#0", smartType ? 650 : 1650, elem.getSimpleName().toString()));
             StringBuilder insertText = new StringBuilder();
+            if (substitutionOffset < offset) {
+                insertText.append((elem.getSimpleName()));
+            }
             insertText.append(CodeStyle.getDefault(doc).spaceBeforeMethodCallParen() ? " ()" : "()");
             if (elem.getModifiers().contains(Modifier.ABSTRACT)) {
                 try {

@@ -234,6 +234,10 @@ public class ModelTest extends ModelTestBase {
         checkModel("testfiles/structure/issueGH5184_02.js");
     }
 
+    public void testIssueGH5184_03() throws Exception {
+        checkModel("testfiles/structure/issueGH5184_03.js");
+    }
+
     public void testBogusGlobalThis() throws Exception {
         checkModel("testfiles/structure/bogusGlobalThis_01.js");
         checkModel("testfiles/structure/bogusGlobalThis_02.js");

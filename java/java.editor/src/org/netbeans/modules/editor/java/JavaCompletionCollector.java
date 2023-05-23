@@ -88,6 +88,7 @@ import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.java.source.ui.ElementHeaders;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lsp.Command;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
@@ -607,10 +608,11 @@ public class JavaCompletionCollector implements CompletionCollector {
 
         @Override
         public Completion createDefaultConstructorItem(TypeElement elem, int substitutionOffset, boolean smartType) {
+            Builder builder = CompletionCollector.newBuilder(elem.getSimpleName().toString() + "()")
+                    .kind(Completion.Kind.Constructor)
+                    .sortText(String.format("%04d%s#0", smartType ? 650 : 1650, elem.getSimpleName().toString()));
             StringBuilder insertText = new StringBuilder();
-            insertText.append(elem.getSimpleName());
             insertText.append(CodeStyle.getDefault(doc).spaceBeforeMethodCallParen() ? " ()" : "()");
-            boolean asTemplate = false;
             if (elem.getModifiers().contains(Modifier.ABSTRACT)) {
                 try {
                     if (CodeStyle.getDefault(info.getDocument()).getClassDeclBracePlacement() == CodeStyle.BracePlacement.SAME_LINE) {
@@ -618,16 +620,14 @@ public class JavaCompletionCollector implements CompletionCollector {
                     } else {
                         insertText.append("\n{\n$0}");
                     }
-                    asTemplate = true;
+                    builder.command(new Command("Complete Abstract Methods", "java.complete.abstract.methods"));
                 } catch (IOException ioe) {
                 }
+                builder.insertTextFormat(Completion.TextFormat.Snippet);
+            } else {
+                builder.insertTextFormat(Completion.TextFormat.PlainText);
             }
-            return CompletionCollector.newBuilder(elem.getSimpleName().toString() + "()")
-                    .kind(Completion.Kind.Constructor)
-                    .insertText(insertText.toString())
-                    .insertTextFormat(asTemplate ? Completion.TextFormat.Snippet : Completion.TextFormat.PlainText)
-                    .sortText(String.format("%04d%s#0", smartType ? 650 : 1650, elem.getSimpleName().toString()))
-                    .build();
+            return builder.insertText(insertText.toString()).build();
         }
 
         @Override
@@ -1016,10 +1016,13 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .sortText(String.format("%04d%s#%02d#%s", smartType ? 800 : 1800, elem.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName))
                     .insertText(insertText.toString());
             if (asTemplate) {
-                    builder.insertTextFormat(Completion.TextFormat.Snippet);
+                builder.insertTextFormat(Completion.TextFormat.Snippet);
             } else {
-                    builder.insertTextFormat(Completion.TextFormat.Snippet)
-                            .addCommitCharacter('.');
+                builder.insertTextFormat(Completion.TextFormat.Snippet)
+                        .addCommitCharacter('.');
+            }
+            if (insideNew) {
+                builder.command(new Command("Invoke Completion", "editor.action.triggerSuggest"));
             }
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, off, handle));
@@ -1048,6 +1051,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             sortParams.append('(');
             int cnt = 0;
             boolean asTemplate = false;
+            Command command = null;
             while(it.hasNext() && tIt.hasNext()) {
                 TypeMirror tm = tIt.next();
                 if (tm == null) {
@@ -1094,6 +1098,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                         } else {
                             insertText.append("\n{\n$0}");
                         }
+                        command = new Command("Complete Abstract Methods", "java.complete.abstract.methods");
                         asTemplate = true;
                     } catch (IOException ioe) {
                     }
@@ -1135,7 +1140,6 @@ public class JavaCompletionCollector implements CompletionCollector {
             } else {
                 builder.insertText(insertText.toString());
             }
-
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, offset, handle));

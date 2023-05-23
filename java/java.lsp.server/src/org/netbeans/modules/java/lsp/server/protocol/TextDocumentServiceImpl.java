@@ -399,6 +399,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         if (edit != null) {
                             item.setTextEdit(Either.forLeft(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText())));
                         }
+                        org.netbeans.api.lsp.Command command = completion.getCommand();
+                        if (command != null) {
+                            item.setCommand(new Command(command.getTitle(), command.getCommand(), command.getArguments()));
+                        }
                         if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
                             List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
                             if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {

@@ -610,6 +610,13 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             }
         }
     }));
+    context.subscriptions.push(commands.registerCommand('java.complete.abstract.methods', async () => {
+        const active = vscode.window.activeTextEditor;
+        if (active) {
+            const position = new vscode.Position(active.selection.start.line, active.selection.start.character);
+            await commands.executeCommand('java.implement.all.abstract.methods', active.document.uri.toString(), position);
+        }
+    }));
     context.subscriptions.push(commands.registerCommand('nbls.startup.condition', async () => {
         return client;
     }));

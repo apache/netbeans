@@ -116,7 +116,7 @@ public class NotifyLaterTest extends NbTestCase {
         assertNotNull("There is parent window", root);
         assertTrue("It is a dialog", root instanceof JDialog);
         JDialog d = (JDialog)root;
-        assertEquals("The owner of d is the same as owner of dialog without owner", new JDialog().getParent(), d.getParent());
+        assertNull("d should have no owner", d.getParent());
         
         SwingUtilities.invokeAndWait(new Runnable () {
             public void run() {

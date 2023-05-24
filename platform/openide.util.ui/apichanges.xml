@@ -27,6 +27,22 @@
     <apidef name="actions">Actions API</apidef>
 </apidefs>
 <changes>
+    <change id="findDialogParent2">
+         <api name="util"/>
+         <summary>static method Utilities.findDialogParent overloaded and isModalDialogOpen added</summary>
+         <version major="9" minor="30"/>
+         <date day="26" month="5" year="2023"/>
+         <author login="rkeen-siemens"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="yes"/>
+         <description>
+             <p>
+                 Updated <code>findDialogParent</code> to ensure that if a modal dialog is open the returned component is in that dialog
+                 and added an overload that allows providing a fallback component.
+                 Added <code>isModalDialogOpen</code> to determine if there is a modal dialog open.
+             </p>
+         </description>
+         <class package="org.openide.util" name="Utilities"/>
+    </change>
     <change id="actionsForPathLookup">
          <api name="util"/>
          <summary>Added variant Utilities.actionsForPath with Lookup that produces context-aware actions</summary>

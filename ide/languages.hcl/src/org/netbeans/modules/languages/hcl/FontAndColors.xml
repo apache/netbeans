@@ -36,4 +36,8 @@
     <fontcolor name="separator" default="separator"/>
     <fontcolor name="string" default="string"/>
     <fontcolor name="whitespace" default="whitespace"/>
+
+    <fontcolor name="mod-method" default="keyword">
+        <font style="bold"/>
+    </fontcolor>
 </fontscolors>

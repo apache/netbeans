@@ -59,7 +59,7 @@
         <author login="dbalek"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
         <description>
-            <a href="@TOP@/org/netbeans/api/lsp/Diagnostic.html#getCommand">Completion.getCommand</a> to get an optional command
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getCommand">Completion.getCommand</a> to get an optional command
             that is executed after inserting the completion.
         </description>
         <class package="org.netbeans.api.lsp" name="Completion"/>

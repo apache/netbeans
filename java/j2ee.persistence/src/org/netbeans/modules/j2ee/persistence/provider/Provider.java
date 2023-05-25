@@ -116,7 +116,7 @@ public abstract class Provider {
         result.add(getJdbcUrl());
         result.add(getJdbcPassword());
         result.add(getTableGenerationPropertyName());
-        for (Iterator<String> it = getUnresolvedVendorSpecificProperties().keySet().iterator(); it.hasNext();) {
+        for (Iterator it = getUnresolvedVendorSpecificProperties().keySet().iterator(); it.hasNext();) {
             String propertyName = (String) it.next();
             result.add(propertyName);
         }

@@ -146,10 +146,10 @@ public class NbCollections {
 
         private static final Object WAITING = new Object();
 
-        private final Iterator<E> it;
+        private final Iterator<?> it;
         private Object next = WAITING;
 
-        public CheckedIterator(Iterator<E> it) {
+        public CheckedIterator(Iterator it) {
             this.it = it;
         }
 

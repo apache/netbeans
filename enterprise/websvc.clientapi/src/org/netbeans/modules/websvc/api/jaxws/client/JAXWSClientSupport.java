@@ -72,7 +72,7 @@ public final class JAXWSClientSupport {
         if (f == null) {
             throw new NullPointerException("Passed null to JAXWSClientSupport.getJAXWSClientSupport(FileObject)"); // NOI18N
         }
-        Iterator<WebServicesClientSupportProvider> it = implementations.allInstances().iterator();
+        Iterator it = implementations.allInstances().iterator();
         while (it.hasNext()) {
             WebServicesClientSupportProvider impl = (WebServicesClientSupportProvider)it.next();
             JAXWSClientSupport wscs = impl.findJAXWSClientSupport (f);

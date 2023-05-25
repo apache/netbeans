@@ -237,7 +237,7 @@ public abstract class J2eeModuleProvider {
         //check whether the ds is not already on the server
         Set<Datasource> deployedDS = getServerDatasources();
         if (deployedDS != null) {
-            for (Iterator<Datasource> it = deployedDS.iterator(); it.hasNext();) {
+            for (Iterator it = deployedDS.iterator(); it.hasNext();) {
                 Datasource ds = (Datasource) it.next();
                 if (jndiName.equals(ds.getJndiName())) // ds with the same JNDI name already exists on the server, do not create new one
                     throw new DatasourceAlreadyExistsException(ds);

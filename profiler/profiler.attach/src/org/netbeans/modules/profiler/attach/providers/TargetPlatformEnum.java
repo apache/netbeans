@@ -66,7 +66,7 @@ public class TargetPlatformEnum {
         return ((TargetPlatformEnum) obj).jvmIndex == this.jvmIndex;
     }
 
-    public static Iterator<TargetPlatformEnum> iterator() {
+    public static Iterator iterator() {
         List<TargetPlatformEnum> jvmList = new ArrayList<>(7);
         jvmList.add(JDK5);
         jvmList.add(JDK6);

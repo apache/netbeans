@@ -444,7 +444,7 @@ public class WebProjectWebServicesClientSupport implements WebServicesClientSupp
             
             if(newWscJars) {
                 StringBuffer newClasspathBuf = new StringBuffer(256);
-                for(Iterator<String> iter = wscJars.iterator(); iter.hasNext(); ) {
+                for(Iterator iter = wscJars.iterator(); iter.hasNext(); ) {
                     newClasspathBuf.append(iter.next());
                     if(iter.hasNext()) {
                         newClasspathBuf.append(':');

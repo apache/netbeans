@@ -69,7 +69,7 @@ public final class WebServicesClientView {
 		if (f == null) {
 			throw new NullPointerException("Passed null to WebServicesClientView.getWebServicesClientView(FileObject)"); // NOI18N
 		}
-		Iterator<WebServicesClientViewProvider> it = implementations.allInstances().iterator();
+		Iterator it = implementations.allInstances().iterator();
 		while (it.hasNext()) {
 			WebServicesClientViewProvider impl = (WebServicesClientViewProvider)it.next();
 			WebServicesClientView wsv = impl.findWebServicesClientView (f);

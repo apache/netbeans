@@ -62,7 +62,7 @@ public abstract class AbstractFilesListener {
         }
     }
     public synchronized void stopListening() {
-        for (Iterator<FileObject> i = fileListeners.keySet().iterator(); i.hasNext();) {
+        for (Iterator i = fileListeners.keySet().iterator(); i.hasNext();) {
             FileObject fo = (FileObject) i.next();
             removeFileListenerFrom(fo);
         }

@@ -82,8 +82,7 @@ public abstract class PageContentModel {
         }
     }
     private final void fireChangeEvent() {
-        Iterator<ChangeListener> it;
-
+        Iterator it;
         synchronized (listeners) {
             it = new HashSet<ChangeListener>(listeners).iterator();
         }

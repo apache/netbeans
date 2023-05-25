@@ -36,7 +36,7 @@ public interface CatalogReader {
      * Get String iterator representing all public IDs registered in catalog.
      * @return null if cannot proceed, try later.
      */
-    public Iterator<String> getPublicIDs();
+    public Iterator getPublicIDs();
     
     /**
      * Refresh content according to content of mounted catalog.

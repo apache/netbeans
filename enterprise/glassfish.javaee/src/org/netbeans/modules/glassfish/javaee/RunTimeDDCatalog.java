@@ -243,7 +243,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
      * @return null if cannot proceed, try later.
      */
     @Override
-    public Iterator<String> getPublicIDs() {
+    public Iterator getPublicIDs() {
         if (platformRootDir == null) {
             return null;
         }

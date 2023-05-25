@@ -58,7 +58,7 @@ public class AddNavigationRuleDialog extends javax.swing.JPanel implements Valid
             NavigationRule rule;
             FacesConfig facesConfig = ConfigurationUtils.getConfigModel(config.getPrimaryFile(), true).getRootComponent();
             
-            Iterator<NavigationRule> iter = facesConfig.getNavigationRules().iterator();
+            Iterator iter = facesConfig.getNavigationRules().iterator();
             while (iter.hasNext()){
                 rule = (NavigationRule) iter.next();
                 if (rule.getFromViewId() != null){

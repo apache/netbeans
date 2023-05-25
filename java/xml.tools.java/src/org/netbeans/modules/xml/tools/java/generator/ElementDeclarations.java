@@ -36,7 +36,7 @@ public class ElementDeclarations extends HashMap {
     /**
      * Creates new ElementDeclarations from TreeElementDecl iterator.
      */
-    public ElementDeclarations(Iterator<TreeElementDecl> it) {
+    public ElementDeclarations(Iterator it) {
         if (it == null) return;
         while (it.hasNext()) {
             TreeElementDecl next = (TreeElementDecl) it.next();

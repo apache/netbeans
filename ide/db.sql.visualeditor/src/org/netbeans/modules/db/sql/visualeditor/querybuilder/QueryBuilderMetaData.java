@@ -193,7 +193,7 @@ public class QueryBuilderMetaData {
         }
 
         List<String> tables = getAllTables();
-        for (Iterator<String> i = tables.iterator(); i.hasNext();) {
+        for (Iterator i = tables.iterator(); i.hasNext();) {
             // first check if the table name exists as is
             String fullNameDb = (String) i.next();
             if (fullNameDb.equalsIgnoreCase(fullTableName)) {

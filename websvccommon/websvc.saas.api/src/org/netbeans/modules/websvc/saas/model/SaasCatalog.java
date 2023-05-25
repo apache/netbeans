@@ -23,7 +23,6 @@ import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.netbeans.modules.xml.catalog.spi.CatalogDescriptor;
@@ -67,8 +66,8 @@ public class SaasCatalog implements CatalogReader, CatalogDescriptor,
      * Get String iterator representing all public IDs registered in catalog.
      * @return null if cannot proceed, try later.
      */
-    public Iterator<String> getPublicIDs() {
-        List<String> ids = new ArrayList<>();
+    public java.util.Iterator getPublicIDs() {
+        ArrayList<String> ids = new ArrayList<String>();
         ids.add(SAAS_SERVICES_1_0_ID);
         
         return ids.iterator();

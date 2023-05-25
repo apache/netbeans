@@ -25,7 +25,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
@@ -354,10 +353,10 @@ private void onNewFilter(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onNe
     private static class FilterModel extends AbstractListModel {
 
         public DefaultListSelectionModel selection = new DefaultListSelectionModel();
-        public List<NotificationFilter> filters;
+        public ArrayList<NotificationFilter> filters;
 
         public FilterModel(FilterRepository rep) {
-            filters = new ArrayList<>(rep.size() * 2);
+            filters = new ArrayList<NotificationFilter>(rep.size() * 2);
             int selectedi = 0;
             for (NotificationFilter f : rep.getFilters()) {
                 if (f == rep.getActive()) {
@@ -368,7 +367,7 @@ private void onNewFilter(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onNe
             }
         }
 
-        public Iterator<NotificationFilter> iterator() {
+        public Iterator iterator() {
             return filters.iterator();
         }
 

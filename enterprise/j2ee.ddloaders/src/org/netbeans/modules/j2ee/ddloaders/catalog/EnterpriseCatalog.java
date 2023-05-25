@@ -196,7 +196,7 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
     }
 
     @Override
-    public Iterator<String> getPublicIDs() {
+    public Iterator getPublicIDs() {
         List<String> result = new ArrayList<>();
         for (SchemaInfo each : schemas){
                result.add(each.getPublicId());

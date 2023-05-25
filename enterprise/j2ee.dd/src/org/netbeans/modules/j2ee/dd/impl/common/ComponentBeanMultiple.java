@@ -358,7 +358,7 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
                 }
             }
         }
-        Iterator<Icon> it = iconList.iterator();
+        java.util.Iterator it = iconList.iterator();
         while(it.hasNext()) removeIcon((org.netbeans.modules.j2ee.dd.api.common.Icon)it.next());
     }
 }

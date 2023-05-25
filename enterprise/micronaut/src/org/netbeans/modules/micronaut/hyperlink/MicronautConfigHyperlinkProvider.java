@@ -21,6 +21,8 @@ package org.netbeans.modules.micronaut.hyperlink;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -42,28 +44,41 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.api.progress.BaseProgressUtils;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.micronaut.MicronautConfigProperties;
 import org.netbeans.modules.micronaut.MicronautConfigUtilities;
+import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.spi.IndexingAwareParserResultTask;
+import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.modules.parsing.spi.Scheduler;
+import org.netbeans.modules.parsing.spi.SchedulerEvent;
+import org.netbeans.modules.parsing.spi.SchedulerTask;
+import org.netbeans.modules.parsing.spi.TaskFactory;
+import org.netbeans.modules.parsing.spi.TaskIndexingMode;
 import org.netbeans.spi.lsp.HyperlinkLocationProvider;
+import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataProperty;
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataSource;
 
 /**
- * CURRENTLY NOT ACTIVE - @MimeRegistration DISABLED to work around 
- * <a href="https://github.com/apache/netbeans/issues/3913">GITHUB-3913</a>
- *
+ * 
  * @author Dusan Balek
  */
 public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
 
-    //@MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkProviderExt.class, position = 1250)
+    private static final String SPANS_PROPERTY_NAME = "MicronautConfigHyperlinkSpans";
+
+    @MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkProviderExt.class, position = 1250)
     public static MicronautConfigHyperlinkProvider createYamlProvider() {
         return new MicronautConfigHyperlinkProvider();
     }
 
-    //@MimeRegistration(mimeType = "text/x-properties", service = HyperlinkProviderExt.class, position = 1250)
+    @MimeRegistration(mimeType = "text/x-properties", service = HyperlinkProviderExt.class, position = 1250)
     public static MicronautConfigHyperlinkProvider createPropertiesProvider() {
         return new MicronautConfigHyperlinkProvider();
     }
@@ -80,10 +95,26 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
 
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
-        int[] span = new int[2];
-        List<ConfigurationMetadataSource> sources = new ArrayList<>();
-        ConfigurationMetadataProperty property = MicronautConfigUtilities.resolveProperty(doc, offset, span, sources);
-        return property != null || !sources.isEmpty() ? span : null;
+        String mimeType = DocumentUtilities.getMimeType(doc);
+        if ("text/x-yaml".equals(mimeType)) {
+            List<int[]> spans = null;
+            synchronized (doc) {
+                spans = (List<int[]>) doc.getProperty(SPANS_PROPERTY_NAME);
+            }
+            if (spans != null) {
+                for (int[] span : spans) {
+                    if (span.length == 2 && span[0] <= offset && offset <= span[1]) {
+                        return span;
+                    }
+                }
+            }
+            return null;
+        } else {
+            int[] span = new int[2];
+            List<ConfigurationMetadataSource> sources = new ArrayList<>();
+            ConfigurationMetadataProperty property = MicronautConfigUtilities.resolveProperty(doc, offset, span, sources);
+            return property != null || !sources.isEmpty() ? span : null;
+        }
     }
 
     @Override
@@ -133,6 +164,7 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
                         if (cancel != null && cancel.get()) {
                             return;
                         }
+                        controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         TypeElement te = (TypeElement) handle[0].resolve(controller);
                         if (te != null) {
                             ElementHandle found = null;
@@ -169,14 +201,70 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
         return handle[0];
     }
 
+    public static final class Task extends IndexingAwareParserResultTask<Parser.Result> {
+    
+        private final AtomicBoolean cancel = new AtomicBoolean();
+        private final Project project;
+
+        public Task(Project project) {
+            super(TaskIndexingMode.ALLOWED_DURING_SCAN);
+            this.project = project;
+        }
+
+        @Override
+        public void run(Parser.Result result, SchedulerEvent event) {
+            if (cancel.get()) {
+                return;
+            }
+            Document doc = result.getSnapshot().getSource().getDocument(false);
+            if (doc != null) {
+                List<int[]> spans = MicronautConfigUtilities.getPropertySpans(project, result);
+                synchronized (doc) {
+                    doc.putProperty(SPANS_PROPERTY_NAME, spans);
+                }
+            }
+        }
+
+        @Override
+        public int getPriority() {
+            return 200;
+        }
+
+        @Override
+        public Class<? extends Scheduler> getSchedulerClass() {
+            return Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER;
+        }
+
+        @Override
+        public void cancel() {
+            cancel.set(true);
+        }
+
+        @MimeRegistration(mimeType = "text/x-yaml", service = TaskFactory.class)
+        public static final class Factory extends TaskFactory {
+
+            @Override
+            public Collection<? extends SchedulerTask> create(Snapshot snapshot) {
+                FileObject fo = snapshot.getSource().getFileObject();
+                if (MicronautConfigUtilities.isMicronautConfigFile(fo)) {
+                    Project project = FileOwnerQuery.getOwner(fo);
+                    if (project != null && MicronautConfigProperties.hasConfigMetadata(project)) {
+                        return Collections.singleton(new Task(project));
+                    }
+                }
+                return Collections.emptySet();
+            }
+        }
+    }
+
     public static class LocationProvider implements HyperlinkLocationProvider {
 
-        //@MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkLocationProvider.class)
+        @MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkLocationProvider.class)
         public static LocationProvider createYamlProvider() {
             return new LocationProvider();
         }
 
-        //@MimeRegistration(mimeType = "text/x-properties", service = HyperlinkLocationProvider.class)
+        @MimeRegistration(mimeType = "text/x-properties", service = HyperlinkLocationProvider.class)
         public static LocationProvider createPropertiesProvider() {
             return new LocationProvider();
         }

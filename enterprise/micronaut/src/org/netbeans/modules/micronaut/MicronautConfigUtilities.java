@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.text.Document;
@@ -98,26 +100,7 @@ public class MicronautConfigUtilities {
                                                                     span[1] = end;
                                                                 }
                                                                 if (start <= offset && offset <= end && item.getName().equals(lineDocument.getText(start, end - start))) {
-                                                                    String propertyName = getPropertyName(context);
-                                                                    for (Map.Entry<String, ConfigurationMetadataGroup> groupEntry : MicronautConfigProperties.getGroups(project).entrySet()) {
-                                                                        String groupKey = groupEntry.getKey();
-                                                                        if (groupKey.endsWith(".*")) {
-                                                                            groupKey = groupKey.substring(0, groupKey.length() - 2);
-                                                                        }
-                                                                        if (Pattern.matches(groupKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*") + ".*", propertyName)) {
-                                                                            ConfigurationMetadataGroup group = groupEntry.getValue();
-                                                                            if (sources != null) {
-                                                                                sources.addAll(group.getSources().values());
-                                                                            }
-                                                                            for (Map.Entry<String, ConfigurationMetadataProperty> propertyEntry : group.getProperties().entrySet()) {
-                                                                                String propertyKey = propertyEntry.getKey();
-                                                                                if (Pattern.matches(propertyKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*"), propertyName)) {
-                                                                                    property[0] = propertyEntry.getValue();
-                                                                                    return;
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
+                                                                    property[0] = getProperty(MicronautConfigProperties.getGroups(project), getPropertyName(context), sources);
                                                                 }
                                                             }
                                                         }
@@ -211,6 +194,70 @@ public class MicronautConfigUtilities {
             Exceptions.printStackTrace(ex);
         }
     }
+    
+    public static List<int[]> getPropertySpans(Project project, Parser.Result r) {
+        List<int[]> spans = new ArrayList<>();
+        if (r instanceof ParserResult) {
+            Language language = LanguageRegistry.getInstance().getLanguageByMimeType(r.getSnapshot().getMimeType());
+            if (language != null) {
+                StructureScanner scanner = language.getStructure();
+                if (scanner != null) {
+                    Map<String, ConfigurationMetadataGroup> groups = MicronautConfigProperties.getGroups(project);
+                    scan(scanner.scan((ParserResult) r), new Stack<>(), context -> {
+                        if (!context.empty()) {
+                            String propertyName = getPropertyName(context);
+                            List<ConfigurationMetadataSource> sources = new ArrayList<>();
+                            ConfigurationMetadataProperty property = getProperty(groups, propertyName, sources);
+                            if (property != null || !sources.isEmpty()) {
+                                StructureItem item = context.peek();
+                                spans.add(new int[] {(int) item.getPosition(), (int) item.getPosition() + item.getName().length()});
+                            }
+                        }
+                        return true;
+                    });
+                }
+            }
+        }
+        return spans;
+    }
+    
+    private static ConfigurationMetadataProperty getProperty(Map<String, ConfigurationMetadataGroup> groups, String propertyName, List<ConfigurationMetadataSource> sources) {
+        for (Map.Entry<String, ConfigurationMetadataGroup> groupEntry : groups.entrySet()) {
+            String groupKey = groupEntry.getKey();
+            if (groupKey.endsWith(".*")) {
+                groupKey = groupKey.substring(0, groupKey.length() - 2);
+            }
+            if (Pattern.matches(groupKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*") + ".*", propertyName)) {
+                ConfigurationMetadataGroup group = groupEntry.getValue();
+                if (sources != null) {
+                    sources.addAll(group.getSources().values());
+                }
+                for (Map.Entry<String, ConfigurationMetadataProperty> propertyEntry : group.getProperties().entrySet()) {
+                    String propertyKey = propertyEntry.getKey();
+                    if (Pattern.matches(propertyKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*"), propertyName)) {
+                        return propertyEntry.getValue();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private static void scan(List<? extends StructureItem> structures, Stack<StructureItem> context, Function<Stack<StructureItem>, Boolean> visitor) {
+        for (StructureItem structure : structures) {
+            if (structure != null) {
+                try {
+                    context.push(structure);
+                    if (visitor.apply(context)) {
+                        scan(structure.getNestedItems(), context, visitor);
+                    }
+                } finally {
+                    context.pop();
+                }
+            }
+        }
+    }
+
 
     private static void find(FileObject fo, String propertyName, List<? extends StructureItem> structures, CharSequence content, Consumer<Usage> consumer) {
         int idx = propertyName.indexOf('.');

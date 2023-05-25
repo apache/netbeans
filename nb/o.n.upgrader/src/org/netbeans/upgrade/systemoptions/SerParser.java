@@ -491,7 +491,7 @@ public final class SerParser implements ObjectStreamConstants {
         makeRef(aw);
         int size = readInt();
         if (size < 0) throw new NotImplementedException();
-        aw.values = new ArrayList<Object>(size);
+        aw.values = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             if (aw.classdesc.name.equals("[B")) { // NOI18N
                 aw.values.add(readByte());
@@ -504,7 +504,7 @@ public final class SerParser implements ObjectStreamConstants {
             } else if (aw.classdesc.name.equals("[F")) { // NOI18N
                 aw.values.add(Float.intBitsToFloat(readInt()));
             } else if (aw.classdesc.name.equals("[D")) { // NOI18N
-                aw.values.add(new Double(Double.longBitsToDouble(readLong())));
+                aw.values.add(Double.longBitsToDouble(readLong()));
             } else if (aw.classdesc.name.equals("[C")) { // NOI18N
                 aw.values.add(new Character((char)readShort()));
             } else if (aw.classdesc.name.equals("[Z")) { // NOI18N
@@ -568,7 +568,7 @@ public final class SerParser implements ObjectStreamConstants {
             } else if (fd.type.equals("F")) { // NOI18N
                 values.add(new NameValue(fd, Float.intBitsToFloat(readInt())));
             } else if (fd.type.equals("D")) { // NOI18N
-                values.add(new NameValue(fd, new Double(Double.longBitsToDouble(readLong()))));
+                values.add(new NameValue(fd, Double.longBitsToDouble(readLong())));
             } else if (fd.type.equals("C")) { // NOI18N
                 values.add(new NameValue(fd, new Character((char)readShort())));
             } else if (fd.type.equals("Z")) { // NOI18N

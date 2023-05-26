@@ -63,7 +63,7 @@ public class DBMetaDataProvider {
      */
     public static synchronized DBMetaDataProvider get(Connection conn, String driverClass) {
         assert conn != null;
-        DBMetaDataProvider provider = (DBMetaDataProvider)CONN_TO_PROVIDER.get(conn);
+        DBMetaDataProvider provider = CONN_TO_PROVIDER.get(conn);
         if (provider == null) {
             provider = new DBMetaDataProvider(conn, driverClass);
             CONN_TO_PROVIDER.put(conn, provider);
@@ -110,22 +110,22 @@ public class DBMetaDataProvider {
             }
         }
         
-        return (Catalog[])catalogs.values().toArray(new Catalog[catalogs.size()]);
+        return catalogs.values().toArray(new Catalog[catalogs.size()]);
     }
     
     public synchronized Catalog getCatalog(String name) throws SQLException {
         if (catalogs == null) {
             getCatalogs();
         }
-        Catalog ret = (Catalog)catalogs.get(name);
+        Catalog ret = catalogs.get(name);
         if(ret == null && "".equals(name)) {
-            ret = (Catalog)catalogs.get(null);
+            ret = catalogs.get(null);
         }
         return ret;
     }
     
     Connection getConnection() {
-        return (Connection)conn.get();
+        return conn.get();
     }
     
     String getDriverClass() {
@@ -190,7 +190,7 @@ public class DBMetaDataProvider {
             }
             DBMetaDataProvider provider;
             synchronized (this) {
-                provider = (DBMetaDataProvider)CONN_TO_PROVIDER.get(conn);
+                provider = CONN_TO_PROVIDER.get(conn);
             }
             if (provider == null) {
                 return null;

@@ -481,7 +481,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                     boolean all = false;
                     for (int k = 0; k < columns.size(); k++)
                         //test if the view is created over all columns and try to eliminate agregation functions
-                        if (((String) columns.get(k)).trim().endsWith("*")) {
+                        if (columns.get(k).trim().endsWith("*")) {
                             all = true;
                             break;
                         }
@@ -541,7 +541,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
 
                             keys = new UniqueKeyElement[tempList.size()];
                             for (int k = 0; k < tempList.size(); k++)
-                                keys[k] = (UniqueKeyElement) tempList.get(k);
+                                keys[k] = tempList.get(k);
                             te.setKeys(keys);
 
                             IndexElement[] indexes = new IndexElement[keys.length];
@@ -698,7 +698,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         ke[j] = uke[j];
                     int idx = uke.length;
                     for (int j = 0; j < tempList.size(); j++)
-                        ke[j + idx] = (ForeignKeyElement) tempList.get(j);
+                        ke[j + idx] = tempList.get(j);
                     
                     te.setKeys(ke);
 

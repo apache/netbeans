@@ -71,7 +71,7 @@ public class Catalog {
             }
         }
         
-        return (Schema[])schemas.values().toArray(new Schema[schemas.size()]);
+        return schemas.values().toArray(new Schema[schemas.size()]);
     }
     
     public synchronized Schema getSchema(String name) throws SQLException {
@@ -79,7 +79,7 @@ public class Catalog {
             getSchemas();
         }
         
-        return (Schema)schemas.get(name);
+        return schemas.get(name);
     }
     
     @Override

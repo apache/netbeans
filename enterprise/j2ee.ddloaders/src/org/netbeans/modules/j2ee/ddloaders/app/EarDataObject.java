@@ -453,7 +453,7 @@ public class EarDataObject extends DD2beansDataObject
                     else if (options[1].equals (e.getSource ())) {
                         Enumeration<DDChangeEvent> en = connectionPanel.listModel.elements ();
                         while (en.hasMoreElements ()) {
-                            processDDChangeEvent ((DDChangeEvent)en.nextElement ());
+                            processDDChangeEvent(en.nextElement());
                         }
                         confirmChangesDialog[0].setVisible (false);
                         connectionPanel.setChanges (null);

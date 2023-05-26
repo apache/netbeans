@@ -324,9 +324,9 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                                 continue;
                             }
                             rset = bridge.getDriverSpecification().getRow();
-                            name = (String) rset.get(new Integer(6));
-                            columnName = (String) rset.get(new Integer(9));
-                            uniqueStr = (String) rset.get(new Integer(4));
+                            name = rset.get(new Integer(6));
+                            columnName = rset.get(new Integer(9));
+                            uniqueStr  = rset.get(new Integer(4));
                             if (uniqueStr == null || uniqueStr.equals("0") || uniqueStr.equalsIgnoreCase("false") || uniqueStr.equalsIgnoreCase("f"))
                                 unq = false;
                             else
@@ -469,15 +469,15 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                     rset = bridge.getDriverSpecification().getRow();
                     
                     //test references between two schemas
-                    c1 = (String) rset.get(new Integer(1));
-                    s1 = (String) rset.get(new Integer(2));
-                    c2 = (String) rset.get(new Integer(5));
-                    s2 = (String) rset.get(new Integer(6));                    
+                    c1 = rset.get(new Integer(1));
+                    s1 = rset.get(new Integer(2));
+                    c2 = rset.get(new Integer(5));
+                    s2 = rset.get(new Integer(6));                    
                             
-                    name = (String) rset.get(new Integer(12));
-                    fkColName = (String) rset.get(new Integer(8));
-                    pkTableName = (String) rset.get(new Integer(3));
-                    pkColName = (String) rset.get(new Integer(4));
+                    name = rset.get(new Integer(12));
+                    fkColName = rset.get(new Integer(8));
+                    pkTableName = rset.get(new Integer(3));
+                    pkColName = rset.get(new Integer(4));
                     rset.clear();
                 } else {
                     //test references between two schemas

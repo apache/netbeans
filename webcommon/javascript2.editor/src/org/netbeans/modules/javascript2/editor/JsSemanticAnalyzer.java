@@ -248,7 +248,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                                     }
                                 }
                             } else if (object instanceof JsObject && !ModelUtils.ARGUMENTS.equals(object.getName())) {   // NOI18N
-                                if (object.getOccurrences().size() <= ((JsObject)object).getAssignmentCount()) {
+                                if (object.getOccurrences().size() <= object.getAssignmentCount()) {
                                     // probably is used only on the left site => is unused
                                     if (object.getDeclarationName().getOffsetRange().getLength() > 0) {
                                         highlights.put(LexUtilities.getLexerOffsets(result, object.getDeclarationName().getOffsetRange()), ColoringAttributes.UNUSED_SET);

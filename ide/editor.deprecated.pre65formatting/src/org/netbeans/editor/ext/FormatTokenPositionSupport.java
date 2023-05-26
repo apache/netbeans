@@ -82,7 +82,7 @@ class FormatTokenPositionSupport {
         int cnt = posList.size();
         ExtTokenPosition etp;
         for (int i = 0; i < cnt; i++) {
-            etp = (ExtTokenPosition)posList.get(i);
+            etp = posList.get(i);
             if (etp.getOffset() == offset && etp.getBias() == bias) {
                 return etp;
             }
@@ -110,7 +110,7 @@ class FormatTokenPositionSupport {
         int len = posList.size();
         List<ExtTokenPosition> prevPosList = getPosList(prevToken);
         for (int i = 0; i < len; i++) {
-            ExtTokenPosition etp = (ExtTokenPosition)posList.get(i);
+            ExtTokenPosition etp = posList.get(i);
             if (etp.offset < startLength) { // move to prevToken
                 etp.token = prevToken;
                 posList.remove(i);
@@ -140,7 +140,7 @@ class FormatTokenPositionSupport {
         int len = posList.size();
         int offset = token.getImage().length() - endLength;
         for (int i = 0; i < len; i++) {
-            ExtTokenPosition etp = (ExtTokenPosition)posList.get(i);
+            ExtTokenPosition etp = posList.get(i);
             if (etp.offset >= offset) { // move to nextToken
                 etp.token = nextToken;
                 etp.offset -= offset;
@@ -158,7 +158,7 @@ class FormatTokenPositionSupport {
         int len = posList.size();
         // Add length to all positions after insertion point
         for (int i = 0; i < len; i++) {
-            ExtTokenPosition etp = (ExtTokenPosition)posList.get(i);
+            ExtTokenPosition etp = posList.get(i);
             if ((etp.bias == Position.Bias.Backward)
                     ? (etp.offset > offset) : (etp.offset >= offset)) {
                 etp.offset += length;
@@ -174,7 +174,7 @@ class FormatTokenPositionSupport {
             posList = getPosList(nextToken);
             len = posList.size();
             for (int i = 0; i < len; i++) {
-                ExtTokenPosition etp = (ExtTokenPosition)posList.get(i);
+                ExtTokenPosition etp = posList.get(i);
                 if (etp.bias == Position.Bias.Backward && etp.offset == 0) {
                     etp.token = token;
                     etp.offset = offset;
@@ -192,7 +192,7 @@ class FormatTokenPositionSupport {
         int newLen = token.getImage().length() - length;
         List<ExtTokenPosition> nextList = getPosList(token.getNext());
         for (int i = 0; i < len; i++) {
-            ExtTokenPosition etp = (ExtTokenPosition)posList.get(i);
+            ExtTokenPosition etp = posList.get(i);
             if (etp.offset >= offset + length) { // move to nextToken
                 etp.offset -= length;
 
@@ -223,7 +223,7 @@ class FormatTokenPositionSupport {
         List<ExtTokenPosition> posList = getPosList(token);
         int len = posList.size();
         for (int i = 0; i < len; i++) {
-            ExtTokenPosition etp = (ExtTokenPosition)posList.get(i);
+            ExtTokenPosition etp = posList.get(i);
             etp.token = nextToken;
             etp.offset = 0;
             nextPosList.add(etp);
@@ -247,7 +247,7 @@ class FormatTokenPositionSupport {
 
             int nextLen = nextPosList.size();
             for (int i = 0; i < nextLen; i++) {
-                ExtTokenPosition etp = (ExtTokenPosition)nextPosList.get(i);
+                ExtTokenPosition etp = nextPosList.get(i);
                 if (etp.offset == 0 && etp.getBias() == Position.Bias.Backward) {
                     etp.token = token; // offset will stay equal to zero
                     nextPosList.remove(i);

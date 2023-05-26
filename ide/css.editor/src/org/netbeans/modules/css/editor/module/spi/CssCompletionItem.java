@@ -649,7 +649,7 @@ public abstract class CssCompletionItem extends DefaultCompletionProposal {
                 if (mustBeEscaped) {
                     result.append("\\");
                     if (entry > 127 || Character.isWhitespace(entry) || Character.isISOControl(entry)) {
-                        result.append(String.format("%06x", (int) entry));
+                        result.append(String.format("%06x", entry));
                     } else {
                         result.appendCodePoint(entry);
                     }

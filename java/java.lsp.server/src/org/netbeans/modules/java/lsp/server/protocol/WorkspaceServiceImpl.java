@@ -60,6 +60,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
@@ -329,7 +330,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 if (file == null) {
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
+                long t = System.currentTimeMillis();
                 return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenCompose(testRoots -> {
+                    LOG.log(Level.INFO, "Project {2}: {0} test roots opened in {1}ms", new Object[] { testRoots.size(), (System.currentTimeMillis() - t), file});
                     BiFunction<FileObject, Collection<TestMethodController.TestMethod>, Collection<TestSuiteInfo>> f = (fo, methods) -> {
                         String url = Utils.toUri(fo);
                         Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();

@@ -174,7 +174,10 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
     
 
     private static void buildServer() throws Exception {
+        File httpwork = Places.getCacheSubdirectory("httpwork");
+        File httpworkBase = Places.getCacheSubdirectory("httpwork-base");
         tomcat = new Tomcat();
+        tomcat.setBaseDir(httpworkBase.getAbsolutePath());
         tomcat.setPort(httpserverSettings().getPort());
         tomcat.getServer().setUtilityThreads(1);
         tomcat.getConnector().setXpoweredBy(false);
@@ -185,8 +188,7 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
 	ThreadPoolExecutor tf  = new ThreadPoolExecutor(0, 3, 60, TimeUnit.SECONDS, tq);
 	tomcat.getConnector().getProtocolHandler().setExecutor(tf);
 
-        File wd = Places.getCacheSubdirectory("httpwork");
-        Context ctx = tomcat.addContext("", wd.getAbsolutePath());
+        Context ctx = tomcat.addContext("", httpwork.getAbsolutePath());
 
         if(ctx instanceof StandardContext) {
             ((StandardContext) ctx).setClearReferencesRmiTargets(false);

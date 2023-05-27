@@ -63,7 +63,7 @@ public final class ParserLoader extends URLClassLoader {
     /** Creates new ParserLoader */
     private ParserLoader(URL[] locations) {
         super(locations);
-        parentLoader = (ClassLoader) Lookup.getDefault().lookup(ClassLoader.class);
+        parentLoader = Lookup.getDefault().lookup(ClassLoader.class);
     }
 
     /**

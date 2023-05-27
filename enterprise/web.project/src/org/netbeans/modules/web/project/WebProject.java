@@ -895,7 +895,7 @@ public final class WebProject implements Project {
         protected void projectOpened() {
             evaluator().addPropertyChangeListener(WebProject.this.webModule);
 
-            WebLogicalViewProvider logicalViewProvider = (WebLogicalViewProvider) WebProject.this.getLookup().lookup (WebLogicalViewProvider.class);
+            WebLogicalViewProvider logicalViewProvider = WebProject.this.getLookup().lookup(WebLogicalViewProvider.class);
             if (logicalViewProvider != null) {
                 logicalViewProvider.initialize();
             }

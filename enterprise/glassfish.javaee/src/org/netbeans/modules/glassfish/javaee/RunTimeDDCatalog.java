@@ -888,7 +888,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
         if (ctx.getFileObject() == null) return null;
         Enumeration<Node> en = ctx.getDocumentChildren();
         while (en.hasMoreElements()) {
-            Node next = (Node) en.nextElement();
+            Node next = en.nextElement();
             if (next.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
                 return null; // null for web.xml specified by DTD
             } else if (next.getNodeType() == Node.ELEMENT_NODE) {

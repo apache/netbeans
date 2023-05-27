@@ -291,7 +291,7 @@ public class WebProjectUtilities {
                   false);
 
         WebProject p = (WebProject)ProjectManager.getDefault().findProject(h.getProjectDirectory());
-        UpdateHelper updateHelper = ((WebProject) p).getUpdateHelper();
+        UpdateHelper updateHelper = p.getUpdateHelper();
         
         // #119052
         if (sourceLevel == null) {
@@ -315,7 +315,7 @@ public class WebProjectUtilities {
             Exceptions.printStackTrace(ex.getException());
         }
         
-        ProjectWebModule pwm = (ProjectWebModule) p.getLookup().lookup(ProjectWebModule.class);
+        ProjectWebModule pwm = p.getLookup().lookup(ProjectWebModule.class);
         if (pwm != null) { //should not be null
             pwm.setContextPath(contextPath);
         }

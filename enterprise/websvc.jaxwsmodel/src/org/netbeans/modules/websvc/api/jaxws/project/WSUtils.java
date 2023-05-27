@@ -122,7 +122,7 @@ public class WSUtils {
                                     WSUtils.class,"ERR_retrieveResource",
                                     key.getCurrentAddress()));
                             ex.initCause(exc);
-                            throw (IOException)(ex);
+                            throw ex;
                         }
                     }
                 }

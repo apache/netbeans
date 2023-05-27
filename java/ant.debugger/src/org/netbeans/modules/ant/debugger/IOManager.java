@@ -96,7 +96,7 @@ public class IOManager {
                     synchronized (buffer) {
                         int i, k = buffer.size ();
                         for (i = 0; i < k; i++) {
-                            Text t = (Text) buffer.removeFirst ();
+                            Text t = buffer.removeFirst();
                             try {
                                 OutputWriter ow = (t.important) ? debuggerErr : debuggerOut;
                                 if (t.line != null) {

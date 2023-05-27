@@ -102,7 +102,7 @@ public class Server implements Node.Cookie {
                 return;
             }
             DataObject dobj = DataObject.find(factoryinstance);
-            InstanceCookie cookie = (InstanceCookie) dobj.getCookie(InstanceCookie.class);
+            InstanceCookie cookie = dobj.getCookie(InstanceCookie.class);
             if (cookie == null) {
                 String msg = NbBundle.getMessage(Server.class, "MSG_FactoryFailed", name);
                 LOGGER.log(Level.SEVERE, msg);
@@ -206,7 +206,7 @@ public class Server implements Node.Cookie {
             return nodeProvider;
         }
 
-        RegistryNodeFactory nodeFact = (RegistryNodeFactory) lkp.lookup(RegistryNodeFactory.class);
+        RegistryNodeFactory nodeFact = lkp.lookup(RegistryNodeFactory.class);
         if (nodeFact == null) {
             String msg = NbBundle.getMessage(Server.class, "MSG_NoInstance", name, RegistryNodeFactory.class);
             LOGGER.log(Level.INFO, msg);
@@ -216,19 +216,18 @@ public class Server implements Node.Cookie {
     }
 
     public RegistryNodeFactory getRegistryNodeFactory() {
-        return (RegistryNodeFactory) lkp.lookup(RegistryNodeFactory.class);
+        return lkp.lookup(RegistryNodeFactory.class);
     }
 
     /** returns OptionalDeploymentManagerFactory or null it is not provided by the plugin */
     public OptionalDeploymentManagerFactory getOptionalFactory () {
-        OptionalDeploymentManagerFactory o = (OptionalDeploymentManagerFactory)
-                lkp.lookup(OptionalDeploymentManagerFactory.class);
+        OptionalDeploymentManagerFactory o = lkp.lookup(OptionalDeploymentManagerFactory.class);
         return o;
     }
 
     /** returns J2eePlatformFactory or null if it is not provided by the plugin */
     public J2eePlatformFactory getJ2eePlatformFactory () {
-        J2eePlatformFactory o = (J2eePlatformFactory) lkp.lookup(J2eePlatformFactory.class);
+        J2eePlatformFactory o = lkp.lookup(J2eePlatformFactory.class);
         return o;
     }
 
@@ -237,7 +236,7 @@ public class Server implements Node.Cookie {
     }
 
     public VerifierSupport getVerifierSupport() {
-        VerifierSupport vs = (VerifierSupport) lkp.lookup(VerifierSupport.class);
+        VerifierSupport vs = lkp.lookup(VerifierSupport.class);
         return vs;
     }
 

@@ -765,8 +765,8 @@ public class QueryBuilder extends TopComponent
             fromTables = _queryModel.getFrom().getTableList();
             for ( int i = 0; i < fromTables.size(); i++ ) {
 
-                String fromTableName = ( (JoinTable) fromTables.get(i) ).getFullTableName();
-                String fromTableSpec = ( (JoinTable) fromTables.get(i) ).getTableSpec();
+                String fromTableName = fromTables.get(i).getFullTableName();
+                String fromTableSpec = fromTables.get(i).getTableSpec();
                 String checkedFullTableName = checkFullTableName( fromTableName ) ;
 
                 if (DEBUG)
@@ -790,7 +790,7 @@ public class QueryBuilder extends TopComponent
 
                 // now check the columns in the condition if any.
                 List<Column> fromColumns = new ArrayList<>();
-                ( (JoinTable) fromTables.get(i) ).getReferencedColumns(fromColumns);
+                fromTables.get(i).getReferencedColumns(fromColumns);
                 for ( int j = 0; j < fromColumns.size(); j++ ) {
                     Column fromColumn = fromColumns.get(j);
                     if (! checkTableColumnName( fromColumn)) {
@@ -907,9 +907,9 @@ public class QueryBuilder extends TopComponent
                 List<JoinTable> fromTables = _queryModel.getFrom().getTableList();
                 boolean found=false;
                 for ( int j = 0; j < fromTables.size(); j++ ) {
-                    String fromTableName = ( (JoinTable) fromTables.get(j) ).getFullTableName();
+                    String fromTableName = fromTables.get(j).getFullTableName();
                     // this could be an alias
-                    String fromTableSpec = ( (JoinTable) fromTables.get(j) ).getTableSpec();
+                    String fromTableSpec = fromTables.get(j).getTableSpec();
 
                     if (DEBUG)
                         System.out.println(

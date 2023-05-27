@@ -195,7 +195,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
                 String prefix = ctx.getCurrentPrefix();
                 elements = new TreeSet<>();
                 while (en.hasMoreElements()) {
-                    String next = (String) en.nextElement();
+                    String next = en.nextElement();
                     if (next.startsWith(prefix)) {
                         elements.add(next);
                     }

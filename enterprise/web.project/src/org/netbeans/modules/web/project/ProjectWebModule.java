@@ -312,7 +312,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
     }
 
     public ClassPathProvider getClassPathProvider () {
-        return (ClassPathProvider) project.getLookup ().lookup (ClassPathProvider.class);
+        return project.getLookup().lookup(ClassPathProvider.class);
     }
 
     public FileObject getArchive () {

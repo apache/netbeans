@@ -195,12 +195,30 @@ public final class ProblemReporterImpl implements ProblemReporter, Comparator<Pr
             //a.getFile should be already normalized but the find() method can pull tricks on us.
             //#225008
             File f = FileUtil.normalizeFile(a.getFile());
+            if (f.exists() && f.canRead()) {
+                throw new ArtifactFoundException(a, f);
+            }
             if (missingArtifacts.add(f)) {                
                 LOG.log(Level.FINE, "listening to {0} from {1}", new Object[] {f, projectPOMFile});                
                 FileUtil.addFileChangeListener(fcl, f);
             }
         }
     }
+    
+    /**
+     * Indicates that the cached data that report a missing artifact is obsolete. 
+     */
+    public static class ArtifactFoundException extends IllegalStateException {
+        private final Artifact artifact;
+        private final File artifactFile;
+
+        public ArtifactFoundException(Artifact artifact, File artifactFile) {
+            this.artifact = artifact;
+            this.artifactFile = artifactFile;
+        }
+    }
+    
+    
 
     public Set<File> getMissingArtifactFiles() {
         synchronized (reports) {

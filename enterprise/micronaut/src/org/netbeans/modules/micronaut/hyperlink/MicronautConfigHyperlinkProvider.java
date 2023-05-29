@@ -73,12 +73,12 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
 
     private static final String SPANS_PROPERTY_NAME = "MicronautConfigHyperlinkSpans";
 
-    @MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkProviderExt.class, position = 1250)
+    @MimeRegistration(mimeType = MicronautConfigUtilities.YAML_MIME, service = HyperlinkProviderExt.class, position = 1250)
     public static MicronautConfigHyperlinkProvider createYamlProvider() {
         return new MicronautConfigHyperlinkProvider();
     }
 
-    @MimeRegistration(mimeType = "text/x-properties", service = HyperlinkProviderExt.class, position = 1250)
+    @MimeRegistration(mimeType = MicronautConfigUtilities.PROPERTIES_MIME, service = HyperlinkProviderExt.class, position = 1250)
     public static MicronautConfigHyperlinkProvider createPropertiesProvider() {
         return new MicronautConfigHyperlinkProvider();
     }
@@ -96,7 +96,7 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
         String mimeType = DocumentUtilities.getMimeType(doc);
-        if ("text/x-yaml".equals(mimeType)) {
+        if (MicronautConfigUtilities.YAML_MIME.equals(mimeType)) {
             List<int[]> spans = null;
             synchronized (doc) {
                 spans = (List<int[]>) doc.getProperty(SPANS_PROPERTY_NAME);
@@ -240,7 +240,7 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
             cancel.set(true);
         }
 
-        @MimeRegistration(mimeType = "text/x-yaml", service = TaskFactory.class)
+        @MimeRegistration(mimeType = MicronautConfigUtilities.YAML_MIME, service = TaskFactory.class)
         public static final class Factory extends TaskFactory {
 
             @Override
@@ -259,12 +259,12 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
 
     public static class LocationProvider implements HyperlinkLocationProvider {
 
-        @MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkLocationProvider.class)
+        @MimeRegistration(mimeType = MicronautConfigUtilities.YAML_MIME, service = HyperlinkLocationProvider.class)
         public static LocationProvider createYamlProvider() {
             return new LocationProvider();
         }
 
-        @MimeRegistration(mimeType = "text/x-properties", service = HyperlinkLocationProvider.class)
+        @MimeRegistration(mimeType = MicronautConfigUtilities.PROPERTIES_MIME, service = HyperlinkLocationProvider.class)
         public static LocationProvider createPropertiesProvider() {
             return new LocationProvider();
         }

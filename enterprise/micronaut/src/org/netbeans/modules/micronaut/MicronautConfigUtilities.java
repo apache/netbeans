@@ -60,6 +60,9 @@ public class MicronautConfigUtilities {
 
     private static final Pattern REGEXP = Pattern.compile("^(application|bootstrap)(-\\w*)*\\.(yml|properties)$", Pattern.CASE_INSENSITIVE);
 
+    public static final String YAML_MIME = "text/x-yaml";
+    public static final String PROPERTIES_MIME = "text/x-properties";
+
     public static boolean isMicronautConfigFile(FileObject fo) {
         return fo != null && REGEXP.matcher(fo.getNameExt()).matches();
     }
@@ -75,7 +78,7 @@ public class MicronautConfigUtilities {
                         try {
                             int lineStart = LineDocumentUtils.getLineStart(lineDocument, offset);
                             String mimeType = DocumentUtilities.getMimeType(doc);
-                            if ("text/x-yaml".equals(mimeType)) {
+                            if (YAML_MIME.equals(mimeType)) {
                                 String text = lineDocument.getText(lineStart, offset - lineStart);
                                 if (!text.startsWith("#")) {
                                     int idx = text.indexOf(':');
@@ -163,7 +166,7 @@ public class MicronautConfigUtilities {
     public static void collectUsages(FileObject fo, String propertyName, Consumer<Usage> consumer) {
         try {
             String mimeType = fo.getMIMEType();
-            if ("text/x-yaml".equals(mimeType)) {
+            if (YAML_MIME.equals(mimeType)) {
                 ParserManager.parse(Collections.singleton(Source.create(fo)), new UserTask() {
                     public @Override void run(ResultIterator resultIterator) throws Exception {
                         Parser.Result r = resultIterator.getParserResult();

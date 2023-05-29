@@ -1,11 +1,9 @@
-Name: Maven Indexer
-Description: Maven remote repository indexing engine.
-Version: 7.0.2
-Origin: Apache Software Foundation
+Name: GSon
+Description: JSon serialization/deserialization library
+Origin: GitHub
+Version: 2.10.1
 License: Apache-2.0
-URL: https://repo1.maven.org/maven2/org/apache/maven/indexer/
-Source: https://github.com/apache/maven-indexer
-Files: indexer-core-7.0.2.jar search-api-7.0.2.jar search-backend-smo-7.0.2.jar
+Source: https://github.com/google/gson
 
                                  Apache License
                            Version 2.0, January 2004

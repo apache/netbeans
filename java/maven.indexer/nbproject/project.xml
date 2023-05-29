@@ -179,6 +179,14 @@
                 <binary-origin>external/indexer-core-7.0.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
+                <runtime-relative-path>ext/maven/search-api-7.0.2.jar</runtime-relative-path>
+                <binary-origin>external/search-api-7.0.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/search-backend-smo-7.0.2.jar</runtime-relative-path>
+                <binary-origin>external/search-backend-smo-7.0.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
                 <runtime-relative-path>ext/maven/lucene-core-9.6.0.jar</runtime-relative-path>
                 <binary-origin>external/lucene-core-9.6.0.jar</binary-origin>
             </class-path-extension>
@@ -201,6 +209,10 @@
             <class-path-extension>
                 <runtime-relative-path>ext/maven/javax.annotation-api-1.2.jar</runtime-relative-path>
                 <binary-origin>external/javax.annotation-api-1.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/gson-2.10.1.jar</runtime-relative-path>
+                <binary-origin>external/gson-2.10.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

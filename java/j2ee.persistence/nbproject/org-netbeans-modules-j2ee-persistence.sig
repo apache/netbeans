@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -1151,7 +1149,9 @@ CLSS public abstract interface org.netbeans.modules.j2ee.persistence.dd.common.P
 fld public final static java.lang.String CLASS2 = "Class2"
 fld public final static java.lang.String DESCRIPTION = "Description"
 fld public final static java.lang.String EXCLUDE_UNLISTED_CLASSES = "ExcludeUnlistedClasses"
+fld public final static java.lang.String JAKARTA_NAMESPACE = "jakarta.persistence."
 fld public final static java.lang.String JAR_FILE = "JarFile"
+fld public final static java.lang.String JAVAX_NAMESPACE = "javax.persistence."
 fld public final static java.lang.String JTA_DATA_SOURCE = "JtaDataSource"
 fld public final static java.lang.String JTA_TRANSACTIONTYPE = "JTA"
 fld public final static java.lang.String MAPPING_FILE = "MappingFile"
@@ -1425,6 +1425,7 @@ cons protected init(java.lang.String,java.lang.String)
 fld public final static java.lang.String TABLE_GENERATION_CREATE = "tableGenerationCreate"
 fld public final static java.lang.String TABLE_GENERATION_DROPCREATE = "tableGenerationDropCreate"
 fld public final static java.lang.String TABLE_GENERATTION_UNKOWN = "tableGenerationUnknown"
+meth protected boolean isJakartaNamespace()
 meth protected java.lang.String getVersion()
 meth public abstract java.lang.String getDisplayName()
 meth public abstract java.util.Map getDefaultVendorSpecificProperties()
@@ -1456,18 +1457,26 @@ fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider 
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER2_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER2_1
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER2_2
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER3_0
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER3_1
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER2_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER2_1
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER2_2
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER3_0
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER3_1
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER1_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER2_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER2_1
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER2_2
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER3_0
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER3_1
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER1_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER2_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER2_1
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER2_2
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER3_0
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER3_1
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider KODO_PROVIDER
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider OPENJPA_PROVIDER1_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider OPENJPA_PROVIDER2_0
@@ -1968,10 +1977,11 @@ hfds filler
 
 CLSS public static org.netbeans.modules.j2ee.persistence.unit.PropertiesPanel$PropertiesParamHolder
  outer org.netbeans.modules.j2ee.persistence.unit.PropertiesPanel
+meth public org.netbeans.modules.j2ee.persistence.dd.common.Persistence getPersistence()
 meth public org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit getPU()
 meth public org.netbeans.modules.j2ee.persistence.provider.Provider getProvider()
 supr java.lang.Object
-hfds prov,pu
+hfds persistence,prov,pu
 
 CLSS public org.netbeans.modules.j2ee.persistence.unit.PropertiesTableModel
 cons public init(org.netbeans.modules.j2ee.persistence.unit.PropertiesPanel$PropertiesParamHolder)
@@ -2011,7 +2021,7 @@ cons public init()
 meth public static java.lang.String getResourcePath(org.netbeans.api.project.SourceGroup[],org.openide.filesystems.FileObject)
 meth public static java.lang.String getResourcePath(org.netbeans.api.project.SourceGroup[],org.openide.filesystems.FileObject,char)
 meth public static java.lang.String getResourcePath(org.netbeans.api.project.SourceGroup[],org.openide.filesystems.FileObject,char,boolean)
-meth public static java.util.ArrayList<java.lang.String> getAvailPropNames(org.netbeans.modules.j2ee.persistence.provider.Provider,org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
+meth public static java.util.ArrayList<java.lang.String> getAvailPropNames(org.netbeans.modules.j2ee.persistence.dd.common.Persistence,org.netbeans.modules.j2ee.persistence.provider.Provider,org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
 meth public static java.util.List<java.lang.String> getAllPropNames(org.netbeans.modules.j2ee.persistence.provider.Provider)
 meth public static java.util.List<java.lang.String> getPropsNamesExceptGeneral(org.netbeans.modules.j2ee.persistence.provider.Provider)
 meth public static org.netbeans.api.project.SourceGroup[] getJavaSourceGroups(org.netbeans.modules.j2ee.persistence.unit.PUDataObject) throws java.io.IOException

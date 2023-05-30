@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.24
+#Version 1.25
 
 CLSS public abstract com.oracle.js.parser.ir.visitor.NodeVisitor<%0 extends com.oracle.js.parser.ir.LexicalContext>
 cons public init({com.oracle.js.parser.ir.visitor.NodeVisitor%0})
@@ -14,6 +14,7 @@ meth public boolean enterBreakNode(com.oracle.js.parser.ir.BreakNode)
 meth public boolean enterCallNode(com.oracle.js.parser.ir.CallNode)
 meth public boolean enterCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public boolean enterCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public boolean enterClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public boolean enterClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public boolean enterContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public boolean enterDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)
@@ -59,6 +60,7 @@ meth public com.oracle.js.parser.ir.Node leaveBreakNode(com.oracle.js.parser.ir.
 meth public com.oracle.js.parser.ir.Node leaveCallNode(com.oracle.js.parser.ir.CallNode)
 meth public com.oracle.js.parser.ir.Node leaveCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public com.oracle.js.parser.ir.Node leaveCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public com.oracle.js.parser.ir.Node leaveClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public com.oracle.js.parser.ir.Node leaveClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public com.oracle.js.parser.ir.Node leaveContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public com.oracle.js.parser.ir.Node leaveDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)
@@ -530,6 +532,7 @@ meth public boolean enterBreakNode(com.oracle.js.parser.ir.BreakNode)
 meth public boolean enterCallNode(com.oracle.js.parser.ir.CallNode)
 meth public boolean enterCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public boolean enterCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public boolean enterClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public boolean enterClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public boolean enterContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public boolean enterDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)
@@ -574,6 +577,7 @@ meth public com.oracle.js.parser.ir.Node leaveBreakNode(com.oracle.js.parser.ir.
 meth public com.oracle.js.parser.ir.Node leaveCallNode(com.oracle.js.parser.ir.CallNode)
 meth public com.oracle.js.parser.ir.Node leaveCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public com.oracle.js.parser.ir.Node leaveCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public com.oracle.js.parser.ir.Node leaveClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public com.oracle.js.parser.ir.Node leaveClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public com.oracle.js.parser.ir.Node leaveContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public com.oracle.js.parser.ir.Node leaveDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)

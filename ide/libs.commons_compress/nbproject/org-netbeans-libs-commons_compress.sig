@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.25.0
+#Version 0.26.0
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -74,6 +74,12 @@ CLSS public abstract interface java.lang.Cloneable
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
 
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
+
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
 intf java.io.Serializable
@@ -133,6 +139,32 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract interface java.nio.channels.ByteChannel
 intf java.nio.channels.ReadableByteChannel
@@ -291,6 +323,9 @@ hfds BYTE_MASK,bytesWritten,oneByte
 CLSS public org.apache.commons.compress.archivers.ArchiveStreamFactory
 cons public init()
 cons public init(java.lang.String)
+fld public final static java.lang.String APK = "apk"
+fld public final static java.lang.String APKM = "apkm"
+fld public final static java.lang.String APKS = "apks"
 fld public final static java.lang.String AR = "ar"
 fld public final static java.lang.String ARJ = "arj"
 fld public final static java.lang.String CPIO = "cpio"
@@ -298,6 +333,7 @@ fld public final static java.lang.String DUMP = "dump"
 fld public final static java.lang.String JAR = "jar"
 fld public final static java.lang.String SEVEN_Z = "7z"
 fld public final static java.lang.String TAR = "tar"
+fld public final static java.lang.String XAPK = "xapk"
 fld public final static java.lang.String ZIP = "zip"
 fld public final static org.apache.commons.compress.archivers.ArchiveStreamFactory DEFAULT
 intf org.apache.commons.compress.archivers.ArchiveStreamProvider
@@ -332,7 +368,7 @@ meth public abstract long getDataOffset()
 
 CLSS public final org.apache.commons.compress.archivers.Lister
 cons public init()
-meth public static void main(java.lang.String[]) throws java.lang.Exception
+meth public static void main(java.lang.String[]) throws java.io.IOException,org.apache.commons.compress.archivers.ArchiveException
 supr java.lang.Object
 hfds FACTORY
 
@@ -341,6 +377,8 @@ cons public init(java.lang.String)
 meth public java.lang.String getFormat()
 supr org.apache.commons.compress.archivers.ArchiveException
 hfds format,serialVersionUID
+
+CLSS abstract interface org.apache.commons.compress.archivers.package-info
 
 CLSS public org.apache.commons.compress.archivers.tar.TarArchiveEntry
 cons public !varargs init(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[]) throws java.io.IOException
@@ -355,10 +393,13 @@ cons public init(java.lang.String,boolean)
 cons public init(java.lang.String,byte)
 cons public init(java.lang.String,byte,boolean)
 cons public init(java.nio.file.Path) throws java.io.IOException
+cons public init(java.util.Map<java.lang.String,java.lang.String>,byte[],org.apache.commons.compress.archivers.zip.ZipEncoding,boolean) throws java.io.IOException
+cons public init(java.util.Map<java.lang.String,java.lang.String>,byte[],org.apache.commons.compress.archivers.zip.ZipEncoding,boolean,long) throws java.io.IOException
 fld public final static int DEFAULT_DIR_MODE = 16877
 fld public final static int DEFAULT_FILE_MODE = 33188
 fld public final static int MAX_NAMELEN = 31
 fld public final static int MILLIS_PER_SECOND = 1000
+ anno 0 java.lang.Deprecated()
 fld public final static long UNKNOWN = -1
 intf org.apache.commons.compress.archivers.ArchiveEntry
 intf org.apache.commons.compress.archivers.EntryStreamOffsets
@@ -386,6 +427,7 @@ meth public boolean isSparse()
 meth public boolean isStarSparse()
 meth public boolean isStreamContiguous()
 meth public boolean isSymbolicLink()
+meth public byte getLinkFlag()
 meth public int getDevMajor()
 meth public int getDevMinor()
 meth public int getGroupId()
@@ -401,6 +443,10 @@ meth public java.lang.String getLinkName()
 meth public java.lang.String getName()
 meth public java.lang.String getUserName()
 meth public java.nio.file.Path getPath()
+meth public java.nio.file.attribute.FileTime getCreationTime()
+meth public java.nio.file.attribute.FileTime getLastAccessTime()
+meth public java.nio.file.attribute.FileTime getLastModifiedTime()
+meth public java.nio.file.attribute.FileTime getStatusChangeTime()
 meth public java.util.Date getLastModifiedDate()
 meth public java.util.Date getModTime()
 meth public java.util.List<org.apache.commons.compress.archivers.tar.TarArchiveStructSparse> getOrderedSparseHeaders() throws java.io.IOException
@@ -416,6 +462,7 @@ meth public void addPaxHeader(java.lang.String,java.lang.String)
 meth public void clearExtraPaxHeaders()
 meth public void parseTarHeader(byte[])
 meth public void parseTarHeader(byte[],org.apache.commons.compress.archivers.zip.ZipEncoding) throws java.io.IOException
+meth public void setCreationTime(java.nio.file.attribute.FileTime)
 meth public void setDataOffset(long)
 meth public void setDevMajor(int)
 meth public void setDevMinor(int)
@@ -423,6 +470,8 @@ meth public void setGroupId(int)
 meth public void setGroupId(long)
 meth public void setGroupName(java.lang.String)
 meth public void setIds(int,int)
+meth public void setLastAccessTime(java.nio.file.attribute.FileTime)
+meth public void setLastModifiedTime(java.nio.file.attribute.FileTime)
 meth public void setLinkName(java.lang.String)
 meth public void setModTime(java.nio.file.attribute.FileTime)
 meth public void setModTime(java.util.Date)
@@ -432,13 +481,14 @@ meth public void setName(java.lang.String)
 meth public void setNames(java.lang.String,java.lang.String)
 meth public void setSize(long)
 meth public void setSparseHeaders(java.util.List<org.apache.commons.compress.archivers.tar.TarArchiveStructSparse>)
+meth public void setStatusChangeTime(java.nio.file.attribute.FileTime)
 meth public void setUserId(int)
 meth public void setUserId(long)
 meth public void setUserName(java.lang.String)
 meth public void writeEntryHeader(byte[])
 meth public void writeEntryHeader(byte[],org.apache.commons.compress.archivers.zip.ZipEncoding,boolean) throws java.io.IOException
 supr java.lang.Object
-hfds EMPTY_TAR_ARCHIVE_ENTRY_ARRAY,checkSumOK,dataOffset,devMajor,devMinor,extraPaxHeaders,file,groupId,groupName,isExtended,linkFlag,linkName,linkOptions,magic,modTime,mode,name,paxGNU1XSparse,paxGNUSparse,preserveAbsolutePath,realSize,size,sparseHeaders,starSparse,userId,userName,version
+hfds EMPTY_TAR_ARCHIVE_ENTRY_ARRAY,aTime,birthTime,cTime,checkSumOK,dataOffset,devMajor,devMinor,extraPaxHeaders,file,groupId,groupName,isExtended,linkFlag,linkName,linkOptions,mTime,magic,mode,name,paxGNU1XSparse,paxGNUSparse,preserveAbsolutePath,realSize,size,sparseHeaders,starSparse,userId,userName,version
 
 CLSS public org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 cons public init(java.io.InputStream)
@@ -534,6 +584,7 @@ fld public final static byte LF_GNUTYPE_LONGLINK = 75
 fld public final static byte LF_GNUTYPE_LONGNAME = 76
 fld public final static byte LF_GNUTYPE_SPARSE = 83
 fld public final static byte LF_LINK = 49
+fld public final static byte LF_MULTIVOLUME = 77
 fld public final static byte LF_NORMAL = 48
 fld public final static byte LF_OLDNORM = 0
 fld public final static byte LF_PAX_EXTENDED_HEADER_LC = 120
@@ -556,6 +607,7 @@ fld public final static int GIDLEN = 8
 fld public final static int GNAMELEN = 32
 fld public final static int ISEXTENDEDLEN_GNU = 1
 fld public final static int ISEXTENDEDLEN_GNU_SPARSE = 1
+fld public final static int LF_OFFSET = 156
 fld public final static int LONGNAMESLEN_GNU = 4
 fld public final static int MAGICLEN = 6
 fld public final static int MAGIC_OFFSET = 257
@@ -578,8 +630,12 @@ fld public final static int UIDLEN = 8
 fld public final static int UNAMELEN = 32
 fld public final static int VERSIONLEN = 2
 fld public final static int VERSION_OFFSET = 263
+fld public final static int XSTAR_ATIME_OFFSET = 476
+fld public final static int XSTAR_CTIME_OFFSET = 488
 fld public final static int XSTAR_MAGIC_LEN = 4
 fld public final static int XSTAR_MAGIC_OFFSET = 508
+fld public final static int XSTAR_MULTIVOLUME_OFFSET = 464
+fld public final static int XSTAR_PREFIX_OFFSET = 345
 fld public final static java.lang.String GNU_LONGLINK = "././@LongLink"
 fld public final static java.lang.String MAGIC_ANT = "ustar\u0000"
 fld public final static java.lang.String MAGIC_GNU = "ustar "
@@ -617,6 +673,7 @@ hcls BoundedTarEntryInputStream
 CLSS public org.apache.commons.compress.archivers.tar.TarUtils
 meth protected static java.util.List<org.apache.commons.compress.archivers.tar.TarArchiveStructSparse> parseFromPAX01SparseHeaders(java.lang.String) throws java.io.IOException
 meth protected static java.util.List<org.apache.commons.compress.archivers.tar.TarArchiveStructSparse> parsePAX01SparseHeaders(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth protected static java.util.List<org.apache.commons.compress.archivers.tar.TarArchiveStructSparse> parsePAX1XSparseHeaders(java.io.InputStream,int) throws java.io.IOException
 meth protected static java.util.Map<java.lang.String,java.lang.String> parsePaxHeaders(java.io.InputStream,java.util.List<org.apache.commons.compress.archivers.tar.TarArchiveStructSparse>,java.util.Map<java.lang.String,java.lang.String>) throws java.io.IOException
  anno 0 java.lang.Deprecated()
@@ -638,6 +695,8 @@ meth public static org.apache.commons.compress.archivers.tar.TarArchiveStructSpa
 meth public static void formatUnsignedOctalString(long,byte[],int,int)
 supr java.lang.Object
 hfds BYTE_MASK,DEFAULT_ENCODING,FALLBACK_ENCODING
+
+CLSS abstract interface org.apache.commons.compress.archivers.tar.package-info
 
 CLSS public abstract org.apache.commons.compress.archivers.zip.AbstractUnicodeExtraField
 cons protected init()
@@ -688,6 +747,13 @@ hfds HEADER_ID,MIN_SIZE,crc,dirFlag,gid,link,mode,uid
 CLSS public abstract interface org.apache.commons.compress.archivers.zip.CharsetAccessor
 meth public abstract java.nio.charset.Charset getCharset()
 
+CLSS public org.apache.commons.compress.archivers.zip.DefaultBackingStoreSupplier
+cons public init(java.nio.file.Path)
+intf org.apache.commons.compress.parallel.ScatterGatherBackingStoreSupplier
+meth public org.apache.commons.compress.parallel.ScatterGatherBackingStore get() throws java.io.IOException
+supr java.lang.Object
+hfds PREFIX,dir,storeNum
+
 CLSS public abstract interface org.apache.commons.compress.archivers.zip.ExtraFieldParsingBehavior
 intf org.apache.commons.compress.archivers.zip.UnparseableExtraFieldBehavior
 meth public abstract org.apache.commons.compress.archivers.zip.ZipExtraField createExtraField(org.apache.commons.compress.archivers.zip.ZipShort) throws java.lang.IllegalAccessException,java.lang.InstantiationException,java.util.zip.ZipException
@@ -707,7 +773,7 @@ meth public static org.apache.commons.compress.archivers.zip.ZipExtraField[] par
 meth public static org.apache.commons.compress.archivers.zip.ZipExtraField[] parse(byte[],boolean,org.apache.commons.compress.archivers.zip.ExtraFieldUtils$UnparseableExtraField) throws java.util.zip.ZipException
 meth public static void register(java.lang.Class<?>)
 supr java.lang.Object
-hfds EMPTY_ZIP_EXTRA_FIELD_ARRAY,WORD,implementations
+hfds EMPTY_ZIP_EXTRA_FIELD_ARRAY,IMPLEMENTATIONS,WORD
 
 CLSS public final static org.apache.commons.compress.archivers.zip.ExtraFieldUtils$UnparseableExtraField
  outer org.apache.commons.compress.archivers.zip.ExtraFieldUtils
@@ -826,8 +892,7 @@ meth public void addArchiveEntry(org.apache.commons.compress.archivers.zip.ZipAr
 meth public void addArchiveEntry(org.apache.commons.compress.archivers.zip.ZipArchiveEntryRequestSupplier)
 meth public void writeTo(org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream) throws java.io.IOException,java.lang.InterruptedException,java.util.concurrent.ExecutionException
 supr java.lang.Object
-hfds backingStoreSupplier,compressionDoneAt,compressionLevel,es,futures,scatterDoneAt,startedAt,streams,tlScatterStreams
-hcls DefaultBackingStoreSupplier
+hfds backingStoreSupplier,compressionDoneAt,compressionLevel,executorService,futures,scatterDoneAt,startedAt,streams,tlScatterStreams
 
 CLSS public org.apache.commons.compress.archivers.zip.ResourceAlignmentExtraField
 cons public init()
@@ -863,6 +928,8 @@ intf java.io.Closeable
 meth public org.apache.commons.compress.archivers.zip.ScatterZipOutputStream$ZipEntryWriter zipEntryWriter() throws java.io.IOException
 meth public static org.apache.commons.compress.archivers.zip.ScatterZipOutputStream fileBased(java.io.File) throws java.io.FileNotFoundException
 meth public static org.apache.commons.compress.archivers.zip.ScatterZipOutputStream fileBased(java.io.File,int) throws java.io.FileNotFoundException
+meth public static org.apache.commons.compress.archivers.zip.ScatterZipOutputStream pathBased(java.nio.file.Path) throws java.io.FileNotFoundException
+meth public static org.apache.commons.compress.archivers.zip.ScatterZipOutputStream pathBased(java.nio.file.Path,int) throws java.io.FileNotFoundException
 meth public void addArchiveEntry(org.apache.commons.compress.archivers.zip.ZipArchiveEntryRequest) throws java.io.IOException
 meth public void close() throws java.io.IOException
 meth public void writeTo(org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream) throws java.io.IOException
@@ -978,12 +1045,16 @@ hfds name,serialVersionUID
 
 CLSS public org.apache.commons.compress.archivers.zip.X000A_NTFS
 cons public init()
+fld public final static org.apache.commons.compress.archivers.zip.ZipShort HEADER_ID
 intf org.apache.commons.compress.archivers.zip.ZipExtraField
 meth public boolean equals(java.lang.Object)
 meth public byte[] getCentralDirectoryData()
 meth public byte[] getLocalFileDataData()
 meth public int hashCode()
 meth public java.lang.String toString()
+meth public java.nio.file.attribute.FileTime getAccessFileTime()
+meth public java.nio.file.attribute.FileTime getCreateFileTime()
+meth public java.nio.file.attribute.FileTime getModifyFileTime()
 meth public java.util.Date getAccessJavaTime()
 meth public java.util.Date getCreateJavaTime()
 meth public java.util.Date getModifyJavaTime()
@@ -995,14 +1066,17 @@ meth public org.apache.commons.compress.archivers.zip.ZipShort getHeaderId()
 meth public org.apache.commons.compress.archivers.zip.ZipShort getLocalFileDataLength()
 meth public void parseFromCentralDirectoryData(byte[],int,int) throws java.util.zip.ZipException
 meth public void parseFromLocalFileData(byte[],int,int) throws java.util.zip.ZipException
+meth public void setAccessFileTime(java.nio.file.attribute.FileTime)
 meth public void setAccessJavaTime(java.util.Date)
 meth public void setAccessTime(org.apache.commons.compress.archivers.zip.ZipEightByteInteger)
+meth public void setCreateFileTime(java.nio.file.attribute.FileTime)
 meth public void setCreateJavaTime(java.util.Date)
 meth public void setCreateTime(org.apache.commons.compress.archivers.zip.ZipEightByteInteger)
+meth public void setModifyFileTime(java.nio.file.attribute.FileTime)
 meth public void setModifyJavaTime(java.util.Date)
 meth public void setModifyTime(org.apache.commons.compress.archivers.zip.ZipEightByteInteger)
 supr java.lang.Object
-hfds EPOCH_OFFSET,HEADER_ID,TIME_ATTR_SIZE,TIME_ATTR_TAG,accessTime,createTime,modifyTime
+hfds TIME_ATTR_SIZE,TIME_ATTR_TAG,accessTime,createTime,modifyTime
 
 CLSS public org.apache.commons.compress.archivers.zip.X0014_X509Certificates
 cons public init()
@@ -1045,6 +1119,7 @@ cons public init()
 fld public final static byte ACCESS_TIME_BIT = 2
 fld public final static byte CREATE_TIME_BIT = 4
 fld public final static byte MODIFY_TIME_BIT = 1
+fld public final static org.apache.commons.compress.archivers.zip.ZipShort HEADER_ID
 intf java.io.Serializable
 intf java.lang.Cloneable
 intf org.apache.commons.compress.archivers.zip.ZipExtraField
@@ -1058,6 +1133,9 @@ meth public byte[] getLocalFileDataData()
 meth public int hashCode()
 meth public java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth public java.lang.String toString()
+meth public java.nio.file.attribute.FileTime getAccessFileTime()
+meth public java.nio.file.attribute.FileTime getCreateFileTime()
+meth public java.nio.file.attribute.FileTime getModifyFileTime()
 meth public java.util.Date getAccessJavaTime()
 meth public java.util.Date getCreateJavaTime()
 meth public java.util.Date getModifyJavaTime()
@@ -1069,15 +1147,18 @@ meth public org.apache.commons.compress.archivers.zip.ZipShort getHeaderId()
 meth public org.apache.commons.compress.archivers.zip.ZipShort getLocalFileDataLength()
 meth public void parseFromCentralDirectoryData(byte[],int,int) throws java.util.zip.ZipException
 meth public void parseFromLocalFileData(byte[],int,int) throws java.util.zip.ZipException
+meth public void setAccessFileTime(java.nio.file.attribute.FileTime)
 meth public void setAccessJavaTime(java.util.Date)
 meth public void setAccessTime(org.apache.commons.compress.archivers.zip.ZipLong)
+meth public void setCreateFileTime(java.nio.file.attribute.FileTime)
 meth public void setCreateJavaTime(java.util.Date)
 meth public void setCreateTime(org.apache.commons.compress.archivers.zip.ZipLong)
 meth public void setFlags(byte)
+meth public void setModifyFileTime(java.nio.file.attribute.FileTime)
 meth public void setModifyJavaTime(java.util.Date)
 meth public void setModifyTime(org.apache.commons.compress.archivers.zip.ZipLong)
 supr java.lang.Object
-hfds HEADER_ID,accessTime,bit0_modifyTimePresent,bit1_accessTimePresent,bit2_createTimePresent,createTime,flags,modifyTime,serialVersionUID
+hfds accessTime,bit0_modifyTimePresent,bit1_accessTimePresent,bit2_createTimePresent,createTime,flags,modifyTime,serialVersionUID
 
 CLSS public org.apache.commons.compress.archivers.zip.X7875_NewUnix
 cons public init()
@@ -1222,10 +1303,14 @@ meth public int hashCode()
 meth public java.lang.Object clone()
 meth public java.lang.String getName()
 meth public java.util.Date getLastModifiedDate()
+meth public java.util.zip.ZipEntry setCreationTime(java.nio.file.attribute.FileTime)
+meth public java.util.zip.ZipEntry setLastAccessTime(java.nio.file.attribute.FileTime)
+meth public java.util.zip.ZipEntry setLastModifiedTime(java.nio.file.attribute.FileTime)
 meth public long getDataOffset()
 meth public long getDiskNumberStart()
 meth public long getExternalAttributes()
 meth public long getSize()
+meth public long getTime()
 meth public org.apache.commons.compress.archivers.zip.GeneralPurposeBit getGeneralPurposeBit()
 meth public org.apache.commons.compress.archivers.zip.UnparseableExtraFieldData getUnparseableExtraFieldData()
 meth public org.apache.commons.compress.archivers.zip.ZipArchiveEntry$CommentSource getCommentSource()
@@ -1252,11 +1337,12 @@ meth public void setNameSource(org.apache.commons.compress.archivers.zip.ZipArch
 meth public void setRawFlag(int)
 meth public void setSize(long)
 meth public void setTime(java.nio.file.attribute.FileTime)
+meth public void setTime(long)
 meth public void setUnixMode(int)
 meth public void setVersionMadeBy(int)
 meth public void setVersionRequired(int)
 supr java.util.zip.ZipEntry
-hfds EMPTY_ZIP_ARCHIVE_ENTRY_ARRAY,SHORT_MASK,SHORT_SHIFT,alignment,commentSource,dataOffset,diskNumberStart,externalAttributes,extraFields,gpb,internalAttributes,isStreamContiguous,localHeaderOffset,method,name,nameSource,platform,rawFlag,rawName,size,unparseableExtra,versionMadeBy,versionRequired
+hfds EMPTY_ARRAY,SHORT_MASK,SHORT_SHIFT,alignment,commentSource,dataOffset,diskNumberStart,externalAttributes,extraFields,gpb,internalAttributes,isStreamContiguous,lastModifiedDateSet,localHeaderOffset,method,name,nameSource,platform,rawFlag,rawName,size,time,unparseableExtra,versionMadeBy,versionRequired
 
 CLSS public final static !enum org.apache.commons.compress.archivers.zip.ZipArchiveEntry$CommentSource
  outer org.apache.commons.compress.archivers.zip.ZipArchiveEntry
@@ -1321,7 +1407,7 @@ meth public org.apache.commons.compress.archivers.zip.ZipArchiveEntry getNextZip
 meth public static boolean matches(byte[],int)
 meth public void close() throws java.io.IOException
 supr org.apache.commons.compress.archivers.ArchiveInputStream
-hfds APK_SIGNING_BLOCK_MAGIC,CFH,CFH_LEN,DD,LFH,LFH_LEN,LONG_MAX,TWO_EXP_32,USE_ZIPFILE_INSTEAD_OF_STREAM_DISCLAIMER,allowStoredEntriesWithDataDescriptor,buf,closed,current,encoding,entriesRead,hitCentralDirectory,in,inf,lastStoredEntry,lfhBuf,shortBuf,skipBuf,skipSplitSig,twoDwordBuf,uncompressedCount,useUnicodeExtraFields,wordBuf,zipEncoding
+hfds APK_SIGNING_BLOCK_MAGIC,CFH,CFH_LEN,DD,LFH,LFH_LEN,LONG_MAX,TWO_EXP_32,USE_ZIPFILE_INSTEAD_OF_STREAM_DISCLAIMER,allowStoredEntriesWithDataDescriptor,buf,closed,current,encoding,entriesRead,hitCentralDirectory,inf,inputStream,lastStoredEntry,lfhBuf,shortBuf,skipBuf,skipSplitSig,twoDwordBuf,uncompressedCount,useUnicodeExtraFields,wordBuf,zipEncoding
 hcls BoundedInputStream,CurrentEntry
 
 CLSS public org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
@@ -1329,7 +1415,8 @@ cons public !varargs init(java.nio.file.Path,java.nio.file.OpenOption[]) throws 
 cons public init(java.io.File) throws java.io.IOException
 cons public init(java.io.File,long) throws java.io.IOException
 cons public init(java.io.OutputStream)
-cons public init(java.nio.channels.SeekableByteChannel) throws java.io.IOException
+cons public init(java.nio.channels.SeekableByteChannel)
+cons public init(java.nio.file.Path,long) throws java.io.IOException
 fld protected boolean finished
 fld protected final java.util.zip.Deflater def
 fld public final static int DEFAULT_COMPRESSION = -1
@@ -1350,6 +1437,7 @@ meth public !varargs org.apache.commons.compress.archivers.ArchiveEntry createAr
 meth public boolean canWriteEntryData(org.apache.commons.compress.archivers.ArchiveEntry)
 meth public boolean isSeekable()
 meth public java.lang.String getEncoding()
+meth public long getBytesWritten()
 meth public org.apache.commons.compress.archivers.ArchiveEntry createArchiveEntry(java.io.File,java.lang.String) throws java.io.IOException
 meth public void addRawArchiveEntry(org.apache.commons.compress.archivers.zip.ZipArchiveEntry,java.io.InputStream) throws java.io.IOException
 meth public void close() throws java.io.IOException
@@ -1369,7 +1457,7 @@ meth public void write(byte[],int,int) throws java.io.IOException
 meth public void writePreamble(byte[]) throws java.io.IOException
 meth public void writePreamble(byte[],int,int) throws java.io.IOException
 supr org.apache.commons.compress.archivers.ArchiveOutputStream
-hfds BUFFER_SIZE,CFH_COMMENT_LENGTH_OFFSET,CFH_COMPRESSED_SIZE_OFFSET,CFH_CRC_OFFSET,CFH_DISK_NUMBER_OFFSET,CFH_EXTERNAL_ATTRIBUTES_OFFSET,CFH_EXTRA_LENGTH_OFFSET,CFH_FILENAME_LENGTH_OFFSET,CFH_FILENAME_OFFSET,CFH_GPB_OFFSET,CFH_INTERNAL_ATTRIBUTES_OFFSET,CFH_LFH_OFFSET,CFH_METHOD_OFFSET,CFH_ORIGINAL_SIZE_OFFSET,CFH_SIG,CFH_SIG_OFFSET,CFH_TIME_OFFSET,CFH_VERSION_MADE_BY_OFFSET,CFH_VERSION_NEEDED_OFFSET,DD_SIG,DEFAULT_ENCODING,EOCD_SIG,LFH_COMPRESSED_SIZE_OFFSET,LFH_CRC_OFFSET,LFH_EXTRA_LENGTH_OFFSET,LFH_FILENAME_LENGTH_OFFSET,LFH_FILENAME_OFFSET,LFH_GPB_OFFSET,LFH_METHOD_OFFSET,LFH_ORIGINAL_SIZE_OFFSET,LFH_SIG,LFH_SIG_OFFSET,LFH_TIME_OFFSET,LFH_VERSION_NEEDED_OFFSET,LZERO,ONE,ZERO,ZIP64_EOCD_LOC_SIG,ZIP64_EOCD_SIG,calendarInstance,cdDiskNumberStart,cdLength,cdOffset,channel,comment,copyBuffer,createUnicodeExtraFields,encoding,entries,entry,eocdLength,fallbackToUTF8,hasCompressionLevelChanged,hasUsedZip64,isSplitZip,level,metaData,method,numberOfCDInDiskData,out,streamCompressor,useUTF8Flag,zip64Mode,zipEncoding
+hfds BUFFER_SIZE,CFH_COMMENT_LENGTH_OFFSET,CFH_COMPRESSED_SIZE_OFFSET,CFH_CRC_OFFSET,CFH_DISK_NUMBER_OFFSET,CFH_EXTERNAL_ATTRIBUTES_OFFSET,CFH_EXTRA_LENGTH_OFFSET,CFH_FILENAME_LENGTH_OFFSET,CFH_FILENAME_OFFSET,CFH_GPB_OFFSET,CFH_INTERNAL_ATTRIBUTES_OFFSET,CFH_LFH_OFFSET,CFH_METHOD_OFFSET,CFH_ORIGINAL_SIZE_OFFSET,CFH_SIG,CFH_SIG_OFFSET,CFH_TIME_OFFSET,CFH_VERSION_MADE_BY_OFFSET,CFH_VERSION_NEEDED_OFFSET,DD_SIG,DEFAULT_ENCODING,EOCD_SIG,LFH_COMPRESSED_SIZE_OFFSET,LFH_CRC_OFFSET,LFH_EXTRA_LENGTH_OFFSET,LFH_FILENAME_LENGTH_OFFSET,LFH_FILENAME_OFFSET,LFH_GPB_OFFSET,LFH_METHOD_OFFSET,LFH_ORIGINAL_SIZE_OFFSET,LFH_SIG,LFH_SIG_OFFSET,LFH_TIME_OFFSET,LFH_VERSION_NEEDED_OFFSET,LZERO,ONE,ZERO,ZIP64_EOCD_LOC_SIG,ZIP64_EOCD_SIG,cdDiskNumberStart,cdLength,cdOffset,channel,comment,copyBuffer,createUnicodeExtraFields,encoding,entries,entry,eocdLength,fallbackToUTF8,hasCompressionLevelChanged,hasUsedZip64,isSplitZip,level,metaData,method,numberOfCDInDiskData,outputStream,streamCompressor,useUTF8Flag,zip64Mode,zipEncoding
 hcls CurrentEntry,EntryMetaData
 
 CLSS public final static org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream$UnicodeExtraFieldPolicy
@@ -1435,23 +1523,29 @@ cons public init(java.nio.channels.SeekableByteChannel) throws java.io.IOExcepti
 cons public init(java.nio.channels.SeekableByteChannel,java.lang.String) throws java.io.IOException
 cons public init(java.nio.channels.SeekableByteChannel,java.lang.String,java.lang.String,boolean) throws java.io.IOException
 cons public init(java.nio.channels.SeekableByteChannel,java.lang.String,java.lang.String,boolean,boolean) throws java.io.IOException
+cons public init(java.nio.file.Path) throws java.io.IOException
+cons public init(java.nio.file.Path,java.lang.String) throws java.io.IOException
+cons public init(java.nio.file.Path,java.lang.String,boolean) throws java.io.IOException
+cons public init(java.nio.file.Path,java.lang.String,boolean,boolean) throws java.io.IOException
 intf java.io.Closeable
 meth protected void finalize() throws java.lang.Throwable
 meth public boolean canReadEntryData(org.apache.commons.compress.archivers.zip.ZipArchiveEntry)
+meth public java.io.InputStream getContentBeforeFirstLocalFileHeader()
 meth public java.io.InputStream getInputStream(org.apache.commons.compress.archivers.zip.ZipArchiveEntry) throws java.io.IOException
-meth public java.io.InputStream getRawInputStream(org.apache.commons.compress.archivers.zip.ZipArchiveEntry)
+meth public java.io.InputStream getRawInputStream(org.apache.commons.compress.archivers.zip.ZipArchiveEntry) throws java.io.IOException
 meth public java.lang.Iterable<org.apache.commons.compress.archivers.zip.ZipArchiveEntry> getEntries(java.lang.String)
 meth public java.lang.Iterable<org.apache.commons.compress.archivers.zip.ZipArchiveEntry> getEntriesInPhysicalOrder(java.lang.String)
 meth public java.lang.String getEncoding()
 meth public java.lang.String getUnixSymlink(org.apache.commons.compress.archivers.zip.ZipArchiveEntry) throws java.io.IOException
 meth public java.util.Enumeration<org.apache.commons.compress.archivers.zip.ZipArchiveEntry> getEntries()
 meth public java.util.Enumeration<org.apache.commons.compress.archivers.zip.ZipArchiveEntry> getEntriesInPhysicalOrder()
+meth public long getFirstLocalFileHeaderOffset()
 meth public org.apache.commons.compress.archivers.zip.ZipArchiveEntry getEntry(java.lang.String)
 meth public static void closeQuietly(org.apache.commons.compress.archivers.zip.ZipFile)
 meth public void close() throws java.io.IOException
 meth public void copyRawEntries(org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream,org.apache.commons.compress.archivers.zip.ZipArchiveEntryPredicate) throws java.io.IOException
 supr java.lang.Object
-hfds BYTE_SHIFT,CFD_DISK_OFFSET,CFD_LOCATOR_OFFSET,CFD_LOCATOR_RELATIVE_OFFSET,CFH_LEN,CFH_SIG,HASH_SIZE,LFH_OFFSET_FOR_FILENAME_LENGTH,MAX_EOCD_SIZE,MIN_EOCD_SIZE,NIBLET_MASK,ONE_ZERO_BYTE,POS_0,POS_1,POS_2,POS_3,ZIP64_EOCDL_LENGTH,ZIP64_EOCDL_LOCATOR_OFFSET,ZIP64_EOCD_CFD_DISK_OFFSET,ZIP64_EOCD_CFD_LOCATOR_OFFSET,ZIP64_EOCD_CFD_LOCATOR_RELATIVE_OFFSET,archive,archiveName,centralDirectoryStartDiskNumber,centralDirectoryStartOffset,centralDirectoryStartRelativeOffset,cfhBbuf,cfhBuf,closed,dwordBbuf,dwordBuf,encoding,entries,isSplitZipArchive,nameMap,offsetComparator,shortBbuf,shortBuf,useUnicodeExtraFields,wordBbuf,wordBuf,zipEncoding
+hfds BYTE_SHIFT,CFD_DISK_OFFSET,CFD_LENGTH_OFFSET,CFD_LOCATOR_RELATIVE_OFFSET,CFH_LEN,CFH_SIG,HASH_SIZE,LFH_OFFSET_FOR_FILENAME_LENGTH,MAX_EOCD_SIZE,MIN_EOCD_SIZE,NIBLET_MASK,ONE_ZERO_BYTE,POS_0,POS_1,POS_2,POS_3,ZIP64_EOCDL_LENGTH,ZIP64_EOCDL_LOCATOR_OFFSET,ZIP64_EOCD_CFD_DISK_OFFSET,ZIP64_EOCD_CFD_LOCATOR_OFFSET,ZIP64_EOCD_CFD_LOCATOR_RELATIVE_OFFSET,archive,archiveName,centralDirectoryStartDiskNumber,centralDirectoryStartOffset,centralDirectoryStartRelativeOffset,cfhBbuf,cfhBuf,closed,dwordBbuf,dwordBuf,encoding,entries,firstLocalFileHeaderOffset,isSplitZipArchive,nameMap,offsetComparator,shortBbuf,shortBuf,useUnicodeExtraFields,wordBbuf,wordBuf,zipEncoding
 hcls BoundedFileChannelInputStream,Entry,NameAndComment,StoredStatisticsStream
 
 CLSS public final org.apache.commons.compress.archivers.zip.ZipLong
@@ -1532,15 +1626,19 @@ CLSS public org.apache.commons.compress.archivers.zip.ZipSplitReadOnlySeekableBy
 cons public init(java.util.List<java.nio.channels.SeekableByteChannel>) throws java.io.IOException
 meth public !varargs static java.nio.channels.SeekableByteChannel forFiles(java.io.File[]) throws java.io.IOException
 meth public !varargs static java.nio.channels.SeekableByteChannel forOrderedSeekableByteChannels(java.nio.channels.SeekableByteChannel[]) throws java.io.IOException
+meth public !varargs static java.nio.channels.SeekableByteChannel forPaths(java.nio.file.Path[]) throws java.io.IOException
 meth public static java.nio.channels.SeekableByteChannel buildFromLastSplitSegment(java.io.File) throws java.io.IOException
+meth public static java.nio.channels.SeekableByteChannel buildFromLastSplitSegment(java.nio.file.Path) throws java.io.IOException
 meth public static java.nio.channels.SeekableByteChannel forFiles(java.io.File,java.lang.Iterable<java.io.File>) throws java.io.IOException
 meth public static java.nio.channels.SeekableByteChannel forOrderedSeekableByteChannels(java.nio.channels.SeekableByteChannel,java.lang.Iterable<java.nio.channels.SeekableByteChannel>) throws java.io.IOException
+meth public static java.nio.channels.SeekableByteChannel forPaths(java.nio.file.Path,java.lang.Iterable<java.nio.file.Path>) throws java.io.IOException
 supr org.apache.commons.compress.utils.MultiReadOnlySeekableByteChannel
-hfds ZIP_SPLIT_SIGNATURE_LENGTH,zipSplitSignatureByteBuffer
+hfds EMPTY_PATH_ARRAY,ZIP_SPLIT_SIGNATURE_LENGTH,zipSplitSignatureByteBuffer
 hcls ZipSplitSegmentComparator
 
 CLSS public abstract org.apache.commons.compress.archivers.zip.ZipUtil
 cons public init()
+meth public static boolean isDosTime(long)
 meth public static byte unsignedIntToSignedByte(int)
 meth public static byte[] reverse(byte[])
 meth public static byte[] toDosTime(long)
@@ -1551,7 +1649,12 @@ meth public static long dosToJavaTime(long)
 meth public static org.apache.commons.compress.archivers.zip.ZipLong toDosTime(java.util.Date)
 meth public static void toDosTime(long,byte[],int)
 supr java.lang.Object
-hfds DOS_TIME_MIN
+hfds DOSTIME_BEFORE_1980,UPPER_DOSTIME_BOUND
+
+CLSS abstract interface org.apache.commons.compress.archivers.zip.package-info
+
+CLSS public abstract interface org.apache.commons.compress.parallel.ScatterGatherBackingStoreSupplier
+meth public abstract org.apache.commons.compress.parallel.ScatterGatherBackingStore get() throws java.io.IOException
 
 CLSS public org.apache.commons.compress.utils.ArchiveUtils
 meth public static boolean isArrayZero(byte[],int)
@@ -1727,10 +1830,16 @@ meth public void write(int) throws java.io.IOException
 supr java.io.FilterOutputStream
 hfds bytesWritten
 
+CLSS public org.apache.commons.compress.utils.ExactMath
+meth public static int add(int,long)
+supr java.lang.Object
+
 CLSS public org.apache.commons.compress.utils.FileNameUtils
 cons public init()
 meth public static java.lang.String getBaseName(java.lang.String)
+meth public static java.lang.String getBaseName(java.nio.file.Path)
 meth public static java.lang.String getExtension(java.lang.String)
+meth public static java.lang.String getExtension(java.nio.file.Path)
 supr java.lang.Object
 
 CLSS public org.apache.commons.compress.utils.FixedLengthBlockOutputStream
@@ -1788,6 +1897,7 @@ CLSS public org.apache.commons.compress.utils.MultiReadOnlySeekableByteChannel
 cons public init(java.util.List<java.nio.channels.SeekableByteChannel>)
 intf java.nio.channels.SeekableByteChannel
 meth public !varargs static java.nio.channels.SeekableByteChannel forFiles(java.io.File[]) throws java.io.IOException
+meth public !varargs static java.nio.channels.SeekableByteChannel forPaths(java.nio.file.Path[]) throws java.io.IOException
 meth public !varargs static java.nio.channels.SeekableByteChannel forSeekableByteChannels(java.nio.channels.SeekableByteChannel[])
 meth public boolean isOpen()
 meth public int read(java.nio.ByteBuffer) throws java.io.IOException
@@ -1799,7 +1909,7 @@ meth public long position()
 meth public long size() throws java.io.IOException
 meth public void close() throws java.io.IOException
 supr java.lang.Object
-hfds channels,currentChannelIdx,globalPosition
+hfds EMPTY_PATH_ARRAY,channels,currentChannelIdx,globalPosition
 
 CLSS public org.apache.commons.compress.utils.OsgiUtils
 cons public init()
@@ -1825,6 +1935,7 @@ supr java.lang.Object
 hfds NAIVE_RESIZE_LIMIT,closed,data,position,size
 
 CLSS public org.apache.commons.compress.utils.ServiceLoaderIterator<%0 extends java.lang.Object>
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.Class<{org.apache.commons.compress.utils.ServiceLoaderIterator%0}>)
 cons public init(java.lang.Class<{org.apache.commons.compress.utils.ServiceLoaderIterator%0}>,java.lang.ClassLoader)
 intf java.util.Iterator<{org.apache.commons.compress.utils.ServiceLoaderIterator%0}>
@@ -1844,4 +1955,22 @@ cons public init(java.io.InputStream)
 meth public long skip(long) throws java.io.IOException
 supr java.io.FilterInputStream
 hfds SKIP_BUFFER,SKIP_BUFFER_SIZE
+
+CLSS public final org.apache.commons.compress.utils.TimeUtils
+meth public static boolean isUnixTime(java.nio.file.attribute.FileTime)
+meth public static boolean isUnixTime(long)
+meth public static java.nio.file.attribute.FileTime ntfsTimeToFileTime(long)
+meth public static java.nio.file.attribute.FileTime toFileTime(java.util.Date)
+meth public static java.nio.file.attribute.FileTime truncateToHundredNanos(java.nio.file.attribute.FileTime)
+meth public static java.nio.file.attribute.FileTime unixTimeToFileTime(long)
+meth public static java.util.Date ntfsTimeToDate(long)
+meth public static java.util.Date toDate(java.nio.file.attribute.FileTime)
+meth public static long toNtfsTime(java.nio.file.attribute.FileTime)
+meth public static long toNtfsTime(java.util.Date)
+meth public static long toNtfsTime(long)
+meth public static long toUnixTime(java.nio.file.attribute.FileTime)
+supr java.lang.Object
+hfds HUNDRED_NANOS_PER_MILLISECOND,HUNDRED_NANOS_PER_SECOND,WINDOWS_EPOCH_OFFSET
+
+CLSS abstract interface org.apache.commons.compress.utils.package-info
 

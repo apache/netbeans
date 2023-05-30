@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.157.0
+#Version 2.158.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -684,6 +684,21 @@ meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
 
+CLSS public javax.swing.JPanel
+cons public init()
+cons public init(boolean)
+cons public init(java.awt.LayoutManager)
+cons public init(java.awt.LayoutManager,boolean)
+innr protected AccessibleJPanel
+intf javax.accessibility.Accessible
+meth protected java.lang.String paramString()
+meth public java.lang.String getUIClassID()
+meth public javax.accessibility.AccessibleContext getAccessibleContext()
+meth public javax.swing.plaf.PanelUI getUI()
+meth public void setUI(javax.swing.plaf.PanelUI)
+meth public void updateUI()
+supr javax.swing.JComponent
+
 CLSS public javax.swing.JTable
 cons public init()
 cons public init(int,int)
@@ -1107,6 +1122,7 @@ hfds repoRoot,repoType
 CLSS public final org.netbeans.modules.maven.api.ModuleInfoUtils
 cons public init()
 meth public static boolean checkModuleInfoAndCompilerFit(org.netbeans.api.project.Project)
+meth public static boolean hasModuleInfo(org.netbeans.modules.maven.api.NbMavenProject)
 meth public static void addRequires(org.netbeans.modules.maven.api.NbMavenProject,java.util.Collection<? extends org.apache.maven.artifact.Artifact>)
 supr java.lang.Object
 hfds MODULE_INFO
@@ -1984,7 +2000,7 @@ meth public boolean cancel()
 meth public static org.openide.execution.ExecutorTask executeMaven(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
 meth public void run()
 supr org.netbeans.modules.maven.execute.AbstractMavenExecutor
-hfds ENV_JAVAHOME,ENV_PREFIX,ICON_MAVEN_PROJECT,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER17,preProcess,preProcessUUID,process,processUUID
+hfds ENV_JAVAHOME,ENV_PREFIX,ICON_MAVEN_PROJECT,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER18,preProcess,preProcessUUID,process,processUUID
 hcls WrapperShellConstructor
 
 CLSS public static org.netbeans.modules.maven.execute.MavenCommandLineExecutor$ExecuteMaven
@@ -2226,6 +2242,184 @@ hfds NAMESPACE
 CLSS public abstract interface org.netbeans.modules.maven.model.ModelOperation<%0 extends org.netbeans.modules.xml.xam.dom.AbstractDocumentModel<? extends org.netbeans.modules.xml.xam.dom.DocumentComponent<?>>>
 meth public abstract void performOperation({org.netbeans.modules.maven.model.ModelOperation%0})
 
+CLSS public final org.netbeans.modules.maven.options.DontShowAgainSettings
+meth protected final java.util.prefs.Preferences getPreferences()
+meth public boolean showWarningAboutApplicationCoS()
+meth public boolean showWarningAboutBuildWithDependencies()
+meth public static org.netbeans.modules.maven.options.DontShowAgainSettings getDefault()
+meth public void dontShowWarningAboutBuildWithDependenciesAnymore()
+meth public void dontshowWarningAboutApplicationCoSAnymore()
+supr java.lang.Object
+hfds INSTANCE
+
+CLSS public org.netbeans.modules.maven.options.GlobalOptionsPanel
+cons public init()
+supr javax.swing.JPanel
+hfds descMap,jList1,jScrollPane1,jScrollPane2,jTextArea1,lblOptions
+
+CLSS public final org.netbeans.modules.maven.options.MavenCommandSettings
+fld public final static java.lang.String COMMAND_CREATE_ARCHETYPENG = "createArchetypeNG"
+fld public final static java.lang.String COMMAND_INSTALL_FILE = "installFile"
+fld public final static java.lang.String COMMAND_SCM_CHECKOUT = "scmCheckout"
+meth protected final java.lang.String getProperty(java.lang.String)
+meth protected final java.lang.String putProperty(java.lang.String,java.lang.String)
+meth protected final java.util.prefs.Preferences getPreferences()
+meth public java.lang.String getCommand(java.lang.String)
+meth public static org.netbeans.modules.maven.options.MavenCommandSettings getDefault()
+supr java.lang.Object
+hfds INSTANCE
+
+CLSS public org.netbeans.modules.maven.options.MavenGroupCategory
+cons public init()
+intf org.netbeans.spi.project.ui.support.ProjectCustomizer$CompositeCategoryProvider
+meth public javax.swing.JComponent createComponent(org.netbeans.spi.project.ui.support.ProjectCustomizer$Category,org.openide.util.Lookup)
+meth public org.netbeans.spi.project.ui.support.ProjectCustomizer$Category createCategory(org.openide.util.Lookup)
+supr java.lang.Object
+
+CLSS public org.netbeans.modules.maven.options.MavenGroupPanel
+meth public void applyValues(org.netbeans.api.project.ui.ProjectGroup)
+supr javax.swing.JPanel
+hfds SEPARATOR,category,comMavenHome,globalMavenValue,lastSelected,lblCommandLine,lblExternalVersion,listItemChangedListener,mavenHomeDataModel,mavenRuntimeHome,predefinedRuntimes,userDefinedMavenRuntimes
+hcls ComboBoxRenderer
+
+CLSS public org.netbeans.modules.maven.options.MavenOptionController
+cons public init()
+fld public final static java.lang.String OPTIONS_SUBPATH = "Maven"
+fld public final static java.lang.String TEMPLATE = "<?xml version=\u00221.0\u0022 encoding=\u0022UTF-8\u0022?><settings xmlns=\u0022http://maven.apache.org/POM/4.0.0\u0022 xmlns:xsi=\u0022http://www.w3.org/2001/XMLSchema-instance\u0022  xsi:schemaLocation=\u0022http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd\u0022></settings>"
+meth public boolean isChanged()
+meth public boolean isValid()
+meth public javax.swing.JComponent getComponent(org.openide.util.Lookup)
+meth public org.openide.util.HelpCtx getHelpCtx()
+meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void applyChanges()
+meth public void cancel()
+meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void update()
+supr org.netbeans.spi.options.OptionsPanelController
+hfds listeners,panel,setts
+
+CLSS public final org.netbeans.modules.maven.options.MavenSettings
+fld public final static java.lang.String PROP_NETWORK_PROXY = "networkProxy"
+fld public final static java.lang.String PROP_PROJECTNODE_NAME_PATTERN = "project.displayName"
+innr public final static !enum DownloadStrategy
+innr public final static !enum OutputTabName
+meth public boolean isAlwaysShowOutput()
+meth public boolean isCollapseSuccessFolds()
+meth public boolean isInteractive()
+meth public boolean isOutputTabShowConfig()
+meth public boolean isPreferMavenWrapper()
+meth public boolean isReuseOutputTabs()
+meth public boolean isShowDebug()
+meth public boolean isShowErrors()
+meth public boolean isShowLoggingLevel()
+meth public boolean isSkipTests()
+meth public boolean isUpdateSnapshots()
+meth public boolean isUseBestMaven()
+meth public boolean isUseBestMavenAltLocation()
+meth public boolean isVMOptionsWrap()
+meth public java.lang.Boolean isOffline()
+meth public java.lang.String getBestMavenAltLocation()
+meth public java.lang.String getDefaultJdk()
+meth public java.lang.String getDefaultOptions()
+meth public java.lang.String getLastArchetypeGroupId()
+meth public java.lang.String getLastArchetypeVersion()
+meth public java.lang.String getProjectNodeNamePattern()
+meth public java.util.List<java.lang.String> getUserDefinedMavenRuntimes()
+meth public org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy getBinaryDownloadStrategy()
+meth public org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy getJavadocDownloadStrategy()
+meth public org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy getSourceDownloadStrategy()
+meth public org.netbeans.modules.maven.options.MavenSettings$OutputTabName getOutputTabName()
+meth public org.netbeans.modules.maven.options.NetworkProxySettings getNetworkProxy()
+meth public static boolean isMavenDaemon(java.nio.file.Path)
+meth public static java.lang.String getCommandLineMavenVersion()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public static java.lang.String getCommandLineMavenVersion(java.io.File)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public static java.lang.String getDefaultExternalMavenRuntime()
+meth public static org.netbeans.modules.maven.options.MavenSettings getDefault()
+meth public void addWeakPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void setAlwaysShowOutput(boolean)
+meth public void setBestMavenAltLocation(java.lang.String)
+meth public void setBinaryDownloadStrategy(org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy)
+meth public void setCollapseSuccessFolds(boolean)
+meth public void setDefaultJdk(java.lang.String)
+meth public void setDefaultOptions(java.lang.String)
+meth public void setJavadocDownloadStrategy(org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy)
+meth public void setLastArchetypeGroupId(java.lang.String)
+meth public void setLastArchetypeVersion(java.lang.String)
+meth public void setMavenRuntimes(java.util.List<java.lang.String>)
+meth public void setNetworkProxy(org.netbeans.modules.maven.options.NetworkProxySettings)
+meth public void setOutputTabName(org.netbeans.modules.maven.options.MavenSettings$OutputTabName)
+meth public void setOutputTabShowConfig(boolean)
+meth public void setPreferMavenWrapper(boolean)
+meth public void setProjectNodeNamePattern(java.lang.String)
+meth public void setReuseOutputTabs(boolean)
+meth public void setShowLoggingLevel(boolean)
+meth public void setSkipTests(boolean)
+meth public void setSourceDownloadStrategy(org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy)
+meth public void setUseBestMaven(boolean)
+meth public void setUseBestMavenAltLocation(boolean)
+meth public void setVMOptionsWrap(boolean)
+supr java.lang.Object
+hfds INSTANCE,MAVEN_CORE_JAR_PATTERN,PROP_ALWAYS_OUTPUT,PROP_BINARY_DOWNLOAD,PROP_CHECKSUM_POLICY,PROP_COLLAPSE_FOLDS,PROP_DEBUG,PROP_DEFAULT_JDK,PROP_DEFAULT_OPTIONS,PROP_ERRORS,PROP_EXPERIMENTAL_ALTERNATE_LOCATION,PROP_EXPERIMENTAL_USE_ALTERNATE_LOCATION,PROP_EXPERIMENTAL_USE_BEST_MAVEN,PROP_FAILURE_BEHAVIOUR,PROP_JAVADOC_DOWNLOAD,PROP_LAST_ARCHETYPE_GROUPID,PROP_LAST_ARCHETYPE_VERSION,PROP_MAVEN_RUNTIMES,PROP_OUTPUT_TAB_CONFIG,PROP_OUTPUT_TAB_NAME,PROP_PLUGIN_POLICY,PROP_PREFER_WRAPPER,PROP_REUSE_OUTPUT,PROP_SHOW_LOGGING_LEVEL,PROP_SKIP_TESTS,PROP_SOURCE_DOWNLOAD,PROP_USE_REGISTRY,PROP_VM_OPTIONS_WRAP,listeners
+
+CLSS public final static !enum org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy
+ outer org.netbeans.modules.maven.options.MavenSettings
+fld public final static org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy EVERY_OPEN
+fld public final static org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy FIRST_OPEN
+fld public final static org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy NEVER
+meth public static org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy valueOf(java.lang.String)
+meth public static org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy[] values()
+supr java.lang.Enum<org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy>
+
+CLSS public final static !enum org.netbeans.modules.maven.options.MavenSettings$OutputTabName
+ outer org.netbeans.modules.maven.options.MavenSettings
+fld public final static org.netbeans.modules.maven.options.MavenSettings$OutputTabName PROJECT_ID
+fld public final static org.netbeans.modules.maven.options.MavenSettings$OutputTabName PROJECT_NAME
+meth public static org.netbeans.modules.maven.options.MavenSettings$OutputTabName valueOf(java.lang.String)
+meth public static org.netbeans.modules.maven.options.MavenSettings$OutputTabName[] values()
+supr java.lang.Enum<org.netbeans.modules.maven.options.MavenSettings$OutputTabName>
+
+CLSS public final org.netbeans.modules.maven.options.MavenVersionSettings
+fld public final static java.lang.String VERSION_COMPILER = "maven-compiler-plugin"
+fld public final static java.lang.String VERSION_RESOURCES = "maven-resources-plugin"
+meth protected final java.lang.String getProperty(java.lang.String)
+meth protected final java.lang.String putProperty(java.lang.String,java.lang.String)
+meth protected final java.util.prefs.Preferences getPreferences()
+meth public java.lang.String getVersion(java.lang.String)
+meth public static org.netbeans.modules.maven.options.MavenVersionSettings getDefault()
+supr java.lang.Object
+hfds INSTANCE
+
+CLSS public final !enum org.netbeans.modules.maven.options.NetworkProxySettings
+fld public final static org.netbeans.modules.maven.options.NetworkProxySettings ASK
+fld public final static org.netbeans.modules.maven.options.NetworkProxySettings IGNORE
+fld public final static org.netbeans.modules.maven.options.NetworkProxySettings NOTICE
+fld public final static org.netbeans.modules.maven.options.NetworkProxySettings OVERRIDE
+fld public final static org.netbeans.modules.maven.options.NetworkProxySettings UPDATE
+meth public java.lang.String toString()
+meth public static boolean allowProxyOverride()
+meth public static org.netbeans.modules.maven.options.NetworkProxySettings valueOf(java.lang.String)
+meth public static org.netbeans.modules.maven.options.NetworkProxySettings[] values()
+supr java.lang.Enum<org.netbeans.modules.maven.options.NetworkProxySettings>
+hfds BRANDING_API_OVERRIDE_ENABLED,displayName
+
+CLSS public org.netbeans.modules.maven.options.SettingsPanel
+fld public final static int RUNTIME_COUNT_LIMIT = 5
+fld public final static java.lang.String BUNDLED_RUNTIME_VERSION
+meth public void applyValues()
+meth public void setValues()
+supr javax.swing.JPanel
+hfds AVAILABLE_OPTIONS,RP,SEPARATOR,btnDirectory,btnGoals,btnIndex,btnOptions,buttonGroup1,cbAlternateLocation,cbAlwaysShow,cbCollapseSuccessFolds,cbEnableIndexDownload,cbEnableIndexing,cbNetworkProxy,cbOutputTabShowConfig,cbPreferWrapper,cbProjectNodeNameMode,cbReuse,cbShowInfoLevel,cbSkipTests,cbUseBestMaven,changed,comBinaries,comIndex,comJavadoc,comJdkHome,comManageJdks,comMavenHome,comSource,completer,controller,jLabel3,jLabel4,jScrollPane1,jdkHomeDataModel,lastSelected,lbNetworkSettings,lblBinaries,lblCategory,lblCommandLine,lblDirectory,lblExternalVersion,lblHint,lblIndex,lblJavadoc,lblJdkHome,lblOptions,lblOutputTab,lblSource,listItemChangedListener,listener,lstCategory,mavenHomeDataModel,mavenRuntimeHome,plnExperimental,pnlAppearance,pnlCards,pnlDependencies,pnlExecution,pnlIndex,predefinedRuntimes,rbOutputTabId,rbOutputTabName,txtDirectory,txtOptions,txtProjectNodeNameCustomPattern,userDefinedMavenRuntimes,userDefinedMavenRuntimesStored,valid
+hcls ActionListenerImpl,ComboBoxRenderer,DocumentListenerImpl
+
+CLSS public org.netbeans.modules.maven.options.UnsetProxyChecker
+cons public init()
+intf org.netbeans.modules.maven.api.execute.ExecutionResultChecker
+meth public void executionResult(org.netbeans.modules.maven.api.execute.RunConfig,org.netbeans.modules.maven.api.execute.ExecutionContext,int)
+supr java.lang.Object
+hfds USE_SYSTEM_PROXIES
+
 CLSS public org.netbeans.modules.maven.spi.IconResources
 fld public final static java.lang.String ARTIFACT_ICON = "org/netbeans/modules/maven/ArtifactIcon.png"
 fld public final static java.lang.String BROKEN_PROJECT_BADGE_ICON = "org/netbeans/modules/maven/brokenProjectBadge.png"
@@ -2428,6 +2622,33 @@ meth public abstract void resetCachedValue()
 CLSS public abstract interface org.netbeans.modules.maven.spi.queries.JavaLikeRootProvider
 meth public abstract java.lang.String kind()
 
+CLSS public abstract org.netbeans.spi.options.OptionsPanelController
+cons public init()
+fld public final static java.lang.String PROP_CHANGED = "changed"
+fld public final static java.lang.String PROP_HELP_CTX = "helpCtx"
+fld public final static java.lang.String PROP_VALID = "valid"
+innr public abstract interface static !annotation ContainerRegistration
+innr public abstract interface static !annotation Keywords
+innr public abstract interface static !annotation KeywordsRegistration
+innr public abstract interface static !annotation SubRegistration
+innr public abstract interface static !annotation TopLevelRegistration
+meth protected void setCurrentSubcategory(java.lang.String)
+meth public abstract boolean isChanged()
+meth public abstract boolean isValid()
+meth public abstract javax.swing.JComponent getComponent(org.openide.util.Lookup)
+meth public abstract org.openide.util.HelpCtx getHelpCtx()
+meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public abstract void applyChanges()
+meth public abstract void cancel()
+meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public abstract void update()
+meth public final static org.netbeans.spi.options.OptionsPanelController createAdvanced(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public final void setSubcategory(java.lang.String)
+meth public org.openide.util.Lookup getLookup()
+meth public void handleSuccessfulSearch(java.lang.String,java.util.List<java.lang.String>)
+supr java.lang.Object
+
 CLSS public abstract interface org.netbeans.spi.project.LookupMerger<%0 extends java.lang.Object>
 innr public abstract interface static !annotation Registration
 meth public abstract java.lang.Class<{org.netbeans.spi.project.LookupMerger%0}> getMergeableClass()
@@ -2466,6 +2687,33 @@ meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void addNotify()
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void removeNotify()
+
+CLSS public final org.netbeans.spi.project.ui.support.ProjectCustomizer
+innr public abstract interface static CategoryComponentProvider
+innr public abstract interface static CompositeCategoryProvider
+innr public final static Category
+meth public static java.awt.Dialog createCustomizerDialog(java.lang.String,org.openide.util.Lookup,java.lang.String,java.awt.event.ActionListener,java.awt.event.ActionListener,org.openide.util.HelpCtx)
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+ anno 5 org.netbeans.api.annotations.common.NullAllowed()
+meth public static java.awt.Dialog createCustomizerDialog(java.lang.String,org.openide.util.Lookup,java.lang.String,java.awt.event.ActionListener,org.openide.util.HelpCtx)
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+meth public static java.awt.Dialog createCustomizerDialog(org.netbeans.spi.project.ui.support.ProjectCustomizer$Category[],org.netbeans.spi.project.ui.support.ProjectCustomizer$CategoryComponentProvider,java.lang.String,java.awt.event.ActionListener,java.awt.event.ActionListener,org.openide.util.HelpCtx)
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+ anno 5 org.netbeans.api.annotations.common.NullAllowed()
+meth public static java.awt.Dialog createCustomizerDialog(org.netbeans.spi.project.ui.support.ProjectCustomizer$Category[],org.netbeans.spi.project.ui.support.ProjectCustomizer$CategoryComponentProvider,java.lang.String,java.awt.event.ActionListener,org.openide.util.HelpCtx)
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+meth public static javax.swing.ComboBoxModel encodingModel(java.lang.String)
+meth public static javax.swing.ListCellRenderer encodingRenderer()
+supr java.lang.Object
+hfds LOG
+hcls DelegateCategoryProvider,EncodingModel,EncodingRenderer
+
+CLSS public abstract interface static org.netbeans.spi.project.ui.support.ProjectCustomizer$CompositeCategoryProvider
+ outer org.netbeans.spi.project.ui.support.ProjectCustomizer
+innr public abstract interface static !annotation Registration
+innr public abstract interface static !annotation Registrations
+meth public abstract javax.swing.JComponent createComponent(org.netbeans.spi.project.ui.support.ProjectCustomizer$Category,org.openide.util.Lookup)
+meth public abstract org.netbeans.spi.project.ui.support.ProjectCustomizer$Category createCategory(org.openide.util.Lookup)
 
 CLSS public org.openide.nodes.AbstractNode
 cons public init(org.openide.nodes.Children)

@@ -488,6 +488,7 @@ meth public abstract java.lang.String name()
 meth public abstract java.util.List<org.netbeans.modules.css.lib.api.Node> children()
 meth public abstract org.netbeans.modules.css.lib.api.Node parent()
 meth public abstract org.netbeans.modules.css.lib.api.NodeType type()
+meth public java.lang.String unescapedImage()
 
 CLSS public final !enum org.netbeans.modules.css.lib.api.NodeType
 fld public final static org.netbeans.modules.css.lib.api.NodeType atRuleId
@@ -665,6 +666,7 @@ meth public static int[] getRuleBodyRange(org.netbeans.modules.css.lib.api.Node)
 meth public static int[] getTrimmedNodeRange(org.netbeans.modules.css.lib.api.Node)
 meth public static java.lang.String encodeToString(org.netbeans.modules.css.lib.api.TreePath)
 meth public static java.lang.String getElementId(org.netbeans.modules.css.lib.api.Node)
+meth public static java.lang.String unescape(java.lang.CharSequence)
 meth public static org.netbeans.modules.css.lib.api.CssTokenId getTokenNodeTokenId(org.netbeans.modules.css.lib.api.Node)
 meth public static org.netbeans.modules.css.lib.api.Node findNodeAtOffset(org.netbeans.modules.css.lib.api.Node,int)
 meth public static org.netbeans.modules.css.lib.api.Node findNonTokenNodeAtOffset(org.netbeans.modules.css.lib.api.Node,int)
@@ -678,7 +680,7 @@ meth public static org.netbeans.modules.css.lib.api.Node[] getChildrenByType(org
 meth public static void dumpTree(org.netbeans.modules.css.lib.api.Node)
 meth public static void dumpTree(org.netbeans.modules.css.lib.api.Node,java.io.PrintWriter)
 supr java.lang.Object
-hfds ELEMENT_PATH_ELEMENTS_DELIMITER,ELEMENT_PATH_INDEX_DELIMITER,INDENT
+hfds ELEMENT_PATH_ELEMENTS_DELIMITER,ELEMENT_PATH_INDEX_DELIMITER,ESCAPE,INDENT
 
 CLSS public abstract org.netbeans.modules.css.lib.api.NodeVisitor<%0 extends java.lang.Object>
 cons public init()

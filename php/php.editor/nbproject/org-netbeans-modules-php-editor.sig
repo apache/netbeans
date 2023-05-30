@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.22.0
+#Version 2.24.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -1090,14 +1090,14 @@ meth public org.netbeans.modules.php.editor.lexer.PHPTokenId nextToken() throws 
 meth public void setState(org.netbeans.modules.php.editor.lexer.PHP5ColoringLexer$LexerState)
 meth public void yypushback(int)
 supr java.lang.Object
-hfds ZZ_ACTION,ZZ_ACTION_PACKED_0,ZZ_ATTRIBUTE,ZZ_ATTRIBUTE_PACKED_0,ZZ_BUFFERSIZE,ZZ_CMAP,ZZ_CMAP_PACKED,ZZ_ERROR_MSG,ZZ_LEXSTATE,ZZ_NO_MATCH,ZZ_PUSHBACK_2BIG,ZZ_ROWMAP,ZZ_ROWMAP_PACKED_0,ZZ_TRANS,ZZ_TRANS_PACKED_0,ZZ_UNKNOWN_ERROR,aspTagsAllowed,bracketBalanceInConst,heredoc,hereocLength,input,isInConst,parenBalanceInConst,parenBalanceInScripting,shortTagsAllowed,stack,yychar,yycolumn,yyline,zzAtBOL,zzAtEOF,zzBuffer,zzCurrentPos,zzEndRead,zzLexicalState,zzMarkedPos,zzPushbackPos,zzReader,zzStartRead,zzState
+hfds ZZ_ACTION,ZZ_ACTION_PACKED_0,ZZ_ATTRIBUTE,ZZ_ATTRIBUTE_PACKED_0,ZZ_BUFFERSIZE,ZZ_CMAP,ZZ_CMAP_PACKED,ZZ_ERROR_MSG,ZZ_LEXSTATE,ZZ_NO_MATCH,ZZ_PUSHBACK_2BIG,ZZ_ROWMAP,ZZ_ROWMAP_PACKED_0,ZZ_TRANS,ZZ_TRANS_PACKED_0,ZZ_UNKNOWN_ERROR,aspTagsAllowed,bracketBalanceInConst,heredoc,heredocStack,input,isInConst,parenBalanceInConst,parenBalanceInScripting,shortTagsAllowed,stack,yychar,yycolumn,yyline,zzAtBOL,zzAtEOF,zzBuffer,zzCurrentPos,zzEndRead,zzLexicalState,zzMarkedPos,zzPushbackPos,zzReader,zzStartRead,zzState
 
 CLSS public final static org.netbeans.modules.php.editor.lexer.PHP5ColoringLexer$LexerState
  outer org.netbeans.modules.php.editor.lexer.PHP5ColoringLexer
 meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 supr java.lang.Object
-hfds heredoc,hereocLength,parenBalanceInScripting,stack,zzLexicalState,zzState
+hfds heredoc,heredocStack,parenBalanceInScripting,stack,zzLexicalState,zzState
 
 CLSS public final org.netbeans.modules.php.editor.lexer.PHPDocCommentLexer
 cons public init(org.netbeans.spi.lexer.LexerRestartInfo<org.netbeans.modules.php.editor.lexer.PHPDocCommentTokenId>)
@@ -1531,7 +1531,6 @@ meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNames
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNamespaceScope(org.netbeans.modules.php.editor.model.ModelElement)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
-meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNamespaceScope(org.netbeans.modules.php.editor.parser.PHPParseResult,int)
 meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNamespaceScope(org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration,org.netbeans.modules.php.editor.model.FileScope)
 meth public static org.netbeans.modules.php.editor.model.TypeScope getTypeScope(org.netbeans.modules.php.editor.model.ModelElement)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
@@ -1809,7 +1808,8 @@ meth public void setState(int)
 meth public void setUseAspTagsAsPhp(boolean)
 meth public void yypushback(int)
 supr java.lang.Object
-hfds ZZ_ACTION,ZZ_ACTION_PACKED_0,ZZ_ATTRIBUTE,ZZ_ATTRIBUTE_PACKED_0,ZZ_BUFFERSIZE,ZZ_CMAP,ZZ_CMAP_PACKED,ZZ_ERROR_MSG,ZZ_LEXSTATE,ZZ_NO_MATCH,ZZ_PUSHBACK_2BIG,ZZ_ROWMAP,ZZ_ROWMAP_PACKED_0,ZZ_TRANS,ZZ_TRANS_PACKED_0,ZZ_UNKNOWN_ERROR,asp_tags,bracket,comment,commentList,docParser,heredoc,heredocBody,heredocBodyLength,heredocBodyStart,isEndedPhp,nowdoc,nowdocBody,nowdocBodyLength,nowdocBodyStart,nowdoc_len,short_tags_allowed,stack,varParser,whitespaceEndPosition,yy_old_buffer,yy_old_pushbackPos,yychar,yycolumn,yyline,zzAtBOL,zzAtEOF,zzBuffer,zzCurrentPos,zzEndRead,zzLexicalState,zzMarkedPos,zzPushbackPos,zzReader,zzStartRead,zzState
+hfds ZZ_ACTION,ZZ_ACTION_PACKED_0,ZZ_ATTRIBUTE,ZZ_ATTRIBUTE_PACKED_0,ZZ_BUFFERSIZE,ZZ_CMAP,ZZ_CMAP_PACKED,ZZ_ERROR_MSG,ZZ_LEXSTATE,ZZ_NO_MATCH,ZZ_PUSHBACK_2BIG,ZZ_ROWMAP,ZZ_ROWMAP_PACKED_0,ZZ_TRANS,ZZ_TRANS_PACKED_0,ZZ_UNKNOWN_ERROR,asp_tags,bracket,comment,commentList,docParser,heredoc,heredocBody,heredocBodyLength,heredocBodyStart,heredocStack,isEndedPhp,nowdoc,nowdocBody,nowdocBodyLength,nowdocBodyStart,short_tags_allowed,stack,varParser,whitespaceEndPosition,yy_old_buffer,yy_old_pushbackPos,yychar,yycolumn,yyline,zzAtBOL,zzAtEOF,zzBuffer,zzCurrentPos,zzEndRead,zzLexicalState,zzMarkedPos,zzPushbackPos,zzReader,zzStartRead,zzState
+hcls HeredocInfo
 
 CLSS public abstract interface org.netbeans.modules.php.editor.parser.ASTPHP5Symbols
 fld public final static int EOF = 0

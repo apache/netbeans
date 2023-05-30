@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.59
+#Version 2.60
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -9446,6 +9446,7 @@ fld public final static int FREQ_NEVER = 3
 fld public final static int FREQ_ONCE_DAY = 1
 fld public final static int FREQ_ONCE_WEEK = 0
 fld public final static int FREQ_STARTUP = 2
+fld public final static java.lang.String PROP_DOWNLOAD_INDEX = "downloadIndex"
 fld public final static java.lang.String PROP_INDEX = "createIndex"
 fld public final static java.lang.String PROP_INDEX_FREQ = "indexUpdateFrequency"
 fld public final static java.lang.String PROP_LAST_INDEX_UPDATE = "lastIndexUpdate"
@@ -9456,10 +9457,13 @@ meth public org.netbeans.modules.maven.indexer.api.RepositoryInfo getLocalReposi
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.modules.maven.indexer.api.RepositoryInfo getRepositoryInfoById(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public static boolean isIndexDownloadEnabled()
+meth public static boolean isIndexDownloadEnabledEffective()
 meth public static boolean isIndexRepositories()
 meth public static int getIndexUpdateFrequency()
 meth public static java.util.Date getLastIndexUpdate(java.lang.String)
 meth public static org.netbeans.modules.maven.indexer.api.RepositoryPreferences getInstance()
+meth public static void setIndexDownloadEnabled(boolean)
 meth public static void setIndexRepositories(boolean)
 meth public static void setIndexUpdateFrequency(int)
 meth public static void setLastIndexUpdate(java.lang.String,java.util.Date)

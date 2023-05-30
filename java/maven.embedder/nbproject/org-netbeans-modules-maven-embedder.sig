@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.73
+#Version 2.74
 
 CLSS public abstract interface !annotation com.google.common.annotations.Beta
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -98,48 +98,6 @@ hcls StringConverter
 CLSS public abstract com.google.common.base.CharMatcher
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
 cons protected init()
-fld public final static com.google.common.base.CharMatcher ANY
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher ASCII
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher BREAKING_WHITESPACE
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher DIGIT
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher INVISIBLE
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher JAVA_DIGIT
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher JAVA_ISO_CONTROL
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher JAVA_LETTER
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher JAVA_LETTER_OR_DIGIT
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher JAVA_LOWER_CASE
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher JAVA_UPPER_CASE
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher NONE
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher SINGLE_WIDTH
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
-fld public final static com.google.common.base.CharMatcher WHITESPACE
- anno 0 com.google.common.annotations.Beta()
- anno 0 java.lang.Deprecated()
 intf com.google.common.base.Predicate<java.lang.Character>
 meth public abstract boolean matches(char)
 meth public boolean apply(java.lang.Character)
@@ -211,28 +169,11 @@ fld public final static java.nio.charset.Charset UTF_16LE
 fld public final static java.nio.charset.Charset UTF_8
 supr java.lang.Object
 
-CLSS public abstract com.google.common.base.Converter<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-cons protected init()
-intf com.google.common.base.Function<{com.google.common.base.Converter%0},{com.google.common.base.Converter%1}>
-meth protected abstract {com.google.common.base.Converter%0} doBackward({com.google.common.base.Converter%1})
-meth protected abstract {com.google.common.base.Converter%1} doForward({com.google.common.base.Converter%0})
-meth public boolean equals(java.lang.Object)
-meth public com.google.common.base.Converter<{com.google.common.base.Converter%1},{com.google.common.base.Converter%0}> reverse()
-meth public final <%0 extends java.lang.Object> com.google.common.base.Converter<{com.google.common.base.Converter%0},{%%0}> andThen(com.google.common.base.Converter<{com.google.common.base.Converter%1},{%%0}>)
-meth public final {com.google.common.base.Converter%1} apply({com.google.common.base.Converter%0})
- anno 0 java.lang.Deprecated()
-meth public final {com.google.common.base.Converter%1} convert({com.google.common.base.Converter%0})
-meth public java.lang.Iterable<{com.google.common.base.Converter%1}> convertAll(java.lang.Iterable<? extends {com.google.common.base.Converter%0}>)
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.google.common.base.Converter<{%%0},{%%1}> from(com.google.common.base.Function<? super {%%0},? extends {%%1}>,com.google.common.base.Function<? super {%%1},? extends {%%0}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Converter<{%%0},{%%0}> identity()
+CLSS public abstract com.google.common.base.Converter
+intf com.google.common.base.Function
 supr java.lang.Object
-hfds handleNullAutomatically,reverse
-hcls ConverterComposition,FunctionBasedConverter,IdentityConverter,ReverseConverter
 
 CLSS public final com.google.common.base.Defaults
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static <%0 extends java.lang.Object> {%%0} defaultValue(java.lang.Class<{%%0}>)
 supr java.lang.Object
 hfds DOUBLE_DEFAULT,FLOAT_DEFAULT
 
@@ -246,33 +187,13 @@ supr java.lang.Object
 hfds enumConstantCache
 hcls StringConverter
 
-CLSS public abstract com.google.common.base.Equivalence<%0 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-cons protected init()
-innr public final static Wrapper
-meth protected abstract boolean doEquivalent({com.google.common.base.Equivalence%0},{com.google.common.base.Equivalence%0})
-meth protected abstract int doHash({com.google.common.base.Equivalence%0})
-meth public final <%0 extends java.lang.Object> com.google.common.base.Equivalence<{%%0}> onResultOf(com.google.common.base.Function<{%%0},? extends {com.google.common.base.Equivalence%0}>)
-meth public final <%0 extends {com.google.common.base.Equivalence%0}> com.google.common.base.Equivalence$Wrapper<{%%0}> wrap({%%0})
-meth public final <%0 extends {com.google.common.base.Equivalence%0}> com.google.common.base.Equivalence<java.lang.Iterable<{%%0}>> pairwise()
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=true)
-meth public final boolean equivalent({com.google.common.base.Equivalence%0},{com.google.common.base.Equivalence%0})
-meth public final com.google.common.base.Predicate<{com.google.common.base.Equivalence%0}> equivalentTo({com.google.common.base.Equivalence%0})
-meth public final int hash({com.google.common.base.Equivalence%0})
-meth public static com.google.common.base.Equivalence<java.lang.Object> equals()
-meth public static com.google.common.base.Equivalence<java.lang.Object> identity()
+CLSS public abstract com.google.common.base.Equivalence
+intf java.util.function.BiPredicate
 supr java.lang.Object
-hcls Equals,EquivalentToPredicate,Identity
 
-CLSS public final static com.google.common.base.Equivalence$Wrapper<%0 extends java.lang.Object>
- outer com.google.common.base.Equivalence
+CLSS public final com.google.common.base.Equivalence$Wrapper
 intf java.io.Serializable
-meth public boolean equals(java.lang.Object)
-meth public int hashCode()
-meth public java.lang.String toString()
-meth public {com.google.common.base.Equivalence$Wrapper%0} get()
 supr java.lang.Object
-hfds equivalence,reference,serialVersionUID
 
 CLSS public abstract com.google.common.base.FinalizablePhantomReference<%0 extends java.lang.Object>
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
@@ -305,45 +226,13 @@ cons protected init({com.google.common.base.FinalizableWeakReference%0},com.goog
 intf com.google.common.base.FinalizableReference
 supr java.lang.ref.WeakReference<{com.google.common.base.FinalizableWeakReference%0}>
 
-CLSS public abstract interface com.google.common.base.Function<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-meth public abstract boolean equals(java.lang.Object)
-meth public abstract {com.google.common.base.Function%1} apply({com.google.common.base.Function%0})
+CLSS public abstract interface com.google.common.base.Function
+intf java.util.function.Function
 
 CLSS public final com.google.common.base.Functions
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object> com.google.common.base.Function<{%%0},{%%2}> compose(com.google.common.base.Function<{%%1},{%%2}>,com.google.common.base.Function<{%%0},? extends {%%1}>)
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.google.common.base.Function<{%%0},{%%1}> forMap(java.util.Map<{%%0},? extends {%%1}>,{%%1})
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.google.common.base.Function<{%%0},{%%1}> forMap(java.util.Map<{%%0},{%%1}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Function<java.lang.Object,{%%0}> constant({%%0})
-meth public static <%0 extends java.lang.Object> com.google.common.base.Function<java.lang.Object,{%%0}> forSupplier(com.google.common.base.Supplier<{%%0}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Function<{%%0},java.lang.Boolean> forPredicate(com.google.common.base.Predicate<{%%0}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Function<{%%0},{%%0}> identity()
-meth public static com.google.common.base.Function<java.lang.Object,java.lang.String> toStringFunction()
 supr java.lang.Object
-hcls ConstantFunction,ForMapWithDefault,FunctionComposition,FunctionForMapNoDefault,IdentityFunction,PredicateFunction,SupplierFunction,ToStringFunction
 
 CLSS public com.google.common.base.Joiner
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-innr public final static MapJoiner
-meth public !varargs final <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.lang.Object,java.lang.Object,java.lang.Object[]) throws java.io.IOException
-meth public !varargs final java.lang.String join(java.lang.Object,java.lang.Object,java.lang.Object[])
-meth public !varargs final java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.lang.Object,java.lang.Object,java.lang.Object[])
-meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.lang.Iterable<?>) throws java.io.IOException
-meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.util.Iterator<?>) throws java.io.IOException
-meth public com.google.common.base.Joiner skipNulls()
-meth public com.google.common.base.Joiner useForNull(java.lang.String)
-meth public com.google.common.base.Joiner$MapJoiner withKeyValueSeparator(char)
-meth public com.google.common.base.Joiner$MapJoiner withKeyValueSeparator(java.lang.String)
-meth public final <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.lang.Object[]) throws java.io.IOException
-meth public final java.lang.String join(java.lang.Iterable<?>)
-meth public final java.lang.String join(java.lang.Object[])
-meth public final java.lang.String join(java.util.Iterator<?>)
-meth public final java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.lang.Iterable<?>)
-meth public final java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.lang.Object[])
-meth public final java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.util.Iterator<?>)
-meth public static com.google.common.base.Joiner on(char)
-meth public static com.google.common.base.Joiner on(java.lang.String)
 supr java.lang.Object
 hfds separator
 
@@ -369,187 +258,28 @@ supr java.lang.Object
 hfds joiner,keyValueSeparator
 
 CLSS public final com.google.common.base.MoreObjects
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-innr public final static ToStringHelper
-meth public static <%0 extends java.lang.Object> {%%0} firstNonNull({%%0},{%%0})
-meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.Class<?>)
-meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.Object)
-meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.String)
 supr java.lang.Object
 
-CLSS public final static com.google.common.base.MoreObjects$ToStringHelper
- outer com.google.common.base.MoreObjects
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,boolean)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,char)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,double)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,float)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,int)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,java.lang.Object)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,long)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(boolean)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(char)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(double)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(float)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(int)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(java.lang.Object)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(long)
-meth public com.google.common.base.MoreObjects$ToStringHelper omitNullValues()
-meth public java.lang.String toString()
+CLSS public final com.google.common.base.MoreObjects$ToStringHelper
 supr java.lang.Object
-hfds className,holderHead,holderTail,omitNullValues
-hcls ValueHolder
+hfds className,holderHead,holderTail,omitNullValues,performedJava8CompatibilityCheck
 
 CLSS public final com.google.common.base.Objects
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-meth public !varargs static int hashCode(java.lang.Object[])
-meth public static boolean equal(java.lang.Object,java.lang.Object)
 supr java.lang.Object
 
-CLSS public abstract com.google.common.base.Optional<%0 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=true)
+CLSS public abstract com.google.common.base.Optional
 intf java.io.Serializable
-meth public abstract <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> transform(com.google.common.base.Function<? super {com.google.common.base.Optional%0},{%%0}>)
-meth public abstract boolean equals(java.lang.Object)
-meth public abstract boolean isPresent()
-meth public abstract com.google.common.base.Optional<{com.google.common.base.Optional%0}> or(com.google.common.base.Optional<? extends {com.google.common.base.Optional%0}>)
-meth public abstract int hashCode()
-meth public abstract java.lang.String toString()
-meth public abstract java.util.Set<{com.google.common.base.Optional%0}> asSet()
-meth public abstract {com.google.common.base.Optional%0} get()
-meth public abstract {com.google.common.base.Optional%0} or(com.google.common.base.Supplier<? extends {com.google.common.base.Optional%0}>)
- anno 0 com.google.common.annotations.Beta()
-meth public abstract {com.google.common.base.Optional%0} or({com.google.common.base.Optional%0})
-meth public abstract {com.google.common.base.Optional%0} orNull()
-meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> absent()
-meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> fromNullable({%%0})
-meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> of({%%0})
-meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> presentInstances(java.lang.Iterable<? extends com.google.common.base.Optional<? extends {%%0}>>)
- anno 0 com.google.common.annotations.Beta()
 supr java.lang.Object
 hfds serialVersionUID
 
 CLSS public final com.google.common.base.Preconditions
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-meth public !varargs static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object[])
-meth public !varargs static void checkArgument(boolean,java.lang.String,java.lang.Object[])
-meth public !varargs static void checkState(boolean,java.lang.String,java.lang.Object[])
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0})
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.Object)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,char)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,char,char)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,char,int)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,char,java.lang.Object)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,char,long)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,int)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,int,char)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,int,int)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,int,java.lang.Object)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,int,long)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,char)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,int)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,java.lang.Object)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,long)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,long)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,long,char)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,long,int)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,long,java.lang.Object)
-meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,long,long)
-meth public static int checkElementIndex(int,int)
-meth public static int checkElementIndex(int,int,java.lang.String)
-meth public static int checkPositionIndex(int,int)
-meth public static int checkPositionIndex(int,int,java.lang.String)
-meth public static void checkArgument(boolean)
-meth public static void checkArgument(boolean,java.lang.Object)
-meth public static void checkArgument(boolean,java.lang.String,char)
-meth public static void checkArgument(boolean,java.lang.String,char,char)
-meth public static void checkArgument(boolean,java.lang.String,char,int)
-meth public static void checkArgument(boolean,java.lang.String,char,java.lang.Object)
-meth public static void checkArgument(boolean,java.lang.String,char,long)
-meth public static void checkArgument(boolean,java.lang.String,int)
-meth public static void checkArgument(boolean,java.lang.String,int,char)
-meth public static void checkArgument(boolean,java.lang.String,int,int)
-meth public static void checkArgument(boolean,java.lang.String,int,java.lang.Object)
-meth public static void checkArgument(boolean,java.lang.String,int,long)
-meth public static void checkArgument(boolean,java.lang.String,java.lang.Object)
-meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,char)
-meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,int)
-meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,java.lang.Object)
-meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
-meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
-meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,long)
-meth public static void checkArgument(boolean,java.lang.String,long)
-meth public static void checkArgument(boolean,java.lang.String,long,char)
-meth public static void checkArgument(boolean,java.lang.String,long,int)
-meth public static void checkArgument(boolean,java.lang.String,long,java.lang.Object)
-meth public static void checkArgument(boolean,java.lang.String,long,long)
-meth public static void checkPositionIndexes(int,int,int)
-meth public static void checkState(boolean)
-meth public static void checkState(boolean,java.lang.Object)
-meth public static void checkState(boolean,java.lang.String,char)
-meth public static void checkState(boolean,java.lang.String,char,char)
-meth public static void checkState(boolean,java.lang.String,char,int)
-meth public static void checkState(boolean,java.lang.String,char,java.lang.Object)
-meth public static void checkState(boolean,java.lang.String,char,long)
-meth public static void checkState(boolean,java.lang.String,int)
-meth public static void checkState(boolean,java.lang.String,int,char)
-meth public static void checkState(boolean,java.lang.String,int,int)
-meth public static void checkState(boolean,java.lang.String,int,java.lang.Object)
-meth public static void checkState(boolean,java.lang.String,int,long)
-meth public static void checkState(boolean,java.lang.String,java.lang.Object)
-meth public static void checkState(boolean,java.lang.String,java.lang.Object,char)
-meth public static void checkState(boolean,java.lang.String,java.lang.Object,int)
-meth public static void checkState(boolean,java.lang.String,java.lang.Object,java.lang.Object)
-meth public static void checkState(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
-meth public static void checkState(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
-meth public static void checkState(boolean,java.lang.String,java.lang.Object,long)
-meth public static void checkState(boolean,java.lang.String,long)
-meth public static void checkState(boolean,java.lang.String,long,char)
-meth public static void checkState(boolean,java.lang.String,long,int)
-meth public static void checkState(boolean,java.lang.String,long,java.lang.Object)
-meth public static void checkState(boolean,java.lang.String,long,long)
 supr java.lang.Object
 
-CLSS public abstract interface com.google.common.base.Predicate<%0 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-meth public abstract boolean apply({com.google.common.base.Predicate%0})
-meth public abstract boolean equals(java.lang.Object)
+CLSS public abstract interface com.google.common.base.Predicate
+intf java.util.function.Predicate
 
 CLSS public final com.google.common.base.Predicates
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
-meth public !varargs static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> and(com.google.common.base.Predicate<? super {%%0}>[])
- anno 0 java.lang.SafeVarargs()
-meth public !varargs static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> or(com.google.common.base.Predicate<? super {%%0}>[])
- anno 0 java.lang.SafeVarargs()
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> compose(com.google.common.base.Predicate<{%%1}>,com.google.common.base.Function<{%%0},? extends {%%1}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> alwaysFalse()
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=true)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> alwaysTrue()
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=true)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> and(com.google.common.base.Predicate<? super {%%0}>,com.google.common.base.Predicate<? super {%%0}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> and(java.lang.Iterable<? extends com.google.common.base.Predicate<? super {%%0}>>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> equalTo({%%0})
-meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> in(java.util.Collection<? extends {%%0}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> isNull()
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=true)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> not(com.google.common.base.Predicate<{%%0}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> notNull()
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=true)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> or(com.google.common.base.Predicate<? super {%%0}>,com.google.common.base.Predicate<? super {%%0}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> or(java.lang.Iterable<? extends com.google.common.base.Predicate<? super {%%0}>>)
-meth public static com.google.common.base.Predicate<java.lang.CharSequence> contains(java.util.regex.Pattern)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="java.util.regex.Pattern")
-meth public static com.google.common.base.Predicate<java.lang.CharSequence> containsPattern(java.lang.String)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static com.google.common.base.Predicate<java.lang.Class<?>> subtypeOf(java.lang.Class<?>)
- anno 0 com.google.common.annotations.Beta()
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static com.google.common.base.Predicate<java.lang.Object> instanceOf(java.lang.Class<?>)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 supr java.lang.Object
-hcls AndPredicate,CompositionPredicate,ContainsPatternFromStringPredicate,ContainsPatternPredicate,InPredicate,InstanceOfPredicate,IsEqualToPredicate,NotPredicate,ObjectPredicate,OrPredicate,SubtypeOfPredicate
 
 CLSS public final com.google.common.base.Splitter
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
@@ -566,6 +296,7 @@ meth public com.google.common.base.Splitter$MapSplitter withKeyValueSeparator(ja
  anno 0 com.google.common.annotations.Beta()
 meth public java.lang.Iterable<java.lang.String> split(java.lang.CharSequence)
 meth public java.util.List<java.lang.String> splitToList(java.lang.CharSequence)
+meth public java.util.stream.Stream<java.lang.String> splitToStream(java.lang.CharSequence)
  anno 0 com.google.common.annotations.Beta()
 meth public static com.google.common.base.Splitter fixedLength(int)
 meth public static com.google.common.base.Splitter on(char)
@@ -587,12 +318,12 @@ supr java.lang.Object
 hfds INVALID_ENTRY_MESSAGE,entrySplitter,outerSplitter
 
 CLSS public final !enum com.google.common.base.StandardSystemProperty
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 fld public final static com.google.common.base.StandardSystemProperty FILE_SEPARATOR
 fld public final static com.google.common.base.StandardSystemProperty JAVA_CLASS_PATH
 fld public final static com.google.common.base.StandardSystemProperty JAVA_CLASS_VERSION
 fld public final static com.google.common.base.StandardSystemProperty JAVA_COMPILER
 fld public final static com.google.common.base.StandardSystemProperty JAVA_EXT_DIRS
+ anno 0 java.lang.Deprecated()
 fld public final static com.google.common.base.StandardSystemProperty JAVA_HOME
 fld public final static com.google.common.base.StandardSystemProperty JAVA_IO_TMPDIR
 fld public final static com.google.common.base.StandardSystemProperty JAVA_LIBRARY_PATH
@@ -616,21 +347,18 @@ fld public final static com.google.common.base.StandardSystemProperty PATH_SEPAR
 fld public final static com.google.common.base.StandardSystemProperty USER_DIR
 fld public final static com.google.common.base.StandardSystemProperty USER_HOME
 fld public final static com.google.common.base.StandardSystemProperty USER_NAME
-meth public java.lang.String key()
-meth public java.lang.String toString()
-meth public java.lang.String value()
-meth public static com.google.common.base.StandardSystemProperty valueOf(java.lang.String)
-meth public static com.google.common.base.StandardSystemProperty[] values()
-supr java.lang.Enum<com.google.common.base.StandardSystemProperty>
+supr java.lang.Enum
 hfds key
 
 CLSS public final com.google.common.base.Stopwatch
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
 meth public boolean isRunning()
 meth public com.google.common.base.Stopwatch reset()
 meth public com.google.common.base.Stopwatch start()
 meth public com.google.common.base.Stopwatch stop()
 meth public java.lang.String toString()
+meth public java.time.Duration elapsed()
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 meth public long elapsed(java.util.concurrent.TimeUnit)
 meth public static com.google.common.base.Stopwatch createStarted()
 meth public static com.google.common.base.Stopwatch createStarted(com.google.common.base.Ticker)
@@ -640,70 +368,21 @@ supr java.lang.Object
 hfds elapsedNanos,isRunning,startTick,ticker
 
 CLSS public final com.google.common.base.Strings
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-meth public !varargs static java.lang.String lenientFormat(java.lang.String,java.lang.Object[])
-meth public static boolean isNullOrEmpty(java.lang.String)
-meth public static java.lang.String commonPrefix(java.lang.CharSequence,java.lang.CharSequence)
-meth public static java.lang.String commonSuffix(java.lang.CharSequence,java.lang.CharSequence)
-meth public static java.lang.String emptyToNull(java.lang.String)
-meth public static java.lang.String nullToEmpty(java.lang.String)
-meth public static java.lang.String padEnd(java.lang.String,int,char)
-meth public static java.lang.String padStart(java.lang.String,int,char)
-meth public static java.lang.String repeat(java.lang.String,int)
 supr java.lang.Object
 
 CLSS public abstract interface com.google.common.base.Supplier<%0 extends java.lang.Object>
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
+ anno 0 java.lang.FunctionalInterface()
+intf java.util.function.Supplier<{com.google.common.base.Supplier%0}>
 meth public abstract {com.google.common.base.Supplier%0} get()
 
 CLSS public final com.google.common.base.Suppliers
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.google.common.base.Supplier<{%%1}> compose(com.google.common.base.Function<? super {%%0},{%%1}>,com.google.common.base.Supplier<{%%0}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Function<com.google.common.base.Supplier<{%%0}>,{%%0}> supplierFunction()
-meth public static <%0 extends java.lang.Object> com.google.common.base.Supplier<{%%0}> memoize(com.google.common.base.Supplier<{%%0}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Supplier<{%%0}> memoizeWithExpiration(com.google.common.base.Supplier<{%%0}>,long,java.util.concurrent.TimeUnit)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Supplier<{%%0}> ofInstance({%%0})
-meth public static <%0 extends java.lang.Object> com.google.common.base.Supplier<{%%0}> synchronizedSupplier(com.google.common.base.Supplier<{%%0}>)
 supr java.lang.Object
-hcls ExpiringMemoizingSupplier,MemoizingSupplier,NonSerializableMemoizingSupplier,SupplierComposition,SupplierFunction,SupplierFunctionImpl,SupplierOfInstance,ThreadSafeSupplier
 
 CLSS public final com.google.common.base.Throwables
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
-meth public static <%0 extends java.lang.Throwable, %1 extends java.lang.Throwable> void propagateIfPossible(java.lang.Throwable,java.lang.Class<{%%0}>,java.lang.Class<{%%1}>) throws {%%0},{%%1}
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static <%0 extends java.lang.Throwable> void propagateIfInstanceOf(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
- anno 0 java.lang.Deprecated()
-meth public static <%0 extends java.lang.Throwable> void propagateIfPossible(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static <%0 extends java.lang.Throwable> void throwIfInstanceOf(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static <%0 extends java.lang.Throwable> {%%0} getCauseAs(java.lang.Throwable,java.lang.Class<{%%0}>)
- anno 0 com.google.common.annotations.Beta()
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static boolean lazyStackTraceIsLazy()
- anno 0 com.google.common.annotations.Beta()
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static java.lang.RuntimeException propagate(java.lang.Throwable)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
- anno 0 java.lang.Deprecated()
-meth public static java.lang.String getStackTraceAsString(java.lang.Throwable)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static java.lang.Throwable getRootCause(java.lang.Throwable)
-meth public static java.util.List<java.lang.StackTraceElement> lazyStackTrace(java.lang.Throwable)
- anno 0 com.google.common.annotations.Beta()
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static java.util.List<java.lang.Throwable> getCausalChain(java.lang.Throwable)
- anno 0 com.google.common.annotations.Beta()
-meth public static void propagateIfPossible(java.lang.Throwable)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
- anno 0 java.lang.Deprecated()
-meth public static void throwIfUnchecked(java.lang.Throwable)
 supr java.lang.Object
-hfds JAVA_LANG_ACCESS_CLASSNAME,SHARED_SECRETS_CLASSNAME,getStackTraceDepthMethod,getStackTraceElementMethod,jla
 
 CLSS public abstract com.google.common.base.Ticker
- anno 0 com.google.common.annotations.Beta()
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 cons protected init()
 meth public abstract long read()
@@ -720,41 +399,9 @@ meth public static int encodedLength(java.lang.CharSequence)
 supr java.lang.Object
 
 CLSS public final com.google.common.base.Verify
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-meth public !varargs static <%0 extends java.lang.Object> {%%0} verifyNotNull({%%0},java.lang.String,java.lang.Object[])
-meth public !varargs static void verify(boolean,java.lang.String,java.lang.Object[])
-meth public static <%0 extends java.lang.Object> {%%0} verifyNotNull({%%0})
-meth public static void verify(boolean)
-meth public static void verify(boolean,java.lang.String,char)
-meth public static void verify(boolean,java.lang.String,char,char)
-meth public static void verify(boolean,java.lang.String,char,int)
-meth public static void verify(boolean,java.lang.String,char,java.lang.Object)
-meth public static void verify(boolean,java.lang.String,char,long)
-meth public static void verify(boolean,java.lang.String,int)
-meth public static void verify(boolean,java.lang.String,int,char)
-meth public static void verify(boolean,java.lang.String,int,int)
-meth public static void verify(boolean,java.lang.String,int,java.lang.Object)
-meth public static void verify(boolean,java.lang.String,int,long)
-meth public static void verify(boolean,java.lang.String,java.lang.Object)
-meth public static void verify(boolean,java.lang.String,java.lang.Object,char)
-meth public static void verify(boolean,java.lang.String,java.lang.Object,int)
-meth public static void verify(boolean,java.lang.String,java.lang.Object,java.lang.Object)
-meth public static void verify(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
-meth public static void verify(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
-meth public static void verify(boolean,java.lang.String,java.lang.Object,long)
-meth public static void verify(boolean,java.lang.String,long)
-meth public static void verify(boolean,java.lang.String,long,char)
-meth public static void verify(boolean,java.lang.String,long,int)
-meth public static void verify(boolean,java.lang.String,long,java.lang.Object)
-meth public static void verify(boolean,java.lang.String,long,long)
 supr java.lang.Object
 
 CLSS public com.google.common.base.VerifyException
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-cons public init()
-cons public init(java.lang.String)
-cons public init(java.lang.String,java.lang.Throwable)
-cons public init(java.lang.Throwable)
 supr java.lang.RuntimeException
 
 CLSS abstract interface com.google.common.base.package-info
@@ -763,6 +410,7 @@ CLSS public abstract com.google.inject.AbstractModule
 cons public init()
 intf com.google.inject.Module
 meth protected !varargs void addError(java.lang.String,java.lang.Object[])
+meth protected !varargs void bindInterceptor(com.google.inject.matcher.Matcher<? super java.lang.Class<?>>,com.google.inject.matcher.Matcher<? super java.lang.reflect.Method>,org.aopalliance.intercept.MethodInterceptor[])
 meth protected !varargs void bindListener(com.google.inject.matcher.Matcher<? super com.google.inject.Binding<?>>,com.google.inject.spi.ProvisionListener[])
 meth protected !varargs void requestStaticInjection(java.lang.Class<?>[])
 meth protected <%0 extends java.lang.Object> com.google.inject.MembersInjector<{%%0}> getMembersInjector(com.google.inject.TypeLiteral<{%%0}>)
@@ -790,8 +438,9 @@ supr java.lang.Object
 hfds binder
 
 CLSS public abstract interface com.google.inject.Binder
-meth public abstract !varargs com.google.inject.Binder skipSources(java.lang.Class[])
+meth public abstract !varargs com.google.inject.Binder skipSources(java.lang.Class<?>[])
 meth public abstract !varargs void addError(java.lang.String,java.lang.Object[])
+meth public abstract !varargs void bindInterceptor(com.google.inject.matcher.Matcher<? super java.lang.Class<?>>,com.google.inject.matcher.Matcher<? super java.lang.reflect.Method>,org.aopalliance.intercept.MethodInterceptor[])
 meth public abstract !varargs void bindListener(com.google.inject.matcher.Matcher<? super com.google.inject.Binding<?>>,com.google.inject.spi.ProvisionListener[])
 meth public abstract !varargs void requestStaticInjection(java.lang.Class<?>[])
 meth public abstract <%0 extends java.lang.Object> com.google.inject.MembersInjector<{%%0}> getMembersInjector(com.google.inject.TypeLiteral<{%%0}>)
@@ -888,8 +537,10 @@ meth public abstract <%0 extends java.lang.Object> {%%0} getInstance(com.google.
 meth public abstract <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>)
 meth public abstract com.google.inject.Injector createChildInjector(java.lang.Iterable<? extends com.google.inject.Module>)
 meth public abstract com.google.inject.Injector getParent()
+meth public abstract java.util.List<com.google.inject.spi.Element> getElements()
 meth public abstract java.util.Map<com.google.inject.Key<?>,com.google.inject.Binding<?>> getAllBindings()
 meth public abstract java.util.Map<com.google.inject.Key<?>,com.google.inject.Binding<?>> getBindings()
+meth public abstract java.util.Map<com.google.inject.TypeLiteral<?>,java.util.List<com.google.inject.spi.InjectionPoint>> getAllMembersInjectorInjectionPoints()
 meth public abstract java.util.Map<java.lang.Class<? extends java.lang.annotation.Annotation>,com.google.inject.Scope> getScopeBindings()
 meth public abstract java.util.Set<com.google.inject.spi.TypeConverterBinding> getTypeConverterBindings()
 meth public abstract void injectMembers(java.lang.Object)
@@ -902,6 +553,8 @@ meth public <%0 extends java.lang.Object> com.google.inject.Key<{%%0}> ofType(co
 meth public <%0 extends java.lang.Object> com.google.inject.Key<{%%0}> ofType(java.lang.Class<{%%0}>)
 meth public boolean hasAttributes()
 meth public com.google.inject.Key<?> ofType(java.lang.reflect.Type)
+meth public com.google.inject.Key<{com.google.inject.Key%0}> withAnnotation(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public com.google.inject.Key<{com.google.inject.Key%0}> withAnnotation(java.lang.annotation.Annotation)
 meth public com.google.inject.Key<{com.google.inject.Key%0}> withoutAttributes()
 meth public final boolean equals(java.lang.Object)
 meth public final com.google.inject.TypeLiteral<{com.google.inject.Key%0}> getTypeLiteral()
@@ -936,7 +589,7 @@ supr java.lang.RuntimeException
 
 CLSS public abstract interface com.google.inject.PrivateBinder
 intf com.google.inject.Binder
-meth public abstract !varargs com.google.inject.PrivateBinder skipSources(java.lang.Class[])
+meth public abstract !varargs com.google.inject.PrivateBinder skipSources(java.lang.Class<?>[])
 meth public abstract com.google.inject.PrivateBinder withSource(java.lang.Object)
 meth public abstract com.google.inject.binder.AnnotatedElementBuilder expose(com.google.inject.TypeLiteral<?>)
 meth public abstract com.google.inject.binder.AnnotatedElementBuilder expose(java.lang.Class<?>)
@@ -946,6 +599,7 @@ CLSS public abstract com.google.inject.PrivateModule
 cons public init()
 intf com.google.inject.Module
 meth protected !varargs final void addError(java.lang.String,java.lang.Object[])
+meth protected !varargs final void bindInterceptor(com.google.inject.matcher.Matcher<? super java.lang.Class<?>>,com.google.inject.matcher.Matcher<? super java.lang.reflect.Method>,org.aopalliance.intercept.MethodInterceptor[])
 meth protected !varargs final void requestStaticInjection(java.lang.Class<?>[])
 meth protected !varargs void bindListener(com.google.inject.matcher.Matcher<? super com.google.inject.Binding<?>>,com.google.inject.spi.ProvisionListener[])
 meth protected <%0 extends java.lang.Object> com.google.inject.MembersInjector<{%%0}> getMembersInjector(com.google.inject.TypeLiteral<{%%0}>)
@@ -999,6 +653,33 @@ meth public java.lang.String getMessage()
 meth public java.util.Collection<com.google.inject.spi.Message> getErrorMessages()
 supr java.lang.RuntimeException
 hfds messages,serialVersionUID
+
+CLSS public abstract interface !annotation com.google.inject.RestrictedBindingSource
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+innr public abstract interface static !annotation Permit
+innr public final static !enum RestrictionLevel
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault com.google.inject.RestrictedBindingSource$RestrictionLevel restrictionLevel()
+meth public abstract !hasdefault java.lang.String exemptModules()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation>[] permits()
+meth public abstract java.lang.String explanation()
+
+CLSS public abstract interface static !annotation com.google.inject.RestrictedBindingSource$Permit
+ outer com.google.inject.RestrictedBindingSource
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public final static !enum com.google.inject.RestrictedBindingSource$RestrictionLevel
+ outer com.google.inject.RestrictedBindingSource
+fld public final static com.google.inject.RestrictedBindingSource$RestrictionLevel ERROR
+fld public final static com.google.inject.RestrictedBindingSource$RestrictionLevel WARNING
+meth public static com.google.inject.RestrictedBindingSource$RestrictionLevel valueOf(java.lang.String)
+meth public static com.google.inject.RestrictedBindingSource$RestrictionLevel[] values()
+supr java.lang.Enum<com.google.inject.RestrictedBindingSource$RestrictionLevel>
 
 CLSS public abstract interface com.google.inject.Scope
 meth public abstract <%0 extends java.lang.Object> com.google.inject.Provider<{%%0}> scope(com.google.inject.Key<{%%0}>,com.google.inject.Provider<{%%0}>)
@@ -1551,6 +1232,32 @@ CLSS public abstract interface java.util.concurrent.Callable<%0 extends java.lan
  anno 0 java.lang.FunctionalInterface()
 meth public abstract {java.util.concurrent.Callable%0} call() throws java.lang.Exception
 
+CLSS public abstract interface java.util.function.BiPredicate<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract boolean test({java.util.function.BiPredicate%0},{java.util.function.BiPredicate%1})
+meth public java.util.function.BiPredicate<{java.util.function.BiPredicate%0},{java.util.function.BiPredicate%1}> and(java.util.function.BiPredicate<? super {java.util.function.BiPredicate%0},? super {java.util.function.BiPredicate%1}>)
+meth public java.util.function.BiPredicate<{java.util.function.BiPredicate%0},{java.util.function.BiPredicate%1}> negate()
+meth public java.util.function.BiPredicate<{java.util.function.BiPredicate%0},{java.util.function.BiPredicate%1}> or(java.util.function.BiPredicate<? super {java.util.function.BiPredicate%0},? super {java.util.function.BiPredicate%1}>)
+
+CLSS public abstract interface java.util.function.Function<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public <%0 extends java.lang.Object> java.util.function.Function<{%%0},{java.util.function.Function%1}> compose(java.util.function.Function<? super {%%0},? extends {java.util.function.Function%0}>)
+meth public <%0 extends java.lang.Object> java.util.function.Function<{java.util.function.Function%0},{%%0}> andThen(java.util.function.Function<? super {java.util.function.Function%1},? extends {%%0}>)
+meth public abstract {java.util.function.Function%1} apply({java.util.function.Function%0})
+meth public static <%0 extends java.lang.Object> java.util.function.Function<{%%0},{%%0}> identity()
+
+CLSS public abstract interface java.util.function.Predicate<%0 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract boolean test({java.util.function.Predicate%0})
+meth public java.util.function.Predicate<{java.util.function.Predicate%0}> and(java.util.function.Predicate<? super {java.util.function.Predicate%0}>)
+meth public java.util.function.Predicate<{java.util.function.Predicate%0}> negate()
+meth public java.util.function.Predicate<{java.util.function.Predicate%0}> or(java.util.function.Predicate<? super {java.util.function.Predicate%0}>)
+meth public static <%0 extends java.lang.Object> java.util.function.Predicate<{%%0}> isEqual(java.lang.Object)
+
+CLSS public abstract interface java.util.function.Supplier<%0 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract {java.util.function.Supplier%0} get()
+
 CLSS public abstract interface !annotation javax.inject.Inject
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -1585,6 +1292,44 @@ CLSS public abstract interface !annotation javax.inject.Singleton
  anno 0 javax.inject.Scope()
 intf java.lang.annotation.Annotation
 
+CLSS public abstract interface !annotation org.apache.http.annotation.Contract
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault org.apache.http.annotation.ThreadingBehavior threading()
+
+CLSS public abstract interface org.apache.http.client.RedirectStrategy
+meth public abstract boolean isRedirected(org.apache.http.HttpRequest,org.apache.http.HttpResponse,org.apache.http.protocol.HttpContext) throws org.apache.http.ProtocolException
+meth public abstract org.apache.http.client.methods.HttpUriRequest getRedirect(org.apache.http.HttpRequest,org.apache.http.HttpResponse,org.apache.http.protocol.HttpContext) throws org.apache.http.ProtocolException
+
+CLSS public abstract interface org.apache.http.client.ServiceUnavailableRetryStrategy
+meth public abstract boolean retryRequest(org.apache.http.HttpResponse,int,org.apache.http.protocol.HttpContext)
+meth public abstract long getRetryInterval()
+
+CLSS public abstract interface org.apache.http.conn.ssl.TrustStrategy
+intf org.apache.http.ssl.TrustStrategy
+
+CLSS public org.apache.http.impl.client.DefaultRedirectStrategy
+ anno 0 org.apache.http.annotation.Contract(org.apache.http.annotation.ThreadingBehavior threading=IMMUTABLE)
+cons public init()
+cons public init(java.lang.String[])
+fld public final static int SC_PERMANENT_REDIRECT = 308
+fld public final static java.lang.String REDIRECT_LOCATIONS = "http.protocol.redirect-locations"
+ anno 0 java.lang.Deprecated()
+fld public final static org.apache.http.impl.client.DefaultRedirectStrategy INSTANCE
+intf org.apache.http.client.RedirectStrategy
+meth protected boolean isRedirectable(java.lang.String)
+meth protected java.net.URI createLocationURI(java.lang.String) throws org.apache.http.ProtocolException
+meth public boolean isRedirected(org.apache.http.HttpRequest,org.apache.http.HttpResponse,org.apache.http.protocol.HttpContext) throws org.apache.http.ProtocolException
+meth public java.net.URI getLocationURI(org.apache.http.HttpRequest,org.apache.http.HttpResponse,org.apache.http.protocol.HttpContext) throws org.apache.http.ProtocolException
+meth public org.apache.http.client.methods.HttpUriRequest getRedirect(org.apache.http.HttpRequest,org.apache.http.HttpResponse,org.apache.http.protocol.HttpContext) throws org.apache.http.ProtocolException
+supr java.lang.Object
+hfds log,redirectMethods
+
+CLSS public abstract interface org.apache.http.ssl.TrustStrategy
+meth public abstract boolean isTrusted(java.security.cert.X509Certificate[],java.lang.String) throws java.security.cert.CertificateException
+
 CLSS public abstract org.apache.maven.AbstractMavenLifecycleParticipant
 cons public init()
 meth public void afterProjectsRead(org.apache.maven.execution.MavenSession) throws org.apache.maven.MavenExecutionException
@@ -1615,7 +1360,7 @@ supr java.lang.Exception
 CLSS public org.apache.maven.DefaultArtifactFilterManager
  anno 0 javax.inject.Named(java.lang.String value="")
  anno 0 javax.inject.Singleton()
-cons public init(java.util.List<org.apache.maven.ArtifactFilterManagerDelegate>,org.apache.maven.extension.internal.CoreExportsProvider)
+cons public init(java.util.List<org.apache.maven.ArtifactFilterManagerDelegate>,org.apache.maven.extension.internal.CoreExports)
  anno 0 javax.inject.Inject()
 fld protected final java.util.List<org.apache.maven.ArtifactFilterManagerDelegate> delegates
 fld protected java.util.Set<java.lang.String> excludedArtifacts
@@ -1798,8 +1543,8 @@ fld public final static org.apache.maven.artifact.ArtifactScopeEnum runtime_plus
 fld public final static org.apache.maven.artifact.ArtifactScopeEnum system
 fld public final static org.apache.maven.artifact.ArtifactScopeEnum test
 meth public boolean encloses(org.apache.maven.artifact.ArtifactScopeEnum)
-meth public final static org.apache.maven.artifact.ArtifactScopeEnum checkScope(org.apache.maven.artifact.ArtifactScopeEnum)
 meth public java.lang.String getScope()
+meth public static org.apache.maven.artifact.ArtifactScopeEnum checkScope(org.apache.maven.artifact.ArtifactScopeEnum)
 meth public static org.apache.maven.artifact.ArtifactScopeEnum valueOf(java.lang.String)
 meth public static org.apache.maven.artifact.ArtifactScopeEnum[] values()
 supr java.lang.Enum<org.apache.maven.artifact.ArtifactScopeEnum>
@@ -2050,6 +1795,7 @@ cons public init(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.Ar
 supr org.apache.maven.repository.legacy.metadata.ResolutionGroup
 
 CLSS public abstract interface org.apache.maven.artifact.repository.ArtifactRepository
+ anno 0 java.lang.Deprecated()
 meth public abstract boolean isBlacklisted()
  anno 0 java.lang.Deprecated()
 meth public abstract boolean isBlocked()
@@ -2099,6 +1845,7 @@ meth public abstract void setGlobalChecksumPolicy(java.lang.String)
 meth public abstract void setGlobalUpdatePolicy(java.lang.String)
 
 CLSS public org.apache.maven.artifact.repository.ArtifactRepositoryPolicy
+ anno 0 java.lang.Deprecated()
 cons public init()
 cons public init(boolean,java.lang.String,java.lang.String)
 cons public init(org.apache.maven.artifact.repository.ArtifactRepositoryPolicy)
@@ -2271,6 +2018,7 @@ meth public abstract org.apache.maven.artifact.repository.RepositoryRequest setO
 meth public abstract org.apache.maven.artifact.repository.RepositoryRequest setRemoteRepositories(java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
 
 CLSS public abstract interface org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String ROLE
 meth public abstract java.lang.String getId()
 meth public abstract java.lang.String pathOf(org.apache.maven.artifact.Artifact)
@@ -2915,7 +2663,7 @@ cons public init(java.util.List<org.apache.maven.model.Exclusion>)
 intf org.apache.maven.artifact.resolver.filter.ArtifactFilter
 meth public boolean include(org.apache.maven.artifact.Artifact)
 supr java.lang.Object
-hfds WILDCARD,exclusions
+hfds WILDCARD,artifactIdIsWildcard,exclusions,groupIdAndArtifactIdIsWildcard,groupIdIsWildcard
 
 CLSS public org.apache.maven.artifact.resolver.filter.ExclusionSetFilter
 cons public init(java.lang.String[])
@@ -3144,6 +2892,8 @@ fld public final static char NON_RECURSIVE = 'N'
 fld public final static char OFFLINE = 'o'
 fld public final static char QUIET = 'q'
 fld public final static char SET_SYSTEM_PROPERTY = 'D'
+ anno 0 java.lang.Deprecated()
+fld public final static char SET_USER_PROPERTY = 'D'
 fld public final static char SHOW_VERSION = 'V'
 fld public final static char UPDATE_SNAPSHOTS = 'U'
 fld public final static char VERSION = 'v'
@@ -3158,7 +2908,6 @@ fld public final static java.lang.String ENCRYPT_PASSWORD = "ep"
 fld public final static java.lang.String FAIL_AT_END = "fae"
 fld public final static java.lang.String FAIL_FAST = "ff"
 fld public final static java.lang.String FAIL_NEVER = "fn"
-fld public final static java.lang.String LEGACY_LOCAL_REPOSITORY = "llr"
 fld public final static java.lang.String LOG_FILE = "l"
 fld public final static java.lang.String NO_TRANSFER_PROGRESS = "ntp"
 fld public final static java.lang.String PROJECT_LIST = "pl"
@@ -3222,7 +2971,7 @@ meth public static int doMain(java.lang.String[],org.codehaus.plexus.classworlds
 meth public static int main(java.lang.String[],org.codehaus.plexus.classworlds.ClassWorld)
 meth public static void main(java.lang.String[])
 supr java.lang.Object
-hfds ANSI_RESET,EXTENSIONS_FILENAME,EXT_CLASS_PATH,LAST_ANSI_SEQUENCE,MVN_MAVEN_CONFIG,classWorld,cliManager,configurationProcessors,dispatcher,eventSpyDispatcher,executionRequestPopulator,maven,modelProcessor,plexusLoggerManager,slf4jLogger,slf4jLoggerFactory,toolchainsBuilder
+hfds ANSI_RESET,EXTENSIONS_FILENAME,EXT_CLASS_PATH,LAST_ANSI_SEQUENCE,MVN_MAVEN_CONFIG,NEXT_LINE,classWorld,cliManager,configurationProcessors,dispatcher,eventSpyDispatcher,executionRequestPopulator,maven,modelProcessor,plexusLoggerManager,slf4jLogger,slf4jLoggerFactory,toolchainsBuilder
 hcls ExitException
 
 CLSS public org.apache.maven.cli.ResolveFile
@@ -3522,6 +3271,7 @@ meth public abstract boolean isRecursive()
 meth public abstract boolean isShowErrors()
 meth public abstract boolean isUpdateSnapshots()
 meth public abstract boolean isUseLegacyLocalRepository()
+ anno 0 java.lang.Deprecated()
 meth public abstract int getDegreeOfConcurrency()
 meth public abstract int getLoggingLevel()
 meth public abstract java.io.File getGlobalSettingsFile()
@@ -3611,6 +3361,7 @@ meth public abstract org.apache.maven.execution.MavenExecutionRequest setToolcha
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setTransferListener(org.eclipse.aether.transfer.TransferListener)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setUpdateSnapshots(boolean)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setUseLegacyLocalRepository(boolean)
+ anno 0 java.lang.Deprecated()
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setUserProperties(java.util.Properties)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setUserSettingsFile(java.io.File)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setUserToolchainsFile(java.io.File)
@@ -3889,8 +3640,11 @@ supr java.lang.Exception
 
 CLSS public org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping
 cons public init()
+ anno 0 java.lang.Deprecated()
+cons public init(java.util.List<org.apache.maven.lifecycle.mapping.Lifecycle>)
 intf org.apache.maven.lifecycle.mapping.LifecycleMapping
 meth public java.util.List<java.lang.String> getOptionalMojos(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.util.Map<java.lang.String,java.lang.String> getPhases(java.lang.String)
  anno 0 java.lang.Deprecated()
 meth public java.util.Map<java.lang.String,org.apache.maven.lifecycle.mapping.Lifecycle> getLifecycles()
@@ -5471,6 +5225,14 @@ meth public java.lang.String toString()
 supr java.lang.Object
 hfds files,hashCode,ids,sizes,timestamps
 
+CLSS public org.apache.maven.plugin.DefaultMojosExecutionStrategy
+ anno 0 javax.inject.Named(java.lang.String value="")
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.apache.maven.plugin.MojosExecutionStrategy
+meth public void execute(java.util.List<org.apache.maven.plugin.MojoExecution>,org.apache.maven.execution.MavenSession,org.apache.maven.plugin.MojoExecutionRunner) throws org.apache.maven.lifecycle.LifecycleExecutionException
+supr java.lang.Object
+
 CLSS public org.apache.maven.plugin.DefaultPluginArtifactsCache
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.plugin.PluginArtifactsCache, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
 cons public init()
@@ -5505,6 +5267,7 @@ intf org.apache.maven.plugin.PluginDescriptorCache
 meth protected static org.apache.maven.plugin.descriptor.PluginDescriptor clone(org.apache.maven.plugin.descriptor.PluginDescriptor)
 meth public org.apache.maven.plugin.PluginDescriptorCache$Key createKey(org.apache.maven.model.Plugin,java.util.List<org.eclipse.aether.repository.RemoteRepository>,org.eclipse.aether.RepositorySystemSession)
 meth public org.apache.maven.plugin.descriptor.PluginDescriptor get(org.apache.maven.plugin.PluginDescriptorCache$Key)
+meth public org.apache.maven.plugin.descriptor.PluginDescriptor get(org.apache.maven.plugin.PluginDescriptorCache$Key,org.apache.maven.plugin.PluginDescriptorCache$PluginDescriptorSupplier) throws org.apache.maven.plugin.InvalidPluginDescriptorException,org.apache.maven.plugin.PluginDescriptorParsingException,org.apache.maven.plugin.PluginResolutionException
 meth public void flush()
 meth public void put(org.apache.maven.plugin.PluginDescriptorCache$Key,org.apache.maven.plugin.descriptor.PluginDescriptor)
 supr java.lang.Object
@@ -5521,6 +5284,7 @@ intf org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable
 meth protected static boolean pluginEquals(org.apache.maven.model.Plugin,org.apache.maven.model.Plugin)
 meth protected static int pluginHashCode(org.apache.maven.model.Plugin)
 meth public org.apache.maven.plugin.PluginRealmCache$CacheRecord get(org.apache.maven.plugin.PluginRealmCache$Key)
+meth public org.apache.maven.plugin.PluginRealmCache$CacheRecord get(org.apache.maven.plugin.PluginRealmCache$Key,org.apache.maven.plugin.PluginRealmCache$PluginRealmSupplier) throws org.apache.maven.plugin.PluginContainerException,org.apache.maven.plugin.PluginResolutionException
 meth public org.apache.maven.plugin.PluginRealmCache$CacheRecord put(org.apache.maven.plugin.PluginRealmCache$Key,org.codehaus.plexus.classworlds.realm.ClassRealm,java.util.List<org.apache.maven.artifact.Artifact>)
 meth public org.apache.maven.plugin.PluginRealmCache$Key createKey(org.apache.maven.model.Plugin,java.lang.ClassLoader,java.util.Map<java.lang.String,java.lang.ClassLoader>,org.eclipse.aether.graph.DependencyFilter,java.util.List<org.eclipse.aether.repository.RemoteRepository>,org.eclipse.aether.RepositorySystemSession)
 meth public void dispose()
@@ -5639,6 +5403,9 @@ cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr org.apache.maven.plugin.AbstractMojoExecutionException
 
+CLSS public abstract interface org.apache.maven.plugin.MojoExecutionRunner
+meth public abstract void run(org.apache.maven.plugin.MojoExecution) throws org.apache.maven.lifecycle.LifecycleExecutionException
+
 CLSS public org.apache.maven.plugin.MojoFailureException
 cons public init(java.lang.Object,java.lang.String,java.lang.String)
 cons public init(java.lang.String)
@@ -5652,6 +5419,9 @@ meth public java.lang.String getGoal()
 meth public org.apache.maven.plugin.descriptor.PluginDescriptor getPluginDescriptor()
 supr java.lang.Exception
 hfds goal,pluginDescriptor
+
+CLSS public abstract interface org.apache.maven.plugin.MojosExecutionStrategy
+meth public abstract void execute(java.util.List<org.apache.maven.plugin.MojoExecution>,org.apache.maven.execution.MavenSession,org.apache.maven.plugin.MojoExecutionRunner) throws org.apache.maven.lifecycle.LifecycleExecutionException
 
 CLSS public abstract interface org.apache.maven.plugin.PluginArtifactsCache
 innr public abstract interface static Key
@@ -5696,13 +5466,20 @@ hfds pluginRealm
 
 CLSS public abstract interface org.apache.maven.plugin.PluginDescriptorCache
 innr public abstract interface static Key
+innr public abstract interface static PluginDescriptorSupplier
 meth public abstract org.apache.maven.plugin.PluginDescriptorCache$Key createKey(org.apache.maven.model.Plugin,java.util.List<org.eclipse.aether.repository.RemoteRepository>,org.eclipse.aether.RepositorySystemSession)
 meth public abstract org.apache.maven.plugin.descriptor.PluginDescriptor get(org.apache.maven.plugin.PluginDescriptorCache$Key)
 meth public abstract void flush()
 meth public abstract void put(org.apache.maven.plugin.PluginDescriptorCache$Key,org.apache.maven.plugin.descriptor.PluginDescriptor)
+meth public org.apache.maven.plugin.descriptor.PluginDescriptor get(org.apache.maven.plugin.PluginDescriptorCache$Key,org.apache.maven.plugin.PluginDescriptorCache$PluginDescriptorSupplier) throws org.apache.maven.plugin.InvalidPluginDescriptorException,org.apache.maven.plugin.PluginDescriptorParsingException,org.apache.maven.plugin.PluginResolutionException
 
 CLSS public abstract interface static org.apache.maven.plugin.PluginDescriptorCache$Key
  outer org.apache.maven.plugin.PluginDescriptorCache
+
+CLSS public abstract interface static org.apache.maven.plugin.PluginDescriptorCache$PluginDescriptorSupplier
+ outer org.apache.maven.plugin.PluginDescriptorCache
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract org.apache.maven.plugin.descriptor.PluginDescriptor load() throws org.apache.maven.plugin.InvalidPluginDescriptorException,org.apache.maven.plugin.PluginDescriptorParsingException,org.apache.maven.plugin.PluginResolutionException
 
 CLSS public org.apache.maven.plugin.PluginDescriptorParsingException
 cons public init(org.apache.maven.model.Plugin,java.lang.String,java.lang.Throwable)
@@ -5801,12 +5578,14 @@ hfds basedir,mojoExecution,project,properties,session
 
 CLSS public abstract interface org.apache.maven.plugin.PluginRealmCache
 innr public abstract interface static Key
+innr public abstract interface static PluginRealmSupplier
 innr public static CacheRecord
 meth public abstract org.apache.maven.plugin.PluginRealmCache$CacheRecord get(org.apache.maven.plugin.PluginRealmCache$Key)
 meth public abstract org.apache.maven.plugin.PluginRealmCache$CacheRecord put(org.apache.maven.plugin.PluginRealmCache$Key,org.codehaus.plexus.classworlds.realm.ClassRealm,java.util.List<org.apache.maven.artifact.Artifact>)
 meth public abstract org.apache.maven.plugin.PluginRealmCache$Key createKey(org.apache.maven.model.Plugin,java.lang.ClassLoader,java.util.Map<java.lang.String,java.lang.ClassLoader>,org.eclipse.aether.graph.DependencyFilter,java.util.List<org.eclipse.aether.repository.RemoteRepository>,org.eclipse.aether.RepositorySystemSession)
 meth public abstract void flush()
 meth public abstract void register(org.apache.maven.project.MavenProject,org.apache.maven.plugin.PluginRealmCache$Key,org.apache.maven.plugin.PluginRealmCache$CacheRecord)
+meth public org.apache.maven.plugin.PluginRealmCache$CacheRecord get(org.apache.maven.plugin.PluginRealmCache$Key,org.apache.maven.plugin.PluginRealmCache$PluginRealmSupplier) throws org.apache.maven.plugin.PluginContainerException,org.apache.maven.plugin.PluginResolutionException
 
 CLSS public static org.apache.maven.plugin.PluginRealmCache$CacheRecord
  outer org.apache.maven.plugin.PluginRealmCache
@@ -5818,6 +5597,11 @@ hfds artifacts,realm
 
 CLSS public abstract interface static org.apache.maven.plugin.PluginRealmCache$Key
  outer org.apache.maven.plugin.PluginRealmCache
+
+CLSS public abstract interface static org.apache.maven.plugin.PluginRealmCache$PluginRealmSupplier
+ outer org.apache.maven.plugin.PluginRealmCache
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract org.apache.maven.plugin.PluginRealmCache$CacheRecord load() throws org.apache.maven.plugin.PluginContainerException,org.apache.maven.plugin.PluginResolutionException
 
 CLSS public org.apache.maven.plugin.PluginResolutionException
 cons public init(org.apache.maven.model.Plugin,java.lang.Throwable)
@@ -5887,6 +5671,7 @@ hfds PROFILES_XML_FILE
 CLSS public org.apache.maven.profiles.DefaultProfileManager
  anno 0 java.lang.Deprecated()
 cons public init(org.codehaus.plexus.PlexusContainer)
+ anno 0 java.lang.Deprecated()
 cons public init(org.codehaus.plexus.PlexusContainer,java.util.Properties)
 intf org.apache.maven.profiles.ProfileManager
 meth public java.util.List getActiveProfiles() throws org.apache.maven.profiles.activation.ProfileActivationException
@@ -6093,7 +5878,7 @@ meth public org.apache.maven.project.ProjectBuildingResult build(org.apache.mave
 meth public org.apache.maven.project.ProjectBuildingResult build(org.apache.maven.artifact.Artifact,org.apache.maven.project.ProjectBuildingRequest) throws org.apache.maven.project.ProjectBuildingException
 meth public org.apache.maven.project.ProjectBuildingResult build(org.apache.maven.model.building.ModelSource,org.apache.maven.project.ProjectBuildingRequest) throws org.apache.maven.project.ProjectBuildingException
 supr java.lang.Object
-hfds dependencyResolver,logger,modelBuilder,modelCache,modelProcessor,projectBuildingHelper,repoSystem,repositoryManager,repositorySystem
+hfds dependencyResolver,logger,modelBuilder,modelCacheFactory,modelProcessor,projectBuildingHelper,repoSystem,repositoryManager,repositorySystem
 hcls InterimResult,InternalConfig
 
 CLSS public org.apache.maven.project.DefaultProjectBuilderConfiguration
@@ -6230,8 +6015,10 @@ hfds DEFAULT_MESSAGE,artifact,project
 
 CLSS public org.apache.maven.project.DuplicateProjectException
 cons public init(java.lang.String)
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String,java.io.File,java.io.File,java.lang.String)
 cons public init(java.lang.String,java.lang.Exception)
+ anno 0 java.lang.Deprecated()
 meth public java.io.File getConflictingProjectFile()
 meth public java.io.File getExistingProjectFile()
 meth public java.lang.String getProjectId()
@@ -6258,7 +6045,9 @@ CLSS public org.apache.maven.project.InvalidProjectModelException
 cons public init(java.lang.String,java.lang.String,java.io.File)
 cons public init(java.lang.String,java.lang.String,java.io.File,org.apache.maven.project.validation.ModelValidationResult)
 cons public init(java.lang.String,java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.apache.maven.project.validation.ModelValidationResult)
+ anno 0 java.lang.Deprecated()
 meth public final org.apache.maven.project.validation.ModelValidationResult getValidationResult()
 supr org.apache.maven.project.ProjectBuildingException
 hfds validationResult
@@ -6543,6 +6332,7 @@ cons public init(java.lang.String,java.lang.String,java.lang.Throwable)
 cons public init(java.util.List<org.apache.maven.project.ProjectBuildingResult>)
 meth public java.io.File getPomFile()
 meth public java.lang.String getPomLocation()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getProjectId()
 meth public java.util.List<org.apache.maven.project.ProjectBuildingResult> getResults()
 supr java.lang.Exception
@@ -8343,187 +8133,7 @@ supr org.apache.maven.wagon.StreamWagon
 
 CLSS public org.apache.maven.wagon.providers.http.HttpWagon
 cons public init()
-supr org.apache.maven.wagon.providers.http.wagon.shared.AbstractHttpClientWagon
-
-CLSS public abstract interface !annotation org.apache.maven.wagon.providers.http.httpclient.annotation.Contract
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
-intf java.lang.annotation.Annotation
-meth public abstract !hasdefault org.apache.maven.wagon.providers.http.httpclient.annotation.ThreadingBehavior threading()
-
-CLSS public abstract interface org.apache.maven.wagon.providers.http.httpclient.client.RedirectStrategy
-meth public abstract boolean isRedirected(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
-meth public abstract org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest getRedirect(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
-
-CLSS public abstract interface org.apache.maven.wagon.providers.http.httpclient.client.ServiceUnavailableRetryStrategy
-meth public abstract boolean retryRequest(org.apache.maven.wagon.providers.http.httpclient.HttpResponse,int,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext)
-meth public abstract long getRetryInterval()
-
-CLSS public abstract interface org.apache.maven.wagon.providers.http.httpclient.conn.ssl.TrustStrategy
-intf org.apache.maven.wagon.providers.http.httpclient.ssl.TrustStrategy
-
-CLSS public org.apache.maven.wagon.providers.http.httpclient.impl.client.DefaultRedirectStrategy
- anno 0 org.apache.maven.wagon.providers.http.httpclient.annotation.Contract(org.apache.maven.wagon.providers.http.httpclient.annotation.ThreadingBehavior threading=IMMUTABLE)
-cons public init()
-cons public init(java.lang.String[])
-fld public final static int SC_PERMANENT_REDIRECT = 308
-fld public final static java.lang.String REDIRECT_LOCATIONS = "http.protocol.redirect-locations"
- anno 0 java.lang.Deprecated()
-fld public final static org.apache.maven.wagon.providers.http.httpclient.impl.client.DefaultRedirectStrategy INSTANCE
-intf org.apache.maven.wagon.providers.http.httpclient.client.RedirectStrategy
-meth protected boolean isRedirectable(java.lang.String)
-meth protected java.net.URI createLocationURI(java.lang.String) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
-meth public boolean isRedirected(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
-meth public java.net.URI getLocationURI(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
-meth public org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest getRedirect(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
-supr java.lang.Object
-hfds log,redirectMethods
-
-CLSS public abstract interface org.apache.maven.wagon.providers.http.httpclient.ssl.TrustStrategy
-meth public abstract boolean isTrusted(java.security.cert.X509Certificate[],java.lang.String) throws java.security.cert.CertificateException
-
-CLSS public abstract org.apache.maven.wagon.providers.http.wagon.shared.AbstractHttpClientWagon
-cons public init()
-fld protected final static int SC_TOO_MANY_REQUESTS = 429
-meth protected int backoff(int,java.lang.String) throws java.lang.InterruptedException,org.apache.maven.wagon.TransferFailedException
-meth protected java.lang.String getURL(org.apache.maven.wagon.repository.Repository)
-meth protected java.lang.String getUserAgent(org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest)
-meth protected org.apache.maven.wagon.providers.http.httpclient.client.AuthCache getAuthCache()
-meth protected org.apache.maven.wagon.providers.http.httpclient.client.CredentialsProvider getCredentialsProvider()
-meth protected org.apache.maven.wagon.providers.http.httpclient.client.methods.CloseableHttpResponse execute(org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest) throws java.io.IOException,org.apache.maven.wagon.providers.http.httpclient.HttpException
-meth protected void cleanupGetTransfer(org.apache.maven.wagon.resource.Resource)
-meth protected void mkdirs(java.lang.String) throws java.io.IOException,org.apache.maven.wagon.providers.http.httpclient.HttpException
-meth protected void putFromStream(java.io.InputStream,org.apache.maven.wagon.resource.Resource) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
-meth public boolean resourceExists(java.lang.String) throws org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
-meth public int getInitialBackoffSeconds()
-meth public java.util.Properties getHttpHeaders()
-meth public org.apache.maven.wagon.providers.http.wagon.shared.BasicAuthScope getBasicAuthScope()
-meth public org.apache.maven.wagon.providers.http.wagon.shared.BasicAuthScope getProxyBasicAuthScope()
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration getHttpConfiguration()
-meth public static int getMaxBackoffWaitSeconds()
-meth public static org.apache.maven.wagon.providers.http.httpclient.impl.client.CloseableHttpClient getHttpClient()
-meth public static void setPersistentPool(boolean)
-meth public static void setPoolingHttpClientConnectionManager(org.apache.maven.wagon.providers.http.httpclient.impl.conn.PoolingHttpClientConnectionManager)
-meth public void closeConnection()
-meth public void fillInputData(org.apache.maven.wagon.InputData) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
-meth public void fillOutputData(org.apache.maven.wagon.OutputData) throws org.apache.maven.wagon.TransferFailedException
-meth public void openConnectionInternal()
-meth public void put(java.io.File,java.lang.String) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
-meth public void putFromStream(java.io.InputStream,java.lang.String) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
-meth public void putFromStream(java.io.InputStream,java.lang.String,long,long) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
-meth public void setBasicAuthScope(org.apache.maven.wagon.providers.http.wagon.shared.BasicAuthScope)
-meth public void setHeaders(org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest)
-meth public void setHttpConfiguration(org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration)
-meth public void setHttpHeaders(java.util.Properties)
-meth public void setInitialBackoffSeconds(int)
-meth public void setProxyBasicAuthScope(org.apache.maven.wagon.providers.http.wagon.shared.BasicAuthScope)
-supr org.apache.maven.wagon.StreamWagon
-hfds CONN_TTL,GMT_TIME_ZONE,IGNORE_SSL_VALIDITY_DATES,MAX_BACKOFF_WAIT_SECONDS,MAX_CONN_PER_ROUTE,MAX_CONN_TOTAL,RETRY_HANDLER_CLASS,RETRY_HANDLER_COUNT,RETRY_HANDLER_EXCEPTIONS,RETRY_HANDLER_REQUEST_SENT_ENABLED,SERVICE_UNAVAILABLE_RETRY_STRATEGY_CLASS,SERVICE_UNAVAILABLE_RETRY_STRATEGY_MAX_RETRIES,SERVICE_UNAVAILABLE_RETRY_STRATEGY_RETRY_INTERVAL,SSL_ALLOW_ALL,SSL_INSECURE,authCache,basicAuth,closeable,credentialsProvider,httpClient,httpClientConnectionManager,httpConfiguration,httpHeaders,initialBackoffSeconds,persistentPool,proxyAuth
-hcls WagonHttpEntity
-
-CLSS public org.apache.maven.wagon.providers.http.wagon.shared.BasicAuthScope
-cons public init()
-meth public java.lang.String getHost()
-meth public java.lang.String getPort()
-meth public java.lang.String getRealm()
-meth public org.apache.maven.wagon.providers.http.httpclient.auth.AuthScope getScope(java.lang.String,int)
-meth public org.apache.maven.wagon.providers.http.httpclient.auth.AuthScope getScope(org.apache.maven.wagon.providers.http.httpclient.HttpHost)
-meth public void setHost(java.lang.String)
-meth public void setPort(java.lang.String)
-meth public void setRealm(java.lang.String)
-supr java.lang.Object
-hfds host,port,realm
-
-CLSS public org.apache.maven.wagon.providers.http.wagon.shared.ConfigurationUtils
-cons public init()
-meth public static org.apache.maven.wagon.providers.http.httpclient.Header[] asRequestHeaders(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
-meth public static org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration merge(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration,org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
-meth public static org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration merge(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration,org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration,org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
-meth public static void copyConfig(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration,org.apache.maven.wagon.providers.http.httpclient.client.config.RequestConfig$Builder)
-supr java.lang.Object
-hfds ALLOW_CIRCULAR_REDIRECTS,COERCE_PATTERN,CONNECTION_TIMEOUT,CONN_MANAGER_TIMEOUT,COOKIE_POLICY,DEFAULT_PROXY,HANDLE_AUTHENTICATION,HANDLE_CONTENT_COMPRESSION,HANDLE_REDIRECTS,HANDLE_URI_NORMALIZATION,LOCAL_ADDRESS,MAX_REDIRECTS,PROXY_AUTH_PREF,REJECT_RELATIVE_REDIRECT,SO_TIMEOUT,STALE_CONNECTION_CHECK,TARGET_AUTH_PREF,USE_EXPECT_CONTINUE
-
-CLSS public org.apache.maven.wagon.providers.http.wagon.shared.EncodingUtil
-cons public init()
-meth public !varargs static java.lang.String encodeURLToString(java.lang.String,java.lang.String[])
-meth public static java.lang.String encodeURLToString(java.lang.String)
- anno 0 java.lang.Deprecated()
-meth public static java.lang.String encodeURLToString(java.lang.String,java.lang.String)
-meth public static java.net.URI encodeURL(java.lang.String) throws java.net.MalformedURLException,java.net.URISyntaxException
- anno 0 java.lang.Deprecated()
-supr java.lang.Object
-
-CLSS public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration
-cons public init()
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration setAll(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration setGet(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration setHead(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration setMkcol(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration setPut(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getAll()
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getGet()
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getHead()
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getMethodConfiguration(org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getMkcol()
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration getPut()
-supr java.lang.Object
-hfds all,get,head,mkcol,put
-
-CLSS public org.apache.maven.wagon.providers.http.wagon.shared.HttpMessageUtils
-cons public init()
-fld public final static int UNKNOWN_STATUS_CODE = -1
-meth public static java.lang.String formatAuthorizationMessage(java.lang.String,int,java.lang.String,org.apache.maven.wagon.proxy.ProxyInfo)
-meth public static java.lang.String formatResourceDoesNotExistMessage(java.lang.String,int,java.lang.String,org.apache.maven.wagon.proxy.ProxyInfo)
-meth public static java.lang.String formatTransferDebugMessage(java.lang.String,int,java.lang.String,org.apache.maven.wagon.proxy.ProxyInfo)
-meth public static java.lang.String formatTransferFailedMessage(java.lang.String,int,java.lang.String,org.apache.maven.wagon.proxy.ProxyInfo)
-meth public static java.lang.String formatTransferFailedMessage(java.lang.String,org.apache.maven.wagon.proxy.ProxyInfo)
-supr java.lang.Object
-hfds SC_FORBIDDEN,SC_GONE,SC_NOT_FOUND,SC_PROXY_AUTH_REQUIRED,SC_UNAUTHORIZED
-
-CLSS public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration
-cons public init()
-meth public boolean isUseDefaultHeaders()
-meth public boolean isUsePreemptive()
-meth public int getConnectionTimeout()
-meth public int getReadTimeout()
-meth public java.lang.Boolean getUseDefaultHeaders()
-meth public java.util.Properties getHeaders()
-meth public java.util.Properties getParams()
-meth public org.apache.maven.wagon.providers.http.httpclient.Header[] asRequestHeaders()
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration addHeader(java.lang.String,java.lang.String)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration addParam(java.lang.String,java.lang.String)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration setConnectionTimeout(int)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration setHeaders(java.util.Properties)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration setParams(java.util.Properties)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration setReadTimeout(int)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration setUseDefaultHeaders(boolean)
-meth public org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration setUsePreemptive(boolean)
-supr java.lang.Object
-hfds connectionTimeout,headers,params,readTimeout,useDefaultHeaders,usePreemptive
-
-CLSS public org.apache.maven.wagon.providers.http.wagon.shared.RelaxedTrustStrategy
-cons public init(boolean)
-intf org.apache.maven.wagon.providers.http.httpclient.conn.ssl.TrustStrategy
-meth public boolean isTrusted(java.security.cert.X509Certificate[],java.lang.String) throws java.security.cert.CertificateException
-supr java.lang.Object
-hfds ignoreSSLValidityDates
-
-CLSS public org.apache.maven.wagon.providers.http.wagon.shared.StandardServiceUnavailableRetryStrategy
- anno 0 org.apache.maven.wagon.providers.http.httpclient.annotation.Contract(org.apache.maven.wagon.providers.http.httpclient.annotation.ThreadingBehavior threading=IMMUTABLE)
-cons public init(int,int)
-intf org.apache.maven.wagon.providers.http.httpclient.client.ServiceUnavailableRetryStrategy
-meth public boolean retryRequest(org.apache.maven.wagon.providers.http.httpclient.HttpResponse,int,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext)
-meth public long getRetryInterval()
-supr java.lang.Object
-hfds maxRetries,retryInterval
-
-CLSS public org.apache.maven.wagon.providers.http.wagon.shared.WagonRedirectStrategy
-cons public init()
-meth public boolean isRedirected(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
-meth public org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest getRedirect(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
-supr org.apache.maven.wagon.providers.http.httpclient.impl.client.DefaultRedirectStrategy
-hfds LOGGER,SC_PERMANENT_REDIRECT
+supr org.apache.maven.wagon.shared.http.AbstractHttpClientWagon
 
 CLSS public org.apache.maven.wagon.proxy.ProxyInfo
 cons public init()
@@ -8614,6 +8224,148 @@ meth public void setLastModified(long)
 meth public void setName(java.lang.String)
 supr java.lang.Object
 hfds contentLength,lastModified,name
+
+CLSS public abstract org.apache.maven.wagon.shared.http.AbstractHttpClientWagon
+cons public init()
+fld protected final static int SC_TOO_MANY_REQUESTS = 429
+meth protected int backoff(int,java.lang.String) throws java.lang.InterruptedException,org.apache.maven.wagon.TransferFailedException
+meth protected java.lang.String getURL(org.apache.maven.wagon.repository.Repository)
+meth protected java.lang.String getUserAgent(org.apache.http.client.methods.HttpUriRequest)
+meth protected org.apache.http.client.AuthCache getAuthCache()
+meth protected org.apache.http.client.CredentialsProvider getCredentialsProvider()
+meth protected org.apache.http.client.methods.CloseableHttpResponse execute(org.apache.http.client.methods.HttpUriRequest) throws java.io.IOException,org.apache.http.HttpException
+meth protected void cleanupGetTransfer(org.apache.maven.wagon.resource.Resource)
+meth protected void mkdirs(java.lang.String) throws java.io.IOException,org.apache.http.HttpException
+meth protected void putFromStream(java.io.InputStream,org.apache.maven.wagon.resource.Resource) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
+meth public boolean resourceExists(java.lang.String) throws org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
+meth public int getInitialBackoffSeconds()
+meth public java.util.Properties getHttpHeaders()
+meth public org.apache.maven.wagon.shared.http.BasicAuthScope getBasicAuthScope()
+meth public org.apache.maven.wagon.shared.http.BasicAuthScope getProxyBasicAuthScope()
+meth public org.apache.maven.wagon.shared.http.HttpConfiguration getHttpConfiguration()
+meth public static int getMaxBackoffWaitSeconds()
+meth public static org.apache.http.impl.client.CloseableHttpClient getHttpClient()
+meth public static void setPersistentPool(boolean)
+meth public static void setPoolingHttpClientConnectionManager(org.apache.http.impl.conn.PoolingHttpClientConnectionManager)
+meth public void closeConnection()
+meth public void fillInputData(org.apache.maven.wagon.InputData) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
+meth public void fillOutputData(org.apache.maven.wagon.OutputData) throws org.apache.maven.wagon.TransferFailedException
+meth public void openConnectionInternal()
+meth public void put(java.io.File,java.lang.String) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
+meth public void putFromStream(java.io.InputStream,java.lang.String) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
+meth public void putFromStream(java.io.InputStream,java.lang.String,long,long) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
+meth public void setBasicAuthScope(org.apache.maven.wagon.shared.http.BasicAuthScope)
+meth public void setHeaders(org.apache.http.client.methods.HttpUriRequest)
+meth public void setHttpConfiguration(org.apache.maven.wagon.shared.http.HttpConfiguration)
+meth public void setHttpHeaders(java.util.Properties)
+meth public void setInitialBackoffSeconds(int)
+meth public void setProxyBasicAuthScope(org.apache.maven.wagon.shared.http.BasicAuthScope)
+supr org.apache.maven.wagon.StreamWagon
+hfds CONN_TTL,GMT_TIME_ZONE,IGNORE_SSL_VALIDITY_DATES,MAX_BACKOFF_WAIT_SECONDS,MAX_CONN_PER_ROUTE,MAX_CONN_TOTAL,RETRY_HANDLER_CLASS,RETRY_HANDLER_COUNT,RETRY_HANDLER_EXCEPTIONS,RETRY_HANDLER_REQUEST_SENT_ENABLED,SERVICE_UNAVAILABLE_RETRY_STRATEGY_CLASS,SERVICE_UNAVAILABLE_RETRY_STRATEGY_MAX_RETRIES,SERVICE_UNAVAILABLE_RETRY_STRATEGY_RETRY_INTERVAL,SSL_ALLOW_ALL,SSL_INSECURE,authCache,basicAuth,closeable,credentialsProvider,httpClient,httpClientConnectionManager,httpConfiguration,httpHeaders,initialBackoffSeconds,persistentPool,proxyAuth
+hcls WagonHttpEntity
+
+CLSS public org.apache.maven.wagon.shared.http.BasicAuthScope
+cons public init()
+meth public java.lang.String getHost()
+meth public java.lang.String getPort()
+meth public java.lang.String getRealm()
+meth public org.apache.http.auth.AuthScope getScope(java.lang.String,int)
+meth public org.apache.http.auth.AuthScope getScope(org.apache.http.HttpHost)
+meth public void setHost(java.lang.String)
+meth public void setPort(java.lang.String)
+meth public void setRealm(java.lang.String)
+supr java.lang.Object
+hfds host,port,realm
+
+CLSS public org.apache.maven.wagon.shared.http.ConfigurationUtils
+cons public init()
+meth public static org.apache.http.Header[] asRequestHeaders(org.apache.maven.wagon.shared.http.HttpMethodConfiguration)
+meth public static org.apache.maven.wagon.shared.http.HttpMethodConfiguration merge(org.apache.maven.wagon.shared.http.HttpMethodConfiguration,org.apache.maven.wagon.shared.http.HttpMethodConfiguration)
+meth public static org.apache.maven.wagon.shared.http.HttpMethodConfiguration merge(org.apache.maven.wagon.shared.http.HttpMethodConfiguration,org.apache.maven.wagon.shared.http.HttpMethodConfiguration,org.apache.maven.wagon.shared.http.HttpMethodConfiguration)
+meth public static void copyConfig(org.apache.maven.wagon.shared.http.HttpMethodConfiguration,org.apache.http.client.config.RequestConfig$Builder)
+supr java.lang.Object
+hfds ALLOW_CIRCULAR_REDIRECTS,COERCE_PATTERN,CONNECTION_TIMEOUT,CONN_MANAGER_TIMEOUT,COOKIE_POLICY,DEFAULT_PROXY,HANDLE_AUTHENTICATION,HANDLE_CONTENT_COMPRESSION,HANDLE_REDIRECTS,HANDLE_URI_NORMALIZATION,LOCAL_ADDRESS,MAX_REDIRECTS,PROXY_AUTH_PREF,REJECT_RELATIVE_REDIRECT,SO_TIMEOUT,STALE_CONNECTION_CHECK,TARGET_AUTH_PREF,USE_EXPECT_CONTINUE
+
+CLSS public org.apache.maven.wagon.shared.http.EncodingUtil
+cons public init()
+meth public !varargs static java.lang.String encodeURLToString(java.lang.String,java.lang.String[])
+meth public static java.lang.String encodeURLToString(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public static java.lang.String encodeURLToString(java.lang.String,java.lang.String)
+meth public static java.net.URI encodeURL(java.lang.String) throws java.net.MalformedURLException,java.net.URISyntaxException
+ anno 0 java.lang.Deprecated()
+supr java.lang.Object
+
+CLSS public org.apache.maven.wagon.shared.http.HttpConfiguration
+cons public init()
+meth public org.apache.maven.wagon.shared.http.HttpConfiguration setAll(org.apache.maven.wagon.shared.http.HttpMethodConfiguration)
+meth public org.apache.maven.wagon.shared.http.HttpConfiguration setGet(org.apache.maven.wagon.shared.http.HttpMethodConfiguration)
+meth public org.apache.maven.wagon.shared.http.HttpConfiguration setHead(org.apache.maven.wagon.shared.http.HttpMethodConfiguration)
+meth public org.apache.maven.wagon.shared.http.HttpConfiguration setMkcol(org.apache.maven.wagon.shared.http.HttpMethodConfiguration)
+meth public org.apache.maven.wagon.shared.http.HttpConfiguration setPut(org.apache.maven.wagon.shared.http.HttpMethodConfiguration)
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration getAll()
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration getGet()
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration getHead()
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration getMethodConfiguration(org.apache.http.client.methods.HttpUriRequest)
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration getMkcol()
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration getPut()
+supr java.lang.Object
+hfds all,get,head,mkcol,put
+
+CLSS public org.apache.maven.wagon.shared.http.HttpMessageUtils
+cons public init()
+fld public final static int UNKNOWN_STATUS_CODE = -1
+meth public static java.lang.String formatAuthorizationMessage(java.lang.String,int,java.lang.String,org.apache.maven.wagon.proxy.ProxyInfo)
+meth public static java.lang.String formatResourceDoesNotExistMessage(java.lang.String,int,java.lang.String,org.apache.maven.wagon.proxy.ProxyInfo)
+meth public static java.lang.String formatTransferDebugMessage(java.lang.String,int,java.lang.String,org.apache.maven.wagon.proxy.ProxyInfo)
+meth public static java.lang.String formatTransferFailedMessage(java.lang.String,int,java.lang.String,org.apache.maven.wagon.proxy.ProxyInfo)
+meth public static java.lang.String formatTransferFailedMessage(java.lang.String,org.apache.maven.wagon.proxy.ProxyInfo)
+supr java.lang.Object
+hfds SC_FORBIDDEN,SC_GONE,SC_NOT_FOUND,SC_PROXY_AUTH_REQUIRED,SC_UNAUTHORIZED
+
+CLSS public org.apache.maven.wagon.shared.http.HttpMethodConfiguration
+cons public init()
+meth public boolean isUseDefaultHeaders()
+meth public boolean isUsePreemptive()
+meth public int getConnectionTimeout()
+meth public int getReadTimeout()
+meth public java.lang.Boolean getUseDefaultHeaders()
+meth public java.util.Properties getHeaders()
+meth public java.util.Properties getParams()
+meth public org.apache.http.Header[] asRequestHeaders()
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration addHeader(java.lang.String,java.lang.String)
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration addParam(java.lang.String,java.lang.String)
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration setConnectionTimeout(int)
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration setHeaders(java.util.Properties)
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration setParams(java.util.Properties)
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration setReadTimeout(int)
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration setUseDefaultHeaders(boolean)
+meth public org.apache.maven.wagon.shared.http.HttpMethodConfiguration setUsePreemptive(boolean)
+supr java.lang.Object
+hfds connectionTimeout,headers,params,readTimeout,useDefaultHeaders,usePreemptive
+
+CLSS public org.apache.maven.wagon.shared.http.RelaxedTrustStrategy
+cons public init(boolean)
+intf org.apache.http.conn.ssl.TrustStrategy
+meth public boolean isTrusted(java.security.cert.X509Certificate[],java.lang.String) throws java.security.cert.CertificateException
+supr java.lang.Object
+hfds ignoreSSLValidityDates
+
+CLSS public org.apache.maven.wagon.shared.http.StandardServiceUnavailableRetryStrategy
+ anno 0 org.apache.http.annotation.Contract(org.apache.http.annotation.ThreadingBehavior threading=IMMUTABLE)
+cons public init(int,int)
+intf org.apache.http.client.ServiceUnavailableRetryStrategy
+meth public boolean retryRequest(org.apache.http.HttpResponse,int,org.apache.http.protocol.HttpContext)
+meth public long getRetryInterval()
+supr java.lang.Object
+hfds maxRetries,retryInterval
+
+CLSS public org.apache.maven.wagon.shared.http.WagonRedirectStrategy
+cons public init()
+meth public boolean isRedirected(org.apache.http.HttpRequest,org.apache.http.HttpResponse,org.apache.http.protocol.HttpContext) throws org.apache.http.ProtocolException
+meth public org.apache.http.client.methods.HttpUriRequest getRedirect(org.apache.http.HttpRequest,org.apache.http.HttpResponse,org.apache.http.protocol.HttpContext) throws org.apache.http.ProtocolException
+supr org.apache.http.impl.client.DefaultRedirectStrategy
+hfds LOGGER,SC_PERMANENT_REDIRECT
 
 CLSS public abstract interface org.codehaus.plexus.ContainerConfiguration
 meth public abstract boolean getAutoWiring()
@@ -9216,8 +8968,10 @@ fld public final static java.lang.String[] DEFAULTEXCLUDES
 intf org.codehaus.plexus.util.Scanner
 meth protected boolean couldHoldIncluded(java.lang.String)
 meth protected boolean isExcluded(java.lang.String)
+meth protected boolean isExcluded(java.lang.String,char[][])
 meth protected boolean isExcluded(java.lang.String,java.lang.String[])
 meth protected boolean isIncluded(java.lang.String)
+meth protected boolean isIncluded(java.lang.String,char[][])
 meth protected boolean isIncluded(java.lang.String,java.lang.String[])
 meth protected static boolean match(java.lang.String,java.lang.String,boolean)
 meth protected static boolean matchPath(java.lang.String,java.lang.String)
@@ -9287,14 +9041,14 @@ cons public init()
 fld protected boolean everythingIncluded
 fld protected boolean haveSlowResults
 fld protected java.io.File basedir
-fld protected java.util.Vector<java.lang.String> dirsDeselected
-fld protected java.util.Vector<java.lang.String> dirsExcluded
-fld protected java.util.Vector<java.lang.String> dirsIncluded
-fld protected java.util.Vector<java.lang.String> dirsNotIncluded
-fld protected java.util.Vector<java.lang.String> filesDeselected
-fld protected java.util.Vector<java.lang.String> filesExcluded
-fld protected java.util.Vector<java.lang.String> filesIncluded
-fld protected java.util.Vector<java.lang.String> filesNotIncluded
+fld protected java.util.ArrayList<java.lang.String> dirsDeselected
+fld protected java.util.ArrayList<java.lang.String> dirsExcluded
+fld protected java.util.ArrayList<java.lang.String> dirsIncluded
+fld protected java.util.ArrayList<java.lang.String> dirsNotIncluded
+fld protected java.util.ArrayList<java.lang.String> filesDeselected
+fld protected java.util.ArrayList<java.lang.String> filesExcluded
+fld protected java.util.ArrayList<java.lang.String> filesIncluded
+fld protected java.util.ArrayList<java.lang.String> filesNotIncluded
 meth protected boolean isSelected(java.lang.String,java.io.File)
 meth protected void scandir(java.io.File,java.lang.String,boolean)
 meth protected void slowScan()
@@ -9315,7 +9069,7 @@ meth public void setBasedir(java.io.File)
 meth public void setBasedir(java.lang.String)
 meth public void setFollowSymlinks(boolean)
 supr org.codehaus.plexus.util.AbstractScanner
-hfds followSymlinks,tokenizedEmpty
+hfds EMPTY_STRING_ARRAY,followSymlinks,tokenizedEmpty
 
 CLSS public abstract interface org.codehaus.plexus.util.DirectoryWalkListener
 meth public abstract void debug(java.lang.String)
@@ -9485,11 +9239,12 @@ meth public static void forceDelete(java.io.File) throws java.io.IOException
 meth public static void forceDelete(java.lang.String) throws java.io.IOException
 meth public static void forceDeleteOnExit(java.io.File) throws java.io.IOException
 meth public static void forceMkdir(java.io.File) throws java.io.IOException
+meth public static void linkFile(java.io.File,java.io.File) throws java.io.IOException
 meth public static void mkDirs(java.io.File,java.lang.String[],java.io.File) throws java.io.IOException
 meth public static void mkdir(java.lang.String)
 meth public static void rename(java.io.File,java.io.File) throws java.io.IOException
 supr java.lang.Object
-hfds FILE_COPY_BUFFER_SIZE,INVALID_CHARACTERS_FOR_WINDOWS_FILE_NAME
+hfds INVALID_CHARACTERS_FOR_WINDOWS_FILE_NAME
 
 CLSS public abstract static org.codehaus.plexus.util.FileUtils$FilterWrapper
  outer org.codehaus.plexus.util.FileUtils
@@ -9516,11 +9271,17 @@ meth public static java.lang.String toString(java.io.InputStream,java.lang.Strin
 meth public static java.lang.String toString(java.io.Reader) throws java.io.IOException
 meth public static java.lang.String toString(java.io.Reader,int) throws java.io.IOException
 meth public static void bufferedCopy(java.io.InputStream,java.io.OutputStream) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth public static void close(java.io.InputStream)
+ anno 0 java.lang.Deprecated()
 meth public static void close(java.io.OutputStream)
+ anno 0 java.lang.Deprecated()
 meth public static void close(java.io.Reader)
+ anno 0 java.lang.Deprecated()
 meth public static void close(java.io.Writer)
+ anno 0 java.lang.Deprecated()
 meth public static void close(java.nio.channels.Channel)
+ anno 0 java.lang.Deprecated()
 meth public static void copy(byte[],java.io.OutputStream) throws java.io.IOException
 meth public static void copy(byte[],java.io.OutputStream,int) throws java.io.IOException
 meth public static void copy(byte[],java.io.Writer) throws java.io.IOException
@@ -9578,6 +9339,7 @@ hfds regexPattern,separator,source,tokenized,tokenizedChar
 CLSS public org.codehaus.plexus.util.MatchPatterns
 meth public !varargs static org.codehaus.plexus.util.MatchPatterns from(java.lang.String[])
 meth public boolean matches(java.lang.String,boolean)
+meth public boolean matches(java.lang.String,char[][],boolean)
 meth public boolean matches(java.lang.String,java.lang.String[],boolean)
 meth public boolean matchesPatternStart(java.lang.String,boolean)
 meth public static org.codehaus.plexus.util.MatchPatterns from(java.lang.Iterable<java.lang.String>)
@@ -9654,10 +9416,10 @@ fld public final static java.lang.String UTF_16 = "UTF-16"
 fld public final static java.lang.String UTF_16BE = "UTF-16BE"
 fld public final static java.lang.String UTF_16LE = "UTF-16LE"
 fld public final static java.lang.String UTF_8 = "UTF-8"
-meth public static java.io.Reader newPlatformReader(java.io.File) throws java.io.FileNotFoundException
+meth public static java.io.Reader newPlatformReader(java.io.File) throws java.io.IOException
 meth public static java.io.Reader newPlatformReader(java.io.InputStream)
 meth public static java.io.Reader newPlatformReader(java.net.URL) throws java.io.IOException
-meth public static java.io.Reader newReader(java.io.File,java.lang.String) throws java.io.FileNotFoundException,java.io.UnsupportedEncodingException
+meth public static java.io.Reader newReader(java.io.File,java.lang.String) throws java.io.IOException
 meth public static java.io.Reader newReader(java.io.InputStream,java.lang.String) throws java.io.UnsupportedEncodingException
 meth public static java.io.Reader newReader(java.net.URL,java.lang.String) throws java.io.IOException
 meth public static org.codehaus.plexus.util.xml.XmlStreamReader newXmlReader(java.io.File) throws java.io.IOException
@@ -9708,6 +9470,7 @@ supr java.lang.Object
 hfds instance
 
 CLSS public org.codehaus.plexus.util.StringInputStream
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String)
 meth public boolean markSupported()
 meth public int read() throws java.io.IOException
@@ -9718,6 +9481,7 @@ supr java.io.InputStream
 hfds in
 
 CLSS public org.codehaus.plexus.util.StringOutputStream
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth public java.lang.String toString()
 meth public void write(byte[]) throws java.io.IOException
@@ -9878,7 +9642,7 @@ fld public final static java.lang.String UTF_16LE = "UTF-16LE"
 fld public final static java.lang.String UTF_8 = "UTF-8"
 meth public static java.io.Writer newPlatformWriter(java.io.File) throws java.io.IOException
 meth public static java.io.Writer newPlatformWriter(java.io.OutputStream)
-meth public static java.io.Writer newWriter(java.io.File,java.lang.String) throws java.io.FileNotFoundException,java.io.UnsupportedEncodingException
+meth public static java.io.Writer newWriter(java.io.File,java.lang.String) throws java.io.IOException
 meth public static java.io.Writer newWriter(java.io.OutputStream,java.lang.String) throws java.io.UnsupportedEncodingException
 meth public static org.codehaus.plexus.util.xml.XmlStreamWriter newXmlWriter(java.io.File) throws java.io.IOException
 meth public static org.codehaus.plexus.util.xml.XmlStreamWriter newXmlWriter(java.io.OutputStream) throws java.io.IOException
@@ -9923,12 +9687,15 @@ meth public static int executeCommandLine(org.codehaus.plexus.util.cli.Commandli
 meth public static int executeCommandLine(org.codehaus.plexus.util.cli.Commandline,org.codehaus.plexus.util.cli.StreamConsumer,org.codehaus.plexus.util.cli.StreamConsumer) throws org.codehaus.plexus.util.cli.CommandLineException
 meth public static int executeCommandLine(org.codehaus.plexus.util.cli.Commandline,org.codehaus.plexus.util.cli.StreamConsumer,org.codehaus.plexus.util.cli.StreamConsumer,int) throws org.codehaus.plexus.util.cli.CommandLineException
 meth public static java.lang.String quote(java.lang.String) throws org.codehaus.plexus.util.cli.CommandLineException
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String quote(java.lang.String,boolean) throws org.codehaus.plexus.util.cli.CommandLineException
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String quote(java.lang.String,boolean,boolean,boolean) throws org.codehaus.plexus.util.cli.CommandLineException
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String toString(java.lang.String[])
 meth public static java.lang.String[] translateCommandline(java.lang.String) throws java.lang.Exception
-meth public static java.util.Properties getSystemEnvVars() throws java.io.IOException
-meth public static java.util.Properties getSystemEnvVars(boolean) throws java.io.IOException
+meth public static java.util.Properties getSystemEnvVars()
+meth public static java.util.Properties getSystemEnvVars(boolean)
 meth public static org.codehaus.plexus.util.cli.CommandLineCallable executeCommandLineAsCallable(org.codehaus.plexus.util.cli.Commandline,java.io.InputStream,org.codehaus.plexus.util.cli.StreamConsumer,org.codehaus.plexus.util.cli.StreamConsumer,int) throws org.codehaus.plexus.util.cli.CommandLineException
 supr java.lang.Object
 hfds MILLIS_PER_SECOND,NANOS_PER_SECOND
@@ -9948,8 +9715,11 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,org.codehaus.plexus.util.cli.shell.Shell)
 cons public init(org.codehaus.plexus.util.cli.shell.Shell)
 fld protected final static java.lang.String OS_NAME = "os.name"
+ anno 0 java.lang.Deprecated()
 fld protected final static java.lang.String WINDOWS = "Windows"
+ anno 0 java.lang.Deprecated()
 fld protected java.lang.String executable
+ anno 0 java.lang.Deprecated()
 fld protected java.util.Map<java.lang.String,java.lang.String> envVars
 fld protected java.util.Vector<org.codehaus.plexus.util.cli.Arg> arguments
 innr public Marker
@@ -9972,12 +9742,17 @@ meth public long getPid()
 meth public org.codehaus.plexus.util.cli.Arg createArg()
 meth public org.codehaus.plexus.util.cli.Arg createArg(boolean)
 meth public org.codehaus.plexus.util.cli.Commandline$Argument createArgument()
+ anno 0 java.lang.Deprecated()
 meth public org.codehaus.plexus.util.cli.Commandline$Argument createArgument(boolean)
+ anno 0 java.lang.Deprecated()
 meth public org.codehaus.plexus.util.cli.Commandline$Marker createMarker()
 meth public org.codehaus.plexus.util.cli.shell.Shell getShell()
 meth public static java.lang.String quoteArgument(java.lang.String) throws org.codehaus.plexus.util.cli.CommandLineException
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String toString(java.lang.String[])
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String[] translateCommandline(java.lang.String) throws java.lang.Exception
+ anno 0 java.lang.Deprecated()
 meth public void addArg(org.codehaus.plexus.util.cli.Arg)
 meth public void addArg(org.codehaus.plexus.util.cli.Arg,boolean)
 meth public void addArguments(java.lang.String[])
@@ -10211,6 +9986,7 @@ meth public abstract void writeMarkup(java.lang.String)
 meth public abstract void writeText(java.lang.String)
 
 CLSS public org.codehaus.plexus.util.xml.XmlReader
+ anno 0 java.lang.Deprecated()
 cons public init(java.io.File) throws java.io.IOException
 cons public init(java.io.InputStream) throws java.io.IOException
 cons public init(java.io.InputStream,boolean) throws java.io.IOException
@@ -10256,7 +10032,7 @@ cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.St
 supr org.codehaus.plexus.util.xml.XmlReaderException
 
 CLSS public org.codehaus.plexus.util.xml.XmlStreamWriter
-cons public init(java.io.File) throws java.io.FileNotFoundException
+cons public init(java.io.File) throws java.io.IOException
 cons public init(java.io.OutputStream)
 meth public java.lang.String getEncoding()
 meth public void close() throws java.io.IOException
@@ -10316,8 +10092,10 @@ fld public final static java.lang.String DEFAULT_SELF_COMBINATION_MODE = "merge"
 fld public final static java.lang.String SELF_COMBINATION_MERGE = "merge"
 fld public final static java.lang.String SELF_COMBINATION_MODE_ATTRIBUTE = "combine.self"
 fld public final static java.lang.String SELF_COMBINATION_OVERRIDE = "override"
+fld public final static java.lang.String SELF_COMBINATION_REMOVE = "remove"
 intf java.io.Serializable
 meth public boolean equals(java.lang.Object)
+meth public boolean removeAttribute(java.lang.String)
 meth public int getChildCount()
 meth public int hashCode()
 meth public java.lang.Object getInputLocation()
@@ -10338,6 +10116,7 @@ meth public static org.codehaus.plexus.util.xml.Xpp3Dom mergeXpp3Dom(org.codehau
 meth public static org.codehaus.plexus.util.xml.Xpp3Dom mergeXpp3Dom(org.codehaus.plexus.util.xml.Xpp3Dom,org.codehaus.plexus.util.xml.Xpp3Dom,java.lang.Boolean)
 meth public void addChild(org.codehaus.plexus.util.xml.Xpp3Dom)
 meth public void removeChild(int)
+meth public void removeChild(org.codehaus.plexus.util.xml.Xpp3Dom)
 meth public void setAttribute(java.lang.String,java.lang.String)
 meth public void setInputLocation(java.lang.Object)
 meth public void setParent(org.codehaus.plexus.util.xml.Xpp3Dom)
@@ -10373,11 +10152,14 @@ fld public final static java.lang.String CHILDREN_COMBINATION_MODE_ATTRIBUTE = "
 fld public final static java.lang.String DEFAULT_CHILDREN_COMBINATION_MODE = "merge"
 fld public final static java.lang.String DEFAULT_SELF_COMBINATION_MODE = "merge"
 fld public final static java.lang.String ID_COMBINATION_MODE_ATTRIBUTE = "combine.id"
+fld public final static java.lang.String KEYS_COMBINATION_MODE_ATTRIBUTE = "combine.keys"
 fld public final static java.lang.String SELF_COMBINATION_MERGE = "merge"
 fld public final static java.lang.String SELF_COMBINATION_MODE_ATTRIBUTE = "combine.self"
 fld public final static java.lang.String SELF_COMBINATION_OVERRIDE = "override"
 meth public static boolean isEmpty(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static boolean isNotEmpty(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static org.codehaus.plexus.util.xml.Xpp3Dom mergeXpp3Dom(org.codehaus.plexus.util.xml.Xpp3Dom,org.codehaus.plexus.util.xml.Xpp3Dom)
 meth public static org.codehaus.plexus.util.xml.Xpp3Dom mergeXpp3Dom(org.codehaus.plexus.util.xml.Xpp3Dom,org.codehaus.plexus.util.xml.Xpp3Dom,java.lang.Boolean)
 meth public void writeToSerializer(java.lang.String,org.codehaus.plexus.util.xml.pull.XmlSerializer,org.codehaus.plexus.util.xml.Xpp3Dom) throws java.io.IOException
@@ -10400,121 +10182,7 @@ hfds entityEnd,entityName,entityNameBuf,entityNameHash,entityReplacement,entityR
 CLSS public org.codehaus.plexus.util.xml.pull.MXParser
 cons public init()
 cons public init(org.codehaus.plexus.util.xml.pull.EntityReplacementMap)
-fld protected boolean allStringsInterned
-fld protected boolean emptyElementTag
-fld protected boolean pastEndTag
-fld protected boolean preventBufferCompaction
-fld protected boolean processNamespaces
-fld protected boolean reachedEnd
-fld protected boolean roundtripSupported
-fld protected boolean seenAmpersand
-fld protected boolean seenDocdecl
-fld protected boolean seenEndTag
-fld protected boolean seenMarkup
-fld protected boolean seenRoot
-fld protected boolean seenStartTag
-fld protected boolean tokenize
-fld protected boolean usePC
-fld protected char[] buf
-fld protected char[] charRefOneCharBuf
-fld protected char[] pc
-fld protected char[][] elRawName
-fld protected char[][] entityNameBuf
-fld protected char[][] entityReplacementBuf
-fld protected final static char LOOKUP_MAX_CHAR = '\u0400'
-fld protected final static char[] NCODING
-fld protected final static char[] NO
-fld protected final static char[] TANDALONE
-fld protected final static char[] VERSION
-fld protected final static char[] YES
-fld protected final static int LOOKUP_MAX = 1024
-fld protected final static int READ_CHUNK_SIZE = 8192
-fld protected final static java.lang.String FEATURE_NAMES_INTERNED = "http://xmlpull.org/v1/doc/features.html#names-interned"
-fld protected final static java.lang.String FEATURE_XML_ROUNDTRIP = "http://xmlpull.org/v1/doc/features.html#xml-roundtrip"
-fld protected final static java.lang.String PROPERTY_LOCATION = "http://xmlpull.org/v1/doc/properties.html#location"
-fld protected final static java.lang.String PROPERTY_XMLDECL_CONTENT = "http://xmlpull.org/v1/doc/properties.html#xmldecl-content"
-fld protected final static java.lang.String PROPERTY_XMLDECL_STANDALONE = "http://xmlpull.org/v1/doc/properties.html#xmldecl-standalone"
-fld protected final static java.lang.String PROPERTY_XMLDECL_VERSION = "http://xmlpull.org/v1/doc/properties.html#xmldecl-version"
-fld protected final static java.lang.String XMLNS_URI = "http://www.w3.org/2000/xmlns/"
-fld protected final static java.lang.String XML_URI = "http://www.w3.org/XML/1998/namespace"
-fld protected int attributeCount
-fld protected int bufAbsoluteStart
-fld protected int bufEnd
-fld protected int bufLoadFactor
-fld protected int bufSoftLimit
-fld protected int bufStart
-fld protected int columnNumber
-fld protected int depth
-fld protected int entityEnd
-fld protected int eventType
-fld protected int lineNumber
-fld protected int namespaceEnd
-fld protected int pcEnd
-fld protected int pcStart
-fld protected int pos
-fld protected int posEnd
-fld protected int posStart
-fld protected int[] attributeNameHash
-fld protected int[] elNamespaceCount
-fld protected int[] elRawNameEnd
-fld protected int[] elRawNameLine
-fld protected int[] entityNameHash
-fld protected int[] namespacePrefixHash
-fld protected java.io.Reader reader
-fld protected java.lang.Boolean xmlDeclStandalone
-fld protected java.lang.String entityRefName
-fld protected java.lang.String inputEncoding
-fld protected java.lang.String location
-fld protected java.lang.String text
-fld protected java.lang.String xmlDeclContent
-fld protected java.lang.String xmlDeclVersion
-fld protected java.lang.String[] attributeName
-fld protected java.lang.String[] attributePrefix
-fld protected java.lang.String[] attributeUri
-fld protected java.lang.String[] attributeValue
-fld protected java.lang.String[] elName
-fld protected java.lang.String[] elPrefix
-fld protected java.lang.String[] elUri
-fld protected java.lang.String[] entityName
-fld protected java.lang.String[] entityReplacement
-fld protected java.lang.String[] namespacePrefix
-fld protected java.lang.String[] namespaceUri
-fld protected static boolean[] lookupNameChar
-fld protected static boolean[] lookupNameStartChar
 intf org.codehaus.plexus.util.xml.pull.XmlPullParser
-meth protected boolean isNameChar(char)
-meth protected boolean isNameStartChar(char)
-meth protected boolean isS(char)
-meth protected boolean parsePI() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected char more() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected char parseAttribute() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected char requireInput(char,char[]) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected char requireNextS() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected char skipS(char) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected char[] lookuEntityReplacement(int) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected char[] parseEntityRef() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected final static int fastHash(char[],int,int)
-meth protected int nextImpl() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected int parseEpilog() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected int parseProlog() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected java.lang.String newString(char[],int,int)
-meth protected java.lang.String newStringIntern(char[],int,int)
-meth protected java.lang.String printable(char)
-meth protected java.lang.String printable(java.lang.String)
-meth protected void ensureAttributesCapacity(int)
-meth protected void ensureElementsCapacity()
-meth protected void ensureEntityCapacity()
-meth protected void ensureNamespacesCapacity(int)
-meth protected void ensurePC(int)
-meth protected void fillBuf() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected void joinPC()
-meth protected void parseCDSect(boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected void parseComment() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected void parseDocdecl() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected void parseXmlDecl(char) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected void parseXmlDeclWithVersion(int,int) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth protected void reset()
-meth protected void resetStringCache()
 meth public boolean getFeature(java.lang.String)
 meth public boolean isAttributeDefault(int)
 meth public boolean isEmptyElementTag() throws org.codehaus.plexus.util.xml.pull.XmlPullParserException
@@ -10548,7 +10216,6 @@ meth public java.lang.String getPositionDescription()
 meth public java.lang.String getPrefix()
 meth public java.lang.String getText()
 meth public java.lang.String nextText() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
-meth public static char[] toChars(int)
 meth public void defineEntityReplacementText(java.lang.String,java.lang.String) throws org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public void require(int,java.lang.String,java.lang.String) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public void setFeature(java.lang.String,boolean) throws org.codehaus.plexus.util.xml.pull.XmlPullParserException
@@ -10558,7 +10225,7 @@ meth public void setProperty(java.lang.String,java.lang.Object) throws org.codeh
 meth public void setupFromTemplate()
 meth public void skipSubTree() throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 supr java.lang.Object
-hfds MAX_CODE_POINT,MAX_HIGH_SURROGATE,MIN_HIGH_SURROGATE,MIN_SUPPLEMENTARY_CODE_POINT,TRACE_SIZING,replacementMapTemplate
+hfds BUF_AMP,BUF_APO,BUF_GT,BUF_LT,BUF_NOT_RESOLVED,BUF_QUOT,FEATURE_NAMES_INTERNED,FEATURE_XML_ROUNDTRIP,LOOKUP_MAX,LOOKUP_MAX_CHAR,NCODING,NO,PROPERTY_LOCATION,PROPERTY_XMLDECL_CONTENT,PROPERTY_XMLDECL_STANDALONE,PROPERTY_XMLDECL_VERSION,READ_CHUNK_SIZE,TANDALONE,TRACE_SIZING,VERSION,XMLNS_URI,XML_URI,YES,allStringsInterned,attributeCount,attributeName,attributeNameHash,attributePrefix,attributeUri,attributeValue,buf,bufAbsoluteStart,bufEnd,bufLoadFactor,bufSoftLimit,bufStart,bufferLoadFactor,columnNumber,depth,elName,elNamespaceCount,elPrefix,elRawName,elRawNameEnd,elRawNameLine,elUri,emptyElementTag,entityEnd,entityName,entityNameBuf,entityNameHash,entityRefName,entityReplacement,entityReplacementBuf,eventType,fileEncoding,inputEncoding,lineNumber,location,lookupNameChar,lookupNameStartChar,namespaceEnd,namespacePrefix,namespacePrefixHash,namespaceUri,pastEndTag,pc,pcEnd,pcStart,pos,posEnd,posStart,preventBufferCompaction,processNamespaces,reachedEnd,reader,replacementMapTemplate,resolvedEntityRefCharBuf,roundtripSupported,seenAmpersand,seenDocdecl,seenEndTag,seenMarkup,seenRoot,seenStartTag,text,tokenize,usePC,xmlDeclContent,xmlDeclStandalone,xmlDeclVersion
 
 CLSS public org.codehaus.plexus.util.xml.pull.MXSerializer
 cons public init()
@@ -10703,9 +10370,11 @@ cons public init(java.lang.String,org.codehaus.plexus.util.xml.pull.XmlPullParse
 fld protected int column
 fld protected int row
 fld protected java.lang.Throwable detail
+ anno 0 java.lang.Deprecated()
 meth public int getColumnNumber()
 meth public int getLineNumber()
 meth public java.lang.Throwable getDetail()
+ anno 0 java.lang.Deprecated()
 meth public void printStackTrace()
 supr java.lang.Exception
 
@@ -10793,16 +10462,23 @@ meth public void metadataResolving(org.eclipse.aether.RepositoryEvent)
 supr java.lang.Object
 
 CLSS public final org.eclipse.aether.ConfigurationProperties
+fld public final static boolean DEFAULT_HTTP_PREEMPTIVE_AUTH = false
 fld public final static boolean DEFAULT_IMPLICIT_PRIORITIES = false
 fld public final static boolean DEFAULT_INTERACTIVE = false
 fld public final static boolean DEFAULT_PERSISTED_CHECKSUMS = true
 fld public final static int DEFAULT_CONNECT_TIMEOUT = 10000
+fld public final static int DEFAULT_HTTP_RETRY_HANDLER_COUNT = 3
 fld public final static int DEFAULT_REQUEST_TIMEOUT = 1800000
 fld public final static java.lang.String CONNECT_TIMEOUT = "aether.connector.connectTimeout"
 fld public final static java.lang.String DEFAULT_HTTP_CREDENTIAL_ENCODING = "ISO-8859-1"
 fld public final static java.lang.String DEFAULT_USER_AGENT = "Aether"
+fld public final static java.lang.String HTTPS_SECURITY_MODE = "aether.connector.https.securityMode"
+fld public final static java.lang.String HTTPS_SECURITY_MODE_DEFAULT = "default"
+fld public final static java.lang.String HTTPS_SECURITY_MODE_INSECURE = "insecure"
 fld public final static java.lang.String HTTP_CREDENTIAL_ENCODING = "aether.connector.http.credentialEncoding"
 fld public final static java.lang.String HTTP_HEADERS = "aether.connector.http.headers"
+fld public final static java.lang.String HTTP_PREEMPTIVE_AUTH = "aether.connector.http.preemptiveAuth"
+fld public final static java.lang.String HTTP_RETRY_HANDLER_COUNT = "aether.connector.http.retryHandler.count"
 fld public final static java.lang.String IMPLICIT_PRIORITIES = "aether.priority.implicit"
 fld public final static java.lang.String INTERACTIVE = "aether.interactive"
 fld public final static java.lang.String PERSISTED_CHECKSUMS = "aether.connector.persistedChecksums"
@@ -10887,10 +10563,17 @@ CLSS public final org.eclipse.aether.DefaultSessionData
 cons public init()
 intf org.eclipse.aether.SessionData
 meth public boolean set(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public java.lang.Object computeIfAbsent(java.lang.Object,java.util.function.Supplier<java.lang.Object>)
 meth public java.lang.Object get(java.lang.Object)
 meth public void set(java.lang.Object,java.lang.Object)
 supr java.lang.Object
 hfds data
+
+CLSS public final org.eclipse.aether.MultiRuntimeException
+meth public java.util.List<? extends java.lang.Throwable> getThrowables()
+meth public static void mayThrow(java.lang.String,java.util.List<? extends java.lang.Throwable>)
+supr java.lang.RuntimeException
+hfds throwables
 
 CLSS public abstract interface org.eclipse.aether.RepositoryCache
 meth public abstract java.lang.Object get(org.eclipse.aether.RepositorySystemSession,java.lang.Object)
@@ -10993,6 +10676,8 @@ meth public abstract org.eclipse.aether.resolution.ArtifactResult resolveArtifac
 meth public abstract org.eclipse.aether.resolution.DependencyResult resolveDependencies(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.resolution.DependencyRequest) throws org.eclipse.aether.resolution.DependencyResolutionException
 meth public abstract org.eclipse.aether.resolution.VersionRangeResult resolveVersionRange(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.resolution.VersionRangeRequest) throws org.eclipse.aether.resolution.VersionRangeResolutionException
 meth public abstract org.eclipse.aether.resolution.VersionResult resolveVersion(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.resolution.VersionRequest) throws org.eclipse.aether.resolution.VersionResolutionException
+meth public abstract void addOnSystemEndedHandler(java.lang.Runnable)
+meth public abstract void shutdown()
 
 CLSS public abstract interface org.eclipse.aether.RepositorySystemSession
 meth public abstract boolean isIgnoreArtifactDescriptorRepositories()
@@ -11021,6 +10706,7 @@ meth public abstract org.eclipse.aether.resolution.ArtifactDescriptorPolicy getA
 meth public abstract org.eclipse.aether.resolution.ResolutionErrorPolicy getResolutionErrorPolicy()
 meth public abstract org.eclipse.aether.transfer.TransferListener getTransferListener()
 meth public abstract org.eclipse.aether.transform.FileTransformerManager getFileTransformerManager()
+ anno 0 java.lang.Deprecated()
 
 CLSS public org.eclipse.aether.RequestTrace
 cons protected init(org.eclipse.aether.RequestTrace,java.lang.Object)
@@ -11035,6 +10721,7 @@ hfds data,parent
 
 CLSS public abstract interface org.eclipse.aether.SessionData
 meth public abstract boolean set(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public abstract java.lang.Object computeIfAbsent(java.lang.Object,java.util.function.Supplier<java.lang.Object>)
 meth public abstract java.lang.Object get(java.lang.Object)
 meth public abstract void set(java.lang.Object,java.lang.Object)
 
@@ -11123,6 +10810,8 @@ meth public java.util.Map<java.lang.String,java.lang.String> getProperties()
 supr java.lang.Object
 hfds classifier,extension,id,properties
 
+CLSS abstract interface org.eclipse.aether.artifact.package-info
+
 CLSS public abstract org.eclipse.aether.metadata.AbstractMetadata
 cons public init()
 intf org.eclipse.aether.metadata.Metadata
@@ -11152,6 +10841,8 @@ meth public abstract java.util.Map<java.lang.String,java.lang.String> getPropert
 meth public abstract org.eclipse.aether.metadata.Metadata setFile(java.io.File)
 meth public abstract org.eclipse.aether.metadata.Metadata setProperties(java.util.Map<java.lang.String,java.lang.String>)
 meth public abstract org.eclipse.aether.metadata.Metadata$Nature getNature()
+
+CLSS abstract interface org.eclipse.aether.package-info
 
 CLSS public abstract interface org.eclipse.aether.repository.ArtifactRepository
 meth public abstract java.lang.String getContentType()
@@ -11412,6 +11103,8 @@ meth public java.lang.String toString()
 supr java.lang.Object
 hfds key,type
 
+CLSS abstract interface org.eclipse.aether.repository.package-info
+
 CLSS public abstract interface org.eclipse.aether.resolution.ArtifactDescriptorPolicy
 fld public final static int IGNORE_ERRORS = 3
 fld public final static int IGNORE_INVALID = 2
@@ -11438,6 +11131,10 @@ meth public void transferStarted(org.eclipse.aether.transfer.TransferEvent) thro
 meth public void transferSucceeded(org.eclipse.aether.transfer.TransferEvent)
 supr java.lang.Object
 
+CLSS public org.eclipse.aether.transfer.ArtifactFilteredOutException
+cons public init(org.eclipse.aether.artifact.Artifact,org.eclipse.aether.repository.RemoteRepository,java.lang.String)
+supr org.eclipse.aether.transfer.ArtifactNotFoundException
+
 CLSS public org.eclipse.aether.transfer.ArtifactNotFoundException
 cons public init(org.eclipse.aether.artifact.Artifact,org.eclipse.aether.repository.RemoteRepository)
 cons public init(org.eclipse.aether.artifact.Artifact,org.eclipse.aether.repository.RemoteRepository,java.lang.String)
@@ -11460,13 +11157,16 @@ CLSS public org.eclipse.aether.transfer.ChecksumFailureException
 cons public init(boolean,java.lang.String,java.lang.Throwable)
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated()
+cons public init(java.lang.String,java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 meth public boolean isRetryWorthy()
 meth public java.lang.String getActual()
 meth public java.lang.String getExpected()
+meth public java.lang.String getExpectedKind()
 supr org.eclipse.aether.RepositoryException
-hfds actual,expected,retryWorthy
+hfds actual,expected,expectedKind,retryWorthy
 
 CLSS public org.eclipse.aether.transfer.MetadataNotFoundException
 cons public init(org.eclipse.aether.metadata.Metadata,org.eclipse.aether.repository.LocalRepository)
@@ -11606,11 +11306,17 @@ meth public org.eclipse.aether.transfer.TransferResource setResumeOffset(long)
 supr java.lang.Object
 hfds contentLength,file,repositoryId,repositoryUrl,resourceName,resumeOffset,startTime,trace
 
+CLSS abstract interface org.eclipse.aether.transfer.package-info
+
 CLSS public final org.eclipse.aether.util.ChecksumUtils
+meth public static byte[] fromHexString(java.lang.String)
 meth public static java.lang.String read(java.io.File) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String toHexString(byte[])
 meth public static java.util.Map<java.lang.String,java.lang.Object> calc(byte[],java.util.Collection<java.lang.String>) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth public static java.util.Map<java.lang.String,java.lang.Object> calc(java.io.File,java.util.Collection<java.lang.String>) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 
 CLSS public final org.eclipse.aether.util.ConfigUtils
@@ -11630,12 +11336,55 @@ meth public !varargs static java.util.Map<?,?> getMap(java.util.Map<?,?>,java.ut
 meth public !varargs static java.util.Map<?,?> getMap(org.eclipse.aether.RepositorySystemSession,java.util.Map<?,?>,java.lang.String[])
 meth public !varargs static long getLong(java.util.Map<?,?>,long,java.lang.String[])
 meth public !varargs static long getLong(org.eclipse.aether.RepositorySystemSession,long,java.lang.String[])
+meth public static java.util.List<java.lang.String> parseCommaSeparatedNames(java.lang.String)
+meth public static java.util.List<java.lang.String> parseCommaSeparatedUniqueNames(java.lang.String)
 supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.DirectoryUtils
+meth public static java.nio.file.Path resolveDirectory(java.lang.String,java.nio.file.Path,boolean) throws java.io.IOException
+meth public static java.nio.file.Path resolveDirectory(org.eclipse.aether.RepositorySystemSession,java.lang.String,java.lang.String,boolean) throws java.io.IOException
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.FileUtils
+innr public abstract interface static CollocatedTempFile
+innr public abstract interface static FileWriter
+innr public abstract interface static TempFile
+meth public static org.eclipse.aether.util.FileUtils$CollocatedTempFile newTempFile(java.nio.file.Path) throws java.io.IOException
+meth public static org.eclipse.aether.util.FileUtils$TempFile newTempFile() throws java.io.IOException
+meth public static void writeFile(java.nio.file.Path,org.eclipse.aether.util.FileUtils$FileWriter) throws java.io.IOException
+meth public static void writeFileWithBackup(java.nio.file.Path,org.eclipse.aether.util.FileUtils$FileWriter) throws java.io.IOException
+supr java.lang.Object
+
+CLSS public abstract interface static org.eclipse.aether.util.FileUtils$CollocatedTempFile
+ outer org.eclipse.aether.util.FileUtils
+intf org.eclipse.aether.util.FileUtils$TempFile
+meth public abstract void move() throws java.io.IOException
+
+CLSS public abstract interface static org.eclipse.aether.util.FileUtils$FileWriter
+ outer org.eclipse.aether.util.FileUtils
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract void write(java.nio.file.Path) throws java.io.IOException
+
+CLSS public abstract interface static org.eclipse.aether.util.FileUtils$TempFile
+ outer org.eclipse.aether.util.FileUtils
+intf java.io.Closeable
+meth public abstract java.nio.file.Path getPath()
+
+CLSS public final org.eclipse.aether.util.StringDigestUtil
+cons public init(java.lang.String)
+meth public java.lang.String digest()
+meth public org.eclipse.aether.util.StringDigestUtil update(java.lang.String)
+meth public static java.lang.String sha1(java.lang.String)
+meth public static org.eclipse.aether.util.StringDigestUtil sha1()
+supr java.lang.Object
+hfds digest
 
 CLSS public final org.eclipse.aether.util.StringUtils
  anno 0 java.lang.Deprecated()
 meth public static boolean isEmpty(java.lang.String)
 supr java.lang.Object
+
+CLSS abstract interface org.eclipse.aether.util.package-info
 
 CLSS public final org.eclipse.aether.util.repository.AuthenticationBuilder
 cons public init()
@@ -11653,6 +11402,22 @@ meth public org.eclipse.aether.util.repository.AuthenticationBuilder addString(j
 meth public org.eclipse.aether.util.repository.AuthenticationBuilder addUsername(java.lang.String)
 supr java.lang.Object
 hfds authentications
+
+CLSS public final org.eclipse.aether.util.repository.ChainedLocalRepositoryManager
+cons public init(org.eclipse.aether.repository.LocalRepositoryManager,java.util.List<org.eclipse.aether.repository.LocalRepositoryManager>,boolean)
+intf org.eclipse.aether.repository.LocalRepositoryManager
+meth public java.lang.String getPathForLocalArtifact(org.eclipse.aether.artifact.Artifact)
+meth public java.lang.String getPathForLocalMetadata(org.eclipse.aether.metadata.Metadata)
+meth public java.lang.String getPathForRemoteArtifact(org.eclipse.aether.artifact.Artifact,org.eclipse.aether.repository.RemoteRepository,java.lang.String)
+meth public java.lang.String getPathForRemoteMetadata(org.eclipse.aether.metadata.Metadata,org.eclipse.aether.repository.RemoteRepository,java.lang.String)
+meth public java.lang.String toString()
+meth public org.eclipse.aether.repository.LocalArtifactResult find(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.repository.LocalArtifactRequest)
+meth public org.eclipse.aether.repository.LocalMetadataResult find(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.repository.LocalMetadataRequest)
+meth public org.eclipse.aether.repository.LocalRepository getRepository()
+meth public void add(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.repository.LocalArtifactRegistration)
+meth public void add(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.repository.LocalMetadataRegistration)
+supr java.lang.Object
+hfds head,ignoreTailAvailability,tail
 
 CLSS public final org.eclipse.aether.util.repository.ChainedWorkspaceReader
 cons public !varargs init(org.eclipse.aether.repository.WorkspaceReader[])
@@ -11732,15 +11497,33 @@ meth public int getMetadataPolicy(org.eclipse.aether.RepositorySystemSession,org
 supr java.lang.Object
 hfds artifactPolicy,metadataPolicy
 
+CLSS abstract interface org.eclipse.aether.util.repository.package-info
+
 CLSS public final org.eclipse.aether.util.version.GenericVersionScheme
 cons public init()
 intf org.eclipse.aether.version.VersionScheme
+meth public !varargs static void main(java.lang.String[])
 meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public org.eclipse.aether.version.Version parseVersion(java.lang.String) throws org.eclipse.aether.version.InvalidVersionSpecificationException
 meth public org.eclipse.aether.version.VersionConstraint parseVersionConstraint(java.lang.String) throws org.eclipse.aether.version.InvalidVersionSpecificationException
 meth public org.eclipse.aether.version.VersionRange parseVersionRange(java.lang.String) throws org.eclipse.aether.version.InvalidVersionSpecificationException
 supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.version.UnionVersionRange
+intf org.eclipse.aether.version.VersionRange
+meth public !varargs static org.eclipse.aether.version.VersionRange from(org.eclipse.aether.version.VersionRange[])
+meth public boolean containsVersion(org.eclipse.aether.version.Version)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public org.eclipse.aether.version.VersionRange$Bound getLowerBound()
+meth public org.eclipse.aether.version.VersionRange$Bound getUpperBound()
+meth public static org.eclipse.aether.version.VersionRange from(java.util.Collection<? extends org.eclipse.aether.version.VersionRange>)
+supr java.lang.Object
+hfds lowerBound,ranges,upperBound
+
+CLSS abstract interface org.eclipse.aether.util.version.package-info
 
 CLSS public org.eclipse.aether.version.InvalidVersionSpecificationException
 cons public init(java.lang.String,java.lang.String)
@@ -11780,6 +11563,8 @@ CLSS public abstract interface org.eclipse.aether.version.VersionScheme
 meth public abstract org.eclipse.aether.version.Version parseVersion(java.lang.String) throws org.eclipse.aether.version.InvalidVersionSpecificationException
 meth public abstract org.eclipse.aether.version.VersionConstraint parseVersionConstraint(java.lang.String) throws org.eclipse.aether.version.InvalidVersionSpecificationException
 meth public abstract org.eclipse.aether.version.VersionRange parseVersionRange(java.lang.String) throws org.eclipse.aether.version.InvalidVersionSpecificationException
+
+CLSS abstract interface org.eclipse.aether.version.package-info
 
 CLSS public abstract interface !annotation org.eclipse.sisu.Typed
  anno 0 java.lang.annotation.Documented()

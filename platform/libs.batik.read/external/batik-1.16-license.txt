@@ -1,9 +1,9 @@
 Name: Apache Batik
-Version: 1.14
+Version: 1.16
 Description: Batik is a toolkit for applications that want to use images in the Scalable Vector Graphics (SVG) format for various purposes, such as display, generation or manipulation.
 License: Apache-2.0
 Origin: https://xmlgraphics.apache.org/batik/
-Files: batik-anim-1.14.jar, batik-awt-util-1.14.jar, batik-bridge-1.14.jar, batik-constants-1.14.jar, batik-css-1.14.jar, batik-dom-1.14.jar, batik-ext-1.14.jar, batik-gvt-1.14.jar, batik-i18n-1.14.jar, batik-parser-1.14.jar, batik-script-1.14.jar, batik-svg-dom-1.14.jar, batik-util-1.14.jar, batik-xml-1.14.jar
+Files: batik-anim-1.16.jar, batik-awt-util-1.16.jar, batik-bridge-1.16.jar, batik-constants-1.16.jar, batik-css-1.16.jar, batik-dom-1.16.jar, batik-ext-1.16.jar, batik-gvt-1.16.jar, batik-i18n-1.16.jar, batik-parser-1.16.jar, batik-script-1.16.jar, batik-svg-dom-1.16.jar, batik-util-1.16.jar, batik-xml-1.16.jar
 
                                  Apache License
                            Version 2.0, January 2004

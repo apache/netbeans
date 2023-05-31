@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.50.0
+#Version 1.51.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -4274,6 +4274,7 @@ innr public final static Entry
 meth public static boolean hasNext()
 meth public static boolean hasPrev()
 meth public static java.lang.String dump()
+ anno 0 java.lang.Deprecated()
 meth public static void addEntry(javax.swing.text.JTextComponent,int)
 meth public static void checkAddEntry()
 meth public static void checkAddEntry(javax.swing.text.JTextComponent)

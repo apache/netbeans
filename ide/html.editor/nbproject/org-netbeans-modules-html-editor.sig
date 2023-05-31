@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.75
+#Version 2.76
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -539,6 +539,7 @@ innr public static CharRefItem
 innr public static EndTag
 innr public static FileAttributeValue
 innr public static GoUpFileAttributeValue
+innr public static HtmlCssValueCompletionItem
 innr public static Tag
 intf org.netbeans.spi.editor.completion.CompletionItem
 meth protected boolean substituteText(javax.swing.text.JTextComponent,int)
@@ -573,6 +574,7 @@ meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletio
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createAutocompleteEndTag(java.lang.String,int)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createBooleanAttribute(java.lang.String,int,boolean,java.lang.String)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createCharacterReference(java.lang.String,char,int,java.lang.String)
+meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createCssValue(java.lang.String,int,boolean)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createEndTag(java.lang.String,int,java.lang.String,int,org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$EndTag$Type)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createEndTag(org.netbeans.modules.html.editor.lib.api.model.HtmlTag,java.lang.String,int,java.lang.String,int,org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$EndTag$Type)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createFileCompletionItem(org.openide.filesystems.FileObject,int)
@@ -670,6 +672,14 @@ CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletio
 meth public int getSortPriority()
 supr org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$FileAttributeValue
 
+CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$HtmlCssValueCompletionItem
+ outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
+meth protected java.lang.String getLeftHtmlText()
+meth protected javax.swing.ImageIcon getIcon()
+meth public int getSortPriority()
+supr org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
+hfds GRAY_COLOR_CODE,ICON,RELATED_SELECTOR_COLOR,related
+
 CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$Tag
  outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
 cons protected init(java.lang.String,int,java.lang.String,boolean)
@@ -766,7 +776,7 @@ hfds errors,isValid,result
 hcls Accessor,Lkp
 
 CLSS public org.netbeans.modules.html.editor.api.index.HtmlIndex
-fld public final static int VERSION = 2
+fld public final static int VERSION = 3
 fld public final static java.lang.String NAME = "html"
 fld public final static java.lang.String REFERS_KEY = "imports"
 innr public static AllDependenciesMaps
@@ -861,6 +871,7 @@ meth public abstract org.netbeans.spi.editor.completion.CompletionTask createToo
 meth public abstract void defaultAction(javax.swing.text.JTextComponent)
 meth public abstract void processKeyEvent(java.awt.event.KeyEvent)
 meth public abstract void render(java.awt.Graphics,java.awt.Font,java.awt.Color,java.awt.Color,int,int,boolean)
+meth public boolean shouldSingleClickInvokeDefaultAction()
 
 CLSS public abstract interface org.netbeans.spi.editor.completion.LazyCompletionItem
 intf org.netbeans.spi.editor.completion.CompletionItem

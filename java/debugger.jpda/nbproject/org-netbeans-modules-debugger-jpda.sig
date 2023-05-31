@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.128.0
+#Version 1.129.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -2976,7 +2976,7 @@ CLSS public final org.netbeans.modules.debugger.jpda.models.ShortenedStrings
 innr public static StringInfo
 meth public static org.netbeans.modules.debugger.jpda.models.ShortenedStrings$StringInfo getShortenedInfo(java.lang.String)
 supr java.lang.Object
-hfds infoStrings,retrievingStrings,stringsCache
+hfds infoStrings,isLittleEndianCache,retrievingStrings,stringsCache
 hcls StringValueInfo
 
 CLSS public static org.netbeans.modules.debugger.jpda.models.ShortenedStrings$StringInfo

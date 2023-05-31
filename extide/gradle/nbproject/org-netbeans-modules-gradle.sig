@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.32
+#Version 2.33
 
 CLSS public abstract interface java.io.Serializable
 
@@ -79,9 +79,11 @@ innr public final static !enum PropertyKind
 innr public final static Property
 meth public java.lang.Iterable<org.netbeans.modules.gradle.api.BuildPropertiesSupport$Property> items(org.netbeans.modules.gradle.api.BuildPropertiesSupport$Property,java.lang.String)
 meth public java.util.Collection<java.lang.String> keys(org.netbeans.modules.gradle.api.BuildPropertiesSupport$Property)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.modules.gradle.api.BuildPropertiesSupport$Property findExtensionProperty(java.lang.String,java.lang.String)
 meth public org.netbeans.modules.gradle.api.BuildPropertiesSupport$Property findTaskProperty(java.lang.String,java.lang.String)
 meth public org.netbeans.modules.gradle.api.BuildPropertiesSupport$Property get(org.netbeans.modules.gradle.api.BuildPropertiesSupport$Property,java.lang.String,java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public static org.netbeans.modules.gradle.api.BuildPropertiesSupport get(org.netbeans.api.project.Project)
 supr java.lang.Object
 hfds impls

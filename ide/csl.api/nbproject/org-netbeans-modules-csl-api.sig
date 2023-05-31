@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.76.0
+#Version 2.78.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -1574,8 +1574,10 @@ meth public boolean hasFormatter()
 meth public boolean hasHintsProvider()
 meth public boolean hasOccurrencesFinder()
 meth public boolean hasStructureScanner()
+ anno 0 java.lang.Deprecated()
 meth public boolean isIdentifierChar(char)
 meth public boolean isUsingCustomEditorKit()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getLineCommentPrefix()
 meth public java.lang.String getPreferredExtension()
 meth public java.util.Set<java.lang.String> getBinaryLibraryPathIds()

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.71
+#Version 1.72
 
 CLSS public abstract interface java.io.Serializable
 
@@ -62,8 +62,10 @@ meth public boolean hasFormatter()
 meth public boolean hasHintsProvider()
 meth public boolean hasOccurrencesFinder()
 meth public boolean hasStructureScanner()
+ anno 0 java.lang.Deprecated()
 meth public boolean isIdentifierChar(char)
 meth public boolean isUsingCustomEditorKit()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getLineCommentPrefix()
 meth public java.lang.String getPreferredExtension()
 meth public java.util.Set<java.lang.String> getBinaryLibraryPathIds()

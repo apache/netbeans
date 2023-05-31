@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.52.0
+#Version 1.53.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -50,6 +50,8 @@ meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
 
 CLSS public final org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion
+fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_4_0
+fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_4_1
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_5_0
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_5_1
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_6

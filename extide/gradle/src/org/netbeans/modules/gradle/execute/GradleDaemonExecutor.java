@@ -253,6 +253,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                     throw new BuildCancelledException("Interrupted", ex);
                 }
             }
+            //buildLauncher.addJvmArguments("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5008");
             buildLauncher.run();
             StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_SUCCESS(getProjectName()));
             gradleTask.finish(0);

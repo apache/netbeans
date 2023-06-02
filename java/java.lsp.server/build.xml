@@ -108,9 +108,9 @@
         <exec executable="npm" failonerror="true" dir="${build.dir}/vsce">
             <arg value="install" />
             <arg value="--save" />
-            <arg value="vsce@2.6.4" />
+            <arg value="@vscode/vsce@2.19.0" />
         </exec>
-        <exec executable="${build.dir}/vsce/node_modules/vsce/vsce" failonerror="true" dir="${basedir}/vscode">
+        <exec executable="${build.dir}/vsce/node_modules/@vscode/vsce/vsce" failonerror="true" dir="${basedir}/vscode">
             <arg value="package" />
             <arg value="--baseImagesUrl" />
             <arg value="https://github.com/apache/netbeans/raw/${metabuild.hash}/java/java.lsp.server/vscode" />

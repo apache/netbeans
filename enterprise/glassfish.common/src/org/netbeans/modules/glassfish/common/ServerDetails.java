@@ -345,6 +345,17 @@ public enum ServerDetails {
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.4/glassfish-7.0.4.zip", // NOI18N
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.4/glassfish-7.0.4.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+
+    /**
+     * details for an instance of GlassFish Server 7.0.5
+     */
+    GLASSFISH_SERVER_7_0_5(NbBundle.getMessage(ServerDetails.class, "STR_705_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv700ee10", // NOI18N
+        705,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.5/glassfish-7.0.5.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.5/glassfish-7.0.5.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     );
 
     /**
@@ -356,6 +367,7 @@ public enum ServerDetails {
     public static WizardDescriptor.InstantiatingIterator
             getInstantiatingIterator() {
         return new ServerWizardIterator(new ServerDetails[]{
+                    GLASSFISH_SERVER_7_0_5,
                     GLASSFISH_SERVER_7_0_4,
                     GLASSFISH_SERVER_7_0_3,
                     GLASSFISH_SERVER_7_0_2,
@@ -384,6 +396,7 @@ public enum ServerDetails {
                     GLASSFISH_SERVER_3_0_1,
                     GLASSFISH_SERVER_3},
                 new ServerDetails[]{
+                    GLASSFISH_SERVER_7_0_5,
                     GLASSFISH_SERVER_7_0_4,
                     GLASSFISH_SERVER_7_0_3,
                     GLASSFISH_SERVER_7_0_2,
@@ -452,6 +465,7 @@ public enum ServerDetails {
                 case GF_7_0_2:   return GLASSFISH_SERVER_7_0_2.getVersion();
                 case GF_7_0_3:   return GLASSFISH_SERVER_7_0_3.getVersion();
                 case GF_7_0_4:   return GLASSFISH_SERVER_7_0_4.getVersion();
+                case GF_7_0_5:   return GLASSFISH_SERVER_7_0_5.getVersion();
                 default:         return -1;
             }
         }

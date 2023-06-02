@@ -58,5 +58,5 @@
         <copy file="${src.dir}/org/netbeans/modules/nbcode/integration/resources/empty.png" tofile="${build.classes.dir}/org/netbeans/modules/nbcode/integration/resources/uidefaults/${copy.icon.name}.png"/>
     </target>
     
-    <target name="-pre-release" depends="projectized-common.-pre-release, copy-icon-files"/>
+    <target name="-pre-jar" depends="projectized-common.-pre-jar, copy-icon-files"/>
 </project>

@@ -126,7 +126,9 @@ public class DynamicVerifyTest extends NbTestCase {
         // from a base installation:
         moduleNames.removeAll(Arrays.asList(
             "org.netbeans.libs.javafx.linux",
+            "org.netbeans.libs.javafx.linux.aarch64",
             "org.netbeans.libs.javafx.macosx",
+            "org.netbeans.libs.javafx.macosx.aarch64",
             "org.netbeans.libs.javafx.win"));
 
         System.out.println(featureItem.getModuleCodeNames());

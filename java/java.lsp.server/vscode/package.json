@@ -87,7 +87,7 @@
 		"viewsWelcome": [
 			{
 				"view": "database.connections",
-				"contents": "No database connections found.\n[Add Database Connection](command:db.add.connection)\n[Add Oracle Autonomous DB](command:nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction)",
+				"contents": "No database connections found.\n[Add Database Connection](command:nbls.db.add.connection)\n[Add Oracle Autonomous DB](command:nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction)",
 				"when": "nb.database.view.active"
 			}
 		],
@@ -323,7 +323,7 @@
 							},
 							"processId": {
 								"type": "string",
-								"default": "${command:java.attachDebugger.pickProcess}",
+								"default": "${command:nbls.java.attachDebugger.pickProcess}",
 								"description": "Process Id of the debuggee"
 							},
 							"listen": {
@@ -400,7 +400,7 @@
 							},
 							"processId": {
 								"type": "string",
-								"default": "${command:nativeImage.attachDebugger.pickProcess}",
+								"default": "${command:nbls.nativeImage.attachDebugger.pickProcess}",
 								"description": "Process Id of the native image"
 							},
 							"miDebugger": {
@@ -437,7 +437,7 @@
 							"type": "nativeimage",
 							"request": "attach",
 							"name": "Attach to Native Image",
-							"processId": "^\"\\${command:nativeImage.attachDebugger.pickProcess\\}\"",
+							"processId": "^\"\\${command:nbls.nativeImage.attachDebugger.pickProcess\\}\"",
 							"nativeImagePath": ""
 						}
 					}
@@ -456,38 +456,38 @@
 				"category": "Java"
 			},
 			{
-				"command": "java.workspace.new",
+				"command": "nbls.workspace.new",
 				"title": "New from Template...",
 				"category": "Java",
 				"icon": "$(new-file)"
 			},
 			{
-				"command": "java.workspace.newproject",
+				"command": "nbls.workspace.newproject",
 				"title": "New Project...",
 				"category": "Java",
 				"icon": "$(new-folder)"
 			},
 			{
-				"command": "java.goto.super.implementation",
+				"command": "nbls.java.goto.super.implementation",
 				"title": "Go to Super Implementation",
 				"category": "Java"
 			},
 			{
-				"command": "java.open.type",
+				"command": "nbls.open.type",
 				"title": "Open Type...",
 				"category": "Java"
 			},
 			{
-				"command": "graalvm.pause.script",
+				"command": "nbls.graalvm.pause.script",
 				"title": "Pause in Script",
 				"category": "GraalVM"
 			},
 			{
-				"command": "foundProjects.deleteEntry",
+				"command": "nbls.foundProjects.deleteEntry",
 				"title": "Delete"
 			},
 			{
-				"command": "db.add.connection",
+				"command": "nbls.db.add.connection",
 				"title": "Add Database Connection",
 				"category": "Database",
 				"icon": "$(add)"
@@ -529,56 +529,41 @@
 				"title": "Delete"
 			},
 			{
-				"command": "workbench.action.debug.run",
-				"title": "Run Without Debugging",
-				"icon": "$(run)"
-			},
-			{
-				"command": "workbench.action.debug.start",
-				"title": "Start Debugging",
-				"icon": "$(debug-alt)"
-			},
-			{
-				"command": "java.project.run",
+				"command": "nbls.project.run",
 				"category": "Project",
 				"title": "Run Project Without Debugging",
 				"icon": "$(run)"
 			},
 			{
-				"command": "java.project.debug",
+				"command": "nbls.project.debug",
 				"category": "Project",
 				"title": "Debug Project",
 				"icon": "$(debug-alt)"
 			},
 			{
-				"command": "java.project.test",
+				"command": "nbls.project.test",
 				"category": "Project",
 				"title": "Test Project",
 				"icon": "$(testing-run-all-icon)"
 			},
 			{
-				"command": "java.project.compile",
+				"command": "nbls.project.compile",
 				"category": "Project",
 				"title": "Compile Project"
 			},
 			{
-				"command": "java.project.clean",
+				"command": "nbls.project.clean",
 				"category": "Project",
 				"title": "Clean Project"
 			},
 			{
-				"command": "java.local.db.set.preferred.connection",
+				"command": "nbls.local.db.set.preferred.connection",
 				"title": "Set as Default Connection"
 			},
 			{
-				"command": "java.workspace.configureRunSettings",
+				"command": "nbls.workspace.configureRunSettings",
 				"title": "Edit",
 				"icon": "$(edit)"
-			},
-			{
-				"command": "testing.runAll",
-				"title": "Run All Tests",
-				"category": "Test"
 			},
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
@@ -597,9 +582,24 @@
 				"title": "Open Service Console"
 			},
 			{
-				"command": "java.select.editor.projects",
+				"command": "nbls.select.editor.projects",
 				"title": "Reveal active editor in Projects",
 				"category": "Project"
+			},
+			{
+				"command": "workbench.action.debug.run",
+				"title": "Run Without Debugging",
+				"icon": "$(run)"
+			},
+			{
+				"command": "workbench.action.debug.start",
+				"title": "Start Debugging",
+				"icon": "$(debug-alt)"
+			},
+			{
+				"command": "testing.runAll",
+				"title": "Run All Tests",
+				"category": "Test"
 			}
 		],
 		"keybindings": [
@@ -609,7 +609,7 @@
 				"when": "nbJavaLSReady && config.netbeans.javaSupport.enabled"
 			},
 			{
-				"command": "java.goto.super.implementation",
+				"command": "nbls.java.goto.super.implementation",
 				"key": "alt+U",
 				"mac": "alt+cmd+U",
 				"when": "editorHasCodeActionsProvider && editorTextFocus && config.netbeans.javaSupport.enabled"
@@ -624,25 +624,25 @@
 		"menus": {
 			"editor/context": [
 				{
-					"command": "java.goto.super.implementation",
+					"command": "nbls.java.goto.super.implementation",
 					"when": "nbJavaLSReady && editorLangId == java && editorTextFocus && config.netbeans.javaSupport.enabled",
 					"group": "navigation@100"
 				}
 			],
 			"explorer/context": [
 				{
-					"command": "java.workspace.new",
+					"command": "nbls.workspace.new",
 					"when": "nbJavaLSReady && explorerResourceIsFolder",
 					"group": "navigation@3"
 				}
 			],
 			"commandPalette": [
 				{
-					"command": "java.workspace.new",
+					"command": "nbls.workspace.new",
 					"when": "nbJavaLSReady"
 				},
 				{
-					"command": "java.workspace.newproject",
+					"command": "nbls.workspace.newproject",
 					"when": "config.netbeans.javaSupport.enabled"
 				},
 				{
@@ -650,15 +650,15 @@
 					"when": "nbJavaLSReady && config.netbeans.javaSupport.enabled"
 				},
 				{
-					"command": "java.goto.super.implementation",
+					"command": "nbls.java.goto.super.implementation",
 					"when": "nbJavaLSReady && editorLangId == java && config.netbeans.javaSupport.enabled"
 				},
 				{
-					"command": "graalvm.pause.script",
+					"command": "nbls.graalvm.pause.script",
 					"when": "nbJavaLSReady"
 				},
 				{
-					"command": "foundProjects.deleteEntry",
+					"command": "nbls.foundProjects.deleteEntry",
 					"when": "false"
 				},
 				{
@@ -694,7 +694,7 @@
 					"when": "false"
 				},
 				{
-					"command": "java.local.db.set.preferred.connection",
+					"command": "nbls.local.db.set.preferred.connection",
 					"when": "false"
 				},
 				{
@@ -710,13 +710,13 @@
 					"when": "false"
 				},
 				{
-					"command": "java.workspace.configureRunSettings",
+					"command": "nbls.workspace.configureRunSettings",
 					"when": "false"
 				}
 			],
 			"view/title": [
 				{
-					"command": "java.workspace.newproject",
+					"command": "nbls.workspace.newproject",
 					"when": "nbJavaLSReady && view == foundProjects && config.netbeans.javaSupport.enabled",
 					"group": "navigation"
 				},
@@ -741,14 +741,14 @@
 					"when": "nbJavaLSReady && view == foundProjects && config.netbeans.javaSupport.enabled"
 				},
 				{
-					"command": "db.add.connection",
+					"command": "nbls.db.add.connection",
 					"when": "view == database.connections",
 					"group": "navigation@3"
 				}
 			],
 			"view/item/context": [
 				{
-					"command": "foundProjects.deleteEntry",
+					"command": "nbls.foundProjects.deleteEntry",
 					"when": "view == foundProjects && viewItem == node && config.netbeans.javaSupport.enabled"
 				},
 				{
@@ -772,37 +772,37 @@
 					"group": "db@50"
 				},
 				{
-					"command": "java.workspace.new",
+					"command": "nbls.workspace.new",
 					"when": "view == foundProjects && viewItem =~ /is:folder/",
 					"group": "inline@1"
 				},
 				{
-					"command": "java.project.run",
+					"command": "nbls.project.run",
 					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/ && config.netbeans.javaSupport.enabled",
 					"group": "inline@10"
 				},
 				{
-					"command": "java.project.debug",
+					"command": "nbls.project.debug",
 					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/ && config.netbeans.javaSupport.enabled",
 					"group": "inline@11"
 				},
 				{
-					"command": "java.project.test",
+					"command": "nbls.project.test",
 					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/ && config.netbeans.javaSupport.enabled",
 					"group": "F@30"
 				},
 				{
-					"command": "java.project.compile",
+					"command": "nbls.project.compile",
 					"when": "view == foundProjects && viewItem =~ /is:project/ && config.netbeans.javaSupport.enabled",
 					"group": "F@10"
 				},
 				{
-					"command": "java.project.clean",
+					"command": "nbls.project.clean",
 					"when": "view == foundProjects && viewItem =~ /is:project/ && config.netbeans.javaSupport.enabled",
 					"group": "F@20"
 				},
 				{
-					"command": "java.local.db.set.preferred.connection",
+					"command": "nbls.local.db.set.preferred.connection",
 					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/",
 					"group": "db@40"
 				},
@@ -839,7 +839,7 @@
 					"group": "inline@13"
 				},
 				{
-					"command": "java.workspace.configureRunSettings",
+					"command": "nbls.workspace.configureRunSettings",
 					"when": "view == run-config && viewItem == configureRunSettings",
 					"group": "inline@1"
 				}

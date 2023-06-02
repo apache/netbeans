@@ -274,10 +274,10 @@ import org.openide.util.lookup.ServiceProvider;
 public class TextDocumentServiceImpl implements TextDocumentService, LanguageClientAware {
     private static final Logger LOG = Logger.getLogger(TextDocumentServiceImpl.class.getName());
     
-    private static final String COMMAND_RUN_SINGLE = "java.run.single";         // NOI18N
-    private static final String COMMAND_DEBUG_SINGLE = "java.debug.single";     // NOI18N
-    private static final String NETBEANS_JAVADOC_LOAD_TIMEOUT = "netbeans.javadoc.load.timeout";// NOI18N
-    private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "netbeans.java.onSave.organizeImports";// NOI18N
+    private static final String COMMAND_RUN_SINGLE = "nbls.run.single";         // NOI18N
+    private static final String COMMAND_DEBUG_SINGLE = "nbls.debug.single";     // NOI18N
+    private static final String NETBEANS_JAVADOC_LOAD_TIMEOUT = "javadoc.load.timeout";// NOI18N
+    private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "java.onSave.organizeImports";// NOI18N
     
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
@@ -351,7 +351,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             ConfigurationItem conf = new ConfigurationItem();
             conf.setScopeUri(uri);
-            conf.setSection(NETBEANS_JAVADOC_LOAD_TIMEOUT);
+            conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVADOC_LOAD_TIMEOUT);
             return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
                 if (c != null && !c.isEmpty()) {
                     javadocTimeout.set(((JsonPrimitive)c.get(0)).getAsInt());
@@ -401,7 +401,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                         org.netbeans.api.lsp.Command command = completion.getCommand();
                         if (command != null) {
-                            item.setCommand(new Command(command.getTitle(), command.getCommand(), command.getArguments()));
+                            item.setCommand(new Command(command.getTitle(), Utils.encodeCommand(command.getCommand(), client.getNbCodeCapabilities()), command.getArguments()));
                         }
                         if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
                             List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
@@ -964,7 +964,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                     commandParams.addAll(inputAction.getCommand().getArguments());
                                 }
 
-                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand(), commandParams));
+                                action.setCommand(new Command(inputAction.getCommand().getTitle(), Utils.encodeCommand(inputAction.getCommand().getCommand(), client.getNbCodeCapabilities()), commandParams));
                             }
                             if (inputAction.getEdit() != null) {
                                 org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getEdit();
@@ -1053,7 +1053,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                             codeAction.setEdit(new WorkspaceEdit(documentChanges));
                                                             int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
                                                             if (renameOffset >= 0) {
-                                                                codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
+                                                                codeAction.setCommand(new Command("Rename", client.getNbCodeCapabilities().getCommandPrefix() + ".rename.element.at", Collections.singletonList(renameOffset)));
                                                             }
                                                             result.add(Either.forRight(codeAction));
                                                         }
@@ -1130,7 +1130,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         for (org.netbeans.api.lsp.CodeLens len : origin) {
             Command cmd = null;
             if (len.getCommand() != null) {
-                cmd = new Command(len.getCommand().getTitle(), len.getCommand().getCommand(), len.getCommand().getArguments());
+                cmd = new Command(len.getCommand().getTitle(), Utils.encodeCommand(len.getCommand().getCommand(), client.getNbCodeCapabilities()), len.getCommand().getArguments());
             }
             result.add(new CodeLens(callRange2Range(len.getRange(), doc), cmd, len.getData()));
         }
@@ -1647,7 +1647,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         ConfigurationItem conf = new ConfigurationItem();
         conf.setScopeUri(uri);
-        conf.setSection(NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS);
+        conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS);
         return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
             if (c != null && !c.isEmpty() && ((JsonPrimitive) c.get(0)).getAsBoolean()) {
                 try {

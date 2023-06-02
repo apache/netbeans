@@ -44,7 +44,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = CodeActionsProvider.class)
 public class DBCommandProvider extends CodeActionsProvider {
-    private static final String  COMMAND_GET_PREFERRED_CONNECTION = "java.db.preferred.connection";
+    private static final String  COMMAND_GET_PREFERRED_CONNECTION = "nbls.db.preferred.connection";
     
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
         COMMAND_GET_PREFERRED_CONNECTION

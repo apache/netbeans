@@ -94,7 +94,7 @@ suite('Extension Test Suite', () => {
 
         try {
             console.log("Test: invoking compile");
-            let res = await vscode.commands.executeCommand("nbls.workspace.compile");
+            let res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".workspace.compile");
             console.log(`Test: compile finished with ${res}`);
         } catch (error) {
             dumpJava();
@@ -184,7 +184,7 @@ suite('Extension Test Suite', () => {
 
         try {
             console.log("Test: get project java source roots");
-            let res: any = await vscode.commands.executeCommand("java.get.project.source.roots", Uri.file(folder).toString());
+            let res: any = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.source.roots", Uri.file(folder).toString());
             console.log(`Test: get project java source roots finished with ${res}`);
             assert.ok(res, "No java source root returned");
             assert.strictEqual(res.length, 2, `Invalid number of java roots returned`);
@@ -192,21 +192,21 @@ suite('Extension Test Suite', () => {
             assert.strictEqual(res[1], path.join('file:', folder, 'src', 'test', 'java') + path.sep, `Invalid java test source root returned`);
 
             console.log("Test: get project resource roots");
-            res = await vscode.commands.executeCommand("java.get.project.source.roots", Uri.file(folder).toString(), 'resources');
+            res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.source.roots", Uri.file(folder).toString(), 'resources');
             console.log(`Test: get project resource roots finished with ${res}`);
             assert.ok(res, "No resource root returned");
             assert.strictEqual(res.length, 1, `Invalid number of resource roots returned`);
             assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'resources') + path.sep, `Invalid resource root returned`);
 
             console.log("Test: get project compile classpath");
-            res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString());
+            res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.classpath", Uri.file(folder).toString());
             console.log(`Test: get project compile classpath finished with ${res}`);
             assert.ok(res, "No compile classpath returned");
             assert.strictEqual(res.length, 9, `Invalid number of compile classpath roots returned`);
             assert.ok(res.find((item: any) => item === path.join('file:', folder, 'target', 'classes') + path.sep, `Invalid compile classpath root returned`));
 
             console.log("Test: get project source classpath");
-            res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'SOURCE');
+            res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.classpath", Uri.file(folder).toString(), 'SOURCE');
             console.log(`Test: get project source classpath finished with ${res}`);
             assert.ok(res, "No source classpath returned");
             assert.strictEqual(res.length, 3, `Invalid number of source classpath roots returned`);
@@ -215,25 +215,25 @@ suite('Extension Test Suite', () => {
             assert.ok(res.find((item: any) => item === path.join('file:', folder, 'src', 'test', 'java') + path.sep, `Invalid source classpath root returned`));
 
             console.log("Test: get project boot classpath");
-            res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'BOOT');
+            res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.classpath", Uri.file(folder).toString(), 'BOOT');
             console.log(`Test: get project boot classpath finished with ${res}`);
             assert.ok(res, "No boot classpath returned");
             assert.ok(res.length > 0, `Invalid number of boot classpath roots returned`);
 
             console.log("Test: get project boot source classpath");
-            res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'BOOT', true);
+            res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.classpath", Uri.file(folder).toString(), 'BOOT', true);
             console.log(`Test: get project boot source classpath finished with ${res}`);
             assert.ok(res, "No boot source classpath returned");
             assert.ok(res.length > 0, `Invalid number of boot source classpath roots returned`);
 
             console.log("Test: get all project packages");
-            res = await vscode.commands.executeCommand("java.get.project.packages", Uri.file(folder).toString());
+            res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.packages", Uri.file(folder).toString());
             console.log(`Test: get all project packages finished with ${res}`);
             assert.ok(res, "No packages returned");
             assert.ok(res.length > 0, `Invalid number of packages returned`);
 
             console.log("Test: get project source packages");
-            res = await vscode.commands.executeCommand("java.get.project.packages", Uri.file(folder).toString(), true);
+            res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.packages", Uri.file(folder).toString(), true);
             console.log(`Test: get project source packages finished with ${res}`);
             assert.ok(res, "No packages returned");
             assert.strictEqual(res.length, 1, `Invalid number of packages returned`);
@@ -253,7 +253,7 @@ suite('Extension Test Suite', () => {
         vscode.workspace.saveAll();
         try {
             console.log("Test: load workspace tests");
-            let tests: any = await vscode.commands.executeCommand("java.load.workspace.tests", Uri.file(folder).toString());
+            let tests: any = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".load.workspace.tests", Uri.file(folder).toString());
             console.log(`Test: load workspace tests finished with ${tests}`);
             assert.ok(tests, "No tests returned for workspace");
             assert.strictEqual(tests.length, 2, `Invalid number of test suites returned`);
@@ -266,7 +266,7 @@ suite('Extension Test Suite', () => {
 
             console.log("Test: run all workspace tests");
             const workspaceFolder = (vscode.workspace.workspaceFolders!)[0];
-            await vscode.commands.executeCommand('java.run.test', workspaceFolder.uri.toString());
+            await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + '.run.test', workspaceFolder.uri.toString());
             console.log(`Test: run all workspace tests finished`);
         } catch (error) {
             dumpJava();

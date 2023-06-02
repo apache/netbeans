@@ -78,7 +78,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
 
     private static final String CHANGE_METHOD_PARAMS_REFACTORING_KIND = "refactor.change.method.params";
-    private static final String CHANGE_METHOD_PARAMS_REFACTORING_COMMAND =  "java.refactor.change.method.params";
+    private static final String CHANGE_METHOD_PARAMS_REFACTORING_COMMAND =  "nbls.java.refactor.change.method.params";
 
     private final Set<String> commands = Collections.singleton(CHANGE_METHOD_PARAMS_REFACTORING_COMMAND);
     private final Gson gson = new Gson();

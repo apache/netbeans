@@ -75,7 +75,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class, position = 100)
 public final class TestClassGenerator extends CodeActionsProvider {
 
-    private static final String GENERATE_TEST_CLASS_COMMAND = "java.generate.testClass";
+    private static final String GENERATE_TEST_CLASS_COMMAND = "nbls.java.generate.testClass";
 
     private final Set<String> commands = Collections.singleton(GENERATE_TEST_CLASS_COMMAND);
 

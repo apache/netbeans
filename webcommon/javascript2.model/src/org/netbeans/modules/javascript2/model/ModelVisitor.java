@@ -1116,6 +1116,11 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
             }
         }
 
+        if (fn.getKind() == FunctionNode.Kind.ARROW) {
+            // marking the function as an arrow function
+            jsFunction.setJsKind(JsElement.Kind.ARROW_FUNCTION);
+        }
+
         if (fn.getKind() == FunctionNode.Kind.GENERATOR) {
             // marking the function as generator
             jsFunction.setJsKind(JsElement.Kind.GENERATOR);
@@ -2965,7 +2970,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
             }
             object.addOccurrence(name.getOffsetRange());
         } else {
-            JsObject current = modelBuilder.getCurrentDeclarationFunction();
+            JsObject current = modelBuilder.getCurrentObject();
             object = (JsObjectImpl)resolveThis(current);
             if (object != null) {
                 // find out, whether is not defined in prototype
@@ -3364,23 +3369,30 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
      * @return JsObject that should represent this.
      */
     @Override
+    @SuppressWarnings("AssignmentToMethodParameter")
     public JsObject resolveThis(JsObject where) {
+        while(
+                (! (where instanceof JsFunction && where.getJSKind() != JsElement.Kind.ARROW_FUNCTION))
+                && where != null && where.getJSKind() != JsElement.Kind.CLASS
+        ) {
+            where = where.getParent();
+        }
+
         JsElement.Kind whereKind = where.getJSKind();
-//        if (canBeSingletonPattern()) {
-//            JsObject result = resolveThisInSingletonPattern(where);
-//            if (result != null) {
-//                return result;
-//            }
-//        }
         if (whereKind == JsElement.Kind.FILE) {
             // this is used in global context
+            return where;
+        }
+        if (whereKind == JsElement.Kind.CLASS) {
             return where;
         }
         if (whereKind.isFunction() && where.getModifiers().contains(Modifier.PRIVATE)) {
             // the case where is defined private function in another function
             return where;
         }
+
         JsObject parent = where.getParent();
+
         if (parent == null) {
             return where;
         }

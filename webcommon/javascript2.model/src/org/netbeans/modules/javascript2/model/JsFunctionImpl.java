@@ -137,9 +137,6 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
                 return JsElement.Kind.CONSTRUCTOR;
             }
         }
-//        if (getParent() != null && !getParent().isDeclared()) {
-//
-//        }
 
         JsElement.Kind result = JsElement.Kind.FUNCTION;
 

@@ -700,6 +700,7 @@ public class JsCompletionItem implements CompletionProposal {
                         case FUNCTION:
                         case METHOD:
                         case GENERATOR:
+                        case ARROW_FUNCTION:
                             Set<String> returnTypes = new HashSet<>();
                             HashMap<String, Set<String>> allParameters = new LinkedHashMap<>();
                             if (element instanceof JsFunction) {

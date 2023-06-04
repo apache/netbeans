@@ -26,7 +26,6 @@ import junit.framework.TestSuite;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.csl.api.HintSeverity;
 import org.netbeans.modules.csl.api.Rule;
-import org.netbeans.modules.csl.api.test.CslTestBase;
 import org.netbeans.modules.javascript2.editor.classpath.ClasspathProviderImplAccessor;
 import org.netbeans.modules.javascript2.editor.hints.GlobalIsNotDefined;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -44,13 +43,13 @@ public class JsGlobalIsNotDeclaredTest extends HintTestBase {
     public JsGlobalIsNotDeclaredTest(String testName) {
         super(testName);
     }
-    
+
     private static class GlobalIsNotDefinedHint extends GlobalIsNotDefined {
         @Override
         public HintSeverity getDefaultSeverity() {
             return HintSeverity.WARNING;
         }
-        
+
     }
 
     private Rule createRule() {
@@ -66,39 +65,39 @@ public class JsGlobalIsNotDeclaredTest extends HintTestBase {
     public void testSimple01() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/globalIsNotDeclared.js", null);
     }
-    
+
     public void testIssue224040() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/issue224040.js", null);
     }
-    
+
     public void testIssue224041() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/issue224041.js", null);
     }
-    
+
     public void testIssue224035() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/issue224035.js", null);
     }
-    
+
     public void testIssue225048() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/issue225048.js", null);
     }
-    
+
     public void testIssue225048_01() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/issue225048_01.js", null);
     }
-    
+
     public void testIssue250372() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/issue250372.js", null);
     }
-    
+
     public void testIssue248696_01() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/issue248696_01.js", null);
     }
-    
+
     public void testIssue248696_02() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/issue248696_02.js", null);
     }
-    
+
     public void testIssue252022() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/issue252022.js", null);
     }
@@ -106,11 +105,11 @@ public class JsGlobalIsNotDeclaredTest extends HintTestBase {
     public void testIssue249487() throws Exception {
         checkHints(this, createRule(), "testfiles/markoccurences/issue249487.js", null);
     }
-    
+
     public void testIssue255494() throws Exception {
         checkHints(this, createRule(), "testfiles/coloring/issue255494.js", null);
     }
-    
+
     public void testIssue268384() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/issue268384.js", null);
     }
@@ -125,6 +124,10 @@ public class JsGlobalIsNotDeclaredTest extends HintTestBase {
 
     public void testIssueGH4568() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/issueGH4568.js", null);
+    }
+
+    public void testIssueGH5740() throws Exception {
+        checkHints(this, createRule(), "testfiles/hints/issueGH5740.js", null);
     }
 
     @Override

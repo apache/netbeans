@@ -712,8 +712,9 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
             );
             JsObject origClassObject = parent.getProperty(className.getName());
             if (origClassObject != null) {
-                for (Entry<String, ? extends JsObject> e : origClassObject.getProperties().entrySet()) {
-                    ModelUtils.moveProperty(classObject, e.getValue());
+                List<JsObject> properties = new ArrayList<>(origClassObject.getProperties().values());
+                for (JsObject property : properties) {
+                    ModelUtils.moveProperty(classObject, property);
                 }
             }
             parent.addProperty(className.getName(), classObject);

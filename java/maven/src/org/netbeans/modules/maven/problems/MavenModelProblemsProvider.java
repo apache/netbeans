@@ -91,10 +91,14 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
     
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private final Project project;
-    private final AtomicBoolean projectListenerSet = new AtomicBoolean(false);
     private final AtomicReference<Pair<Collection<ProjectProblem>, Boolean>> problemsCache = new AtomicReference<>();
     private final PrimingActionProvider primingProvider = new PrimingActionProvider();
+
     private ProblemReporterImpl problemReporter;
+
+    // @GuardedBy(this)
+    private boolean projectListenerSet;
+
     /**
      * The Maven project that has been processed already.
      */
@@ -165,7 +169,8 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
     
         synchronized (this) {
             //lazy adding listener only when someone asks for the problems the first time
-            if (projectListenerSet.compareAndSet(false, true)) {
+            if (!projectListenerSet) {
+                projectListenerSet = true;
                 //TODO do we check only when the project is opened?
                 problemReporter = project.getLookup().lookup(NbMavenProjectImpl.class).getProblemReporter();
                 assert problemReporter != null;
@@ -189,54 +194,49 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
             if (sba != null && sba.getPendingResult() == null) {
                 cachedSanityBuild.clear();
             }
-            c = new Callable<Pair<Collection<ProjectProblem>, Boolean>>() {
-                @Override
-                public Pair<Collection<ProjectProblem>, Boolean> call() throws Exception {
-                    // double check, the project may be invalidated during the time.
-                    MavenProject prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
-                    Object wasprocessed = updatedPrj.getContextValue(MavenModelProblemsProvider.class.getName());
-                    if (o == updatedPrj && wasprocessed != null) {
-                        Pair<Collection<ProjectProblem>, Boolean> cached = problemsCache.get();
-                        LOG.log(Level.FINER, "getProblems: Project was processed #2, cached is: {0}", cached);
-                        if (cached != null) {                            
-                            return cached;
-                        }
-                    } 
-                    int round = 0;
-                    List<ProjectProblem> toRet = null;
-                    while (round < 3) {
-                        try {
-                            synchronized (MavenModelProblemsProvider.this) {
-                                sanityBuildStatus = false;
-                                toRet = new ArrayList<>();
-                                MavenExecutionResult res = MavenProjectCache.getExecutionResult(prj);
-                                if (res != null && res.hasExceptions()) {
-                                    toRet.addAll(reportExceptions(res));
-                                }
-                                //#217286 doArtifactChecks can call FileOwnerQuery and attempt to aquire the project mutex.
-                                toRet.addAll(doArtifactChecks(prj));
-                                //mark the project model as checked once and cached
-                                prj.setContextValue(MavenModelProblemsProvider.class.getName(), new Object());
-                                synchronized(MavenModelProblemsProvider.this) {
-                                    LOG.log(Level.FINER, "getProblems: Project {1} processing finished, result is: {0}",
-                                            new Object[] { toRet, prj });
-                                    problemsCache.set(Pair.of(toRet, sanityBuildStatus));
-                                    analysedProject = new WeakReference<>(prj);
-                                }
-                                firePropertyChange();
-                                return Pair.of(toRet, sanityBuildStatus);
-                            }
-                        } catch (ProblemReporterImpl.ArtifactFoundException ex) {
-                            round++;
-                            LOG.log(Level.FINER, "getProblems: Project {1} reported missing artifact that actually exists, restarting - {0} round",
-                                    new Object[] { round, prj });
-                            // force reload, then wait for the reload to complete
-                            NbMavenProject.fireMavenProjectReload(project);
-                            prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
-                        } 
+            c = () -> {
+                // double check, the project may be invalidated during the time.
+                MavenProject prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
+                Object wasprocessed2 = updatedPrj.getContextValue(MavenModelProblemsProvider.class.getName());
+                if (o == updatedPrj && wasprocessed2 != null) {
+                    Pair<Collection<ProjectProblem>, Boolean> cached = problemsCache.get();
+                    LOG.log(Level.FINER, "getProblems: Project was processed #2, cached is: {0}", cached);
+                    if (cached != null) {                            
+                        return cached;
                     }
-                    return Pair.of(toRet, sanityBuildStatus);
+                } 
+                int round = 0;
+                List<ProjectProblem> toRet = null;
+                while (round < 3) {
+                    try {
+                        synchronized (MavenModelProblemsProvider.this) {
+                            sanityBuildStatus = false;
+                            toRet = new ArrayList<>();
+                            MavenExecutionResult res = MavenProjectCache.getExecutionResult(prj);
+                            if (res != null && res.hasExceptions()) {
+                                toRet.addAll(reportExceptions(res));
+                            }
+                            //#217286 doArtifactChecks can call FileOwnerQuery and attempt to aquire the project mutex.
+                            toRet.addAll(doArtifactChecks(prj));
+                            //mark the project model as checked once and cached
+                            prj.setContextValue(MavenModelProblemsProvider.class.getName(), new Object());
+                            LOG.log(Level.FINER, "getProblems: Project {1} processing finished, result is: {0}",
+                                    new Object[] { toRet, prj });
+                            problemsCache.set(Pair.of(toRet, sanityBuildStatus));
+                            analysedProject = new WeakReference<>(prj);
+                        }
+                        firePropertyChange();
+                        return Pair.of(toRet, sanityBuildStatus);
+                    } catch (ProblemReporterImpl.ArtifactFoundException ex) {
+                        round++;
+                        LOG.log(Level.FINER, "getProblems: Project {1} reported missing artifact that actually exists, restarting - {0} round",
+                                new Object[] { round, prj });
+                        // force reload, then wait for the reload to complete
+                        NbMavenProject.fireMavenProjectReload(project);
+                        prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
+                    } 
                 }
+                return Pair.of(toRet, sanityBuildStatus);
             };
         }
         if(sync || Boolean.getBoolean("test.reload.sync")) {

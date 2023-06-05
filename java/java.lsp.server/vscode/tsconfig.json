@@ -4,7 +4,8 @@
 		"target": "es6",
 		"outDir": "out",
 		"lib": [
-			"es6"
+			"ES2020",
+			"DOM"
 		],
 		"sourceMap": true,
 		"rootDir": "src",

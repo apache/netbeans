@@ -67,6 +67,7 @@ import org.eclipse.lsp4j.RenameOptions;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
 import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ServerCapabilities;
+import org.eclipse.lsp4j.SetTraceParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
@@ -957,6 +958,12 @@ public final class Server {
             ((LanguageClientAware) getTextDocumentService()).connect(client);
             ((LanguageClientAware) getWorkspaceService()).connect(client);
             ((LanguageClientAware) treeService).connect(client);
+        }
+
+        @Override
+        public void setTrace(SetTraceParams params) {
+            // no op: there's already a lot of noise in the log, and the console log
+            // can be controlled by a commandline parameter to the NBLS.
         }
     }
 

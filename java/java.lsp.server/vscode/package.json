@@ -446,6 +446,10 @@
 		],
 		"commands": [
 			{
+				"command": "nbls.node.properties.edit",
+				"title": "Properties"
+			},
+			{
 				"command": "nbls.workspace.compile",
 				"title": "Compile Workspace",
 				"category": "Java"
@@ -662,6 +666,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls.node.properties.edit",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
 					"when": "false"
 				},
@@ -750,6 +758,11 @@
 				{
 					"command": "foundProjects.deleteEntry",
 					"when": "view == foundProjects && viewItem == node && config.netbeans.javaSupport.enabled"
+				},
+				{
+					"command": "nbls.node.properties.edit",
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/",
+					"group": "db@9999"
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
@@ -1025,20 +1038,22 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
+		"compile": "tsc -p ./; node ./esbuild.js",
+		"watch": "tsc -watch -p ./ | node ./esbuild.js --watch",
 		"test": "node ./out/test/runTest.js",
 		"nbcode": "node ./out/nbcode.js",
 		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*",
 		"apisupport": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install '(org.netbeans.libs.xerces|org.netbeans.modules.editor.structure|org.netbeans.modules.xml|org.netbeans.modules.xml.axi|org.netbeans.modules.xml.retriever|org.netbeans.modules.xml.schema.model|org.netbeans.modules.xml.tax|org.netbeans.modules.xml.text|org.netbeans.modules.ant.browsetask|.*apisupport.*|org.netbeans.modules.debugger.jpda.ant)' && node ./out/nbcode.js -J-Dnetbeans.close=true --modules --enable .*apisupport.ant"
 	},
 	"devDependencies": {
-		"@vscode/codicons": "0.0.29",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^9.0.0",
 		"@types/node": "^13.11.0",
 		"@types/ps-node": "^0.1.0",
 		"@types/vscode": "^1.76.0",
+		"@types/vscode-webview": "^1.57.1",
+		"@vscode/codicons": "0.0.29",
+		"esbuild": "^0.16.17",
 		"glob": "^7.1.6",
 		"mocha": "^9.1.2",
 		"ps-node": "^0.1.6",
@@ -1046,8 +1061,9 @@
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
-		"jsonc-parser": "3.0.0",
 		"@vscode/debugadapter": "1.55.1",
+		"@vscode/webview-ui-toolkit": "^1.2.2",
+		"jsonc-parser": "3.0.0",
 		"vscode-languageclient": "8.0.1"
 	},
 	"__metadata": {

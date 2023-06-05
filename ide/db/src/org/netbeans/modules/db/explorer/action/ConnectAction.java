@@ -223,27 +223,24 @@ public class ConnectAction extends AbstractAction implements ContextAwareAction,
 
                 dbcon.addPropertyChangeListener(connectionListener);
 
-                try {
-                    if (headless) {
-                        connectWithNewInfo(dbcon, input);
-                    } else {
-                        ActionListener actionListener = new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent event) {
-                                if (event.getSource() == DialogDescriptor.OK_OPTION) {
-                                    connectWithNewInfo(dbcon, input);
-                                }
+                if (headless) {
+                    connectWithNewInfo(dbcon, input);
+                } else {
+                    ActionListener actionListener = new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent event) {
+                            if (event.getSource() == DialogDescriptor.OK_OPTION) {
+                                connectWithNewInfo(dbcon, input);
                             }
-                        };
-                
-                        SwingUtilities.invokeAndWait(() -> {
-                            ConnectPanel basePanel = input.getConnectPanel();
-                            dlg = new ConnectionDialog(this, basePanel, basePanel.getTitle(), CONNECT_ACTION_HELPCTX, actionListener);
-                            dlg.setVisible(true);
-                        });
-                    }
-                } catch (InterruptedException | InvocationTargetException ex) {
-                    Exceptions.printStackTrace(ex);
+                        }
+                    };
+
+                    Mutex.EVENT.writeAccess((Mutex.Action<Void>) () -> {
+                        ConnectPanel basePanel = input.getConnectPanel();
+                        dlg = new ConnectionDialog(this, basePanel, basePanel.getTitle(), CONNECT_ACTION_HELPCTX, actionListener);
+                        dlg.setVisible(true);
+                        return null;
+                    });
                 }
                 dbcon.removeExceptionListener(excListener);
             } else { // without dialog with connection data (username, password), just with progress dlg

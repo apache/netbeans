@@ -1985,6 +1985,9 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
+      - name: enterprise/j2ee.core
+        run: ant $OPTS -f enterprise/j2ee.core test
+
       - name: enterprise/micronaut
         run: .github/retry.sh ant $OPTS -f enterprise/micronaut test
 

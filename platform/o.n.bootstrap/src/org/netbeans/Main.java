@@ -35,30 +35,49 @@ public final class Main extends Object {
      * @throws Exception for lots of reasons
      */
     public static void main (String args[]) throws Exception {
-        // following code has to execute without java6 - e.g. do not use
-        // NbBundle or any other library compiled against java6 only
-        // also prevent usage of java6 methods and classes
-        try {
-            Class.forName("java.lang.ReflectiveOperationException"); // NOI18N
-        } catch (ClassNotFoundException ex) {
-            if (GraphicsEnvironment.isHeadless()) {
-                System.err.println(ResourceBundle.getBundle("org.netbeans.Bundle").getString("MSG_InstallJava7"));
-            } else {
+        // following code has to execute on java 8 - e.g. do not use
+        // NbBundle or any other library
+        int required = 11;
+
+        if (Boolean.getBoolean("bootstrap.disableJDKCheck")) {
+            System.err.println(getMessage("MSG_WarnJavaCheckDisabled"));
+        } else if (!checkJavaVersion(required)) {
+            System.err.println(getMessage("MSG_InstallJava", required));
+            if (!GraphicsEnvironment.isHeadless()) {
                 JOptionPane.showMessageDialog(
                         null,
-                        ResourceBundle.getBundle("org.netbeans.Bundle").getString("MSG_InstallJava7"),
-                        ResourceBundle.getBundle("org.netbeans.Bundle").getString("MSG_NeedsJava7"),
+                        getMessage("MSG_InstallJava", required),
+                        getMessage("MSG_NeedsJava", required),
                         JOptionPane.WARNING_MESSAGE
                 );
             }
             System.exit(10);
         }
-        // end of java6 only code
+        // end of java 8 only code
 
         MainImpl.main(args);
     }
-        
-    
+
+    private static boolean checkJavaVersion(int required) {
+        if (required < 11) {
+            throw new IllegalArgumentException();
+        }
+        try {
+            Object runtimeVersion = Runtime.class.getMethod("version").invoke(null);
+            return ((int) runtimeVersion.getClass().getMethod("feature").invoke(runtimeVersion)) >= required;
+        } catch (ReflectiveOperationException ex) {
+            return false;
+        }
+    }
+
+    private static String getMessage(String key) {
+        return ResourceBundle.getBundle("org.netbeans.Bundle").getString(key);
+    }
+
+    private static String getMessage(String key, int arg) {
+        return getMessage(key).replace("{0}", String.valueOf(arg));
+    }
+
     /**
      * Call when the system is up and running, to complete handling of
      * delayed command-line options like -open FILE.

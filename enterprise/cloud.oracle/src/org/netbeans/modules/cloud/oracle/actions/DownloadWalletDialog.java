@@ -90,7 +90,7 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
                 String path = dlgPanel.jTextFieldLocation.getText();
                 char[] passwd = dlgPanel.jPasswordField.getPassword();
                 NbPreferences.forModule(DownloadWalletAction.class).put(LAST_USED_DIR, path); //NOI18N
-                return Optional.of(new WalletInfo(path, passwd, null, null));
+                return Optional.of(new WalletInfo(path, passwd, null, null, db.getKey().getValue()));
             }
         } else {
             try {
@@ -109,7 +109,7 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
                     return Optional.empty();
                 }
                 char[] password = inp.getInputText().toCharArray();
-                return Optional.of(new WalletInfo(walletsDir.getAbsolutePath(), generatePassword(), username, password));
+                return Optional.of(new WalletInfo(walletsDir.getAbsolutePath(), generatePassword(), username, password, db.getKey().getValue()));
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -253,12 +253,14 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
         private char[] walletPassword;
         private String dbUser;
         private char[] dbPassword;
+        private String ocid;
 
-        public WalletInfo(String path, char[] walletPassword, String dbUser, char[] dbPassword) {
+        public WalletInfo(String path, char[] walletPassword, String dbUser, char[] dbPassword, String ocid) {
             this.path = path;
             this.walletPassword = walletPassword;
             this.dbUser = dbUser;
             this.dbPassword = dbPassword;
+            this.ocid = ocid;
         }
 
         public String getPath() {
@@ -276,7 +278,10 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
         public char[] getDbPassword() {
             return dbPassword;
         }
-        
+
+        public String getOcid() {
+            return ocid;
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

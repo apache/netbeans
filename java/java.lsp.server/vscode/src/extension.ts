@@ -53,6 +53,7 @@ import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickReque
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
 import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings, runConfigurationUpdateAll } from './runConfiguration';
+import { DBConfigurationProvider } from './dbConfigurationProvider';
 import { TLSSocket } from 'tls';
 import { InputStep, MultiStepInput } from './utils';
 import { env } from 'process';
@@ -412,6 +413,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     // initialize Run Configuration
     initializeRunConfiguration().then(initialized => {
 		if (initialized) {
+            context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java+', new DBConfigurationProvider()));
 			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java+', runConfigurationProvider));
 			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java', runConfigurationProvider));
 			context.subscriptions.push(vscode.window.registerTreeDataProvider('run-config', runConfigurationNodeProvider));

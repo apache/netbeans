@@ -170,8 +170,8 @@ public class DDHelperTest extends NbTestCase {
         assertNull(DDHelper.createValidationXml(Profile.J2EE_14, null));
         assertNull(DDHelper.createValidationXml(Profile.JAVA_EE_5, null));
 
-        verifyValidationXmlFileCreation(Profile.JAVA_EE_6_FULL, "validation.xml");
-        verifyValidationXmlFileCreation(Profile.JAVA_EE_6_WEB, "validation.xml");
+        verifyValidationXmlFileCreation(Profile.JAVA_EE_6_FULL, "validation-1.0.xml");
+        verifyValidationXmlFileCreation(Profile.JAVA_EE_6_WEB, "validation-1.0.xml");
 
         verifyValidationXmlFileCreation(Profile.JAVA_EE_7_FULL, "validation-1.1.xml");
         verifyValidationXmlFileCreation(Profile.JAVA_EE_7_WEB, "validation-1.1.xml");
@@ -204,8 +204,8 @@ public class DDHelperTest extends NbTestCase {
         assertNull(DDHelper.createConstraintXml(Profile.J2EE_14, null));
         assertNull(DDHelper.createConstraintXml(Profile.JAVA_EE_5, null));
 
-        verifyConstraintXmlFileCreation(Profile.JAVA_EE_6_FULL, "constraint.xml");
-        verifyConstraintXmlFileCreation(Profile.JAVA_EE_6_WEB, "constraint.xml");
+        verifyConstraintXmlFileCreation(Profile.JAVA_EE_6_FULL, "constraint-1.0.xml");
+        verifyConstraintXmlFileCreation(Profile.JAVA_EE_6_WEB, "constraint-1.0.xml");
 
         verifyConstraintXmlFileCreation(Profile.JAVA_EE_7_FULL, "constraint-1.1.xml");
         verifyConstraintXmlFileCreation(Profile.JAVA_EE_7_WEB, "constraint-1.1.xml");

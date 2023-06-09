@@ -28,7 +28,7 @@
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/beans-2.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/beans-3.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/beans-4.0.xml</file>
-        <file>src/org/netbeans/modules/j2ee/common/dd/resources/constraint.xml</file>
+        <file>src/org/netbeans/modules/j2ee/common/dd/resources/constraint-1.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/constraint-1.1.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/constraint-2.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/constraint-3.0.xml</file>
@@ -40,7 +40,7 @@
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/ear-8.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/ear-9.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/ear-10.xml</file>
-        <file>src/org/netbeans/modules/j2ee/common/dd/resources/validation.xml</file>
+        <file>src/org/netbeans/modules/j2ee/common/dd/resources/validation-1.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/validation-1.1.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/validation-2.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/validation-3.0.xml</file>

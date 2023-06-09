@@ -36,6 +36,39 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public final !enum org.netbeans.api.j2ee.core.DeploymentDescriptors
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors J2EE_13
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors J2EE_14
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors JAKARTA_EE_10
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors JAKARTA_EE_10_WEB
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors JAKARTA_EE_9_AND_JAKARTA_EE_91
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors JAKARTA_EE_9_WEB_AND_JAKARTA_EE_91_WEB
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors JAVA_EE_5
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors JAVA_EE_6
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors JAVA_EE_6_WEB
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors JAVA_EE_7
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors JAVA_EE_7_WEB
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors JAVA_EE_8_AND_JAKARTA_EE_8
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors JAVA_EE_8_WEB_AND_JAKARTA_EE_8_WEB
+innr public final static !enum Type
+meth public java.util.Map<org.netbeans.api.j2ee.core.DeploymentDescriptors$Type,java.lang.String> getMapping()
+meth public static org.netbeans.api.j2ee.core.DeploymentDescriptors valueOf(java.lang.String)
+meth public static org.netbeans.api.j2ee.core.DeploymentDescriptors[] values()
+supr java.lang.Enum<org.netbeans.api.j2ee.core.DeploymentDescriptors>
+hfds mapping
+
+CLSS public final static !enum org.netbeans.api.j2ee.core.DeploymentDescriptors$Type
+ outer org.netbeans.api.j2ee.core.DeploymentDescriptors
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors$Type BEANS
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors$Type CONSTRAINT
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors$Type EAR
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors$Type VALIDATION
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors$Type WEB
+fld public final static org.netbeans.api.j2ee.core.DeploymentDescriptors$Type WEB_FRAGMENT
+meth public static org.netbeans.api.j2ee.core.DeploymentDescriptors$Type valueOf(java.lang.String)
+meth public static org.netbeans.api.j2ee.core.DeploymentDescriptors$Type[] values()
+supr java.lang.Enum<org.netbeans.api.j2ee.core.DeploymentDescriptors$Type>
+
 CLSS public final !enum org.netbeans.api.j2ee.core.Profile
 fld public final static java.util.Comparator<org.netbeans.api.j2ee.core.Profile> UI_COMPARATOR
 fld public final static org.netbeans.api.j2ee.core.Profile J2EE_13
@@ -62,11 +95,12 @@ meth public java.lang.String getDisplayName()
 meth public java.lang.String toPropertiesString()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String toString()
+meth public java.util.Map<org.netbeans.api.j2ee.core.DeploymentDescriptors$Type,java.lang.String> getDeploymentDescriptors()
 meth public static org.netbeans.api.j2ee.core.Profile fromPropertiesString(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
 meth public static org.netbeans.api.j2ee.core.Profile valueOf(java.lang.String)
 meth public static org.netbeans.api.j2ee.core.Profile[] values()
 supr java.lang.Enum<org.netbeans.api.j2ee.core.Profile>
-hfds propertiesString
+hfds deploymentDescriptors,propertiesString
 

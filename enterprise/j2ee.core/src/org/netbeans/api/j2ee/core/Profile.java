@@ -20,6 +20,7 @@
 package org.netbeans.api.j2ee.core;
 
 import java.util.Comparator;
+import java.util.Map;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -36,57 +37,70 @@ public enum Profile {
     // !!! ATTENTION: BE AWARE OF THE ENUM ORDER! It controls compatibility and UI position.
     // Do not ever change name of this constant - it is copied from j2eeserver
     @Messages("J2EE_13.displayName=J2EE 1.3")
-    J2EE_13("1.3"),
-
+    J2EE_13("1.3", DeploymentDescriptors.J2EE_13),
+    
     // Do not ever change name of this constant - it is copied from j2eeserver
     @Messages("J2EE_14.displayName=J2EE 1.4")
-    J2EE_14("1.4"),
-
+    J2EE_14("1.4", DeploymentDescriptors.J2EE_14),
     // Do not ever change name of this constant - it is copied from j2eeserver
     @Messages("JAVA_EE_5.displayName=Java EE 5")
-    JAVA_EE_5("1.5"),
-
+    JAVA_EE_5("1.5",DeploymentDescriptors.JAVA_EE_5),
     @Messages("JAVA_EE_6_WEB.displayName=Java EE 6 Web")
-    JAVA_EE_6_WEB("1.6", "web"),
-
+    JAVA_EE_6_WEB("1.6", "web",
+            DeploymentDescriptors.JAVA_EE_6_WEB
+    ),
     @Messages("JAVA_EE_6_FULL.displayName=Java EE 6")
-    JAVA_EE_6_FULL("1.6"),
-
+    JAVA_EE_6_FULL("1.6",
+            DeploymentDescriptors.JAVA_EE_6
+    ),
     @Messages("JAVA_EE_7_WEB.displayName=Java EE 7 Web")
-    JAVA_EE_7_WEB("1.7", "web"),
-
+    JAVA_EE_7_WEB("1.7", "web",
+            DeploymentDescriptors.JAVA_EE_7_WEB
+    ),
     @Messages("JAVA_EE_7_FULL.displayName=Java EE 7")
-    JAVA_EE_7_FULL("1.7"),
-
+    JAVA_EE_7_FULL("1.7",
+            DeploymentDescriptors.JAVA_EE_7
+    ),
     @Messages("JAVA_EE_8_WEB.displayName=Java EE 8 Web")
-    JAVA_EE_8_WEB("1.8", "web"),
-
+    JAVA_EE_8_WEB("1.8", "web",
+            DeploymentDescriptors.JAVA_EE_8_WEB_AND_JAKARTA_EE_8_WEB
+    ),
     @Messages("JAVA_EE_8_FULL.displayName=Java EE 8")
-    JAVA_EE_8_FULL("1.8"),
-
+    JAVA_EE_8_FULL("1.8",
+            DeploymentDescriptors.JAVA_EE_8_AND_JAKARTA_EE_8
+    ),
     @Messages("JAKARTA_EE_8_WEB.displayName=Jakarta EE 8 Web")
-    JAKARTA_EE_8_WEB("8.0", "web"),
-
+    JAKARTA_EE_8_WEB("8.0", "web",
+            DeploymentDescriptors.JAVA_EE_8_WEB_AND_JAKARTA_EE_8_WEB
+    ),
     @Messages("JAKARTA_EE_8_FULL.displayName=Jakarta EE 8")
-    JAKARTA_EE_8_FULL("8.0"),
-
+    JAKARTA_EE_8_FULL("8.0",
+            DeploymentDescriptors.JAVA_EE_8_AND_JAKARTA_EE_8
+    ),
     @Messages("JAKARTA_EE_9_WEB.displayName=Jakarta EE 9 Web")
-    JAKARTA_EE_9_WEB("9.0", "web"),
-
+    JAKARTA_EE_9_WEB("9.0", "web",
+            DeploymentDescriptors.JAKARTA_EE_9_WEB_AND_JAKARTA_EE_91_WEB
+    ),
     @Messages("JAKARTA_EE_9_FULL.displayName=Jakarta EE 9")
-    JAKARTA_EE_9_FULL("9.0"),
-
+    JAKARTA_EE_9_FULL("9.0",
+            DeploymentDescriptors.JAKARTA_EE_9_AND_JAKARTA_EE_91
+    ),
     @Messages("JAKARTA_EE_9_1_WEB.displayName=Jakarta EE 9.1 Web")
-    JAKARTA_EE_9_1_WEB("9.1", "web"),
-
+    JAKARTA_EE_9_1_WEB("9.1", "web",
+            DeploymentDescriptors.JAKARTA_EE_9_WEB_AND_JAKARTA_EE_91_WEB
+    ),
     @Messages("JAKARTA_EE_9_1_FULL.displayName=Jakarta EE 9.1")
-    JAKARTA_EE_9_1_FULL("9.1"),
-
+    JAKARTA_EE_9_1_FULL("9.1",
+            DeploymentDescriptors.JAKARTA_EE_9_AND_JAKARTA_EE_91
+    ),
     @Messages("JAKARTA_EE_10_WEB.displayName=Jakarta EE 10 Web")
-    JAKARTA_EE_10_WEB("10", "web"),
-
+    JAKARTA_EE_10_WEB("10", "web",
+            DeploymentDescriptors.JAKARTA_EE_10_WEB
+    ),
     @Messages("JAKARTA_EE_10_FULL.displayName=Jakarta EE 10")
-    JAKARTA_EE_10_FULL("10");
+    JAKARTA_EE_10_FULL("10",
+            DeploymentDescriptors.JAKARTA_EE_10
+    );
     // !!! ATTENTION: BE AWARE OF THE ENUM ORDER! It controls compatibility and UI position.
 
     public static final Comparator<Profile> UI_COMPARATOR = (Profile o1, Profile o2) -> -(o1.ordinal() - o2.ordinal());
@@ -94,12 +108,20 @@ public enum Profile {
     // cache
     private final String propertiesString;
 
-    private Profile(String canonicalName) {
-        this.propertiesString = canonicalName;
+    private final DeploymentDescriptors deploymentDescriptors;
+
+    private Profile(String version, DeploymentDescriptors deploymentDescriptors) {
+        this.propertiesString = version;
+        this.deploymentDescriptors = deploymentDescriptors;
     }
 
-    private Profile(String canonicalName, String profile) {
+    private Profile(String canonicalName, String profile, DeploymentDescriptors deploymentDescriptors) {
         this.propertiesString = canonicalName + "-" + profile;
+        this.deploymentDescriptors = deploymentDescriptors;
+    }
+
+    public Map<DeploymentDescriptors.Type, String> getDeploymentDescriptors() {
+        return deploymentDescriptors.getMapping();
     }
 
     /**
@@ -139,6 +161,8 @@ public enum Profile {
     public boolean isAtLeast(@NonNull Profile profile) {
         return this.ordinal() >= profile.ordinal();
     }
+
+
 
     @Override
     public String toString() {

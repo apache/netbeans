@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.123
+#Version 1.124
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,6 +159,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -711,8 +713,8 @@ meth public static org.openide.filesystems.FileObject createWebFragmentXml(org.n
 meth public static org.openide.filesystems.FileObject createWebXml(org.netbeans.api.j2ee.core.Profile,boolean,org.openide.filesystems.FileObject) throws java.io.IOException
 meth public static org.openide.filesystems.FileObject createWebXml(org.netbeans.api.j2ee.core.Profile,org.openide.filesystems.FileObject) throws java.io.IOException
 supr java.lang.Object
-hfds RESOURCE_FOLDER
-hcls MakeFileCopy
+hfds RESOURCE_FOLDER,WEBXML_REQUIREMENTS_INDEPENDANT_PROFILES,atomicActionRunner,makeFileCopyFactory
+hcls MakeFileCopy,MakeFileCopyFactory
 
 CLSS public org.netbeans.modules.j2ee.common.ui.BrokenDatasourceAlertPanel
 cons public init()

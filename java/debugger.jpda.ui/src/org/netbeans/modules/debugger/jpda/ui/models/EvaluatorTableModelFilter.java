@@ -21,38 +21,55 @@ package org.netbeans.modules.debugger.jpda.ui.models;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
+import java.util.concurrent.Executor;
+import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
+import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
-import org.netbeans.spi.debugger.ui.CodeEvaluator;
 import org.netbeans.spi.debugger.ui.CodeEvaluator.Result.DefaultHistoryItem;
 import org.netbeans.spi.debugger.ui.Constants;
+import org.netbeans.spi.viewmodel.AsynchronousModelFilter;
 import org.netbeans.spi.viewmodel.ModelListener;
 import org.netbeans.spi.viewmodel.TableModel;
 import org.netbeans.spi.viewmodel.TableModelFilter;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 
+import static org.netbeans.spi.viewmodel.AsynchronousModelFilter.CALL.CHILDREN;
+import static org.netbeans.spi.viewmodel.AsynchronousModelFilter.CALL.DISPLAY_NAME;
+import static org.netbeans.spi.viewmodel.AsynchronousModelFilter.CALL.SHORT_DESCRIPTION;
+import static org.netbeans.spi.viewmodel.AsynchronousModelFilter.CALL.VALUE;
+import static org.netbeans.spi.viewmodel.AsynchronousModelFilter.CURRENT_THREAD;
+
 @DebuggerServiceRegistration(path="netbeans-JPDASession/ResultsView",
-                             types=TableModelFilter.class,
+                             types = { TableModelFilter.class, AsynchronousModelFilter.class },
                              position=330)
-public class EvaluatorTableModelFilter implements TableModelFilter {
+public class EvaluatorTableModelFilter implements TableModelFilter, AsynchronousModelFilter {
 
-    private final Collection<ModelListener> listeners = new HashSet<ModelListener>();
+    private final Executor rp;
+    private final Collection<ModelListener> listeners = new HashSet<>();
 
-    public EvaluatorTableModelFilter() {
+    public EvaluatorTableModelFilter(ContextProvider lookupProvider) {
+        JPDADebuggerImpl debugger = (JPDADebuggerImpl) lookupProvider.
+                lookupFirst(null, JPDADebugger.class);
+        rp = debugger.getRequestProcessor();
     }
 
+    @Override
     public void addModelListener(ModelListener l) {
         synchronized (listeners) {
             listeners.add (l);
         }
     }
 
+    @Override
     public void removeModelListener (ModelListener l) {
         synchronized (listeners) {
             listeners.remove (l);
         }
     }
 
+    @Override
+    @SuppressWarnings("ConvertToStringSwitch")
     public Object getValueAt(TableModel original, Object node, String columnID) throws UnknownTypeException {
         if (node instanceof DefaultHistoryItem) {
             DefaultHistoryItem item = (DefaultHistoryItem) node;
@@ -71,6 +88,7 @@ public class EvaluatorTableModelFilter implements TableModelFilter {
         return original.getValueAt(node, columnID);
     }
 
+    @Override
     public boolean isReadOnly(TableModel original, Object node, String columnID) throws UnknownTypeException {
         if (node instanceof DefaultHistoryItem || node instanceof EvaluatorTreeModel.HistoryNode) {
             return true;
@@ -78,6 +96,7 @@ public class EvaluatorTableModelFilter implements TableModelFilter {
         return original.isReadOnly(node, columnID);
     }
 
+    @Override
     public void setValueAt(TableModel original, Object node, String columnID, Object value) throws UnknownTypeException {
         if (node instanceof DefaultHistoryItem || node instanceof EvaluatorTreeModel.HistoryNode) {
             return;
@@ -85,4 +104,16 @@ public class EvaluatorTableModelFilter implements TableModelFilter {
         original.setValueAt(node, columnID, value);
     }
 
+    @Override
+    public Executor asynchronous(Executor exec, CALL asynchCall, Object object) {
+        switch (asynchCall) {
+            case VALUE:
+            case CHILDREN:
+            case SHORT_DESCRIPTION:
+                return rp;
+            case DISPLAY_NAME:
+                return CURRENT_THREAD;
+        }
+        return null; // ??
+    }
 }

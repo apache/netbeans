@@ -51,8 +51,11 @@ import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.openjdk.common.BuildUtils;
 import org.netbeans.modules.java.openjdk.common.BuildUtils.ExtraMakeTargets;
 import org.netbeans.modules.java.openjdk.common.ShortcutUtils;
@@ -123,6 +126,7 @@ public class ActionProviderImpl implements ActionProvider {
                "DN_Running=Running ({0})"})
     public static ExecutorTask createAndRunTest(Lookup context, String command) {
         final FileObject file = context.lookup(FileObject.class);
+        ensureProjectsRegistered(file);
         String ioName = COMMAND_DEBUG_TEST_SINGLE.equals(command) ? Bundle.DN_Debugging(file.getName()) : Bundle.DN_Running(file.getName());
         StopAction newStop = new StopAction();
         ReRunAction newReRun = new ReRunAction(COMMAND_TEST_SINGLE);
@@ -671,13 +675,48 @@ public class ActionProviderImpl implements ActionProvider {
         if (file == null)
             return false;
         
+        return findJDKRoot(file) != null;
+    }
+
+    private static FileObject findJDKRoot(FileObject file) {
         while (!file.isRoot()) {
             if (Utilities.isJDKRepository(file))
-                return true;
+                return file;
             file = file.getParent();
         }
 
-        return false;
+        return null;
+    }
+
+    private static void ensureProjectsRegistered(FileObject file) {
+        if (FileOwnerQuery.getOwner(file) != null) {
+            return ;
+        }
+
+        FileObject jdkRoot = findJDKRoot(file);
+
+        if (jdkRoot == null) {
+            return ;
+        }
+
+        for (String wellKnownProject : new String[] {"java.base", "java.compiler",
+                                                     "java.xml", "jdk.scripting.nashorn"}) {
+            for (String open : new String[] {"open/", ""}) {
+                FileObject prjRoot = jdkRoot.getFileObject(open + "src/" + wellKnownProject);
+
+                if (prjRoot == null) {
+                    continue;
+                }
+
+                Project thisPrj = FileOwnerQuery.getOwner(prjRoot);
+
+                if (thisPrj != null) {
+                    //ensure external roots are registered:
+                    ProjectUtils.getSources(thisPrj)
+                                .getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+                }
+            }
+        }
     }
 
     private static TestType inferTestType(Project prj) {

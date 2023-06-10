@@ -294,4 +294,8 @@ public class ModelTest extends ModelTestBase {
     public void testObjectNameMatchingNestedFunction() throws Exception {
         checkModel("testfiles/model/objectNameMatchingNestedFunction.js");
     }
+
+    public void testClassConstructor() throws Exception {
+        checkModel("testfiles/model/classConstructor.js");
+    }
 }

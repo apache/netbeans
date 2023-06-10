@@ -93,7 +93,9 @@ class DumpingVisitor extends NodeVisitor {
             System.out.println(indent() + node.getClass().getName() + " [" + cn.isOptional() + "]");
         } else if (node instanceof PropertyNode) {
             PropertyNode pn = (PropertyNode) node;
-            System.out.println(indent() + node.getClass().getName() + " [static=" + pn.isStatic() + "]");
+            System.out.printf("%s%s [%d-%d, static=%b]%n", indent(),
+                    node.getClass().getName(), node.getStart(),
+                    node.getFinish(), pn.isStatic());
         } else if (node instanceof JsxElementNode) {
             JsxElementNode jen = (JsxElementNode) node;
             System.out.printf("%s%s [%d-%d, name=%s]%n", indent(),

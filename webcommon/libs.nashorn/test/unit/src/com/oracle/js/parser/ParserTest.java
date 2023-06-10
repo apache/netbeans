@@ -19,6 +19,7 @@
 
 package com.oracle.js.parser;
 
+import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.LexicalContext;
 import com.oracle.js.parser.ir.Node;
@@ -283,8 +284,41 @@ public class ParserTest {
                 + "});");
     }
 
+    @Test
+    public void testGeneratedConstructorMethod() {
+        FunctionNode programm = parse(13, false, "class Demo {}");
+
+        FunctionNode generatedConstructor = findNode(programm, functionNodeWithName("Demo"), FunctionNode.class);
+        assertNotNull(generatedConstructor);
+        assertTrue(generatedConstructor.isGenerated());
+
+        programm = parse(13, false, "class Demo {constructor() {}}");
+
+        FunctionNode definedConstructor = findNode(programm, functionNodeWithName("constructor"), FunctionNode.class);
+        assertNotNull(definedConstructor);
+        assertFalse(definedConstructor.isGenerated());
+
+        programm = parse(13, false, "class Demo {constructor() {}} class Demo2 extends Demo {}");
+
+        ClassNode demoClassDemo = findNode(programm, classNodeWithName("Demo"), ClassNode.class);
+        ClassNode demoClass2Demo = findNode(programm, classNodeWithName("Demo2"), ClassNode.class);
+
+        definedConstructor = findNode(demoClassDemo, functionNodeWithName("constructor"), FunctionNode.class);
+        assertNotNull(definedConstructor);
+        assertFalse(definedConstructor.isGenerated());
+        definedConstructor = findNode(demoClass2Demo, functionNodeWithName("Demo2"), FunctionNode.class);
+        assertNotNull(definedConstructor);
+        assertTrue(definedConstructor.isGenerated());
+    }
+
     private Predicate<Node> functionNodeWithName(String name) {
         return n -> n instanceof FunctionNode && name.equals(((FunctionNode) n).getName());
+    }
+
+    private Predicate<Node> classNodeWithName(String name) {
+        return n -> n instanceof ClassNode 
+                && ((ClassNode) n).getIdent() != null
+                && name.equals(((ClassNode) n).getIdent().getName());
     }
 
     public void assertParses(String script) {

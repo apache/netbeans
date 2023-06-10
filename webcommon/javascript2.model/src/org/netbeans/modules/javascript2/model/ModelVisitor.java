@@ -920,7 +920,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
 
     @Override
     public boolean enterFunctionNode(FunctionNode functionNode) {
-        if (functionNode.isClassConstructor() && !(ModelUtils.CONSTRUCTOR.equals(functionNode.getName()) || functionNode.getName().startsWith(ModelUtils.CONSTRUCTOR))) {
+        if (isArtificialConstructor(functionNode)) {
             // don't process artificail constructors.
             return false;
         }
@@ -1023,6 +1023,18 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         }
         removeFromPathTheLast();
         return false;
+    }
+
+    /**
+     * The parse tree for classes holds constructors for all classes. For the
+     * structure scanner it is relevent to detect whether or not this
+     * constructor is generated or defined
+     *
+     * @param functionNode to check
+     * @return true if functionNode is detected to be generated
+     */
+    private static boolean isArtificialConstructor(FunctionNode functionNode) {
+        return functionNode.isClassConstructor() && functionNode.isGenerated();
     }
 
     private void correctNameAndOffsets(JsFunctionImpl jsFunction, FunctionNode fn) {
@@ -1482,7 +1494,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         }
     }
 
-    private void  processDeclarations(final JsFunctionImpl parentFn, final FunctionNode inNode) {
+    private void processDeclarations(final JsFunctionImpl parentFn, final FunctionNode inNode) {
         LOGGER.log(Level.FINEST, "in function: {0}, ident: {1}", new Object[]{inNode.getName(), inNode.getIdent()});
         final JsDocumentationHolder docHolder = JsDocumentationSupport.getDocumentationHolder(parserResult);
 
@@ -1601,7 +1613,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         LOGGER.log(Level.FINEST, "       function: {0}", debugInfo(fnNode)); // NOI18N
         String name = fnNode.isAnonymous() ? modelBuilder.getFunctionName(fnNode) : fnNode.getIdent().getName();
         Identifier fnName = new Identifier(name, new OffsetRange(fnNode.getIdent().getStart(), fnNode.getIdent().getFinish()));
-        if (fnNode.isClassConstructor() && !ModelUtils.CONSTRUCTOR.equals(fnName.getName())) {
+        if (isArtificialConstructor(fnNode)) {
             // skip artifical/ syntetic constructor nodes, that are created
             // when a class extends different class
             return;

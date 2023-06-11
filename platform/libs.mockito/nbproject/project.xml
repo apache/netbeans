@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.netbeans.libs.mockito</code-name-base>
+            <module-dependencies/>
+            <public-packages>
+                <package>org.mockito</package>
+                <package>org.mockito.configuration</package>
+                <package>org.mockito.exceptions.base</package>
+                <package>org.mockito.exceptions.misusing</package>
+                <package>org.mockito.exceptions.stacktrace</package>
+                <package>org.mockito.exceptions.verification</package>
+                <package>org.mockito.exceptions.verification.junit</package>
+                <package>org.mockito.hamcrest</package>
+                <package>org.mockito.internal</package>
+                <package>org.mockito.internal.configuration</package>
+                <package>org.mockito.internal.configuration.injection</package>
+                <package>org.mockito.internal.configuration.injection.filter</package>
+                <package>org.mockito.internal.configuration.injection.scanner</package>
+                <package>org.mockito.internal.configuration.plugins</package>
+                <package>org.mockito.internal.creation</package>
+                <package>org.mockito.internal.creation.bytebuddy</package>
+                <package>org.mockito.internal.creation.instance</package>
+                <package>org.mockito.internal.creation.settings</package>
+                <package>org.mockito.internal.creation.util</package>
+                <package>org.mockito.internal.debugging</package>
+                <package>org.mockito.internal.exceptions</package>
+                <package>org.mockito.internal.exceptions.stacktrace</package>
+                <package>org.mockito.internal.exceptions.util</package>
+                <package>org.mockito.internal.framework</package>
+                <package>org.mockito.internal.hamcrest</package>
+                <package>org.mockito.internal.handler</package>
+                <package>org.mockito.internal.invocation</package>
+                <package>org.mockito.internal.invocation.finder</package>
+                <package>org.mockito.internal.junit</package>
+                <package>org.mockito.internal.junit.util</package>
+                <package>org.mockito.internal.listeners</package>
+                <package>org.mockito.internal.matchers</package>
+                <package>org.mockito.internal.matchers.apachecommons</package>
+                <package>org.mockito.internal.matchers.text</package>
+                <package>org.mockito.internal.progress</package>
+                <package>org.mockito.internal.reporting</package>
+                <package>org.mockito.internal.runners</package>
+                <package>org.mockito.internal.runners.util</package>
+                <package>org.mockito.internal.session</package>
+                <package>org.mockito.internal.stubbing</package>
+                <package>org.mockito.internal.stubbing.answers</package>
+                <package>org.mockito.internal.stubbing.defaultanswers</package>
+                <package>org.mockito.internal.util</package>
+                <package>org.mockito.internal.util.collections</package>
+                <package>org.mockito.internal.util.concurrent</package>
+                <package>org.mockito.internal.util.io</package>
+                <package>org.mockito.internal.util.reflection</package>
+                <package>org.mockito.internal.verification</package>
+                <package>org.mockito.internal.verification.api</package>
+                <package>org.mockito.internal.verification.argumentmatching</package>
+                <package>org.mockito.internal.verification.checkers</package>
+                <package>org.mockito.invocation</package>
+                <package>org.mockito.junit</package>
+                <package>org.mockito.listeners</package>
+                <package>org.mockito.mock</package>
+                <package>org.mockito.plugins</package>
+                <package>org.mockito.quality</package>
+                <package>org.mockito.runners</package>
+                <package>org.mockito.session</package>
+                <package>org.mockito.stubbing</package>
+                <package>org.mockito.verification</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/mockito-core-4.11.0.jar</runtime-relative-path>
+                <binary-origin>external/mockito-core-4.11.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/byte-buddy-agent-1.12.19.jar</runtime-relative-path>
+                <binary-origin>external/byte-buddy-agent-1.12.19.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/byte-buddy-1.12.19.jar</runtime-relative-path>
+                <binary-origin>external/byte-buddy-1.12.19.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/objenesis-3.3.jar</runtime-relative-path>
+                <binary-origin>external/objenesis-3.3.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

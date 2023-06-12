@@ -44,7 +44,7 @@ export class DBConfigurationProvider implements vscode.DebugConfigurationProvide
 
 	resolveDebugConfigurationWithSubstitutedVariables?(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
         return new Promise<vscode.DebugConfiguration>(async resolve => {
-			let o: Object = await vscode.commands.executeCommand('java.db.connections');
+			let o: Object = await vscode.commands.executeCommand('java.db.connection');
 			if (config === undefined) {
 				config = {} as vscode.DebugConfiguration;
 			}

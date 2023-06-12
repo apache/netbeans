@@ -40,8 +40,8 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Jan Horvath
  */
 @ServiceProvider(service = CodeActionsProvider.class)
-public class DBConnectionsProvider extends CodeActionsProvider{
-    private static final String  GET_DB_CONNECTIONS = "java.db.connections"; //NOI18N
+public class DBConnectionProvider extends CodeActionsProvider{
+    private static final String  GET_DB_CONNECTIONS = "java.db.connection"; //NOI18N
     
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
         GET_DB_CONNECTIONS
@@ -65,7 +65,7 @@ public class DBConnectionsProvider extends CodeActionsProvider{
         result.put("DATASOURCES_DEFAULT_USERNAME", conn.getUser()); //NOI18N
         result.put("DATASOURCES_DEFAULT_PASSWORD", conn.getPassword()); //NOI18N
         result.put("DATASOURCES_DEFAULT_DRIVER_CLASS_NAME", conn.getDriverClass()); //NOI18N
-        String ocid = (String) conn.getConnectionProperties().get("OCID");
+        String ocid = (String) conn.getConnectionProperties().get("OCID"); //NOI18N
         if (ocid != null && !ocid.isEmpty()) {
             result.put("DATASOURCES_DEFAULT_OCID", ocid); //NOI18N
         }

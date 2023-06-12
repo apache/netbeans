@@ -41,10 +41,10 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = CodeActionsProvider.class)
 public class DBConnectionProvider extends CodeActionsProvider{
-    private static final String  GET_DB_CONNECTIONS = "java.db.connection"; //NOI18N
+    private static final String  GET_DB_CONNECTION = "java.db.connection"; //NOI18N
     
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
-        GET_DB_CONNECTIONS
+        GET_DB_CONNECTION
     ));
     
 
@@ -55,7 +55,7 @@ public class DBConnectionProvider extends CodeActionsProvider{
     
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (!GET_DB_CONNECTIONS.equals(command)) {
+        if (!GET_DB_CONNECTION.equals(command)) {
             return null;
         }
         Map<String, String> result = new HashMap<> ();

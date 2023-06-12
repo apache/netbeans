@@ -183,7 +183,8 @@ public class AddADBAction implements ActionListener {
                         DownloadWalletDialog.getWalletsDir().getAbsolutePath(),
                         AbstractPasswordPanel.generatePassword(),
                         (String) result.get(USERNAME),
-                        ((String) result.get(PASSWORD)).toCharArray());
+                        ((String) result.get(PASSWORD)).toCharArray(),
+                        selectedDatabase.getKey().getValue());
                 action.addConnection(info);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);

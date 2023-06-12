@@ -27,6 +27,7 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -147,6 +148,8 @@ public class DownloadWalletAction extends AbstractAction implements ContextAware
                             return;
                         }
                     }
+                    Properties props = new Properties();
+                    props.put("OCID", p.getOcid()); //NOI18N
                     String dbUrl = MessageFormat.format(URL_TEMPLATE, connectionName, BaseUtilities.escapeParameters(new String[] { walletPath.toString() }));
                     DatabaseConnection dbConn = DatabaseConnection.create(
                             drivers[0], 
@@ -155,7 +158,8 @@ public class DownloadWalletAction extends AbstractAction implements ContextAware
                             p.getDbUser(), 
                             new String(p.getDbPassword()), 
                             true, 
-                            context.getName());
+                            context.getName(),
+                            props);
                     ConnectionManager.getDefault().addConnection(dbConn);
                 }
 

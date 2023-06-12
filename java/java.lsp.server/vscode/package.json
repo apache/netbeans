@@ -597,11 +597,6 @@
 				"title": "Open Service Console"
 			},
 			{
-				"command": "java.db.set.env",
-				"title": "Set Database Environment Variables",
-				"category": "Database"
-			},
-			{
 				"command": "java.select.editor.projects",
 				"title": "Reveal active editor in Projects",
 				"category": "Project"

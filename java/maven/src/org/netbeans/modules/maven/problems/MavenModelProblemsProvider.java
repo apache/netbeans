@@ -91,11 +91,12 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
     
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private final Project project;
-    private final AtomicReference<Pair<Collection<ProjectProblem>, Boolean>> problemsCache = new AtomicReference<>();
     private final PrimingActionProvider primingProvider = new PrimingActionProvider();
 
     private ProblemReporterImpl problemReporter;
 
+    // @GuardedBy(this)
+    private Pair<Collection<ProjectProblem>, Boolean> problemsCache = null;
     // @GuardedBy(this)
     private boolean projectListenerSet;
 
@@ -183,7 +184,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
             //for non changed project models, no need to recalculate, always return the cached value
             Object wasprocessed = updatedPrj.getContextValue(MavenModelProblemsProvider.class.getName());
             if (o == updatedPrj && wasprocessed != null) {
-                Pair<Collection<ProjectProblem>, Boolean> cached = problemsCache.get();
+                Pair<Collection<ProjectProblem>, Boolean> cached = problemsCache;
                 LOG.log(Level.FINER, "getProblems: Project was processed, cached is: {0}", cached);
                 if (cached != null) {
                     return cached;
@@ -198,13 +199,15 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                 // double check, the project may be invalidated during the time.
                 MavenProject prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
                 Object wasprocessed2 = updatedPrj.getContextValue(MavenModelProblemsProvider.class.getName());
-                if (o == updatedPrj && wasprocessed2 != null) {
-                    Pair<Collection<ProjectProblem>, Boolean> cached = problemsCache.get();
-                    LOG.log(Level.FINER, "getProblems: Project was processed #2, cached is: {0}", cached);
-                    if (cached != null) {                            
-                        return cached;
-                    }
-                } 
+                synchronized (MavenModelProblemsProvider.this) {
+                    if (o == updatedPrj && wasprocessed2 != null) {
+                        Pair<Collection<ProjectProblem>, Boolean> cached = problemsCache;
+                        LOG.log(Level.FINER, "getProblems: Project was processed #2, cached is: {0}", cached);
+                        if (cached != null) {                            
+                            return cached;
+                        }
+                    } 
+                }
                 int round = 0;
                 List<ProjectProblem> toRet = null;
                 while (round < 3) {
@@ -222,7 +225,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                             prj.setContextValue(MavenModelProblemsProvider.class.getName(), new Object());
                             LOG.log(Level.FINER, "getProblems: Project {1} processing finished, result is: {0}",
                                     new Object[] { toRet, prj });
-                            problemsCache.set(Pair.of(toRet, sanityBuildStatus));
+                            problemsCache = Pair.of(toRet, sanityBuildStatus);
                             analysedProject = new WeakReference<>(prj);
                         }
                         firePropertyChange();

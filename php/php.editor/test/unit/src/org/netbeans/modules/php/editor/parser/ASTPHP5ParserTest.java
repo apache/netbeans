@@ -1509,6 +1509,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/issueGH5585_02");
     }
 
+    public void testTrueFalseNull() throws Exception {
+        performTest("parser/TrueFalseNull");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

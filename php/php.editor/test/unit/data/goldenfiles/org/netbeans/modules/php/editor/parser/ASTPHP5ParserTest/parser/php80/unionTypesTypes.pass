@@ -727,9 +727,7 @@
                             </UnionType>
                             <Block start='988' end='1016' isCurly='true'>
                                 <ReturnStatement start='998' end='1010'>
-                                    <NamespaceName start='1005' end='1009' isCurrent='false' isGlobal='false'>
-                                        <Identifier start='1005' end='1009' name='null'/>
-                                    </NamespaceName>
+                                    <Scalar start='1005' end='1009' type='STRING' value='null'/>
                                 </ReturnStatement>
                             </Block>
                         </FunctionDeclaration>
@@ -1074,9 +1072,7 @@
                             </UnionType>
                             <Block start='1783' end='1811' isCurly='true'>
                                 <ReturnStatement start='1793' end='1805'>
-                                    <NamespaceName start='1800' end='1804' isCurrent='false' isGlobal='false'>
-                                        <Identifier start='1800' end='1804' name='null'/>
-                                    </NamespaceName>
+                                    <Scalar start='1800' end='1804' type='STRING' value='null'/>
                                 </ReturnStatement>
                             </Block>
                         </FunctionDeclaration>

@@ -20,7 +20,7 @@ VARIABLE   $http_response_header                      PHP Platform
 VARIABLE   $php_errormsg                              PHP Platform
 CONSTANT   DUMMY 'DUMMY'                   [PUBLIC]   constants.php
 CONSTANT   FALSE false                     [PUBLIC]   constants.php
-CONSTANT   NULL ?                          [PUBLIC]   constants.php
+CONSTANT   NULL null                       [PUBLIC]   constants.php
 CONSTANT   TRUE true                       [PUBLIC]   constants.php
 KEYWORD    abstract                                   null
 KEYWORD    and                                        null

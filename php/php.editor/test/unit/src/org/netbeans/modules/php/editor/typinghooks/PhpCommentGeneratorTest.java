@@ -827,7 +827,7 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 + "class Class2 {}"
         );
     }
-    
+
     public void testFunctionGuessingBoolReturnType() throws Exception {
         insertBreak( "<?php\n" +
                             "/**^\n" +
@@ -844,7 +844,31 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "    return true;\n" +
                             "}\n" +
                             "?>\n");
-    }    
+    }
+
+    public void testFunctionGuessingNullReturnType() throws Exception {
+        insertBreak( "<?php\n" +
+                            "/**^\n" +
+                            "function testFunction() {\n" +
+                            "    if ($a) {\n" +
+                            "        return 1;\n" +
+                            "    }\n" +
+                            "    return null;\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "/**\n" +
+                            " * \n" +
+                            " * @return null|int^\n" +
+                            " */\n" +
+                             "function testFunction() {\n" +
+                            "    if ($a) {\n" +
+                            "        return 1;\n" +
+                            "    }\n" +
+                            "    return null;\n" +
+                            "}\n" +
+                            "?>\n");
+    }
 
     @Override
     public void insertNewline(String source, String reformatted, IndentPrefs preferences) throws Exception {

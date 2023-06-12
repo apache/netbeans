@@ -136,9 +136,7 @@
                 </NullableType>
                 <Block start='31' end='51' isCurly='true'>
                     <ReturnStatement start='37' end='49'>
-                        <NamespaceName start='44' end='48' isCurrent='false' isGlobal='false'>
-                            <Identifier start='44' end='48' name='null'/>
-                        </NamespaceName>
+                        <Scalar start='44' end='48' type='STRING' value='null'/>
                     </ReturnStatement>
                 </Block>
             </FunctionDeclaration>

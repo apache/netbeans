@@ -4522,7 +4522,7 @@ common_scalar:scalar
     if (!nsn.isGlobal() && list.size() == 1) {
         String itemName = ((Identifier) list.get(0)).getName();
         String itemNameLower = itemName.toLowerCase();
-        if ("true".equals(itemNameLower) || "false".equals(itemNameLower)) { // NOI18N
+        if ("true".equals(itemNameLower) || "false".equals(itemNameLower) || "null".equals(itemNameLower)) { // NOI18N
             RESULT = new Scalar(nsnleft, nsnright, itemName, Scalar.Type.STRING);
         } else {
             RESULT = nsn;
@@ -4938,7 +4938,7 @@ T_STRING_VARNAME:scalar
     if (!nsn.isGlobal() && list.size() == 1) {
         String itemName = ((Identifier) list.get(0)).getName();
         String itemNameLower = itemName.toLowerCase();
-        if ("true".equals(itemNameLower) || "false".equals(itemNameLower)) { // NOI18N
+        if ("true".equals(itemNameLower) || "false".equals(itemNameLower) || "null".equals(itemNameLower)) { // NOI18N
             RESULT = new Scalar(nsnleft, nsnright, itemName, Scalar.Type.STRING);
         } else {
             RESULT = nsn;

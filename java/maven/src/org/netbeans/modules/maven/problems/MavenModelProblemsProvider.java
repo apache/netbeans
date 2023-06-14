@@ -103,7 +103,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
     /**
      * The Maven project that has been processed already.
      */
-    private volatile Reference<MavenProject> analysedProject = new WeakReference<>(null);
+    private Reference<MavenProject> analysedProject = new WeakReference<>(null);
     private final PropertyChangeListener projectListener = new PropertyChangeListener() {
 
         @Override

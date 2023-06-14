@@ -80,7 +80,7 @@ import org.openide.windows.InputOutput;
  * @author Laszlo Kishalmi
  */
 public final class GradleDaemonExecutor extends AbstractGradleExecutor {
-
+    private static final boolean DEBUG_GRADLE_BUILD_ACTION = Boolean.getBoolean("netbeans.debug.gradle.build.action"); //NOI18N
     private CancellationTokenSource cancelTokenSource;
     private static final Logger LOGGER = Logger.getLogger(GradleDaemonExecutor.class.getName());
     private static final String JAVA_HOME = "JAVA_HOME";    // NOI18N
@@ -253,7 +253,9 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                     throw new BuildCancelledException("Interrupted", ex);
                 }
             }
-            //buildLauncher.addJvmArguments("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5008");
+            if (DEBUG_GRADLE_BUILD_ACTION) {
+                buildLauncher.addJvmArguments("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5008");
+            }
             buildLauncher.run();
             StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_SUCCESS(getProjectName()));
             gradleTask.finish(0);

@@ -41,6 +41,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -138,6 +139,8 @@ public final class NbMavenProjectImpl implements Project {
             MavenProject old;
             synchronized (NbMavenProjectImpl.this) {
                 old = project == null ? null : project.get();
+                LOG.log(Level.FINE, "Project {0} reloaded. Old project is: {1}, new project {2}", 
+                        new Object[] { prj, System.identityHashCode(old == null ? this : old), System.identityHashCode(prj) });
                 if (old != null && MavenProjectCache.isFallbackproject(prj)) {
                     prj.setPackaging(old.getPackaging()); //#229366 preserve packaging for broken projects to avoid changing lookup.
                 }
@@ -150,7 +153,7 @@ public final class NbMavenProjectImpl implements Project {
             ACCESSOR.doFireReload(watcher);
             reloadPossibleBrokenModules(old, prj);
         }
-    });
+    }, true);
     private final FileObject fileObject;
     private final FileObject folderFileObject;
     private final File projectFile;
@@ -420,7 +423,7 @@ public final class NbMavenProjectImpl implements Project {
             if (mp == null) {
                 // PENDING: should be the whole project load synchronized ?
                 mp = loadOriginalMavenProject(false);
-                project = new SoftReference<MavenProject>(mp);
+                project = new SoftReference<>(mp);
                 if (hardReferencingMavenProject) {
                     hardRefProject = mp;
                 }
@@ -429,6 +432,20 @@ public final class NbMavenProjectImpl implements Project {
         // in case someone got already information from the NbMavenProject:
         ACCESSOR.doFireReload(watcher);
         return mp;
+    }
+    
+    /**
+     * Returns the original project, or waits for reload task if already pending.
+     * @return possibly reloaded Maven project.
+     */
+    public MavenProject getFreshOriginalMavenProject() {
+        if (reloadTask.isFinished()) {
+            return getOriginalMavenProject();
+        } else {
+            LOG.log(Level.FINE, "Asked for project {0} being updated, waiting for the refresh to complete.", projectFile);
+            reloadTask.waitFinished();
+            return getOriginalMavenProject();
+        }
     }
     
     /**
@@ -559,7 +576,8 @@ public final class NbMavenProjectImpl implements Project {
     private void reloadPossibleBrokenModules(MavenProject preceding, MavenProject p) {
         // restrict to just poms that were marked as broken/incomplete.
         if (!(MavenProjectCache.isFallbackproject(preceding) || 
-            preceding.getContextValue("org.netbeans.modules.maven.problems.primingNotDone") != Boolean.TRUE)) {
+            // the project is tagged by Boolean.TRUE, if a SanityBuildAction was created for it.
+            preceding.getContextValue("org.netbeans.modules.maven.problems.primingNotDone") == Boolean.TRUE)) {
             return;
         }
         // but do not cascade from projects, which are themselves broken.
@@ -578,8 +596,9 @@ public final class NbMavenProjectImpl implements Project {
                 continue;
             }
             // the project may have more problems, more subtle, but now repair just total breakage
-            if (!MavenProjectCache.isFallbackproject(child)) {
+            if (!MavenProjectCache.isFallbackproject(child) && child.getContextValue("org.netbeans.modules.maven.problems.primingNotDone") != Boolean.TRUE) {
                 LOG.log(Level.FINE, "Project for module {0} is not a fallback, skipping", modName);
+                continue;
             }
             FileObject dir = FileUtil.toFileObject(modPom.getParentFile());
             if (dir == null) {

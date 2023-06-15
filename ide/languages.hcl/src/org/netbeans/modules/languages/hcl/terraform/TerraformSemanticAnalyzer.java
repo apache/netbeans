@@ -68,7 +68,7 @@ public final class TerraformSemanticAnalyzer extends SemanticAnalyzer<TerraformP
 
             TerraformParserResult.BlockType bt = TerraformParserResult.BlockType.get(type.id());
             if (bt != null) {
-                refs.getOffsetRange(type).ifPresent((range) -> highlights.put(range, ColoringAttributes.METHOD_SET));
+                refs.getOffsetRange(type).ifPresent((range) -> highlights.put(range, ColoringAttributes.CLASS_SET));
             }
         }
         semanticHighlights = highlights;

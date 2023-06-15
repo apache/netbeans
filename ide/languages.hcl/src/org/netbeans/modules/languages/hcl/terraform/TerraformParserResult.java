@@ -43,8 +43,9 @@ import org.openide.util.NbBundle.Messages;
 public class TerraformParserResult extends HCLParserResult {
 
 
-    enum BlockType {
+    public enum BlockType {
 
+        CHECK("check", 2),
         DATA("data", 3),
         LOCALS("locals", 1),
         MODULE("module", 2),
@@ -108,6 +109,7 @@ public class TerraformParserResult extends HCLParserResult {
                 } else {
                     if (!defined.add(block.id())) {
                         switch (bt) {
+                            case CHECK:
                             case DATA:
                             case MODULE:
                             case OUTPUT:

@@ -44,6 +44,7 @@ public final class BasicHCLLexer extends AbstractHCLLexer {
             case BOOL_LIT:
                 return token(BOOLEAN);
 
+            case LEGACY_INDEX:
             case NUMERIC_LIT:
                 return token(NUMBER);
 

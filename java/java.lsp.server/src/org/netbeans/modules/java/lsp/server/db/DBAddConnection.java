@@ -238,16 +238,21 @@ public class DBAddConnection extends CodeActionsProvider {
                                 Either<List<QuickPickItem>,String> userData = data.get(USER_ID);
                                 int i = ((Double) driverData.getLeft().get(0).getUserData()).intValue();
                                 JDBCDriver driver = drivers[i];
+                                boolean failed = true;
+
                                 schemas.clear();
                                 DatabaseConnection dbconn = DatabaseConnection.create(driver, urlData.getRight(), userData.getRight(), null, passwordData.getRight(), true);
                                 try {
                                     ConnectionManager.getDefault().addConnection(dbconn);
                                     schemas.addAll(getSchemas(dbconn));
+                                    failed = false;
                                 } catch(DatabaseException | SQLException ex) {
                                     return CompletableFuture.completedFuture(ex.getMessage());
                                 } finally {
                                     try {
-                                        ConnectionManager.getDefault().removeConnection(dbconn);
+                                        if (failed || !schemas.isEmpty()) {
+                                            ConnectionManager.getDefault().removeConnection(dbconn);
+                                        }
                                     } catch (DatabaseException ex) {}
                                 }
                             }

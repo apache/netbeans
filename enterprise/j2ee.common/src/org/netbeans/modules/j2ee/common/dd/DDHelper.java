@@ -82,18 +82,7 @@ public class DDHelper {
             return null;
         }
 
-        String webDDVersion = eeProfile.getDeploymentDescriptors().get(DeploymentDescriptors.Type.WEB);
-        if (webDDVersion == null) {
-            return null;
-        }
-
-        String template = String.format("web-%s.xml",webDDVersion);
-        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, "web.xml");
-        atomicActionRunner.accept(action);
-        if (action.getException() != null)
-            throw action.getException();
-        else
-            return action.getResult();
+        return createDeploymentDescriptorFromResource(eeProfile, DeploymentDescriptors.Type.WEB, "web-%s.xml", dir, "web.xml");
     }
 
     /**
@@ -104,18 +93,7 @@ public class DDHelper {
      * @throws java.io.IOException
      */
     public static FileObject createWebFragmentXml(Profile eeProfile, FileObject dir) throws IOException {
-        String webFragmentDDVersion = eeProfile.getDeploymentDescriptors().get(DeploymentDescriptors.Type.WEB_FRAGMENT);
-        if (webFragmentDDVersion == null) {
-            return null;
-        }
-
-        String template = String.format("web-fragment-%s.xml", webFragmentDDVersion);
-        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, "web-fragment.xml");
-        atomicActionRunner.accept(action);
-        if (action.getException() != null)
-            throw action.getException();
-        else
-            return action.getResult();
+        return createDeploymentDescriptorFromResource(eeProfile, DeploymentDescriptors.Type.WEB_FRAGMENT, "web-fragment-%s.xml", dir, "web-fragment.xml");
     }
 
     /**
@@ -140,18 +118,7 @@ public class DDHelper {
      * @since 1.49
      */
     public static FileObject createBeansXml(Profile eeProfile, FileObject dir, String name) throws IOException {
-        String beansDDVersion = eeProfile.getDeploymentDescriptors().get(DeploymentDescriptors.Type.BEANS);
-        if (beansDDVersion == null) {
-            return null;
-        }
-
-        String template = String.format("beans-%s.xml", beansDDVersion);
-        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, name+".xml");
-        atomicActionRunner.accept(action);
-        if (action.getException() != null)
-            throw action.getException();
-        else
-            return action.getResult();
+        return createDeploymentDescriptorFromResource(eeProfile, DeploymentDescriptors.Type.BEANS, "beans-%s.xml", dir, name + ".xml");
     }
 
     /**
@@ -176,18 +143,7 @@ public class DDHelper {
      * @since 1.52
      */
     public static FileObject createValidationXml(Profile eeProfile, FileObject dir, String name) throws IOException {
-        String validationDDVersion = eeProfile.getDeploymentDescriptors().get(DeploymentDescriptors.Type.VALIDATION);
-        if (validationDDVersion == null) {
-            return null;
-        }
-
-        String template = String.format("validation-%s.xml", validationDDVersion);
-        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, name+".xml");
-        atomicActionRunner.accept(action);
-        if (action.getException() != null)
-            throw action.getException();
-        else
-            return action.getResult();
+        return createDeploymentDescriptorFromResource(eeProfile, DeploymentDescriptors.Type.VALIDATION, "validation-%s.xml", dir, name + ".xml");
     }
 
     /**
@@ -212,18 +168,7 @@ public class DDHelper {
      * @since 1.52
      */
     public static FileObject createConstraintXml(Profile eeProfile, FileObject dir, String name) throws IOException {
-        String constraintDDVersion = eeProfile.getDeploymentDescriptors().get(DeploymentDescriptors.Type.CONSTRAINT);
-        if (constraintDDVersion == null) {
-            return null;
-        }
-
-        String template = String.format("constraint-%s.xml", constraintDDVersion);
-        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, name+".xml");
-        atomicActionRunner.accept(action);
-        if (action.getException() != null)
-            throw action.getException();
-        else
-            return action.getResult();
+        return createDeploymentDescriptorFromResource(eeProfile, DeploymentDescriptors.Type.CONSTRAINT, "constraint-%s.xml", dir, name + ".xml");
     }
 
     /**
@@ -244,13 +189,17 @@ public class DDHelper {
             return null;
         }
 
-        String constraintDDVersion = eeProfile.getDeploymentDescriptors().get(DeploymentDescriptors.Type.EAR);
-        if (constraintDDVersion == null) {
+        return createDeploymentDescriptorFromResource(eeProfile, DeploymentDescriptors.Type.EAR, "ear-%s.xml", dir, "application.xml");
+    }
+    
+    private static FileObject createDeploymentDescriptorFromResource(Profile eeProfile, DeploymentDescriptors.Type type, String filenamePattern, FileObject toDir, String toFile) throws IOException {
+        String deploymentDescriptorVersion = eeProfile.getDeploymentDescriptors().get(type);
+        if (deploymentDescriptorVersion == null) {
             return null;
         }
 
-        String template = String.format("ear-%s.xml", constraintDDVersion);
-        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, "application.xml");
+        String template = String.format(filenamePattern, deploymentDescriptorVersion);
+        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, toDir, toFile);
         atomicActionRunner.accept(action);
         if (action.getException() != null) {
             throw action.getException();

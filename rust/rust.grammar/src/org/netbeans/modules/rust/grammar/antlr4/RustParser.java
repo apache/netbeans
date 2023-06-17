@@ -63,7 +63,8 @@ public class RustParser extends RustParserBase {
 		UNDERSCORE=109, DOT=110, DOTDOT=111, DOTDOTDOT=112, DOTDOTEQ=113, COMMA=114, 
 		SEMI=115, COLON=116, PATHSEP=117, RARROW=118, FATARROW=119, POUND=120, 
 		DOLLAR=121, QUESTION=122, LCURLYBRACE=123, RCURLYBRACE=124, LSQUAREBRACKET=125, 
-		RSQUAREBRACKET=126, LPAREN=127, RPAREN=128;
+		RSQUAREBRACKET=126, LPAREN=127, RPAREN=128, SINGLEQUOTE=129, DOUBLEQUOTE=130, 
+		BACKSLASH=131;
 	public static final int
 		RULE_crate = 0, RULE_macroInvocation = 1, RULE_delimTokenTree = 2, RULE_tokenTree = 3, 
 		RULE_tokenTreeToken = 4, RULE_macroInvocationSemi = 5, RULE_macroRulesDefinition = 6, 
@@ -198,7 +199,7 @@ public class RustParser extends RustParserBase {
 			"'|='", "'<<='", "'>>='", "'='", "'=='", "'!='", "'>'", "'<'", "'>='", 
 			"'<='", "'@'", "'_'", "'.'", "'..'", "'...'", "'..='", "','", "';'", 
 			"':'", "'::'", "'->'", "'=>'", "'#'", "'$'", "'?'", "'{'", "'}'", "'['", 
-			"']'", "'('", "')'"
+			"']'", "'('", "')'", "'''", "'\"'", "'\\'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -224,7 +225,8 @@ public class RustParser extends RustParserBase {
 			"SHREQ", "EQ", "EQEQ", "NE", "GT", "LT", "GE", "LE", "AT", "UNDERSCORE", 
 			"DOT", "DOTDOT", "DOTDOTDOT", "DOTDOTEQ", "COMMA", "SEMI", "COLON", "PATHSEP", 
 			"RARROW", "FATARROW", "POUND", "DOLLAR", "QUESTION", "LCURLYBRACE", "RCURLYBRACE", 
-			"LSQUAREBRACKET", "RSQUAREBRACKET", "LPAREN", "RPAREN"
+			"LSQUAREBRACKET", "RSQUAREBRACKET", "LPAREN", "RPAREN", "SINGLEQUOTE", 
+			"DOUBLEQUOTE", "BACKSLASH"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -16272,7 +16274,7 @@ public class RustParser extends RustParserBase {
 	}
 
 	private static final String _serializedATNSegment0 =
-		"\u0004\u0001\u0080\u09b0\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
+		"\u0004\u0001\u0083\u09b0\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
 		"\u0002\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004"+
 		"\u0002\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007"+
 		"\u0002\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b"+

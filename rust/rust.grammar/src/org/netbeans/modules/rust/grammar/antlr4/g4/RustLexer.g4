@@ -205,15 +205,15 @@ CHAR_LITERAL
     ) '\''
     ;
 
-STRING_LITERAL: '"\\\\"' | '"' ( '\\' '"' | ~["] )*? ('"' | EOF);
+STRING_LITERAL: '"\\\\"' | '"' ( '\\' '"' | ~["] )*? '"';
 
 RAW_STRING_LITERAL: 'r' RAW_STRING_CONTENT;
- 
-fragment RAW_STRING_CONTENT: '#' RAW_STRING_CONTENT '#' | '"' .*? ('"' | EOF);
 
-BYTE_LITERAL: 'b\'' (. | QUOTE_ESCAPE | BYTE_ESCAPE) ('\'' | EOF);
+fragment RAW_STRING_CONTENT: '#' RAW_STRING_CONTENT '#' | '"' .*? '"';
 
-BYTE_STRING_LITERAL: 'b"' (~["] | QUOTE_ESCAPE | BYTE_ESCAPE)* ('"' | EOF);
+BYTE_LITERAL: 'b\'' (. | QUOTE_ESCAPE | BYTE_ESCAPE) '\'';
+
+BYTE_STRING_LITERAL: 'b"' (~["] | QUOTE_ESCAPE | BYTE_ESCAPE)* '"';
 
 RAW_BYTE_STRING_LITERAL: 'br' RAW_STRING_CONTENT;
 
@@ -338,3 +338,10 @@ LSQUAREBRACKET: '[';
 RSQUAREBRACKET: ']';
 LPAREN: '(';
 RPAREN: ')';
+
+// The lexer has to be able to handle unmatched quotes and backslashes. These
+// will be lead to parsing errors, but these are then expected. The
+// infrastructure still needs the Token.
+SINGLEQUOTE: '\'';
+DOUBLEQUOTE: '"';
+BACKSLASH: '\\';

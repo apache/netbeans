@@ -26,13 +26,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
-import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
@@ -74,9 +74,9 @@ public final class ImplementAllAbstractMethodsAction extends CodeActionsProvider
                 Position position = gson.fromJson(gson.toJson(arguments.get(1)), Position.class);
                 List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                     wc.toPhase(JavaSource.Phase.RESOLVED);
-                    Document doc = wc.getSnapshot().getSource().getDocument(true);
-                    if (doc instanceof LineDocument) {
-                        int offset = Utils.getOffset((LineDocument) doc, position);
+                  Document doc = wc.getSnapshot().getSource().getDocument(true);
+                    if (doc instanceof StyledDocument) {
+                        int offset = Utils.getOffset((StyledDocument) doc, position);
                         GeneratorUtils.generateAllAbstractMethodImplementations(wc, wc.getTreeUtilities().pathFor(offset));
                     }
                 });

@@ -39,6 +39,7 @@ public class NBGroupInfo {
         this.name = name;
     }
 
+    @SuppressWarnings("element-type-mismatch")
     public void removeArtifactInfo(Object o) {
          artifactInfos.remove(o);
     }

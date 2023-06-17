@@ -14,9 +14,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-C02F9C34FBC4C698BEF9D5074966545122908D06 org.apache.maven.indexer:indexer-core:7.0.2
-20AE1ED178C812FAA78DC83C9BF218D047FD01D0 org.apache.maven.indexer:search-api:7.0.2
-5967AEFBE9281C46155E73BBFC1E2BC4054CC92F org.apache.maven.indexer:search-backend-smo:7.0.2
+D9086E551E71DC953FC989754500E9905AF3FB1B org.apache.maven.indexer:indexer-core:7.0.3
+C3C93EF8FEAB7CE50FEFB3C3947A2F6A27E6B3F0 org.apache.maven.indexer:search-api:7.0.3
+BD0EAC88D46ED462BB62D074D8EA3227905C7391 org.apache.maven.indexer:search-backend-smo:7.0.3
 2C08C7A491E9D033BB4806E0A45496E3A0667217 org.apache.lucene:lucene-core:9.6.0
 A4819CA127C46A2759FDF091F41512C56C441FA7 org.apache.lucene:lucene-backward-codecs:9.6.0
 B9E14451C73FA0BC8E71A2CFE12A442F37A53C69 org.apache.lucene:lucene-highlighter:9.6.0

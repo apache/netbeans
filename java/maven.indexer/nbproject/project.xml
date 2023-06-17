@@ -175,16 +175,16 @@
                 <package>org.netbeans.modules.maven.indexer.spi.impl</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/indexer-core-7.0.2.jar</runtime-relative-path>
-                <binary-origin>external/indexer-core-7.0.2.jar</binary-origin>
+                <runtime-relative-path>ext/maven/indexer-core-7.0.3.jar</runtime-relative-path>
+                <binary-origin>external/indexer-core-7.0.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/search-api-7.0.2.jar</runtime-relative-path>
-                <binary-origin>external/search-api-7.0.2.jar</binary-origin>
+                <runtime-relative-path>ext/maven/search-api-7.0.3.jar</runtime-relative-path>
+                <binary-origin>external/search-api-7.0.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/search-backend-smo-7.0.2.jar</runtime-relative-path>
-                <binary-origin>external/search-backend-smo-7.0.2.jar</binary-origin>
+                <runtime-relative-path>ext/maven/search-backend-smo-7.0.3.jar</runtime-relative-path>
+                <binary-origin>external/search-backend-smo-7.0.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/maven/lucene-core-9.6.0.jar</runtime-relative-path>

@@ -80,7 +80,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class SurroundWithHint extends CodeActionsProvider {
 
     private static final String COMMAND_INSERT_SNIPPET = "editor.action.insertSnippet";
-    private static final String COMMAND_SURROUND_WITH = "java.surround.with";
+    private static final String COMMAND_SURROUND_WITH = "surround.with";
     private static final String DOTS = "...";
     private static final String SNIPPET = "snippet";
     private static final String SELECTION_VAR = "${selection}";

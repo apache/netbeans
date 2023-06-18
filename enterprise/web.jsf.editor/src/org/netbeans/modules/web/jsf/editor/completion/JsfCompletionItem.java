@@ -31,6 +31,7 @@ import org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem;
 import org.netbeans.modules.html.editor.lib.api.DefaultHelpItem;
 import org.netbeans.modules.html.editor.lib.api.HelpItem;
 import org.netbeans.modules.web.jsf.editor.facelets.AbstractFaceletsLibrary;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.LibraryComponent;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
@@ -58,8 +59,8 @@ public class JsfCompletionItem {
     private static final Pattern REPLACEMENT_PATTERN = getPattern();
 
     //----------- Factory methods --------------
-    public static JsfTag createTag(int substitutionOffset, LibraryComponent component, String declaredPrefix, boolean autoimport, boolean isJsf22Plus) {
-        return new JsfTag(substitutionOffset, component, declaredPrefix, autoimport, isJsf22Plus);
+    public static JsfTag createTag(int substitutionOffset, LibraryComponent component, String declaredPrefix, boolean autoimport, JsfVersion jsfVersion) {
+        return new JsfTag(substitutionOffset, component, declaredPrefix, autoimport, jsfVersion);
     }
 
     public static JsfTagAttribute createAttribute(String name, int substitutionOffset, Library library, org.netbeans.modules.web.jsfapi.api.Tag tag, org.netbeans.modules.web.jsfapi.api.Attribute attr) {
@@ -109,13 +110,13 @@ public class JsfCompletionItem {
         
         private LibraryComponent component;
         private boolean autoimport; //autoimport (declare) the tag namespace if set to true
-        private boolean isJsf22Plus;
+        private JsfVersion jsfVersion;
 
-        public JsfTag(int substitutionOffset, LibraryComponent component, String declaredPrefix, boolean autoimport, boolean isJsf22Plus) {
+        public JsfTag(int substitutionOffset, LibraryComponent component, String declaredPrefix, boolean autoimport, JsfVersion jsfVersion) {
             super(generateItemText(component, declaredPrefix), substitutionOffset, null, true);
             this.component = component;
             this.autoimport = autoimport;
-            this.isJsf22Plus = isJsf22Plus;
+            this.jsfVersion = jsfVersion;
         }
 
         private static String generateItemText(LibraryComponent component, String declaredPrefix) {
@@ -139,7 +140,7 @@ public class JsfCompletionItem {
         private void autoimportLibrary(JTextComponent component) {
             final BaseDocument doc = (BaseDocument) component.getDocument();
             Library lib = JsfTag.this.component.getLibrary();
-            LibraryUtils.importLibrary(doc, lib, null, isJsf22Plus);
+            LibraryUtils.importLibrary(doc, lib, null, jsfVersion);
         }
 
         //use bold font

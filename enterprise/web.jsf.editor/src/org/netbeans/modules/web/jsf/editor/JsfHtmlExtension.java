@@ -45,6 +45,7 @@ import org.netbeans.modules.web.jsf.editor.facelets.AbstractFaceletsLibrary;
 import org.netbeans.modules.web.jsf.editor.facelets.CompositeComponentLibrary;
 import org.netbeans.modules.web.jsf.editor.hints.HintsRegistry;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.LibraryComponent;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
@@ -199,10 +200,10 @@ public class JsfHtmlExtension extends HtmlExtension {
                 if (declaredPrefix == null) {
                     //undeclared prefix, try to match with default library prefix
                     if (lib.getDefaultPrefix() != null && lib.getDefaultPrefix().startsWith(context.getPrefix())) {
-                        items.addAll(queryLibrary(context, lib, lib.getDefaultPrefix(), true, jsfs.isJsf22Plus()));
+                        items.addAll(queryLibrary(context, lib, lib.getDefaultPrefix(), true, jsfs.getJsfVersion()));
                     }
                 } else {
-                    items.addAll(queryLibrary(context, lib, declaredPrefix, false, jsfs.isJsf22Plus()));
+                    items.addAll(queryLibrary(context, lib, declaredPrefix, false, jsfs.getJsfVersion()));
                 }
             }
         } else {
@@ -215,7 +216,7 @@ public class JsfHtmlExtension extends HtmlExtension {
                 for (Library lib : librariesSet) {
                     if (lib.getDefaultPrefix() != null && lib.getDefaultPrefix().equals(tagNamePrefix)) {
                         //match
-                        items.addAll(queryLibrary(context, lib, tagNamePrefix, true, jsfs.isJsf22Plus()));
+                        items.addAll(queryLibrary(context, lib, tagNamePrefix, true, jsfs.getJsfVersion()));
                     }
                 }
 
@@ -227,7 +228,7 @@ public class JsfHtmlExtension extends HtmlExtension {
                     return Collections.emptyList();
                 } else {
                     //query the library
-                    items.addAll(queryLibrary(context, lib, tagNamePrefix, false, jsfs.isJsf22Plus()));
+                    items.addAll(queryLibrary(context, lib, tagNamePrefix, false, jsfs.getJsfVersion()));
                 }
             }
         }
@@ -253,11 +254,11 @@ public class JsfHtmlExtension extends HtmlExtension {
         return null;
     }
 
-    private Collection<CompletionItem> queryLibrary(CompletionContext context, Library lib, String nsPrefix, boolean undeclared, boolean isJsf22Plus) {
+    private Collection<CompletionItem> queryLibrary(CompletionContext context, Library lib, String nsPrefix, boolean undeclared, JsfVersion jsfVersion) {
         Collection<CompletionItem> items = new ArrayList<>();
         for (LibraryComponent component : lib.getComponents()) {
             if (!(component instanceof AbstractFaceletsLibrary.Function)) {
-                items.add(JsfCompletionItem.createTag(context.getCCItemStartOffset(), component, nsPrefix, undeclared, isJsf22Plus));
+                items.add(JsfCompletionItem.createTag(context.getCCItemStartOffset(), component, nsPrefix, undeclared, jsfVersion));
             }
         }
 
@@ -353,7 +354,7 @@ public class JsfHtmlExtension extends HtmlExtension {
         JsfAttributesCompletionHelper.completeFaceletsFromProject(context, items, ns, openTag);
 
         // completion for sections in cases of ui:define name attribute
-        JsfAttributesCompletionHelper.completeSectionsOfTemplate(context, items, ns, openTag);
+        JsfAttributesCompletionHelper.completeSectionsOfTemplate(context, items, ns, openTag, jsfs.getJsfVersion());
 
         // completion for java classes in <cc:attribute type="com.example.|
         JsfAttributesCompletionHelper.completeJavaClasses(context, items, ns, openTag);

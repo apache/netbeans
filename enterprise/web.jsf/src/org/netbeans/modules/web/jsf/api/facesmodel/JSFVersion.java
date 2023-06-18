@@ -127,7 +127,7 @@ public enum JSFVersion {
             }, compileCP);
             compileCP.addPropertyChangeListener(listener);
             projectListenerCache.put(webModule, listener);
-            projectVersionCache.put(webModule, get(webModule, true));
+            projectVersionCache.put(webModule, version);
         }
         return version;
     }

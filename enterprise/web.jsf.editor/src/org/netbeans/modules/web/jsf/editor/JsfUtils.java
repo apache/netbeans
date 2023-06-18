@@ -28,6 +28,7 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser.Result;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.LibraryInfo;
 
 /**
@@ -99,12 +100,9 @@ public class JsfUtils {
         return null;
     }
 
-    public static Node getRoot(HtmlParserResult parserResult, LibraryInfo library) {
-        Node rootNode = parserResult.root(library.getNamespace());
-        if ((rootNode == null || rootNode.children().isEmpty()) && library.getLegacyNamespace() != null) {
-            rootNode = parserResult.root(library.getLegacyNamespace());
-        }
-        return rootNode;
+    public static Node getRoot(HtmlParserResult parserResult, LibraryInfo library, JsfVersion jsfVersion) {
+        String namespace = jsfVersion.getNamespaceUri(library.getDefaultPrefix());
+        return parserResult.root(namespace);
     }
     
 }

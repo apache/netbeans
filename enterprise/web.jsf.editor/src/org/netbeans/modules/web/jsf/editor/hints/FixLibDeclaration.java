@@ -21,6 +21,7 @@ package org.netbeans.modules.web.jsf.editor.hints;
 
 import javax.swing.text.Document;
 import org.netbeans.modules.csl.api.HintFix;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
 import org.openide.util.NbBundle;
@@ -34,19 +35,19 @@ public class FixLibDeclaration implements HintFix{
     private final String nsPrefix;
     private final Library lib;
     private final Document doc;
-    private final boolean isJsf22Plus;
+    private final JsfVersion jsfVersion;
 
-    public FixLibDeclaration(Document doc, String nsPrefix, Library lib, boolean isJsf22Plus) {
+    public FixLibDeclaration(Document doc, String nsPrefix, Library lib, JsfVersion jsfVersion) {
         this.doc = doc;
         this.nsPrefix = nsPrefix;
         this.lib = lib;
-        this.isJsf22Plus = isJsf22Plus;
+        this.jsfVersion = jsfVersion;
     }
 
     @Override
     public String getDescription() {
         String namespace;
-        if (isJsf22Plus || lib.getLegacyNamespace() == null) {
+        if (jsfVersion.isAtLeast(JsfVersion.JSF_2_2) || lib.getLegacyNamespace() == null) {
             namespace = lib.getNamespace();
         } else {
             namespace = lib.getLegacyNamespace();
@@ -56,7 +57,7 @@ public class FixLibDeclaration implements HintFix{
 
     @Override
     public void implement() throws Exception {
-        LibraryUtils.importLibrary(doc, lib, nsPrefix, isJsf22Plus);
+        LibraryUtils.importLibrary(doc, lib, nsPrefix, jsfVersion);
     }
 
     @Override

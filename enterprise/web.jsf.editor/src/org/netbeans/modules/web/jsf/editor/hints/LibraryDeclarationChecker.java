@@ -175,7 +175,7 @@ public class LibraryDeclarationChecker extends HintsProvider {
                     List<HintFix> fixes = new ArrayList<>();
                     Set<Library> libs = getLibsByPrefixes(context, getUndeclaredNamespaces(undeclaredNodes));
                     for (Library lib : libs) {
-                        FixLibDeclaration fix = new FixLibDeclaration(context.doc, lib.getDefaultPrefix(), lib, jsfSupport.isJsf22Plus());
+                        FixLibDeclaration fix = new FixLibDeclaration(context.doc, lib.getDefaultPrefix(), lib, jsfSupport.getJsfVersion());
                         fixes.add(fix);
                     }
 

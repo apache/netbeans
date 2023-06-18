@@ -215,7 +215,7 @@ public class InjectCompositeComponent {
                 public void run(ResultIterator resultIterator) throws Exception {
                     Library lib = jsfs.getLibrary(compositeLibURL);
                     if (lib != null) {
-                        if (!LibraryUtils.importLibrary(document, lib, prefix, jsfs.isJsf22Plus())) { //XXX: fix the damned static prefix !!!
+                        if (!LibraryUtils.importLibrary(document, lib, prefix, jsfs.getJsfVersion())) { //XXX: fix the damned static prefix !!!
                             logger.log(Level.WARNING, "Cannot import composite components library {0}", compositeLibURL); //NOI18N
                         }
                     } else {
@@ -248,7 +248,7 @@ public class InjectCompositeComponent {
                             ((BaseDocument) templateInstanceDoc).runAtomic(new Runnable() {
                                 @Override
                                 public void run() {
-                                    LibraryUtils.importLibrary(templateInstanceDoc, importsMap, jsfs.isJsf22Plus());
+                                    LibraryUtils.importLibrary(templateInstanceDoc, importsMap, jsfs.getJsfVersion());
                                 }
                             });
                             try {

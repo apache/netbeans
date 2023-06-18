@@ -78,6 +78,7 @@ import org.netbeans.modules.web.jsf.editor.index.CompositeComponentModel;
 import org.netbeans.modules.web.jsf.editor.index.JsfPageModelFactory;
 import org.netbeans.modules.web.jsfapi.api.Attribute;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.LibraryComponent;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
@@ -246,7 +247,7 @@ public class JsfAttributesCompletionHelper {
         }
     }
 
-    public static void completeSectionsOfTemplate(final CompletionContext context, final List<CompletionItem> items, String ns, OpenTag openTag) {
+    public static void completeSectionsOfTemplate(final CompletionContext context, final List<CompletionItem> items, String ns, OpenTag openTag, JsfVersion jsfVersion) {
         // <ui:define name="|" ...
         String tagName = openTag.unqualifiedName().toString();
         String attrName = context.getAttributeName();
@@ -254,7 +255,7 @@ public class JsfAttributesCompletionHelper {
                 && "define".equalsIgnoreCase(tagName) && "name".equalsIgnoreCase(attrName)) { //NOI18N
 
             // get the template path
-            Node root = JsfUtils.getRoot(context.getResult(), DefaultLibraryInfo.FACELETS);
+            Node root = JsfUtils.getRoot(context.getResult(), DefaultLibraryInfo.FACELETS, jsfVersion);
             final String[] template = new String[1];
             ElementUtils.visitChildren(root, new ElementVisitor() {
                 @Override
@@ -283,7 +284,7 @@ public class JsfAttributesCompletionHelper {
                         Parser.Result result = resultIterator.getParserResult(0);
                         if (result.getSnapshot().getMimeType().equals("text/html")) {
                             HtmlParserResult htmlResult = (HtmlParserResult) result;
-                            Node root = JsfUtils.getRoot(htmlResult, DefaultLibraryInfo.FACELETS);
+                            Node root = JsfUtils.getRoot(htmlResult, DefaultLibraryInfo.FACELETS, jsfVersion);
                             if (root != null) {
                                 List<OpenTag> foundNodes = findValue(root.children(OpenTag.class), getPrefixForFaceletsNs(htmlResult) + ":insert", new ArrayList<OpenTag>()); //NOI18N
                                 for (OpenTag node : foundNodes) {

@@ -31,7 +31,7 @@ import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorActionRegistration;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseAction;
 import static org.netbeans.editor.BaseAction.MAGIC_POSITION_RESET;
 import static org.netbeans.editor.BaseAction.UNDO_MERGE_RESET;
@@ -83,53 +83,55 @@ public class FixNamespacesAction extends BaseAction {
 
     @Override
     public void actionPerformed(ActionEvent evt, final JTextComponent target) {
-        if (target != null) {
-            final AtomicBoolean cancel = new AtomicBoolean();
-            final AtomicReference<ImportData> importData = new AtomicReference<>();
-            final UserTask task = new UserTask() {
-                @Override
-                public void run(ResultIterator ri) throws Exception {
-                    Parser.Result parserResult = getHtmlParserResult(ri);
-                    if (parserResult instanceof HtmlParserResult) {
-                        HtmlParserResult htmlParserResult = (HtmlParserResult) parserResult;
-                        if (cancel.get()) {
-                            return;
-                        }
+        if (target == null) {
+            return;
+        }
 
-                        final ImportData data = computeNamespaces(htmlParserResult);
-                        if (cancel.get()) {
-                            return;
+        final AtomicBoolean cancel = new AtomicBoolean();
+        final AtomicReference<ImportData> importData = new AtomicReference<>();
+        final UserTask task = new UserTask() {
+            @Override
+            public void run(ResultIterator ri) throws Exception {
+                Parser.Result parserResult = getHtmlParserResult(ri);
+                if (parserResult instanceof HtmlParserResult) {
+                    HtmlParserResult htmlParserResult = (HtmlParserResult) parserResult;
+                    if (cancel.get()) {
+                        return;
+                    }
+
+                    final ImportData data = computeNamespaces(htmlParserResult);
+                    if (cancel.get()) {
+                        return;
+                    }
+                    if (data.shouldShowNamespacesPanel) {
+                        if (!cancel.get()) {
+                            importData.set(data);
                         }
-                        if (data.shouldShowNamespacesPanel) {
-                            if (!cancel.get()) {
-                                importData.set(data);
-                            }
-                        } else {
-                            performFixNamespaces(htmlParserResult, data, data.getDefaultVariants(), isRemoveUnusedNs());
-                        }
+                    } else {
+                        performFixNamespaces(htmlParserResult, data, data.getDefaultVariants(), isRemoveUnusedNs());
                     }
                 }
-            };
+            }
+        };
 
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ParserManager.parse(Collections.singleton(Source.create(target.getDocument())), task);
+                } catch (ParseException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }, Bundle.FixNamespacesLabelLongName(), cancel, false);
+
+        if (importData.get() != null && !cancel.get()) {
+            SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        ParserManager.parse(Collections.singleton(Source.create(target.getDocument())), task);
-                    } catch (ParseException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                    showFixNamespacesDialog(target, importData.get());
                 }
-            }, Bundle.FixNamespacesLabelLongName(), cancel, false);
-
-            if (importData.get() != null && !cancel.get()) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        showFixNamespacesDialog(target, importData.get());
-                    }
-                });
-            }
+            });
         }
     }
 

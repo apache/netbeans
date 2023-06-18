@@ -44,6 +44,7 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.web.common.api.WebUtils;
 import org.netbeans.modules.web.jsfapi.api.JsfSupport;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.LibraryType;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
@@ -71,8 +72,8 @@ public class LibraryUtils {
         return library.getType() == LibraryType.COMPOSITE;
     }
 
-    public static boolean importLibrary(Document document, Library library, String prefix, boolean isJsf22Plus) {
-        return !importLibrary(document, Collections.singletonMap(library, prefix), isJsf22Plus).isEmpty();
+    public static boolean importLibrary(Document document, Library library, String prefix, JsfVersion jsfVersion) {
+        return !importLibrary(document, Collections.singletonMap(library, prefix), jsfVersion).isEmpty();
     }
 
     /**
@@ -84,7 +85,7 @@ public class LibraryUtils {
      *
      * @return a map of library2declared prefixes which contains just the imported pairs
      */
-    public static Map<Library, String> importLibrary(Document document, Map<Library, String> libraries2prefixes, final boolean isJsf22Plus) {
+    public static Map<Library, String> importLibrary(Document document, Map<Library, String> libraries2prefixes, JsfVersion jsfVersion) {
         assert document instanceof BaseDocument;
 
         final Map<Library, String> imports = new LinkedHashMap<Library, String>(libraries2prefixes);
@@ -226,8 +227,7 @@ public class LibraryUtils {
                                 String prefixToDeclare = imports.get(library);
                                 int insertPosition = originalInsertPosition + offset_shift;
 
-                                String namespace = isJsf22Plus || library.getLegacyNamespace() == null ?
-                                        library.getNamespace() : library.getLegacyNamespace();
+                                String namespace = jsfVersion.getNamespaceUri(prefixToDeclare);
                                 String text = (!noAttributes ? "\n" : "") + " xmlns:" + prefixToDeclare + //NOI18N
                                         "=\"" + namespace + "\""; //NOI18N
 

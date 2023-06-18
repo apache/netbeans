@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.netbeans.modules.html.editor.lib.api.elements.Attribute;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 
 /**
@@ -31,7 +32,7 @@ import org.netbeans.modules.web.jsfapi.api.Library;
 public class ImportData {
 
     public volatile boolean shouldShowNamespacesPanel;
-    public volatile boolean isJsf22;
+    public volatile JsfVersion jsfVersion;
 
     private final List<DataItem> dataItems = new ArrayList<>();
     private final List<DataItem> dataItemsToReplace = new ArrayList<>();

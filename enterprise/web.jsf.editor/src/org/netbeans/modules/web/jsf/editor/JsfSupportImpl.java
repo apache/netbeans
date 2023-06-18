@@ -23,6 +23,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.logging.Level;
@@ -40,6 +42,7 @@ import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import org.netbeans.modules.web.jsf.editor.facelets.FaceletsLibrarySupport;
 import org.netbeans.modules.web.jsf.editor.index.JsfIndex;
 import org.netbeans.modules.web.jsfapi.api.JsfSupport;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 import org.netbeans.modules.web.jsfapi.spi.JsfSupportProvider;
@@ -57,6 +60,21 @@ import org.openide.util.lookup.InstanceContent;
 public class JsfSupportImpl implements JsfSupport {
 
 	private static final Logger LOG = Logger.getLogger(JsfSupportImpl.class.getSimpleName());
+
+    private static final Map<JSFVersion, JsfVersion> JSF_VERSION_MAPPING;
+    static {
+        Map<JSFVersion, JsfVersion> map = new HashMap<>();
+        map.put(JSFVersion.JSF_1_0, JsfVersion.JSF_1_0);
+        map.put(JSFVersion.JSF_1_1, JsfVersion.JSF_1_1);
+        map.put(JSFVersion.JSF_1_2, JsfVersion.JSF_1_2);
+        map.put(JSFVersion.JSF_2_0, JsfVersion.JSF_2_0);
+        map.put(JSFVersion.JSF_2_1, JsfVersion.JSF_2_1);
+        map.put(JSFVersion.JSF_2_2, JsfVersion.JSF_2_2);
+        map.put(JSFVersion.JSF_2_3, JsfVersion.JSF_2_3);
+        map.put(JSFVersion.JSF_3_0, JsfVersion.JSF_3_0);
+        map.put(JSFVersion.JSF_4_0, JsfVersion.JSF_4_0);
+        JSF_VERSION_MAPPING = Collections.unmodifiableMap(map);
+    }
 
     public static JsfSupportImpl findFor(Source source) {
         return getOwnImplementation(JsfSupportProvider.get(source));
@@ -265,6 +283,17 @@ public class JsfSupportImpl implements JsfSupport {
     
     public synchronized MetadataModel<org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel> getJakartaWebBeansModel() {
         return webBeansModelJakarta;
+    }
+
+    @Override
+    public JsfVersion getJsfVersion() {
+        if (wm == null) {
+            return JsfVersion.latest();
+        }
+
+        JSFVersion jsfVersion = JSFVersion.forWebModule(wm);
+
+        return JSF_VERSION_MAPPING.getOrDefault(jsfVersion, JsfVersion.latest());
     }
 
     @Override

@@ -44,7 +44,7 @@ import org.netbeans.modules.web.jsf.editor.JsfSupportImpl;
 import org.netbeans.modules.web.jsf.editor.JsfUtils;
 import org.netbeans.modules.web.jsf.editor.actions.ImportData.VariantItem;
 import org.netbeans.modules.web.jsf.editor.hints.LibraryDeclarationChecker;
-import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 
@@ -78,7 +78,9 @@ class NamespaceProcessor {
         final ImportData importData = new ImportData();
 
         // use JSF 2.2 namespaces?
-        importData.isJsf22 = jsfSupport == null ? false : jsfSupport.isJsf22Plus();
+        importData.jsfVersion = jsfSupport.getJsfVersion();
+
+        resultCollector.initialize(importData.jsfVersion);
 
         // unused declarations
         for (Attribute namespaceAttribute : resultCollector.getUnusedNamespaces()) {
@@ -87,7 +89,7 @@ class NamespaceProcessor {
 
         for (String prefix : resultCollector.getUnresolvedPrefixes()) {
             importData.shouldShowNamespacesPanel = true;
-            List<VariantItem> sortedVariants = getSortedVariants(prefix);
+            List<VariantItem> sortedVariants = getSortedVariants(prefix, importData.jsfVersion);
             importData.add(new ImportData.DataItem(
                     prefix,
                     sortedVariants,
@@ -95,19 +97,6 @@ class NamespaceProcessor {
         }
 
         return importData;
-    }
-
-    private static Node getTopRoot(HtmlParserResult parserResult) {
-        Node root = parserResult.root();
-        if (root.children().isEmpty()) {
-            Node faceletsRoot = parserResult.root(DefaultLibraryInfo.FACELETS.getLegacyNamespace());
-            if (!faceletsRoot.children().isEmpty()) {
-                return faceletsRoot;
-            } else {
-                return parserResult.root(DefaultLibraryInfo.FACELETS.getNamespace());
-            }
-        }
-        return root;
     }
 
     private List<Library> getDeclaredLibraries() {
@@ -121,7 +110,7 @@ class NamespaceProcessor {
         return result;
     }
 
-    private List<VariantItem> getSortedVariants(String prefix) {
+    private List<VariantItem> getSortedVariants(String prefix, JsfVersion jsfVersion) {
         List<VariantItem> result = new ArrayList<>();
         List<String> sortedList = new ArrayList<>(supportedLibraries.keySet());
         Collections.sort(sortedList);
@@ -131,9 +120,8 @@ class NamespaceProcessor {
             String ns = it.next();
             Library library = supportedLibraries.get(ns);
             if (prefix.equals(library.getDefaultPrefix())) {
-                if (jsfSupport != null && jsfSupport.isJsf22Plus()) {
-                    ns = library.getNamespace();
-                }
+                ns = jsfVersion.getNamespaceUri(prefix);
+
                 result.add(new VariantItem(prefix, ns, library));
                 it.remove();
             }
@@ -142,9 +130,7 @@ class NamespaceProcessor {
         // complete the remaining items
         for (String remainingNs : sortedList) {
             Library library = supportedLibraries.get(remainingNs);
-            if (jsfSupport != null && jsfSupport.isJsf22Plus()) {
-                    remainingNs = library.getNamespace();
-                }
+            remainingNs = jsfVersion.getNamespaceUri(prefix);
             result.add(new VariantItem(prefix, remainingNs, library));
         }
 
@@ -167,10 +153,9 @@ class NamespaceProcessor {
             this.nsCollector = new NamespaceCollector(parserResult);
             this.compCollector = new ComponentCollector(parserResult, prefixMap);
             this.unresolvedCollector = new UnresolvedCollector(parserResult);
-            initialize();
         }
 
-        private void initialize() {
+        private void initialize(JsfVersion jsfVersion) {
             for (String prefix : parserResult.getNamespaces().values()) {
                 if (prefix != null) {
                     prefixMap.put(prefix, Boolean.FALSE);
@@ -180,7 +165,7 @@ class NamespaceProcessor {
             // gather usage of namespaces
             ElementUtils.visitChildren(parserResult.root(), compCollector, ElementType.OPEN_TAG);
             for (Library library : declaredLibraries) {
-                Node root = JsfUtils.getRoot(parserResult, library);
+                Node root = JsfUtils.getRoot(parserResult, library, jsfVersion);
                 if (root != null) {
                     ElementUtils.visitChildren(root, compCollector, ElementType.OPEN_TAG);
                 }

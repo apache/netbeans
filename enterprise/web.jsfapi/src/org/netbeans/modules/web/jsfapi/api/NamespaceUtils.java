@@ -39,7 +39,7 @@ public final class NamespaceUtils {
     public static final String SUN_COM_LOCATION = "http://java.sun.com";  //NOI18N
 
     /** Mapping of the new namespace to the legacy one. */
-    public static final Map<String, String> NS_MAPPING = new HashMap<String, String>(8);
+    public static final Map<String, String> NS_MAPPING = new HashMap<String, String>(16);
 
     static {
         NS_MAPPING.put("http://xmlns.jcp.org/jsf/html", "http://java.sun.com/jsf/html");                     //NOI18N
@@ -50,6 +50,15 @@ public final class NamespaceUtils {
         NS_MAPPING.put("http://xmlns.jcp.org/jsf/composite", "http://java.sun.com/jsf/composite");           //NOI18N
         NS_MAPPING.put("http://xmlns.jcp.org/jsf", "http://java.sun.com/jsf");                               //NOI18N
         NS_MAPPING.put("http://xmlns.jcp.org/jsf/passthrough", "http://java.sun.com/jsf/passthrough");       //NOI18N
+
+        NS_MAPPING.put("jakarta.faces.html", "http://java.sun.com/jsf/html");               //NOI18N
+        NS_MAPPING.put("jakarta.faces.core", "http://java.sun.com/jsf/core");               //NOI18N
+        NS_MAPPING.put("jakarta.tags.core", "http://java.sun.com/jsp/jstl/core");           //NOI18N
+        NS_MAPPING.put("jakarta.tags.functions", "http://java.sun.com/jsp/jstl/functions"); //NOI18N
+        NS_MAPPING.put("jakarta.faces.facelets", "http://java.sun.com/jsf/facelets");       //NOI18N
+        NS_MAPPING.put("jakarta.faces.composite", "http://java.sun.com/jsf/composite");     //NOI18N
+        NS_MAPPING.put("jakarta.faces", "http://java.sun.com/jsf");                         //NOI18N
+        NS_MAPPING.put("jakarta.faces.passthrough", "http://java.sun.com/jsf/passthrough"); //NOI18N
     }
 
     /**

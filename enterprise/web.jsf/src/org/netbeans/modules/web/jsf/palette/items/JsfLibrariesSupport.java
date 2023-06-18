@@ -130,7 +130,7 @@ public class JsfLibrariesSupport {
                 toimport.put(limport.lib, null); //lets use the default prefix
             }
         }
-        LibraryUtils.importLibrary(tc.getDocument(), toimport, jsfs.isJsf22Plus());
+        LibraryUtils.importLibrary(tc.getDocument(), toimport, jsfs.getJsfVersion());
     }
 
     /** @return the library default prefix in the case it hasn't been declared yet or the declared prefix */

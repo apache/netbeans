@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.54
+#Version 1.55
 
 CLSS public abstract interface java.io.Serializable
 
@@ -122,13 +122,20 @@ meth public abstract java.lang.String getDescription()
 meth public abstract java.lang.String getName()
 meth public abstract java.lang.String getSignature()
 
+CLSS public final org.netbeans.modules.web.jsfapi.api.JsfNamespaces
+supr java.lang.Object
+hfds JAKARTA,JAVA_SUN_COM,XMLNS_JCP_ORG
+
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.JsfSupport
 meth public abstract boolean isJsf22Plus()
+ anno 0 java.lang.Deprecated()
 meth public abstract boolean isJsf30Plus()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Map<java.lang.String,? extends org.netbeans.modules.web.jsfapi.api.Library> getLibraries()
 meth public abstract org.netbeans.api.java.classpath.ClassPath getClassPath()
 meth public abstract org.netbeans.api.project.Project getProject()
 meth public abstract org.netbeans.modules.web.api.webmodule.WebModule getWebModule()
+meth public abstract org.netbeans.modules.web.jsfapi.api.JsfVersion getJsfVersion()
 meth public abstract org.netbeans.modules.web.jsfapi.api.Library getLibrary(java.lang.String)
 meth public abstract org.openide.util.Lookup getLookup()
 
@@ -137,6 +144,23 @@ cons public init()
 fld public final static java.lang.String JSF_XHTML_FILE_MIMETYPE = "text/facelets"
 meth public static boolean isFaceletsFile(org.openide.filesystems.FileObject)
 supr java.lang.Object
+
+CLSS public final !enum org.netbeans.modules.web.jsfapi.api.JsfVersion
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_1_0
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_1_1
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_1_2
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_0
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_1
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_2
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_3
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_3_0
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_4_0
+meth public java.lang.String getNamespaceUri(java.lang.String)
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion latest()
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion valueOf(java.lang.String)
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion[] values()
+supr java.lang.Enum<org.netbeans.modules.web.jsfapi.api.JsfVersion>
+hfds prefixUriMapping,version
 
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.Library
 intf org.netbeans.modules.web.jsfapi.api.LibraryInfo
@@ -234,7 +258,7 @@ cons public init()
 fld public final static java.lang.String COMPOSITE_LIBRARY_LEGACY_NS = "http://java.sun.com/jsf/composite"
 fld public final static java.lang.String COMPOSITE_LIBRARY_NS = "http://xmlns.jcp.org/jsf/composite"
 fld public final static java.lang.String XHTML_NS = "http://www.w3.org/1999/xhtml"
-meth public static boolean importLibrary(javax.swing.text.Document,org.netbeans.modules.web.jsfapi.api.Library,java.lang.String,boolean)
+meth public static boolean importLibrary(javax.swing.text.Document,org.netbeans.modules.web.jsfapi.api.Library,java.lang.String,org.netbeans.modules.web.jsfapi.api.JsfVersion)
 meth public static boolean isCompositeComponentLibrary(org.netbeans.modules.web.jsfapi.api.Library)
  anno 0 java.lang.Deprecated()
 meth public static java.lang.String generateDefaultPrefix(java.lang.String)
@@ -242,7 +266,7 @@ meth public static java.lang.String generateDefaultPrefix(java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static java.lang.String getCompositeLibraryURL(java.lang.String,boolean)
 meth public static java.util.Map<java.lang.String,org.netbeans.modules.web.jsfapi.api.Library> getDeclaredLibraries(org.netbeans.modules.html.editor.lib.api.HtmlParsingResult)
-meth public static java.util.Map<org.netbeans.modules.web.jsfapi.api.Library,java.lang.String> importLibrary(javax.swing.text.Document,java.util.Map<org.netbeans.modules.web.jsfapi.api.Library,java.lang.String>,boolean)
+meth public static java.util.Map<org.netbeans.modules.web.jsfapi.api.Library,java.lang.String> importLibrary(javax.swing.text.Document,java.util.Map<org.netbeans.modules.web.jsfapi.api.Library,java.lang.String>,org.netbeans.modules.web.jsfapi.api.JsfVersion)
 meth public static org.netbeans.api.project.Project[] getOpenedJSFProjects()
 supr java.lang.Object
 

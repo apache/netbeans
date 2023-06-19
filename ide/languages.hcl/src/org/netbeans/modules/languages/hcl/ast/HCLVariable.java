@@ -18,49 +18,28 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-public abstract class HCLIdentifier extends HCLElement {
+public final class HCLVariable extends HCLExpression {
 
-    public final String id;
-    
-    public HCLIdentifier(String id) {
-        this.id = id;
-    }
+    public final HCLIdentifier name;
 
-    public String id() {
-        return id;
+    public HCLVariable(HCLIdentifier name) {
+        this.name = name;
     }
 
     @Override
-    public final void accept(Visitor v) {
-        v.visit(this);
+    public String asString() {
+        return name.id;
     }
 
-    public final static class SimpleId extends HCLIdentifier {
-
-        public SimpleId(String id) {
-            super(id);
-        }
-
-        @Override
-        public String toString() {
-            return id;
-        }
-    }
-
-    public final static class StringId extends HCLIdentifier {
-
-        public StringId(String id) {
-            super(id);
-        }
-
-        @Override
-        public String toString() {
-            return "\"" + id + "\"";
-        }
-
+    @Override
+    public List<? extends HCLExpression> getChildren() {
+        return Collections.emptyList();
     }
 }

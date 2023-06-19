@@ -18,49 +18,44 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
+import java.util.List;
+import java.util.StringJoiner;
+
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-public abstract class HCLIdentifier extends HCLElement {
+public class HCLFunction extends HCLExpression {
 
-    public final String id;
-    
-    public HCLIdentifier(String id) {
-        this.id = id;
+    final HCLIdentifier name;
+    final List<HCLExpression> args;
+    final boolean expand;
+
+    public HCLFunction(HCLIdentifier name, List<HCLExpression> args, boolean expand) {
+        this.name = name;
+        this.args = args;
+        this.expand = expand;
     }
 
-    public String id() {
-        return id;
+    public HCLIdentifier getName() {
+        return name;
+    }
+
+    public List<HCLExpression> getArgs() {
+        return args;
     }
 
     @Override
-    public final void accept(Visitor v) {
-        v.visit(this);
+    public String asString() {
+        StringJoiner sargs = new StringJoiner(",", "(", expand ? "...)" : ")");
+        args.forEach((arg) -> sargs.add(arg.toString()));
+        return name + sargs.toString();
     }
 
-    public final static class SimpleId extends HCLIdentifier {
-
-        public SimpleId(String id) {
-            super(id);
-        }
-
-        @Override
-        public String toString() {
-            return id;
-        }
+    @Override
+    public List<? extends HCLExpression> getChildren() {
+        return args;
     }
 
-    public final static class StringId extends HCLIdentifier {
-
-        public StringId(String id) {
-            super(id);
-        }
-
-        @Override
-        public String toString() {
-            return "\"" + id + "\"";
-        }
-
-    }
+    
 }

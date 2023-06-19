@@ -18,16 +18,22 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
+
 /**
  *
  * @author Laszlo Kishalmi
  */
-public final class HCLAttribute extends HCLElement {
+public final class HCLAttribute extends HCLAddressableElement {
 
-    HCLIdentifier name;
+    final HCLIdentifier name;
+    final HCLExpression value;
+    final int group;
 
-    public HCLAttribute(HCLContainer parent) {
+    public HCLAttribute(HCLContainer parent, HCLIdentifier name, HCLExpression value, int group) {
         super(parent);
+        this.name = name;
+        this.value = value;
+        this.group = group;
     }
  
     @Override
@@ -39,4 +45,19 @@ public final class HCLAttribute extends HCLElement {
         return name;
     }
 
+    public HCLExpression getValue() {
+        return value;
+    }
+
+    public int getGroup() {
+        return group;
+    }
+
+    @Override
+    public void accept(Visitor v) {
+        if (!v.visit(this) && (value != null)) {
+            value.accept(v);
+        }
+    }
+    
 }

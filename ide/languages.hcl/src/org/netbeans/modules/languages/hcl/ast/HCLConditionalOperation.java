@@ -18,49 +18,34 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-public abstract class HCLIdentifier extends HCLElement {
+public final class HCLConditionalOperation extends HCLExpression {
 
-    public final String id;
-    
-    public HCLIdentifier(String id) {
-        this.id = id;
-    }
+    final HCLExpression condition;
+    final HCLExpression trueValue;
+    final HCLExpression falseValue;
 
-    public String id() {
-        return id;
+    public HCLConditionalOperation(HCLExpression condition, HCLExpression trueValue, HCLExpression falseValue) {
+        this.condition = condition;
+        this.trueValue = trueValue;
+        this.falseValue = falseValue;
     }
 
     @Override
-    public final void accept(Visitor v) {
-        v.visit(this);
+    public String asString() {
+        return condition.toString() + "?" + trueValue.toString() + ":" + falseValue.toString();
     }
 
-    public final static class SimpleId extends HCLIdentifier {
-
-        public SimpleId(String id) {
-            super(id);
-        }
-
-        @Override
-        public String toString() {
-            return id;
-        }
+    @Override
+    public List<? extends HCLExpression> getChildren() {
+        return Arrays.asList(condition, trueValue, falseValue);
     }
-
-    public final static class StringId extends HCLIdentifier {
-
-        public StringId(String id) {
-            super(id);
-        }
-
-        @Override
-        public String toString() {
-            return "\"" + id + "\"";
-        }
-
-    }
+        
+    
 }

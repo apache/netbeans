@@ -189,22 +189,18 @@ public class JsfSupportImpl implements JsfSupport {
             }
         });
 
-        if(isJsf30Plus()){
-            webBeansModelJakarta = new org.netbeans.modules.jakarta.web.beans.MetaModelSupport(project).getMetaModel();
-        } else {
-            webBeansModel = new org.netbeans.modules.web.beans.MetaModelSupport(project).getMetaModel();
-        }
-        
         //init lookup
         //TODO do it lazy so it creates the web beans model lazily once looked up
         InstanceContent ic = new InstanceContent();
-        if(isJsf30Plus()){
+        if(getJsfVersion().isAtLeast(JsfVersion.JSF_3_0)){
+            webBeansModelJakarta = new org.netbeans.modules.jakarta.web.beans.MetaModelSupport(project).getMetaModel();
             ic.add(webBeansModelJakarta);
         } else {
+            webBeansModel = new org.netbeans.modules.web.beans.MetaModelSupport(project).getMetaModel();
             ic.add(webBeansModel);
         }
-        this.lookup = new AbstractLookup(ic);
 
+        this.lookup = new AbstractLookup(ic);
     }
 
     @Override
@@ -294,28 +290,6 @@ public class JsfSupportImpl implements JsfSupport {
         JSFVersion jsfVersion = JSFVersion.forWebModule(wm);
 
         return JSF_VERSION_MAPPING.getOrDefault(jsfVersion, JsfVersion.latest());
-    }
-
-    @Override
-    public boolean isJsf22Plus() {
-        if (wm != null) {
-            JSFVersion version = JSFVersion.forWebModule(wm);
-            // caching is done inside the method
-            return version != null && version.isAtLeast(JSFVersion.JSF_2_2);
-        }
-        // return the latest supported one until somebody will complain about that
-        return true;
-    }
-
-		@Override
-    public boolean isJsf30Plus() {
-        if (wm != null) {
-            JSFVersion version = JSFVersion.forWebModule(wm);
-            // caching is done inside the method
-            return version != null && version.isAtLeast(JSFVersion.JSF_3_0);
-        }
-        // return the latest supported one until somebody will complain about that
-        return true;
     }
 
     @Override

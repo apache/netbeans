@@ -47,19 +47,4 @@ public interface JsfSupport {
     public Lookup getLookup();
 
     public JsfVersion getJsfVersion();
-
-    /**
-     *
-     * @return
-     * @deprecated use {@link JsfSupport#getJsfVersion()}
-     */
-    @Deprecated
-    public boolean isJsf22Plus();
-
-    /**
-     *
-     * @return @deprecated use {@link JsfSupport#getJsfVersion()}
-     */
-    @Deprecated
-    public boolean isJsf30Plus();
 }

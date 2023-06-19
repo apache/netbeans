@@ -32,6 +32,7 @@ import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.html.editor.lib.api.elements.*;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.web.jsf.editor.JsfSupportImpl;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.LibraryComponent;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
@@ -93,7 +94,7 @@ public class JsfVariablesModel {
         if(sup == null) {
             return ;
         }
-        Set<String> faceletsLibsNamespaces = NamespaceUtils.getAvailableNss(sup.getLibraries(), sup.isJsf22Plus());
+        Set<String> faceletsLibsNamespaces = NamespaceUtils.getAvailableNss(sup.getLibraries(), sup.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2));
         Collection<String> declaredNamespaces = result.getNamespaces().keySet();
 
         for (String namespace : declaredNamespaces) {

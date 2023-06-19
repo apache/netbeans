@@ -31,6 +31,7 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.modules.web.jsf.editor.index.CompositeComponentModel;
 import org.netbeans.modules.web.jsf.editor.index.JsfIndex;
 import org.netbeans.modules.web.jsfapi.api.Attribute;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.LibraryType;
 import org.netbeans.modules.web.jsfapi.api.Tag;
 import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
@@ -89,7 +90,7 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
 
     @Override
     public String getDefaultNamespace() {
-        return LibraryUtils.getCompositeLibraryURL(getLibraryName(), support.getJsfSupport().isJsf22Plus());
+        return LibraryUtils.getCompositeLibraryURL(getLibraryName(), support.getJsfSupport().getJsfVersion().isAtLeast(JsfVersion.JSF_2_2));
     }
 
     @Override

@@ -52,6 +52,7 @@ import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.common.api.WebUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
 import org.netbeans.spi.editor.codegen.CodeGenerator;
@@ -208,7 +209,7 @@ public class InjectCompositeComponent {
             //but since the library has just been created by adding an xhtml file
             //to the resources/xxx/ folder we need to wait until the files
             //get indexed and the library is created
-            final String compositeLibURL = LibraryUtils.getCompositeLibraryURL(compFolder, jsfs.isJsf22Plus());
+            final String compositeLibURL = LibraryUtils.getCompositeLibraryURL(compFolder, jsfs.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2));
             Source documentSource = Source.create(document);
             ParserManager.parseWhenScanFinished(Collections.singletonList(documentSource), new UserTask() { //NOI18N
                 @Override

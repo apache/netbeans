@@ -127,10 +127,6 @@ supr java.lang.Object
 hfds JAKARTA,JAVA_SUN_COM,XMLNS_JCP_ORG
 
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.JsfSupport
-meth public abstract boolean isJsf22Plus()
- anno 0 java.lang.Deprecated()
-meth public abstract boolean isJsf30Plus()
- anno 0 java.lang.Deprecated()
 meth public abstract java.util.Map<java.lang.String,? extends org.netbeans.modules.web.jsfapi.api.Library> getLibraries()
 meth public abstract org.netbeans.api.java.classpath.ClassPath getClassPath()
 meth public abstract org.netbeans.api.project.Project getProject()
@@ -155,7 +151,9 @@ fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_2
 fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_3
 fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_3_0
 fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_4_0
+meth public boolean isAtLeast(org.netbeans.modules.web.jsfapi.api.JsfVersion)
 meth public java.lang.String getNamespaceUri(java.lang.String)
+meth public java.lang.String getVersion()
 meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion latest()
 meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion valueOf(java.lang.String)
 meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion[] values()

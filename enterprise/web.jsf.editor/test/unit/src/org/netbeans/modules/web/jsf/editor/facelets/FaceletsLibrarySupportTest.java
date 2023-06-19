@@ -23,6 +23,10 @@ import java.util.Map;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.assertTrue;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.modules.web.jsf.editor.JsfSupportImpl;
@@ -31,6 +35,7 @@ import org.netbeans.modules.web.jsf.editor.index.JsfCustomIndexer;
 import org.netbeans.modules.web.jsfapi.api.Attribute;
 import org.netbeans.modules.web.jsfapi.api.Function;
 import org.netbeans.modules.web.jsfapi.api.JsfSupport;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.LibraryComponent;
 import org.netbeans.modules.web.jsfapi.api.LibraryType;
@@ -66,7 +71,7 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
     public void testCompositeComponentLibraryWithoutDescriptor() {
         JsfSupportImpl instance = getJsfSupportImpl();
 
-        String ezCompLibraryNS = LibraryUtils.getCompositeLibraryURL("ezcomp", instance.isJsf22Plus());
+        String ezCompLibraryNS = LibraryUtils.getCompositeLibraryURL("ezcomp", instance.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2));
 
         Library ezcompLib = instance.getLibrary(ezCompLibraryNS);
         assertNotNull(String.format("Library %s not found!", ezCompLibraryNS), ezcompLib);
@@ -115,7 +120,7 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
         assertEquals("ezcomp2", ezcompLib.getDefaultPrefix());
         assertSame(LibraryType.COMPOSITE, ezcompLib.getType());
 
-        String ezCompLibraryDefaultNS = LibraryUtils.getCompositeLibraryURL("ezcomp2", instance.isJsf22Plus());
+        String ezCompLibraryDefaultNS = LibraryUtils.getCompositeLibraryURL("ezcomp2", instance.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2));
         assertEquals(ezCompLibraryDefaultNS, ezcompLib.getDefaultNamespace());
         assertEquals(ezCompLibraryNS, ezcompLib.getNamespace());
         Tag t = cclib.getLibraryDescriptor().getTags().get("test");
@@ -201,7 +206,7 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
 
 //        debugLibraries(instance);
 
-        String libNs = LibraryUtils.getCompositeLibraryURL("cclib", instance.isJsf22Plus());
+        String libNs = LibraryUtils.getCompositeLibraryURL("cclib", instance.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2));
 
         Library lib = instance.getLibrary(libNs);
         assertNotNull(String.format("Library %s not found!", libNs), lib);
@@ -240,7 +245,7 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
         assertEquals("cclib2", lib.getDefaultPrefix());
         assertSame(LibraryType.COMPOSITE, lib.getType());
 
-        String ezCompLibraryDefaultNS = LibraryUtils.getCompositeLibraryURL("cclib2", instance.isJsf22Plus());
+        String ezCompLibraryDefaultNS = LibraryUtils.getCompositeLibraryURL("cclib2", instance.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2));
         assertEquals(ezCompLibraryDefaultNS, lib.getDefaultNamespace());
         assertEquals(libNs, lib.getNamespace());
         Tag t = cclib.getLibraryDescriptor().getTags().get("cc2");

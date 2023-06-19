@@ -142,14 +142,6 @@ public class JsfLibrariesSupport {
         return limport.declaredPrefix != null ? limport.declaredPrefix : limport.lib.getDefaultPrefix();
     }
 
-    public boolean isJsf22Plus() {
-        return jsfs.isJsf22Plus();
-    }
-
-    public boolean isJsf30Plus() {
-        return jsfs.isJsf30Plus();
-    }
-
     private static class LibraryImport {
         public Library lib;
         public String declaredPrefix;

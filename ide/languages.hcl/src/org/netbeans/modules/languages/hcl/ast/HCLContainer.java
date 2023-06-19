@@ -1,4 +1,4 @@
-/*
+ /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author Laszlo Kishalmi
  */
-public abstract class HCLContainer extends HCLElement {
+public abstract class HCLContainer extends HCLAddressableElement {
     final List<HCLElement> elements = new LinkedList<>();
 
     final List<HCLBlock> blocks = new LinkedList<>();
@@ -63,4 +63,14 @@ public abstract class HCLContainer extends HCLElement {
     public boolean hasAttributes() {
         return !attributes.isEmpty();
     }
+
+    @Override
+    public final void accept(Visitor v) {
+        if (!v.visit(this)) {
+            for (HCLElement element : elements) {
+                element.accept(v);
+            }
+        }
+    }
+
 }

@@ -16,16 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.languages.hcl.ast;
+package org.netbeans.modules.languages.hcl;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.languages.hcl.ast.HCLElement;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.openide.filesystems.FileObject;
 
@@ -36,30 +38,50 @@ import org.openide.filesystems.FileObject;
 public class SourceRef {
     public final Snapshot source;
     private Map<HCLElement, OffsetRange> elementOffsets = new HashMap<>();
-    private final Comparator<HCLElement> sourceOrder = Comparator.comparing((HCLElement e) -> elementOffsets.get(e));
 
+    private TreeMap<OffsetRange, HCLElement> elementAt = new TreeMap<>((o1, o2) -> o1.getStart() != o2.getStart() ? o1.getStart() - o2.getStart() : o2.getEnd() - o1.getEnd());
+    
     public SourceRef(Snapshot source) {
         this.source = source;
     }
 
-    void add(HCLElement e, OffsetRange r) {
-        elementOffsets.put(e, r);
+    private void add(HCLElement e, OffsetRange r) {
+        if (!elementOffsets.containsKey(e)) {
+            // Only add the most specific range for the expression.
+            elementOffsets.put(e, r);
+            elementAt.put(r, e);
+        }
     }
 
-    void add(HCLElement e, int startOffset, int endOffset) {
-        add(e, new OffsetRange(startOffset, endOffset));
+    void elementCreated(HCLElement.CreateContext ctx) {
+        add(ctx.element, new OffsetRange(ctx.start.getStartIndex(), ctx.stop.getStopIndex() + 1));
     }
 
     public FileObject getFileObject() {
         return source.getSource().getFileObject();
     }
+
     public Optional<OffsetRange> getOffsetRange(HCLElement e) {
         return Optional.ofNullable(elementOffsets.get(e));
     }
-    
-    <E extends HCLElement> List<E> sortBySource(List<? extends E> elements) {
-        List<E> ret = new ArrayList<>(elements);
-        Collections.sort(ret, sourceOrder);
-        return ret;
+
+    public List<? extends HCLElement> elementsAt(int index) {
+        if (index < 0) {
+            return Collections.emptyList();
+        }
+        List<HCLElement> ret = new LinkedList<>();
+        Iterator<Map.Entry<OffsetRange, HCLElement>> it = elementAt.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<OffsetRange, HCLElement> e = it.next();
+            OffsetRange or = e.getKey();
+            if (or.getStart() > index) {
+                break;
+            }
+            if (or.getEnd() <= index) {
+                continue;
+            }
+            ret.add(e.getValue());
+        }
+        return ret.isEmpty() ? Collections.emptyList() : Collections.unmodifiableList(ret);
     }
 }

@@ -20,47 +20,28 @@ package org.netbeans.modules.languages.hcl.ast;
 
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-public abstract class HCLIdentifier extends HCLElement {
-
-    public final String id;
+public abstract class HCLAddressableElement extends HCLElement {
     
-    public HCLIdentifier(String id) {
-        this.id = id;
+    final HCLAddressableElement parent;
+
+    public HCLAddressableElement(HCLAddressableElement parent) {
+        this.parent = parent;
     }
 
-    public String id() {
-        return id;
+    public final HCLAddressableElement getParent() {
+        return parent;
     }
 
-    @Override
-    public final void accept(Visitor v) {
-        v.visit(this);
-    }
-
-    public final static class SimpleId extends HCLIdentifier {
-
-        public SimpleId(String id) {
-            super(id);
+    public HCLContainer getContainer() {
+        HCLAddressableElement e = parent;
+        while (e != null && !(e instanceof HCLContainer)) {
+            e = e.parent;
         }
-
-        @Override
-        public String toString() {
-            return id;
-        }
+        return (HCLContainer) e;
     }
 
-    public final static class StringId extends HCLIdentifier {
+    public abstract String id();
 
-        public StringId(String id) {
-            super(id);
-        }
-
-        @Override
-        public String toString() {
-            return "\"" + id + "\"";
-        }
-
-    }
 }

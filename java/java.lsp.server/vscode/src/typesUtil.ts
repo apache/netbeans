@@ -25,6 +25,18 @@ export function asClass<T>(cls: Constructor<T>, obj: unknown, errorMessage?: str
     return obj;
 }
 
+export function isString(obj: unknown): obj is string {
+    return typeof obj === 'string';
+}
+
+export function isObject(obj: unknown): obj is object {
+    return typeof obj === 'object' && obj !== null;
+}
+
+export function isRecord<K extends PropertyKey, T>(typeTest: IsType<T>, obj: unknown): obj is Record<K, T> {
+    return isObject(obj) && Object.keys(obj).every(typeTest);
+}
+
 export function isError(obj: unknown): obj is Error {
     return obj instanceof Error;
 }
@@ -32,11 +44,6 @@ export function isError(obj: unknown): obj is Error {
 export function assertNever(_obj: never, errorMessage?: string): never {
     throw new Error(errorMessage || "Shouldn't reach here.");
 }
-
-export type KeyOfArray<T> = TupleUnion<keyof T>;
-export type TupleUnion<U extends PropertyKey, R extends PropertyKey[] = []> = {
-    [S in U]: Exclude<U, S> extends never ? [...R, S] : TupleUnion<Exclude<U, S>, [...R, S]>;
-}[U];
 
 export type EnumType<T extends PropertyKey> = { readonly [P in T]: P };
 export type Typed<T extends PropertyKey> = { _type: T };

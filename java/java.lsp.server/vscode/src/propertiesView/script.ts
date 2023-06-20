@@ -13,7 +13,7 @@ provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeTextField(), vsCodeDi
 const vscode = acquireVsCodeApi();
 document.addEventListener("DOMContentLoaded", () => {
     try {
-        asClass(Button, document.getElementById('save'), "Not save.")
+        asClass(Button, document.getElementById('save'))
             .addEventListener('click', () => {
                 try {
                     if (validate())
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     handleError(e);
                 }
             });
-        asClass(Button, document.getElementById('cancel'), "Not cancel.")
+        asClass(Button, document.getElementById('cancel'))
             .addEventListener('click', () => {
                 sendMessage({ _type: CommandKey.Cancel });
             });
@@ -61,11 +61,13 @@ function getProperty(element: HTMLElement): MessageProp {
     } else if (isClass(HTMLTableElement, element)) {
         return makeProperty(parseProperties(element), element?.id);
     }
-    return { name: element?.id || "", value: element?.nodeValue || "" };
+    throw new Error("Unknown HTML Element type.");
 }
 
 function makeProperty(value: string | boolean | Record<string, string>, name?: string): MessageProp {
-    return { name: name || "NoID", value: value };
+    if (name)
+        return { name: name, value: value };
+    throw new Error("HTML Element have no ID.");
 }
 
 function parseProperties(table: HTMLTableElement): Record<string, string> {

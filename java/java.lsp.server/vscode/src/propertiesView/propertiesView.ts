@@ -7,12 +7,13 @@
 
 import * as vscode from 'vscode';
 import { CommandKey, ID, Message, MessageProp, Properties, Property, PropTypes } from './controlTypes';
-import { asClass, assertNever } from '../typesUtil';
+import { assertNever, isRecord, isString, IsType } from '../typesUtil';
 import { makeHtmlForProperties } from './propertiesHtmlBuilder';
 
 export class PropertiesView {
-	private static readonly COMMAND_GET_NODE_PROPERTIES = "java.node.properties.get";      // NOI18N
-	private static readonly COMMAND_SET_NODE_PROPERTIES = "java.node.properties.set";      // NOI18N
+	private static readonly COMMAND_PREFIX = "nbls.";
+	private static readonly COMMAND_GET_NODE_PROPERTIES = PropertiesView.COMMAND_PREFIX + "node.properties.get";      // NOI18N
+	private static readonly COMMAND_SET_NODE_PROPERTIES = PropertiesView.COMMAND_PREFIX + "node.properties.set";      // NOI18N
 
 	private static extensionUri: vscode.Uri;
 	private static scriptPath: vscode.Uri;
@@ -104,36 +105,49 @@ export class PropertiesView {
 		if (props.size === 0) {
 			throw new Error("No properties.");
 		}
-		
 		this.properties = props.values().next().value;
-		console.log("Props "+this.properties);
 	}
 
-	private async get() : Promise<Map<String,Properties>> {
+	private async get(): Promise<Map<String, Properties>> {
 		let resp = await vscode.commands.executeCommand(PropertiesView.COMMAND_GET_NODE_PROPERTIES, this.id);
 		if (!resp) {
 			// TODO - possibly report protocol error ?
 			return new Map<String, Properties>();
 		}
-		return new Map<String, Properties>(Object.entries(resp));
-		
+		return new Map<String, Properties>(Object.entries(resp)); // TODO - validate cast
 	}
 
 	private save(properties: MessageProp[]) {
-		if (!this.properties) {
-			return;
-		}
+		if (!this.properties) return;
+
 		for (const prop of properties)
 			this.mergeProps(prop, this.properties?.props);
-		let msg = new Map<String,Properties>();
-		msg.set(this.properties.propName, this.properties);
 
-		vscode.commands.executeCommand(PropertiesView.COMMAND_SET_NODE_PROPERTIES, this.id, msg);
+		const msg: Record<string, Properties> = {};
+		msg[this.properties.propName] = this.properties;
+
+		vscode.commands.executeCommand(PropertiesView.COMMAND_SET_NODE_PROPERTIES, this.id, msg)
+			.then(done => {
+				if (isRecord(isRecord.bind(null, isString) as IsType<Record<string, string>>, done)) {
+					this.processSaveError(done);
+				}
+			}, err => vscode.window.showErrorMessage(err.message, { modal: true, detail: err.stack }));
+	}
+
+	private processSaveError(errObj: Record<string, Record<string, string>>) {
+		if (Object.keys(errObj).length === 0)
+			return;
+		let out = "";
+		for (const propertiesName of Object.keys(errObj)) {
+			for (const property of Object.entries(errObj[propertiesName]))
+				out += `${propertiesName}.${property[0]}: ${property[1]}\n`;
+		}
+		vscode.window.showErrorMessage("Saving of properties failed.", { modal: true, detail: out });
 	}
 
 	private mergeProps(prop: MessageProp, props?: Property[]): void {
 		const p = props?.find(p => p.propName === prop.name);
-		if (p && PropTypes.includes(p.propType))
+		if (p && Object.values(PropTypes).includes(p.propType))
 			p.propValue = prop.value;
 	}
 

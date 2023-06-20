@@ -21,10 +21,10 @@
 import { commands, window, workspace, ExtensionContext, ProgressLocation, TextEditorDecorationType } from 'vscode';
 
 import {
-    LanguageClient,
-    LanguageClientOptions,
-    ServerOptions,
-    StreamInfo
+	LanguageClient,
+	LanguageClientOptions,
+	ServerOptions,
+	StreamInfo
 } from 'vscode-languageclient/node';
 
 import {
@@ -45,11 +45,10 @@ import * as path from 'path';
 import { ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
 import * as launcher from './nbcode';
-import { NbTestAdapter } from './testAdapter';
-import {
-    asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, MutliStepInputRequest, TestProgressNotification, DebugConnector,
-    TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
-    ExecInHtmlPageRequest, SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep
+import {NbTestAdapter} from './testAdapter';
+import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, MutliStepInputRequest, TestProgressNotification, DebugConnector,
+         TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
+         ExecInHtmlPageRequest, SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
@@ -64,14 +63,14 @@ const API_VERSION : string = "1.0";
 const DATABASE: string = 'Database';
 let client: Promise<NbLanguageClient>;
 let testAdapter: NbTestAdapter | undefined;
-let nbProcess: ChildProcess | null = null;
+let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
 
 export class NbLanguageClient extends LanguageClient {
     private _treeViewService: TreeViewService;
 
-    constructor(id: string, name: string, s: ServerOptions, log: vscode.OutputChannel, c: LanguageClientOptions) {
+    constructor (id : string, name: string, s : ServerOptions, log : vscode.OutputChannel, c : LanguageClientOptions) {
         super(id, name, s, c);
         this._treeViewService = createTreeViewService(log, this);
     }
@@ -108,7 +107,7 @@ export function enableConsoleLog() {
     console.log("enableConsoleLog");
 }
 
-export function findClusters(myPath: string): string[] {
+export function findClusters(myPath : string): string[] {
     let clusters = [];
     for (let e of vscode.extensions.all) {
         if (e.extensionPath === myPath) {
@@ -135,8 +134,8 @@ export function findClusters(myPath: string): string[] {
 }
 
 // for tests only !
-export function awaitClient(): Promise<NbLanguageClient> {
-    const c: Promise<NbLanguageClient> = client;
+export function awaitClient() : Promise<NbLanguageClient> {
+    const c : Promise<NbLanguageClient> = client;
     if (c && !(c instanceof InitialPromise)) {
         return c;
     }
@@ -144,7 +143,7 @@ export function awaitClient(): Promise<NbLanguageClient> {
     if (!nbcode) {
         return Promise.reject(new Error("Extension not installed."));
     }
-    const t: Thenable<NbLanguageClient> = nbcode.activate().then(nc => {
+    const t : Thenable<NbLanguageClient> = nbcode.activate().then(nc => {
         if (client === undefined || client instanceof InitialPromise) {
             throw new Error("Client not available");
         } else {
@@ -154,9 +153,9 @@ export function awaitClient(): Promise<NbLanguageClient> {
     return Promise.resolve(t);
 }
 
-function findJDK(onChange: (path: string | null) => void): void {
-    let nowDark: boolean = isDarkColorTheme();
-    let nowJavaEnabled: boolean = isJavaSupportEnabled();
+function findJDK(onChange: (path : string | null) => void): void {
+    let nowDark : boolean = isDarkColorTheme();
+    let nowJavaEnabled : boolean = isJavaSupportEnabled();
     function find(): string | null {
         let nbJdk = workspace.getConfiguration('netbeans').get('jdkhome');
         if (nbJdk) {
@@ -184,7 +183,7 @@ function findJDK(onChange: (path: string | null) => void): void {
         if (timeout) {
             return;
         }
-        let interested: boolean = false;
+        let interested : boolean = false;
         if (params.affectsConfiguration('netbeans') || params.affectsConfiguration('java')) {
             interested = true;
         } else if (params.affectsConfiguration('workbench.colorTheme')) {
@@ -213,11 +212,11 @@ function findJDK(onChange: (path: string | null) => void): void {
 }
 
 interface VSNetBeansAPI {
-    version: string;
+    version : string;
     apiVersion: string;
 }
 
-function contextUri(ctx: any): vscode.Uri | undefined {
+function contextUri(ctx : any) : vscode.Uri | undefined {
     if (ctx?.fsPath) {
         return ctx as vscode.Uri;
     } else if (ctx?.resourceUri) {
@@ -244,14 +243,14 @@ function contextUri(ctx: any): vscode.Uri | undefined {
  * @param args additional arguments
  * @returns Promise for the command's result
  */
-function wrapProjectActionWithProgress(action: string, configuration: string | undefined, title: string, log?: vscode.OutputChannel, showOutput?: boolean, ...args: any[]): Thenable<unknown> {
+function wrapProjectActionWithProgress(action : string, configuration : string | undefined, title : string, log? : vscode.OutputChannel, showOutput? : boolean, ...args : any[]) : Thenable<unknown> {
     let items = [];
     let actionParams = {
-        action: action,
-        configuration: configuration,
+        action : action,
+        configuration : configuration,
     } as ProjectActionParams;
     for (let item of args) {
-        let u: vscode.Uri | undefined;
+        let u : vscode.Uri | undefined;
         if (item?.fsPath) {
             items.push((item.fsPath as vscode.Uri).toString());
         } else if (item?.resourceUri) {
@@ -263,10 +262,10 @@ function wrapProjectActionWithProgress(action: string, configuration: string | u
     return wrapCommandWithProgress('java.project.run.action', title, log, showOutput, actionParams, ...items);
 }
 
-function wrapCommandWithProgress(lsCommand: string, title: string, log?: vscode.OutputChannel, showOutput?: boolean, ...args: any[]): Thenable<unknown> {
+function wrapCommandWithProgress(lsCommand : string, title : string, log? : vscode.OutputChannel, showOutput? : boolean, ...args : any[]) : Thenable<unknown> {
     return window.withProgress({ location: ProgressLocation.Window }, p => {
         return new Promise(async (resolve, reject) => {
-            let c: LanguageClient = await client;
+            let c : LanguageClient = await client;
             const commands = await vscode.commands.getCommands();
             if (commands.includes(lsCommand)) {
                 p.report({ message: title });
@@ -301,7 +300,7 @@ function wrapCommandWithProgress(lsCommand: string, title: string, log?: vscode.
  * the initial one needs to be largely ignored in the launching/mgmt code, BUT should be available to normal commands / features.
  */
 class InitialPromise extends Promise<NbLanguageClient> {
-    constructor(f: (resolve: (value: NbLanguageClient | PromiseLike<NbLanguageClient>) => void, reject: (reason?: any) => void) => void) {
+    constructor(f : (resolve: (value: NbLanguageClient | PromiseLike<NbLanguageClient>) => void, reject: (reason?: any) => void) => void) {
         super(f);
     }
 }
@@ -310,7 +309,7 @@ class InitialPromise extends Promise<NbLanguageClient> {
  * Determines the outcome, if there's a conflict betwee RH Java and us: disable java, enable java, ask the user.
  * @returns false, if java should be disablde; true, if enabled. Undefined if no config is present, ask the user
  */
-function shouldEnableConflictingJavaSupport(): boolean | undefined {
+function shouldEnableConflictingJavaSupport() : boolean | undefined {
     // backwards compatibility; remove in NBLS 19
     if (vscode.extensions.getExtension('oracle-labs-graalvm.gcn')) {
         return false;
@@ -335,8 +334,9 @@ function shouldEnableConflictingJavaSupport(): boolean | undefined {
 
 export function activate(context: ExtensionContext): VSNetBeansAPI {
     let log = vscode.window.createOutputChannel("Apache NetBeans Language Server");
-    var clientResolve: (x: NbLanguageClient) => void;
-    var clientReject: (err: any) => void;
+
+    var clientResolve : (x : NbLanguageClient) => void;
+    var clientReject : (err : any) => void;
 
     // establish a waitable Promise, export the callbacks so they can be called after activation.
     client = new InitialPromise((resolve, reject) => {
@@ -348,7 +348,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         let conf = workspace.getConfiguration();
         if (conf.get("netbeans.conflict.check")) {
             if (conf.get("netbeans.javaSupport.enabled")) {
-                const e: boolean | undefined = shouldEnableConflictingJavaSupport();
+                const e : boolean | undefined = shouldEnableConflictingJavaSupport();
                 if (!e && vscode.extensions.getExtension('redhat.java')) {
                     if (e === false) {
                         // do not ask, an extension wants us to disable on conflict
@@ -396,7 +396,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     });
 
     //register debugger:
-    let debugTrackerFactory = new NetBeansDebugAdapterTrackerFactory();
+    let debugTrackerFactory =new NetBeansDebugAdapterTrackerFactory();
     context.subscriptions.push(vscode.debug.registerDebugAdapterTrackerFactory('java+', debugTrackerFactory));
     let configInitialProvider = new NetBeansConfigurationInitialProvider();
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java+', configInitialProvider, vscode.DebugConfigurationProviderTriggerKind.Initial));
@@ -413,7 +413,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     // initialize Run Configuration
     initializeRunConfiguration().then(initialized => {
-        if (initialized) {
+		if (initialized) {
             context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java+', new DBConfigurationProvider()));
 			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java+', runConfigurationProvider));
 			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java', runConfigurationProvider));
@@ -437,7 +437,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 let newFile = vscode.Uri.parse(res as string);
                 await vscode.window.showTextDocument(newFile, { preview: false });
             } else if (Array.isArray(res)) {
-                for (let r of res) {
+                for(let r of res) {
                     if (typeof r === 'string') {
                         let newFile = vscode.Uri.parse(r as string);
                         await vscode.window.showTextDocument(newFile, { preview: false });
@@ -524,7 +524,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             await commands.executeCommand(selected.userData.command.command, ...(selected.userData.command.arguments || []));
         }
     }));
-    const mergeWithLaunchConfig = (dconfig: vscode.DebugConfiguration) => {
+    const mergeWithLaunchConfig = (dconfig : vscode.DebugConfiguration) => {
         const folder = vscode.workspace.workspaceFolders?.[0];
         const uri = folder?.uri;
         if (uri) {
@@ -546,11 +546,11 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         }
     }
 
-    const runDebug = async (noDebug: boolean, testRun: boolean, uri: any, methodName?: string, launchConfiguration?: string, project: boolean = false,) => {
+    const runDebug = async (noDebug: boolean, testRun: boolean, uri: any, methodName?: string, launchConfiguration?: string, project : boolean = false, ) => {
         const docUri = contextUri(uri);
         if (docUri) {
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
-            const debugConfig: vscode.DebugConfiguration = {
+            const debugConfig : vscode.DebugConfiguration = {
                 type: "java+",
                 name: "Java Single Debug",
                 request: "launch",
@@ -562,10 +562,10 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 debugConfig['projectFile'] = docUri.toString();
                 debugConfig['project'] = true;
             } else {
-                debugConfig['mainClass'] = docUri.toString();
+                debugConfig['mainClass'] =  docUri.toString();
             }
             mergeWithLaunchConfig(debugConfig);
-            const debugOptions: vscode.DebugSessionOptions = {
+            const debugOptions : vscode.DebugSessionOptions = {
                 noDebug: noDebug,
             }
             const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions);
@@ -623,40 +623,42 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand('nbls.startup.condition', async () => {
         return client;
     }));
-    context.subscriptions.push(commands.registerCommand('nbls.node.properties.edit', async (node) => await PropertiesView.createOrShow(context, node)));
+
+    context.subscriptions.push(commands.registerCommand('nbls.node.properties.edit',
+        async (node) => await PropertiesView.createOrShow(context, node)));
 
     launchConfigurations.updateLaunchConfig();
 
     // register completions:
     launchConfigurations.registerCompletion(context);
     return Object.freeze({
-        version: API_VERSION,
-        apiVersion: API_VERSION
+        version : API_VERSION,
+        apiVersion : API_VERSION
     });
 }
 
 /**
  * Pending maintenance (install) task, activations should be chained after it.
  */
-let maintenance: Promise<void> | null;
+let maintenance : Promise<void> | null;
 
 /**
  * Pending activation flag. Will be cleared when the process produces some message or fails.
  */
-let activationPending: boolean = false;
+let activationPending : boolean = false;
 
-function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log: vscode.OutputChannel, notifyKill: boolean,
-    clientResolve?: (x: NbLanguageClient) => void, clientReject?: (x: any) => void): void {
+function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean, 
+    clientResolve? : (x : NbLanguageClient) => void, clientReject? : (x : any) => void): void {
     if (activationPending) {
         // do not activate more than once in parallel.
         handleLog(log, "Server activation requested repeatedly, ignoring...");
         return;
     }
     let oldClient = client;
-    let setClient: [(c: NbLanguageClient) => void, (err: any) => void];
+    let setClient : [(c : NbLanguageClient) => void, (err : any) => void];
     client = new Promise<NbLanguageClient>((clientOK, clientErr) => {
         setClient = [
-            function (c: NbLanguageClient) {
+            function (c : NbLanguageClient) {
                 clientOK(c);
                 if (clientResolve) {
                     clientResolve(c);
@@ -670,7 +672,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
         ]
         //setClient = [ clientOK, clientErr ];
     });
-    const a: Promise<void> | null = maintenance;
+    const a : Promise<void> | null = maintenance;
 
     commands.executeCommand('setContext', 'nbJavaLSReady', false);
     commands.executeCommand('setContext', 'dbAddConnectionPresent', true);
@@ -690,7 +692,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
 }
 
 
-function killNbProcess(notifyKill: boolean, log: vscode.OutputChannel, specProcess?: ChildProcess): Promise<void> {
+function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specProcess?: ChildProcess) : Promise<void> {
     const p = nbProcess;
     handleLog(log, "Request to kill LSP server.");
     if (p && (!specProcess || specProcess == p)) {
@@ -699,7 +701,7 @@ function killNbProcess(notifyKill: boolean, log: vscode.OutputChannel, specProce
         }
         return new Promise((resolve, reject) => {
             nbProcess = null;
-            p.on('close', function (code: number) {
+            p.on('close', function(code: number) {
                 handleLog(log, "LSP server closed: " + p.pid)
                 resolve();
             });
@@ -722,23 +724,23 @@ function killNbProcess(notifyKill: boolean, log: vscode.OutputChannel, specProce
  * Attempts to determine if the Workbench is using dark-style color theme, so that NBLS
  * starts with some dark L&F for icon resource selection.
  */
-function isDarkColorTheme(): boolean {
+function isDarkColorTheme() : boolean {
     const themeName = workspace.getConfiguration('workbench')?.get('colorTheme');
     if (!themeName) {
         return false;
     }
     for (const ext of vscode.extensions.all) {
-        const themeList: object[] = ext.packageJSON?.contributes && ext.packageJSON?.contributes['themes'];
+        const themeList : object[] =  ext.packageJSON?.contributes && ext.packageJSON?.contributes['themes'];
         if (!themeList) {
             continue;
         }
-        let t: any;
+        let t : any;
         for (t of themeList) {
             if (t.id !== themeName) {
                 continue;
             }
             const uiTheme = t.uiTheme;
-            if (typeof (uiTheme) == 'string') {
+            if (typeof(uiTheme) == 'string') {
                 if (uiTheme.includes('-dark') || uiTheme.includes('-black')) {
                     return true;
                 }
@@ -748,15 +750,15 @@ function isDarkColorTheme(): boolean {
     return false;
 }
 
-function isJavaSupportEnabled(): boolean {
+function isJavaSupportEnabled() : boolean {
     return workspace.getConfiguration('netbeans')?.get('javaSupport.enabled') as boolean;
 }
 
-function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log: vscode.OutputChannel, notifyKill: boolean,
-    setClient: [(c: NbLanguageClient) => void, (err: any) => void]
+function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
+    setClient : [(c : NbLanguageClient) => void, (err : any) => void]
 ): void {
     maintenance = null;
-    let restartWithJDKLater: ((time: number, n: boolean) => void) = function restartLater(time: number, n: boolean) {
+    let restartWithJDKLater : ((time: number, n: boolean) => void) = function restartLater(time: number, n : boolean) {
         handleLog(log, `Restart of Apache Language Server requested in ${(time / 1000)} s.`);
         setTimeout(() => {
             activateWithJDK(specifiedJDK, context, log, n);
@@ -764,7 +766,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     };
 
     const netbeansConfig = workspace.getConfiguration('netbeans');
-    const beVerbose: boolean = netbeansConfig.get('verbose', false);
+    const beVerbose : boolean = netbeansConfig.get('verbose', false);
     let userdir = process.env['nbcode_userdir'] || netbeansConfig.get('userdir', 'local');
     switch (userdir) {
         case 'local':
@@ -772,19 +774,19 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 userdir = context.storagePath;
                 break;
             }
-        // fallthru
+            // fallthru
         case 'global':
             userdir = context.globalStoragePath;
             break;
         default:
-        // assume storage is path on disk
+            // assume storage is path on disk
     }
 
     let info = {
-        clusters: findClusters(context.extensionPath),
+        clusters : findClusters(context.extensionPath),
         extensionPath: context.extensionPath,
-        storagePath: userdir,
-        jdkHome: specifiedJDK,
+        storagePath : userdir,
+        jdkHome : specifiedJDK,
         verbose: beVerbose
     };
     let launchMsg = `Launching Apache NetBeans Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'} and userdir ${userdir}`;
@@ -792,7 +794,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     vscode.window.setStatusBarMessage(launchMsg, 2000);
 
     let ideRunning = new Promise((resolve, reject) => {
-        let stdOut: string | null = '';
+        let stdOut : string | null = '';
         function logAndWaitForEnabled(text: string, isOut: boolean) {
             if (p == nbProcess) {
                 activationPending = false;
@@ -809,7 +811,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 stdOut = null;
             }
         }
-        let extras: string[] = ["--modules", "--list", "-J-XX:PerfMaxStringConstLength=10240"];
+        let extras : string[] = ["--modules", "--list", "-J-XX:PerfMaxStringConstLength=10240"];
         if (isDarkColorTheme()) {
             extras.push('--laf', 'com.formdev.flatlaf.FlatDarkLaf');
         }
@@ -821,14 +823,14 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         let p = launcher.launch(info, ...extras);
         handleLog(log, "LSP server launching: " + p.pid);
         handleLog(log, "LSP server user directory: " + userdir);
-        p.stdout.on('data', function (d: any) {
+        p.stdout.on('data', function(d: any) {
             logAndWaitForEnabled(d.toString(), true);
         });
-        p.stderr.on('data', function (d: any) {
+        p.stderr.on('data', function(d: any) {
             logAndWaitForEnabled(d.toString(), false);
         });
         nbProcess = p;
-        p.on('close', function (code: number) {
+        p.on('close', function(code: number) {
             if (p == nbProcess) {
                 nbProcess = null;
             }
@@ -894,18 +896,18 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             });
         });
         const conf = workspace.getConfiguration();
-        let documentSelectors: DocumentSelector = [
-            { language: 'java' },
-            { language: 'yaml', pattern: '**/{application,bootstrap}*.yml' },
-            { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
-            { language: 'jackpot-hint' },
-            { language: 'xml', pattern: '**/pom.xml' },
-            { pattern: '**/build.gradle' }
+        let documentSelectors : DocumentSelector = [
+                { language: 'java' },
+                { language: 'yaml', pattern: '**/{application,bootstrap}*.yml' },
+                { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
+                { language: 'jackpot-hint' },
+                { language: 'xml', pattern: '**/pom.xml' },
+                { pattern: '**/build.gradle'}
         ];
         const enableJava = isJavaSupportEnabled();
-        const enableGroovy: boolean = conf.get("netbeans.groovySupport.enabled") as boolean;
+        const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") as boolean;
         if (enableGroovy) {
-            documentSelectors.push({ language: 'groovy' });
+            documentSelectors.push({ language: 'groovy'});
         }
         // Options to control the language client
         let clientOptions: LanguageClientOptions = {
@@ -923,20 +925,20 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             outputChannel: log,
             revealOutputChannelOn: RevealOutputChannelOn.Never,
             progressOnInitialization: true,
-            initializationOptions: {
-                'nbcodeCapabilities': {
-                    'statusBarMessageSupport': true,
-                    'testResultsSupport': true,
-                    'showHtmlPageSupport': true,
-                    'wantsJavaSupport': enableJava,
-                    'wantsGroovySupport': enableGroovy
+            initializationOptions : {
+                'nbcodeCapabilities' : {
+                    'statusBarMessageSupport' : true,
+                    'testResultsSupport' : true,
+                    'showHtmlPageSupport' : true,
+                    'wantsJavaSupport' : enableJava,
+                    'wantsGroovySupport' : enableGroovy
                 }
             },
             errorHandler: {
-                error: function (error: Error, _message: Message, count: number): ErrorHandlerResult {
+                error : function(error: Error, _message: Message, count: number): ErrorHandlerResult {
                     return { action: ErrorAction.Continue, message: error.message };
                 },
-                closed: function (): CloseHandlerResult {
+                closed : function(): CloseHandlerResult {
                     handleLog(log, "Connection to Apache NetBeans Language Server closed.");
                     if (!activationPending) {
                         restartWithJDKLater(10000, false);
@@ -948,11 +950,11 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
 
         let c = new NbLanguageClient(
-            'java',
-            'NetBeans Java',
-            connection,
-            log,
-            clientOptions
+                'java',
+                'NetBeans Java',
+                connection,
+                log,
+                clientOptions
         );
         handleLog(log, 'Language Client: Starting');
         c.start().then(() => {
@@ -1062,7 +1064,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             handleLog(log, 'Language Client: Ready');
             setClient[0](c);
             commands.executeCommand('setContext', 'nbJavaLSReady', true);
-
+        
             if (enableJava) {
                 // create project explorer:
                 //c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
@@ -1071,7 +1073,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
             createDatabaseView(c);
             if (enableJava) {
-                c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany: false });
+                c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
             }
         }).catch(setClient[1]);
     }).catch((reason) => {
@@ -1081,11 +1083,11 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     });
 
     class Decorator implements TreeItemDecorator<Visualizer> {
-        private provider: CustomizableTreeDataProvider<Visualizer>;
-        private setCommand: vscode.Disposable;
+        private provider : CustomizableTreeDataProvider<Visualizer>;
+        private setCommand : vscode.Disposable;
         private initialized: boolean = false;
 
-        constructor(provider: CustomizableTreeDataProvider<Visualizer>, client: NbLanguageClient) {
+        constructor(provider : CustomizableTreeDataProvider<Visualizer>, client : NbLanguageClient) {
             this.provider = provider;
             this.setCommand = vscode.commands.registerCommand('java.local.db.set.preferred.connection', (n) => this.setPreferred(n));
         }
@@ -1097,7 +1099,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             return children;
         }
 
-        async decorateTreeItem(vis: Visualizer, item: vscode.TreeItem): Promise<vscode.TreeItem> {
+        async decorateTreeItem(vis : Visualizer, item : vscode.TreeItem) : Promise<vscode.TreeItem> {
             if (!(item.contextValue && item.contextValue.match(/class:org.netbeans.api.db.explorer.DatabaseConnection/))) {
                 return item;
             }
@@ -1121,22 +1123,22 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }
     }
 
-    function createDatabaseView(c: NbLanguageClient) {
-        let decoRegister: CustomizableTreeDataProvider<Visualizer>;
-        c.findTreeViewService().createView('database.connections', undefined, {
-            canSelectMany: true,
+    function createDatabaseView(c : NbLanguageClient) {
+        let decoRegister : CustomizableTreeDataProvider<Visualizer>;
+        c.findTreeViewService().createView('database.connections', undefined , {
+            canSelectMany : true,
 
-            providerInitializer: (customizable) =>
+            providerInitializer : (customizable) =>
                 customizable.addItemDecorator(new Decorator(customizable, c))
         });
 
     }
 
-    async function createProjectView(ctx: ExtensionContext, client: NbLanguageClient) {
-        const ts: TreeViewService = client.findTreeViewService();
-        let tv: vscode.TreeView<Visualizer> = await ts.createView('foundProjects', 'Projects', { canSelectMany: false });
+    async function createProjectView(ctx : ExtensionContext, client : NbLanguageClient) {
+        const ts : TreeViewService = client.findTreeViewService();
+        let tv : vscode.TreeView<Visualizer> = await ts.createView('foundProjects', 'Projects', { canSelectMany : false });
 
-        async function revealActiveEditor(ed?: vscode.TextEditor) {
+        async function revealActiveEditor(ed? : vscode.TextEditor) {
             const uri = window.activeTextEditor?.document?.uri;
             if (!uri || uri.scheme.toLowerCase() !== 'file') {
                 return;
@@ -1144,11 +1146,11 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             if (!tv.visible) {
                 return;
             }
-            let vis: Visualizer | undefined = await ts.findPath(tv, uri.toString());
+            let vis : Visualizer | undefined = await ts.findPath(tv, uri.toString());
             if (!vis) {
                 return;
             }
-            tv.reveal(vis, { select: true, focus: false, expand: false });
+            tv.reveal(vis, { select : true, focus : false, expand : false });
         }
 
         ctx.subscriptions.push(window.onDidChangeActiveTextEditor(ed => {
@@ -1167,7 +1169,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
     const webviews = new Map<string, vscode.Webview>();
 
-    async function showHtmlPage(params: HtmlPageParams): Promise<void> {
+    async function showHtmlPage(params : HtmlPageParams): Promise<void> {
         return new Promise(resolve => {
             let data = params.text;
             const match = /<title>(.*)<\/title>/i.exec(data);
@@ -1203,12 +1205,12 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             });
             view.onDidDispose(() => {
                 resolve();
-                workspace.fs.delete(resourceDir, { recursive: true });
+                workspace.fs.delete(resourceDir, {recursive: true});
             });
         });
     }
 
-    async function execInHtmlPage(params: HtmlPageParams): Promise<boolean> {
+    async function execInHtmlPage(params : HtmlPageParams): Promise<boolean> {
         return new Promise(resolve => {
             const webview = webviews.get(params.id);
             if (webview) {
@@ -1223,8 +1225,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         });
     }
 
-    function showStatusBarMessage(params: ShowStatusMessageParams) {
-        let decorated: string = params.message;
+    function showStatusBarMessage(params : ShowStatusMessageParams) {
+        let decorated : string = params.message;
         let defTimeout;
 
         switch (params.type) {
@@ -1250,22 +1252,22 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }
     }
 
-    function checkInstallNbJavac(msg: string) {
+    function checkInstallNbJavac(msg : string) {
         const NO_JAVA_SUPPORT = "Cannot initialize Java support";
         if (msg.startsWith(NO_JAVA_SUPPORT)) {
             const yes = "Install GPLv2+CPEx code";
             window.showErrorMessage("Additional Java Support is needed", yes).then(reply => {
                 if (yes === reply) {
                     vscode.window.setStatusBarMessage("Preparing Apache NetBeans Language Server for additional installation", 2000);
-                    restartWithJDKLater = function () {
+                    restartWithJDKLater = function() {
                         handleLog(log, "Ignoring request for restart of Apache NetBeans Language Server");
                     };
                     maintenance = new Promise((resolve, reject) => {
-                        const kill: Promise<void> = killNbProcess(false, log);
+                        const kill : Promise<void> = killNbProcess(false, log);
                         kill.then(() => {
                             let installProcess = launcher.launch(info, "-J-Dnetbeans.close=true", "--modules", "--install", ".*nbjavac.*");
                             handleLog(log, "Launching installation process: " + installProcess.pid);
-                            let logData = function (d: any) {
+                            let logData = function(d: any) {
                                 handleLogNoNL(log, d.toString());
                             };
                             installProcess.stdout.on('data', logData);
@@ -1273,7 +1275,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                             installProcess.addListener("error", reject);
                             // MUST wait on 'close', since stdout is inherited by children. The installProcess dies but
                             // the inherited stream will be closed by the last child dying.
-                            installProcess.on('close', function (code: number) {
+                            installProcess.on('close', function(code: number) {
                                 handleLog(log, "Installation completed: " + installProcess.pid);
                                 handleLog(log, "Additional Java Support installed with exit code " + code);
                                 // will be actually run after maintenance is resolve()d.
@@ -1342,15 +1344,15 @@ class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescr
 class NetBeansConfigurationInitialProvider implements vscode.DebugConfigurationProvider {
 
     provideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration[]> {
-        return this.doProvideDebugConfigurations(folder, token);
+       return this.doProvideDebugConfigurations(folder, token);
     }
 
-    async doProvideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined, _token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration[]> {
-        let c: LanguageClient = await client;
+    async doProvideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined, _token?:  vscode.CancellationToken):  Promise<vscode.DebugConfiguration[]> {
+        let c : LanguageClient = await client;
         if (!folder) {
             return [];
         }
-        var u: vscode.Uri | undefined;
+        var u : vscode.Uri | undefined;
         if (folder && folder.uri) {
             u = folder.uri;
         } else {
@@ -1359,9 +1361,9 @@ class NetBeansConfigurationInitialProvider implements vscode.DebugConfigurationP
         let result : vscode.DebugConfiguration[] = [];
         const configNames : string[] | null | undefined = await vscode.commands.executeCommand('java.project.configurations', u?.toString());
         if (configNames) {
-            let first: boolean = true;
+            let first : boolean = true;
             for (let cn of configNames) {
-                let cname: string;
+                let cname : string;
 
                 if (first) {
                     // ignore the default config, comes first.
@@ -1370,7 +1372,7 @@ class NetBeansConfigurationInitialProvider implements vscode.DebugConfigurationP
                 } else {
                     cname = "Launch Java: " + cn;
                 }
-                const debugConfig: vscode.DebugConfiguration = {
+                const debugConfig : vscode.DebugConfiguration = {
                     name: cname,
                     type: "java+",
                     request: "launch",
@@ -1393,11 +1395,11 @@ class NetBeansConfigurationDynamicProvider implements vscode.DebugConfigurationP
     }
 
     provideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration[]> {
-        return this.doProvideDebugConfigurations(folder, this.context, this.commandValues, token);
+       return this.doProvideDebugConfigurations(folder, this.context, this.commandValues, token);
     }
 
-    async doProvideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined, context: ExtensionContext, commandValues: Map<string, string>, _token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration[]> {
-        let c: LanguageClient = await client;
+    async doProvideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined, context: ExtensionContext, commandValues: Map<string, string>, _token?:  vscode.CancellationToken):  Promise<vscode.DebugConfiguration[]> {
+        let c : LanguageClient = await client;
         if (!folder) {
             return [];
         }
@@ -1405,7 +1407,7 @@ class NetBeansConfigurationDynamicProvider implements vscode.DebugConfigurationP
         const attachConnectors : DebugConnector[] | null | undefined = await vscode.commands.executeCommand('java.attachDebugger.configurations');
         if (attachConnectors) {
             for (let ac of attachConnectors) {
-                const debugConfig: vscode.DebugConfiguration = {
+                const debugConfig : vscode.DebugConfiguration = {
                     name: ac.name,
                     type: ac.type,
                     request: "attach",

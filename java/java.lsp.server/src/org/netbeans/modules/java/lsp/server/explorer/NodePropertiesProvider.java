@@ -33,13 +33,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -49,6 +50,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = CodeActionsProvider.class)
 public class NodePropertiesProvider extends CodeActionsProvider {
+    private static final Logger LOG = Logger.getLogger(NodePropertiesProvider.class.getName());
 
     private static final String COMMAND_GET_NODE_PROPERTIES = "java.node.properties.get";      // NOI18N
     private static final String COMMAND_SET_NODE_PROPERTIES = "java.node.properties.set";      // NOI18N
@@ -109,14 +111,20 @@ public class NodePropertiesProvider extends CodeActionsProvider {
             if (propJson instanceof JsonNull) {
                 return CompletableFuture.completedFuture(null);
             }
-            List m = gson.fromJson((JsonElement) propJson, List.class);
-            setAllProperties(propertySets, m);
+            Map<String,Map<String,?>> m = gson.fromJson((JsonElement) propJson, Map.class);
+            try {
+                return CompletableFuture.completedFuture(setAllProperties(propertySets, m));
+            } catch (IllegalArgumentException ex) {
+                CompletableFuture<Object> f  = new CompletableFuture<>();
+                f.completeExceptionally(ex);
+                return f;
+            }
         }
         return CompletableFuture.completedFuture(null);
     }
 
-    Map<String, ?>[] getAllPropertiesMap(Node.PropertySet[] propertySets) {
-        Map<String, Object>[] allPropertiesMap = new Map[propertySets.length];
+    Map<String, Map<String, ?>> getAllPropertiesMap(Node.PropertySet[] propertySets) {
+        Map<String, Map<String, ?>> allPropertiesMap = new HashMap<>();
 
         for (int i = 0; i < propertySets.length; i++) {
             Map<String, Object> propertiesMap = new HashMap<>();
@@ -129,7 +137,7 @@ public class NodePropertiesProvider extends CodeActionsProvider {
             propertiesMap.put(PROP_EXPERT, ps.isExpert());
             propertiesMap.put(PROP_HIDDEN, ps.isHidden());
             propertiesMap.put(PROPS, getProperties(ps.getProperties()));
-            allPropertiesMap[i] = propertiesMap;
+            allPropertiesMap.put(ps.getName(), propertiesMap);
         }
         return allPropertiesMap;
     }
@@ -160,31 +168,47 @@ public class NodePropertiesProvider extends CodeActionsProvider {
         try {
             return prop.getValue();
         } catch (IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.INFO, "getPropertyValue", ex);
         } catch (InvocationTargetException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.INFO, "getPropertyValue", ex);
         }
         return null;
     }
 
-    private void setAllProperties(Node.PropertySet[] propertySets, List m) {
+    private Map<String, Map<String, String>> setAllProperties(Node.PropertySet[] propertySets, Map<String,Map<String,?>> m) {
+        Map<String, Map<String, String>> errorSet = new HashMap<>();
+        Map<String, Node.PropertySet> propertySetMap = new HashMap<>();
         assert m.size() <= propertySets.length;
-
-        for (int i = 0; i < m.size(); i++) {
-            Map pm = (Map) m.get(i);
-            Node.PropertySet p = propertySets[i];
-            setProperties(p.getProperties(), (List<Map<String, Object>>) pm.get(PROPS));
+        for (Node.PropertySet pset : propertySets) {
+            propertySetMap.put(pset.getName(), pset);
         }
+        for (Map<String, ?> pm: m.values()) {
+            Map<String, String> errors;
+            String psetName = (String)pm.get(PROP_NAME);
+            Node.PropertySet p = propertySetMap.get(psetName);
+
+            if (p!= null) {
+                errors = setProperties(p.getProperties(), (List<Map<String, Object>>) pm.get(PROPS));
+
+                if (!errors.isEmpty()) {
+                    errorSet.put(p.getName(), errors);
+                }
+            } else {
+                throw new IllegalArgumentException("Property Set "+psetName+" does not exist.");
+            }
+        }
+        return errorSet;
     }
 
-    private void setProperties(Node.Property[] properties, List<Map<String, Object>> props) {
+    private Map<String,String> setProperties(Node.Property[] properties, List<Map<String, Object>> props) {
         Map<String, Node.Property> names = new HashMap<>();
-
+        Map<String,String> errors = new HashMap<>();
         for (Node.Property p : properties) {
             names.put(p.getName(), p);
         }
         for (Map pm : props) {
-            Node.Property prop = names.get((String) pm.get(PROP_NAME));
+            String name = (String) pm.get(PROP_NAME);
+            Node.Property prop = names.get(name);
             if (prop != null && prop.canWrite()) {
                 try {
                     Object val = pm.get(PROP_VALUE);
@@ -193,13 +217,15 @@ public class NodePropertiesProvider extends CodeActionsProvider {
                     if (!Objects.equals(val, oldVal)) {
                         prop.setValue(val);
                     }
-                } catch (IllegalAccessException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (InvocationTargetException ex) {
-                    Exceptions.printStackTrace(ex);
+                } catch (IllegalAccessException | InvocationTargetException ex) {
+                    errors.put(prop.getName(), ex.getLocalizedMessage());
+                    LOG.log(Level.INFO, "setProperties", ex);
                 }
+            } else {
+                throw new IllegalArgumentException("Property "+name+" does not exist.");
             }
         }
+        return errors;
     }
 
     @Override

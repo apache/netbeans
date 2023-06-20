@@ -52,8 +52,9 @@ import org.openide.util.lookup.ServiceProvider;
 public class NodePropertiesProvider extends CodeActionsProvider {
     private static final Logger LOG = Logger.getLogger(NodePropertiesProvider.class.getName());
 
-    private static final String COMMAND_GET_NODE_PROPERTIES = "java.node.properties.get";      // NOI18N
-    private static final String COMMAND_SET_NODE_PROPERTIES = "java.node.properties.set";      // NOI18N
+    private static final String COMMAND_PREFIX = "nbls.";
+    private static final String COMMAND_GET_NODE_PROPERTIES = COMMAND_PREFIX + "node.properties.get";      // NOI18N
+    private static final String COMMAND_SET_NODE_PROPERTIES = COMMAND_PREFIX + "node.properties.set";      // NOI18N
 
     private static final String PROP_NAME = "propName";      // NOI18N
     private static final String PROP_DNAME = "propDispName";      // NOI18N

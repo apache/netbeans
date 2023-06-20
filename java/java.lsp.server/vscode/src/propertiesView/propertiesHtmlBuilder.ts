@@ -5,7 +5,7 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
  */
 import * as vscode from 'vscode';
-import { Properties, Property } from "./controlTypes";
+import { PropTypes, Properties, Property } from "./controlTypes";
 
 export function makeHtmlForProperties(name: string, nonce: string, scriptUri: vscode.Uri, properties: Properties): string {
     return `<!DOCTYPE html>
@@ -55,13 +55,13 @@ function makePropertiesTable(properties: Properties): string {
 function makePropAccess(prop: Property): string {
     let out: string;
     switch (prop.propType) {
-        case 'java.lang.String':
+        case PropTypes.String:
             out = makeStringAccess(prop);
             break;
-        case 'java.lang.Boolean':
+        case PropTypes.Boolean:
             out = makeBoolAccess(prop);
             break;
-        case 'java.util.Properties':
+        case PropTypes.Properties:
             out = makePropertiesAccess(prop);
             break;
         default:
@@ -71,21 +71,21 @@ function makePropAccess(prop: Property): string {
     return wrapToTable(prop.propDispName, out) + '\n';
 }
 
-function makeStringAccess(prop: Property<'java.lang.String'>) {
+function makeStringAccess(prop: Property<typeof PropTypes.String>) {
     return `<vscode-text-field name="input" id="${prop.propName}" value="${encode(prop.propValue)}" ${prop.propWrite ? "" : "disabled"}></vscode-text-field>`;
 }
 
-function makeBoolAccess(prop: Property<'java.lang.Boolean'>) {
+function makeBoolAccess(prop: Property<typeof PropTypes.Boolean>) {
     return `<vscode-checkbox name="input" id="${prop.propName}" ${prop.propWrite ? "" : "disabled"} ${prop.propValue ? "checked" : ""}></vscode-checkbox>`;
 }
 
-function makePropertiesAccess(prop: Property<'java.util.Properties'>) {
+function makePropertiesAccess(prop: Property<typeof PropTypes.Properties>) {
     return `<details><summary><b>${prop.propDispName}</b></summary><table name="input" id="${prop.propName}">
     ${makePropTable(prop)}
     </table></details>`;
 }
 
-function makePropTable(prop: Property<'java.util.Properties'>) {
+function makePropTable(prop: Property<typeof PropTypes.Properties>) {
     let out = "";
     for (const key in prop.propValue) {
         out += makePropRow(prop, key) + '\n';
@@ -93,7 +93,7 @@ function makePropTable(prop: Property<'java.util.Properties'>) {
     return out;
 }
 
-function makePropRow(prop: Property<'java.util.Properties'>, key: string) {
+function makePropRow(prop: Property<typeof PropTypes.Properties>, key: string) {
     return wrapToTable(asTextField(key, prop.propWrite, "name"), asTextField(prop.propValue[key], prop.propWrite, "value"), " = ");
 }
 

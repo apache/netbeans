@@ -4,16 +4,16 @@
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
  */
-import { EnumType, KeyOfArray, Typed } from "../typesUtil";
+import { EnumType, Typed } from "../typesUtil";
 
 export type ID = number;
 
-export const PropTypes: KeyOfArray<PropTypeMap> = [
-    "java.lang.String",
-    "java.lang.Boolean",
-    "java.util.Properties",
-    "unknown"
-];// unfortunate but necessary duplication
+export const PropTypes = {
+    String: "java.lang.String",
+    Boolean: "java.lang.Boolean",
+    Properties: "java.util.Properties",
+    Unknown: "unknown",
+} as const;// unfortunate but necessary duplication
 export type PropTypeMap = {
     "java.lang.String": string;
     "java.lang.Boolean": boolean;

@@ -60,14 +60,16 @@ public class DBConnectionProvider extends CodeActionsProvider{
         }
         Map<String, String> result = new HashMap<> ();
         DatabaseConnection conn = ConnectionManager.getDefault().getPreferredConnection(true);
-            
-        result.put("DATASOURCES_DEFAULT_URL", conn.getDatabaseURL()); //NOI18N
-        result.put("DATASOURCES_DEFAULT_USERNAME", conn.getUser()); //NOI18N
-        result.put("DATASOURCES_DEFAULT_PASSWORD", conn.getPassword()); //NOI18N
-        result.put("DATASOURCES_DEFAULT_DRIVER_CLASS_NAME", conn.getDriverClass()); //NOI18N
-        String ocid = (String) conn.getConnectionProperties().get("OCID"); //NOI18N
-        if (ocid != null && !ocid.isEmpty()) {
-            result.put("DATASOURCES_DEFAULT_OCID", ocid); //NOI18N
+
+        if (conn != null) {
+            result.put("DATASOURCES_DEFAULT_URL", conn.getDatabaseURL()); //NOI18N
+            result.put("DATASOURCES_DEFAULT_USERNAME", conn.getUser()); //NOI18N
+            result.put("DATASOURCES_DEFAULT_PASSWORD", conn.getPassword()); //NOI18N
+            result.put("DATASOURCES_DEFAULT_DRIVER_CLASS_NAME", conn.getDriverClass()); //NOI18N
+            String ocid = (String) conn.getConnectionProperties().get("OCID"); //NOI18N
+            if (ocid != null && !ocid.isEmpty()) {
+                result.put("DATASOURCES_DEFAULT_OCID", ocid); //NOI18N
+            }
         }
             
         return CompletableFuture.completedFuture(result);

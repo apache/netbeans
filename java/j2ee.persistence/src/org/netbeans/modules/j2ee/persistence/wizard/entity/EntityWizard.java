@@ -33,7 +33,6 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.j2ee.core.api.support.java.SourceUtils;
 import org.netbeans.modules.j2ee.persistence.provider.ProviderUtil;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -59,6 +58,7 @@ import org.netbeans.modules.j2ee.core.api.support.wizard.Wizards;
 import org.netbeans.modules.j2ee.persistence.dd.PersistenceUtils;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
 import org.netbeans.modules.j2ee.persistence.provider.InvalidPersistenceXmlException;
+import org.netbeans.modules.j2ee.persistence.spi.moduleinfo.JPAModuleInfo;
 import org.netbeans.modules.j2ee.persistence.unit.PUDataObject;
 import org.netbeans.modules.j2ee.persistence.util.EntityMethodGenerator;
 import org.netbeans.modules.j2ee.persistence.util.JPAClassPathHelper;
@@ -80,6 +80,7 @@ import org.openide.util.NbBundle;
  */
 
 public final class EntityWizard implements WizardDescriptor.InstantiatingIterator {
+
     private WizardDescriptor.Panel[] panels;
     private int index = 0;
     private EntityWizardDescriptor ejbPanel;
@@ -135,17 +136,25 @@ public final class EntityWizard implements WizardDescriptor.InstantiatingIterato
     
     @Override
     public Set instantiate() throws IOException {
+        Project project = Templates.getProject(wiz);
+
+        ClassPath compileCP = ClassPath.getClassPath(sourceGroups[0].getRootFolder(), ClassPath.COMPILE);
+
+        String enterprisePrefix = "jakarta";
+        if (compileCP != null && compileCP.findResource("javax/persistence/Entity.class") != null) {
+            enterprisePrefix = "javax";
+        }
         
         FileObject result = generateEntity(
                 Templates.getTargetFolder(wiz),
                 Templates.getTargetName(wiz),
                 ejbPanel.getPrimaryKeyClassName(),
-                true // setting field access type by default
+                true, // setting field access type by default
+                enterprisePrefix
                 );
         
         try{
             boolean isCreatePU = ejbPanel.isCreatePU();
-            Project project = Templates.getProject(wiz);
             if(isCreatePU)
             {
                 PersistenceUnit punit = Util.buildPersistenceUnitUsingData(project, puPanel.getPersistenceUnitName(), puPanel.getPersistenceConnection()!=null ? puPanel.getPersistenceConnection().getName() : puPanel.getDatasource(), TableGeneration.NONE, puPanel.getSelectedProvider());
@@ -253,7 +262,7 @@ public final class EntityWizard implements WizardDescriptor.InstantiatingIterato
      * @return a FileObject representing the generated entity.
      */
     public static FileObject generateEntity(final FileObject targetFolder, final String targetName,
-            final String primaryKeyClassName, final boolean isAccessProperty) throws IOException {
+            final String primaryKeyClassName, final boolean isAccessProperty, final String enterprisePrefix) throws IOException {
         
         FileObject entityFo = GenerationUtils.createClass(targetFolder, targetName, null);
         ClassPath boot = ClassPath.getClassPath(targetFolder, ClassPath.BOOT);
@@ -294,9 +303,9 @@ public final class EntityWizard implements WizardDescriptor.InstantiatingIterato
             ModifiersTree idMethodModifiers = genUtils.createModifiers(Modifier.PUBLIC);
             MethodTree idGetter = genUtils.createPropertyGetterMethod(idMethodModifiers, idFieldName, typeTree);
             MethodTree idSetter = genUtils.createPropertySetterMethod(idMethodModifiers, idFieldName, typeTree);
-            AnnotationTree idAnnotation = genUtils.createAnnotation("javax.persistence.Id"); //NOI18N
-            ExpressionTree generationStrategy = genUtils.createAnnotationArgument("strategy", "javax.persistence.GenerationType", "AUTO"); //NOI18N
-            AnnotationTree generatedValueAnnotation = genUtils.createAnnotation("javax.persistence.GeneratedValue", Collections.singletonList(generationStrategy)); //NOI18N
+            AnnotationTree idAnnotation = genUtils.createAnnotation(enterprisePrefix + ".persistence.Id"); //NOI18N
+            ExpressionTree generationStrategy = genUtils.createAnnotationArgument("strategy", enterprisePrefix + ".persistence.GenerationType", "AUTO"); //NOI18N
+            AnnotationTree generatedValueAnnotation = genUtils.createAnnotation(enterprisePrefix + ".persistence.GeneratedValue", Collections.singletonList(generationStrategy)); //NOI18N
             
             if (isAccessProperty){
                 idField = genUtils.addAnnotation(idField, idAnnotation);
@@ -313,7 +322,7 @@ public final class EntityWizard implements WizardDescriptor.InstantiatingIterato
             modifiedClazz = make.addClassMember(modifiedClazz, idGetter);
             modifiedClazz = make.addClassMember(modifiedClazz, idSetter);
             modifiedClazz = genUtils.addImplementsClause(modifiedClazz, "java.io.Serializable");
-            modifiedClazz = genUtils.addAnnotation(modifiedClazz, genUtils.createAnnotation("javax.persistence.Entity"));
+            modifiedClazz = genUtils.addAnnotation(modifiedClazz, genUtils.createAnnotation(enterprisePrefix + ".persistence.Entity"));
             
             String entityClassFqn = typeElement.getQualifiedName().toString();
             EntityMethodGenerator methodGenerator = new EntityMethodGenerator(workingCopy, genUtils, typeElement);

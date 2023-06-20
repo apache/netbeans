@@ -1,0 +1,20 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+package ${package};
+
+import jakarta.ejb.Local;
+
+/**
+ *
+ * @author ${user}
+ */
+@Local
+public interface ${name} {
+
+<#if timerExist && exposeTimer>
+    public void myTimer();
+</#if>
+}

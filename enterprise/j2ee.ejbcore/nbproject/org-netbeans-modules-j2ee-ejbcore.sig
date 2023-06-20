@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.71
+#Version 1.72
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -656,7 +656,7 @@ supr java.lang.Object
 hfds key,value
 
 CLSS public final org.netbeans.modules.j2ee.ejbcore.api.codegeneration.SessionGenerator
-cons protected init(java.lang.String,org.openide.filesystems.FileObject,boolean,boolean,java.lang.String,boolean,boolean,boolean,org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.TimerOptions,boolean,boolean,boolean)
+cons protected init(java.lang.String,org.openide.filesystems.FileObject,boolean,boolean,java.lang.String,org.netbeans.api.j2ee.core.Profile,boolean,boolean,org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.TimerOptions,boolean,boolean,boolean)
 fld public final static java.lang.String ANNOTATION_LOCAL_BEAN = "javax.ejb.LocalBean"
 fld public final static java.lang.String EJB21_EJBCLASS = "Templates/J2EE/EJB21/SessionEjbClass.java"
 fld public final static java.lang.String EJB21_LOCAL = "Templates/J2EE/EJB21/SessionLocal.java"
@@ -668,15 +668,20 @@ fld public final static java.lang.String EJB30_REMOTE = "Templates/J2EE/EJB30/Se
 fld public final static java.lang.String EJB30_STATEFUL_EJBCLASS = "Templates/J2EE/EJB30/StatefulEjbClass.java"
 fld public final static java.lang.String EJB30_STATELESS_EJBCLASS = "Templates/J2EE/EJB30/StatelessEjbClass.java"
 fld public final static java.lang.String EJB31_SINGLETON_EJBCLASS = "Templates/J2EE/EJB31/SingletonEjbClass.java"
+fld public final static java.lang.String EJB40_LOCAL = "Templates/J2EE/EJB40/SessionLocal.java"
+fld public final static java.lang.String EJB40_REMOTE = "Templates/J2EE/EJB40/SessionRemote.java"
+fld public final static java.lang.String EJB40_SINGLETON_EJBCLASS = "Templates/J2EE/EJB40/SingletonEjbClass.java"
+fld public final static java.lang.String EJB40_STATEFUL_EJBCLASS = "Templates/J2EE/EJB40/StatefulEjbClass.java"
+fld public final static java.lang.String EJB40_STATELESS_EJBCLASS = "Templates/J2EE/EJB40/StatelessEjbClass.java"
 fld public final static java.lang.String TEMPLATE_PROPERTY_INTERFACES = "interfaces"
 fld public final static java.lang.String TEMPLATE_PROPERTY_LOCAL_BEAN = "annotationLocalBean"
 meth public org.openide.filesystems.FileObject generate() throws java.io.IOException
 meth public static java.lang.String getScheduleAnnotationValue(org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.TimerOptions,boolean)
-meth public static org.netbeans.modules.j2ee.ejbcore.api.codegeneration.SessionGenerator create(java.lang.String,org.openide.filesystems.FileObject,boolean,boolean,java.lang.String,boolean,boolean,boolean,org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.TimerOptions,boolean,boolean)
+meth public static org.netbeans.modules.j2ee.ejbcore.api.codegeneration.SessionGenerator create(java.lang.String,org.openide.filesystems.FileObject,boolean,boolean,java.lang.String,org.netbeans.api.j2ee.core.Profile,boolean,boolean,org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.TimerOptions,boolean,boolean)
 meth public static org.openide.filesystems.FileObject createRemoteInterfacePackage(org.netbeans.api.project.Project,java.lang.String,org.openide.filesystems.FileObject) throws java.io.IOException
 meth public void initRemoteInterfacePackage(org.netbeans.api.project.Project,java.lang.String,org.openide.filesystems.FileObject) throws java.io.IOException
 supr java.lang.Object
-hfds displayName,ejbClassName,ejbName,ejbNameOptions,hasLocal,hasRemote,isSimplified,isXmlBased,localHomeName,localName,packageName,packageNameWithDot,pkg,remoteHomeName,remoteName,remotePkg,sessionType,templateParameters
+hfds displayName,ejbClassName,ejbName,ejbNameOptions,enterpriseProfile,hasLocal,hasRemote,isXmlBased,localHomeName,localName,packageName,packageNameWithDot,pkg,remoteHomeName,remoteName,remotePkg,sessionType,templateParameters
 
 CLSS public abstract org.netbeans.modules.j2ee.ejbcore.api.methodcontroller.AbstractMethodController
 cons public init(java.lang.String,org.netbeans.modules.j2ee.metadata.model.api.MetadataModel<org.netbeans.modules.j2ee.dd.api.ejb.EjbJarMetadata>)

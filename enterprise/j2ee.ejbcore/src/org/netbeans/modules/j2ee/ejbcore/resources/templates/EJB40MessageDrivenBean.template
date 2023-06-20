@@ -1,0 +1,31 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+package ${package};
+
+import jakarta.ejb.ActivationConfigProperty;
+import jakarta.ejb.MessageDriven;
+import jakarta.jms.Message;
+import jakarta.jms.MessageListener;
+
+/**
+ *
+ * @author ${user}
+ */
+@MessageDriven(<#if useMappedName?? && useMappedName>mappedName = "${messageDestinationName}", </#if>activationConfig =  {
+<#list activationConfigProperties as property>
+        @ActivationConfigProperty(propertyName = "${property.getKey()}", propertyValue = "${property.getValue()}")<#if property_has_next>,</#if>
+</#list>
+    })
+public class ${name} implements MessageListener {
+    
+    public ${name}() {
+    }
+
+    @Override
+    public void onMessage(Message message) {
+    }
+    
+}

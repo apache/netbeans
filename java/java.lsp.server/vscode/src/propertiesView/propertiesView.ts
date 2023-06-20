@@ -101,19 +101,34 @@ export class PropertiesView {
 
 	private async load() {
 		const props = await this.get();
-		if (props.length === 0)
+		if (props.size === 0) {
 			throw new Error("No properties.");
-		this.properties = props[0] as Properties;
+		}
+		
+		this.properties = props.values().next().value;
+		console.log("Props "+this.properties);
 	}
 
-	private async get() {
-		return asClass(Array, await vscode.commands.executeCommand(PropertiesView.COMMAND_GET_NODE_PROPERTIES, this.id));
+	private async get() : Promise<Map<String,Properties>> {
+		let resp = await vscode.commands.executeCommand(PropertiesView.COMMAND_GET_NODE_PROPERTIES, this.id);
+		if (!resp) {
+			// TODO - possibly report protocol error ?
+			return new Map<String, Properties>();
+		}
+		return new Map<String, Properties>(Object.entries(resp));
+		
 	}
 
 	private save(properties: MessageProp[]) {
+		if (!this.properties) {
+			return;
+		}
 		for (const prop of properties)
 			this.mergeProps(prop, this.properties?.props);
-		vscode.commands.executeCommand(PropertiesView.COMMAND_SET_NODE_PROPERTIES, this.id, [this.properties]);
+		let msg = new Map<String,Properties>();
+		msg.set(this.properties.propName, this.properties);
+
+		vscode.commands.executeCommand(PropertiesView.COMMAND_SET_NODE_PROPERTIES, this.id, msg);
 	}
 
 	private mergeProps(prop: MessageProp, props?: Property[]): void {

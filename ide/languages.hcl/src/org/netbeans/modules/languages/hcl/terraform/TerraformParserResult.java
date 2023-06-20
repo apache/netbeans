@@ -122,7 +122,7 @@ public class TerraformParserResult extends HCLParserResult {
             } else {
                 references.getOffsetRange(type).ifPresent((range) -> addError(Bundle.UNKNOWN_BLOCK(type.id()), range));
             }
-            checkDuplicateAttribute(doc, references);
+            checkDuplicateAttribute(block, references);
         }
         for (HCLAttribute attribute : doc.getAttributes()) {
             references.getOffsetRange(attribute.getName()).ifPresent((range) -> addError(Bundle.UNEXPECTED_DOCUMENT_ATTRIBUTE(attribute.id()), range));

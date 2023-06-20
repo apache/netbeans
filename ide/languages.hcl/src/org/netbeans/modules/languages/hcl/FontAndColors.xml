@@ -24,6 +24,7 @@
     <fontcolor name="boolean" default="keyword"/>
     <fontcolor name="comment" default="comment"/>
     <fontcolor name="error" default="error"/>
+    <fontcolor name="group-separator" default="separator"/>
     <fontcolor name="heredoc" foreColor="ffce7b00"/>
     <fontcolor name="heredoc-guard" foreColor="ffce7b00">
         <font style="bold"/>
@@ -37,7 +38,11 @@
     <fontcolor name="string" default="string"/>
     <fontcolor name="whitespace" default="whitespace"/>
 
-    <fontcolor name="mod-method" default="keyword">
+    <fontcolor name="mod-class" default="keyword">
+    </fontcolor>
+    <fontcolor name="mod-constructor" default="default">
         <font style="bold"/>
+    </fontcolor>
+    <fontcolor name="mod-field" default="field">
     </fontcolor>
 </fontscolors>

@@ -62,6 +62,36 @@
             </folder>
         </folder>
     </folder>
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-terraform+x-hcl" url="terraform/example.tf"/>
+                <file name="x-tfvars+x-hcl" url="tfvars/example.tfvars"/>
+            </folder>
+        </folder>
+        <folder name="Editor">
+            <folder name="Formatting">
+                <folder name="text">
+                    <folder name="x-terraform+x-hcl">
+                        <file name="TabsAndIndents.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.options.editor.spi.CustomizerFactories.createDefaultTabsAndIndentsCustomizerFactory"/>
+                            <attr name="previewTextFile" stringvalue="org/netbeans/modules/languages/hcl/terraform/example.yaml"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                    </folder>
+                    <folder name="x-tfvars+x-hcl">
+                        <file name="TabsAndIndents.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.options.editor.spi.CustomizerFactories.createDefaultTabsAndIndentsCustomizerFactory"/>
+                            <attr name="previewTextFile" stringvalue="org/netbeans/modules/languages/hcl/tfvars/example.yaml"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
     <folder name="Loaders">
         <folder name="text">
             <folder name="x-terraform+x-hcl">

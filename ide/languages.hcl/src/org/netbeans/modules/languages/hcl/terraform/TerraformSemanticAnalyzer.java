@@ -25,6 +25,7 @@ import java.util.Set;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
+import org.netbeans.modules.languages.hcl.ast.HCLAttribute;
 import org.netbeans.modules.languages.hcl.ast.HCLBlock;
 import org.netbeans.modules.languages.hcl.ast.HCLIdentifier;
 import org.netbeans.modules.languages.hcl.ast.SourceRef;
@@ -69,9 +70,25 @@ public final class TerraformSemanticAnalyzer extends SemanticAnalyzer<TerraformP
             TerraformParserResult.BlockType bt = TerraformParserResult.BlockType.get(type.id());
             if (bt != null) {
                 refs.getOffsetRange(type).ifPresent((range) -> highlights.put(range, ColoringAttributes.CLASS_SET));
+                if (decl.size() > 1) {
+                    for (int i = 1; i < decl.size(); i++) {
+                        HCLIdentifier id = decl.get(i);
+                        refs.getOffsetRange(id).ifPresent((range) -> highlights.put(range, ColoringAttributes.CONSTRUCTOR_SET));
+                    }
+                }
             }
+            markAttributes(highlights, refs, block);
         }
         semanticHighlights = highlights;
+    }
+
+    private void markAttributes(Map<OffsetRange, Set<ColoringAttributes>> highlights, SourceRef refs, HCLBlock block) {
+        for (HCLAttribute attr : block.getAttributes()) {
+            refs.getOffsetRange(attr.getName()).ifPresent((range) -> highlights.put(range, ColoringAttributes.FIELD_SET));
+        }
+        for (HCLBlock nested : block.getBlocks()) {
+            markAttributes(highlights, refs, nested);
+        }
     }
 
     @Override

@@ -24,4 +24,9 @@
         <file>src/org/netbeans/modules/languages/hcl/resources/terraform.png</file>
         <license ref="MIT-vscode-material-icon-theme" />
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/languages/hcl/terraform/example.tf</file>
+        <file>src/org/netbeans/modules/languages/hcl/tfvars/example.tfvars</file>
+        <license ref="Apache-2.0-ASF" />
+    </fileset>
 </licenseinfo>

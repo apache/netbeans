@@ -24,8 +24,10 @@ import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
+import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
+import org.netbeans.modules.languages.hcl.BasicHCLLexer;
 import org.netbeans.modules.languages.hcl.HCLLanguage;
 import org.netbeans.modules.languages.hcl.HCLTokenId;
 import org.netbeans.modules.languages.hcl.NbHCLParser;
@@ -76,6 +78,11 @@ public final class TerraformLanguage extends HCLLanguage {
     }
 
     @Override
+    public SemanticAnalyzer getSemanticAnalyzer() {
+        return new TerraformSemanticAnalyzer();
+    }
+
+    @Override
     public StructureScanner getStructureScanner() {
         return super.getStructureScanner();
     }
@@ -94,7 +101,7 @@ public final class TerraformLanguage extends HCLLanguage {
 
         @Override
         protected Lexer<HCLTokenId> createLexer(LexerRestartInfo<HCLTokenId> info) {
-            return new TerraformHCLLexer(info);
+            return new BasicHCLLexer(info);
         }
 
         @Override

@@ -29,6 +29,7 @@ public enum HCLTokenId implements TokenId {
     BOOLEAN("boolean"),
     COMMENT("comment"),
     ERROR("error"),
+    GROUP_SEPARATOR("group-separator"),
     HEREDOC_GUARD("heredoc-guard"),
     HEREDOC("heredoc"),
     IDENTIFIER("identifier"),

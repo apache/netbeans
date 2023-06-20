@@ -44,6 +44,7 @@ public final class BasicHCLLexer extends AbstractHCLLexer {
             case BOOL_LIT:
                 return token(BOOLEAN);
 
+            case LEGACY_INDEX:
             case NUMERIC_LIT:
                 return token(NUMBER);
 
@@ -60,10 +61,14 @@ public final class BasicHCLLexer extends AbstractHCLLexer {
             case RBRACE:
             case LBRACK:
             case RBRACK:
+                return token(GROUP_SEPARATOR);
+                
             case LPAREN:
             case RPAREN:
+            case COLON:
             case COMMA:
             case DOT:
+            case EQUAL:
             case INTERPOLATION_START:
             case INTERPOLATION_END:
             case RARROW:
@@ -72,9 +77,7 @@ public final class BasicHCLLexer extends AbstractHCLLexer {
                 return token(SEPARATOR);
 
             case AND:
-            case COLON:
             case ELLIPSIS:
-            case EQUAL:
             case EQUALS:
             case GT:
             case GTE:

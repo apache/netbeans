@@ -43,11 +43,13 @@ import org.openide.util.NbBundle.Messages;
 public class TerraformParserResult extends HCLParserResult {
 
 
-    enum BlockType {
+    public enum BlockType {
 
+        CHECK("check", 2),
         DATA("data", 3),
         LOCALS("locals", 1),
         MODULE("module", 2),
+        MOVED("moved", 1),
         OUTPUT("output", 2),
         PROVIDER("provider", 2),
         RESOURCE("resource", 3),
@@ -89,7 +91,10 @@ public class TerraformParserResult extends HCLParserResult {
         "# {0} - Block ID",
         "DUPLICATE_BLOCK=Duplicate Block Definition: {0}",
         "# {0} - Attribute name",
-        "DUPLICATE_ATTRIBUTE=Attribute {0} has already defined"
+        "DUPLICATE_ATTRIBUTE=Attribute {0} has already defined",
+        "# {0} - Attribute name",
+        "UNEXPECTED_DOCUMENT_ATTRIBUTE=No attributes expected at Terraform document level.",
+
     })
     protected void processDocument(HCLDocument doc, SourceRef references) {
         Set<String> defined = new HashSet<>();
@@ -104,6 +109,7 @@ public class TerraformParserResult extends HCLParserResult {
                 } else {
                     if (!defined.add(block.id())) {
                         switch (bt) {
+                            case CHECK:
                             case DATA:
                             case MODULE:
                             case OUTPUT:
@@ -116,8 +122,11 @@ public class TerraformParserResult extends HCLParserResult {
             } else {
                 references.getOffsetRange(type).ifPresent((range) -> addError(Bundle.UNKNOWN_BLOCK(type.id()), range));
             }
+            checkDuplicateAttribute(block, references);
         }
-        checkDuplicateAttribute(doc, references);
+        for (HCLAttribute attribute : doc.getAttributes()) {
+            references.getOffsetRange(attribute.getName()).ifPresent((range) -> addError(Bundle.UNEXPECTED_DOCUMENT_ATTRIBUTE(attribute.id()), range));
+        }
     }
 
     private void checkDuplicateAttribute(HCLContainer c, SourceRef references) {

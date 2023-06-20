@@ -72,6 +72,7 @@ public final class RustProject implements Project {
         // instanceContent.add(new RustPrivilegedTemplates());
         instanceContent.add(this);
         instanceContent.add(new RustProjectCustomizerProvider2(this));
+        instanceContent.add(new RustProjectOperations(this));
         AbstractLookup ourLookup = new AbstractLookup(instanceContent);
 
         // Mix our lookup with providers registered in the file filesystem

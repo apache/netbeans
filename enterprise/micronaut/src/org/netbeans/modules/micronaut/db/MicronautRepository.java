@@ -247,7 +247,10 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                 js.runWhenScanFinished(cc -> {
                     TypeElement typeElement = cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.Entity" : "io.micronaut.data.annotation.MappedEntity"); //NOI18N
                     if (typeElement != null) {
-                        TypeElement idTypeElement = cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.Id" : "io.micronaut.data.annotation.Id"); //NOI18N
+                        TypeElement[] idTypeElements = new TypeElement[] {
+                            cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.Id" : "io.micronaut.data.annotation.Id"), //NOI18N
+                            cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.EmbeddedId" : "io.micronaut.data.annotation.EmbeddedId") //NOI18N
+                        };
                         Set<ElementHandle<TypeElement>> elementHandles = cc.getClasspathInfo().getClassIndex().getElements(ElementHandle.create(typeElement), EnumSet.of(ClassIndex.SearchKind.TYPE_REFERENCES), EnumSet.of(ClassIndex.SearchScope.SOURCE));
                         for (ElementHandle<TypeElement> elementHandle : elementHandles) {
                             TypeElement type = elementHandle.resolve(cc);
@@ -260,12 +263,14 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                                     }
                                 }
                                 if (fqn != null) {
-                                    if (idTypeElement != null) {
-                                        for (VariableElement field : ElementFilter.fieldsIn(type.getEnclosedElements())) {
-                                            if (idType == null) {
-                                                for (AnnotationMirror annotationMirror : field.getAnnotationMirrors()) {
-                                                    if (idType == null && idTypeElement == annotationMirror.getAnnotationType().asElement()) {
-                                                        idType = cc.getTypeUtilities().getTypeName(field.asType(), TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
+                                    for (TypeElement idTypeElement : idTypeElements) {
+                                        if (idTypeElement != null) {
+                                            for (VariableElement field : ElementFilter.fieldsIn(type.getEnclosedElements())) {
+                                                if (idType == null) {
+                                                    for (AnnotationMirror annotationMirror : field.getAnnotationMirrors()) {
+                                                        if (idType == null && idTypeElement == annotationMirror.getAnnotationType().asElement()) {
+                                                            idType = cc.getTypeUtilities().getTypeName(field.asType(), TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
+                                                        }
                                                     }
                                                 }
                                             }

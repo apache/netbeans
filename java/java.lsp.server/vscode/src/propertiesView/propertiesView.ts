@@ -9,9 +9,10 @@ import * as vscode from 'vscode';
 import { CommandKey, ID, Message, MessageProp, Properties, Property, PropTypes } from './controlTypes';
 import { assertNever, isRecord, isString, IsType } from '../typesUtil';
 import { makeHtmlForProperties } from './propertiesHtmlBuilder';
+import { fstat } from 'fs';
 
 export class PropertiesView {
-	private static readonly COMMAND_PREFIX = "nbls.";
+	private static readonly COMMAND_PREFIX = "java.";
 	private static readonly COMMAND_GET_NODE_PROPERTIES = PropertiesView.COMMAND_PREFIX + "node.properties.get";      // NOI18N
 	private static readonly COMMAND_SET_NODE_PROPERTIES = PropertiesView.COMMAND_PREFIX + "node.properties.set";      // NOI18N
 
@@ -30,6 +31,11 @@ export class PropertiesView {
 		if (!node)
 			return;
 		const id = node.id;
+		const p: Property={
+			propDispName:"",propExpert:false,propHidden:false,propName:"",propPref:false,propShortName:"",propWrite:false,
+			propType:'java.lang.Boolean',
+			propValue:''
+		}
 		// If we already have a panel, show it.
 		const current = PropertiesView.panels[id];
 		try {

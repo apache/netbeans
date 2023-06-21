@@ -27,6 +27,7 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -43,6 +44,8 @@ import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.db.explorer.ConnectionManager;
@@ -328,7 +331,8 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                         if (origTree.getKind() == Tree.Kind.INTERFACE) {
                             GenerationUtils gu = GenerationUtils.newInstance(copy);
                             TreeMaker tm = copy.getTreeMaker();
-                            List<ExpressionTree> args = Arrays.asList(tm.QualIdent(entityFQN), tm.QualIdent(entityIdType));
+                            TypeMirror entityIdTM = copy.getTreeUtilities().parseType(entityIdType, (TypeElement) copy.getTrees().getElement(new TreePath(new TreePath(copy.getCompilationUnit()), origTree)));
+                            List<ExpressionTree> args = Arrays.asList(tm.QualIdent(entityFQN), entityIdTM != null && entityIdTM.getKind().isPrimitive() ? tm.QualIdent(copy.getTypes().boxedClass((PrimitiveType) entityIdTM)) : tm.QualIdent(entityIdType));
                             ParameterizedTypeTree type = tm.ParameterizedType(tm.QualIdent("io.micronaut.data.repository.CrudRepository"), args); //NOI18N
                             ClassTree cls = tm.addClassImplementsClause((ClassTree) origTree, type);
                             if (dialect == null) {

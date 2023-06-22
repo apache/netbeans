@@ -75,14 +75,14 @@ implements PropertyChangeListener, ContextAwareAction {
         return (m.containsKey(PREFERENCES_KEY)) ? new CheckBox(m) : new AlwaysEnabledAction(m);
     }
 
-    final Map map;
+    final Map<String, Object> map;
     private final AlwaysEnabledAction parent;
     private PropertyChangeListener weakL;
     ActionListener delegate;
     final Lookup context;
     final Object equals;
 
-    public AlwaysEnabledAction(Map m) {
+    public AlwaysEnabledAction(Map<String, Object> m) {
         super();
         this.map = m;
         this.context = null;
@@ -90,7 +90,7 @@ implements PropertyChangeListener, ContextAwareAction {
         parent = null;
     }
 
-    AlwaysEnabledAction(Map m, AlwaysEnabledAction parent, Lookup context, Object equals) {
+    AlwaysEnabledAction(Map<String, Object> m, AlwaysEnabledAction parent, Lookup context, Object equals) {
         super();
         this.map = m;
         this.parent = parent;
@@ -198,7 +198,7 @@ implements PropertyChangeListener, ContextAwareAction {
         return o != null ? o : super.getValue(name);
     }
 
-    static final Object extractCommonAttribute(Map fo, String name) {
+    static final Object extractCommonAttribute(Map<String, Object> fo, String name) {
         try {
         if (Action.NAME.equals(name)) {
             String actionName = (String) fo.get("displayName"); // NOI18N

@@ -534,7 +534,7 @@ public class Actions {
         String preferencesNode, String preferencesKey,
         String displayName, String iconBase, boolean noIconInMenu
     ) {
-        HashMap<String,Object> map = new HashMap<String,Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("preferencesNode", preferencesNode); // NOI18N
         map.put("preferencesKey", preferencesKey); // NOI18N
         map.put("displayName", displayName); // NOI18N
@@ -600,7 +600,7 @@ public class Actions {
         String key, Action fallback, boolean surviveFocusChange,
         String displayName, String iconBase, boolean noIconInMenu
     ) {
-        Map<String,Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("key", key); // NOI18N
         map.put("surviveFocusChange", surviveFocusChange); // NOI18N
         map.put("fallback", fallback); // NOI18N
@@ -609,7 +609,7 @@ public class Actions {
         map.put("noIconInMenu", noIconInMenu); // NOI18N
         return callback(map);
     }
-    static ContextAwareAction callback(Map fo) {
+    static ContextAwareAction callback(Map<String, Object> fo) {
         return GeneralAction.callback(fo);
     }
 
@@ -792,7 +792,7 @@ public class Actions {
         String key,
         String displayName, String iconBase, boolean noIconInMenu
     ) {
-        Map<String,Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("key", key); // NOI18N
         map.put("surviveFocusChange", surviveFocusChange); // NOI18N
         map.put("delegate", delegate); // NOI18N

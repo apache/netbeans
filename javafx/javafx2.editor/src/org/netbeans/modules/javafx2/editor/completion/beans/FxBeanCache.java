@@ -146,7 +146,7 @@ class FxBeanCache implements ChangeListener {
 
         public void run() {
             synchronized (instance().cache) {
-                Map m = instance().cache;
+                Map<String, Reference<ClasspathCache>> m = instance().cache;
                 Object o = m.get(refKey);
                 if (o == this) {
                     m.remove(refKey);

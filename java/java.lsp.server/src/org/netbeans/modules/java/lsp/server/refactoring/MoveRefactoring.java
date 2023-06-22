@@ -99,7 +99,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class MoveRefactoring extends CodeRefactoring {
 
     private static final String MOVE_REFACTORING_KIND = "refactor.move";
-    private static final String MOVE_REFACTORING_COMMAND =  "nbls.java.refactor.move";
+    private static final String MOVE_REFACTORING_COMMAND =  "java.refactor.move";
     private static final ClassPath EMPTY_PATH = ClassPathSupport.createClassPath(new URL[0]);
 
     private final Set<String> commands = Collections.singleton(MOVE_REFACTORING_COMMAND);

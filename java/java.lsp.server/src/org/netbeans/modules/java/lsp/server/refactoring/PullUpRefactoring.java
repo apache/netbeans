@@ -76,7 +76,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class PullUpRefactoring extends CodeRefactoring {
 
     private static final String PULL_UP_REFACTORING_KIND = "refactor.pull.up";
-    private static final String PULL_UP_REFACTORING_COMMAND =  "nbls.java.refactor.pull.up";
+    private static final String PULL_UP_REFACTORING_COMMAND =  "java.refactor.pull.up";
 
     private final Set<String> commands = Collections.singleton(PULL_UP_REFACTORING_COMMAND);
     private final Gson gson = new Gson();

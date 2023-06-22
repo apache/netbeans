@@ -8,40 +8,42 @@ import { EnumType, Typed } from "../typesUtil";
 
 export type ID = number;
 
-export const PropTypes = {
+export const PropertyTypes = {
     String: "java.lang.String",
     Boolean: "java.lang.Boolean",
     Properties: "java.util.Properties",
     Unknown: "unknown",
 } as const;// unfortunate but necessary duplication
-export type PropTypeMap = {
+export type PropertyTypeMap = {
     "java.lang.String": string;
     "java.lang.Boolean": boolean;
     "java.util.Properties": Record<string, string>;
     "unknown": unknown
 };
-export type Property<T extends keyof PropTypeMap = keyof PropTypeMap> = T extends T ? {
-    propPref: boolean;
-    propDispName: string;
-    propShortName: string;
-    propWrite: boolean;
-    propHidden: boolean;
-    propExpert: boolean;
-    propType: T;
-    propValue: PropTypeMap[T];
-    propName: string;
+export type Property<T extends keyof PropertyTypeMap = keyof PropertyTypeMap> = T extends T ? {
+    preferred: boolean;
+    displayName: string;
+    shortName: string;
+    htmlName?: string;
+    write: boolean;
+    hidden: boolean;
+    expert: boolean;
+    type: T;
+    value: PropertyTypeMap[T];
+    name: string;
 } : never; // Distributive type
 export type Properties = {
-    propPref: boolean;
-    propDispName: string;
-    propShortName: string;
-    propHidden: boolean;
-    propExpert: boolean;
-    propName: string;
-    props: Property[];
+    preferred: boolean;
+    displayName: string;
+    shortName: string;
+    htmlName?: string;
+    hidden: boolean;
+    expert: boolean;
+    name: string;
+    properties: Property[];
 };
 
-export type MessageProp = {
+export type PropertyMessage = {
     name: string;
     value: string | boolean | Record<string, string>;
 };
@@ -63,7 +65,7 @@ export type ErrMessage = MessageCommon<typeof CommandKey.Error> & {
     stack?: string;
 };
 export type SaveMessage = MessageCommon<typeof CommandKey.Save> & {
-    properties: MessageProp[];
+    properties: PropertyMessage[];
 };
 export type CancelMessage = MessageCommon<typeof CommandKey.Cancel>;
 export type Message = InfoMessage | ErrMessage | SaveMessage | CancelMessage;

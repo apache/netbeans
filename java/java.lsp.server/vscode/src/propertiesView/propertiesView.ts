@@ -6,10 +6,9 @@
  */
 
 import * as vscode from 'vscode';
-import { CommandKey, ID, Message, MessageProp, Properties, Property, PropTypes } from './controlTypes';
+import { CommandKey, ID, Message, PropertyMessage, Properties, Property, PropertyTypes } from './controlTypes';
 import { assertNever, isRecord, isString, IsType } from '../typesUtil';
 import { makeHtmlForProperties } from './propertiesHtmlBuilder';
-import { fstat } from 'fs';
 
 export class PropertiesView {
 	private static readonly COMMAND_PREFIX = "java.";
@@ -31,11 +30,6 @@ export class PropertiesView {
 		if (!node)
 			return;
 		const id = node.id;
-		const p: Property={
-			propDispName:"",propExpert:false,propHidden:false,propName:"",propPref:false,propShortName:"",propWrite:false,
-			propType:'java.lang.Boolean',
-			propValue:''
-		}
 		// If we already have a panel, show it.
 		const current = PropertiesView.panels[id];
 		try {
@@ -123,14 +117,14 @@ export class PropertiesView {
 		return new Map<String, Properties>(Object.entries(resp)); // TODO - validate cast
 	}
 
-	private save(properties: MessageProp[]) {
+	private save(properties: PropertyMessage[]) {
 		if (!this.properties) return;
 
 		for (const prop of properties)
-			this.mergeProps(prop, this.properties?.props);
+			this.mergeProps(prop, this.properties?.properties);
 
 		const msg: Record<string, Properties> = {};
-		msg[this.properties.propName] = this.properties;
+		msg[this.properties.name] = this.properties;
 
 		vscode.commands.executeCommand(PropertiesView.COMMAND_SET_NODE_PROPERTIES, this.id, msg)
 			.then(done => {
@@ -151,10 +145,10 @@ export class PropertiesView {
 		vscode.window.showErrorMessage("Saving of properties failed.", { modal: true, detail: out });
 	}
 
-	private mergeProps(prop: MessageProp, props?: Property[]): void {
-		const p = props?.find(p => p.propName === prop.name);
-		if (p && Object.values(PropTypes).includes(p.propType))
-			p.propValue = prop.value;
+	private mergeProps(prop: PropertyMessage, props?: Property[]): void {
+		const p = props?.find(p => p.name === prop.name);
+		if (p && Object.values(PropertyTypes).includes(p.type))
+			p.value = prop.value;
 	}
 
 	private processMessage(message: Message) {

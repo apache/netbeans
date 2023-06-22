@@ -56,18 +56,18 @@ public class NodePropertiesProvider extends CodeActionsProvider {
     private static final String COMMAND_GET_NODE_PROPERTIES = COMMAND_PREFIX + "node.properties.get";      // NOI18N
     private static final String COMMAND_SET_NODE_PROPERTIES = COMMAND_PREFIX + "node.properties.set";      // NOI18N
 
-    private static final String PROP_NAME = "propName";      // NOI18N
-    private static final String PROP_DNAME = "propDispName";      // NOI18N
-    private static final String PROP_HTML_NAME = "propHtmlName";      // NOI18N
-    private static final String PROP_SHORT_NAME = "propShortName";      // NOI18N
-    private static final String PROP_PREF = "propPref";      // NOI18N
-    private static final String PROP_EXPERT = "propExpert";      // NOI18N
-    private static final String PROP_HIDDEN = "propHidden";      // NOI18N
-    private static final String PROP_CAN_READ = "propRead";      // NOI18N
-    private static final String PROP_CAN_WRITE = "propWrite";      // NOI18N
-    private static final String PROP_VAL_TYPE = "propType";      // NOI18N
-    private static final String PROP_VALUE = "propValue";      // NOI18N
-    private static final String PROPS = "props";      // NOI18N
+    private static final String PROP_NAME = "name";      // NOI18N
+    private static final String PROP_DNAME = "displayName";      // NOI18N
+    private static final String PROP_HTML_NAME = "htmlName";      // NOI18N
+    private static final String PROP_SHORT_NAME = "shortName";      // NOI18N
+    private static final String PROP_PREFERRED = "preferred";      // NOI18N
+    private static final String PROP_EXPERT = "expert";      // NOI18N
+    private static final String PROP_HIDDEN = "hidden";      // NOI18N
+    private static final String PROP_CAN_READ = "read";      // NOI18N
+    private static final String PROP_CAN_WRITE = "write";      // NOI18N
+    private static final String PROP_VAL_TYPE = "type";      // NOI18N
+    private static final String PROP_VALUE = "value";      // NOI18N
+    private static final String PROPS = "properties";      // NOI18N
 
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
             COMMAND_GET_NODE_PROPERTIES, COMMAND_SET_NODE_PROPERTIES
@@ -134,7 +134,7 @@ public class NodePropertiesProvider extends CodeActionsProvider {
             propertiesMap.put(PROP_DNAME, ps.getDisplayName());
             propertiesMap.put(PROP_HTML_NAME, ps.getHtmlDisplayName());
             propertiesMap.put(PROP_SHORT_NAME, ps.getShortDescription());
-            propertiesMap.put(PROP_PREF, ps.isPreferred());
+            propertiesMap.put(PROP_PREFERRED, ps.isPreferred());
             propertiesMap.put(PROP_EXPERT, ps.isExpert());
             propertiesMap.put(PROP_HIDDEN, ps.isHidden());
             propertiesMap.put(PROPS, getProperties(ps.getProperties()));
@@ -153,7 +153,7 @@ public class NodePropertiesProvider extends CodeActionsProvider {
                 propMap.put(PROP_HTML_NAME, property.getHtmlDisplayName());
                 propMap.put(PROP_SHORT_NAME, property.getShortDescription());
                 propMap.put(PROP_NAME, property.getName());
-                propMap.put(PROP_PREF, property.isPreferred());
+                propMap.put(PROP_PREFERRED, property.isPreferred());
                 propMap.put(PROP_EXPERT, property.isExpert());
                 propMap.put(PROP_HIDDEN, property.isHidden());
                 propMap.put(PROP_CAN_WRITE, property.canWrite());
@@ -169,9 +169,9 @@ public class NodePropertiesProvider extends CodeActionsProvider {
         try {
             return prop.getValue();
         } catch (IllegalAccessException ex) {
-            LOG.log(Level.INFO, "getPropertyValue", ex);
+            LOG.log(Level.INFO, "getPropertyValue", ex);    // NOI18N
         } catch (InvocationTargetException ex) {
-            LOG.log(Level.INFO, "getPropertyValue", ex);
+            LOG.log(Level.INFO, "getPropertyValue", ex);    // NOI18N
         }
         return null;
     }
@@ -195,7 +195,7 @@ public class NodePropertiesProvider extends CodeActionsProvider {
                     errorSet.put(p.getName(), errors);
                 }
             } else {
-                throw new IllegalArgumentException("Property Set "+psetName+" does not exist.");
+                throw new IllegalArgumentException("Property Set "+psetName+" does not exist.");    // NOI18N
             }
         }
         return errorSet;
@@ -220,10 +220,10 @@ public class NodePropertiesProvider extends CodeActionsProvider {
                     }
                 } catch (IllegalAccessException | InvocationTargetException ex) {
                     errors.put(prop.getName(), ex.getLocalizedMessage());
-                    LOG.log(Level.INFO, "setProperties", ex);
+                    LOG.log(Level.INFO, "setProperties", ex);    // NOI18N
                 }
             } else {
-                throw new IllegalArgumentException("Property "+name+" does not exist.");
+                throw new IllegalArgumentException("Property "+name+" does not exist.");    // NOI18N
             }
         }
         return errors;

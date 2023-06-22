@@ -34,7 +34,7 @@ export function isObject(obj: unknown): obj is object {
 }
 
 export function isRecord<K extends PropertyKey, T>(typeTest: IsType<T>, obj: unknown): obj is Record<K, T> {
-    return isObject(obj) && Object.keys(obj).every(typeTest);
+    return isObject(obj) && Object.values(obj).every(typeTest);
 }
 
 export function isError(obj: unknown): obj is Error {

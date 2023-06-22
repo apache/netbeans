@@ -7,7 +7,7 @@
 
 import * as vscode from 'vscode';
 import { CommandKey, ID, Message, PropertyMessage, Properties, Property, PropertyTypes } from './controlTypes';
-import { assertNever, isRecord, isString, IsType } from '../typesUtil';
+import { assertNever, isObject, isRecord, isString, IsType } from '../typesUtil';
 import { makeHtmlForProperties } from './propertiesHtmlBuilder';
 
 export class PropertiesView {
@@ -109,8 +109,8 @@ export class PropertiesView {
 	}
 
 	private async get(): Promise<Map<String, Properties>> {
-		let resp = await vscode.commands.executeCommand(PropertiesView.COMMAND_GET_NODE_PROPERTIES, this.id);
-		if (!resp) {
+		const resp = await vscode.commands.executeCommand(PropertiesView.COMMAND_GET_NODE_PROPERTIES, this.id);
+		if (!isObject(resp)) {
 			// TODO - possibly report protocol error ?
 			return new Map<String, Properties>();
 		}

@@ -6,7 +6,7 @@
  */
 import { provideVSCodeDesignSystem, vsCodeButton, vsCodeTextField, vsCodeDivider, vsCodeCheckbox, Button, TextField, Checkbox } from "@vscode/webview-ui-toolkit";
 import { isError, asClass, isClass } from "../typesUtil";
-import { CommandKey, Message, MessageProp } from "./controlTypes";
+import { CommandKey, Message, PropertyMessage } from "./controlTypes";
 
 provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeTextField(), vsCodeDivider(), vsCodeCheckbox());
 
@@ -42,8 +42,8 @@ function sendMessage(message: Message) {
     vscode.postMessage(message);
 }
 
-function getProperties(): MessageProp[] {
-    const out: MessageProp[] = [];
+function getProperties(): PropertyMessage[] {
+    const out: PropertyMessage[] = [];
     const elements = document.getElementsByName("input");
     for (let i = 0; i < elements.length; ++i) {
         const element = elements.item(i);
@@ -53,7 +53,7 @@ function getProperties(): MessageProp[] {
     return out;
 }
 
-function getProperty(element: HTMLElement): MessageProp {
+function getProperty(element: HTMLElement): PropertyMessage {
     if (isClass(TextField, element)) {
         return makeProperty(element.value, element?.id);
     } else if (isClass(Checkbox, element)) {
@@ -64,7 +64,7 @@ function getProperty(element: HTMLElement): MessageProp {
     throw new Error("Unknown HTML Element type.");
 }
 
-function makeProperty(value: string | boolean | Record<string, string>, name?: string): MessageProp {
+function makeProperty(value: string | boolean | Record<string, string>, name?: string): PropertyMessage {
     if (name)
         return { name: name, value: value };
     throw new Error("HTML Element have no ID.");

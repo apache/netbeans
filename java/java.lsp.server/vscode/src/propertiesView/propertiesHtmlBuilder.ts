@@ -5,7 +5,7 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
  */
 import * as vscode from 'vscode';
-import { PropTypes, Properties, Property } from "./controlTypes";
+import { PropertyTypes, Properties, Property } from "./controlTypes";
 
 export function makeHtmlForProperties(name: string, nonce: string, scriptUri: vscode.Uri, properties: Properties): string {
     return `<!DOCTYPE html>
@@ -46,7 +46,7 @@ function wrapToTable(name: string, content: string, separator: string = ":"): st
 
 function makePropertiesTable(properties: Properties): string {
     let html = "";
-    for (const prop of properties.props) {
+    for (const prop of properties.properties) {
         html += makePropAccess(prop);
     }
     return html;
@@ -54,47 +54,47 @@ function makePropertiesTable(properties: Properties): string {
 
 function makePropAccess(prop: Property): string {
     let out: string;
-    switch (prop.propType) {
-        case PropTypes.String:
+    switch (prop.type) {
+        case PropertyTypes.String:
             out = makeStringAccess(prop);
             break;
-        case PropTypes.Boolean:
+        case PropertyTypes.Boolean:
             out = makeBoolAccess(prop);
             break;
-        case PropTypes.Properties:
+        case PropertyTypes.Properties:
             out = makePropertiesAccess(prop);
             break;
         default:
-            out = prop.propValue + "";
+            out = prop.value + "";
             break;
     }
-    return wrapToTable(prop.propDispName, out) + '\n';
+    return wrapToTable(prop.displayName, out) + '\n';
 }
 
-function makeStringAccess(prop: Property<typeof PropTypes.String>) {
-    return `<vscode-text-field name="input" id="${prop.propName}" value="${encode(prop.propValue)}" ${prop.propWrite ? "" : "disabled"}></vscode-text-field>`;
+function makeStringAccess(prop: Property<typeof PropertyTypes.String>) {
+    return `<vscode-text-field name="input" id="${prop.name}" value="${encode(prop.value)}" ${prop.write ? "" : "disabled"}></vscode-text-field>`;
 }
 
-function makeBoolAccess(prop: Property<typeof PropTypes.Boolean>) {
-    return `<vscode-checkbox name="input" id="${prop.propName}" ${prop.propWrite ? "" : "disabled"} ${prop.propValue ? "checked" : ""}></vscode-checkbox>`;
+function makeBoolAccess(prop: Property<typeof PropertyTypes.Boolean>) {
+    return `<vscode-checkbox name="input" id="${prop.name}" ${prop.write ? "" : "disabled"} ${prop.value ? "checked" : ""}></vscode-checkbox>`;
 }
 
-function makePropertiesAccess(prop: Property<typeof PropTypes.Properties>) {
-    return `<details><summary><b>${prop.propDispName}</b></summary><table name="input" id="${prop.propName}">
+function makePropertiesAccess(prop: Property<typeof PropertyTypes.Properties>) {
+    return `<details><summary><b>${prop.displayName}</b></summary><table name="input" id="${prop.name}">
     ${makePropTable(prop)}
     </table></details>`;
 }
 
-function makePropTable(prop: Property<typeof PropTypes.Properties>) {
+function makePropTable(prop: Property<typeof PropertyTypes.Properties>) {
     let out = "";
-    for (const key in prop.propValue) {
+    for (const key in prop.value) {
         out += makePropRow(prop, key) + '\n';
     }
     return out;
 }
 
-function makePropRow(prop: Property<typeof PropTypes.Properties>, key: string) {
-    return wrapToTable(asTextField(key, prop.propWrite, "name"), asTextField(prop.propValue[key], prop.propWrite, "value"), " = ");
+function makePropRow(prop: Property<typeof PropertyTypes.Properties>, key: string) {
+    return wrapToTable(asTextField(key, prop.write, "name"), asTextField(prop.value[key], prop.write, "value"), " = ");
 }
 
 function asTextField(value: string, enabled: boolean, name: string) {

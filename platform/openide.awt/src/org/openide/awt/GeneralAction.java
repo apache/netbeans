@@ -68,7 +68,7 @@ final class GeneralAction {
         return new AlwaysEnabledAction(map);
     }
 
-    public static ContextAwareAction callback(Map map) {
+    public static ContextAwareAction callback(Map<String, Object> map) {
         Action fallback = (Action)map.get("fallback");
         DelegateAction d = new DelegateAction(map, fallback);
         Parameters.notNull("key", d.key);
@@ -88,7 +88,7 @@ final class GeneralAction {
         return context(map, false);
     }
     
-    static ContextAwareAction context(Map map, boolean instanceReady) {
+    static ContextAwareAction context(Map<String, Object> map, boolean instanceReady) {
         Class<?> dataType = readClass(map.get("type")); // NOI18N
         ContextAwareAction ca = _context(map, dataType, Utilities.actionsGlobalContext(), instanceReady);
         // autodetect on/off actions
@@ -104,7 +104,7 @@ final class GeneralAction {
         return new BaseDelAction(map, _context(map, dataType, context, false));
     }
     
-    private static <T> ContextAwareAction _context(Map map, Class<T> dataType, Lookup context, boolean instanceReady) {
+    private static <T> ContextAwareAction _context(Map<String, Object> map, Class<T> dataType, Lookup context, boolean instanceReady) {
         ContextSelection sel = readSelection(map.get("selectionType")); // NOI18N
         boolean survive = Boolean.TRUE.equals(map.get("surviveFocusChange")); // NOI18N
         StatefulMonitor enableMonitor = null;
@@ -208,7 +208,7 @@ final class GeneralAction {
             super(map, key, actionContext, fallback, surviveFocusChange, async);
         }
 
-        public DelegateAction(Map map, Action fallback) {
+        public DelegateAction(Map<String, Object> map, Action fallback) {
             super(map, fallback);
         }
     } // end of DelegateAction
@@ -313,7 +313,7 @@ final class GeneralAction {
          * listens for changes of <code>ActionMap</code> in order to delegate
          * to right action.
          */
-        protected BaseDelAction(Map map, Object key, Lookup actionContext, Action fallback, boolean surviveFocusChange, boolean async) {
+        protected BaseDelAction(Map<String, Object> map, Object key, Lookup actionContext, Action fallback, boolean surviveFocusChange, boolean async) {
             this.map = map;
             this.key = key;
             this.fallback = fallback;

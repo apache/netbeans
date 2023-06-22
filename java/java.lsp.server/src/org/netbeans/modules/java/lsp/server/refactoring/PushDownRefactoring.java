@@ -72,7 +72,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class PushDownRefactoring extends CodeRefactoring {
 
     private static final String PUSH_DOWN_REFACTORING_KIND = "refactor.push.down";
-    private static final String PUSH_DOWN_REFACTORING_COMMAND =  "nbls.java.refactor.push.down";
+    private static final String PUSH_DOWN_REFACTORING_COMMAND =  "java.refactor.push.down";
 
     private final Set<String> commands = Collections.singleton(PUSH_DOWN_REFACTORING_COMMAND);
     private final Gson gson = new Gson();

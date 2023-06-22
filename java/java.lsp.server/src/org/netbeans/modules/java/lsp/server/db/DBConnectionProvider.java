@@ -41,7 +41,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = CodeActionsProvider.class)
 public class DBConnectionProvider extends CodeActionsProvider{
-    private static final String  GET_DB_CONNECTION = "nbls.db.connection"; //NOI18N
+    private static final String  GET_DB_CONNECTION = "java.db.connection"; //NOI18N
     
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
         GET_DB_CONNECTION

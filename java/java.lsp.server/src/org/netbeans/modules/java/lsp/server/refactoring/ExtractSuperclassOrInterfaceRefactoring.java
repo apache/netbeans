@@ -79,8 +79,8 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class, position = 170)
 public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactoring {
 
-    private static final String EXTRACT_SUPERCLASS_REFACTORING_COMMAND =  "nbls.java.refactor.extract.superclass";
-    private static final String EXTRACT_INTERFACE_REFACTORING_COMMAND =  "nbls.java.refactor.extract.interface";
+    private static final String EXTRACT_SUPERCLASS_REFACTORING_COMMAND =  "java.refactor.extract.superclass";
+    private static final String EXTRACT_INTERFACE_REFACTORING_COMMAND =  "java.refactor.extract.interface";
     private static final ClassPath EMPTY_PATH = ClassPathSupport.createClassPath(new URL[0]);
 
     private final Set<String> commands = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(EXTRACT_INTERFACE_REFACTORING_COMMAND, EXTRACT_SUPERCLASS_REFACTORING_COMMAND)));

@@ -61,7 +61,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class)
 public class QuickOpen extends CodeActionsProvider {
 
-    public static final String QUICK_OPEN =  "nbls.quick.open"; // NOI18N
+    public static final String QUICK_OPEN =  "java.quick.open"; // NOI18N
     public static final String DEFAULT_PKG =  "<default package>"; // NOI18N
     private final Gson gson = new Gson();
 

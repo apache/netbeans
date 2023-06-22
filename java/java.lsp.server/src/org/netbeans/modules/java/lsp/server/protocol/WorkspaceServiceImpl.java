@@ -167,15 +167,15 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     @Override
     public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
-        String command = Utils.decodeCommand(params.getCommand(), client.getNbCodeCapabilities());
+        String command = params.getCommand();
         switch (command) {
-            case Server.NBLS_GRAALVM_PAUSE_SCRIPT:
+            case Server.GRAALVM_PAUSE_SCRIPT:
                 ActionsManager am = DebuggerManager.getDebuggerManager().getCurrentEngine().getActionsManager();
                 am.doAction("pauseInGraalScript");
                 return CompletableFuture.completedFuture(true);
-            case Server.NBLS_NEW_FROM_TEMPLATE:
+            case Server.JAVA_NEW_FROM_TEMPLATE:
                 return LspTemplateUI.createFromTemplate("Templates", client, params);
-            case Server.NBLS_NEW_PROJECT:
+            case Server.JAVA_NEW_PROJECT:
                 return LspTemplateUI.createProject("Templates/Project", client, params);
             case Server.NBLS_BUILD_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();
@@ -189,7 +189,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 progressOfCompilation.checkStatus();
                 return progressOfCompilation.getFinishFuture();
             }
-            case Server.NBLS_RUN_PROJECT_ACTION: {
+            case Server.JAVA_RUN_PROJECT_ACTION: {
                 // TODO: maybe a structure would be better for future compatibility / extensions, i.e. what to place in the action's context Lookup.
                 List<FileObject> targets = new ArrayList<>();
                 ProjectActionParams actionParams = gson.fromJson(gson.toJson(params.getArguments().get(0)), ProjectActionParams.class);
@@ -318,7 +318,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return future;
                 });
             }
-            case Server.NBLS_LOAD_WORKSPACE_TESTS: {
+            case Server.JAVA_LOAD_WORKSPACE_TESTS: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 FileObject file;
                 try {
@@ -401,7 +401,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return future;
                 });
             }
-            case Server.NBLS_RESOLVE_STACKTRACE_LOCATION: {
+            case Server.JAVA_RESOLVE_STACKTRACE_LOCATION: {
                 CompletableFuture<Object> future = new CompletableFuture<>();
                 try {
                     if (params.getArguments().size() >= 3) {
@@ -448,7 +448,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementations(uri, pos);
-            case Server.NBLS_FIND_PROJECT_CONFIGURATIONS: {
+            case Server.JAVA_FIND_PROJECT_CONFIGURATIONS: {
                 String fileUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 
                 FileObject file;
@@ -470,7 +470,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH: {
                 return AttachNativeConfigurations.findProcessAttachTo(client);
             }
-            case Server.NBLS_PROJECT_CONFIGURATION_COMPLETION: {
+            case Server.JAVA_PROJECT_CONFIGURATION_COMPLETION: {
                 // We expect one, two or three arguments.
                 // The first argument is always the URI of the launch.json file.
                 // When not more arguments are provided, all available configurations ought to be provided.
@@ -515,7 +515,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         .thenApply(avoid -> completionFutures.stream().flatMap(c -> c.join().stream()).collect(Collectors.toList()));
                 return (CompletableFuture<Object>) (CompletableFuture<?>) joinedFuture;
             }
-            case Server.NBLS_PROJECT_RESOLVE_PROJECT_PROBLEMS: {
+            case Server.JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS: {
                 final CompletableFuture<Object> result = new CompletableFuture<>();
                 List<Object> arguments = params.getArguments();
                 if (!arguments.isEmpty()) {
@@ -571,7 +571,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
                 return result;
             }
-            case Server.NBLS_CLEAR_PROJECT_CACHES: {
+            case Server.JAVA_CLEAR_PROJECT_CACHES: {
                 // politely clear project manager's cache of "no project" answers
                 ProjectManager.getDefault().clearNonProjectCache();
                 // impolitely clean the project-based traversal's cache, so any affiliation of intermediate folders will disappear
@@ -595,7 +595,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return (CompletableFuture<Object>) (CompletableFuture<?>)result;
             }
             
-            case Server.NBLS_PROJECT_INFO: {
+            case Server.JAVA_PROJECT_INFO: {
                 final CompletableFuture<Object> result = new CompletableFuture<>();
                 List<Object> arguments = params.getArguments();
                 if (arguments.size() < 1) {

@@ -97,10 +97,10 @@ public class EarActionProvider implements ActionProvider {
     private final UpdateHelper updateHelper;
         
     /** Map from commands to ant targets */
-    Map<String,String[]> commands;
+    Map<String, String[]> commands;
     
     public EarActionProvider(EarProject project, UpdateHelper updateHelper) {
-        commands = new HashMap<String, String[]>();
+        commands = new HashMap<>();
         commands.put(COMMAND_BUILD, new String[] {"dist"}); // NOI18N
         commands.put(COMMAND_CLEAN, new String[] {"clean"}); // NOI18N
         commands.put(COMMAND_REBUILD, new String[] {"clean", "dist"}); // NOI18N
@@ -407,7 +407,7 @@ public class EarActionProvider implements ActionProvider {
         return Boolean.parseBoolean(project.evaluator().getProperty(EarProjectProperties.J2EE_COMPILE_ON_SAVE));
     }
     
-    private void collectStartupExtenderArgs(Map p, String command) {
+    private void collectStartupExtenderArgs(Map<Object, Object> p, String command) {
         StringBuilder b = new StringBuilder();
         for (String arg : runJvmargsIde(command)) {
             b.append(' ').append(arg);

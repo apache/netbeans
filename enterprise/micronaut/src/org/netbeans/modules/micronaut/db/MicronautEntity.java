@@ -284,7 +284,8 @@ public class MicronautEntity extends RelatedCMPWizard {
                     case NEW:
                         generatedEntityClasses.add(entityClassName);
                         try {
-                            String newName = entityClassName;
+                            String pkMemberName = getPkMemberName(entityClass);
+                            String newName = pkMemberName != null ? Character.toUpperCase(pkMemberName.charAt(0)) + pkMemberName.substring(1) : entityClassName;
                             int count = 1;
                             while (packageFileObject.getFileObject(newName, "java") != null && count < 1000) {
                                 newName = entityClassName + "_" + count;

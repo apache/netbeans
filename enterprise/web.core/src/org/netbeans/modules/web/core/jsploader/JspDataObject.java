@@ -22,8 +22,6 @@ package org.netbeans.modules.web.core.jsploader;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
@@ -273,14 +271,6 @@ public class JspDataObject extends MultiDataObject implements QueryStringCookie 
         return "text/x-java"; // NOI18N
     }
     
-    /**
-     * Ensures the file encoding is determined. The call may may access 
-     * JSP parser and obtain project's lock.
-     */
-    void loadFileEncoding() {
-        getFileEncoding();
-    }
-    
     String getFileEncoding() {
         //just assure we do not return the initial null value
         encoding.compareAndSet(null, findFileEncoding(false));
@@ -349,10 +339,6 @@ public class JspDataObject extends MultiDataObject implements QueryStringCookie 
                             ((dObj == null) ? "null" : dObj.getClass().getName()) + // NOI18N
                             "/" + dObj); // NOI18N
                 }
-                /*if (!(dObj instanceof JspServletDataObject)) {
-                    // need to re-recognize
-                    dObj = rerecognize(dObj);
-                }*/
                 if (dObj instanceof JspServletDataObject) {
                     servletDataObject = (JspServletDataObject)dObj;
                     servletDataObjectDate = dObj.getPrimaryFile().lastModified();
@@ -385,8 +371,7 @@ public class JspDataObject extends MultiDataObject implements QueryStringCookie 
         }
         
         // editor
-        if ((oldServlet == null)/*&&(servletDataObject != null)*/) {
-        } else {
+        if (oldServlet != null) {
             RequestProcessor.postRequest(
                     new Runnable() {
                 public void run() {
@@ -400,26 +385,6 @@ public class JspDataObject extends MultiDataObject implements QueryStringCookie 
             );
         }
     }
-    
-    /** This method causes a DataObject to be re-recognized by the loader system.
-     *  This is a poor practice and should not be normally used, as it uses reflection
-     *  to call a protected method DataObject.dispose().
-     */
-   /* private DataObject rerecognize(DataObject dObj) {
-        // invalidate the object so it can be rerecognized
-        FileObject prim = dObj.getPrimaryFile();
-        try {
-            dObj.setValid(false);
-            return DataObject.find(prim);
-        }
-        catch (java.beans.PropertyVetoException e) {
-            ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
-        }
-        catch (DataObjectNotFoundException e) {
-            ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
-        }
-        return dObj;
-    }*/
     
     /** JDK 1.2 compiler hack. */
     public void firePropertyChange0(String propertyName, Object oldValue, Object newValue) {
@@ -497,18 +462,18 @@ public class JspDataObject extends MultiDataObject implements QueryStringCookie 
     ////// -------- INNER CLASSES ---------
     
     private class Listener extends FileChangeAdapter implements PropertyChangeListener/*, ServerRegistryImpl.ServerRegistryListener */{
-        WeakReference weakListener;
+        WeakReference<FileChangeListener> weakListener;
         
         Listener() {
         }
         
         private void register(FileObject fo) {
-            EventListener el = WeakListeners.create(FileChangeListener.class, this, fo);
-            fo.addFileChangeListener((FileChangeListener) el);
-            weakListener = new WeakReference(el);
+            FileChangeListener el = WeakListeners.create(FileChangeListener.class, this, fo);
+            fo.addFileChangeListener(el);
+            weakListener = new WeakReference<>(el);
         }
         private void unregister(FileObject fo) {
-            FileChangeListener listener = (FileChangeListener) weakListener.get();
+            FileChangeListener listener = weakListener.get();
             if (listener != null) {
                 fo.removeFileChangeListener(listener);
             }
@@ -549,31 +514,6 @@ public class JspDataObject extends MultiDataObject implements QueryStringCookie 
         public void fileRenamed(FileRenameEvent fe) {
             refreshPlugin(true);
         }
-        
-        // implementation of ServerRegistryImpl.ServerRegistryListener
-        /*
-        PENDING
-        public void added(ServerRegistryImpl.ServerEvent added) {
-            serverChange();
-        }
-         
-        public void setAppDefault(ServerRegistryImpl.InstanceEvent inst) {
-            serverChange();
-        }
-         
-        public void setWebDefault(ServerRegistryImpl.InstanceEvent inst) {
-            serverChange();
-        }
-         
-        public void removed(ServerRegistryImpl.ServerEvent removed) {
-            serverChange();
-        }
-         */
-        /*
-        private void serverChange() {
-            refreshPlugin(true);
-            firePropertyChange0(PROP_SERVER_CHANGE, null, null);
-        }*/
     }
 }
 

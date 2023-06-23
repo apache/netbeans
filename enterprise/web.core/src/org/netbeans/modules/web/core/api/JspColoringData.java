@@ -44,7 +44,7 @@ public final class JspColoringData extends PropertyChangeSupport {
     public static final String PROP_PARSING_IN_PROGRESS = "parsingInProgress"; //NOI18N
     
     /** Taglib id -> TagLibraryInfo */
-    private Map taglibs;
+    private Map<String, TagLibraryInfo> taglibs;
     
     /** Prefix -> Taglib id */
     private Map<String, String> prefixMapper;
@@ -120,7 +120,7 @@ public final class JspColoringData extends PropertyChangeSupport {
      * @param newPrefixMapper the new map of (prefix, uri)
      * @param parseSuccessful whether parsing was successful. If false, then the new information is partial only
      */
-    public void applyParsedData(Map newTaglibs, Map<String, String> newPrefixMapper, boolean newELIgnored, boolean newXMLSyntax, boolean parseSuccessful) {
+    public void applyParsedData(Map<String, TagLibraryInfo> newTaglibs, Map<String, String> newPrefixMapper, boolean newELIgnored, boolean newXMLSyntax, boolean parseSuccessful) {
 
         initialized = true;
 
@@ -165,7 +165,7 @@ public final class JspColoringData extends PropertyChangeSupport {
                 String uri = newPrefixMapper.get(prefix);
                 String uriOld = prefixMapper.get(prefix);
                 if ((uriOld == null) || !uri.equals(uriOld)) {
-                    Object newTaglib = newTaglibs.get(uri);
+                    TagLibraryInfo newTaglib = newTaglibs.get(uri);
                     if (newTaglib != null) {
                         // change - merge it
                         prefixMapper.put(prefix, uri);
@@ -180,8 +180,8 @@ public final class JspColoringData extends PropertyChangeSupport {
         }
     }
 
-    private static boolean equalsColoringInformation(Map taglibs1, Map<String, String> prefixMapper1,
-            Map taglibs2, Map<String, String> prefixMapper2) {
+    private static boolean equalsColoringInformation(Map<String, TagLibraryInfo> taglibs1, Map<String, String> prefixMapper1,
+            Map<String, TagLibraryInfo> taglibs2, Map<String, String> prefixMapper2) {
 
         if ((taglibs1 == null) != (taglibs2 == null)) {
             return false;
@@ -203,8 +203,8 @@ public final class JspColoringData extends PropertyChangeSupport {
                     return false;
                 }
 
-                TagLibraryInfo tli1 = (TagLibraryInfo)taglibs1.get(key1);
-                TagLibraryInfo tli2 = (TagLibraryInfo)taglibs2.get(key2);
+                TagLibraryInfo tli1 = taglibs1.get(key1);
+                TagLibraryInfo tli2 = taglibs2.get(key2);
                 if ((tli1 == null) || (tli2 == null)) {
                     return false;
                 }

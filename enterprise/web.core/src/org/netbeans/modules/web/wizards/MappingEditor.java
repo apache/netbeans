@@ -49,7 +49,7 @@ public class MappingEditor extends JPanel implements ActionListener {
     private JRadioButton urlRadio;
     private JRadioButton servletRadio;
     private JTextField mappingField;
-    private ToolTipCombo servletCombo;
+    private ToolTipCombo<String> servletCombo;
     private JCheckBox[] cb;
     private Dialog dialog;
     private DialogDescriptor editDialog;

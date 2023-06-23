@@ -26,11 +26,11 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-class ToolTipCombo extends JComboBox {
+class ToolTipCombo<T> extends JComboBox<T> {
 
     private static final long serialVersionUID = 1189442122448524856L;
 
-    ToolTipCombo(Object[] o) {
+    ToolTipCombo(T[] o) {
         super(o);
         this.setRenderer(new PathRenderer());
         addItemListener(new ItemListener() {

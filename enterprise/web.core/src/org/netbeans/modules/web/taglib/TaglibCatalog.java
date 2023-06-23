@@ -27,7 +27,6 @@ import org.netbeans.modules.xml.catalog.spi.CatalogListener;
 import org.netbeans.modules.xml.catalog.spi.CatalogReader;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 
 /** Catalog for taglib DTDs and schemas that enables code completion and XML validation in editor.
  *

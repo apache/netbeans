@@ -372,6 +372,19 @@ public class MicronautEntity extends RelatedCMPWizard {
             PersistenceUtils.logUsage(Generator.class, "USG_PERSISTENCE_ENTITY_DB_CREATED", new Integer[]{entityClasses.length});
         }
 
+        private static String getPkMemberName(EntityClass entityClass) {
+            if (entityClass != null) {
+                List<EntityMember> pks = entityClass.getFields().stream().filter(f -> f.isPrimaryKey()).collect(Collectors.toList());
+                if (pks.size() == 1) {
+                    String memberName = pks.get(0).getMemberName();
+                    if (memberName.length() > 2 && memberName.endsWith("Id")) {
+                        return memberName.substring(0, memberName.length() - 2);
+                    }
+                }
+            }
+            return null;
+        }
+
         private static String createPKClassName(String entityClassName) {
             return entityClassName + "PK"; // NOI18N
         }
@@ -757,8 +770,11 @@ public class MicronautEntity extends RelatedCMPWizard {
             @Override
             protected void generateRelationship(RelationshipRole role) throws IOException {
                 String memberName = role.getFieldName();
-                if (role.isMany() && !role.isToMany() && memberName.endsWith("Id")) {
-                    memberName = memberName.substring(0, memberName.length() - 2);
+                if (role.isMany() && !role.isToMany()) {
+                    String pkMemberName = getPkMemberName(beanMap.get(role.getParent().getRoleB().getEntityName()));
+                    if (pkMemberName != null) {
+                        memberName = pkMemberName;
+                    }
                 }
                 String typeName = getRelationshipFieldType(role, entityClass.getPackage());
                 if(replacedTypeNames.containsKey(typeName)) {

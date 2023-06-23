@@ -40,6 +40,7 @@ public class NBArtifactInfo {
         this.name = name;
     }
 
+    @SuppressWarnings("element-type-mismatch")
     public boolean removeVersionInfo(Object o) {
         return versionInfos.remove(o);
     }

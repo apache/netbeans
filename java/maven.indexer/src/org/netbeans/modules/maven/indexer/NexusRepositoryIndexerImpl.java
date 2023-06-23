@@ -69,6 +69,7 @@ import org.apache.maven.index.creator.MavenPluginArtifactInfoIndexCreator;
 import org.apache.maven.index.creator.MinimalArtifactInfoIndexCreator;
 import org.apache.maven.index.expr.StringSearchExpression;
 import org.apache.maven.index.updater.IndexUpdateRequest;
+import org.apache.maven.index.updater.IndexUpdateResult;
 import org.apache.maven.index.updater.IndexUpdater;
 import org.apache.maven.index.updater.ResourceFetcher;
 import org.apache.maven.search.SearchRequest;
@@ -134,6 +135,7 @@ import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
 import org.openide.util.NbBundle.Messages;
 import org.netbeans.modules.maven.indexer.spi.RepositoryIndexQueryProvider;
+
 import static org.apache.maven.index.creator.MinimalArtifactInfoIndexCreator.FLD_LAST_MODIFIED;
 
 
@@ -230,18 +232,13 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         return this;
     }
     
-    private Mutex getRepoMutex(RepositoryInfo repo) {
+    private static Mutex getRepoMutex(RepositoryInfo repo) {
         return getRepoMutex(repo.getId());
     }
     
-    private Mutex getRepoMutex(String repoId) {
+    private static Mutex getRepoMutex(String repoId) {
         synchronized (repoMutexMap) {
-            Mutex m = repoMutexMap.get(repoId);
-            if (m == null) {
-                m = new Mutex();
-                repoMutexMap.put(repoId, m);
-            }
-            return m;
+            return repoMutexMap.computeIfAbsent(repoId, k -> new Mutex());
         }
     }
     
@@ -309,28 +306,13 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                 /* indexers */ indexers);
 
         // The allGroups and rootGroups properties of the IndexingContext are
-        // not persistent anymore, so need to be save outside the context
-        boolean needGroupCacheRebuild = false;
+        // not persistent anymore, so need to be saved outside the context
         try {
             context.setAllGroups(Files.readAllLines(getAllGroupCacheFile(repo)));
-        } catch (IOException ex) {
-            needGroupCacheRebuild = true;
-        }
-        try {
             context.setRootGroups(Files.readAllLines(getRootGroupCacheFile(repo)));
         } catch (IOException ex) {
-            needGroupCacheRebuild = true;
-        }
-        // At least one of the group caches could not be loaded, so rebuild it
-        if(needGroupCacheRebuild) {
-            RP_LOCAL.submit(() -> {
-                try {
-                    context.rebuildGroups();
-                    storeGroupCache(repo, context);
-                } catch (IOException ex) {
-                    LOGGER.log(Level.WARNING, "Failed to store group caches for repo: " + repo.getId(), ex);
-                }
-            });
+            // At least one of the group caches could not be loaded, so rebuild it
+            rebuildGroupCache(repo, context);
         }
         indexingContexts.put(context.getId(), context);
         return context;
@@ -503,6 +485,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         }
         boolean fetchFailed = false;
         long t = System.currentTimeMillis();
+        IndexUpdateResult fetchUpdateResult = null;
         RemoteIndexTransferListener listener = null;
         try {
             IndexingContext indexingContext = getIndexingContexts().get(repo.getId());
@@ -583,9 +566,8 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                         nic.start(listener);
                     }
                     try {
-                        Files.deleteIfExists(getAllGroupCacheFile(repo));
-                        Files.deleteIfExists(getRootGroupCacheFile(repo));
-                        remoteIndexUpdater.fetchAndUpdateIndex(iur);
+                        removeGroupCache(repo);
+                        fetchUpdateResult = remoteIndexUpdater.fetchAndUpdateIndex(iur);
                         storeGroupCache(repo, indexingContext);
                     } catch (IOException | AlreadyClosedException | IllegalArgumentException ex) {
                         // AlreadyClosedException can happen in low storage situations when lucene is trying to handle IOEs
@@ -595,6 +577,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                     } catch (RuntimeException ex) {
                         // thread pools, like the one used in maven-indexer's IndexDataReader, may suppress cancellation exceptions
                         // lets try to find them again
+                        fetchFailed = true;
                         if (isCancellation(ex)) {
                             Cancellation cancellation = new Cancellation();
                             cancellation.addSuppressed(ex);
@@ -625,8 +608,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                     RepositoryIndexerListener repoListener = new RepositoryIndexerListener(indexingContext);
                     try {
                         // Ensure no stale cache files are left
-                        Files.deleteIfExists(getAllGroupCacheFile(repo));
-                        Files.deleteIfExists(getRootGroupCacheFile(repo));
+                        removeGroupCache(repo);
                         scan(indexingContext, null, repoListener, updateLocal);
                         storeGroupCache(repo, indexingContext);
                     } finally {
@@ -667,7 +649,13 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         } catch (ComponentLookupException x) {
             throw new IOException("could not find protocol handler for " + repo.getRepositoryUrl(), x);
         } finally {
-            LOGGER.log(Level.INFO, "Indexing of {0} took {1}s.", new Object[]{repo.getId(), String.format("%.2f", (System.currentTimeMillis() - t)/1000.0f)});
+            String kind;
+            if (fetchUpdateResult != null) {
+                kind = fetchUpdateResult.isFullUpdate() ? "download, create" : "incremental download, update";
+            } else {
+                kind = "scan";
+            }
+            LOGGER.log(Level.INFO, "Indexing [{0}] of {1} took {2}s.", new Object[]{kind, repo.getId(), String.format("%.2f", (System.currentTimeMillis() - t)/1000.0f)});
             synchronized (indexingMutexes) {
                 indexingMutexes.remove(mutex);
             }
@@ -820,7 +808,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         if (!tmpDir.mkdirs()) {
             throw new IOException( "Cannot create temporary directory: " + tmpDir );
         }
-        File tmpFile = new File(tmpDir, context.getId() + "-tmp");
+        File tmpFile = new File(tmpDir, context.getId() + "-tmp"); // TODO: purpose of file?
  
         IndexingContext tmpContext = null;
         try {
@@ -1811,21 +1799,47 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         return getIndexDirectory(info).resolve(GROUP_CACHE_ROOT_PREFIX + "." + GROUP_CACHE_ROOT_SUFFIX);
     }
 
-    private void storeGroupCache(RepositoryInfo repoInfo, IndexingContext ic) throws IOException {
-
-        Path indexDir = getIndexDirectory(repoInfo);
+    private static void storeGroupCache(RepositoryInfo repo, IndexingContext context) throws IOException {
+        Path indexDir = getIndexDirectory(repo);
         Path tempAllCache = Files.createTempFile(indexDir, GROUP_CACHE_ALL_PREFIX, GROUP_CACHE_ALL_SUFFIX);
         Path tempRootCache = Files.createTempFile(indexDir, GROUP_CACHE_ROOT_PREFIX, GROUP_CACHE_ROOT_SUFFIX);
         try {
-            Files.write(tempAllCache, ic.getAllGroups());
-            Files.move(tempAllCache, getAllGroupCacheFile(repoInfo), StandardCopyOption.REPLACE_EXISTING);
+            Files.write(tempAllCache, context.getAllGroups());
+            Files.move(tempAllCache, getAllGroupCacheFile(repo), StandardCopyOption.REPLACE_EXISTING);
 
-            Files.write(tempRootCache, ic.getRootGroups());
-            Files.move(tempRootCache, getRootGroupCacheFile(repoInfo), StandardCopyOption.REPLACE_EXISTING);
+            Files.write(tempRootCache, context.getRootGroups());
+            Files.move(tempRootCache, getRootGroupCacheFile(repo), StandardCopyOption.REPLACE_EXISTING);
         } finally {
             Files.deleteIfExists(tempAllCache);
             Files.deleteIfExists(tempRootCache);
         }
+    }
+
+    private static void removeGroupCache(RepositoryInfo repo) throws IOException {
+        Files.deleteIfExists(getAllGroupCacheFile(repo));
+        Files.deleteIfExists(getRootGroupCacheFile(repo));
+    }
+
+    private static void rebuildGroupCache(RepositoryInfo repo, IndexingContext context) throws IOException {
+        removeGroupCache(repo);
+        (repo.isLocal() ? RP_LOCAL : RP_REMOTE).submit(() -> {
+            getRepoMutex(repo).writeAccess(() -> {
+                Path allGroupsPath = getAllGroupCacheFile(repo);
+                Path rootGroupsPath = getRootGroupCacheFile(repo);
+                if (Files.exists(allGroupsPath) && Files.exists(rootGroupsPath)) {
+                    return; // already rebuilt
+                }
+                try {
+                    LOGGER.log(Level.FINE, "Rebuilding group cache for {0}", repo.getId());
+                    long start = System.currentTimeMillis();
+                    context.rebuildGroups();
+                    storeGroupCache(repo, context);
+                    LOGGER.log(Level.INFO, "Group cache rebuilding of {0} took {1}s.", new Object[] {repo.getId(), (System.currentTimeMillis()-start)});
+                } catch (IOException e) {
+                    LOGGER.log(Level.WARNING, "Failed to rebuild groups for repo: " + repo.getId(), e);
+                }
+            });
+        });
     }
 
     // somewhat based on maven-indexer impl (in WagonHelper) prior to removal in maven-indexer 7.0.0

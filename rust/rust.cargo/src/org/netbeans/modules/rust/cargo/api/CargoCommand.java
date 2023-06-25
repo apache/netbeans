@@ -30,13 +30,26 @@ import org.openide.util.NbBundle;
     "CARGO_BENCH_DESC=Execute benchmarks", // FMT
     "CARGO_BUILD=build", // FMT
     "CARGO_BUILD_DESC=Builds the package in debug mode", // FMT
-    "CARGO_CLEAN=clean", "CARGO_CLEAN_DESC=Cleans the project", // FMT
-    "CARGO_DOC_DESC=Builds package's documentation", // FMT
+    "CARGO_CLEAN=clean", // FMT
+    "CARGO_CLEAN_DESC=Cleans the project", // FMT
     "CARGO_DOC=doc", // FMT
+    "CARGO_DOC_DESC=Builds package's documentation", // FMT
+    "CARGO_FETCH=fetch", // FMT
+    "CARGO_FETCH_DESC=Fetch dependencies of a package from the network", // FMT
+    "CARGO_FIX=fix", // FMT
+    "CARGO_FIX_DESC=Automatically fix lint warnings reported by rustc", // FMT
     "CARGO_REMOVE=remove", // FMT
     "CARGO_REMOVE_DESC=Remove dependencies", // FMT
+    "CARGO_REPORT=report", // FMT
+    "CARGO_REPORT_DESC=Generate and display various kinds of reports", // FMT
     "CARGO_RUN_DESC=Run the current package", // FMT
     "CARGO_RUN=run", // FMT
+    "CARGO_RUSTC=rustc", // FMT
+    "CARGO_RUSTC_DESC=Compile a package, and pass extra options to the compiler", // FMT
+    "CARGO_RUSTDOC=rustdoc", // FMT
+    "CARGO_RUSTDOC_DESC=Build a package's documentation, using specified custom flags", // FMT
+    "CARGO_TEST=test", // FMT
+    "CARGO_TEST_DESC=Execute all unit and integration tests and build examples of a local package", // FMT
 })
 public enum CargoCommand {
     CARGO_ADD(new String[]{"add"}), // NOI18N

@@ -22,12 +22,17 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Action;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.project.RustProject;
 import org.netbeans.modules.rust.project.api.RustProjectAPI;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
+import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.AbstractLookup;
@@ -37,6 +42,8 @@ import org.openide.util.lookup.InstanceContent;
  * The root project of the project.
  */
 public class RustProjectRootNode extends AbstractNode implements PropertyChangeListener {
+
+    private static final Logger LOG = Logger.getLogger(RustProjectRootNode.class.getName());
 
     private final RustProject project;
 
@@ -50,6 +57,38 @@ public class RustProjectRootNode extends AbstractNode implements PropertyChangeL
                 new AbstractLookup(content));
         this.project = project;
         content.add(project);
+        content.add(project.getProjectDirectory());
+        content.add(project, new InstanceContent.Convertor<RustProject, DataObject>() {
+                    @Override
+                    public DataObject convert(RustProject obj) {
+                        try {
+                            final FileObject fo = obj.getProjectDirectory();
+                            return fo != null && fo.isValid() ? DataObject.
+                                    find(fo) : null;
+                        } catch (DataObjectNotFoundException ex) {
+                            LOG.log(Level.WARNING, null, ex);
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    public Class<? extends DataObject> type(RustProject obj) {
+                        return DataObject.class;
+                    }
+
+                    @Override
+                    public String id(RustProject obj) {
+                        final FileObject fo = obj.getProjectDirectory();
+                        return fo == null ? "" : fo.getPath();  // NOI18N
+                    }
+
+                    @Override
+                    public String displayName(RustProject obj) {
+                        return obj.toString();
+                    }
+
+                });
+
         this.project.getCargoTOML().addPropertyChangeListener(this);
         setName(project.getCargoTOML().getPackageName());
         setDisplayName(project.getCargoTOML().getPackageName());

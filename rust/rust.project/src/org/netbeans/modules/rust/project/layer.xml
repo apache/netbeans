@@ -53,21 +53,57 @@
                     <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunProject.instance"/>
                     <attr name="position" intvalue="700"/>
                 </file>
-                <file name="org-netbeans-modules-debugger-ui-actions-DebugProjectAction.shadow">
-                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugProjectAction.instance"/>
-                    <attr name="position" intvalue="800"/>
-                </file>
                 <file name="org-netbeans-modules-project-ui-TestProject.shadow">
                     <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestProject.instance"/>
                     <attr name="position" intvalue="1000"/>
                 </file>
                 <file name="sep-3.instance">
                     <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="2000"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-CloseProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CloseProject.instance"/>
+                    <attr name="position" intvalue="2100"/>
+                </file>
+               <file name="sep-4.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                     <attr name="position" intvalue="3000"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-RenameProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RenameProject.instance"/>
+                    <attr name="position" intvalue="3100"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-MoveProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-MoveProject.instance"/>
+                    <attr name="position" intvalue="3200"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-CopyProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CopyProject.instance"/>
+                    <attr name="position" intvalue="3300"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-DeleteProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-DeleteProject.instance"/>
+                    <attr name="position" intvalue="3400"/>
+                </file>
+                <file name="sep-5.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="4000"/>
+                </file>
+                <file name="org-openide-actions-FindAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-FindAction.instance"/>
+                    <attr name="position" intvalue="4100"/>
+                </file>
+                <file name="general.shadow">
+                    <attr name="originalFile" stringvalue="Projects/Actions"/>
+                    <attr name="position" intvalue="4200"/>
+                </file>
+                <file name="sep-6.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="5000"/>
                 </file>
                 <file name="org-netbeans-modules-project-ui-CustomizeProject.shadow">
                     <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CustomizeProject.instance"/>
-                    <attr name="position" intvalue="3200"/>
+                    <attr name="position" intvalue="5200"/>
                 </file>
             </folder>
         </folder>

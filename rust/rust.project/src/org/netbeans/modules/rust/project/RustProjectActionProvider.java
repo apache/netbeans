@@ -18,77 +18,70 @@
  */
 package org.netbeans.modules.rust.project;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.netbeans.modules.rust.cargo.api.CargoCommand;
-import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Lookup;
-import org.netbeans.modules.rust.cargo.api.Cargo;
+import org.netbeans.modules.rust.project.ui.actions.CargoExecutionCommand;
+import org.netbeans.modules.rust.project.ui.actions.Command;
+import org.netbeans.modules.rust.project.ui.actions.CopyCommand;
+import org.netbeans.modules.rust.project.ui.actions.DeleteCommand;
+import org.netbeans.modules.rust.project.ui.actions.MoveCommand;
+import org.netbeans.modules.rust.project.ui.actions.RenameCommand;
+import org.openide.LifecycleManager;
+import org.openide.util.RequestProcessor;
 
 /**
  * An ActionProvider for Rust projects.
  */
 public final class RustProjectActionProvider implements ActionProvider {
 
-    private static final Logger LOG = Logger.getLogger(RustProjectActionProvider.class.getName());
+    private static final RequestProcessor REQUEST_PROCESSOR = new RequestProcessor("Rust Executor");
 
-    private static final String[] SUPPORTED_ACTIONS = {
-        COMMAND_BUILD,
-        COMMAND_CLEAN,
-        COMMAND_REBUILD,
-        COMMAND_RUN,
-        COMMAND_DEBUG,};
-
-    private final RustProject project;
+    private final Map<String,Command> commands;
 
     public RustProjectActionProvider(RustProject project) {
-        this.project = project;
+        commands = new LinkedHashMap<>();
+
+        commands.put(COMMAND_BUILD, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCommand[]{CargoCommand.CARGO_BUILD}));
+        commands.put(COMMAND_CLEAN, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCommand[]{CargoCommand.CARGO_CLEAN}));
+        commands.put(COMMAND_REBUILD, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCommand[]{CargoCommand.CARGO_CLEAN, CargoCommand.CARGO_BUILD}));
+        commands.put(COMMAND_RUN, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCommand[]{CargoCommand.CARGO_RUN}));
+        commands.put(COMMAND_TEST, new CargoExecutionCommand(project, COMMAND_TEST, new CargoCommand[]{CargoCommand.CARGO_TEST}));
+
+        commands.put(COMMAND_COPY, new CopyCommand(project));
+        commands.put(COMMAND_DELETE, new DeleteCommand(project));
+        commands.put(COMMAND_MOVE, new MoveCommand(project));
+        commands.put(COMMAND_RENAME, new RenameCommand(project));
     }
 
     @Override
     public String[] getSupportedActions() {
-        return SUPPORTED_ACTIONS;
+        return commands.keySet().toArray(new String[0]);
     }
 
     @Override
-    public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
-        // TODO: Enhance this
-        Cargo build = Lookup.getDefault().lookup(Cargo.class);
-        if (build == null) {
-            LOG.log(Level.INFO, String.format("No CargoBuild in this application."));
+    public void invokeAction(String commandId, Lookup lookup) throws IllegalArgumentException {
+        final Command command = getCommand(commandId);
+        if (command.saveRequired()) {
+            LifecycleManager.getDefault().saveAll();
+        }
+        if (!command.asyncCallRequired()) {
+            command.invokeAction(lookup);
         } else {
-            CargoCommand[] commands = {};
-            CargoTOML cargotoml = project.getCargoTOML();
-            switch (command) {
-                case COMMAND_BUILD:
-                    commands = new CargoCommand[]{CargoCommand.CARGO_BUILD};
-                    break;
-                case COMMAND_CLEAN:
-                    commands = new CargoCommand[]{CargoCommand.CARGO_CLEAN};
-                    break;
-                case COMMAND_REBUILD:
-                    commands = new CargoCommand[]{CargoCommand.CARGO_CLEAN, CargoCommand.CARGO_BUILD};
-                    break;
-                case COMMAND_RUN:
-                    commands = new CargoCommand[]{CargoCommand.CARGO_RUN};
-                    break;
-                default:
-                    LOG.log(Level.WARNING, String.format("Invoked action %s but cannot find a CargoBuild mode for it", command));
-                    return;
-            }
-            try {
-                build.cargo(project.getCargoTOML(), commands);
-            } catch (IOException ioe) {
-                throw new IllegalArgumentException(ioe.getMessage(), ioe);
-            }
+            REQUEST_PROCESSOR.submit(() -> command.invokeAction(lookup));
         }
     }
 
     @Override
-    public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
-        return true;
+    public boolean isActionEnabled(String commandId, Lookup lookup) throws IllegalArgumentException {
+        return getCommand(commandId).isActionEnabled(lookup);
     }
 
+    public Command getCommand(String commandId) {
+        Command retval = commands.get(commandId);
+        assert retval != null : commandId;
+        return retval;
+    }
 }

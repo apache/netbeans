@@ -437,6 +437,14 @@
                 <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc-0.13.0.jar</runtime-relative-path>
                 <binary-origin>external/org.eclipse.lsp4j.jsonrpc-0.13.0.jar</binary-origin>
             </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.debug-0.13.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.debug-0.13.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc.debug-0.13.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.jsonrpc.debug-0.13.0.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

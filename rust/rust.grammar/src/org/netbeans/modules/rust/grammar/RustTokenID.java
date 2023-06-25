@@ -162,6 +162,9 @@ public enum RustTokenID implements TokenId {
     UNDERSCORE(OPERATOR, RustLexer.UNDERSCORE),
     WHITESPACE(RustTokenIDCategory.WHITESPACE, RustLexer.WHITESPACE),
     EOF(RustTokenIDCategory.EOF, RustLexer.EOF),
+    SINGLEQUOTE(RustTokenIDCategory.ERROR, RustLexer.SINGLEQUOTE),
+    DOUBLEQUOTE(RustTokenIDCategory.ERROR, RustLexer.DOUBLEQUOTE),
+    BACKSLASH(RustTokenIDCategory.ERROR, RustLexer.BACKSLASH),
     ERROR(RustTokenIDCategory.ERROR, RustLexer.VOCABULARY.getMaxTokenType() + 1);
 
     private static Map<Integer, RustTokenID> ANTLR_2_TOKENID;

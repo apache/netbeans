@@ -124,4 +124,17 @@ public class RustLexerTest extends NbTestCase {
         Assert.assertTrue("This test should have visited a STRING_LITERAL with a specific content, but hasn't", weirdStringVisited[0]);
     }
 
+    @Test
+    public void testShouldLexIncompleteLiterals() throws Exception {
+        RustTestUtils.lexString("fn main() { println!(\"", false, null);
+        RustTestUtils.lexString("fn main() { println!('", false, null);
+        RustTestUtils.lexString("fn main() { println!('\\", false, null);
+        RustTestUtils.lexString("fn main() { println!('\\u", false, null);
+        RustTestUtils.lexString("fn main() { println!(b", false, null);
+        RustTestUtils.lexString("fn main() { println!(b\"", false, null);
+        RustTestUtils.lexString("fn main() { println!(r", false, null);
+        RustTestUtils.lexString("fn main() { println!(r#", false, null);
+        RustTestUtils.lexString("fn main() { println!(r##", false, null);
+        RustTestUtils.lexString("fn main() { println!(r##\"", false, null);
+    }
 }

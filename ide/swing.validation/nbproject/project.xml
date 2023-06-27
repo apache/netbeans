@@ -78,8 +78,12 @@
                 <package>org.netbeans.validation.spi.accessibility</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/ValidationAPI.jar</runtime-relative-path>
-                <binary-origin>external/ValidationAPI-b26b94cc001a41ab9138496b11e2ae256a159ffd.jar</binary-origin>
+                <runtime-relative-path>ext/simplevalidation-swing.jar</runtime-relative-path>
+                <binary-origin>external/simplevalidation-swing-1.14.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/simplevalidation.jar</runtime-relative-path>
+                <binary-origin>external/simplevalidation-1.14.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -158,8 +158,12 @@ OR
     : Or
     ;
 
-BOOL_LIT
-    : BoolLiteral
+TRUE
+    : True
+    ;
+
+FALSE
+    : False
     ;
 
 NULL

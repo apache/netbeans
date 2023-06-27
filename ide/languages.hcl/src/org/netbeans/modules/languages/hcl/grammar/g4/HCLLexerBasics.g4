@@ -110,9 +110,12 @@ fragment UnicodeEsc
     : 'u' HexDigit*
     ;
 
-fragment BoolLiteral
+fragment True
     : 'true'
-    | 'false'
+    ;
+
+fragment False
+    : 'false'
     ;
 
 fragment Null

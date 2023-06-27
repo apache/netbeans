@@ -72,21 +72,32 @@ public class HCLIndenter implements IndentTask {
 
         if (ts != null) {
             for (Context.Region region : regions) {
-                ts.moveStart();
-                int depth = 0;
+                int rstart = region.getStartOffset();
+                ts.move(rstart);
+                int prevLineIndent = 0;
+                if (ts.movePrevious()) {
+                    int prevLineStart = context.lineStartOffset(ts.offset());
+                    prevLineIndent = context.lineIndent(prevLineStart);
+                    while (ts.offset() > prevLineStart && ts.movePrevious());
+                }
+                int delta = 0;
 
                 LinkedList<Integer> startOffsets = getStartOffsets(region);
                 Map<Integer, Integer> newIndents = new HashMap<>();
 
                 for (Integer startOffset : startOffsets) {
-                    depth += depthScan(startOffset);
-                    depth = Math.max(depth, 0);
+                    delta = depthScan(startOffset);
+
+                    int newIndent = prevLineIndent + (delta * indentSize);
+                    newIndent = Math.max(newIndent, 0);
 
                     Token<HCLTokenId> token = ts.token();
                     // Do not indent block comments and heredoc contents
                     if (token != null && token.id() != BLOCK_COMMENT && token.id() != HEREDOC) {
-                        newIndents.put(startOffset, depth * indentSize);
+                        newIndents.put(startOffset, newIndent);
                     }
+                    // TODO: Add support for indented HEREDOC <<~
+                    prevLineIndent = newIndent;
                 }
 
                 while (!startOffsets.isEmpty()) {

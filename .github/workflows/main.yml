@@ -1985,6 +1985,9 @@ jobs:
       - name: enterprise/j2ee.core
         run: ant $OPTS -f enterprise/j2ee.core test
 
+      - name: enterprise/javaee.wildfly
+        run: .github/retry.sh ant $OPTS -f enterprise/javaee.wildfly test
+
       - name: enterprise/micronaut
         run: .github/retry.sh ant $OPTS -f enterprise/micronaut test
 

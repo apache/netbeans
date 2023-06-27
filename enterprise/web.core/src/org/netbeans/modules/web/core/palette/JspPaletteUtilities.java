@@ -272,32 +272,29 @@ public final class JspPaletteUtilities {
         Document doc = target.getDocument();
         if (doc instanceof BaseDocument) {
             BaseDocument baseDoc = (BaseDocument)doc;
-            baseDoc.atomicLock();
-            try {
-                int pos = 0;  // FIXME: compute better where to insert tag lib definition?
-                String definition = "<%@taglib prefix=\""+prefix+"\" uri=\""+uri+"\"%>\n";  //NOI18N
-                
-                //test for .jspx. FIXME: find better way to detect xml syntax?.
-                FileObject fobj = getFileObject(target);
-                if (fobj != null && "jspx".equals(fobj.getExt())) {
-                    int baseDocLength = baseDoc.getLength();
-                    String text = baseDoc.getText(0, baseDocLength);
-                    String jspRootBegin = "<jsp:root "; //NOI18N
-                    int jspRootIndex = text.indexOf(jspRootBegin);
-                    if (jspRootIndex != -1) {
-                        pos = jspRootIndex + jspRootBegin.length();
-                        definition = "xmlns:" + prefix + "=\"" + uri + "\" ";  //NOI18N
-                    }
-                }
+            baseDoc.runAtomic(() -> {
+                try {
+                    int pos = 0;  // FIXME: compute better where to insert tag lib definition?
+                    String definition = "<%@taglib prefix=\"" + prefix + "\" uri=\"" + uri + "\"%>\n";  //NOI18N
 
-                doc.insertString(pos, definition, null);
-            }
-            catch (BadLocationException e) {
-                Exceptions.printStackTrace(e);
-            }
-            finally {
-                baseDoc.atomicUnlock();
-            }
+                    //test for .jspx. FIXME: find better way to detect xml syntax?.
+                    FileObject fobj = getFileObject(target);
+                    if (fobj != null && "jspx".equals(fobj.getExt())) {
+                        int baseDocLength = baseDoc.getLength();
+                        String text = baseDoc.getText(0, baseDocLength);
+                        String jspRootBegin = "<jsp:root "; //NOI18N
+                        int jspRootIndex = text.indexOf(jspRootBegin);
+                        if (jspRootIndex != -1) {
+                            pos = jspRootIndex + jspRootBegin.length();
+                            definition = "xmlns:" + prefix + "=\"" + uri + "\" ";  //NOI18N
+                        }
+                    }
+
+                    doc.insertString(pos, definition, null);
+                } catch (BadLocationException e) {
+                    Exceptions.printStackTrace(e);
+                }
+            });
         }
     }
     

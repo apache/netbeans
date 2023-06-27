@@ -37,6 +37,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.junit.Assert;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManagerTest;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.j2ee.deployment.impl.ServerRegistry;
 import org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties;
@@ -57,7 +58,6 @@ import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
-import org.openide.util.test.MockLookup;
 import org.xml.sax.SAXException;
 
 

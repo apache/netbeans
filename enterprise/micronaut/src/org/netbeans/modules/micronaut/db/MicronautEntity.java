@@ -241,7 +241,7 @@ public class MicronautEntity extends RelatedCMPWizard {
             for (int i = 0; i < entityClasses.length; i++) {
                 final EntityClass entityClass = entityClasses[i];
                 if (entityClass.isForTable() && !entityClass.isUsePkField() && !jpaSupported && !jakartaSupported) {
-                    throw new IOException("Cannot generate " + entityClass.getClassName() + " class unless 'jakarta.persistence' or 'javax.persistence' is on the project classpath");
+                    throw new IOException("Cannot generate " + entityClass.getClassName() + " class unless 'jakarta.persistence' or 'javax.persistence' is on the project classpath. Update the classpath and invoke again.");
                 }
                 String entityClassName = entityClass.getClassName();
                 FileObject packageFileObject = entityClass.getPackageFileObject();

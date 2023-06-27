@@ -1,6 +1,6 @@
 Name: Apache Rat
 Origin: Apache Software Foundation
-Version: 0.12
+Version: 0.15
 License: Apache-2.0
 Description: Apache Rat is a release audit tool, focused on licenses.
 URL: https://creadur.apache.org/rat/

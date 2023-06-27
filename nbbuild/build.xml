@@ -2185,7 +2185,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         
         <taskdef uri="antlib:org.apache.rat.anttasks" resource="org/apache/rat/anttasks/antlib.xml">
             <classpath>
-                <pathelement location="external/apache-rat-0.12.jar"/>
+                <pathelement location="external/apache-rat-0.15.jar"/>
             </classpath>
         </taskdef>
         

@@ -40,6 +40,7 @@ import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Kind;
 import org.openide.filesystems.FileObject;
@@ -62,7 +63,7 @@ public class MicronautSymbolSearcher implements IndexSearcher {
 
     @Override
     public Set<? extends Descriptor> getSymbols(Project project, String textForQuery, Kind searchType, Helper helper) {
-        if (project == null || !textForQuery.startsWith("@")) {
+        if (project == null || !textForQuery.startsWith("@") || IndexingManager.getDefault().isIndexing()) {
             return Collections.emptySet();
         }
         Set<Descriptor> symbols = new HashSet<>();

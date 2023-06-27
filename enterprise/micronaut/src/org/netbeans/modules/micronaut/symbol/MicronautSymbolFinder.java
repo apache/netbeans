@@ -21,6 +21,8 @@ package org.netbeans.modules.micronaut.symbol;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreePathScanner;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -63,12 +65,13 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Pair;
+import org.openide.util.WeakListeners;
 
 /**
  *
  * @author Dusan Balek
  */
-public final class MicronautSymbolFinder extends EmbeddingIndexer {
+public final class MicronautSymbolFinder extends EmbeddingIndexer implements PropertyChangeListener {
 
     public static final String NAME = "mn"; // NOI18N
     public static final int VERSION = 1;
@@ -98,11 +101,19 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer {
         }
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        synchronized (this) {
+            map.clear();
+        }
+    }
+
     private synchronized boolean initialize(CompilationController cc) {
         Project p = FileOwnerQuery.getOwner(cc.getFileObject());
         Boolean ret = map.get(p);
         if (ret == null) {
             ClassPath cp = ClassPath.getClassPath(p.getProjectDirectory(), ClassPath.COMPILE);
+            cp.addPropertyChangeListener(WeakListeners.propertyChange(this, cp));
             ret = cp.findResource("io/micronaut/http/annotation/HttpMethodMapping.class") != null;
             map.put(p, ret);
         }

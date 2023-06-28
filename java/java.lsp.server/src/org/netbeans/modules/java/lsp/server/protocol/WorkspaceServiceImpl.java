@@ -899,7 +899,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     @Override
     public CompletableFuture<Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>>> symbol(WorkspaceSymbolParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
-        if (server.openedProjects().getNow(null) == null) {
+        final Project[] openedProjects = server.openedProjects().getNow(null);
+        if (openedProjects == null) {
             return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
         }
         String query = params.getQuery();
@@ -926,33 +927,34 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         WORKER.post(() -> {
             try {
                 List<WorkspaceSymbol> symbols = new ArrayList<>();
-                if (client.getNbCodeCapabilities().wantsJavaSupport()) {
-                    SearchType searchType = getSearchType(queryFin, exactFin, false, null, null);
+                SearchType searchType = getSearchType(queryFin, exactFin, false, null, null);
 
-                    // CSL Part
-                    Collection<? extends IndexSearcher> providers = Lookup.getDefault().lookupAll(IndexSearcher.class);
-                    Set<? extends IndexSearcher.Descriptor> descriptors;
+                // CSL Part
+                Collection<? extends IndexSearcher> providers = Lookup.getDefault().lookupAll(IndexSearcher.class);
+                Set<? extends IndexSearcher.Descriptor> descriptors;
+                for (Project project : openedProjects) {
                     if (!providers.isEmpty()) {
                         for (IndexSearcher provider : providers) {
-                            descriptors = provider.getSymbols(null, queryFin, Utils.searchType2QueryKind(searchType), null);
+                            descriptors = provider.getSymbols(project, queryFin, Utils.searchType2QueryKind(searchType), null);
                             for (IndexSearcher.Descriptor desc : descriptors) {
                                 FileObject fo = desc.getFileObject();
                                 org.netbeans.modules.csl.api.ElementHandle element = desc.getElement();
                                 if (fo != null) {
-                                    Position startPos = Utils.createPosition(fo, desc.getOffset());
-                                    Position endPos = Utils.createPosition(fo, desc.getOffset() + desc.getSimpleName().length());
+                                    Position pos = Utils.createPosition(fo, desc.getOffset());
                                     WorkspaceSymbol symbol = new WorkspaceSymbol(
                                             desc.getSimpleName(),
                                             Utils.cslElementKind2SymbolKind(element.getKind()),
-                                            Either.forLeft(new Location(Utils.toUri(fo), new Range(startPos, endPos))),
+                                            Either.forLeft(new Location(Utils.toUri(fo), new Range(pos, pos))),
                                             desc.getContextName());
                                     symbols.add(symbol);
                                 }
                             }
                         }
                     }
+                }
 
-                    // Java part
+                // Java part
+                if (client.getNbCodeCapabilities().wantsJavaSupport()) {
                     JavaSymbolProvider.ResultHandler symbolHandler = new JavaSymbolProvider.ResultHandler() {
                         @Override
                         public void setHighlightText(String text) {

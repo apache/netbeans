@@ -51,6 +51,19 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="CommandProvider">
+        <api name="LSP_API"/>
+        <summary>Added CommandProvider interface</summary>
+        <version major="1" minor="18"/>
+        <date day="30" month="6" year="2023"/>
+        <author login="jlahoda"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/spi/lsp/CommandProvider.html">CommandProvider</a>
+            has been added to allow server provide arbitrary commands runnable from a client.
+        </description>
+        <class package="org.netbeans.spi.lsp" name="CommandProvider"/>
+    </change>
     <change id="Completion_getCommand">
         <api name="LSP_API"/>
         <summary>Added URL to diagnostic code description</summary>

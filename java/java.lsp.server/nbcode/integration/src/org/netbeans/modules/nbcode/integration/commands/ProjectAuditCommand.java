@@ -24,15 +24,12 @@ import com.google.gson.JsonPrimitive;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.eclipse.lsp4j.CodeAction;
-import org.eclipse.lsp4j.CodeActionParams;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -42,10 +39,8 @@ import org.netbeans.modules.cloud.oracle.OCIProfile;
 import org.netbeans.modules.cloud.oracle.adm.AuditOptions;
 import org.netbeans.modules.cloud.oracle.adm.AuditResult;
 import org.netbeans.modules.cloud.oracle.adm.ProjectVulnerability;
-import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.UIContext;
-import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
@@ -57,8 +52,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author sdedic
  */
-@ServiceProvider(service = CodeActionsProvider.class)
-public class ProjectAuditCommand extends CodeActionsProvider {
+@ServiceProvider(service = CommandProvider.class)
+public class ProjectAuditCommand implements CommandProvider {
     private static final Logger LOG = Logger.getLogger(ProjectAuditCommand.class.getName());
     
     /**
@@ -86,11 +81,6 @@ public class ProjectAuditCommand extends CodeActionsProvider {
             COMMAND_LOAD_AUDIT_OLD
     ));
     
-    @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-        return Collections.emptyList();
-    }
-    
     private final Gson gson;
 
     public ProjectAuditCommand() {
@@ -103,7 +93,7 @@ public class ProjectAuditCommand extends CodeActionsProvider {
         "ERR_KnowledgeBaseSearchFailed=Could not search for knowledge base of project {0}: {1}"
     })
     @Override
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+    public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
         if (arguments.size() < 3) {
             throw new IllegalArgumentException("Expected 3 parameters: resource, compartment, knowledgebase");
         }

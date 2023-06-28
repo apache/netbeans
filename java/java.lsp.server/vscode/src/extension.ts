@@ -36,7 +36,8 @@ import {
     RevealOutputChannelOn,
     DocumentSelector,
     ErrorHandlerResult,
-    CloseHandlerResult
+    CloseHandlerResult,
+    SymbolInformation
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -612,6 +613,10 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 commands.executeCommand('workbench.action.quickOpen', '#' + fqn.substring(fqn.lastIndexOf('.') + 1));
             }
         }
+    }));
+    context.subscriptions.push(commands.registerCommand('nbls.workspace.symbols', async (query) => {
+        const c = await client;
+        return (await c.sendRequest<SymbolInformation[]>("workspace/symbol", { "query": query })) ?? [];
     }));
     context.subscriptions.push(commands.registerCommand('java.complete.abstract.methods', async () => {
         const active = vscode.window.activeTextEditor;

@@ -75,7 +75,7 @@ public class MicronautSymbolSearcher implements IndexSearcher {
                     while (children.hasMoreElements()) {
                         FileObject child = children.nextElement();
                         if (child.hasExt("mn")) { //NOI18N
-                            loadSymbols(child, symbols);
+                            loadSymbols(child, textForQuery, symbols);
                         }
                     }
                 }
@@ -84,7 +84,7 @@ public class MicronautSymbolSearcher implements IndexSearcher {
         return symbols;
     }
 
-    private static void loadSymbols(FileObject input, Set<Descriptor> symbols) {
+    private static void loadSymbols(FileObject input, String textForQuery, Set<Descriptor> symbols) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(input.getInputStream(), StandardCharsets.UTF_8))) {
             FileObject fo = null;
             String line;
@@ -102,10 +102,12 @@ public class MicronautSymbolSearcher implements IndexSearcher {
                         return;
                     }
                     String name = info.substring(0, idx).trim();
-                    String[] range = info.substring(idx + 1).split("-");
-                    int start = range.length > 0 ? Integer.parseInt(range[0]) : 0;
-                    int end = range.length > 1 ? Integer.parseInt(range[1]) : start;
-                    symbols.add(new SymbolDescriptor(name, fo, start, end));
+                    if (name.startsWith(textForQuery)) {
+                        String[] range = info.substring(idx + 1).split("-");
+                        int start = range.length > 0 ? Integer.parseInt(range[0]) : 0;
+                        int end = range.length > 1 ? Integer.parseInt(range[1]) : start;
+                        symbols.add(new SymbolDescriptor(name, fo, start, end));
+                    }
                 }
             }
         } catch (IOException ex) {

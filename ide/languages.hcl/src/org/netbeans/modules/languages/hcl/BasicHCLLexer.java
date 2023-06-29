@@ -73,12 +73,11 @@ public final class BasicHCLLexer extends AbstractHCLLexer {
             return token(id);
         }
     }
-/*
+
     @Override
     protected String flyweightText(HCLTokenId id) {
         return id.getFixedText();
     }
-*/
 
     static HCLTokenId fromAntlrToken(int id) {
         if (id < 0 || id >= convert.length) {

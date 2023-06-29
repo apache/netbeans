@@ -24,20 +24,6 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
             <code-name-base>org.netbeans.modules.languages.hcl</code-name-base>
-            <!--test-dependencies>
-                <test-type>
-                    <name>unit</name>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.libs.junit4</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                </test-type>
-            </test-dependencies-->
             <module-dependencies>
                 <dependency>
                     <code-name-base>org.netbeans.core.multiview</code-name-base>
@@ -168,7 +154,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.0</specification-version>
+                        <specification-version>1.3</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

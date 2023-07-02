@@ -280,8 +280,8 @@ public class DnDSupport  implements DragGestureListener, DropTargetListener {
                 p1.y += target.getHeight();
                 p2.y += target.getHeight();
             }
-            p1 = SwingUtilities.convertPoint( target, p1, palette.getRootPane() );
-            p2 = SwingUtilities.convertPoint( target, p2, palette.getRootPane() );
+            p1 = SwingUtilities.convertPoint( target, p1, dropPane );
+            p2 = SwingUtilities.convertPoint( target, p2, dropPane );
             Line2D line = new Line2D.Double( p1.x, p1.y, p2.x, p2.y );
             dropPane.setDropLine( line );
         } else {
@@ -411,8 +411,8 @@ public class DnDSupport  implements DragGestureListener, DropTargetListener {
                 p2.y += rect.height;
             }
         }
-        p1 = SwingUtilities.convertPoint( list, p1, palette.getRootPane() );
-        p2 = SwingUtilities.convertPoint( list, p2, palette.getRootPane() );
+        p1 = SwingUtilities.convertPoint( list, p1, dropPane );
+        p2 = SwingUtilities.convertPoint( list, p2, dropPane );
         Line2D line = new Line2D.Double( p1.x, p1.y, p2.x, p2.y );
         dropPane.setDropLine( line );
         targetItem = (Item)list.getModel().getElementAt( dropIndex );

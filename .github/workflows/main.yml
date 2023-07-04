@@ -934,7 +934,7 @@ jobs:
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.ui test
 
       - name: platform/core.windows
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.windows test
+        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/core.windows test
 
       - name: platform/editor.mimelookup
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/editor.mimelookup test
@@ -943,7 +943,7 @@ jobs:
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/editor.mimelookup.impl test
 
       - name: platform/favorites
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/favorites test
+        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/favorites test
 
       - name: platform/javahelp
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/javahelp test-unit
@@ -1143,7 +1143,7 @@ jobs:
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/sendopts test
 
       - name: platform/settings
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/settings test
+        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/settings test
 
       - name: platform/spi.actions
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/spi.actions test
@@ -2234,7 +2234,11 @@ jobs:
       # longest step (~40min)
       - name: php.editor
         if: env.test_php == 'true' && success()
-        run: ant $OPTS -f php/php.editor test
+        run: ant $OPTS -Dtest.config=stable -f php/php.editor test
+
+      - name: php.editor (unreliable tests)
+        if: env.test_php == 'true' && success()
+        run: .github/retry.sh ant $OPTS -Dtest.config=unreliable -f php/php.editor test
 
       - name: php.latte
         run: ant $OPTS -f php/php.latte test

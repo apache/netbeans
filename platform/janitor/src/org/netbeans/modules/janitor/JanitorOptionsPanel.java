@@ -39,14 +39,14 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
 
     void loadValues() {
         cbEnabled.setSelected(Janitor.isEnabled());
-        cbAutoRemove.setSelected(Janitor.isAutoRemoveAbanconedCache());
+        cbAutoRemove.setSelected(Janitor.isAutoRemoveAbandonedCache());
         spinnerModel.setValue(Janitor.getUnusedDays());
         resetRunNow();
     }
 
     void saveValues() {
         Janitor.setEnabled(cbEnabled.isSelected());
-        Janitor.setAutoRemoveAbanconedCache(cbAutoRemove.isSelected());
+        Janitor.setAutoRemoveAbandonedCache(cbAutoRemove.isSelected());
         Janitor.setUnusedDays(spinnerModel.getNumber().intValue());
         resetRunNow();
     }
@@ -54,7 +54,7 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
     boolean isChanged() {
         boolean changed = false;
         changed |= cbEnabled.isSelected() != Janitor.isEnabled();
-        changed |= cbAutoRemove.isSelected() != Janitor.isAutoRemoveAbanconedCache();
+        changed |= cbAutoRemove.isSelected() != Janitor.isAutoRemoveAbandonedCache();
         changed |= spinnerModel.getNumber().intValue() != Janitor.getUnusedDays();
         changed |= !btRunNow.isEnabled();
         return changed;

@@ -59,7 +59,6 @@ import org.netbeans.spi.project.FileOwnerQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
@@ -75,9 +74,9 @@ public class MavenFileOwnerQueryImpl implements FileOwnerQueryImplementation {
     
     private final PropertyChangeListener projectListener;
     private final ProjectGroupChangeListener groupListener;
-    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<>();
 
-    private static final AtomicReference<Preferences> prefs = new AtomicReference<Preferences>(NbPreferences.forModule(MavenFileOwnerQueryImpl.class).node(EXTERNAL_OWNERS));
+    private static final AtomicReference<Preferences> prefs = new AtomicReference<>(NbPreferences.forModule(MavenFileOwnerQueryImpl.class).node(EXTERNAL_OWNERS));
 
     private static final Logger LOG = Logger.getLogger(MavenFileOwnerQueryImpl.class.getName());
     
@@ -150,7 +149,15 @@ public class MavenFileOwnerQueryImpl implements FileOwnerQueryImplementation {
         String ownerString = owner.toString();
         try {
             for (String k : prefs().keys()) {
-                if (ownerString.equals(prefs().get(k, null))) {
+                String value;
+                try {
+                    value = prefs().get(k, null);
+                } catch (IllegalArgumentException ex) {
+                     // e.g invalid code point JDK-8075156
+                    LOG.log(Level.WARNING, "Invalid prefrences key at {0}, msg: {1}", new Object[] { prefs().absolutePath(), ex.getMessage() });
+                    continue;
+                }
+                if (ownerString.equals(value)) {
                     prefs().remove(k);
                     break;
                 }

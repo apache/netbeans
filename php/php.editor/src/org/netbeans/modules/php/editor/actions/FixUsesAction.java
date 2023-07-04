@@ -78,10 +78,7 @@ public class FixUsesAction extends BaseAction {
     static final String ACTION_NAME = "fix-uses"; //NOI18N
     private static final String PREFERENCES_NODE_KEY = FixUsesAction.class.getName();
     private static final String KEY_REMOVE_UNUSED_USES = "remove.unused.uses"; //NOI18N
-    private static final String KEY_PSR12_ORDER = "psr12.order"; // NOI18N class-based, function-based, constant-based
     private static final boolean REMOVE_UNUSED_USES_DEFAULT = true;
-    private static final boolean PSR12_ORDER_DEFAULT = false;
-    private static final long serialVersionUID = -8544670573081125944L;
 
     public FixUsesAction() {
         super(MAGIC_POSITION_RESET | UNDO_MERGE_RESET);
@@ -113,7 +110,7 @@ public class FixUsesAction extends BaseAction {
                                 importData.set(data);
                             }
                         } else {
-                            performFixUses((PHPParseResult) parserResult, data, data.getDefaultVariants(), isRemoveUnusedUses(), isPSR12Order());
+                            performFixUses((PHPParseResult) parserResult, data, data.getDefaultVariants(), isRemoveUnusedUses());
                         }
                     }
                 }
@@ -155,14 +152,6 @@ public class FixUsesAction extends BaseAction {
         getPreferences().putBoolean(KEY_REMOVE_UNUSED_USES, removeUnusedUses);
     }
 
-    private static boolean isPSR12Order() {
-        return getPreferences().getBoolean(KEY_PSR12_ORDER, PSR12_ORDER_DEFAULT);
-    }
-
-    private static void setPSR12Order(final boolean putInPSR12Order) {
-        getPreferences().putBoolean(KEY_PSR12_ORDER, putInPSR12Order);
-    }
-
     private static ImportData computeUses(final PHPParseResult parserResult, final int caretPosition) {
         Map<String, List<UsedNamespaceName>> filteredExistingNames = new UsedNamesCollector(parserResult, caretPosition).collectNames();
         Index index = parserResult.getModel().getIndexScope().getIndex();
@@ -177,9 +166,8 @@ public class FixUsesAction extends BaseAction {
             final PHPParseResult parserResult,
             final ImportData importData,
             final List<ImportData.ItemVariant> selections,
-            final boolean removeUnusedUses,
-            final boolean putInPSR12Order) {
-        new FixUsesPerformer(parserResult, importData, selections, removeUnusedUses, putInPSR12Order, createOptions(parserResult)).perform();
+            final boolean removeUnusedUses) {
+        new FixUsesPerformer(parserResult, importData, selections, removeUnusedUses, createOptions(parserResult)).perform();
     }
 
     private static Options createOptions(final PHPParseResult parserResult) {
@@ -196,7 +184,7 @@ public class FixUsesAction extends BaseAction {
     })
     private static void showFixUsesDialog(final JTextComponent target, final ImportData importData) {
     final FixDuplicateImportStmts panel = new FixDuplicateImportStmts();
-        panel.initPanel(importData, isRemoveUnusedUses(), isPSR12Order());
+        panel.initPanel(importData, isRemoveUnusedUses());
         final JButton ok = new JButton(Bundle.LBL_Ok());
         final JButton cancel = new JButton(Bundle.LBL_Cancel());
         final AtomicBoolean stop = new AtomicBoolean();
@@ -213,7 +201,6 @@ public class FixUsesAction extends BaseAction {
                 ok.setEnabled(false);
                 final List<ItemVariant> selections = panel.getSelections();
                 final boolean removeUnusedUses = panel.getRemoveUnusedImports();
-                final boolean putInPSR12Order = panel.isPSR12Order();
                 WORKER.post(new Runnable() {
 
                     @Override
@@ -236,7 +223,7 @@ public class FixUsesAction extends BaseAction {
                                         if (stop.get()) {
                                             return;
                                         }
-                                        performFixUses((PHPParseResult) parserResult, importData, selections, removeUnusedUses, putInPSR12Order);
+                                        performFixUses((PHPParseResult) parserResult, importData, selections, removeUnusedUses);
                                     }
                                 }
                             });
@@ -244,7 +231,6 @@ public class FixUsesAction extends BaseAction {
                             Exceptions.printStackTrace(ex);
                         }
                         setRemoveUnusedUses(removeUnusedUses);
-                        setPSR12Order(putInPSR12Order);
                         SwingUtilities.invokeLater(new Runnable() {
 
                             @Override

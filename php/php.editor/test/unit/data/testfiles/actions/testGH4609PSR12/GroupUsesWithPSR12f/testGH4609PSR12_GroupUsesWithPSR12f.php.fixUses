@@ -59,7 +59,7 @@ namespace Test;
 
 use function Vendor\Package\Functions\functionA;
 
-use const Vendor\Package\Constants\{
+use const Vendor\Package\Constants\ {
     CONSTANT_A,
     CONSTANT_B
 };

@@ -57,7 +57,7 @@ function functionB(): void {
 
 namespace Test;
 
-use const Vendor\Package\Constants\{
+use const Vendor\Package\Constants\ {
     CONSTANT_A,
     CONSTANT_B
 };

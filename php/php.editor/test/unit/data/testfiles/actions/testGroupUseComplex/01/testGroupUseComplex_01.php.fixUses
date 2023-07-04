@@ -83,20 +83,20 @@ class MyX {
 
 namespace Run;
 
-use \A\{
+use \A\ {
     B\C\ClsABC,
     B\C\ClsABC2 as MyCls,
     B\ClsAB,
     ClsA
 };
 use \X\MyX;
-use const \A\{
+use const \A\ {
     B\C\C_C,
     B\C_B,
     C_A
 };
 use const \X\C_X;
-use function \A\{
+use function \A\ {
     B\C\fc,
     B\fb,
     fa

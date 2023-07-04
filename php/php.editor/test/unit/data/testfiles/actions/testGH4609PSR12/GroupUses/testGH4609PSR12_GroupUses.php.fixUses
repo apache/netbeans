@@ -57,13 +57,13 @@ function functionB(): void {
 
 namespace Test;
 
-use Vendor\Package\{
+use Vendor\Package\ {
     Classes\MyClass,
     Enums\MyEnum,
     Interfaces\MyInterface,
     Traits\MyTrait
 };
-use const Vendor\Package\Constants\{
+use const Vendor\Package\Constants\ {
     CONSTANT_A,
     CONSTANT_B
 };

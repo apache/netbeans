@@ -352,6 +352,18 @@ public class FixUsesPerformerTest extends PHPTestBase {
         performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
     }
 
+    public void testGH6056_01() throws Exception {
+        String[] selections = new String[] {"\\Test\\TestClass1", "\\Test\\TestClass2"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("        <?php if(1 === 1):^ ?>", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testGH6082_01() throws Exception {
+        String[] selections = new String[] {"\\Vendor\\Test"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("function one(): ^Test {", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
     private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final Options options) throws Exception {
         FileObject testFile = getTestFile(fileName);
 

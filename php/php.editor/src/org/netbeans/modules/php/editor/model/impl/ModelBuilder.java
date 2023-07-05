@@ -86,7 +86,7 @@ class ModelBuilder {
     NamespaceScope build(NamespaceDeclaration node, OccurenceBuilder occurencesBuilder) {
         final NamespaceDeclarationInfo info = NamespaceDeclarationInfo.create(node);
 
-        NamespaceScopeImpl nScope = ModelElementFactory.create(info, this);
+        NamespaceScopeImpl nScope = /*(info.isDefaultNamespace()) ? defaultNamespaceScope :*/ ModelElementFactory.create(info, this);
         if (!nScope.isDefaultNamespace()) {
             setCurrentScope(nScope);
         }

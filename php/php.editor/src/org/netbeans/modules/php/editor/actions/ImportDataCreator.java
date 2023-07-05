@@ -27,8 +27,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.TreeSet;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.actions.FixUsesAction.Options;
 import org.netbeans.modules.php.editor.actions.ImportData.DataItem;
@@ -75,22 +74,8 @@ public class ImportDataCreator {
     }
 
     public ImportData create() {
-        for (Map.Entry<String, List<UsedNamespaceName>> entry : (new TreeMap<>(usedNames)).entrySet()) {
-            if (entry.getValue().size() > 1) {
-                Map<Integer, List<UsedNamespaceName>> scopeNames = new HashMap();
-                for (UsedNamespaceName usedName : entry.getValue()) {
-                    Integer scopeOffset = usedName.getInScope().getBlockRange().getStart();
-                    if (!scopeNames.containsKey(scopeOffset)) {
-                        scopeNames.put(scopeOffset, new ArrayList());
-                    }
-                    scopeNames.get(scopeOffset).add(usedName);
-                }
-                for (Map.Entry<Integer, List<UsedNamespaceName>> keyNames : scopeNames.entrySet()) {
-                    processFQElementName(entry.getKey(), keyNames.getValue());
-                }
-            } else {
-                processFQElementName(entry.getKey(), entry.getValue());
-            }
+        for (String fqElementName : new TreeSet<>(usedNames.keySet())) {
+            processFQElementName(fqElementName);
         }
         ImportData data = new ImportData();
         for (PossibleItem possibleItem : possibleItems) {
@@ -100,7 +85,7 @@ public class ImportDataCreator {
         return data;
     }
 
-    private void processFQElementName(final String fqElementName, List<UsedNamespaceName> usedNames) {
+    private void processFQElementName(final String fqElementName) {
         Collection<FullyQualifiedElement> possibleFQElements = fetchPossibleFQElements(fqElementName);
         Collection<FullyQualifiedElement> filteredPlatformConstsAndFunctions = filterPlatformConstsAndFunctions(possibleFQElements);
         Collection<FullyQualifiedElement> filteredDuplicates = filterDuplicates(filteredPlatformConstsAndFunctions);
@@ -116,11 +101,10 @@ public class ImportDataCreator {
         } else {
             Collection<FullyQualifiedElement> filteredFQElements = filterFQElementsFromCurrentNamespace(filteredExactUnqualifiedNames);
             if (filteredFQElements.isEmpty()) {
-                possibleItems.add(new ReplaceItem(fqElementName, usedNames, filteredExactUnqualifiedNames));
+                possibleItems.add(new ReplaceItem(fqElementName, filteredExactUnqualifiedNames));
             } else {
                 possibleItems.add(new ValidItem(
                         fqElementName,
-                        usedNames,
                         filteredFQElements,
                         filteredFQElements.size() != filteredExactUnqualifiedNames.size()));
             }
@@ -242,12 +226,10 @@ public class ImportDataCreator {
 
     private final class ReplaceItem implements PossibleItem {
         private final String fqName;
-        private final List<UsedNamespaceName> usedNames;
         private final Collection<FullyQualifiedElement> filteredExactUnqualifiedNames;
 
-        public ReplaceItem(String fqName, List<UsedNamespaceName> usedNames, Collection<FullyQualifiedElement> filteredExactUnqualifiedNames) {
+        public ReplaceItem(String fqName, Collection<FullyQualifiedElement> filteredExactUnqualifiedNames) {
             this.fqName = fqName;
-            this.usedNames = usedNames;
             this.filteredExactUnqualifiedNames = filteredExactUnqualifiedNames;
         }
 
@@ -259,7 +241,7 @@ public class ImportDataCreator {
                     ? fqElement.getFullyQualifiedName().toString()
                     : fqElement.getName();
             ItemVariant replaceItemVariant = new ItemVariant(itemVariantReplaceName, ItemVariant.UsagePolicy.CAN_BE_USED);
-            data.addJustToReplace(new DataItem(fqName, Collections.singletonList(replaceItemVariant), replaceItemVariant, usedNames));
+            data.addJustToReplace(new DataItem(fqName, Collections.singletonList(replaceItemVariant), replaceItemVariant, usedNames.get(fqName)));
         }
 
         private FullyQualifiedElement findBestElement() {
@@ -276,12 +258,10 @@ public class ImportDataCreator {
     private final class ValidItem implements PossibleItem {
         private final Collection<FullyQualifiedElement> filteredFQElements;
         private final String typeName;
-        private final List<UsedNamespaceName> usedNames;
         private final boolean existsFQElementFromCurrentNamespace;
 
-        private ValidItem(String typeName, List<UsedNamespaceName> usedNames, Collection<FullyQualifiedElement> filteredFQElements, boolean existsFQELEMENTFromCurrentNamespace) {
+        private ValidItem(String typeName, Collection<FullyQualifiedElement> filteredFQElements, boolean existsFQELEMENTFromCurrentNamespace) {
             this.typeName = typeName;
-            this.usedNames = usedNames;
             this.filteredFQElements = filteredFQElements;
             this.existsFQElementFromCurrentNamespace = existsFQELEMENTFromCurrentNamespace;
         }
@@ -326,7 +306,7 @@ public class ImportDataCreator {
                 }
             }
             Collections.sort(variants);
-            data.add(new DataItem(typeName, variants, defaultValue, usedNames));
+            data.add(new DataItem(typeName, variants, defaultValue, usedNames.get(typeName)));
         }
 
     }

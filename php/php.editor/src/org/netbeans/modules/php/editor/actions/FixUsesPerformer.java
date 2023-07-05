@@ -19,16 +19,16 @@
 package org.netbeans.modules.php.editor.actions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -46,8 +46,10 @@ import org.netbeans.modules.php.editor.indent.CodeStyle;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.GroupUseScope;
+import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
+import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.UseScope;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.UnusedUsesCollector;
@@ -84,24 +86,20 @@ public class FixUsesPerformer {
     private final ImportData importData;
     private final List<ItemVariant> selections;
     private final boolean removeUnusedUses;
-    private final boolean putInPSR12Order;
     private final Options options;
     private EditList editList;
     private BaseDocument baseDocument;
-    private NamespaceScope namespaceScope;
 
     public FixUsesPerformer(
             final PHPParseResult parserResult,
             final ImportData importData,
             final List<ItemVariant> selections,
             final boolean removeUnusedUses,
-            final boolean putInPSR12Order,
             final Options options) {
         this.parserResult = parserResult;
         this.importData = importData;
         this.selections = selections;
         this.removeUnusedUses = removeUnusedUses;
-        this.putInPSR12Order = putInPSR12Order;
         this.options = options;
     }
 
@@ -110,8 +108,7 @@ public class FixUsesPerformer {
         if (document instanceof BaseDocument) {
             baseDocument = (BaseDocument) document;
             editList = new EditList(baseDocument);
-            namespaceScope = ModelUtils.getNamespaceScope(parserResult.getModel().getFileScope(), importData.caretPosition);
-            assert namespaceScope != null;
+            processExistingUses();
             processSelections();
             editList.apply();
         }
@@ -120,25 +117,30 @@ public class FixUsesPerformer {
     @NbBundle.Messages("FixUsesPerformer.noChanges=Fix imports: No Changes")
     private void processSelections() {
         final List<ImportData.DataItem> dataItems = resolveDuplicateSelections();
-        TreeMap<Integer, List<UsePart>> usePartsMap = new TreeMap<>();
-        assert selections.size() <= dataItems.size()
-                : "The selections size must not be larger than the dataItems size. selections size: " + selections.size() + " > dataItems size: " + dataItems.size(); // NOI18N
+        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult, importData.caretPosition);
+        assert namespaceScope != null;
+        int startOffset = getOffset(baseDocument, namespaceScope, parserResult, importData.caretPosition);
+        List<UsePart> useParts = new ArrayList<>();
+        Collection<? extends GroupUseScope> declaredGroupUses = namespaceScope.getDeclaredGroupUses();
+        for (GroupUseScope groupUseElement : declaredGroupUses) {
+            for (UseScope useElement : groupUseElement.getUseScopes()) {
+                processUseElement(useElement, useParts);
+            }
+        }
+        Collection<? extends UseScope> declaredUses = namespaceScope.getDeclaredSingleUses();
+        for (UseScope useElement : declaredUses) {
+            assert !useElement.isPartOfGroupUse() : useElement;
+            processUseElement(useElement, useParts);
+        }
         for (int i = 0; i < selections.size(); i++) {
             ItemVariant itemVariant = selections.get(i);
-            // we shouldn't use itemVariant if there is no any real dataItem related to it
-            if (itemVariant.canBeUsed() && !dataItems.get(i).getUsedNamespaceNames().isEmpty()) {
-                NamespaceScope currentScope = dataItems.get(i).getUsedNamespaceNames().get(0).getInScope();
-                int mapKey = currentScope.getBlockRange().getStart();
-                if (usePartsMap.get(mapKey) == null) {
-                    usePartsMap.put(mapKey, processScopeDeclaredUses(currentScope, new ArrayList<>()));
-                }
-
+            if (itemVariant.canBeUsed()) {
                 SanitizedUse sanitizedUse = new SanitizedUse(
                         new UsePart(modifyUseName(itemVariant.getName()), UsePart.Type.create(itemVariant.getType()), itemVariant.isFromAliasedElement()),
-                        usePartsMap.get(mapKey),
-                        createAliasStrategy(i, usePartsMap.get(mapKey), selections));
+                        useParts,
+                        createAliasStrategy(i, useParts, selections));
                 if (sanitizedUse.shouldBeUsed()) {
-                    usePartsMap.get(mapKey).add(sanitizedUse.getSanitizedUsePart());
+                    useParts.add(sanitizedUse.getSanitizedUsePart());
                 }
                 for (UsedNamespaceName usedNamespaceName : dataItems.get(i).getUsedNamespaceNames()) {
                     editList.replace(usedNamespaceName.getOffset(), usedNamespaceName.getReplaceLength(), sanitizedUse.getReplaceName(usedNamespaceName), false, 0);
@@ -146,166 +148,13 @@ public class FixUsesPerformer {
             }
         }
         replaceUnimportedItems();
-
-        CheckVisitor visitor = new CheckVisitor();
-        Program program = parserResult.getProgram();
-        if (program != null) {
-            program.accept(visitor);
-        }
-
-        boolean emptyString = true;
-        int lastUsedRangeIndex = 0;
-        int lastDeclareIndex = 0;
-        List<NamespaceScope> declaredNamespaces;
-        if (namespaceScope.isDefaultNamespace()) {
-            declaredNamespaces = new ArrayList(namespaceScope.getFileScope().getDeclaredNamespaces());
-            declaredNamespaces.sort((left, right) -> left.getBlockRange().getStart() - right.getBlockRange().getStart());
-        } else {
-            declaredNamespaces = new ArrayList();
-            declaredNamespaces.add(namespaceScope);
-        }
-        for (NamespaceScope currentScope : declaredNamespaces) {
-            int mapKey = currentScope.getBlockRange().getStart();
-            if (usePartsMap.get(mapKey) == null) {
-                usePartsMap.put(mapKey, processScopeDeclaredUses(currentScope, new ArrayList<>()));
-            }
-
-            int startOffset = getNamespaceScopeOffset(currentScope);
-            int endOffset = currentScope.isDefaultNamespace() && visitor.getGlobalNamespaceEndOffset() > 0
-                    ? visitor.getGlobalNamespaceEndOffset()
-                    : currentScope.getBlockRange().getEnd();
-
-            int compareStringOffsetStart = 0;
-            List <OffsetRange> replace = new ArrayList();
-            for (int i = lastUsedRangeIndex; i < visitor.getUsedRanges().size(); i++) {
-                OffsetRange offsetRange = visitor.getUsedRanges().get(i);
-                if (endOffset < offsetRange.getStart()) {
-                    break;
-                }
-                lastUsedRangeIndex = i;
-                if (startOffset > offsetRange.getStart()) {
-                    continue;
-                }
-
-                compareStringOffsetStart = compareStringOffsetStart > 0 ? compareStringOffsetStart : offsetRange.getStart();
-                int useStartOffset = getOffsetWithoutLeadingWhitespaces(offsetRange.getStart());
-                replace.add(new OffsetRange(useStartOffset, offsetRange.getEnd()));
-                startOffset = offsetRange.getEnd();
-            }
-
-            // because only declare(strict_types=1) should go first, but declare(ticks=1) could be everywhere
-            // we have to restrict declare start offset to prevent wrong USE placement after declare in cases such
-            // function { declare(ticks=1); } or class A { puclic function fn () { declare(ticks=1); } }
-            // in the feature it would be better to have DeclareStatmentScope for that
-            int maxDeclareOffset = currentScope.getElements().isEmpty() ? endOffset : currentScope.getElements().get(0).getOffset();
-            // NETBEANS-4978 check whether declare statemens exist
-            // e.g. in the following case, insert the code(use statements) after the declare statement
-            // declare (strict_types=1);
-            // class TestClass
-            // {
-            //     public function __construct()
-            //     {
-            //         $test = new Foo();
-            //     }
-            // }
-            for (int j = lastDeclareIndex; j < visitor.getDeclareStatements().size(); j++) {
-                if (maxDeclareOffset < visitor.getDeclareStatements().get(j).getStartOffset()) {
-                    break;
-                }
-                startOffset = Math.max(startOffset, visitor.getDeclareStatements().get(j).getEndOffset());
-                lastDeclareIndex = j;
-            }
-
-            String insertString = createInsertString(usePartsMap.get(mapKey));
-            // avoid being recognized as a modified file
-            if (insertString.isEmpty()) {
-                // remove unused namespaces if exists
-                for (OffsetRange offsetRange : replace) {
-                    editList.replace(offsetRange.getStart(), offsetRange.getLength(), EMPTY_STRING, false, 0);
-                    emptyString = false;
-                }
-                continue;
-            }
-
-            try {
-                // get -2/+2 for new lines before string
-                String replaceString = compareStringOffsetStart > 1 ? baseDocument.getText(compareStringOffsetStart - 2, startOffset - compareStringOffsetStart + 2) : "";
-                if (replaceString.equals(insertString)) {
-                    continue;
-                }
-
-                for (OffsetRange offsetRange : replace) {
-                    editList.replace(offsetRange.getStart(), offsetRange.getLength(), EMPTY_STRING, false, 0);
-                }
-                editList.replace(startOffset, 0, insertString, false, 0);
-                if (shouldAppendLineAfter(startOffset)) {
-                    editList.replace(startOffset, 0, NEW_LINE, false, 0);
-                }
-                emptyString = false;
-            } catch (BadLocationException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-
-        if (emptyString) {
+        String insertString = createInsertString(useParts);
+        // avoid being recognized as a modified file
+        if (insertString.isEmpty()) {
             StatusDisplayer.getDefault().setStatusText(Bundle.FixUsesPerformer_noChanges());
-        }
-    }
-
-    private List<UsePart> processScopeDeclaredUses(NamespaceScope namespaceScope, List<UsePart> useParts) {
-        for (GroupUseScope groupUseElement : namespaceScope.getDeclaredGroupUses()) {
-            for (UseScope useElement : groupUseElement.getUseScopes()) {
-                processUseElement(useElement, useParts);
-            }
-        }
-        for (UseScope useElement : namespaceScope.getDeclaredSingleUses()) {
-            assert !useElement.isPartOfGroupUse() : useElement;
-            processUseElement(useElement, useParts);
-        }
-        return useParts;
-    }
-
-    private int getNamespaceScopeOffset(NamespaceScope scope) {
-        int useScopeStart = scope.getBlockRange().getStart();
-        if (useScopeStart == 0) {
-            // this is check for case when we don't have namespace declaration in file
-            // such <?php but tag could be not on the first line, also we put statements
-            // after phpdoc blocks due to PSR/PER
-            baseDocument.readLock();
-            try {
-                TokenSequence<? extends PHPTokenId> ts = LexUtilities.getPositionedSequence(baseDocument, scope.getBlockRange().getEnd());
-                if (ts != null) {
-                    LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_OPENTAG, PHPTokenId.PHPDOC_COMMENT_END));
-                    if (ts.token().id().equals(PHPTokenId.PHP_OPENTAG) || ts.token().id().equals(PHPTokenId.PHPDOC_COMMENT_END)) {
-                        useScopeStart = ts.offset() + ts.token().length() + 1;
-                    }
-                }
-            } finally {
-                baseDocument.readUnlock();
-            }
         } else {
-            //because when semicolon in the end of a namespace, the block starts
-            //after semicolon, but for brace it starts before curly open
-            //we can't just add +1 because of such case <?php namespace NS;?>
-            baseDocument.readLock();
-            try {
-                if (LexUtilities.getTokenChar(baseDocument, useScopeStart) == CURLY_OPEN) {
-                    useScopeStart++;
-                }
-            } finally {
-                baseDocument.readUnlock();
-            }
+            editList.replace(startOffset, 0, insertString, false, 0);
         }
-        return useScopeStart;
-    }
-
-    private boolean shouldAppendLineAfter(int lineOffset) {
-        try {
-            return LineDocumentUtils.getNextNonWhitespace(baseDocument, lineOffset, LineDocumentUtils.getLineEnd(baseDocument, lineOffset)) != -1;
-        }  catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return false;
     }
 
     private void replaceUnimportedItems() {
@@ -330,7 +179,6 @@ public class FixUsesPerformer {
             for (int j = i + 1; j < selectionsCopy.size(); j++) {
                 ItemVariant testedVariant = selectionsCopy.get(j);
                 if (baseVariant.equals(testedVariant)
-                        && dataItems.get(j).getUsedNamespaceNames().get(0).getInScope() == dataItems.get(i).getUsedNamespaceNames().get(0).getInScope()
                         && itemIndexesToRemove.add(j)) {
                     ImportData.DataItem duplicateItem = dataItems.get(j);
                     usedNamespaceNames.addAll(duplicateItem.getUsedNamespaceNames());
@@ -398,34 +246,8 @@ public class FixUsesPerformer {
 
     private String createInsertString(final List<UsePart> useParts) {
         StringBuilder insertString = new StringBuilder();
-        if (putInPSR12Order) {
-            Collections.sort(useParts, (u1, u2) -> {
-                int result = 0;
-                if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
-                    result = 0;
-                } else if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
-                    result = -1;
-                } else if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
-                    result = -1;
-                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
-                    result = 1;
-                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
-                    result = 0;
-                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
-                    result = 1;
-                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
-                    result = 1;
-                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
-                    result = -1;
-                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
-                    result = 0;
-                }
-                return result == 0 ? u1.getTextPart().compareToIgnoreCase(u2.getTextPart()) : result;
-            });
-        } else {
-            Collections.sort(useParts);
-        }
-        if (!useParts.isEmpty()) {
+        Collections.sort(useParts);
+        if (useParts.size() > 0) {
             insertString.append(NEW_LINE);
         }
         String indentString = null;
@@ -468,31 +290,11 @@ public class FixUsesPerformer {
         StringBuilder insertString = new StringBuilder();
         // types
         createStringForGroupUse(insertString, indentString, USE_PREFIX, typeUseParts);
-        if (putInPSR12Order) {
-            if (!functionUseParts.isEmpty()) {
-                appendNewLine(insertString);
-            }
-            // functions
-            createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, functionUseParts);
-
-            if (!constUseParts.isEmpty()) {
-                appendNewLine(insertString);
-            }
-            // constants
-            createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, constUseParts);
-        } else {
-            // constants
-            createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, constUseParts);
-            // functions
-            createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, functionUseParts);
-        }
+        // constants
+        createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, constUseParts);
+        // functions
+        createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, functionUseParts);
         return insertString.toString();
-    }
-
-    private void appendNewLine(StringBuilder insertString) {
-        if (insertString.length() > 0) {
-            insertString.append(NEW_LINE);
-        }
     }
 
     private List<String> usePartsToNamespaces(List<UsePart> useParts) {
@@ -550,7 +352,7 @@ public class FixUsesPerformer {
         }
         assert groupUsePrefix != null : groupedUseParts;
         String properGroupUsePrefix = modifyUseName(groupUsePrefix);
-        insertString.append(usePrefix).append(properGroupUsePrefix).append(CURLY_OPEN).append(NEW_LINE);
+        insertString.append(usePrefix).append(properGroupUsePrefix).append(SPACE).append(CURLY_OPEN).append(NEW_LINE);
         boolean first = true;
         int prefixLength = properGroupUsePrefix.length();
         for (UsePart groupUsePart : groupedUseParts) {
@@ -603,15 +405,22 @@ public class FixUsesPerformer {
 
     private String createStringForCommonUse(List<UsePart> useParts) {
         StringBuilder result = new StringBuilder();
-        UsePart.Type lastUseType = null;
         for (UsePart usePart : useParts) {
-            if (putInPSR12Order && lastUseType != null && lastUseType != usePart.getType()) {
-                appendNewLine(result);
-            }
             result.append(usePart.getUsePrefix()).append(usePart.getTextPart()).append(SEMICOLON);
-            lastUseType = usePart.getType();
         }
         return result.toString();
+    }
+
+    private void processExistingUses() {
+        ExistingUseStatementVisitor visitor = new ExistingUseStatementVisitor();
+        Program program = parserResult.getProgram();
+        if (program != null) {
+            program.accept(visitor);
+        }
+        for (OffsetRange offsetRange : visitor.getUsedRanges()) {
+            int startOffset = getOffsetWithoutLeadingWhitespaces(offsetRange.getStart());
+            editList.replace(startOffset, offsetRange.getEnd() - startOffset, EMPTY_STRING, false, 0);
+        }
     }
 
     private int getOffsetWithoutLeadingWhitespaces(final int startOffset) {
@@ -631,13 +440,79 @@ public class FixUsesPerformer {
         return result;
     }
 
+    private static int getOffset(BaseDocument baseDocument, NamespaceScope namespaceScope, PHPParseResult parserResult, int caretPosition) {
+        try {
+            ModelElement lastSingleUse = getLastUse(namespaceScope, false);
+            ModelElement lastGroupUse = getLastUse(namespaceScope, true);
+            if (lastSingleUse != null
+                    && lastGroupUse != null) {
+                if (lastSingleUse.getOffset() > lastGroupUse.getOffset()) {
+                    return LineDocumentUtils.getLineEnd(baseDocument, lastSingleUse.getOffset());
+                }
+                // XXX is this correct?
+                return LineDocumentUtils.getLineEnd(baseDocument, lastGroupUse.getNameRange().getEnd());
+            }
+            if (lastSingleUse != null) {
+                return LineDocumentUtils.getLineEnd(baseDocument, lastSingleUse.getOffset());
+            }
+            if (lastGroupUse != null) {
+                // XXX is this correct?
+                return LineDocumentUtils.getLineEnd(baseDocument, lastGroupUse.getNameRange().getEnd());
+            }
+            // NETBEANS-4978 check whether declare statemens exist
+            // e.g. in the following case, insert the code(use statements) after the declare statement
+            // declare (strict_types=1);
+            // class TestClass
+            // {
+            //     public function __construct()
+            //     {
+            //         $test = new Foo();
+            //     }
+            // }
+            int offset = LineDocumentUtils.getLineEnd(baseDocument, namespaceScope.getOffset());
+            CheckVisitor checkVisitor = new CheckVisitor();
+            parserResult.getProgram().accept(checkVisitor);
+            if (namespaceScope.isDefaultNamespace()) {
+                List<NamespaceDeclaration> globalNamespaceDeclarations = checkVisitor.getGlobalNamespaceDeclarations();
+                if (!globalNamespaceDeclarations.isEmpty()) {
+                    offset = globalNamespaceDeclarations.get(0).getBody().getStartOffset() + 1; // +1: {
+                }
+                for (NamespaceDeclaration globalNamespace : globalNamespaceDeclarations) {
+                    if (globalNamespace.getStartOffset() <= caretPosition
+                            && caretPosition <= globalNamespace.getEndOffset()) {
+                        offset = globalNamespace.getBody().getStartOffset() + 1; // +1: {
+                        break;
+                    }
+                }
+            }
+            for (DeclareStatement declareStatement : checkVisitor.getDeclareStatements()) {
+                offset = Math.max(offset, declareStatement.getEndOffset());
+            }
+            return offset;
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return 0;
+    }
+
+    @CheckForNull
+    private static ModelElement getLastUse(NamespaceScope namespaceScope, boolean group) {
+        ModelElement offsetElement = null;
+        Collection<? extends Scope> declaredUses = group ? namespaceScope.getDeclaredGroupUses() : namespaceScope.getDeclaredSingleUses();
+        for (Scope useElement : declaredUses) {
+            if (offsetElement == null
+                    || offsetElement.getOffset() < useElement.getOffset()) {
+                offsetElement = useElement;
+            }
+        }
+        return offsetElement;
+    }
+
     //~ inner classes
     private static class CheckVisitor extends DefaultVisitor {
 
         private List<DeclareStatement> declareStatements = new ArrayList<>();
         private List<NamespaceDeclaration> globalNamespaceDeclarations = new ArrayList<>();
-        private final List<OffsetRange> usedRanges = new LinkedList<>();
-        private int globalNamespaceEndOffset = 0;
 
         public List<DeclareStatement> getDeclareStatements() {
             return Collections.unmodifiableList(declareStatements);
@@ -645,23 +520,6 @@ public class FixUsesPerformer {
 
         public List<NamespaceDeclaration> getGlobalNamespaceDeclarations() {
             return Collections.unmodifiableList(globalNamespaceDeclarations);
-        }
-
-        public List<OffsetRange> getUsedRanges() {
-            return Collections.unmodifiableList(usedRanges);
-        }
-
-        public int getGlobalNamespaceEndOffset() {
-            return globalNamespaceEndOffset;
-        }
-
-        @Override
-        public void visit(UseStatement node) {
-            if (CancelSupport.getDefault().isCancelled()) {
-                return;
-            }
-            usedRanges.add(new OffsetRange(node.getStartOffset(), node.getEndOffset()));
-            super.visit(node);
         }
 
         @Override
@@ -677,9 +535,6 @@ public class FixUsesPerformer {
         public void visit(NamespaceDeclaration declaration) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
-            }
-            if (globalNamespaceEndOffset == 0 || globalNamespaceEndOffset > declaration.getBody().getEndOffset()) {
-                globalNamespaceEndOffset = declaration.getBody().getStartOffset();
             }
             if (declaration.isBracketed() && declaration.getName() == null) {
                 globalNamespaceDeclarations.add(declaration);
@@ -820,6 +675,20 @@ public class FixUsesPerformer {
 
         public boolean shouldBeUsed() {
             return shouldBeUsed;
+        }
+    }
+
+    private static class ExistingUseStatementVisitor extends DefaultVisitor {
+
+        private final List<OffsetRange> usedRanges = new LinkedList<>();
+
+        public List<OffsetRange> getUsedRanges() {
+            return Collections.unmodifiableList(usedRanges);
+        }
+
+        @Override
+        public void visit(UseStatement node) {
+            usedRanges.add(new OffsetRange(node.getStartOffset(), node.getEndOffset()));
         }
     }
 

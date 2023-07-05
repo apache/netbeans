@@ -18,16 +18,10 @@
  * under the License.
  */
 
-namespace {
-    class Utils {}
-    function fix() {}
+namespace Test;
+
+class TestClass3 {
+    public static function callMe() {
+        return __CLASS__;
+    }
 }
-namespace MyProject {
-    class Connection {}
-    function connect() {}
-}
-namespace {
-    class Connection {}
-    function connect() {}
-}
-?>

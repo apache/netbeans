@@ -20,9 +20,11 @@ package org.netbeans.modules.languages.hcl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
 import javax.swing.text.BadLocationException;
@@ -48,6 +50,12 @@ import static org.netbeans.modules.languages.hcl.HCLTokenId.*;
 public class HCLIndenter implements IndentTask {
 
     private static final MimePath MIME_HCL = MimePath.get("text/x-hcl");
+
+    // Set of tokens considered WhiteSpace in regard of indenting
+    private static final Set<HCLTokenId> SKIP_INDENT_WS = EnumSet.of(WS, NL, BLOCK_COMMENT, HEREDOC_END, HEREDOC);
+    // Do not indent inside the following tokens
+    private static final Set<HCLTokenId> DONT_INDENT = EnumSet.of(BLOCK_COMMENT, HEREDOC, HEREDOC_START);
+
     private final Context context;
     private final int indentSize;
 
@@ -66,7 +74,6 @@ public class HCLIndenter implements IndentTask {
         if (MimePath.parse(context.mimePath()).getIncludedPaths().contains(MIME_HCL)) {
             ts = (TokenSequence<HCLTokenId>) tseq;
         }
-
         ArrayList<Context.Region> regions = new ArrayList<>(context.indentRegions());
         Collections.reverse(regions);
 
@@ -74,30 +81,31 @@ public class HCLIndenter implements IndentTask {
             for (Context.Region region : regions) {
                 int rstart = region.getStartOffset();
                 ts.move(rstart);
-                int prevLineIndent = 0;
-                if (ts.movePrevious()) {
-                    int prevLineStart = context.lineStartOffset(ts.offset());
-                    prevLineIndent = context.lineIndent(prevLineStart);
-                    while (ts.offset() > prevLineStart && ts.movePrevious());
-                }
-                int delta = 0;
+                int prevLineIndent = previousIndent(rstart);
 
                 LinkedList<Integer> startOffsets = getStartOffsets(region);
                 Map<Integer, Integer> newIndents = new HashMap<>();
-
                 for (Integer startOffset : startOffsets) {
-                    delta = depthScan(startOffset);
+                    int delta = depthScan(startOffset);
 
                     int newIndent = prevLineIndent + (delta * indentSize);
                     newIndent = Math.max(newIndent, 0);
-
+                    
                     Token<HCLTokenId> token = ts.token();
-                    // Do not indent block comments and heredoc contents
-                    if (token != null && token.id() != BLOCK_COMMENT && token.id() != HEREDOC) {
-                        newIndents.put(startOffset, newIndent);
+                    
+                    // Do not indent block comments and heredoc
+                    if (token != null && DONT_INDENT.contains(token.id())) {
+                        continue;
                     }
-                    // TODO: Add support for indented HEREDOC <<~
-                    prevLineIndent = newIndent;
+
+                    //Detect empty line, but do not set the indent to 0 if we just hit the Enter
+                    if (emptyLine() && (startOffset != context.caretOffset())) {
+                        newIndents.put(startOffset,  0);
+                    } else {
+                        newIndents.put(startOffset, newIndent);
+                        // TODO: Add support for indented HEREDOC <<~
+                        prevLineIndent = newIndent;                            
+                    }
                 }
 
                 while (!startOffsets.isEmpty()) {
@@ -111,6 +119,43 @@ public class HCLIndenter implements IndentTask {
         }
     }
 
+    private boolean emptyLine() {
+        if (ts.token() == null || ts.token().id() == NL || ts.token().id() == WS) {
+            if (ts.moveNext()) {
+                if (ts.token().id() == NL) {
+                    return true;
+                } else if (ts.token().id() == WS) {
+                    if (ts.moveNext()) { 
+                        HCLTokenId next = ts.token().id(); // tokens so far <NL> <WS> <next>
+                        ts.movePrevious(); // Rewind back last token in case it would be an un processed indent marker
+                        return next == NL;
+                    } else {
+                        return true; // Last line without NL
+                    }
+                }
+            } else {
+                return true; // tokens so far: <NL> <EOF>
+            }
+        }
+        return false;
+    }
+
+    private int previousIndent(int offset) throws BadLocationException {
+        ts.move(offset);
+        // Rewind to the previous indented line.
+        boolean hasPrevious;
+        while ((hasPrevious = ts.movePrevious()) && SKIP_INDENT_WS.contains(ts.token().id()));
+        if (!hasPrevious) {
+            // reached the begining of the document
+            return 0;
+        } else {
+            int lineStart = context.lineStartOffset(ts.offset());
+            // Rewind to the line start
+            while (ts.offset() > lineStart && ts.movePrevious()); 
+            return context.lineIndent(lineStart);
+        }
+    }
+    
     private int depthScan(int offset) {
         if (offset == 0) {
             return 0;
@@ -136,7 +181,7 @@ public class HCLIndenter implements IndentTask {
                 ret--;
             }
         }
-        if (ts.offset() > offset) { // Move TS mack to the previously read non-group closing token.
+        while (ts.offset() >= offset) { // Move TS back before the offset.
             ts.movePrevious();
         }
         return ret;

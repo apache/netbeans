@@ -28,7 +28,8 @@ fragment Hws
     ;
 
 fragment Vws
-    : [\r\n\f]
+    : [\r\n]
+    | [\n]
     ;
 
 fragment NonVws

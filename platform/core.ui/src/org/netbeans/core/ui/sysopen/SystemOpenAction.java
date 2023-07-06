@@ -51,7 +51,8 @@ import org.openide.util.WeakListeners;
 @ActionRegistration(displayName = "#CTL_SystemOpenAction", lazy=false)
 @ActionReferences ({
     @ActionReference(path = "UI/ToolActions/Files", position = 2045),
-    @ActionReference(path = "Projects/Actions", position = 101)
+    @ActionReference(path = "Projects/Actions", position = 101),
+    @ActionReference(path = "Shortcuts", name = "SO-S")
 })
 public final class SystemOpenAction extends AbstractAction implements ContextAwareAction {
 

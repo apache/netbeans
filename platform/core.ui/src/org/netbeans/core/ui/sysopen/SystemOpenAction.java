@@ -106,12 +106,22 @@ public final class SystemOpenAction extends AbstractAction implements ContextAwa
         files.clear();
         for (DataObject d : result.allInstances()) {
             File f = FileUtil.toFile(d.getPrimaryFile());
-            if (f == null || /* #144575 */ Utilities.isWindows() && f.isFile() && !f.getName().contains(".")) {
-                files.clear();
-                break;
+            if (f == null || isIgnoredFile(f)) {
+                continue;
             }
             files.add(f);
         }
+    }
+
+    private boolean isIgnoredFile(File f) {
+        if (Utilities.isWindows() && f.isFile() && !f.getName().contains(".")) {
+            /* #144575 */
+            return true;
+        }
+        if (f.getName().endsWith(".shadow")) {
+            return true;
+        }
+        return false;
     }
 
 }

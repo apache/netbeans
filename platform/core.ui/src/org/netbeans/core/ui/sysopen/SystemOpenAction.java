@@ -50,6 +50,7 @@ import org.openide.util.WeakListeners;
 @ActionID(id = "org.netbeans.core.ui.sysopen.SystemOpenAction", category = "Edit")
 @ActionRegistration(displayName = "#CTL_SystemOpenAction", lazy=false)
 @ActionReferences ({
+    @ActionReference(path = "Editors/TabActions", position = 401),
     @ActionReference(path = "UI/ToolActions/Files", position = 2045),
     @ActionReference(path = "Projects/Actions", position = 101),
     @ActionReference(path = "Shortcuts", name = "SO-S")

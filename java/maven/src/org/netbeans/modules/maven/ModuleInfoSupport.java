@@ -159,14 +159,14 @@ public class ModuleInfoSupport {
         return getDeclaredModules(src);
     }
     
-    private static Set<String> getDeclaredModules(final JavaSource src) {
+    static Set<String> getDeclaredModules(final JavaSource src) {
         Set<String> declaredModuleNames = new HashSet<>();
         try {
             src.runUserActionTask((cc)-> {
                 cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                final List<? extends Tree> decls = cc.getCompilationUnit().getTypeDecls();
-                final ModuleElement me =  !decls.isEmpty() && decls.get(0).getKind() == Tree.Kind.MODULE ?
-                        (ModuleElement) cc.getTrees().getElement(TreePath.getPath(cc.getCompilationUnit(), decls.get(0))) :
+                final ModuleTree moduleTree = cc.getCompilationUnit().getModule();
+                final ModuleElement me = moduleTree != null ?
+                        ((ModuleElement) cc.getTrees().getElement(TreePath.getPath(cc.getCompilationUnit(), moduleTree))) :
                         null;
                 if (me != null) {
                     for (ModuleElement.Directive d : me.getDirectives()) {
@@ -214,7 +214,7 @@ public class ModuleInfoSupport {
         });
     }
     
-    private static void addRequires(FileObject moduleInfo, List<String> newModules) {
+    static void addRequires(FileObject moduleInfo, List<String> newModules) {
         final JavaSource src = JavaSource.forFileObject(moduleInfo);
         if (src == null) {
             return;
@@ -235,7 +235,7 @@ public class ModuleInfoSupport {
                 src.runModificationTask((WorkingCopy copy) -> {
                     copy.toPhase(JavaSource.Phase.RESOLVED);
                     TreeMaker tm = copy.getTreeMaker();
-                    ModuleTree modle = (ModuleTree) copy.getCompilationUnit().getTypeDecls().get(0);
+                    ModuleTree modle = (ModuleTree) copy.getCompilationUnit().getModule();
                     ModuleTree newModle = modle;
                     for (String mName : mNames) {
                         newModle = tm.addModuleDirective(newModle, tm.Requires(false, false, tm.QualIdent(mName)));

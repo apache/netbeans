@@ -57,7 +57,7 @@ function functionB(): void {
 
 namespace Test;
 
-use Vendor\Package\ {
+use Vendor\Package\{
     Classes\MyClass,
     Enums\MyEnum,
     Interfaces\MyInterface,

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.languages.hcl;
 
+import org.antlr.v4.runtime.Vocabulary;
 import org.netbeans.api.lexer.Token;
 import static org.netbeans.modules.languages.hcl.HCLTokenId.*;
 import org.netbeans.modules.languages.hcl.grammar.HCLLexer;
@@ -30,93 +31,58 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
  */
 public final class BasicHCLLexer extends AbstractHCLLexer {
 
+    // At the moment HCLLexer.HEREDOC_END is the last token id;
+    private static final HCLTokenId[] convert = new HCLTokenId[HCLLexer.HEREDOC_END + 1 ];
+
+    static {
+        Vocabulary v = HCLLexer.VOCABULARY;
+        for (int i = 1; i < convert.length; i++) {
+            String n = v.getSymbolicName(i);
+            try {
+                convert[i] = HCLTokenId.valueOf(n);
+            } catch (IllegalArgumentException ex) {
+                // do nothing leave convert[i] null
+            }
+        }
+    }
+
     public BasicHCLLexer(LexerRestartInfo<HCLTokenId> info) {
         super(info, HCLLexer::new);
     }
 
     @Override
     protected Token<HCLTokenId> mapToken(org.antlr.v4.runtime.Token antlrToken) {
-        switch (antlrToken.getType()) {
-            case LINE_COMMENT:
-            case BLOCK_COMMENT:
-                return token(COMMENT);
+        HCLTokenId id = fromAntlrToken(antlrToken.getType());
+        if (id == null) {
+            switch (antlrToken.getType()) {
+                case HEREDOC_CONTENT:
+                    return groupToken(HEREDOC, HEREDOC_CONTENT);
+                case STRING_CONTENT:
+                    return groupToken(STRING, STRING_CONTENT);
 
-            case BOOL_LIT:
-                return token(BOOLEAN);
+                case INTERPOLATION_CONTENT:
+                    return groupToken(INTERPOLATION, INTERPOLATION_CONTENT);
 
-            case LEGACY_INDEX:
-            case NUMERIC_LIT:
-                return token(NUMBER);
+                case TEMPLATE_CONTENT:
+                    return groupToken(INTERPOLATION, TEMPLATE_CONTENT);
 
-            case HCLLexer.IDENTIFIER:
-                return token(HCLTokenId.IDENTIFIER);
-
-            case FOR:
-            case IF:
-            case IN:
-            case NULL:
-                return token(KEYWORD);
-
-            case LBRACE:
-            case RBRACE:
-            case LBRACK:
-            case RBRACK:
-                return token(GROUP_SEPARATOR);
-                
-            case LPAREN:
-            case RPAREN:
-            case COLON:
-            case COMMA:
-            case DOT:
-            case EQUAL:
-            case INTERPOLATION_START:
-            case INTERPOLATION_END:
-            case RARROW:
-            case TEMPLATE_START:
-            case TEMPLATE_END:
-                return token(SEPARATOR);
-
-            case AND:
-            case ELLIPSIS:
-            case EQUALS:
-            case GT:
-            case GTE:
-            case LT:
-            case LTE:
-            case MINUS:
-            case NOT:
-            case NOT_EQUALS:
-            case OR:
-            case PERCENT:
-            case PLUS:
-            case QUESTION:
-            case SLASH:
-            case STAR:
-                return token(OPERATOR);
-
-            case QUOTE:
-                return token(STRING);
-            case HEREDOC_START:
-            case HEREDOC_END:
-                return token(HEREDOC_GUARD);
-            case HEREDOC_CONTENT:
-                return groupToken(HEREDOC, HEREDOC_CONTENT);
-
-            case STRING_CONTENT:
-                return groupToken(STRING, STRING_CONTENT);
-
-            case INTERPOLATION_CONTENT:
-                return groupToken(INTERPOLATION, INTERPOLATION_CONTENT);
-
-            case TEMPLATE_CONTENT:
-                return groupToken(INTERPOLATION, TEMPLATE_CONTENT);
-            case WS:
-            case NL:
-                return token(WHITESPACE);
-
-            default:
-                return token(ERROR);
+                default:
+                    return token(ERROR);
+            }
+        } else {
+            return token(id);
         }
     }
 
+    @Override
+    protected String flyweightText(HCLTokenId id) {
+        return id.getFixedText();
+    }
+
+    static HCLTokenId fromAntlrToken(int id) {
+        if (id < 0 || id >= convert.length) {
+            return null;
+        }
+        return convert[id];
+    }
 }

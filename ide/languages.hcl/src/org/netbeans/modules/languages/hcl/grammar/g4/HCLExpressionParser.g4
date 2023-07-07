@@ -45,7 +45,8 @@ exprTerm
 
 literalValue
     : NUMERIC_LIT
-    | BOOL_LIT
+    | TRUE
+    | FALSE
     | NULL
     ;
 

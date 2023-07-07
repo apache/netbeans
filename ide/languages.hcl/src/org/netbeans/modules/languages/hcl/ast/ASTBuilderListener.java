@@ -74,10 +74,12 @@ public class ASTBuilderListener extends HCLParserBaseListener {
         }
         for (HCLParser.StringLitContext idn : ctx.stringLit()) {
             String sid = idn.getText();
-            sid = sid.substring(1, sid.length() - (sid.endsWith("\"") ? 1 : 0));
-            HCLIdentifier id = new HCLIdentifier.StringId(block, sid);
-            addReference(id, idn);
-            decl.add(id);
+            if (sid.length() > 1) { // Do not process the '"' string literal
+                sid = sid.substring(1, sid.length() - (sid.endsWith("\"") ? 1 : 0));
+                HCLIdentifier id = new HCLIdentifier.StringId(block, sid);
+                addReference(id, idn);
+                decl.add(id);
+            }
         }
         block.setDeclaration(references.sortBySource(decl));
 

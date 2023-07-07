@@ -232,25 +232,29 @@ public class NbModuleSuiteTest extends NbTestCase {
     public void testModulesForCL() throws Exception {
         Set<String> s = NbModuleSuite.S.findEnabledModules(ClassLoader.getSystemClassLoader());
         s.remove("org.netbeans.modules.nbjunit");
-        assertEquals("Four modules left: " + s, 5, s.size());
+        assertEquals("Seven modules left: " + s, 7, s.size());
 
         assertTrue("Util: " + s, s.contains("org.openide.util.ui"));
         assertTrue("Util: " + s, s.contains("org.openide.util"));
         assertTrue("Lookup: " + s, s.contains("org.openide.util.lookup"));
         assertTrue("junit: " + s, s.contains("org.netbeans.libs.junit4"));
         assertTrue("insane: " + s, s.contains("org.netbeans.insane"));
+        assertTrue("agent: " + s, s.contains("org.netbeans.agent"));
+        assertTrue("agent hooks: " + s, s.contains("org.netbeans.agent.hooks"));
     }
 
     public void testModulesForMe() throws Exception {
         Set<String> s = NbModuleSuite.S.findEnabledModules(getClass().getClassLoader());
         s.remove("org.netbeans.modules.nbjunit");
-        assertEquals("Four modules left: " + s, 5, s.size());
+        assertEquals("Seven modules left: " + s, 7, s.size());
 
         assertTrue("Util: " + s, s.contains("org.openide.util.ui"));
         assertTrue("Util: " + s, s.contains("org.openide.util"));
         assertTrue("Lookup: " + s, s.contains("org.openide.util.lookup"));
         assertTrue("JUnit: " + s, s.contains("org.netbeans.libs.junit4"));
         assertTrue("insane: " + s, s.contains("org.netbeans.insane"));
+        assertTrue("agent: " + s, s.contains("org.netbeans.agent"));
+        assertTrue("agent hooks: " + s, s.contains("org.netbeans.agent.hooks"));
     }
 
     public void testAddSuite() throws Exception{

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.masterfs;
 
+import org.netbeans.modules.masterfs.filebasedfs.utils.FileChangedManager;
 import org.netbeans.modules.masterfs.watcher.Watcher;
 import org.openide.modules.OnStart;
 import org.openide.modules.OnStop;
@@ -29,6 +30,7 @@ public final class Installer implements Runnable {
     @Override
     public void run() {
         Watcher.isEnabled();
+        FileChangedManager.install();
     }
     
     @OnStop

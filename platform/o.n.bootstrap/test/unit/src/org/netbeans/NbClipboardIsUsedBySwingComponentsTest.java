@@ -20,11 +20,14 @@
 package org.netbeans;
 
 import java.awt.GraphicsEnvironment;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.Lookup;
@@ -54,20 +57,14 @@ public class NbClipboardIsUsedBySwingComponentsTest extends NbTestCase {
         assertNotNull ("Some clipboard found", clip);
         assertEquals ("Correct clipboard found", Clip.class, clip.getClass());
         this.clip = (Clip)clip;
-        
-        if (System.getSecurityManager () == null) {
-            java.text.NumberFormat.getInstance ();
 
-            Object clazz = org.netbeans.TopSecurityManager.class;
-            SecurityManager m = new org.netbeans.TopSecurityManager ();
-            System.setSecurityManager (m);
-            
-            inMiddleOfSettingUpTheManager();
-            
-            org.netbeans.TopSecurityManager.makeSwingUseSpecialClipboard (this.clip);
-        } else {
-            inMiddleOfSettingUpTheManager();
-        }
+        inMiddleOfSettingUpTheManager();
+        TrackingHooks.register(new TrackingHooks() {
+            @Override
+            protected Clipboard getClipboard() {
+                return NbClipboardIsUsedBySwingComponentsTest.this.clip;
+            }
+        }, 0, Hooks.CLIPBOARD);
         
         field = new javax.swing.JTextField ();
     }

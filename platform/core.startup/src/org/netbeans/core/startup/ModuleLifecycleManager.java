@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.netbeans.CLIHandler;
 import org.netbeans.TopSecurityManager;
+import org.netbeans.agent.hooks.api.TrackingHooks;
 import org.netbeans.core.startup.layers.SessionManager;
 import org.openide.LifecycleManager;
 import org.openide.modules.Places;
@@ -40,7 +41,8 @@ public class ModuleLifecycleManager extends LifecycleManager {
     public ModuleLifecycleManager() {
         Runtime.getRuntime().addShutdownHook(new Thread("close modules") { // NOI18N
             public @Override void run() {
-                if (System.getSecurityManager() instanceof TopSecurityManager) {
+                if (TrackingHooks.isInstalled()) {
+                    System.setProperty("netbeans.close.no.exit", "true");
                     LifecycleManager.getDefault().exit();
                 }
             }

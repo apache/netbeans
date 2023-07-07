@@ -57,7 +57,6 @@ public abstract class TestBaseHid extends MultiThreadedTestCaseHid {
     /** array of filesystems that can be used for tests. All filesystems should
      * satisfy requirements for resources @see getResources () */
     protected FileSystem  allTestedFS[];
-    private static SecurityManager defaultSecurityManager;
     /** If not null, file accesses are counted through custom SecurityManager. */
     public static StatFiles accessMonitor;
     
@@ -76,10 +75,7 @@ public abstract class TestBaseHid extends MultiThreadedTestCaseHid {
         if (allTestedFS != null) testedFS = allTestedFS[0];
         // If not null, file accesses are counted through custom SecurityManager.
         if(accessMonitor != null) {
-            if(defaultSecurityManager == null) {
-                defaultSecurityManager = System.getSecurityManager();
-            }
-            System.setSecurityManager(accessMonitor);
+            accessMonitor.register();
         }
     }
     
@@ -87,7 +83,7 @@ public abstract class TestBaseHid extends MultiThreadedTestCaseHid {
     protected void tearDown() throws Exception {
         // restore SecurityManager if previously changed
         if(accessMonitor != null) {
-            System.setSecurityManager(defaultSecurityManager);
+            accessMonitor.unregister();
         }
         
         if (testedFS instanceof JarFileSystem) {

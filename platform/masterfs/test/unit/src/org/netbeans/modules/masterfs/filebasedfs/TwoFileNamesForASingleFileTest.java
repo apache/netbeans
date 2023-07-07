@@ -45,7 +45,7 @@ public class TwoFileNamesForASingleFileTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         clearWorkDir();
-        System.setSecurityManager(FileChangedManager.getInstance());
+        FileChangedManager.install();
     }
     
     public void testTwoFileNames() throws Exception {

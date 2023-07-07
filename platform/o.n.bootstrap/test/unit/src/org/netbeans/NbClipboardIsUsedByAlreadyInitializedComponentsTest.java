@@ -41,7 +41,6 @@ public class NbClipboardIsUsedByAlreadyInitializedComponentsTest extends NbClipb
     }
 
     protected void inMiddleOfSettingUpTheManager() {
-        assertNotNull("There is a manager already", System.getSecurityManager());
         // do some strange tricks to initialize the system
         field = new javax.swing.JTextField ();
         TransferHandler.getCopyAction();

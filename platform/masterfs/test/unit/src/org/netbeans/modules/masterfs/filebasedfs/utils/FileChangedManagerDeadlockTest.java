@@ -179,7 +179,7 @@ public class FileChangedManagerDeadlockTest {
             } catch (InterruptedException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            FileChangedManager.getInstance().checkRead(path);
+            FileChangedManager.getInstance().checkFileRead(path);
             return "path";
         }
 

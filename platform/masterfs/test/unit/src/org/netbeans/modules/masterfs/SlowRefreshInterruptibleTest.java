@@ -68,7 +68,7 @@ public class SlowRefreshInterruptibleTest extends NbTestCase {
         testFolder = FileUtil.toFileObject(dir);
         assertNotNull("Test folder created", testFolder);
 
-        System.setSecurityManager(new FileChangedManager());
+        FileChangedManager.install();
     }
 
     @RandomlyFails // jglick: "No change detected expected:<0> but was:<1>"

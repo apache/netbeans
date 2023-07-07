@@ -20,8 +20,9 @@ package org.netbeans.modules.masterfs.filebasedfs.naming;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Permission;
 import junit.framework.Test;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.masterfs.providers.ProvidedExtensions;
@@ -56,7 +57,7 @@ public class NamingFactoryTest extends NbTestCase {
     }
     
     public void registerSecurityManager() {
-        System.setSecurityManager(new AssertNoLockManager(NamingFactory.class));
+        TrackingHooks.register(new AssertNoLockManager(NamingFactory.class), 0, Hooks.IO);
     }
 
     public void testDontForciblyUnregisterFileName() throws Exception {
@@ -170,28 +171,16 @@ public class NamingFactoryTest extends NbTestCase {
         
     }
 
-    private static class AssertNoLockManager extends SecurityManager {
+    private static class AssertNoLockManager extends TrackingHooks {
         private final Object LOCK;
         
         public AssertNoLockManager(Object lock) {
             LOCK = lock;
         }
         @Override
-        public void checkRead(String string) {
+        public void checkFileRead(String string) {
             assertFalse("No lock", Thread.holdsLock(LOCK));
         }
 
-        @Override
-        public void checkRead(String string, Object o) {
-            checkRead(string);
-        }
-
-        @Override
-        public void checkPermission(Permission prmsn) {
-        }
-
-        @Override
-        public void checkPermission(Permission prmsn, Object o) {
-        }
     }
 }

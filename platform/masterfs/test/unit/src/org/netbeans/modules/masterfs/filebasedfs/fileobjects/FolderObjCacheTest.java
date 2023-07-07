@@ -37,7 +37,7 @@ import org.openide.filesystems.FileUtil;
  */
 public class FolderObjCacheTest extends NbTestCase {
     static {
-        System.setSecurityManager(FileChangedManager.getInstance());
+        FileChangedManager.install();
     }
     
     Logger LOG;

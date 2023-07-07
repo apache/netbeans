@@ -173,6 +173,7 @@
                 <or>
                     <isset property="is.autoload"/>
                     <isset property="is.eager"/>
+                    <equals arg1="${module.jar.dir}" arg2="agent"/>
                     <equals arg1="${module.jar.dir}" arg2="core"/>
                     <equals arg1="${module.jar.dir}" arg2="lib"/>
                 </or>

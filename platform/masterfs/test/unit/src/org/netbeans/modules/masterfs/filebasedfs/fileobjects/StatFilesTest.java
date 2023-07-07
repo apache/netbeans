@@ -60,7 +60,7 @@ public class StatFilesTest extends NbTestCase {
         //init
         FileUtil.toFileObject(testFile);
         monitor = new StatFiles();
-        System.setSecurityManager(monitor);
+        monitor.register();
         monitor.reset();
     }
 

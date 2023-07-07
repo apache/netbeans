@@ -20,6 +20,7 @@
 package org.netbeans;
 
 import junit.framework.TestCase;
+import org.netbeans.agent.hooks.TrackingHooksCallback;
 
 /**
  *
@@ -32,13 +33,6 @@ public class TopSecurityManagerTest extends TestCase {
         System.err.println("TopSecurityManagerTest: " + testName);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        TopSecurityManager.uninstall();
-    }
-    
-    
     public void testCanInstallTwice() {
         TopSecurityManager.install();
         TopSecurityManager.install();
@@ -54,6 +48,9 @@ public class TopSecurityManagerTest extends TestCase {
         fail("Associating own security manager when one is already installed shall not be allowed");
     }
 
+    public void testGetStack() {
+        assertEquals(TopSecurityManagerTest.class, TopSecurityManager.getStack()[1]);
+    }
     /* Reenable when assert checkLogger(perm) is added back:
     public void testLoggerCannotBeReset() {
         if (true) return;
@@ -90,6 +87,11 @@ public class TopSecurityManagerTest extends TestCase {
     }
      */
 
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        TrackingHooksCallback.clear();
+    }
 
     private static final class SecMan extends SecurityManager {
     }

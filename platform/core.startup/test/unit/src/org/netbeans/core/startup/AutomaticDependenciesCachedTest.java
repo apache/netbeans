@@ -36,6 +36,8 @@ import org.netbeans.junit.NbTestSuite;
  * @author Jaroslav Tulach
  */
 public class AutomaticDependenciesCachedTest extends NbTestCase {
+    private static final Logger AUTOMATIC_DEPENDENCIES_LOG = Logger.getLogger("org.netbeans.core.startup.AutomaticDependencies");
+
     public AutomaticDependenciesCachedTest(String name) {
         super(name);
     }
@@ -106,11 +108,10 @@ public class AutomaticDependenciesCachedTest extends NbTestCase {
         
         public LogConfig() {
             consulted = true;
-            final Logger logger = Logger.getLogger("org.netbeans.core.startup.AutomaticDependencies");
-            Observer o = new Observer(logger);
+            Observer o = new Observer(AUTOMATIC_DEPENDENCIES_LOG);
             o.setLevel(Level.ALL);
-            logger.setLevel(Level.ALL);
-            logger.addHandler(o);
+            AUTOMATIC_DEPENDENCIES_LOG.setLevel(Level.ALL);
+            AUTOMATIC_DEPENDENCIES_LOG.addHandler(o);
         }
     }
 }

@@ -92,65 +92,6 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
-CLSS public java.lang.SecurityManager
-cons public init()
-fld protected boolean inCheck
- anno 0 java.lang.Deprecated()
-meth protected boolean inClass(java.lang.String)
- anno 0 java.lang.Deprecated()
-meth protected boolean inClassLoader()
- anno 0 java.lang.Deprecated()
-meth protected int classDepth(java.lang.String)
- anno 0 java.lang.Deprecated()
-meth protected int classLoaderDepth()
- anno 0 java.lang.Deprecated()
-meth protected java.lang.Class<?> currentLoadedClass()
- anno 0 java.lang.Deprecated()
-meth protected java.lang.ClassLoader currentClassLoader()
- anno 0 java.lang.Deprecated()
-meth protected java.lang.Class[] getClassContext()
-meth public boolean checkTopLevelWindow(java.lang.Object)
- anno 0 java.lang.Deprecated()
-meth public boolean getInCheck()
- anno 0 java.lang.Deprecated()
-meth public java.lang.Object getSecurityContext()
-meth public java.lang.ThreadGroup getThreadGroup()
-meth public void checkAccept(java.lang.String,int)
-meth public void checkAccess(java.lang.Thread)
-meth public void checkAccess(java.lang.ThreadGroup)
-meth public void checkAwtEventQueueAccess()
- anno 0 java.lang.Deprecated()
-meth public void checkConnect(java.lang.String,int)
-meth public void checkConnect(java.lang.String,int,java.lang.Object)
-meth public void checkCreateClassLoader()
-meth public void checkDelete(java.lang.String)
-meth public void checkExec(java.lang.String)
-meth public void checkExit(int)
-meth public void checkLink(java.lang.String)
-meth public void checkListen(int)
-meth public void checkMemberAccess(java.lang.Class<?>,int)
- anno 0 java.lang.Deprecated()
-meth public void checkMulticast(java.net.InetAddress)
-meth public void checkMulticast(java.net.InetAddress,byte)
- anno 0 java.lang.Deprecated()
-meth public void checkPackageAccess(java.lang.String)
-meth public void checkPackageDefinition(java.lang.String)
-meth public void checkPermission(java.security.Permission)
-meth public void checkPermission(java.security.Permission,java.lang.Object)
-meth public void checkPrintJobAccess()
-meth public void checkPropertiesAccess()
-meth public void checkPropertyAccess(java.lang.String)
-meth public void checkRead(java.io.FileDescriptor)
-meth public void checkRead(java.lang.String)
-meth public void checkRead(java.lang.String,java.lang.Object)
-meth public void checkSecurityAccess(java.lang.String)
-meth public void checkSetFactory()
-meth public void checkSystemClipboardAccess()
- anno 0 java.lang.Deprecated()
-meth public void checkWrite(java.io.FileDescriptor)
-meth public void checkWrite(java.lang.String)
-supr java.lang.Object
-
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
 cons public init()
@@ -559,27 +500,17 @@ meth public abstract void flushCaches(java.io.DataOutputStream) throws java.io.I
 
 CLSS public org.netbeans.TopSecurityManager
 cons public init()
-meth public boolean checkTopLevelWindow(java.lang.Object)
-meth public final void checkPropertyAccess(java.lang.String)
+meth protected final void checkSystemProperty(java.lang.String)
+meth protected void checkExit(int)
+meth protected void checkSetAccessible(java.lang.reflect.AccessibleObject)
+meth protected void checkSetSecurityManager(java.lang.Object)
+meth public static <%0 extends java.lang.Throwable> java.lang.RuntimeException throwAny(java.lang.Throwable) throws {%%0}
+meth public static java.lang.Class<?>[] getStack()
 meth public static void exit(int)
 meth public static void install()
-meth public static void makeSwingUseSpecialClipboard(java.awt.datatransfer.Clipboard)
-meth public static void register(java.lang.SecurityManager)
-meth public static void unregister(java.lang.SecurityManager)
-meth public void checkConnect(java.lang.String,int)
-meth public void checkConnect(java.lang.String,int,java.lang.Object)
-meth public void checkDelete(java.lang.String)
-meth public void checkExit(int)
-meth public void checkMemberAccess(java.lang.Class<?>,int)
-meth public void checkPermission(java.security.Permission)
-meth public void checkPermission(java.security.Permission,java.lang.Object)
-meth public void checkRead(java.io.FileDescriptor)
-meth public void checkRead(java.lang.String)
-meth public void checkWrite(java.io.FileDescriptor)
-meth public void checkWrite(java.lang.String)
-supr java.lang.SecurityManager
-hfds CLIPBOARD_FORBIDDEN,LOG,URLClass,accessControllerClass,allPermission,awtPermissionClass,callerWhiteList,check,classLoaderClass,delegates,fsSecManager,officialExit,runtimePermissionClass,urlField,warnedClassesNDE,warnedClassesNH,warnedSunMisc
-hcls PrivilegedCheck
+supr org.netbeans.agent.hooks.api.TrackingHooks
+hfds LOG,callerWhiteList,check,officialExit,warnedClassesNDE,warnedClassesNH,warnedSunMisc
+hcls StackSecurityManager
 
 CLSS public final org.netbeans.Util
 fld public final static java.util.logging.Logger err
@@ -598,6 +529,23 @@ hcls JarFilter,ModuleLookup
 CLSS public abstract interface static org.netbeans.Util$ModuleProvider
  outer org.netbeans.Util
 meth public abstract org.netbeans.Module getModule()
+
+CLSS public abstract org.netbeans.agent.hooks.api.TrackingHooks
+cons public init()
+innr public final static !enum Hooks
+meth protected void checkDelete(java.lang.String)
+meth protected void checkExec(java.util.List<java.lang.String>)
+meth protected void checkExit(int)
+meth protected void checkFileRead(java.lang.String)
+meth protected void checkFileWrite(java.lang.String)
+meth protected void checkNewAWTWindow(java.awt.Window)
+meth protected void checkSetAccessible(java.lang.reflect.AccessibleObject)
+meth protected void checkSetSecurityManager(java.lang.Object)
+meth protected void checkSystemProperty(java.lang.String)
+meth public !varargs static void register(org.netbeans.agent.hooks.api.TrackingHooks,int,org.netbeans.agent.hooks.api.TrackingHooks$Hooks[])
+meth public static boolean isInstalled()
+meth public static void unregister(org.netbeans.agent.hooks.api.TrackingHooks)
+supr java.lang.Object
 
 CLSS public abstract org.openide.modules.ModuleInfo
 cons protected init()

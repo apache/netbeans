@@ -73,7 +73,7 @@ class AccController {
     }
     
     /** @return an IOPermissionCollection or <tt>null</tt> if not found */
-    static IOPermissionCollection getIOPermissionCollection(AccessControlContext acc) {
+    private static IOPermissionCollection getIOPermissionCollection(AccessControlContext acc) {
         try {
             ProtectionDomain[] pds = getDomains(acc);
             PermissionCollection pc;

@@ -532,6 +532,7 @@
                 <isset property="test-have-jdk-1.9"/>
             </or>
         </condition>
+        <property name="test.tracking.agent.args" value="-javaagent:${netbeans.dest.dir}/${nb.cluster.platform.dir}/agent/org-netbeans-agent.jar -Xbootclasspath/a:${netbeans.dest.dir}/${nb.cluster.platform.dir}/agent/org-netbeans-agent-hooks.jar"/>
         <macrodef name="test-init">
             <attribute name="test.type"/>
             <sequential>
@@ -747,6 +748,7 @@
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg line="${nbjdk.enable_security_manager}" />
@@ -779,6 +781,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg line="${nbjdk.enable_security_manager}" />
@@ -852,6 +855,7 @@
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${run.args.ide}"/>
                     <jvmarg line="${run.jvmargs.ide}"/>
@@ -883,6 +887,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg line="${nbjdk.enable_security_manager}" />
@@ -913,6 +918,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg line="${nbjdk.enable_security_manager}" />
@@ -968,6 +974,7 @@
                         <pathelement location="${ant.home}/lib/ant-junit4.jar"/>
                     </classpath>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <arg value="${test.class}"/>
@@ -997,6 +1004,7 @@
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg line="${nbjdk.enable_security_manager}" />
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
@@ -1031,6 +1039,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg line="${nbjdk.enable_security_manager}" />
@@ -1097,6 +1106,7 @@
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg line="${nbjdk.enable_security_manager}" />
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${run.jvmargs.ide}"/>
                     <formatter type="brief" usefile="false"/>
@@ -1125,6 +1135,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg line="${nbjdk.enable_security_manager}" />
@@ -1251,6 +1262,7 @@
                     <test name="${profile.class}" todir="${build.test.@{test.type}.results.dir}"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg line="${test.run.args}"/>

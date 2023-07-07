@@ -76,7 +76,7 @@ public class SlowRefreshAndPriorityIOTest extends NbTestCase {
         testFolder = FileUtil.toFileObject(dir);
         assertNotNull("Test folder created", testFolder);
 
-        System.setSecurityManager(new FileChangedManager());
+        FileChangedManager.install();
     }
 
     public void testRefreshCanBeSuspendedByPriorityIO() throws Exception {

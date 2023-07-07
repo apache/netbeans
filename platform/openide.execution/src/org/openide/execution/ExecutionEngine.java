@@ -64,6 +64,7 @@ public abstract class ExecutionEngine extends Object {
      * @param io an I/O tab
      * @return a permission collection
      */
+    //TODO: deprecate? is this really used???
     protected abstract PermissionCollection createPermissions(CodeSource cs, InputOutput io);
 
     /** Method that allows implementor of the execution engine to provide

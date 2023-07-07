@@ -1065,7 +1065,9 @@ public class NbModuleSuite {
                 "org.openide.filesystems.compat8",
                 "org.netbeans.core.startup",
                 "org.netbeans.core.startup.base",
-                "org.netbeans.libs.asm"));
+                "org.netbeans.libs.asm",
+                "org.netbeans.agent",
+                "org.netbeans.agent.hooks"));
         static void turnClassPathModules(File ud, ClassLoader loader) throws IOException {
             Enumeration<URL> en = loader.getResources("META-INF/MANIFEST.MF");
             while (en.hasMoreElements()) {
@@ -1422,6 +1424,22 @@ public class NbModuleSuite {
                 if (name.equals("META-INF/services/java.util.logging.Handler")) { // NOI18N
                     return junit.getResources("org/netbeans/junit/internal/FakeMetaInf.txt"); // NOI18N
                 }
+                if (name.equals("META-INF/MANIFEST.MF")) { // NOI18N
+                    //read manifest from the agent jar:
+                    Enumeration<URL> en = junit.getResources(name);
+                    while (en.hasMoreElements()) {
+                        URL man = en.nextElement();
+                        if (man.getPath().contains("org-netbeans-agent.jar")) { // NOI18N
+                            List<URL> manifests = new ArrayList<>();
+                            manifests.add(man);
+                            Enumeration<URL> en2 = super.findResources(name);
+                            while (en2.hasMoreElements()) {
+                                manifests.add(en2.nextElement());
+                            }
+                            return Collections.enumeration(manifests);
+                        }
+                    }
+                }
                 return super.findResources(name);
             }
 
@@ -1439,6 +1457,10 @@ public class NbModuleSuite {
                     if (res.startsWith("org.netbeans.junit.ide") || res.startsWith("org/netbeans/junit/ide")) {
                         return false;
                     }
+                    return true;
+                }
+                //must delegate to the app classloader for the agent classes/resources:
+                if (res.startsWith("org.netbeans.agent.") || res.startsWith("org/netbeans/agent/")) {
                     return true;
                 }
                 return false;

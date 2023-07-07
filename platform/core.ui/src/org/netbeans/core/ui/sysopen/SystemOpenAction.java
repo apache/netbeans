@@ -50,8 +50,10 @@ import org.openide.util.WeakListeners;
 @ActionID(id = "org.netbeans.core.ui.sysopen.SystemOpenAction", category = "Edit")
 @ActionRegistration(displayName = "#CTL_SystemOpenAction", lazy=false)
 @ActionReferences ({
+    @ActionReference(path = "Editors/TabActions", position = 401),
     @ActionReference(path = "UI/ToolActions/Files", position = 2045),
-    @ActionReference(path = "Projects/Actions", position = 101)
+    @ActionReference(path = "Projects/Actions", position = 101),
+    @ActionReference(path = "Shortcuts", name = "SO-S")
 })
 public final class SystemOpenAction extends AbstractAction implements ContextAwareAction {
 
@@ -104,12 +106,22 @@ public final class SystemOpenAction extends AbstractAction implements ContextAwa
         files.clear();
         for (DataObject d : result.allInstances()) {
             File f = FileUtil.toFile(d.getPrimaryFile());
-            if (f == null || /* #144575 */ Utilities.isWindows() && f.isFile() && !f.getName().contains(".")) {
-                files.clear();
-                break;
+            if (f == null || isIgnoredFile(f)) {
+                continue;
             }
             files.add(f);
         }
+    }
+
+    private boolean isIgnoredFile(File f) {
+        if (Utilities.isWindows() && f.isFile() && !f.getName().contains(".")) {
+            /* #144575 */
+            return true;
+        }
+        if (f.getName().endsWith(".shadow")) {
+            return true;
+        }
+        return false;
     }
 
 }

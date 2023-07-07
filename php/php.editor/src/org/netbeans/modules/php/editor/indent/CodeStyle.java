@@ -749,6 +749,10 @@ public final class CodeStyle {
         return preferences.getBoolean(ALIASES_CAPITALS_OF_NAMESPACES, getDefaultAsBoolean(ALIASES_CAPITALS_OF_NAMESPACES));
     }
 
+    public boolean putInPSR12Order() {
+        return preferences.getBoolean(PUT_IN_PSR12_ORDER, getDefaultAsBoolean(PUT_IN_PSR12_ORDER));
+    }
+
     private static class Producer implements FmtOptions.CodeStyleProducer {
 
         @Override

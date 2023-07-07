@@ -226,6 +226,7 @@ public final class FmtOptions {
     public static final String PREFER_GROUP_USES = "preferGroupUses"; // NOI18N
     public static final String START_USE_WITH_NAMESPACE_SEPARATOR = "startUseWithNamespaceSeparator"; //NOI18N
     public static final String ALIASES_CAPITALS_OF_NAMESPACES = "aliasesCapitalsOfNamespacesNames"; //NOI18N
+    public static final String PUT_IN_PSR12_ORDER = "putInPSR12Order"; //NOI18N
     public static CodeStyleProducer codeStyleProducer;
 
     private FmtOptions() {
@@ -419,7 +420,8 @@ public final class FmtOptions {
             {PREFER_MULTIPLE_USE_STATEMENTS_COMBINED, FALSE},
             {PREFER_GROUP_USES, FALSE},
             {START_USE_WITH_NAMESPACE_SEPARATOR, FALSE},
-            {ALIASES_CAPITALS_OF_NAMESPACES, FALSE}
+            {ALIASES_CAPITALS_OF_NAMESPACES, FALSE},
+            {PUT_IN_PSR12_ORDER, TRUE}
         };
 
         defaults = new HashMap<>();

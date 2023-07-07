@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.actions;
 
 import java.awt.BorderLayout;
@@ -56,13 +55,13 @@ import org.openide.util.NbBundle;
  * JTable with custom renderer, so second column looks editable (JComboBox).
  * Second column also has CellEditor (also a JComboBox).
  *
- * @author  eakle, Martin Roskanin
+ * @author eakle, Martin Roskanin
  */
 public class FixDuplicateImportStmts extends javax.swing.JPanel {
+
+    private static final long serialVersionUID = -6191791129600727827L;
     private JComboBox[] combos;
-    private JCheckBox checkUnusedImports;
-    private ItemVariant[] defaultVariants;
-    private ItemVariant[] dontUseVariants;
+    private FixImportsBottomPanel fixImportsBottomPanel;
 
     public FixDuplicateImportStmts() {
         initComponents();
@@ -70,7 +69,6 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
 
     public void initPanel(ImportData importData, boolean removeUnusedImports) {
         initComponentsMore(importData, removeUnusedImports);
-        initButtons(importData);
         setAccessible();
     }
 
@@ -92,6 +90,7 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
                     Rectangle r = c.getBounds();
                     contentPanel.scrollRectToVisible(r);
                 }
+
                 @Override
                 public void focusLost(FocusEvent arg0) {
                 }
@@ -121,12 +120,9 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
         // load localized text into widgets:
         lblTitle.setText(getBundleString("FixDupImportStmts_IntroLbl")); //NOI18N
         lblHeader.setText(getBundleString("FixDupImportStmts_Header")); //NOI18N
-
-        checkUnusedImports = new JCheckBox();
-        Mnemonics.setLocalizedText(checkUnusedImports, getBundleString("FixDupImportStmts_UnusedImports")); //NOI18N
-        bottomPanel.add(checkUnusedImports, BorderLayout.WEST);
-        checkUnusedImports.setEnabled(true);
-        checkUnusedImports.setSelected(removeUnusedImports);
+        fixImportsBottomPanel = new FixImportsBottomPanel(combos, importData);
+        fixImportsBottomPanel.setRemoveUnusedImports(removeUnusedImports);
+        bottomPanel.add(fixImportsBottomPanel);
     }
 
     private JComboBox createComboBox(DataItem item, Font font, FocusListener listener) {
@@ -154,64 +150,8 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
         return NbBundle.getMessage(FixDuplicateImportStmts.class, s);
     }
 
-    @NbBundle.Messages({
-        "ClearSuggestionsButton=&Clear Suggestions",
-        "RestoreDefaultsButton=Restore &Defaults"
-    })
-    private void initButtons(ImportData importData) {
-        int numberOfItems = importData.getItems().size();
-        defaultVariants = new ItemVariant[numberOfItems];
-        dontUseVariants = new ItemVariant[numberOfItems];
-        for (int i = 0; i < numberOfItems; i++) {
-            DataItem dataItem = importData.getItems().get(i);
-            defaultVariants[i] = dataItem.getDefaultVariant();
-            dontUseVariants[i] = dataItem.getDefaultVariant();
-            for (ItemVariant variant : dataItem.getVariants()) {
-                if (!variant.canBeUsed()) {
-                    dontUseVariants[i] = variant;
-                }
-            }
-        }
-
-        bottomPanel.add(Box.createHorizontalStrut(150));
-
-        JPanel buttonsPanel = new JPanel(new BorderLayout(5, 3));
-        bottomPanel.add(buttonsPanel, BorderLayout.LINE_END);
-
-        JButton changeNothingButton = new JButton();
-        Mnemonics.setLocalizedText(changeNothingButton, Bundle.ClearSuggestionsButton());
-        changeNothingButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                deselectAllButtonActionPerformed(evt);
-            }
-        });
-        buttonsPanel.add(changeNothingButton, BorderLayout.LINE_START);
-
-        JButton restoreDefaultsButton = new JButton();
-        Mnemonics.setLocalizedText(restoreDefaultsButton, Bundle.RestoreDefaultsButton());
-        restoreDefaultsButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                restoreDefaultsButtonActionPerformed(evt);
-            }
-        });
-        buttonsPanel.add(restoreDefaultsButton, BorderLayout.LINE_END);
-    }
-
-    private void deselectAllButtonActionPerformed(ActionEvent evt) {
-        for (int i = 0; i < combos.length; i++) {
-            combos[i].setSelectedItem(dontUseVariants[i]);
-        }
-    }
-
-    private void restoreDefaultsButtonActionPerformed(ActionEvent evt) {
-        for (int i = 0; i < combos.length; i++) {
-            combos[i].setSelectedItem(defaultVariants[i]);
-        }
-    }
-
     private void setAccessible() {
         getAccessibleContext().setAccessibleDescription(getBundleString("FixDupImportStmts_IntroLbl")); // NOI18N
-        checkUnusedImports.getAccessibleContext().setAccessibleDescription(getBundleString("FixDupImportStmts_checkUnusedImports_a11y")); // NOI18N
     }
 
     public List<ItemVariant> getSelections() {
@@ -226,13 +166,13 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
     }
 
     public boolean getRemoveUnusedImports() {
-        return checkUnusedImports.isSelected();
+        return fixImportsBottomPanel.removeUnusedImports();
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -297,9 +237,11 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private static class DelegatingRenderer implements ListCellRenderer {
+
         private ListCellRenderer orig;
         private Icon[] icons;
         private List<ItemVariant> values;
+
         public DelegatingRenderer(ListCellRenderer orig, List<ItemVariant> values, Icon[] icons) {
             this.orig = orig;
             this.icons = icons;
@@ -322,6 +264,7 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
     }
 
     private static class TogglePopupAction extends AbstractAction {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() instanceof JComboBox) {

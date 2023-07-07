@@ -33,6 +33,7 @@ import static org.netbeans.modules.php.editor.indent.FmtOptions.CategorySupport.
 public class FmtUses extends javax.swing.JPanel {
 
     private static final Logger LOGGER = Logger.getLogger(FmtUses.class.getName());
+    private static final long serialVersionUID = -3146487319808745793L;
 
     public FmtUses() {
         initComponents();
@@ -41,16 +42,17 @@ public class FmtUses extends javax.swing.JPanel {
         preferGroupUsesCheckBox.putClientProperty(OPTION_ID, FmtOptions.PREFER_GROUP_USES);
         startUseWithNamespaceSeparatorCheckBox.putClientProperty(OPTION_ID, FmtOptions.START_USE_WITH_NAMESPACE_SEPARATOR);
         aliasesCapitalsOfNamespacesCheckBox.putClientProperty(OPTION_ID, FmtOptions.ALIASES_CAPITALS_OF_NAMESPACES);
+        putInPSR12OrderCheckBox.putClientProperty(OPTION_ID, FmtOptions.PUT_IN_PSR12_ORDER);
     }
 
     public static PreferencesCustomizer.Factory getController() {
-        String preview = "";
+        String preview = ""; // NOI18N
         try {
-            preview = Utils.loadPreviewText(FmtUses.class.getClassLoader().getResourceAsStream("org/netbeans/modules/php/editor/indent/ui/Uses.php"));
+            preview = Utils.loadPreviewText(FmtUses.class.getClassLoader().getResourceAsStream("org/netbeans/modules/php/editor/indent/ui/Uses.php")); // NOI18N
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
-        return new CategorySupport.Factory("uses", FmtUses.class, preview);
+        return new CategorySupport.Factory("uses", FmtUses.class, preview); // NOI18N
     }
 
     /**
@@ -67,6 +69,7 @@ public class FmtUses extends javax.swing.JPanel {
         preferGroupUsesCheckBox = new javax.swing.JCheckBox();
         startUseWithNamespaceSeparatorCheckBox = new javax.swing.JCheckBox();
         aliasesCapitalsOfNamespacesCheckBox = new javax.swing.JCheckBox();
+        putInPSR12OrderCheckBox = new javax.swing.JCheckBox();
 
         setName(org.openide.util.NbBundle.getMessage(FmtUses.class, "LBL_Uses")); // NOI18N
         setOpaque(false);
@@ -85,6 +88,8 @@ public class FmtUses extends javax.swing.JPanel {
         aliasesCapitalsOfNamespacesCheckBox.setMnemonic('g');
         org.openide.awt.Mnemonics.setLocalizedText(aliasesCapitalsOfNamespacesCheckBox, org.openide.util.NbBundle.getMessage(FmtUses.class, "FmtUses.aliasesCapitalsOfNamespacesCheckBox.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(putInPSR12OrderCheckBox, org.openide.util.NbBundle.getMessage(FmtUses.class, "FmtUses.putInPSR12OrderCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -96,7 +101,8 @@ public class FmtUses extends javax.swing.JPanel {
                     .addComponent(preferMultipleUseStatementsCombinedCheckBox)
                     .addComponent(startUseWithNamespaceSeparatorCheckBox)
                     .addComponent(aliasesCapitalsOfNamespacesCheckBox)
-                    .addComponent(preferGroupUsesCheckBox))
+                    .addComponent(preferGroupUsesCheckBox)
+                    .addComponent(putInPSR12OrderCheckBox))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -112,7 +118,9 @@ public class FmtUses extends javax.swing.JPanel {
                 .addComponent(startUseWithNamespaceSeparatorCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(aliasesCapitalsOfNamespacesCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(putInPSR12OrderCheckBox)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -120,6 +128,7 @@ public class FmtUses extends javax.swing.JPanel {
     private javax.swing.JCheckBox preferFullyQualifiedNamesCheckBox;
     private javax.swing.JCheckBox preferGroupUsesCheckBox;
     private javax.swing.JCheckBox preferMultipleUseStatementsCombinedCheckBox;
+    private javax.swing.JCheckBox putInPSR12OrderCheckBox;
     private javax.swing.JCheckBox startUseWithNamespaceSeparatorCheckBox;
     // End of variables declaration//GEN-END:variables
 }

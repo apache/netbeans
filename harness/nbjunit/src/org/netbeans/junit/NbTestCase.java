@@ -79,6 +79,7 @@ import org.netbeans.junit.internal.NbModuleLogHandler;
 public abstract class NbTestCase extends TestCase implements NbTest {
     static {
         MethodOrder.initialize();
+        System.setProperty("bootstrap.disableJDKCheck", "true");
     }
     /**
      * active filter

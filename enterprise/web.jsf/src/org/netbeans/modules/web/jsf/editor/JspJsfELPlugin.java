@@ -133,7 +133,7 @@ public class JspJsfELPlugin extends ELPlugin {
             
             // method has not parameters and return types are assignable.
             if ( executableElement.getParameters().isEmpty() && 
-                    ( (TypeKind.VOID.equals(elementReturnType.getKind()) && VOID_RETURN_TYPE.equals(attributeReturnType)) || 
+                    ( (TypeKind.VOID == elementReturnType.getKind() && VOID_RETURN_TYPE.equals(attributeReturnType)) ||
                     (types.isAssignable(elementReturnType, attributeReturnTypeElement.asType())) ) ) {
                 return true;
             }
@@ -197,7 +197,7 @@ public class JspJsfELPlugin extends ELPlugin {
         }
 
         // Return types of the element and attribute are void
-        if (TypeKind.VOID.equals(elementReturnType.getKind()) && VOID_RETURN_TYPE.equals(attributeReturnType)) {
+        if (TypeKind.VOID == elementReturnType.getKind() && VOID_RETURN_TYPE.equals(attributeReturnType)) {
             return true;
         }
 
@@ -216,7 +216,7 @@ public class JspJsfELPlugin extends ELPlugin {
         }
         
         final ParserResult parserResult = completionContext.getParserResult();
-        if (parserResult == null || !(parserResult instanceof ELParserResult)) {
+        if (!(parserResult instanceof ELParserResult)) {
             return null;
         }
         
@@ -238,7 +238,7 @@ public class JspJsfELPlugin extends ELPlugin {
         }
         
         Parser.Result result = results[0];
-        if (result == null || !(result instanceof HtmlParserResult)) {
+        if (!(result instanceof HtmlParserResult)) {
             // unexpected instance of Result
             return null;
         }
@@ -258,7 +258,7 @@ public class JspJsfELPlugin extends ELPlugin {
         CharSequence htmlParserResultText = htmlParserSnapshot.getText();
 
         Element element = htmlParserResult.findByPhysicalRange(elementAtCaretEmbeddedOffset, true);
-        if (element == null || !(element instanceof OpenTag)) {
+        if (!(element instanceof OpenTag)) {
             return null;
         }
         

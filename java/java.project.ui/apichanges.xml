@@ -94,7 +94,7 @@ is the proper place.
                 Added the <code>superclass</code> and <code>interfaces</code> variables for use in FreeMarker 
                 templates used by the New Java File Wizard.
             </description>
-            <class name="NewJavaFileWizardIterator" package="org.netbeans.modules.java.project.ui"/>
+            <class name="NewJavaFileWizardIterator" package="org.netbeans.modules.java.project.ui" link="no"/>
         </change>
         <change id="BrokenReferencesSupport.createPlatformVersionProblemProvider">
             <api name="JavaProjectUI"/>

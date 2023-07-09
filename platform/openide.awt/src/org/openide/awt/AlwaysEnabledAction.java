@@ -56,7 +56,7 @@ import org.openide.util.actions.ActionInvoker;
 
 /** Lazily initialized always enabled action
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 class AlwaysEnabledAction extends AbstractAction
 implements PropertyChangeListener, ContextAwareAction {

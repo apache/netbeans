@@ -155,7 +155,10 @@ public final class ProjectTemplateAttributesProvider implements CreateFromTempla
             // in order to get through the freemarker, the path needs to "absolute" in freemarker terms - http://freemarker.sourceforge.net/docs/ref_directive_include.html
             // relative would mean relative to the template and we cannot be sure what the path from template to license template is..
             // it used to be, ../Licenses/ or ../../Licenses but can be anything similar, just based on where the template resides.
-            map.put(ATTR_LICENSE_PATH, "/" + url);
+            // Note: ensure reentrancy, so if 'url' starts with slash, do not prepend
+            if (!url.startsWith("/")) { // NOI18N
+                map.put(ATTR_LICENSE_PATH, "/" + url); // NOI18N
+            }
             //appears to cover both the new and old default value of the include path
         }  
         if (map.get(ATTR_ENCODING) == null) {

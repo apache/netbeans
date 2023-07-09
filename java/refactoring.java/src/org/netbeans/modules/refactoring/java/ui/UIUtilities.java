@@ -57,22 +57,16 @@ public final class UIUtilities {
 
     // XXX: Remove "test_" when #211651 is fixed
     private static final String TEST_JAVA_MIME_TYPE = "test_text/x-java"; // NOI18N
-    private static final String RECORD = "RECORD"; // NOI18N
     /**
      * Element.Kind values allowed to be used when calling ElementHandle.create
      *
      * @see javax.lang.model.element.ElementKind
      * @see org.netbeans.api.java.source.ElementHandle
      */
-    public static EnumSet allowedElementKinds = EnumSet.of(ElementKind.PACKAGE, ElementKind.CLASS, ElementKind.INTERFACE, ElementKind.ENUM, ElementKind.ANNOTATION_TYPE, ElementKind.METHOD, ElementKind.CONSTRUCTOR, ElementKind.INSTANCE_INIT, ElementKind.STATIC_INIT, ElementKind.FIELD, ElementKind.ENUM_CONSTANT, ElementKind.TYPE_PARAMETER);
-    static {
-        ElementKind recKind = null;
-        try {
-            recKind = ElementKind.valueOf(RECORD);
-            allowedElementKinds.add(recKind);
-        } catch (IllegalArgumentException ex) {
-        }
-    }
+    public static final EnumSet allowedElementKinds = EnumSet.of(ElementKind.PACKAGE, ElementKind.CLASS, ElementKind.INTERFACE, ElementKind.RECORD,
+            ElementKind.ENUM, ElementKind.ANNOTATION_TYPE, ElementKind.METHOD, ElementKind.CONSTRUCTOR, ElementKind.INSTANCE_INIT,
+            ElementKind.STATIC_INIT, ElementKind.FIELD, ElementKind.ENUM_CONSTANT, ElementKind.TYPE_PARAMETER);
+
     // not to be instantiated
     private UIUtilities() {
     }
@@ -318,6 +312,7 @@ public final class UIUtilities {
 
         case CLASS:
         case INTERFACE:
+        case RECORD:
         case ENUM:
         case ANNOTATION_TYPE:
             if (forSignature) {

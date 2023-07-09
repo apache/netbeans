@@ -1,0 +1,1545 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+# Base commit: 787a7a7e972719edf7a79009d768f5111e1d93bc
+
+---
+ build/build.py                                |   1 +
+ .../checker/schematronequiv/Assertions.java   | 152 +-----
+ src/nu/validator/datatype/IriRef.java         |  93 ----
+ src/nu/validator/datatype/Language.java       |   2 +-
+ src/nu/validator/datatype/MediaQuery.java     |  55 --
+ src/nu/validator/io/DataUri.java              |  28 +-
+ .../LocalCacheEntityResolver.java             |   9 +-
+ src/nu/validator/localentities/presets        |  10 +
+ .../BufferingRootNamespaceSniffer.java        | 171 +++++++
+ .../messages/RootNamespaceSniffer.java        | 124 +++++
+ .../messages/ValidationTransaction.java       | 471 ++++++++++++++++++
+ src/nu/validator/xml/BaseUriTracker.java      |  70 ++-
+ .../validator/xml/DataUriEntityResolver.java  |  18 +-
+ 13 files changed, 864 insertions(+), 340 deletions(-)
+ create mode 100644 src/nu/validator/localentities/presets
+ create mode 100644 src/nu/validator/messages/BufferingRootNamespaceSniffer.java
+ create mode 100644 src/nu/validator/messages/RootNamespaceSniffer.java
+ create mode 100644 src/nu/validator/messages/ValidationTransaction.java
+
+diff --git a/build/build.py b/build/build.py
+index 72145331..76d57d1e 100755
+--- a/build/build.py
++++ b/build/build.py
+@@ -172,6 +172,7 @@ dependencyPackages = [
+     ("https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-servlets/9.4.18.v20190429/jetty-servlets-9.4.18.v20190429.jar", "ed9e6c52ea1c28d92b81bf5c4cff5e22"),  # nopep8
+     ("https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-util/9.4.18.v20190429/jetty-util-9.4.18.v20190429.jar", "0e98accd79ef0f0709e67b32d1882712"),  # nopep8
+     ("https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-util-ajax/9.4.18.v20190429/jetty-util-ajax-9.4.18.v20190429.jar", "ec81b52cf2801e04c47e4be7fbeaa9d2"),  # nopep8
++    ("https://repo1.maven.org/maven2/com/hp/hpl/jena/iri/0.8/iri-0.8.jar", "475e01f6ed4c775114d2d2dfdfb9b354"),  # nopep8
+ ]
+ 
+ moduleDependencyPackages = [
+diff --git a/src/nu/validator/checker/schematronequiv/Assertions.java b/src/nu/validator/checker/schematronequiv/Assertions.java
+index 917182f3..6aba4301 100644
+--- a/src/nu/validator/checker/schematronequiv/Assertions.java
++++ b/src/nu/validator/checker/schematronequiv/Assertions.java
+@@ -65,12 +65,6 @@ import nu.validator.messages.MessageEmitterAdapter;
+ 
+ import org.relaxng.datatype.DatatypeException;
+ 
+-import org.w3c.css.css.StyleSheetParser;
+-import org.w3c.css.parser.CssError;
+-import org.w3c.css.parser.CssParseException;
+-import org.w3c.css.parser.Errors;
+-import org.w3c.css.util.ApplContext;
+-
+ import org.xml.sax.Attributes;
+ import org.xml.sax.Locator;
+ import org.xml.sax.SAXException;
+@@ -1506,93 +1500,6 @@ public class Assertions extends Checker {
+             } else if ("option" == localName
+                     && !stack[currentPtr].hasOption()) {
+                 stack[currentPtr].setOptionFound();
+-            } else if ("style" == localName) {
+-                String styleContents = node.getTextContent().toString();
+-                int lineOffset = 0;
+-                if (styleContents.startsWith("\n")) {
+-                    lineOffset = 1;
+-                }
+-                ApplContext ac = new ApplContext("en");
+-                ac.setCssVersionAndProfile("css3svg");
+-                ac.setMedium("all");
+-                ac.setSuggestPropertyName(false);
+-                ac.setTreatVendorExtensionsAsWarnings(true);
+-                ac.setTreatCssHacksAsWarnings(true);
+-                ac.setWarningLevel(-1);
+-                ac.setFakeURL("file://localhost/StyleElement");
+-                StyleSheetParser styleSheetParser = new StyleSheetParser();
+-                styleSheetParser.parseStyleSheet(ac,
+-                        new StringReader(styleContents.substring(lineOffset)),
+-                        null);
+-                styleSheetParser.getStyleSheet().findConflicts(ac);
+-                Errors errors = styleSheetParser.getStyleSheet().getErrors();
+-                if (errors.getErrorCount() > 0) {
+-                    incrementUseCounter("style-element-errors-found");
+-                }
+-                for (int i = 0; i < errors.getErrorCount(); i++) {
+-                    String message = "";
+-                    String cssProperty = "";
+-                    String cssMessage = "";
+-                    CssError error = errors.getErrorAt(i);
+-                    int beginLine = error.getBeginLine() + lineOffset;
+-                    int beginColumn = error.getBeginColumn();
+-                    int endLine = error.getEndLine() + lineOffset;
+-                    int endColumn = error.getEndColumn();
+-                    if (beginLine == 0) {
+-                        continue;
+-                    }
+-                    Throwable ex = error.getException();
+-                    if (ex instanceof CssParseException) {
+-                        CssParseException cpe = (CssParseException) ex;
+-                        if ("generator.unrecognize" //
+-                                .equals(cpe.getErrorType())) {
+-                            cssMessage = "Parse Error";
+-                        }
+-                        if (cpe.getProperty() != null) {
+-                            cssProperty = String.format("\u201c%s\u201D: ",
+-                                    cpe.getProperty());
+-                        }
+-                        if (cpe.getMessage() != null) {
+-                            cssMessage = cpe.getMessage();
+-                        }
+-                        if (!"".equals(cssMessage)) {
+-                            message = cssProperty + cssMessage.trim();
+-                            if (!".".equals(
+-                                    message.substring(message.length() - 1))) {
+-                                message = message + ".";
+-                            }
+-                        }
+-                    } else {
+-                        message = ex.getMessage();
+-                    }
+-                    if (!"".equals(message)) {
+-                        int lastLine = node.locator.getLineNumber() //
+-                                + endLine - 1;
+-                        int lastColumn = endColumn;
+-                        int columnOffset = node.locator.getColumnNumber();
+-                        if (error.getBeginLine() == 1) {
+-                            if (lineOffset != 0) {
+-                                columnOffset = 0;
+-                            }
+-                        } else {
+-                            columnOffset = 0;
+-                        }
+-                        String prefix = sourceIsCss ? "" : "CSS: ";
+-                        SAXParseException spe = new SAXParseException( //
+-                                prefix + message, publicId, systemId, //
+-                                lastLine, lastColumn);
+-                        int[] start = {
+-                                node.locator.getLineNumber() + beginLine - 1,
+-                                beginColumn, columnOffset };
+-                        if ((getErrorHandler() instanceof MessageEmitterAdapter)
+-                                && !(getErrorHandler() instanceof TestRunner)) {
+-                            ((MessageEmitterAdapter) getErrorHandler()) //
+-                                    .errorWithStart(spe, start);
+-                        } else {
+-                            getErrorHandler().error(spe);
+-                        }
+-                    }
+-                }
+             }
+             if ("article" == localName || "aside" == localName
+                     || "nav" == localName || "section" == localName) {
+@@ -1743,64 +1650,7 @@ public class Assertions extends Checker {
+                                     + " XML-compatible.");
+                         }
+                     }
+-                    if ("style" == attLocal) {
+-                        String styleContents = atts.getValue(i);
+-                        ApplContext ac = new ApplContext("en");
+-                        ac.setCssVersionAndProfile("css3svg");
+-                        ac.setMedium("all");
+-                        ac.setSuggestPropertyName(false);
+-                        ac.setTreatVendorExtensionsAsWarnings(true);
+-                        ac.setTreatCssHacksAsWarnings(true);
+-                        ac.setWarningLevel(-1);
+-                        ac.setFakeURL("file://localhost/StyleAttribute");
+-                        StyleSheetParser styleSheetParser = //
+-                                new StyleSheetParser();
+-                        styleSheetParser.parseStyleAttribute(ac,
+-                                new ByteArrayInputStream(
+-                                        styleContents.getBytes()),
+-                                "", ac.getFakeURL(),
+-                                getDocumentLocator().getLineNumber());
+-                        styleSheetParser.getStyleSheet().findConflicts(ac);
+-                        Errors errors = //
+-                                styleSheetParser.getStyleSheet().getErrors();
+-                        if (errors.getErrorCount() > 0) {
+-                            incrementUseCounter("style-attribute-errors-found");
+-                        }
+-                        for (int j = 0; j < errors.getErrorCount(); j++) {
+-                            String message = "";
+-                            String cssProperty = "";
+-                            String cssMessage = "";
+-                            CssError error = errors.getErrorAt(j);
+-                            Throwable ex = error.getException();
+-                            if (ex instanceof CssParseException) {
+-                                CssParseException cpe = (CssParseException) ex;
+-                                if ("generator.unrecognize" //
+-                                        .equals(cpe.getErrorType())) {
+-                                    cssMessage = "Parse Error";
+-                                }
+-                                if (cpe.getProperty() != null) {
+-                                    cssProperty = String.format(
+-                                            "\u201c%s\u201D: ",
+-                                            cpe.getProperty());
+-                                }
+-                                if (cpe.getMessage() != null) {
+-                                    cssMessage = cpe.getMessage();
+-                                }
+-                                if (!"".equals(cssMessage)) {
+-                                    message = cssProperty + cssMessage.trim();
+-                                    if (!".".equals(message.substring(
+-                                            message.length() - 1))) {
+-                                        message = message + ".";
+-                                    }
+-                                }
+-                            } else {
+-                                message = ex.getMessage();
+-                            }
+-                            if (!"".equals(message)) {
+-                                err("CSS: " + message);
+-                            }
+-                        }
+-                    } else if ("tabindex" == attLocal) {
++                    if ("tabindex" == attLocal) {
+                         tabindex = true;
+                     } else if ("href" == attLocal) {
+                         href = true;
+diff --git a/src/nu/validator/datatype/IriRef.java b/src/nu/validator/datatype/IriRef.java
+index 8fb8de35..461c753c 100644
+--- a/src/nu/validator/datatype/IriRef.java
++++ b/src/nu/validator/datatype/IriRef.java
+@@ -30,11 +30,6 @@ import org.relaxng.datatype.DatatypeException;
+ import nu.validator.io.DataUri;
+ import nu.validator.io.DataUriException;
+ 
+-import io.mola.galimatias.URL;
+-import io.mola.galimatias.URLParsingSettings;
+-import io.mola.galimatias.GalimatiasParseException;
+-import io.mola.galimatias.StrictErrorHandler;
+-
+ public class IriRef extends AbstractDatatype {
+ 
+     private static final int ELIDE_LIMIT = 50;
+@@ -86,94 +81,6 @@ public class IriRef extends AbstractDatatype {
+ 
+     @Override
+     public void checkValid(CharSequence literal) throws DatatypeException {
+-        String messagePrologue = "";
+-        int length = literal.length();
+-        String urlString = literal.toString();
+-        if (reportValue()) {
+-            if (length < ELIDE_LIMIT) {
+-                messagePrologue = "\u201c" + literal + "\u201d: ";
+-            } else {
+-                StringBuilder sb = new StringBuilder(ELIDE_LIMIT + 1);
+-                sb.append(literal, 0, ELIDE_LIMIT / 2);
+-                sb.append('\u2026');
+-                sb.append(literal, length - ELIDE_LIMIT / 2, length);
+-                messagePrologue = "\u201c" + sb.toString() + "\u201d: ";
+-            }
+-        }
+-        if ("".equals(trimHtmlSpaces(urlString))) {
+-            throw newDatatypeException("Must be non-empty.");
+-        }
+-        URL url = null;
+-        URLParsingSettings settings = URLParsingSettings.create().withErrorHandler(
+-                StrictErrorHandler.getInstance());
+-        boolean data = false;
+-        try {
+-            CharSequencePair pair = splitScheme(literal);
+-            if (pair == null) {
+-                // no scheme or scheme is private
+-                if (isAbsolute()) {
+-                    throw newDatatypeException("The string \u201c" + literal
+-                            + "\u201d is not an absolute URL.");
+-                } else {
+-                    if (mustBeHttpOrHttps()) {
+-                        throw newDatatypeException("Must contain only"
+-                                + " \u201chttp\u201d or \u201chttps\u201d URLs.");
+-                    }
+-                    // in this case, doc's actual base URL isn't relevant,
+-                    // so just use http://example.org/foo/bar as base
+-                    url = URL.parse(settings,
+-                            URL.parse("http://example.org/foo/bar"), urlString);
+-                }
+-            } else {
+-                CharSequence scheme = pair.getHead();
+-                CharSequence tail = pair.getTail();
+-                if (mustBeHttpOrHttps() && !isHttpOrHttps(scheme)) {
+-                    throw newDatatypeException("Must contain only"
+-                            + " \u201chttp\u201d or \u201chttps\u201d URLs.");
+-                }
+-                if (isWellKnown(scheme)) {
+-                    url = URL.parse(settings, urlString);
+-                } else if ("javascript".contentEquals(scheme)) {
+-                    url = null; // Don't bother user with generic IRI syntax
+-                } else if ("data".contentEquals(scheme)) {
+-                    data = true;
+-                    url = URL.parse(settings, urlString);
+-                } else if (isHttpAlias(scheme)) {
+-                    StringBuilder sb = new StringBuilder(5 + tail.length());
+-                    sb.append("http:").append(tail);
+-                    url = URL.parse(settings, sb.toString());
+-                } else {
+-                    StringBuilder sb = new StringBuilder(2 + literal.length());
+-                    sb.append("x-").append(literal);
+-                    url = URL.parse(settings, sb.toString());
+-                }
+-            }
+-        } catch (GalimatiasParseException e) {
+-            throw newDatatypeException(
+-                    messagePrologue + e.getMessage() + ".");
+-        }
+-        if (url != null) {
+-            if (data) {
+-                try {
+-                    DataUri dataUri = new DataUri(url);
+-                    InputStream is = dataUri.getInputStream();
+-                    while (is.read() >= 0) {
+-                        // spin
+-                    }
+-                } catch (DataUriException e) {
+-                    throw newDatatypeException(e.getIndex(), e.getHead(),
+-                            e.getLiteral(), e.getTail());
+-                } catch (IOException e) {
+-                    String msg = e.getMessage();
+-                    if (WARN
+-                            && "Fragment is not allowed for data: URIs according to RFC 2397.".equals(msg)) {
+-                        throw newDatatypeException(messagePrologue + msg, WARN);
+-                    } else {
+-                        throw newDatatypeException(messagePrologue + msg);
+-                    }
+-                }
+-            }
+-        }
+     }
+ 
+     private final boolean isHttpOrHttps(CharSequence scheme) {
+diff --git a/src/nu/validator/datatype/Language.java b/src/nu/validator/datatype/Language.java
+index fdb4ae59..b95f21ea 100644
+--- a/src/nu/validator/datatype/Language.java
++++ b/src/nu/validator/datatype/Language.java
+@@ -237,7 +237,7 @@ public final class Language extends AbstractDatatype {
+             checkPrivateUse(i, subtags);
+             return;
+         }
+-        if (subtag.length() == 4 & isLowerCaseAlpha(subtag)) {
++        if (subtag.length() == 4 && isLowerCaseAlpha(subtag)) {
+             if (!isScript(subtag)) {
+                 throw newDatatypeException("Bad script subtag.");
+             }
+diff --git a/src/nu/validator/datatype/MediaQuery.java b/src/nu/validator/datatype/MediaQuery.java
+index dff51c58..1a2c86cd 100644
+--- a/src/nu/validator/datatype/MediaQuery.java
++++ b/src/nu/validator/datatype/MediaQuery.java
+@@ -22,14 +22,7 @@
+ 
+ package nu.validator.datatype;
+ 
+-import java.io.StringReader;
+-
+ import org.relaxng.datatype.DatatypeException;
+-import org.w3c.css.css.StyleSheetParser;
+-import org.w3c.css.parser.CssError;
+-import org.w3c.css.parser.CssParseException;
+-import org.w3c.css.parser.Errors;
+-import org.w3c.css.util.ApplContext;
+ 
+ public class MediaQuery extends AbstractDatatype {
+ 
+@@ -44,54 +37,6 @@ public class MediaQuery extends AbstractDatatype {
+ 
+     @Override
+     public void checkValid(CharSequence literal) throws DatatypeException {
+-        ApplContext ac = new ApplContext("en");
+-        ac.setCssVersionAndProfile("css3svg");
+-        ac.setMedium("all");
+-        ac.setSuggestPropertyName(false);
+-        ac.setTreatVendorExtensionsAsWarnings(true);
+-        ac.setTreatCssHacksAsWarnings(true);
+-        ac.setWarningLevel(-1);
+-        ac.setFakeURL("file://localhost/StyleElement");
+-        String literalString = literal.toString();
+-        String style;
+-        if (isMediaCondition()) {
+-            style = String.format("@media all and %s %s", literalString, "{}");
+-        } else {
+-            style = String.format("@media %s %s", literalString, "{}");
+-        }
+-        StyleSheetParser styleSheetParser = new StyleSheetParser();
+-        styleSheetParser.parseStyleSheet(ac, new StringReader(style), null);
+-        styleSheetParser.getStyleSheet().findConflicts(ac);
+-        Errors errors = styleSheetParser.getStyleSheet().getErrors();
+-        for (int i = 0; i < errors.getErrorCount(); i++) {
+-            String message = "";
+-            String cssProperty = "";
+-            String cssMessage = "";
+-            CssError error = errors.getErrorAt(i);
+-            Throwable ex = error.getException();
+-            if (ex instanceof CssParseException) {
+-                CssParseException cpe = (CssParseException) ex;
+-                if ("generator.unrecognize" //
+-                        .equals(cpe.getErrorType())) {
+-                    cssMessage = "Parse Error";
+-                }
+-                if (cpe.getProperty() != null) {
+-                    cssProperty = String.format("\u201c%s\u201D: ",
+-                            cpe.getProperty());
+-                }
+-                if (cpe.getMessage() != null) {
+-                    cssMessage = cpe.getMessage();
+-                }
+-                if (!"".equals(cssMessage)) {
+-                    message = cssProperty + cssMessage + ".";
+-                }
+-            } else {
+-                message = ex.getMessage();
+-            }
+-            if (!"".equals(message)) {
+-                throw newDatatypeException(message);
+-            }
+-        }
+     }
+ 
+     protected boolean isMediaCondition() {
+diff --git a/src/nu/validator/io/DataUri.java b/src/nu/validator/io/DataUri.java
+index eb6fba26..d68f74a5 100644
+--- a/src/nu/validator/io/DataUri.java
++++ b/src/nu/validator/io/DataUri.java
+@@ -22,14 +22,12 @@
+ 
+ package nu.validator.io;
+ 
++import com.hp.hpl.jena.iri.IRIFactory;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.io.StringReader;
+ import java.net.MalformedURLException;
+ 
+-import io.mola.galimatias.URL;
+-import io.mola.galimatias.GalimatiasParseException;
+-
+ public class DataUri {
+ 
+     public static boolean startsWithData(String uri) {
+@@ -56,17 +54,17 @@ public class DataUri {
+      * @throws MalformedURLException
+      * @throws IOException
+      */
+-    protected void init(URL url) throws IOException, MalformedURLException {
+-        if (!url.scheme().equals("data")) {
++    protected void init(com.hp.hpl.jena.iri.IRI url) throws IOException, MalformedURLException {
++        if (!url.getScheme().equals("data")) {
+             throw new IllegalArgumentException("The input did not start with data:.");
+         }
+ 
+-        if (url.fragment() != null) {
++        if (url.getRawFragment()!= null) {
+             throw new MalformedURLException(
+                     "Fragment is not allowed for data: URIs according to RFC 2397.");
+         }
+ 
+-        is = new PercentDecodingReaderInputStream(new StringReader(url.schemeData()));
++        is = new PercentDecodingReaderInputStream(new StringReader(url.getRawPath()));
+         StringBuilder sb = new StringBuilder();
+         State state = State.AT_START;
+         int i = 0; // string counter
+@@ -256,11 +254,15 @@ public class DataUri {
+     }
+ 
+     public DataUri(String url) throws IOException {
+-        try {
+-            init(URL.parse(url));
+-        } catch (GalimatiasParseException e) {
+-            throw new MalformedURLException(e.getMessage());
+-        }
++
++        IRIFactory fac = new IRIFactory();
++        fac.shouldViolation(true, false);
++        fac.securityViolation(true, false);
++        fac.dnsViolation(true, false);
++        fac.mintingViolation(false, false);
++        fac.useSpecificationIRI(true);
++        init(fac.construct(url));
++
+     }
+ 
+     /**
+@@ -268,7 +270,7 @@ public class DataUri {
+      * @throws MalformedURLException
+      * @throws IOException
+      */
+-    public DataUri(URL url) throws IOException, MalformedURLException {
++    public DataUri(com.hp.hpl.jena.iri.IRI url) throws IOException, MalformedURLException {
+         init(url);
+     }
+ 
+diff --git a/src/nu/validator/localentities/LocalCacheEntityResolver.java b/src/nu/validator/localentities/LocalCacheEntityResolver.java
+index f56a7ecc..6cdd64e3 100644
+--- a/src/nu/validator/localentities/LocalCacheEntityResolver.java
++++ b/src/nu/validator/localentities/LocalCacheEntityResolver.java
+@@ -4,6 +4,7 @@ import java.io.BufferedReader;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.io.InputStreamReader;
++import java.net.URL;
+ import java.util.HashMap;
+ import java.util.Map;
+ 
+@@ -41,7 +42,7 @@ public class LocalCacheEntityResolver implements EntityResolver {
+     }
+ 
+     public static InputStream getPresetsAsStream() {
+-        return LOADER.getResourceAsStream("nu/validator/localentities/files/presets");
++        return LOADER.getResourceAsStream("nu/validator/localentities/presets");
+     }
+ 
+     public static InputStream getHtml5SpecAsStream() {
+@@ -59,6 +60,11 @@ public class LocalCacheEntityResolver implements EntityResolver {
+         this.delegate = delegate;
+     }
+ 
++    public static URL getResource(String systemId) {
++        String path = PATH_MAP.get(systemId);
++        return path != null ? LOADER.getResource(path) : null;
++    }
++
+     /**
+      * @see org.xml.sax.EntityResolver#resolveEntity(java.lang.String,
+      *      java.lang.String)
+@@ -92,6 +98,7 @@ public class LocalCacheEntityResolver implements EntityResolver {
+                 return is;
+             }
+         }
++        System.out.println("resolve :" + publicId +" " + systemId);
+         return delegate.resolveEntity(publicId, systemId);
+     }
+ 
+diff --git a/src/nu/validator/localentities/presets b/src/nu/validator/localentities/presets
+new file mode 100644
+index 00000000..c07f7299
+--- /dev/null
++++ b/src/nu/validator/localentities/presets
+@@ -0,0 +1,10 @@
++-1	-	HTML5 + SVG 1.1 + MathML 3.0	http://s.validator.nu/html5.rnc http://s.validator.nu/html5/assertions.sch http://c.validator.nu/all/
++-1	-	HTML5 + SVG 1.1 + MathML 3.0 + ITS 2.0	http://s.validator.nu/html5-its.rnc http://s.validator.nu/html5/assertions.sch http://c.validator.nu/all/
++3	-	HTML5 + SVG 1.1 + MathML 3.0 + RDFa Lite 1.1	http://s.validator.nu/html5-rdfalite.rnc http://s.validator.nu/html5/assertions.sch http://c.validator.nu/all/
++2	-	HTML 4.01 Strict + IRI / XHTML 1.0 Strict + IRI	http://s.validator.nu/xhtml10/xhtml-strict.rnc http://s.validator.nu/html5/assertions.sch http://c.validator.nu/all-html4/
++1	-	HTML 4.01 Transitional + IRI / XHTML 1.0 Transitional + IRI	http://s.validator.nu/xhtml10/xhtml-transitional.rnc http://s.validator.nu/html5/assertions.sch http://c.validator.nu/all-html4/
++-1	-	HTML 4.01 Frameset + IRI / XHTML 1.0 Frameset + IRI	http://s.validator.nu/xhtml10/xhtml-frameset.rnc http://s.validator.nu/html5/assertions.sch http://c.validator.nu/all-html4/
++-1	-	XHTML5 + SVG 1.1 + MathML 3.0	http://s.validator.nu/xhtml5.rnc http://s.validator.nu/html5/assertions.sch http://c.validator.nu/all/
++7	http://www.w3.org/1999/xhtml	XHTML5 + SVG 1.1 + MathML 3.0 + RDFa Lite 1.1	http://s.validator.nu/xhtml5-rdfalite.rnc http://s.validator.nu/html5/assertions.sch http://c.validator.nu/all/
++-1	-	XHTML 1.0 Strict + IRI + Ruby + SVG 1.1 + MathML 3.0	http://s.validator.nu/xhtml1-ruby-rdf-svg-mathml.rnc http://s.validator.nu/html5/assertions.sch http://c.validator.nu/all-html4/
++-1	http://www.w3.org/2000/svg	SVG 1.1 + IRI + XHTML5 + MathML 3.0	http://s.validator.nu/svg-xhtml5-rdf-mathml.rnc http://s.validator.nu/html5/assertions.sch http://c.validator.nu/all/
+diff --git a/src/nu/validator/messages/BufferingRootNamespaceSniffer.java b/src/nu/validator/messages/BufferingRootNamespaceSniffer.java
+new file mode 100644
+index 00000000..51dafcbb
+--- /dev/null
++++ b/src/nu/validator/messages/BufferingRootNamespaceSniffer.java
+@@ -0,0 +1,171 @@
++/*
++ * Copyright (c) 2006 Henri Sivonen
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be included in
++ * all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++ * DEALINGS IN THE SOFTWARE.
++ */
++package nu.validator.messages;
++
++import java.util.Iterator;
++import java.util.LinkedList;
++import java.util.List;
++import org.xml.sax.Attributes;
++import org.xml.sax.ContentHandler;
++import org.xml.sax.Locator;
++import org.xml.sax.SAXException;
++
++public class BufferingRootNamespaceSniffer implements ContentHandler {
++
++    private ContentHandler ch = null;
++
++    private Locator locator = null;
++
++    private List<String[]> namespaces = new LinkedList<String[]>();
++
++    private ValidationTransaction vst;
++
++    public BufferingRootNamespaceSniffer(ValidationTransaction vst) {
++        super();
++        this.vst = vst;
++    }
++
++    public void setContentHandler(ContentHandler contentHandler) throws SAXException {
++        this.ch = contentHandler;
++        if (locator != null) {
++            ch.setDocumentLocator(locator);
++        }
++        ch.startDocument();
++        for (Iterator<String[]> iter = namespaces.iterator(); iter.hasNext();) {
++            String[] element = iter.next();
++            ch.startPrefixMapping(element[0], element[1]);
++        }
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#characters(char[], int, int)
++     */
++    public void characters(char[] arg0, int arg1, int arg2) throws SAXException {
++        if (ch != null) {
++            ch.characters(arg0, arg1, arg2);
++        }
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#endDocument()
++     */
++    public void endDocument() throws SAXException {
++        if (ch != null) {
++            ch.endDocument();
++        }
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#endElement(java.lang.String,
++     * java.lang.String, java.lang.String)
++     */
++    public void endElement(String arg0, String arg1, String arg2)
++            throws SAXException {
++        if (ch != null) {
++            ch.endElement(arg0, arg1, arg2);
++        }
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
++     */
++    public void endPrefixMapping(String arg0) throws SAXException {
++        if (ch != null) {
++            ch.endPrefixMapping(arg0);
++        }
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)
++     */
++    public void ignorableWhitespace(char[] arg0, int arg1, int arg2)
++            throws SAXException {
++        if (ch != null) {
++            ch.ignorableWhitespace(arg0, arg1, arg2);
++        }
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#processingInstruction(java.lang.String,
++     * java.lang.String)
++     */
++    public void processingInstruction(String arg0, String arg1)
++            throws SAXException {
++        if (ch != null) {
++            ch.processingInstruction(arg0, arg1);
++        }
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#setDocumentLocator(org.xml.sax.Locator)
++     */
++    public void setDocumentLocator(Locator arg0) {
++        locator = arg0;
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#skippedEntity(java.lang.String)
++     */
++    public void skippedEntity(String arg0) throws SAXException {
++        if (ch != null) {
++            ch.skippedEntity(arg0);
++        }
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#startDocument()
++     */
++    public void startDocument() throws SAXException {
++
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#startElement(java.lang.String,
++     * java.lang.String, java.lang.String, org.xml.sax.Attributes)
++     */
++    public void startElement(String arg0, String arg1, String arg2,
++            Attributes arg3) throws SAXException {
++        if (ch != null) {
++            ch.startElement(arg0, arg1, arg2, arg3);
++        } else {
++            vst.rootNamespace(arg0, locator);
++            ch.startElement(arg0, arg1, arg2, arg3);
++        }
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#startPrefixMapping(java.lang.String,
++     * java.lang.String)
++     */
++    public void startPrefixMapping(String arg0, String arg1)
++            throws SAXException {
++        if (ch != null) {
++            ch.startPrefixMapping(arg0, arg1);
++        } else {
++            String[] arr = new String[2];
++            arr[0] = arg0;
++            arr[1] = arg1;
++            namespaces.add(arr);
++        }
++    }
++
++}
+diff --git a/src/nu/validator/messages/RootNamespaceSniffer.java b/src/nu/validator/messages/RootNamespaceSniffer.java
+new file mode 100644
+index 00000000..c21e58ab
+--- /dev/null
++++ b/src/nu/validator/messages/RootNamespaceSniffer.java
+@@ -0,0 +1,124 @@
++/*
++ * Copyright (c) 2006 Henri Sivonen
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be included in
++ * all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++ * DEALINGS IN THE SOFTWARE.
++ */
++package nu.validator.messages;
++
++import org.xml.sax.Attributes;
++import org.xml.sax.ContentHandler;
++import org.xml.sax.Locator;
++import org.xml.sax.SAXException;
++
++public class RootNamespaceSniffer implements ContentHandler {
++
++    private ValidationTransaction vst;
++    private ContentHandler ch;
++    private Locator locator;
++
++    public RootNamespaceSniffer(ValidationTransaction vst, ContentHandler ch) {
++        super();
++        this.vst = vst;
++        this.ch = ch;
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#characters(char[], int, int)
++     */
++    public void characters(char[] arg0, int arg1, int arg2) throws SAXException {
++        ch.characters(arg0, arg1, arg2);
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#endDocument()
++     */
++    public void endDocument() throws SAXException {
++        ch.endDocument();
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#endElement(java.lang.String,
++     * java.lang.String, java.lang.String)
++     */
++    public void endElement(String arg0, String arg1, String arg2) throws SAXException {
++        ch.endElement(arg0, arg1, arg2);
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
++     */
++    public void endPrefixMapping(String arg0) throws SAXException {
++        ch.endPrefixMapping(arg0);
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)
++     */
++    public void ignorableWhitespace(char[] arg0, int arg1, int arg2) throws SAXException {
++        ch.ignorableWhitespace(arg0, arg1, arg2);
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#processingInstruction(java.lang.String,
++     * java.lang.String)
++     */
++    public void processingInstruction(String arg0, String arg1) throws SAXException {
++        ch.processingInstruction(arg0, arg1);
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#setDocumentLocator(org.xml.sax.Locator)
++     */
++    public void setDocumentLocator(Locator arg0) {
++        this.locator = arg0;
++        ch.setDocumentLocator(arg0);
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#skippedEntity(java.lang.String)
++     */
++    public void skippedEntity(String arg0) throws SAXException {
++        ch.skippedEntity(arg0);
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#startDocument()
++     */
++    public void startDocument() throws SAXException {
++        ch.startDocument();
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#startElement(java.lang.String,
++     * java.lang.String, java.lang.String, org.xml.sax.Attributes)
++     */
++    public void startElement(String arg0, String arg1, String arg2, Attributes arg3) throws SAXException {
++        vst.rootNamespace(arg0, locator);
++        ch.startElement(arg0, arg1, arg2, arg3);
++    }
++
++    /**
++     * @see org.xml.sax.ContentHandler#startPrefixMapping(java.lang.String,
++     * java.lang.String)
++     */
++    public void startPrefixMapping(String arg0, String arg1) throws SAXException {
++        ch.startPrefixMapping(arg0, arg1);
++    }
++
++}
+diff --git a/src/nu/validator/messages/ValidationTransaction.java b/src/nu/validator/messages/ValidationTransaction.java
+new file mode 100644
+index 00000000..89e9c661
+--- /dev/null
++++ b/src/nu/validator/messages/ValidationTransaction.java
+@@ -0,0 +1,471 @@
++package nu.validator.messages;
++
++import com.thaiopensource.relaxng.impl.CombineValidator;
++import com.thaiopensource.util.PropertyMap;
++import com.thaiopensource.validate.IncorrectSchemaException;
++import com.thaiopensource.validate.Schema;
++import com.thaiopensource.validate.SchemaReader;
++import com.thaiopensource.validate.SchemaResolver;
++import com.thaiopensource.validate.Validator;
++import com.thaiopensource.validate.auto.AutoSchemaReader;
++import com.thaiopensource.validate.prop.wrap.WrapProperty;
++import com.thaiopensource.validate.rng.CompactSchemaReader;
++import java.io.IOException;
++import java.lang.ref.SoftReference;
++import java.util.Arrays;
++import java.util.HashMap;
++import java.util.Map;
++import java.util.logging.Level;
++import java.util.logging.Logger;
++import java.util.regex.Pattern;
++import nu.validator.checker.XmlPiChecker;
++import nu.validator.checker.jing.CheckerSchema;
++import nu.validator.htmlparser.common.DocumentMode;
++import nu.validator.htmlparser.common.DocumentModeHandler;
++import nu.validator.htmlparser.sax.HtmlParser;
++import nu.validator.localentities.LocalCacheEntityResolver;
++import nu.validator.spec.Spec;
++import nu.validator.xml.TypedInputSource;
++import org.xml.sax.ContentHandler;
++import org.xml.sax.EntityResolver;
++import org.xml.sax.Locator;
++import org.xml.sax.SAXException;
++import org.xml.sax.SAXParseException;
++import org.xml.sax.XMLReader;
++import org.xml.sax.ext.LexicalHandler;
++
++/**
++ * This class code was mainly extracted from the original class
++ * {@link VerifierServletTransaction}.
++ *
++ * @author hsivonen, mfukala@netbeans.org
++ */
++public class ValidationTransaction implements DocumentModeHandler, SchemaResolver {
++
++    private static final Logger LOGGER = Logger.getLogger(ValidationTransaction.class.getCanonicalName());
++
++    // XXX SVG!!!
++    private static final String[] KNOWN_CONTENT_TYPES = {
++        "application/atom+xml", "application/docbook+xml",
++        "application/xhtml+xml", "application/xv+xml", "image/svg+xml"};
++    private static final String[] NAMESPACES_FOR_KNOWN_CONTENT_TYPES = {
++        "http://www.w3.org/2005/Atom", "http://docbook.org/ns/docbook",
++        "http://www.w3.org/1999/xhtml", "http://www.w3.org/1999/xhtml",
++        "http://www.w3.org/2000/svg"};
++    protected static final String[] ALL_CHECKERS = {
++        "http://c.validator.nu/table/", "http://c.validator.nu/nfc/",
++        "http://c.validator.nu/text-content/",
++        "http://c.validator.nu/unchecked/",
++        "http://c.validator.nu/usemap/", "http://c.validator.nu/obsolete/",
++        "http://c.validator.nu/xml-pi/"};
++    private static final String[] ALL_CHECKERS_HTML4 = {
++        "http://c.validator.nu/table/", "http://c.validator.nu/nfc/",
++        "http://c.validator.nu/unchecked/", "http://c.validator.nu/usemap/"};
++
++    protected BufferingRootNamespaceSniffer bufferingRootNamespaceSniffer = null;
++    protected boolean rootNamespaceSeen = false;
++    protected String contentType = null;
++
++    protected static int[] presetDoctypes;
++    protected static String[] presetLabels;
++    protected static String[] presetUrls;
++    protected static String[] presetNamespaces;
++
++    protected MessageEmitterAdapter errorHandler;
++    protected static String[] preloadedSchemaUrls;
++    protected static Schema[] preloadedSchemas;
++
++    private Map<String, Validator> loadedValidatorUrls = new HashMap<String, Validator>();
++
++    protected Validator validator = null;
++    protected LocalCacheEntityResolver entityResolver;
++
++    private static final Pattern SPACE = Pattern.compile("\\s+");
++    protected static final int HTML5_SCHEMA = 3;
++    protected static final int XHTML1STRICT_SCHEMA = 2;
++    protected static final int XHTML1FRAMESET_SCHEMA = 4;
++    protected static final int XHTML1TRANSITIONAL_SCHEMA = 1;
++    protected static final int XHTML5_SCHEMA = 7;
++
++    public HtmlParser htmlParser = null;
++    protected PropertyMap jingPropertyMap;
++    protected static Spec html5spec;
++
++    protected XMLReader reader;
++    protected LexicalHandler lexicalHandler;
++
++    public void rootNamespace(String namespace, Locator locator) throws SAXException {
++        if (validator == null) {
++            int index = -1;
++            for (int i = 0; i < presetNamespaces.length; i++) {
++                if (namespace.equals(presetNamespaces[i])) {
++                    index = i;
++                    break;
++                }
++            }
++            if (index == -1) {
++                String message = "Cannot find preset schema for namespace: \u201C"
++                        + namespace + "\u201D.";
++                SAXException se = new SAXException(message);
++                errorHandler.schemaError(se);
++                throw se;
++            }
++            String label = presetLabels[index];
++            String urls = presetUrls[index];
++            errorHandler.info("Using the preset for " + label
++                    + " based on the root namespace " + namespace);
++            try {
++                validator = validatorByUrls(urls);
++            } catch (IOException ioe) {
++                // At this point the schema comes from memory.
++                throw new RuntimeException(ioe);
++            } catch (IncorrectSchemaException e) {
++                // At this point the schema comes from memory.
++                throw new RuntimeException(e);
++            }
++            if (bufferingRootNamespaceSniffer == null) {
++                throw new RuntimeException(
++                        "Bug! bufferingRootNamespaceSniffer was null.");
++            }
++            bufferingRootNamespaceSniffer.setContentHandler(validator.getContentHandler());
++        }
++
++        if (!rootNamespaceSeen) {
++            rootNamespaceSeen = true;
++            if (contentType != null) {
++                int i;
++                if ((i = Arrays.binarySearch(KNOWN_CONTENT_TYPES, contentType)) > -1) {
++                    if (!NAMESPACES_FOR_KNOWN_CONTENT_TYPES[i].equals(namespace)) {
++                        String message = "".equals(namespace) ? "\u201C"
++                                + contentType
++                                + "\u201D is not an appropriate Content-Type for a document whose root element is not in a namespace."
++                                : "\u201C"
++                                + contentType
++                                + "\u201D is not an appropriate Content-Type for a document whose root namespace is \u201C"
++                                + namespace + "\u201D.";
++                        SAXParseException spe = new SAXParseException(message,
++                                locator);
++                        errorHandler.warning(spe);
++                    }
++                }
++            }
++        }
++    }
++
++    @Override
++    public void documentMode(DocumentMode mode, String publicIdentifier,
++            String systemIdentifier) throws SAXException {
++        documentMode(mode, publicIdentifier, systemIdentifier, false);
++    }
++
++    public void documentMode(DocumentMode mode, String publicIdentifier,
++            String systemIdentifier, boolean html4SpecificAdditionalErrorChecks)
++            throws SAXException {
++        if (validator == null) {
++            try {
++                if ("-//W3C//DTD XHTML 1.0 Transitional//EN".equals(publicIdentifier)) {
++                    errorHandler.info("XHTML 1.0 Transitional doctype seen. Appendix C is not supported. Proceeding anyway for your convenience. The parser is still an HTML parser, so namespace processing is not performed and \u201Cxml:*\u201D attributes are not supported. Using the schema for "
++                            + getPresetLabel(XHTML1TRANSITIONAL_SCHEMA)
++                            + "."
++                            + (html4SpecificAdditionalErrorChecks ? " HTML4-specific tokenization errors are enabled."
++                                    : ""));
++                    validator = validatorByDoctype(XHTML1TRANSITIONAL_SCHEMA);
++                } else if ("-//W3C//DTD XHTML 1.0 Strict//EN".equals(publicIdentifier)) {
++                    errorHandler.info("XHTML 1.0 Strict doctype seen. Appendix C is not supported. Proceeding anyway for your convenience. The parser is still an HTML parser, so namespace processing is not performed and \u201Cxml:*\u201D attributes are not supported. Using the schema for "
++                            + getPresetLabel(XHTML1STRICT_SCHEMA)
++                            + "."
++                            + (html4SpecificAdditionalErrorChecks ? " HTML4-specific tokenization errors are enabled."
++                                    : ""));
++                    validator = validatorByDoctype(XHTML1STRICT_SCHEMA);
++                } else if ("-//W3C//DTD HTML 4.01 Transitional//EN".equals(publicIdentifier)) {
++                    errorHandler.info("HTML 4.01 Transitional doctype seen. Using the schema for "
++                            + getPresetLabel(XHTML1TRANSITIONAL_SCHEMA)
++                            + "."
++                            + (html4SpecificAdditionalErrorChecks ? ""
++                                    : " HTML4-specific tokenization errors are not enabled."));
++                    validator = validatorByDoctype(XHTML1TRANSITIONAL_SCHEMA);
++                } else if ("-//W3C//DTD HTML 4.01//EN".equals(publicIdentifier)) {
++                    errorHandler.info("HTML 4.01 Strict doctype seen. Using the schema for "
++                            + getPresetLabel(XHTML1STRICT_SCHEMA)
++                            + "."
++                            + (html4SpecificAdditionalErrorChecks ? ""
++                                    : " HTML4-specific tokenization errors are not enabled."));
++                    validator = validatorByDoctype(XHTML1STRICT_SCHEMA);
++                } else if ("-//W3C//DTD HTML 4.0 Transitional//EN".equals(publicIdentifier)) {
++                    errorHandler.info("Legacy HTML 4.0 Transitional doctype seen.  Please consider using HTML 4.01 Transitional instead. Proceeding anyway for your convenience with the schema for "
++                            + getPresetLabel(XHTML1TRANSITIONAL_SCHEMA)
++                            + "."
++                            + (html4SpecificAdditionalErrorChecks ? ""
++                                    : " HTML4-specific tokenization errors are not enabled."));
++                    validator = validatorByDoctype(XHTML1TRANSITIONAL_SCHEMA);
++                } else if ("-//W3C//DTD HTML 4.0//EN".equals(publicIdentifier)) {
++                    errorHandler.info("Legacy HTML 4.0 Strict doctype seen. Please consider using HTML 4.01 instead. Proceeding anyway for your convenience with the schema for "
++                            + getPresetLabel(XHTML1STRICT_SCHEMA)
++                            + "."
++                            + (html4SpecificAdditionalErrorChecks ? ""
++                                    : " HTML4-specific tokenization errors are not enabled."));
++                    validator = validatorByDoctype(XHTML1STRICT_SCHEMA);
++                } else {
++                    errorHandler.info("Using the schema for "
++                            + getPresetLabel(HTML5_SCHEMA)
++                            + "."
++                            + (html4SpecificAdditionalErrorChecks ? " HTML4-specific tokenization errors are enabled."
++                                    : ""));
++                    validator = validatorByDoctype(HTML5_SCHEMA);
++                }
++            } catch (IOException ioe) {
++                // At this point the schema comes from memory.
++                throw new RuntimeException(ioe);
++            } catch (IncorrectSchemaException e) {
++                // At this point the schema comes from memory.
++                throw new RuntimeException(e);
++            }
++            ContentHandler ch = validator.getContentHandler();
++            ch.setDocumentLocator(htmlParser.getDocumentLocator());
++            ch.startDocument();
++            reader.setContentHandler(ch);
++        } else {
++            if (html4SpecificAdditionalErrorChecks) {
++                errorHandler.info("HTML4-specific tokenization errors are enabled.");
++            }
++        }
++    }
++
++    public Schema resolveSchema(String url, PropertyMap options)
++            throws SAXException, IOException, IncorrectSchemaException {
++        int i = Arrays.binarySearch(preloadedSchemaUrls, url);
++        if (i > -1) {
++            Schema rv = preloadedSchemas[i];
++            if (options.contains(WrapProperty.ATTRIBUTE_OWNER)) {
++                if (rv instanceof ValidationTransaction.ProxySchema && ((ValidationTransaction.ProxySchema) rv).getWrappedSchema() instanceof CheckerSchema) {
++                    errorHandler.error(new SAXParseException(
++                            "A non-schema checker cannot be used as an attribute schema.",
++                            null, url, -1, -1));
++                    throw new IncorrectSchemaException();
++                } else {
++                    // ugly fall through
++                }
++            } else {
++                return rv;
++            }
++        }
++
++        //this code line should not normally be encountered since the necessary
++        //schemas have been preloaded
++        LOGGER.log(Level.INFO, "Going to create a non preloaded Schema for {0}", url); //NOI18N
++
++        TypedInputSource schemaInput = (TypedInputSource) entityResolver.resolveEntity(
++                null, url);
++        SchemaReader sr = null;
++        if ("application/relax-ng-compact-syntax".equals(schemaInput.getType())) {
++            sr = CompactSchemaReader.getInstance();
++        } else {
++            sr = new AutoSchemaReader();
++        }
++        Schema sch = sr.createSchema(schemaInput, options);
++        return sch;
++    }
++
++    /**
++     * @param validator
++     * @return
++     * @throws SAXException
++     * @throws IOException
++     * @throws IncorrectSchemaException
++     */
++    protected Validator validatorByUrls(String schemaList) throws SAXException,
++            IOException, IncorrectSchemaException {
++        Validator v = null;
++        String[] schemas = SPACE.split(schemaList);
++        for (int i = schemas.length - 1; i > -1; i--) {
++            String url = schemas[i];
++            if ("http://c.validator.nu/all/".equals(url)
++                    || "http://hsivonen.iki.fi/checkers/all/".equals(url)) {
++                for (int j = 0; j < ALL_CHECKERS.length; j++) {
++                    v = combineValidatorByUrl(v, ALL_CHECKERS[j]);
++                }
++            } else if ("http://c.validator.nu/all-html4/".equals(url)
++                    || "http://hsivonen.iki.fi/checkers/all-html4/".equals(url)) {
++                for (int j = 0; j < ALL_CHECKERS_HTML4.length; j++) {
++                    v = combineValidatorByUrl(v, ALL_CHECKERS_HTML4[j]);
++                }
++            } else {
++                v = combineValidatorByUrl(v, url);
++            }
++        }
++        return v;
++    }
++
++    /**
++     * @param val
++     * @param url
++     * @return
++     * @throws SAXException
++     * @throws IOException
++     * @throws IncorrectSchemaException
++     */
++    private Validator combineValidatorByUrl(Validator val, String url)
++            throws SAXException, IOException, IncorrectSchemaException {
++        if (!"".equals(url)) {
++            Validator v = validatorByUrl(url);
++            if (val == null) {
++                val = v;
++            } else {
++                val = new CombineValidator(v, val);
++            }
++        }
++        return val;
++    }
++
++    /**
++     * @param url
++     * @return
++     * @throws SAXException
++     * @throws IOException
++     * @throws IncorrectSchemaException
++     */
++    private Validator validatorByUrl(String url) throws SAXException,
++            IOException, IncorrectSchemaException {
++        Validator v = loadedValidatorUrls.get(url);
++        if (v != null) {
++            return v;
++        }
++
++        if ("http://s.validator.nu/html5/html5full-aria.rnc".equals(url)
++                || "http://s.validator.nu/xhtml5-aria-rdf-svg-mathml.rnc".equals(url)
++                || "http://s.validator.nu/html5/html5full.rnc".equals(url)
++                || "http://s.validator.nu/html5/xhtml5full-xhtml.rnc".equals(url)
++                || "http://s.validator.nu/html5-aria-svg-mathml.rnc".equals(url)) {
++            errorHandler.setSpec(html5spec);
++        }
++        Schema sch = resolveSchema(url, jingPropertyMap);
++        Validator validatorInstance = sch.createValidator(jingPropertyMap);
++        if (validatorInstance.getContentHandler() instanceof XmlPiChecker) {
++            lexicalHandler = (LexicalHandler) validatorInstance.getContentHandler();
++        }
++
++        loadedValidatorUrls.put(url, v);
++        return validatorInstance;
++    }
++
++    private String getPresetLabel(int schemaId) {
++        for (int i = 0; i < presetDoctypes.length; i++) {
++            if (presetDoctypes[i] == schemaId) {
++                return presetLabels[i];
++            }
++        }
++        return "unknown";
++    }
++
++    protected Validator validatorByDoctype(int schemaId) throws SAXException,
++            IOException, IncorrectSchemaException {
++        if (schemaId == 0) {
++            return null;
++        }
++        for (int i = 0; i < presetDoctypes.length; i++) {
++            if (presetDoctypes[i] == schemaId) {
++                return validatorByUrls(presetUrls[i]);
++            }
++        }
++        throw new RuntimeException("Doctype mappings not initialized properly.");
++    }
++
++    /**
++     * @param url
++     * @return
++     * @throws SAXException
++     * @throws IOException
++     * @throws IncorrectSchemaException
++     */
++    private static Schema schemaByUrl(String url, EntityResolver resolver,
++            PropertyMap pMap) throws SAXException, IOException,
++            IncorrectSchemaException {
++        LOGGER.fine(String.format("Will load schema: %s", url));
++        long a = System.currentTimeMillis();
++        TypedInputSource schemaInput;
++        try {
++            schemaInput = (TypedInputSource) resolver.resolveEntity(
++                    null, url);
++        } catch (ClassCastException e) {
++            LOGGER.log(Level.SEVERE, url, e);
++            throw e;
++        }
++
++        SchemaReader sr = null;
++        if ("application/relax-ng-compact-syntax".equals(schemaInput.getType())) {
++            sr = CompactSchemaReader.getInstance();
++            LOGGER.log(Level.FINE, "Used CompactSchemaReader");
++        } else {
++            sr = new AutoSchemaReader();
++            LOGGER.log(Level.FINE, "Used AutoSchemaReader");
++        }
++        long c = System.currentTimeMillis();
++
++        Schema sch = sr.createSchema(schemaInput, pMap);
++        LOGGER.log(Level.FINE, String.format("Schema created in %s ms.", (System.currentTimeMillis() - c)));
++        return sch;
++    }
++
++    protected static Schema proxySchemaByUrl(String uri, EntityResolver resolver, PropertyMap pMap) {
++        return new ProxySchema(uri, resolver, pMap);
++    }
++
++    /**
++     * A Schema instance delegate, the delegated instance if softly reachable so
++     * it should not be GCed so often. If the delegate is GCed a new instance is
++     * recreated.
++     */
++    private static class ProxySchema implements Schema {
++
++        private String uri;
++        private EntityResolver resolver;
++        private PropertyMap pMap;
++
++        private SoftReference<Schema> delegateWeakRef;
++
++        private ProxySchema(String uri, EntityResolver resolver, PropertyMap pMap) {
++            this.uri = uri;
++            this.resolver = resolver;
++            this.pMap = pMap;
++        }
++
++        //exposing just because of some instanceof test used in the code
++        private Schema getWrappedSchema() throws SAXException, IOException, IncorrectSchemaException {
++            return getSchemaDelegate();
++        }
++
++        public Validator createValidator(PropertyMap pm) {
++            try {
++                return getSchemaDelegate().createValidator(pm);
++            } catch (Exception ex) { //SAXException, IOException, IncorrectSchemaException
++                LOGGER.log(Level.INFO, "Cannot create schema delegate", ex); //NOI18N
++            }
++            return null;
++        }
++
++        public PropertyMap getProperties() {
++            try {
++                return getSchemaDelegate().getProperties();
++            } catch (Exception ex) { //SAXException, IOException, IncorrectSchemaException
++                LOGGER.log(Level.INFO, "Cannot create schema delegate", ex); //NOI18N
++            }
++            return null;
++        }
++
++        private synchronized Schema getSchemaDelegate() throws SAXException, IOException, IncorrectSchemaException {
++            Schema delegate = delegateWeakRef != null ? delegateWeakRef.get() : null;
++            if (delegate == null) {
++                long a = System.currentTimeMillis();
++                delegate = schemaByUrl(uri, resolver, pMap);
++                long b = System.currentTimeMillis();
++                delegateWeakRef = new SoftReference<Schema>(delegate);
++                LOGGER.log(Level.FINE, "Created new Schema instance for {0} in {1}ms.", new Object[]{uri, (b - a)});
++            } else {
++                LOGGER.log(Level.FINE, "Using cached Schema instance for {0}", uri);
++            }
++            return delegate;
++        }
++
++    }
++
++}
+diff --git a/src/nu/validator/xml/BaseUriTracker.java b/src/nu/validator/xml/BaseUriTracker.java
+index 3ad18c5c..c0e39a69 100644
+--- a/src/nu/validator/xml/BaseUriTracker.java
++++ b/src/nu/validator/xml/BaseUriTracker.java
+@@ -32,8 +32,8 @@ import org.xml.sax.ContentHandler;
+ import org.xml.sax.Locator;
+ import org.xml.sax.SAXException;
+ 
+-import io.mola.galimatias.URL;
+-import io.mola.galimatias.GalimatiasParseException;
++import com.hp.hpl.jena.iri.IRI;
++import com.hp.hpl.jena.iri.IRIFactory;
+ 
+ public class BaseUriTracker implements ContentHandler, UriLangContext {
+ 
+@@ -42,7 +42,7 @@ public class BaseUriTracker implements ContentHandler, UriLangContext {
+     }
+ 
+     private class Node {
+-        public URL currentAbsolute; // not null
++        public URI currentAbsolute; // not null
+ 
+         public String originalRelative; // null if no xml:base
+ 
+@@ -56,7 +56,7 @@ public class BaseUriTracker implements ContentHandler, UriLangContext {
+          * @param currentAbsolute
+          * @param originalRelative
+          */
+-        public Node(URL currentAbsolute, String originalRelative, String lang,
++        public Node(URI currentAbsolute, String originalRelative, String lang,
+                 boolean langSpecified, boolean rtl) {
+             this.currentAbsolute = currentAbsolute;
+             this.originalRelative = originalRelative;
+@@ -66,6 +66,8 @@ public class BaseUriTracker implements ContentHandler, UriLangContext {
+         }
+     }
+ 
++    private final IRIFactory iriFactory;
++
+     private LinkedList<Node> stack = new LinkedList<>();
+ 
+     private boolean baseSeen = false;
+@@ -110,11 +112,26 @@ public class BaseUriTracker implements ContentHandler, UriLangContext {
+ 
+     public BaseUriTracker(String systemId, String contentLanguage) {
+ 
+-        URL url = null;
++        this.iriFactory = new IRIFactory();
++        this.iriFactory.shouldViolation(false, false);
++        this.iriFactory.securityViolation(false, false);
++        this.iriFactory.dnsViolation(false, false);
++        this.iriFactory.mintingViolation(false, false);
++        this.iriFactory.useSpecificationIRI(false);
++        this.iriFactory.useSchemeSpecificRules("http", false);
++        this.iriFactory.useSchemeSpecificRules("https", false);
++        this.iriFactory.useSchemeSpecificRules("ftp", false);
++        this.iriFactory.useSchemeSpecificRules("data", false);
++
++        URI uri = null;
+         try {
+-            url = URL.parse(systemId);
++            IRI iri = iriFactory.construct(systemId);
++            uri = new URI(iri.toASCIIString());
++            if (!uri.isAbsolute()) {
++                uri = null;
++            }
+         } catch (Exception e) {
+-            url = null;
++            uri = null;
+         }
+ 
+         String lang = "";
+@@ -129,8 +146,8 @@ public class BaseUriTracker implements ContentHandler, UriLangContext {
+             } catch (DatatypeException e) {
+             }
+         }
+-        stack.add(new Node(url, null, lang, langSpecified, false));
+-        stack.add(new Node(url, null, lang, false, false)); // base/content-language placeholder
++        stack.add(new Node(uri, null, lang, langSpecified, false));
++        stack.add(new Node(uri, null, lang, false, false)); // base/content-language placeholder
+     }
+ 
+     private Node peek() {
+@@ -156,7 +173,7 @@ public class BaseUriTracker implements ContentHandler, UriLangContext {
+         }
+ 
+         Node curr = peek();
+-        URL base = curr.currentAbsolute;
++        URI base = curr.currentAbsolute;
+         if (!langSpecified) {
+             lang = curr.lang;
+         }
+@@ -176,19 +193,19 @@ public class BaseUriTracker implements ContentHandler, UriLangContext {
+         if (relative == null) {
+             stack.addLast(new Node(base, null, lang, langSpecified, rtl));
+         } else {
+-            URL newBase;
++            URI newBase;
+             String ascii = null;
+             try {
++                IRI relIri = iriFactory.construct(relative);
++                ascii = relIri.toASCIIString();
+                 if (base != null) {
+-                    try {
+-                        newBase = base.resolve(relative);
+-                    } catch (GalimatiasParseException e) {
++                    newBase = base.resolve(ascii);
++                    if (!newBase.isAbsolute()) {
+                         newBase = base;
+                     }
+                 } else {
+-                    try {
+-                        newBase = URL.parse((new URI(ascii)).toString());
+-                    } catch (GalimatiasParseException e) {
++                    newBase = new URI(ascii);
++                    if (!newBase.isAbsolute()) {
+                         newBase = null;
+                     }
+                 }
+@@ -284,9 +301,22 @@ public class BaseUriTracker implements ContentHandler, UriLangContext {
+     @Override
+     public String toAbsoluteUriWithCurrentBase(String uri) {
+         try {
+-            URL base = stack.getLast().currentAbsolute;
+-            return URL.parse(base, uri).toString();
+-        } catch (GalimatiasParseException e) {
++            IRI relIri = iriFactory.construct(uri);
++            String ascii;
++            ascii = relIri.toASCIIString();
++            URI base = stack.getLast().currentAbsolute;
++            URI rv;
++            if (base == null) {
++                rv = new URI(ascii);
++            } else {
++                rv = base.resolve(ascii);
++            }
++            if (rv.isAbsolute()) {
++                return rv.toASCIIString();
++            } else {
++                return null;
++            }
++        } catch (Exception e) {
+             return null;
+         }
+     }
+diff --git a/src/nu/validator/xml/DataUriEntityResolver.java b/src/nu/validator/xml/DataUriEntityResolver.java
+index ac905052..d9febbb5 100644
+--- a/src/nu/validator/xml/DataUriEntityResolver.java
++++ b/src/nu/validator/xml/DataUriEntityResolver.java
+@@ -31,8 +31,9 @@ import org.xml.sax.InputSource;
+ import org.xml.sax.SAXException;
+ import org.xml.sax.SAXParseException;
+ 
+-import io.mola.galimatias.URL;
+-import io.mola.galimatias.GalimatiasParseException;
++import com.hp.hpl.jena.iri.IRI;
++import com.hp.hpl.jena.iri.IRIException;
++import com.hp.hpl.jena.iri.IRIFactory;
+ 
+ public class DataUriEntityResolver implements EntityResolver {
+ 
+@@ -52,6 +53,8 @@ public class DataUriEntityResolver implements EntityResolver {
+ 
+     private boolean allowGenericXml = true;
+ 
++    private final IRIFactory iriFactory;
++
+     private final ContentTypeParser contentTypeParser;
+     
+     /**
+@@ -60,6 +63,9 @@ public class DataUriEntityResolver implements EntityResolver {
+     public DataUriEntityResolver(EntityResolver delegate, boolean laxContentType,
+             ErrorHandler errorHandler) {
+         this.errorHandler = errorHandler;
++        this.iriFactory = new IRIFactory();
++        this.iriFactory.useSpecificationXMLSystemID(true);
++        this.iriFactory.useSchemeSpecificRules("data", true);
+         this.contentTypeParser = new ContentTypeParser(errorHandler,
+                 laxContentType, this.allowRnc, this.allowHtml, this.allowXhtml,
+                 this.acceptAllKnownXmlTypes, this.allowGenericXml);
+@@ -74,10 +80,10 @@ public class DataUriEntityResolver implements EntityResolver {
+     public InputSource resolveEntity(String publicId, String systemId)
+             throws SAXException, IOException {
+         if (DataUri.startsWithData(systemId)) {
+-            URL url;
++            IRI iri;
+             try {
+-                url = URL.parse(systemId);
+-            } catch (GalimatiasParseException e) {
++                iri = iriFactory.construct(systemId);
++            } catch (IRIException e) {
+                 IOException ioe = (IOException) new IOException(e.getMessage()).initCause(e);
+                 SAXParseException spe = new SAXParseException(e.getMessage(),
+                         publicId, systemId, -1, -1, ioe);
+@@ -86,7 +92,7 @@ public class DataUriEntityResolver implements EntityResolver {
+                 }
+                 throw spe;
+             }
+-            systemId = url.toString();
++            systemId = iri.toASCIIString();
+             DataUri du = new DataUri(systemId);
+             TypedInputSource is = contentTypeParser.buildTypedInputSource(systemId, publicId,
+                     du.getContentType());
+-- 
+2.37.2
+

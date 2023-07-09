@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
@@ -38,6 +40,8 @@ import org.openide.awt.StatusDisplayer.Message;
 import org.openide.util.Lookup;
 
 public abstract class UIContext {
+    private static final Logger LOG = Logger.getLogger(UIContext.class.getName());
+    
     private static Reference<UIContext> lastCtx = new WeakReference<>(null);
     
     /**
@@ -50,11 +54,13 @@ public abstract class UIContext {
     public static synchronized UIContext find(Lookup lkp) {
         UIContext ctx = lkp.lookup(UIContext.class);
         if (ctx != null) {
+            LOG.log(Level.FINE, "Acquired user context from lookup: {0}, context instance: {1}", new Object[] { lkp, ctx });
             return ctx;
         }
         Lookup def = Lookup.getDefault();
         if (lkp != def) {
             ctx = def.lookup(UIContext.class);
+            LOG.log(Level.FINE, "Acquired user context from default lookup: {0}, context instance: {1}", new Object[] { lkp, ctx });
         }
         if (ctx == null) {
             // PENDING: better context transfer between threads is needed; this way the UIContext can remote to a bad
@@ -85,7 +91,7 @@ public abstract class UIContext {
     public abstract boolean isValid();
     public abstract void showMessage(MessageParams msg);
     public CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
-        showMessage(new MessageParams(MessageType.Log, msg.getUri()));
+        showMessage(new MessageParams(MessageType.Log, msg.getText()));
         return CompletableFuture.completedFuture(null);
     }
     public abstract CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg);
@@ -136,7 +142,7 @@ public abstract class UIContext {
 
         @Override
         public Message showStatusMessage(ShowStatusMessageParams msg) {
-            System.out.println(msg.getType() + ": " + msg.getMessage());
+            System.err.println(msg.getType() + ": " + msg.getMessage());
             return (int timeInMillis) -> {};
         }
 
@@ -147,7 +153,7 @@ public abstract class UIContext {
 
         @Override
         public CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
-            System.out.println("Open in browser: " + msg.getUri());
+            System.err.println("Open in browser: " + msg.getText());
             return CompletableFuture.completedFuture(null);
         }
 

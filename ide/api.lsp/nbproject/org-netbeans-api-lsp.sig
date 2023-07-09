@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.9
+#Version 1.15
 
 CLSS public abstract interface java.io.Serializable
 
@@ -92,12 +92,22 @@ meth public org.netbeans.api.lsp.WorkspaceEdit getEdit()
 supr java.lang.Object
 hfds command,edit,title
 
+CLSS public org.netbeans.api.lsp.CodeLens
+cons public init(org.netbeans.api.lsp.Range,org.netbeans.api.lsp.Command,java.lang.Object)
+meth public java.lang.Object getData()
+meth public org.netbeans.api.lsp.Command getCommand()
+meth public org.netbeans.api.lsp.Range getRange()
+supr java.lang.Object
+hfds command,data,range
+
 CLSS public org.netbeans.api.lsp.Command
 cons public init(java.lang.String,java.lang.String)
+cons public init(java.lang.String,java.lang.String,java.util.List<java.lang.Object>)
 meth public java.lang.String getCommand()
 meth public java.lang.String getTitle()
+meth public java.util.List<java.lang.Object> getArguments()
 supr java.lang.Object
-hfds command,title
+hfds arguments,command,title
 
 CLSS public final org.netbeans.api.lsp.Completion
 innr public final static !enum Kind
@@ -206,30 +216,40 @@ supr java.lang.Enum<org.netbeans.api.lsp.Completion$TriggerKind>
 
 CLSS public org.netbeans.api.lsp.Diagnostic
 innr public abstract interface static LazyCodeActions
+innr public abstract interface static ReporterControl
 innr public final static !enum Severity
 innr public final static Builder
 meth public java.lang.String getCode()
 meth public java.lang.String getDescription()
+meth public java.net.URL getCodeDescription()
 meth public org.netbeans.api.lsp.Diagnostic$LazyCodeActions getActions()
 meth public org.netbeans.api.lsp.Diagnostic$Severity getSeverity()
 meth public org.netbeans.api.lsp.Position getEndPosition()
 meth public org.netbeans.api.lsp.Position getStartPosition()
+meth public static org.netbeans.api.lsp.Diagnostic$ReporterControl findReporterControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
 supr java.lang.Object
-hfds actions,code,description,endPosition,severity,startPosition
+hfds actions,code,codeDescription,description,endPosition,severity,startPosition
 
 CLSS public final static org.netbeans.api.lsp.Diagnostic$Builder
  outer org.netbeans.api.lsp.Diagnostic
 meth public org.netbeans.api.lsp.Diagnostic build()
 meth public org.netbeans.api.lsp.Diagnostic$Builder addActions(org.netbeans.api.lsp.Diagnostic$LazyCodeActions)
 meth public org.netbeans.api.lsp.Diagnostic$Builder setCode(java.lang.String)
+meth public org.netbeans.api.lsp.Diagnostic$Builder setCodeDescription(java.net.URL)
 meth public org.netbeans.api.lsp.Diagnostic$Builder setSeverity(org.netbeans.api.lsp.Diagnostic$Severity)
 meth public static org.netbeans.api.lsp.Diagnostic$Builder create(org.netbeans.api.lsp.Position,org.netbeans.api.lsp.Position,java.lang.String)
 supr java.lang.Object
-hfds actions,code,description,endPosition,severity,startPosition
+hfds actions,code,codeDescription,description,endPosition,severity,startPosition
 
 CLSS public abstract interface static org.netbeans.api.lsp.Diagnostic$LazyCodeActions
  outer org.netbeans.api.lsp.Diagnostic
 meth public abstract java.util.List<org.netbeans.api.lsp.CodeAction> computeCodeActions(java.util.function.Consumer<java.lang.Exception>)
+
+CLSS public abstract interface static org.netbeans.api.lsp.Diagnostic$ReporterControl
+ outer org.netbeans.api.lsp.Diagnostic
+meth public abstract void diagnosticChanged(java.util.Collection<org.openide.filesystems.FileObject>,java.lang.String)
 
 CLSS public final static !enum org.netbeans.api.lsp.Diagnostic$Severity
  outer org.netbeans.api.lsp.Diagnostic
@@ -388,6 +408,11 @@ meth public abstract java.util.concurrent.CompletableFuture<java.util.List<org.n
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 
+CLSS public abstract interface org.netbeans.spi.lsp.CodeLensProvider
+ anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CodeLensProvider")
+meth public abstract java.util.concurrent.CompletableFuture<java.util.List<? extends org.netbeans.api.lsp.CodeLens>> codeLens(javax.swing.text.Document)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
 CLSS public abstract interface org.netbeans.spi.lsp.CompletionCollector
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CompletionCollectors")
 innr public final static Builder
@@ -451,6 +476,12 @@ meth public org.netbeans.spi.lsp.CompletionCollector$Builder textEdit(org.netbea
 supr java.lang.Object
 hfds additionalTextEdits,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,preselect,sortText,tags,textEdit
 hcls LazyCompletableFuture
+
+CLSS public abstract interface org.netbeans.spi.lsp.DiagnosticReporter
+meth public abstract org.netbeans.api.lsp.Diagnostic$ReporterControl findDiagnosticControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
 
 CLSS public abstract interface org.netbeans.spi.lsp.ErrorProvider
 innr public final static !enum Kind

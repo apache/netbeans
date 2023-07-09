@@ -263,9 +263,7 @@ public final class StorageImpl <K extends Object, V extends Object> {
                         }
 
                         // First remove all entries marked as removed
-                        for(K key : removed) {
-                            map.remove(key);
-                        }
+                        map.keySet().removeAll(removed);
 
                         if (LOG.isLoggable(Level.FINEST)) {
                             LOG.finest("--- Adding '" + storageDescription.getId() + "': " + added); //NOI18N

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.apisupport.project.suite;
 
-import static junit.framework.Assert.*;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.apisupport.project.TestBase;

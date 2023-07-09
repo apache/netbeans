@@ -48,8 +48,6 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.SymbolTag;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.editor.document.LineDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.modules.editor.java.Utilities;
@@ -327,19 +325,15 @@ public class Utils {
         }
     }
 
-    public static Position createPosition(LineDocument doc, int offset) {
-        try {
-            int line = LineDocumentUtils.getLineIndex(doc, offset);
-            int column = offset - LineDocumentUtils.getLineStart(doc, offset);
+    public static Position createPosition(StyledDocument doc, int offset) {
+        int line = NbDocument.findLineNumber(doc, offset);
+        int column = offset - NbDocument.findLineOffset(doc, line);
 
-            return new Position(line, column);
-        } catch (BadLocationException ex) {
-            throw new IllegalStateException(ex);
-        }
+        return new Position(line, column);
     }
 
-    public static int getOffset(LineDocument doc, Position pos) {
-        return LineDocumentUtils.getLineStartFromIndex(doc, pos.getLine()) + pos.getCharacter();
+    public static int getOffset(StyledDocument doc, Position pos) {
+        return NbDocument.findLineOffset(doc,pos.getLine()) + pos.getCharacter();
     }
 
     public static synchronized String toUri(FileObject file) {
@@ -374,7 +368,7 @@ public class Utils {
                 i += 1;
             }
             if (replaced != null) {
-                replaced.append(text.substring(lastPos, text.length()));
+                replaced.append(text.substring(lastPos));
                 text = replaced.toString();
             }
             replaced = null;

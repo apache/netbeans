@@ -29,8 +29,6 @@ Apache NetBeans is an open source development environment, tooling platform, and
    * GitHub actions
      * [![Build Status](https://github.com/apache/netbeans/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/main.yml)
      * [![Profiler Lib Native Binaries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml)
-   * TravisCI:
-     * [![Build Status](https://app.travis-ci.com/apache/netbeans.svg?branch=master)](https://app.travis-ci.com/apache/netbeans)
    * Apache Jenkins:
      * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
      * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows) 
@@ -50,25 +48,32 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Building NetBeans
 
-Build with the default config (See the [cluster.config](https://github.com/apache/netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
+Build the default `release` config (See the [cluster.config](https://github.com/apache/netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
 ```
-$ ant
+$ ant build
 ```
-Build the basic project (mainly, JavaSE features):
+Build the basic project (mainly Java features):
 ```
-$ ant -Dcluster.config=basic
+$ ant -Dcluster.config=basic build
 ```
-Build the full project (including Groovy, PHP, JavaEE/JakartaEE, and JavaScript features):
+Build the full project (may include clusters which are not be in the release):
 ```
-$ ant -Dcluster.config=full
+$ ant -Dcluster.config=full build
 ```
 Build the NetBeans Platform:
 ```
-$ ant -Dcluster.config=platform
+$ ant -Dcluster.config=platform build
+```
+Cleanup:
+```
+$ ant -q clean
 ```
 
 #### Notes:
 * You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
+* Once built, you can simply open individual modules of interest with NetBeans and run/rebuild/debug them like any other project
+* Building the gradle modules on recent JDKs might fail with "Unsupported class file major version" errors. In that case the gradle daemon must be
+  configured to run on a compatible JDK (for example add `org.gradle.java.home=/home/duke/jdk17` to your `~/.gradle/gradle.properties`, see [gradle doc](https://docs.gradle.org/current/userguide/build_environment.html)).
 
 #### Generating Javadoc
 
@@ -102,7 +107,7 @@ Latest release (convenience binary of released source artifacts): https://netbea
 
 ### Reporting Bugs
 
-Bugs should be reported to https://github.com/apache/netbeans/issues
+[How to report bugs](https://netbeans.apache.org/participate/report-issue.html)
 
 ### Log, Config and Cache Locations
 

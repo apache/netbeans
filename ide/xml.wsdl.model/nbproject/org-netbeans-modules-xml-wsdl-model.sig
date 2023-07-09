@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.49.0
+#Version 1.53.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -57,12 +57,14 @@ intf org.netbeans.modules.xml.wsdl.model.WSDLComponent
 intf org.netbeans.modules.xml.xam.Nameable<org.netbeans.modules.xml.wsdl.model.WSDLComponent>
 meth public abstract org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Fault> getFault()
 meth public abstract void setFault(org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Fault>)
+ anno 0 java.lang.Deprecated()
 
 CLSS public abstract interface org.netbeans.modules.xml.wsdl.model.BindingInput
 intf org.netbeans.modules.xml.wsdl.model.WSDLComponent
 intf org.netbeans.modules.xml.xam.Nameable<org.netbeans.modules.xml.wsdl.model.WSDLComponent>
 meth public abstract org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Input> getInput()
 meth public abstract void setInput(org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Input>)
+ anno 0 java.lang.Deprecated()
 
 CLSS public abstract interface org.netbeans.modules.xml.wsdl.model.BindingOperation
 fld public final static java.lang.String BINDING_FAULT_PROPERTY = "fault"
@@ -86,6 +88,7 @@ intf org.netbeans.modules.xml.wsdl.model.WSDLComponent
 intf org.netbeans.modules.xml.xam.Nameable<org.netbeans.modules.xml.wsdl.model.WSDLComponent>
 meth public abstract org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Output> getOutput()
 meth public abstract void setOutput(org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Output>)
+ anno 0 java.lang.Deprecated()
 
 CLSS public abstract interface org.netbeans.modules.xml.wsdl.model.Definitions
 fld public final static java.lang.String BINDING_PROPERTY = "binding"
@@ -1134,6 +1137,7 @@ meth public javax.swing.text.Document getBaseDocument()
 meth public org.netbeans.modules.xml.xam.dom.AbstractDocumentComponent findComponent(org.netbeans.modules.xml.xam.dom.AbstractDocumentComponent,java.util.List<org.w3c.dom.Element>,int)
 meth public org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<? extends org.w3c.dom.Node>,java.util.List<? extends org.w3c.dom.Node>)
 meth public org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<org.w3c.dom.Node>)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(int)
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(java.util.List<org.w3c.dom.Element>)
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(org.w3c.dom.Element)

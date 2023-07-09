@@ -170,7 +170,7 @@ public class Utils {
             JavaPlatform[] platforms = JavaPlatformManager.getDefault().getInstalledPlatforms();
             for(int i = 0; i < platforms.length; i++) {
                 JavaPlatform platform = platforms[i];
-                String antName = (String)platform.getProperties().get(PLATFORM_ANT_NAME);
+                String antName = platform.getProperties().get(PLATFORM_ANT_NAME);
                 if (antName != null && antName.equals(platformName)) {
                     if(specFilter == null || specFilter.equalsIgnoreCase(platform.getSpecification().getName())) {
                         return platform;

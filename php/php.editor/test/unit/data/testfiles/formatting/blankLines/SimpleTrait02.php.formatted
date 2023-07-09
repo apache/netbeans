@@ -12,7 +12,6 @@ trait SimpleTrait {
     public function displayVar() {
         echo $this->var;
     }
-
 }
 
 ?>

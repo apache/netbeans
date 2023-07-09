@@ -53,6 +53,14 @@ public class JavaCompletionTask113FeaturesTest extends CompletionTestBase {
         performTest("SwitchExprForYieldWithValue2", 1023, "yi", "SwitchExprYieldAutoCompletion.pass", SOURCE_LEVEL);
     }
 
+    public void testSwitchExprAutoCompleteAfterYield() throws Exception {
+        performTest("SwitchExprForYieldWithValue", 1019, "yield ", "SwitchExprAfterYieldAutoCompletion.pass", SOURCE_LEVEL);
+    }
+
+    public void testSwitchExprAutoCompleteAfterYield2() throws Exception {
+        performTest("SwitchExprForYieldWithValue2", 1023, "yield ", "SwitchExprAfterYieldAutoCompletion.pass", SOURCE_LEVEL);
+    }
+
     public void noop() {
     }
 

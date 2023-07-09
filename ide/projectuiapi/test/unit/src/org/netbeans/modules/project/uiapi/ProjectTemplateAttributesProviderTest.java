@@ -89,7 +89,7 @@ public class ProjectTemplateAttributesProviderTest extends NbTestCase {
         Project prj = ProjectManager.getDefault().findProject(projdir);
         FileObject folder = projdir.getFileObject("nbproject");
         FileObject template = FileUtil.toFileObject(getDataDir()).getFileObject("file.txt");
-        Map<String, Object> init = new HashMap();
+        Map<String, Object> init = new HashMap<>();
         init.put("mama", "se raduje");
         FileObject result = FileBuilder.createFromTemplate(template, folder, "honza", init, FileBuilder.Mode.FORMAT);
         

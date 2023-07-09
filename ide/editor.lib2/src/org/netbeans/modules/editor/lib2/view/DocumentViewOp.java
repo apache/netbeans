@@ -1391,7 +1391,7 @@ public final class DocumentViewOp
 
     TextLayout createTextLayout(String text, Font font) {
         checkSettingsInfo();
-        if (fontRenderContext != null && font != null) {
+        if (fontRenderContext != null && font != null && text.length() > 0) {
             ViewStats.incrementTextLayoutCreated(text.length());
             FontInfo fontInfo = getFontInfo(font);
             TextLayout textLayout = new TextLayout(text, fontInfo.renderFont, fontRenderContext);

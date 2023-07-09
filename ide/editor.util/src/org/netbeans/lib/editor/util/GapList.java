@@ -311,6 +311,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     /**
      * @deprecated use {@link #copyElements(int, int, Object[], int)} which performs the same operation
      */
+    @Deprecated
     public void copyItems(int startIndex, int endIndex,
     Object[] dest, int destIndex) {
         copyElements(startIndex, endIndex, dest, destIndex);

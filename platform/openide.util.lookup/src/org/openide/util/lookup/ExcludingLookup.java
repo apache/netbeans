@@ -43,7 +43,7 @@ final class ExcludingLookup extends org.openide.util.Lookup {
     
     /**
      * Creates new Result object with supplied instances parameter.
-     * @param instances to be used to return from the lookup
+     * @param classes to be used to return from the lookup
      */
     ExcludingLookup(Lookup delegate, Class[] classes) {
         this.delegate = delegate;

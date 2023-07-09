@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,6 +49,10 @@ public class KnowledgeBaseItem extends OCIItem implements URLProvider{
         this.timeUpdated = timeUpdated;
         this.compartmentId = compartmentId;
         registerItem();
+    }
+    
+    public String getCompartmentId() {
+        return compartmentId;
     }
     
     void registerItem() {
@@ -76,6 +81,9 @@ public class KnowledgeBaseItem extends OCIItem implements URLProvider{
         
         synchronized (KnowledgeBaseItem.class) {
             Collection<Reference<KnowledgeBaseItem>> refItems = itemInstances.get(ocid);
+            if (refItems == null) {
+                return Collections.emptyList();
+            }
             for (Iterator<Reference<KnowledgeBaseItem>> it = refItems.iterator(); it.hasNext(); ) {
                 Reference<KnowledgeBaseItem> r = it.next();
                 KnowledgeBaseItem i = r.get();

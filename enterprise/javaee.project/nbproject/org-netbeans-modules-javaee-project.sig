@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.35
+#Version 1.39
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -805,6 +805,7 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
 innr public final static PasswordLine
 innr public final static QuickPick

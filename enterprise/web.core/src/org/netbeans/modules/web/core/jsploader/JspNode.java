@@ -21,6 +21,7 @@ package org.netbeans.modules.web.core.jsploader;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import javax.swing.Action;
 import org.openide.nodes.*;
 import org.openide.loaders.DataNode;
 import org.openide.loaders.DataObject;
@@ -58,12 +59,16 @@ public class JspNode extends DataNode {
 
     private void initialize () {
         setIconBaseWithExtension(getIconBase());
-        setDefaultAction (SystemAction.get (OpenAction.class));
 
         if (isTagFile())
                 setShortDescription (NbBundle.getMessage(JspNode.class, "LBL_tagNodeShortDesc")); //NOI18N
         else
                 setShortDescription (NbBundle.getMessage(JspNode.class, "LBL_jspNodeShortDesc")); //NOI18N
+    }
+
+    @Override
+    public Action getPreferredAction() {
+        return SystemAction.get (OpenAction.class);
     }
 
     private String getExtension(){
@@ -98,26 +103,21 @@ public class JspNode extends DataNode {
             ps.setDisplayName(NbBundle.getBundle(JspNode.class).getString("PROP_executionSetName")); //NOI18N
             ps.setShortDescription(NbBundle.getBundle(JspNode.class).getString("HINT_executionSetName")); //NOI18N
 
-            ps.put(new PropertySupport.ReadWrite (
+            ps.put(new PropertySupport.ReadWrite<String> (
                        PROP_REQUEST_PARAMS,
                        String.class,
                        NbBundle.getBundle(JspNode.class).getString("PROP_requestParams"), //NOI18N
                        NbBundle.getBundle(JspNode.class).getString("HINT_requestParams") //NOI18N
                    ) {
-                       public Object getValue() {
+                       public String getValue() {
                            return getRequestParams(((MultiDataObject)getDataObject()).getPrimaryEntry());
                        }
-                       public void setValue (Object val) throws InvocationTargetException {
-                           if (val instanceof String) {
-                               try {
-                                   setRequestParams(((MultiDataObject)getDataObject()).getPrimaryEntry(), (String)val);
-                               } catch(IOException e) {
-                                   throw new InvocationTargetException (e);
-                               }
-                           }
-                           else {
-                               throw new IllegalArgumentException();
-                           }
+                       public void setValue (String val) throws InvocationTargetException {
+                            try {
+                                setRequestParams(((MultiDataObject)getDataObject()).getPrimaryEntry(), (String)val);
+                            } catch(IOException e) {
+                                throw new InvocationTargetException (e);
+                            }
                        }
                    }
                   );
@@ -136,13 +136,13 @@ public class JspNode extends DataNode {
         ps.setShortDescription(NbBundle.getBundle(JspNode.class).getString("HINT_textfileSetName")); // NOI18N
         sheet.put(ps);
         
-           ps.put(new PropertySupport.ReadOnly(
+           ps.put(new PropertySupport.ReadOnly<String>(
                    PROP_FILE_ENCODING,
                    String.class,
                    NbBundle.getBundle(JspNode.class).getString("PROP_fileEncoding"), //NOI18N
                    NbBundle.getBundle(JspNode.class).getString("HINT_fileEncoding") //NOI18N
                    ) {
-               public Object getValue() {
+               public String getValue() {
                    return ((JspDataObject)getDataObject()).getFileEncoding();
                }
            }

@@ -41,8 +41,8 @@ class ThreadInfo {
         threadId = id;
         threadName = name;
         threadClassName = className;
-        waitMonitors = new HashMap();
-        ownerMonitors = new HashMap();
+        waitMonitors = new HashMap<>();
+        ownerMonitors = new HashMap<>();
     }
 
     void openMonitor(ThreadInfo owner, MonitorInfo mi, long timeStamp) {
@@ -147,14 +147,14 @@ class ThreadInfo {
 
         private MonitorDetail(MonitorInfo mi) {
             monitor = mi;
-            threads = new HashMap();
+            threads = new HashMap<>();
         }
 
         MonitorDetail(MonitorDetail m) {
             monitor = m.monitor;
             count = m.count;
             waitTime = m.waitTime;
-            threads = new HashMap();
+            threads = new HashMap<>();
             for (MonitorInfo.ThreadDetail td : m.threads.values()) {
                 threads.put(td.threadInfo, td);
             }

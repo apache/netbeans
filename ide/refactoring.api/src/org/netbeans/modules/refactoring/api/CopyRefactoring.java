@@ -42,7 +42,8 @@ public final class CopyRefactoring extends AbstractRefactoring {
     /**
      * Creates a new instance of CopyRefactoring.
      * Copy Refactoring implementations currently understand the following types:
-     * <table border="1">
+     * <table>
+     *   <caption>CopyRefactoring types supported</caption>
      *   <tr><th>Module</th><th>Types the Module Understands</th><th>Implementation</th></tr>
      *   <tr><td>Refactoring API (Default impl.)</td><td>{@link org.openide.filesystems.FileObject}(s)</td><td>Does file copy</td></tr>
      *   <tr><td>Java Refactoring</td><td><ul>
@@ -59,7 +60,8 @@ public final class CopyRefactoring extends AbstractRefactoring {
     /**
      * Target for copying.
      * Copy Refactoring implementations currently understand the following types:
-     * <table border="1">
+     * <table>
+     *   <caption>CopyRefactoring types supported</caption>
      *   <tr><th>Module</th><th>Types the Module Understands</th><th>Implementation</th></tr>
      *   <tr><td>Refactoring API (Default impl.)</td><td>{@link java.net.URL}</td>
      *        <td>Creates directory corresponding to specified URL (if it does not exist) and copies all FileObjects into this folder.</td></tr>

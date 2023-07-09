@@ -40,7 +40,7 @@ public interface SourceJavadocAttacherImplementation {
     /**
      * Attaches a source root provided by this SPI to given binary root.
      * @param root the binary root to attach sources to
-     * @param a listener notified about result when attaching is done
+     * @param listener a listener notified about result when attaching is done
      * @throws IOException in case of error
      */
     boolean attachSources(
@@ -50,7 +50,7 @@ public interface SourceJavadocAttacherImplementation {
     /**
      * Attaches a javadoc root provided by this SPI to given binary root.
      * @param root the binary root to attach javadoc to
-     * @param a listener notified about result when attaching is done
+     * @param listener a listener notified about result when attaching is done
      * @throws IOException in case of error
      */
     boolean attachJavadoc(

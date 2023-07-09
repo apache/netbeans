@@ -44,6 +44,7 @@ import org.openide.util.NbBundle;
 public class DatabaseNode extends OCINode {
 
     private static final String DB_ICON = "org/netbeans/modules/cloud/oracle/resources/database.svg"; // NOI18N
+    private static final String SERVICE_CONSOLE_SUFFIX = "admin/_sdw/"; // NOI18N
 
     public DatabaseNode(DatabaseItem dbSummary) {
         super(dbSummary, Children.LEAF);
@@ -79,9 +80,9 @@ public class DatabaseNode extends OCINode {
                     .map(d -> {
                         List<DatabaseConnectionStringProfile> profiles = d.getConnectionStrings().getProfiles();
                         DatabaseItem item = new DatabaseItem(
-                                OCID.of(d.getId(), "Database"), //NOI18N
+                                OCID.of(d.getId(), "Databases"), //NOI18N
                                 d.getDbName(),
-                                d.getServiceConsoleUrl(),
+                                d.getConnectionUrls().getOrdsUrl()+SERVICE_CONSOLE_SUFFIX,
                                 getConnectionName(profiles));
                         StringBuilder sb = new StringBuilder();
                         sb.append(Bundle.LBL_WorkloadType(d.getDbWorkload().getValue()));

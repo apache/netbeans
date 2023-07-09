@@ -33,6 +33,7 @@ import org.netbeans.modules.mercurial.HgModuleConfig;
 import org.netbeans.modules.mercurial.util.HgRepositoryContextCache;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -127,7 +128,7 @@ public class HgProperties implements ListSelectionListener {
                             if (bPropChanged && hgPropertyValue.trim().length() >= 0) {
                                 if (hgPropertyName.equals(HGPROPNAME_USERNAME) &&
                                         !HgModuleConfig.getDefault().isUserNameValid(hgPropertyValue)) {
-                                    JOptionPane.showMessageDialog(null,
+                                    JOptionPane.showMessageDialog(Utilities.findDialogParent(),
                                             NbBundle.getMessage(HgProperties.class, "MSG_WARN_USER_NAME_TEXT"), // NOI18N
                                             NbBundle.getMessage(HgProperties.class, "MSG_WARN_FIELD_TITLE"), // NOI18N
                                             JOptionPane.WARNING_MESSAGE);

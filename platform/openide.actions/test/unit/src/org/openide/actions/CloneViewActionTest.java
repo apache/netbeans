@@ -89,7 +89,7 @@ public class CloneViewActionTest extends NbTestCase {
      * Test getHelpCtx method. 
      */ 
     public void testGetHelpCtx() { 
-        HelpCtx expected = new HelpCtx(CloneViewAction.class);; 
+        HelpCtx expected = new HelpCtx(CloneViewAction.class);
         HelpCtx result   = instance.getHelpCtx(); 
          
         assertEquals(expected, result); 

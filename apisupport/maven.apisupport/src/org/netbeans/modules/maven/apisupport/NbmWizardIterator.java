@@ -30,6 +30,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -66,12 +67,12 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
     static {
         NB_MODULE_ARCH = new Archetype();
         NB_MODULE_ARCH.setGroupId("org.apache.netbeans.archetypes"); //NOI18N
-        NB_MODULE_ARCH.setVersion("1.17"); //NOI18N
+        NB_MODULE_ARCH.setVersion("1.18"); //NOI18N
         NB_MODULE_ARCH.setArtifactId("nbm-archetype"); //NOI18N
 
         NB_APP_ARCH = new Archetype();
         NB_APP_ARCH.setGroupId("org.apache.netbeans.archetypes"); //NOI18N
-        NB_APP_ARCH.setVersion("1.22"); //NOI18N
+        NB_APP_ARCH.setVersion("1.23"); //NOI18N
         NB_APP_ARCH.setArtifactId("netbeans-platform-app-archetype"); //NOI18N
 
     }
@@ -118,17 +119,20 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
             };
     }
 
-    private static void getLatestArchetypeVersion(Archetype archetype) {
+    // non blocking
+    private static void updateToLatestKnownArchetypeVersion(Archetype archetype) {
         RepositoryQueries.Result<NBVersionInfo> versionsResult = RepositoryQueries.getVersionsResult(archetype.getGroupId(), archetype.getArtifactId(), null);
-
-        if (versionsResult.isPartial()) {
-            versionsResult.waitForSkipped();
-        }
 
         // Versions are sorted in descending order
         List<NBVersionInfo> results = versionsResult.getResults();
-        if (!results.isEmpty()) {
-            archetype.setVersion(results.get(0).getVersion());
+        for (NBVersionInfo result : results) {
+            String betterVersion = result.getVersion();
+            if (!betterVersion.contains("SNAPSHOT")) { // skip snapshots
+                if (new ComparableVersion(betterVersion).compareTo(new ComparableVersion(archetype.getVersion())) > 0) {
+                    archetype.setVersion(betterVersion);
+                }
+                return;
+            }
         }
     }
 
@@ -145,11 +149,11 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
             Map<String,String> additional = Collections.singletonMap("netbeansVersion", version); // NOI18N
             
             if (archetype == NB_MODULE_ARCH) {
-                getLatestArchetypeVersion(NB_MODULE_ARCH);
+                updateToLatestKnownArchetypeVersion(NB_MODULE_ARCH);
                 NBMNativeMWI.instantiate(vi, projFile, version, Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES)), null);
 
             } else {
-                getLatestArchetypeVersion(NB_APP_ARCH);
+                updateToLatestKnownArchetypeVersion(NB_APP_ARCH);
                 ArchetypeWizards.createFromArchetype(projFile, vi, archetype, additional, true);
                 List<ModelOperation<POMModel>> opers = new ArrayList<>();
                 if (Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES))) {
@@ -199,25 +203,12 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
                     NBMNativeMWI.instantiate(nbm, nbm_folder, version, Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES)), mp);
                     if (archetype == NB_APP_ARCH) {
                         File appDir = new File(projFile, "application"); //NOI18N
-                        addModuleToApplication(appDir, new ProjectInfo("${project.groupId}", nbm.artifactId, "${project.version}", nbm.packageName), null); // NOI18N
+                        addModuleToApplication(appDir, new ProjectInfo("${project.groupId}", nbm.artifactId, "${project.version}", nbm.packageName)); // NOI18N
                     }
                 }
             }
             
-            //TODO what is this supposed to do?
-            Set<FileObject> projects = ArchetypeWizards.openProjects(projFile, new File(projFile, "application"));
-            for (FileObject project : projects) {
-                Project prj = ProjectManager.getDefault().findProject(project);
-                if (prj == null) {
-                    continue;
-                }
-                NbMavenProject mprj = prj.getLookup().lookup(NbMavenProject.class);
-                if (mprj == null) {
-                    continue;
-                }
-            }
-            
-            return projects;
+        return ArchetypeWizards.openProjects(projFile, new File(projFile, "application"));
     }
     
     @Override
@@ -320,17 +311,12 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
             Repository repo = model.getFactory().createRepository();
             repo.setId(APACHE_SNAPSHOT_REPO_ID); // NOI18N
             repo.setName("Apache Development Snapshot Repository"); // NOI18N
-            /* Is the following necessary?
-            RepositoryPolicy policy = model.getFactory().createSnapshotRepositoryPolicy();
-            policy.setEnabled(true);
-            repo.setSnapshots(policy);
-            */
             repo.setUrl("https://repository.apache.org/content/repositories/snapshots/"); // NOI18N
             model.getProject().addRepository(repo);
         };
    }
 
-    private static void addModuleToApplication(File file, ProjectInfo nbm, Object object) {
+    private static void addModuleToApplication(File file, ProjectInfo nbm) {
         FileObject appPrjFO = FileUtil.toFileObject(FileUtil.normalizeFile(file));
         if (appPrjFO == null) {
             return;

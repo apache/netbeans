@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.59
+#Version 1.63
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -826,7 +826,7 @@ CLSS public abstract interface static org.netbeans.modules.xml.actions.CollectDT
 
 CLSS public abstract org.netbeans.modules.xml.actions.CollectSystemAction
 cons public init()
-fld protected final java.util.List registeredAction
+fld protected final java.util.List<java.lang.Object> registeredAction
 intf org.openide.util.actions.Presenter$Popup
 meth protected abstract java.lang.Class getActionLookClass()
 meth protected abstract void addRegisteredAction()

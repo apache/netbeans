@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.50
+#Version 1.54
 
 CLSS public abstract interface java.io.Serializable
 
@@ -124,6 +124,7 @@ meth public abstract java.lang.String getSignature()
 
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.JsfSupport
 meth public abstract boolean isJsf22Plus()
+meth public abstract boolean isJsf30Plus()
 meth public abstract java.util.Map<java.lang.String,? extends org.netbeans.modules.web.jsfapi.api.Library> getLibraries()
 meth public abstract org.netbeans.api.java.classpath.ClassPath getClassPath()
 meth public abstract org.netbeans.api.project.Project getProject()

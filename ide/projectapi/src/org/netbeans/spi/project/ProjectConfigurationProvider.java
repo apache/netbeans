@@ -28,7 +28,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
  * Provider of configurations for a project.
  * Should be registered in a project's {@link org.netbeans.api.project.Project#getLookup lookup}.
  * Besides the implementor, only the project UI infrastructure is expected to use this class.
- * @param C the type of configuration created by this provider
+ * @param <C> the type of configuration created by this provider
  *
  * @author Adam Sotona, Jesse Glick
  * @since org.netbeans.modules.projectapi/1 1.11

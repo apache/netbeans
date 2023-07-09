@@ -299,6 +299,9 @@ public class ActionProviderImpl implements ActionProvider {
         for (InternalActionDelegate del : proj.getLookup().lookupAll(InternalActionDelegate.class)) {
             ActionProvider ap = del.getActionProvider();
             if (Arrays.asList(ap.getSupportedActions()).contains(action)) {
+                LOG.log(Level.FINE, "Runnign action {0} through provider {1}", new Object[] {
+                    action, ap
+                });
                 ap.invokeAction(action, lookup);
                 return;
             }

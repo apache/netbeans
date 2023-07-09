@@ -357,7 +357,6 @@ public class WildflyClient {
             Object readDeployments = createReadResourceOperation(cl, deploymentAddressModelNode, true, true);
             // ModelNode
             Object response = executeOnModelNode(cl, readDeployments);
-            String httpPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
             if (isSuccessfulOutcome(cl, response)) {
                 // ModelNode
                 Object result = readResult(cl, response);
@@ -369,7 +368,7 @@ public class WildflyClient {
                     Object deployment = getModelNodeChild(cl, getModelNodeChild(cl, readResult(cl, application), SUBSYSTEM), WEB_SUBSYSTEM);
                     WildflyModule module = new WildflyModule(applicationName, true);
                     if (modelNodeIsDefined(cl, deployment)) {
-                        String url = "http://" + serverAddress + ':' + httpPort + modelNodeAsString(cl, getModelNodeChild(cl, deployment, "context-root"));
+                        String url = "http://" + serverAddress + ':' + getHttpPort() + modelNodeAsString(cl, getModelNodeChild(cl, deployment, "context-root"));
                         module.setUrl(url);
                     }
                     modules.add(module);
@@ -390,8 +389,7 @@ public class WildflyClient {
             // ModelNode
             Object readDeployments = createReadResourceOperation(cl, deploymentAddressModelNode, true, true);
             // ModelNode
-            Object response = executeOnModelNode(cl, readDeployments);
-            String httpPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
+            Object response = executeOnModelNode(cl, readDeployments);   
             if (isSuccessfulOutcome(cl, response)) {
                 // ModelNode
                 Object result = readResult(cl, response);
@@ -403,7 +401,7 @@ public class WildflyClient {
                         // ModelNode
                         Object deployment = getModelNodeChild(cl, getModelNodeChild(cl, readResult(cl, application), SUBSYSTEM), WEB_SUBSYSTEM);
                         if (modelNodeIsDefined(cl, deployment)) {
-                            String url = "http://" + serverAddress + ':' + httpPort + modelNodeAsString(cl, getModelNodeChild(cl, deployment, "context-root"));
+                            String url = "http://" + serverAddress + ':' + getHttpPort() + modelNodeAsString(cl, getModelNodeChild(cl, deployment, "context-root"));
                             modules.add(new WildflyWebModuleNode(applicationName, lookup, url));
                         } else {
                             modules.add(new WildflyWebModuleNode(applicationName, lookup, null));
@@ -426,7 +424,6 @@ public class WildflyClient {
             Object readDeployments = createReadResourceOperation(cl, deploymentAddressModelNode, true, true);
             // ModelNode
             Object response = executeOnModelNode(cl, readDeployments);
-            String httpPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
             if (isSuccessfulOutcome(cl, response)) {
                 // ModelNode
                 Object result = readResult(cl, response);
@@ -435,7 +432,7 @@ public class WildflyClient {
                     // ModelNode
                     Object deployment = getModelNodeChild(cl, getModelNodeChild(cl, result, SUBSYSTEM), WEB_SUBSYSTEM);
                     if (modelNodeIsDefined(cl, deployment)) {
-                        return "http://" + serverAddress + ':' + httpPort + modelNodeAsString(cl, getModelNodeChild(cl, deployment, "context-root")); // NOI18N
+                        return "http://" + serverAddress + ':' + getHttpPort() + modelNodeAsString(cl, getModelNodeChild(cl, deployment, "context-root")); // NOI18N
                     }
                 } else if (applicationName.endsWith(".ear")) { // NOI18N
                     Object subdeployment = getModelNodeChild(cl, result, Constants.SUBDEPLOYMENT);
@@ -447,7 +444,7 @@ public class WildflyClient {
                                 Object deployment = getModelNodeChild(cl, getModelNodeChild(cl, child, SUBSYSTEM), WEB_SUBSYSTEM);
                                 if (modelNodeIsDefined(cl, deployment)) {
                                     return "http://" + serverAddress + ':' // NOI18N
-                                            + httpPort + modelNodeAsString(cl, getModelNodeChild(cl, deployment, "context-root")); // NOI18N
+                                            + getHttpPort() + modelNodeAsString(cl, getModelNodeChild(cl, deployment, "context-root")); // NOI18N
                                 }
                             }
                         }
@@ -968,7 +965,7 @@ public class WildflyClient {
             // ModelNode
             Object response = executeOnModelNode(cl, readJaxrsResources);
             if (isSuccessfulOutcome(cl, response)) {
-                String serverUrl = "http://" + serverAddress + ':' + ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
+                String serverUrl = "http://" + serverAddress + ':' + getHttpPort();
                 // List<ModelNode>
                 Object result = readResult(cl, response);
                 if (modelNodeIsDefined(cl, result)) {
@@ -1053,7 +1050,7 @@ public class WildflyClient {
             Object readDeployments = createReadResourceOperation(cl, deploymentAddressModelNode, true, true);
             Object response = executeOnModelNode(cl, readDeployments);
             if (isSuccessfulOutcome(cl, response)) {
-                String httpPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
+                int httpPort = getHttpPort();
                 Object result = readResult(cl, response);
                 List subDeployments = modelNodeAsList(cl, getModelNodeChild(cl, result, "subdeployment"));
                 for (Object subDeployment : subDeployments) {
@@ -1371,5 +1368,15 @@ public class WildflyClient {
             return MESSAGING_ACTIVEMQ_SERVER_TYPE;
         }
         return HORNETQ_SERVER_TYPE;
+    }
+
+    private int getHttpPort() {
+        String httpPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
+        String offSet = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET);
+        int port = Integer.parseInt(httpPort);
+        if (offSet != null) {
+            port = port + Integer.parseInt(offSet);
+        }
+        return port;
     }
 }

@@ -256,7 +256,7 @@ public interface PacHelperMethodsNetscape {
      * <br>
      * @param args up to max 3 arguments
      * @return 
-     * @see org.netbeans.network.proxy.pac.datetime.PacUtilsDateTime#WEEKDAY_NAMES
+     * @see org.netbeans.core.network.proxy.pac.datetime.PacUtilsDateTime#WEEKDAY_NAMES
      */
     public boolean weekdayRange(Object... args);
 
@@ -279,7 +279,6 @@ public interface PacHelperMethodsNetscape {
      * Even if not shown above, the {@code gmt} parameter can always be
      * added as an (optional) last parameter.
      * 
-     * <p>
      * <ul>
      *    <li>{@code day} is the day of month between 1 and 31 (as an integer).
      *    </li>
@@ -320,7 +319,7 @@ public interface PacHelperMethodsNetscape {
      *     true from beginning of year 1995 until the end of year 1997.
      * </pre>
      * 
-     * @see org.netbeans.network.proxy.pac.datetime.PacUtilsDateTime#MONTH_NAMES
+     * @see org.netbeans.core.network.proxy.pac.datetime.PacUtilsDateTime#MONTH_NAMES
      * @param args
      * @return 
      */
@@ -339,7 +338,6 @@ public interface PacHelperMethodsNetscape {
      * </pre>
      * Even if not shown above, the {@code gmt} parameter can always be
      * added as an (optional) last parameter.
-     * <p>
      * <ul>
      *    <li>{@code hour} is the hour from 0 to 23. (0 is midnight, 23 is 11 pm.)
      *    </li>

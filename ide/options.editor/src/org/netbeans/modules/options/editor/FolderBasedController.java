@@ -21,9 +21,11 @@ package org.netbeans.modules.options.editor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -35,6 +37,7 @@ import javax.swing.text.PlainDocument;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
 import org.netbeans.modules.options.editor.spi.OptionsFilter;
+import org.netbeans.modules.options.util.LanguagesComparator;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
@@ -91,6 +94,19 @@ public final class FolderBasedController extends OptionsPanelController implemen
     )
     public static OptionsPanelController markOccurrences() {
         return new FolderBasedController("MarkOccurrences/", "netbeans.optionsDialog.editor.markOccurences", false);
+    }
+
+    @OptionsPanelController.SubRegistration(
+	id="InlineHints",
+        displayName="#CTL_InlineHints_DisplayName",
+        location=OptionsDisplayer.EDITOR,
+        keywords="#KW_InlineHints",
+        keywordsCategory="Editor/InlineHints",
+        position=500
+//        toolTip="#CTL_MarkOccurences_ToolTip"
+    )
+    public static OptionsPanelController inlineHints() {
+        return new FolderBasedController("InlineHints/", "netbeans.optionsDialog.editor.inlineHints", false);
     }
 
     public static OptionsPanelController create (Map args) {
@@ -226,8 +242,13 @@ public final class FolderBasedController extends OptionsPanelController implemen
         Logger.getLogger(FolderBasedController.class.getName()).log(Level.WARNING, "setCurrentSubcategory: cannot open: {0}", subpath);
     }
 
-    Iterable<String> getMimeTypes() {
-        return getMimeType2delegates ().keySet();
+    /**
+     * @return Copy of the list of mime types sorted by display name
+     */
+    List<String> getMimeTypes() {
+        List<String> mimeTypes = new ArrayList<>(getMimeType2delegates().keySet());
+        mimeTypes.sort(LanguagesComparator.INSTANCE);
+        return mimeTypes;
     }
     
     OptionsPanelController getController(String mimeType) {

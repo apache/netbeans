@@ -258,7 +258,7 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
 
             // Construct source by removing <% %> tokens etc.
             StringBuilder sb = new StringBuilder();
-            TokenHierarchy hi = TokenHierarchy.create(source, YamlTokenId.language());
+            TokenHierarchy hi = TokenHierarchy.create(source, YamlLanguage.language());
 
             TokenSequence ts = hi.tokenSequence();
 

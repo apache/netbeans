@@ -32,7 +32,7 @@ import org.netbeans.editor.TokenContextPath;
 * @version 1.00
 * @deprecated Use {@link ELLexer} instead.
 */
-
+@Deprecated
 public class ELTokenContext extends TokenContext {
 
     // Token category-ids

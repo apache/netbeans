@@ -40,6 +40,7 @@ public class ProgressListenerImpl implements ProgressListener {
         this.expectedSource = expectedSource;
     }
 
+    @Override
     public void handleProgressEvent(ProgressEvent evt) {
         if (counter > events.length) {
             TestCase.fail("Event arrive - unregistered listener");

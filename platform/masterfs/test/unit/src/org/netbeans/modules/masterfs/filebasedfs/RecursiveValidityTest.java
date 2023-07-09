@@ -18,15 +18,10 @@
  */
 package org.netbeans.modules.masterfs.filebasedfs;
 
-import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import javax.swing.Action;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.masterfs.providers.BaseAnnotationProvider;

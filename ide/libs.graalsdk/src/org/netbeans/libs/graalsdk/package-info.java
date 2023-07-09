@@ -26,7 +26,7 @@
  * This tutorial shows how to embed the various languages in a
  * NetBeans or even plain Java application via {@link org.netbeans.api.scripting.Scripting} helper methods. This
  * environment lets Java interoperate with standard as well as
- * <a href="http://graalvm.org">GraalVM</a> based
+ * <a href="https://graalvm.org">GraalVM</a> based
  * <em>guest languages</em> via <em>foreign objects</em> and <em>foreign functions</em>.
  * For example Java code
  * can directly access guest language methods, objects, classes,
@@ -46,10 +46,10 @@
  * <h2>Setup</h2>
  *
  * The most advanced features that this API provides work in cooperation with
- * <a href="http://graalvm.org">GraalVM</a>.
+ * <a href="https://graalvm.org">GraalVM</a>.
  * Downloading
- * <a href="http://graalvm.org">GraalVM</a> and running your (NetBeans) application on
- * <a href="http://graalvm.org">GraalVM</a> will give you access to the
+ * <a href="https://graalvm.org">GraalVM</a> and running your (NetBeans) application on
+ * <a href="https://graalvm.org">GraalVM</a> will give you access to the
  * polyglot features highlighted in this tutorial.
  * <p>
  * NetBeans modules are <a href="https://search.maven.org/search?q=org.netbeans.api">
@@ -87,7 +87,7 @@
  * <p>
  * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="listAll"}
  * <p>
- * When the above code snippet is executed on <a href="http://graalvm.org">GraalVM</a> it may print:
+ * When the above code snippet is executed on <a href="https://graalvm.org">GraalVM</a> it may print:
  * <pre>
 Found Oracle Nashorn
 Found Graal.js
@@ -96,18 +96,18 @@ Found GraalVM:llvm
 Found GraalVM:python
  * </pre>
  * e.g. a mixture of standard script engines in the JDK with additional ones
- * provided as <a href="http://graalvm.org">GraalVM</a> languages located
+ * provided as <a href="https://graalvm.org">GraalVM</a> languages located
  * via dedicated implementation of {@link org.netbeans.spi.scripting.EngineProvider}
  * interface
  *
  * <h3>Add a language</h3>
  *
- * <a href="http://graalvm.org">GraalVM</a>
+ * <a href="https://graalvm.org">GraalVM</a>
  * download comes with highly efficient implementations of <em>JavaScript</em>.
  * Additional languages like
- * <a href="https://github.com/graalvm/truffleruby/">Ruby</a>,
- * the <a href="https://github.com/graalvm/fastr/">R</a> and
- * <a href="https://github.com/graalvm/graalpython/">Python</a>
+ * <a href="https://github.com/graalvm/truffleruby">Ruby</a>,
+ * the <a href="https://github.com/graalvm/fastr">R</a> and
+ * <a href="https://github.com/graalvm/graalpython">Python</a>
  * can be installed via the <code>bin/gu</code> <em>Graal Updater</em> tool:
  * <p>
  * <pre>
@@ -135,7 +135,7 @@ Found GraalVM:python
  * <p>
  * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="testHelloWorldInPythonAndJavaScript"}
  * <p>
- * Languages provided by <a href="http://graalvm.org">GraalVM</a> use the
+ * Languages provided by <a href="https://graalvm.org">GraalVM</a> use the
  * {@link javax.script.ScriptEngineManager} created by
  * {@link org.netbeans.libs.graalsdk.Scripting#createManager()} factory
  * method as a connection point to talk to each other and mutually share
@@ -199,7 +199,7 @@ Found GraalVM:python
  *
  * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="callRFunctionFromJava"}
  *
- * Don't forget to install support for the R language into your <a href="http://graalvm.org">GraalVM</a>
+ * Don't forget to install support for the R language into your <a href="https://graalvm.org">GraalVM</a>
  * instance:
  * <p>
  * <pre>
@@ -315,7 +315,7 @@ Found GraalVM:python
  *
  * <h3>View any Object as Map</h3>
  *
- * Each dynamic object coming from a <a href="http://graalvm.org">GraalVM</a>
+ * Each dynamic object coming from a <a href="https://graalvm.org">GraalVM</a>
  * language can be "cast" to a {@link java.util.Map}. Here is an example:
  *
  * <p>

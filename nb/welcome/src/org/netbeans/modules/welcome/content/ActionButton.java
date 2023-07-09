@@ -40,7 +40,7 @@ public class ActionButton extends LinkButton {
         this.action = a;
         this.urlString = urlString;
         Object icon = a.getValue( Action.SMALL_ICON );
-        if( null != icon && icon instanceof Icon )
+        if(icon instanceof Icon)
             setIcon( (Icon)icon );
         Object tooltip = a.getValue( Action.SHORT_DESCRIPTION );
         if( null != tooltip )

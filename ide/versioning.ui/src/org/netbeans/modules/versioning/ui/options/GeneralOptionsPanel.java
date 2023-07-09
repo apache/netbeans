@@ -203,7 +203,7 @@ final class GeneralOptionsPanel extends javax.swing.JPanel implements ActionList
 
     void load () {
         fillVersioningSystems();
-        originalLabels = VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false);
+        originalLabels = VersioningSupport.isTextAnnotationVisible();
         cbShowLabels.setSelected(originalLabels);
         cmbVersioningSystems.setSelectedIndex(selectedIndex);
         for (int i = 0; i < cmbVersioningSystems.getItemCount(); i++) {

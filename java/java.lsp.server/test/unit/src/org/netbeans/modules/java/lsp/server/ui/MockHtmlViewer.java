@@ -54,12 +54,12 @@ public final class MockHtmlViewer extends AbstractLspHtmlViewer {
                 MockTech.exception(ctx, ex);
             }
             data.put(key, ctx);
-            ui.showHtmlPage(new HtmlPageParams(key));
+            ui.showHtmlPage(new HtmlPageParams(key, null));
         });
     }
 
-    public static <T> T assertDialogShown(String uri, Class<T> clazz) {
-        Object v = MockTech.applied(data.get(uri));
+    public static <T> T assertDialogShown(String id, Class<T> clazz) {
+        Object v = MockTech.applied(data.get(id));
         if (v instanceof Exception) {
             throw new AssertionError((Exception)v);
         }

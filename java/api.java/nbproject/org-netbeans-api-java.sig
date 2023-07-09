@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.82
+#Version 1.86
 
 CLSS public abstract interface java.io.Serializable
 
@@ -430,7 +430,9 @@ hfds cs,delegate,spiListener
 
 CLSS public org.netbeans.api.java.queries.UnitTestForSourceQuery
 meth public static java.net.URL findSource(org.openide.filesystems.FileObject)
+ anno 0 java.lang.Deprecated()
 meth public static java.net.URL findUnitTest(org.openide.filesystems.FileObject)
+ anno 0 java.lang.Deprecated()
 meth public static java.net.URL[] findSources(org.openide.filesystems.FileObject)
 meth public static java.net.URL[] findUnitTests(org.openide.filesystems.FileObject)
 supr java.lang.Object
@@ -661,6 +663,7 @@ meth public abstract org.netbeans.api.java.queries.SourceLevelQuery$Profile getP
  anno 0 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.spi.java.queries.UnitTestForSourceQueryImplementation
+ anno 0 java.lang.Deprecated()
 meth public abstract java.net.URL findSource(org.openide.filesystems.FileObject)
 meth public abstract java.net.URL findUnitTest(org.openide.filesystems.FileObject)
 

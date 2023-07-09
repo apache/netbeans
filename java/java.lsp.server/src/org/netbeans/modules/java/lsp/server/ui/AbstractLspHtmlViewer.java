@@ -18,15 +18,13 @@
  */
 package org.netbeans.modules.java.lsp.server.ui;
 
-import java.net.URL;
-import net.java.html.js.JavaScriptBody;
+import java.io.IOException;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
-import org.netbeans.modules.java.lsp.server.htmlui.Browser;
-import org.netbeans.modules.java.lsp.server.htmlui.Browser.Config;
 import org.netbeans.modules.java.lsp.server.htmlui.Buttons;
 import static org.netbeans.modules.java.lsp.server.htmlui.Buttons.buttonName0;
 import static org.netbeans.modules.java.lsp.server.htmlui.Buttons.buttonText0;
+import org.netbeans.modules.java.lsp.server.htmlui.WebView;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.netbeans.modules.java.lsp.server.protocol.UIContext;
@@ -41,7 +39,6 @@ import org.openide.util.NbBundle;
  * @since 1.14
  */
 public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewer.View, Object> {
-    private final Config initial = new Config();
 
     protected AbstractLspHtmlViewer() {
     }
@@ -95,7 +92,7 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
     protected final class View {
         final Context ctx;
         private final UIContext ui;
-        private Browser presenter;
+        private WebView presenter;
 
         private View(UIContext ui, Context ctx) {
             this.ui = ui;
@@ -121,12 +118,14 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
                 notifyClose();
                 return;
             }
-            URL pageUrl = ctx.getPage();
-            Browser.Config c = initial.clone();
-            c.browser((page) -> {
+            presenter = new WebView((page) -> {
                 try {
-                    ui.showHtmlPage(new HtmlPageParams(page.toASCIIString())).thenAccept((t) -> {
-                        final Browser p = presenter;
+                    HtmlPageParams params = new HtmlPageParams(page.getId(), page.getText());
+                    if (!page.getResources().isEmpty()) {
+                        params = params.setResources(page.getResources());
+                    }
+                    ui.showHtmlPage(params).thenAccept((t) -> {
+                        final WebView p = presenter;
                         if (p == null) {
                             return;
                         }
@@ -137,7 +136,7 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
                         }
                         try {
                             p.close();
-                        } catch (Exception ex) {
+                        } catch (IOException ex) {
                             Exceptions.printStackTrace(ex);
                         } finally {
                             presenter = null;
@@ -151,16 +150,7 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
                     Exceptions.printStackTrace(ex);
                 }
             });
-            presenter = new Browser(c);
-            presenter.displayPage(pageUrl, () -> {
-                Buttons.registerCloseWindow();
-                try {
-                    ctx.onPageLoad();
-                } catch (Exception ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            });
-
+            presenter.displayPage(ctx);
         }
     }
 }

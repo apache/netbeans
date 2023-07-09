@@ -36,7 +36,6 @@ public interface WelcomeFileList extends org.netbeans.modules.j2ee.dd.api.common
          */
 	public java.lang.String getWelcomeFile(int index);
         /** Setter for welcome-file property.
-         * @param index position in the array of welcome-files
          * @param value array of welcome-file properties
          */
 	public void setWelcomeFile(java.lang.String[] value);

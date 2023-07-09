@@ -28,7 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
-import junit.framework.Assert;
 import org.netbeans.ModuleManager;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -83,7 +82,7 @@ public class FXMLCompletionTestBase extends NbTestCase {
     static {
         FXMLCompletionTestBase.class.getClassLoader().setDefaultAssertionStatus(true);
         System.setProperty("org.openide.util.Lookup", Lkp.class.getName());
-        Assert.assertEquals(Lkp.class, Lookup.getDefault().getClass());
+        assertEquals(Lkp.class, Lookup.getDefault().getClass());
 
         SourceUtilsTestUtil2.disableArtificalParameterNames();
     }
@@ -100,7 +99,7 @@ public class FXMLCompletionTestBase extends NbTestCase {
         
         @SuppressWarnings("LeakingThisInConstructor")
         public Lkp() {
-            Assert.assertNull(DEFAULT);
+            assertNull(DEFAULT);
             DEFAULT = this;
         }
         

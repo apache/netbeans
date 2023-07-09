@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.20.0
+#Version 2.3.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -15,6 +15,12 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractDiagnosticReporter
+cons public init()
+intf org.netbeans.spi.lsp.DiagnosticReporter
+meth public org.netbeans.api.lsp.Diagnostic$ReporterControl findDiagnosticControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)
+supr java.lang.Object
+
 CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractDialogDisplayer
 cons public init()
 meth public <%0 extends org.openide.NotifyDescriptor> java.util.concurrent.CompletableFuture<{%%0}> notifyFuture({%%0})
@@ -22,7 +28,7 @@ meth public java.awt.Dialog createDialog(org.openide.DialogDescriptor)
 meth public java.lang.Object notify(org.openide.NotifyDescriptor)
 meth public void notifyLater(org.openide.NotifyDescriptor)
 supr org.openide.DialogDisplayer
-hfds context
+hfds LOG
 
 CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractGlobalActionContext
 cons public init()
@@ -54,7 +60,6 @@ meth public void runLater(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtm
 meth public void setEnabled(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Object,boolean)
 meth public void setText(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Object,java.lang.String)
 supr java.lang.Object
-hfds initial
 
 CLSS protected final org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View
  outer org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer
@@ -195,6 +200,12 @@ meth public abstract {org.netbeans.spi.io.InputOutputProvider%3} startFold({org.
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface org.netbeans.spi.lsp.DiagnosticReporter
+meth public abstract org.netbeans.api.lsp.Diagnostic$ReporterControl findDiagnosticControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
 
 CLSS public abstract interface org.netbeans.spi.project.ui.ProjectProblemsImplementation
 meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> showAlert(org.netbeans.api.project.Project)

@@ -128,6 +128,15 @@ public abstract class JavaCompletionItem implements CompletionItem {
         }
     }
 
+    public static JavaCompletionItem createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars) {
+        if(elem.getKind() == ElementKind.RECORD) {
+            return new RecordPatternItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew);
+        }
+        else {
+            throw new IllegalArgumentException("kind=" + elem.getKind());
+        }
+    }
+
     public static JavaCompletionItem createArrayItem(CompilationInfo info, ArrayType type, int substitutionOffset, ReferencesCount referencesCount, Elements elements, WhiteListQuery.WhiteList whiteList) {
         int dim = 0;
         TypeMirror tm = type;
@@ -1336,7 +1345,51 @@ public abstract class JavaCompletionItem implements CompletionItem {
             return icon;
         }
     }
-    
+
+    static class RecordPatternItem extends ClassItem {
+
+        private String simpleName;
+        private String recordParams;
+
+        private RecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int dim, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew) {
+            super(info, elem, type, dim, substitutionOffset, referencesCount, isDeprecated, insideNew, false, false, false, false, null);
+            simpleName = elem.getSimpleName().toString();
+            Iterator<? extends RecordComponentElement> it = elem.getRecordComponents().iterator();
+            StringBuilder sb = new StringBuilder();
+            RecordComponentElement recordComponent;
+            String name;
+            sb.append("(");
+            while (it.hasNext()) {
+                recordComponent = it.next();
+                name = recordComponent.getAccessor().getReturnType().toString();
+                name = name.substring(name.lastIndexOf(".") + 1);
+                sb.append(name);
+                sb.append(" ");
+                sb.append(recordComponent.getSimpleName().toString());
+                if (it.hasNext()) {
+                    sb.append(", "); //NOI18N
+                }
+            }
+            sb.append(")");
+            recordParams = sb.toString();
+        }
+
+        @Override
+        protected CharSequence substituteText(final JTextComponent c, final int offset, final int length, final CharSequence text, final CharSequence toAdd) {
+            return recordParams;
+        }
+
+        @Override
+        protected String getLeftHtmlText() {
+            return simpleName + recordParams;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return 650;
+        }
+    }
+
     static class AnnotationTypeItem extends ClassItem {
 
         private static final String ANNOTATION = "org/netbeans/modules/editor/resources/completion/annotation_type.png"; // NOI18N

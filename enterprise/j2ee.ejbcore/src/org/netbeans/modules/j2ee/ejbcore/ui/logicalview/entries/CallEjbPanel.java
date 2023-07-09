@@ -76,7 +76,7 @@ import org.openide.util.RequestProcessor;
  *
  * @author Chris Webster
  * @author Martin Adamek
- * @Petr Slechta
+ * @author Petr Slechta
  */
 public class CallEjbPanel extends javax.swing.JPanel {
 

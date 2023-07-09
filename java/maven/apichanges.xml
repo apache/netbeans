@@ -83,6 +83,34 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="runutils-createconfig-action">
+            <api name="general"/>
+            <summary></summary>
+            <version major="2" minor="157"/>
+            <date day="23" month="1" year="2023"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                Added a <a href="@TOP@/org/netbeans/modules/maven/api/execute/RunUtils.html#createRunConfig-java.lang.String-org.netbeans.api.project.Project-org.netbeans.spi.project.ProjectConfiguration-org.openide.util.Lookup-">
+                RunUtils.createRunConfig()</a> variant that allows to create a <a href="@TOP@/org/netbeans/modules/maven/api/execute/RunConfig.html">RunConfig</a> for a project-defined action. 
+                Clients can use this function to use all user customizations that may have been configured for the project action before executing it using 
+                <a href="@TOP@/org/netbeans/modules/maven/api/execute/RunUtils.html#run-org.netbeans.modules.maven.api.execute.RunConfig-">RunUtils.run</a>.
+            </description>
+            <class package="org.netbeans.modules.maven.api.execute" name="RunUtils"/>
+        </change>
+        <change id="lifecycle-white-list">
+            <api name="general"/>
+            <summary>LifecycleParticipants can be ignored</summary>
+            <version major="2" minor="156"/>
+            <date day="9" month="9" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                NetBeans warns if a project / plugin provides AbstractLifecycleParticipants that
+                can reconfigure the project after load. Now some harmless ones can be whitelisted
+                so they do not produce warning / project problem. See <a href="@TOP@/architecture-summary.html#layer-LifecycleParticipants">LifecycleParticipants</a>.
+            </description>
+        </change>
         <change id="evaluated-project">
             <api name="general"/>
             <summary>Project model can be customized for specific action or usage</summary>

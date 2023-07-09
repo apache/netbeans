@@ -102,7 +102,7 @@ public final class DefaultLibraryImplementation implements LibraryImplementation
         if (path == null) {
             throw new IllegalArgumentException ();
         }
-        if (this.contents.keySet().contains(contentType)) {
+        if (this.contents.containsKey(contentType)) {
             this.contents.put(contentType, new ArrayList<URL>(path));
             this.firePropertyChange(PROP_CONTENT,null,null);
         } else {

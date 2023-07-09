@@ -123,7 +123,7 @@
         </condition>
     </target>
     <target name="-init-bootclasspath-prepend-run9" depends="-init-bootclasspath-prepend-compile" if="have-jdk-1.9">
-        <condition property="test.bootclasspath.prepend.args" value="--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming,jdk.jdi">
+        <condition property="test.bootclasspath.prepend.args" value="--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming,jdk.jdi,jdk.unsupported">
             <and>
                 <istrue value="${requires.nb.javac}"/>
                 <not>

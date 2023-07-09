@@ -27,9 +27,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.api.j2ee.core.Profile;
-
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;

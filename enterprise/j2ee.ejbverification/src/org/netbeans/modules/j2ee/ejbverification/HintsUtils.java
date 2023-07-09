@@ -119,7 +119,8 @@ public class HintsUtils {
     public static boolean isEjb30Plus(String ejbVersion) {
         return org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_3_0.equals(ejbVersion)
                 || org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_3_1.equals(ejbVersion)
-                || org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_3_2.equals(ejbVersion);
+                || org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_3_2.equals(ejbVersion)
+                || org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_4_0.equals(ejbVersion);
     }
 
     /**

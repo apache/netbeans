@@ -46,30 +46,37 @@ public class TomcatDatasource implements Datasource {
         this.driverClassName = driverClassName;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
 
+    @Override
     public String getUrl() {
         return url;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
 
+    @Override
     public String getJndiName() {
         return jndiName;
     }
 
+    @Override
     public String getDriverClassName() {
         return driverClassName;
     }
 
+    @Override
     public String getDisplayName() {
         return jndiName + " [" + url + "]"; // NOI18N
     }
     
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -96,6 +103,7 @@ public class TomcatDatasource implements Datasource {
         return true;
     }
     
+    @Override
     public int hashCode() {
         if (hash == 0) {
             int result = 17;
@@ -109,6 +117,7 @@ public class TomcatDatasource implements Datasource {
         return hash;
     }
     
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("TomcatDatasource [username=").append(username); // NOI18N

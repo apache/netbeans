@@ -29,6 +29,7 @@ import java.util.function.Supplier;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.lsp.Command;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.modules.lsp.CompletionAccessor;
@@ -99,6 +100,7 @@ public interface CompletionCollector {
         private String insertText;
         private Completion.TextFormat insertTextFormat;
         private TextEdit textEdit;
+        private Command command;
         private CompletableFuture<List<TextEdit>> additionalTextEdits;
         private List<Character> commitCharacters;
 
@@ -248,7 +250,7 @@ public interface CompletionCollector {
         /**
          * The format of the insert text. The format applies to both the
          * {@code insertText} property and the {@code newText} property of a provided
-         * {@code textEdit}. If omitted defaults to {@link TextFormat#PlainText}.
+         * {@code textEdit}. If omitted defaults to {@link org.netbeans.api.lsp.Completion.TextFormat#PlainText}.
          *
          * @since 1.0
          */
@@ -273,6 +275,16 @@ public interface CompletionCollector {
             return this;
         }
 
+        /**
+	 * An optional command that is executed after inserting this completion.
+         *
+         * @since 1.17
+	 */
+        @NonNull
+        public Builder command(@NonNull Command command) {
+            this.command = command;
+            return this;
+        }
         /**
          * A list of additional text edits that are applied when selecting this
          * completion. Edits must not overlap (including the same insert position)
@@ -334,7 +346,7 @@ public interface CompletionCollector {
         public Completion build() {
             return CompletionAccessor.getDefault().createCompletion(label, kind,
                     tags, detail, documentation, preselect, sortText, filterText,
-                    insertText, insertTextFormat, textEdit, additionalTextEdits,
+                    insertText, insertTextFormat, textEdit, command, additionalTextEdits,
                     commitCharacters);
         }
 

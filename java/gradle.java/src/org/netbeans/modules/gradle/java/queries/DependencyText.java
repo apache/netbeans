@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.netbeans.modules.gradle.api.GradleDependency;
 import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.DependencyResult;
 
@@ -105,6 +104,19 @@ class DependencyText {
         }
         sb.append(" [").append(startPos).append(", ").append(endPos).append("]}");
         return sb.toString();
+    }
+    
+    public String getContentsOrGav() {
+        if (contents != null) {
+            return contents;
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append(group).append(':').append(name);
+            if (version != null && !version.isEmpty()) {
+                sb.append(':').append(version);
+            }
+            return sb.toString();
+        }
     }
 
     /**

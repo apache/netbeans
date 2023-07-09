@@ -109,4 +109,9 @@ public class OptionsCategoryImpl extends OptionsCategory {
 	    return Collections.emptySet();
 	}
     }
+
+    @Override
+    public String toString() {
+        return "OptionsCategoryImpl{" + "title=" + title + ", categoryName=" + categoryName + ", iconBase=" + iconBase + ", icon=" + icon + ", controller=" + controller + ", keywords=" + keywords + ", keywordsCategory=" + keywordsCategory + ", advancedOptionsFolder=" + advancedOptionsFolder + '}';
+    }
 }

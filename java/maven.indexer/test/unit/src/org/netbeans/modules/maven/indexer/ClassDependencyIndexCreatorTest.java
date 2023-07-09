@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -86,7 +85,7 @@ public class ClassDependencyIndexCreatorTest extends NexusTestBase {
 
         // repo set up, now index and query:
         nrii.indexRepo(info);
-        List<RepositoryInfo> repo = Collections.singletonList(info);
+        List<RepositoryInfo> repo = List.of(info);
 
         List<ClassUsage> list = nrii.findClassUsages("mod1.API", repo).getResults();
         assertEquals("[test:mod2:0:test[mod2.Client, mod2.OtherClient], test:mod3:0:test[mod3.Client]]", list.toString());
@@ -128,7 +127,7 @@ public class ClassDependencyIndexCreatorTest extends NexusTestBase {
         install(mod2v2, "test", "mod2", "43", "jar");
 
         nrii.indexRepo(info);
-        List<RepositoryInfo> repo = Collections.singletonList(info);
+        List<RepositoryInfo> repo = List.of(info);
 
         // single version
         List<NBVersionInfo> list = nrii.findVersionsByClass("mod1.API", repo).getResults();

@@ -171,7 +171,6 @@ final class EditorSupportLineSet extends DocumentLine.Set {
 
         /** Constructor.
         * @param support support to work with
-        * @param doc document to use
         */
         public Closed(CloneableEditorSupport support) {
             this.support = support;

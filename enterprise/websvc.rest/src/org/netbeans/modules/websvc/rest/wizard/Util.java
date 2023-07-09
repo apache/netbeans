@@ -864,7 +864,7 @@ public class Util {
     }
     
     private static String capitalizeFirstLetter(String str) {
-        return str.substring(0, 1).toUpperCase() + str.substring(1, str.length());
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
     
     private static void addXmlTransientAnnotation(WorkingCopy workingCopy, 

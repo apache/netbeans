@@ -36,7 +36,7 @@ public class ProjectAppClientProvider implements CarProvider, CarsInProject {
     
     public Car findCar (FileObject file) {
         Project project = FileOwnerQuery.getOwner (file);
-        if (project != null && project instanceof AppClientProject) {
+        if (project instanceof AppClientProject) {
             return ((AppClientProject) project).getAPICar();
         }
         return null;

@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
@@ -50,6 +49,7 @@ import org.netbeans.modules.css.editor.module.spi.CssEditorModule;
 import org.netbeans.modules.css.lib.TestUtil;
 import org.netbeans.modules.css.lib.api.CssParserResult;
 import org.netbeans.modules.css.lib.api.NodeUtil;
+import org.netbeans.modules.css.lib.api.properties.GrammarElement;
 import org.netbeans.modules.css.lib.api.properties.GroupGrammarElement;
 import org.netbeans.modules.css.lib.api.properties.Node;
 import org.netbeans.modules.css.lib.api.properties.Properties;
@@ -66,7 +66,6 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 
 /**
@@ -139,7 +138,7 @@ public class CssModuleTestBase extends CslTestBase {
             System.out.println("Tokens:");
             System.out.println(dumpList(pv.getTokens()));
             System.out.println("Grammar:");
-            System.out.println(tree.toString2(0));
+            System.out.println(dumpGETree(tree));
         }
         if (PRINT_GRAMMAR_RESOLVE_TIMES) {
             System.out.println(String.format("Input '%s' resolved in %s ms.", inputText, c - a));
@@ -603,6 +602,46 @@ public class CssModuleTestBase extends CslTestBase {
         @Override
         public boolean isCaseSensitive() {
             return isCaseSensitive;
+        }
+    }
+
+    protected static final String dumpGETree(GrammarElement ge) {
+        StringBuilder result = new StringBuilder();
+        dumpTree(result, ge, new ArrayList<>());
+        return result.toString();
+    }
+
+    private static final void dumpTree(StringBuilder sb, GrammarElement ge, List<GrammarElement> parentList) {
+        int level = parentList.size();
+        if (ge instanceof GroupGrammarElement) {
+            List<GrammarElement> newParentList = new ArrayList<>(parentList.size() + 1);
+            newParentList.addAll(parentList);
+            newParentList.add(ge);
+            String heading = ge.toString();
+            heading = heading.substring(0, heading.length() - 1);
+            indentString(sb, level);
+            sb.append(heading);
+            if (ge.getName() != null) {
+                sb.append("(").append(ge.getName()).append(") "); //NOI18N
+            }
+
+            sb.append('\n');
+            for (GrammarElement e : ((GroupGrammarElement) ge).elements()) {
+                dumpTree(sb, e, newParentList);
+                sb.append('\n');
+            }
+            indentString(sb, level);
+            sb.append(']');
+        } else {
+            sb.append(level);
+            sb.append(ge.toString());
+            sb.append("\n");
+        }
+    }
+
+    private static void indentString(StringBuilder sb, int level) {
+        for (int i = 0; i < level; i++) {
+            sb.append('\t');
         }
     }
 }

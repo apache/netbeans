@@ -418,12 +418,12 @@ public class HTTPComponentValidator
         boolean isValidToken = true;
         if(tokenString.startsWith("http://")) {
             //strip off the protocol stuff
-            tokenString = tokenString.substring(7, tokenString.length());
+            tokenString = tokenString.substring(7);
             containsProtocolInfo = true;
         }
         if(tokenString.startsWith("https://")) {
             //strip off the protocol stuff
-            tokenString = tokenString.substring(8, tokenString.length());
+            tokenString = tokenString.substring(8);
             containsProtocolInfo = true;
         }
         //No protocol info, it better be of the format ${URL}
@@ -443,7 +443,7 @@ public class HTTPComponentValidator
             //Context separator / exists.
             if(indexOfContextSeparator != -1) {
                 //The token is in the context.
-                String context = tokenString.substring(indexOfContextSeparator+1, tokenString.length());
+                String context = tokenString.substring(indexOfContextSeparator+1);
                 int indexOfContextTokenStart = context.indexOf("${");
                 if(indexOfContextTokenStart == 0) {
                     int indexOfTokenEnd = context.indexOf("}");

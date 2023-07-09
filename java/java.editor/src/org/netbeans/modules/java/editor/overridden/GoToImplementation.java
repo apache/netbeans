@@ -165,6 +165,7 @@ public final class GoToImplementation extends BaseAction {
             case CLASS:
             case ENUM:
             case INTERFACE:
+            case RECORD:
                 elementNameSpan = info.getTreeUtilities().findNameSpan((ClassTree) tp.getLeaf());
                 onDeclaration.set(true);
                 break;
@@ -186,6 +187,7 @@ public final class GoToImplementation extends BaseAction {
         }
     }
 
-    private static Set<ElementKind> SUPPORTED_ELEMENTS = EnumSet.of(ElementKind.METHOD, ElementKind.ANNOTATION_TYPE, ElementKind.CLASS, ElementKind.ENUM, ElementKind.INTERFACE);
+    private static final Set<ElementKind> SUPPORTED_ELEMENTS = EnumSet.of(
+            ElementKind.METHOD, ElementKind.ANNOTATION_TYPE, ElementKind.CLASS, ElementKind.ENUM, ElementKind.INTERFACE, ElementKind.RECORD);
     
 }

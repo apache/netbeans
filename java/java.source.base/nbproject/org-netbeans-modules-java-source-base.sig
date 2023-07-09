@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.56.0
+#Version 2.61.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -18,7 +18,9 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitClass(com.sun.sour
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCompilationUnit(com.sun.source.tree.CompilationUnitTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitConstantCaseLabel(com.sun.source.tree.ConstantCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitContinue(com.sun.source.tree.ContinueTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDeconstructionPattern(com.sun.source.tree.DeconstructionPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitEmptyStatement(com.sun.source.tree.EmptyStatementTree,{com.sun.source.tree.TreeVisitor%1})
@@ -27,7 +29,6 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitErroneous(com.sun.
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitExports(com.sun.source.tree.ExportsTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitExpressionStatement(com.sun.source.tree.ExpressionStatementTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitForLoop(com.sun.source.tree.ForLoopTree,{com.sun.source.tree.TreeVisitor%1})
-meth public abstract {com.sun.source.tree.TreeVisitor%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitIdentifier(com.sun.source.tree.IdentifierTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitIf(com.sun.source.tree.IfTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitImport(com.sun.source.tree.ImportTree,{com.sun.source.tree.TreeVisitor%1})
@@ -50,6 +51,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPackage(com.sun.so
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPatternCaseLabel(com.sun.source.tree.PatternCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.tree.TreeVisitor%1})
@@ -99,7 +101,9 @@ meth public {com.sun.source.util.TreeScanner%0} visitClass(com.sun.source.tree.C
 meth public {com.sun.source.util.TreeScanner%0} visitCompilationUnit(com.sun.source.tree.CompilationUnitTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitConstantCaseLabel(com.sun.source.tree.ConstantCaseLabelTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitContinue(com.sun.source.tree.ContinueTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitDeconstructionPattern(com.sun.source.tree.DeconstructionPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitEmptyStatement(com.sun.source.tree.EmptyStatementTree,{com.sun.source.util.TreeScanner%1})
@@ -108,7 +112,6 @@ meth public {com.sun.source.util.TreeScanner%0} visitErroneous(com.sun.source.tr
 meth public {com.sun.source.util.TreeScanner%0} visitExports(com.sun.source.tree.ExportsTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitExpressionStatement(com.sun.source.tree.ExpressionStatementTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitForLoop(com.sun.source.tree.ForLoopTree,{com.sun.source.util.TreeScanner%1})
-meth public {com.sun.source.util.TreeScanner%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitIdentifier(com.sun.source.tree.IdentifierTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitIf(com.sun.source.tree.IfTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitImport(com.sun.source.tree.ImportTree,{com.sun.source.util.TreeScanner%1})
@@ -131,6 +134,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitPackage(com.sun.source.tree
 meth public {com.sun.source.util.TreeScanner%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitPatternCaseLabel(com.sun.source.tree.PatternCaseLabelTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.util.TreeScanner%1})
@@ -702,6 +706,7 @@ meth public org.netbeans.api.java.source.CodeStyle$WrapStyle wrapTryResources()
 meth public org.netbeans.api.java.source.CodeStyle$WrapStyle wrapWhileStatement()
 meth public static org.netbeans.api.java.source.CodeStyle getDefault(javax.swing.text.Document)
 meth public static org.netbeans.api.java.source.CodeStyle getDefault(org.netbeans.api.project.Project)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.java.source.CodeStyle getDefault(org.openide.filesystems.FileObject)
 supr java.lang.Object
 hfds preferences
@@ -867,6 +872,7 @@ meth public org.netbeans.api.java.source.ClasspathInfo getClasspathInfo()
 meth public org.netbeans.api.java.source.ElementUtilities getElementUtilities()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.api.java.source.JavaSource getJavaSource()
+ anno 0 java.lang.Deprecated()
  anno 0 org.netbeans.api.annotations.common.NullUnknown()
 meth public org.netbeans.api.java.source.JavaSource$Phase getPhase()
  anno 0 org.netbeans.api.annotations.common.NonNull()
@@ -1004,6 +1010,7 @@ meth public com.sun.source.tree.ClassTree insertClassMembers(com.sun.source.tree
 meth public com.sun.source.tree.ClassTree insertClassMembers(com.sun.source.tree.ClassTree,java.util.List<? extends com.sun.source.tree.Tree>,int)
 meth public com.sun.source.tree.CompilationUnitTree addImports(com.sun.source.tree.CompilationUnitTree,java.util.Set<? extends javax.lang.model.element.Element>)
 meth public com.sun.source.tree.CompilationUnitTree createFromTemplate(org.openide.filesystems.FileObject,java.lang.String,javax.lang.model.element.ElementKind) throws java.io.IOException
+meth public com.sun.source.tree.ExpressionTree createDefaultLambdaExpression(com.sun.source.tree.LambdaExpressionTree,javax.lang.model.element.ExecutableElement)
 meth public com.sun.source.tree.MethodTree createAbstractMethodImplementation(javax.lang.model.element.TypeElement,javax.lang.model.element.ExecutableElement)
 meth public com.sun.source.tree.MethodTree createConstructor(com.sun.source.tree.ClassTree,java.lang.Iterable<? extends com.sun.source.tree.VariableTree>)
 meth public com.sun.source.tree.MethodTree createConstructor(javax.lang.model.element.TypeElement,java.lang.Iterable<? extends javax.lang.model.element.VariableElement>,javax.lang.model.element.ExecutableElement)
@@ -1020,7 +1027,7 @@ meth public java.util.List<? extends com.sun.source.tree.MethodTree> createOverr
 meth public static org.netbeans.api.java.source.GeneratorUtilities get(org.netbeans.api.java.source.WorkingCopy)
 meth public void copyComments(com.sun.source.tree.Tree,com.sun.source.tree.Tree,boolean)
 supr java.lang.Object
-hfds CLASS_NAME,DEFAULT_RETURN_TYPE_VALUE,GENERATED_METHOD_BODY,LAMBDA_BODY,METHOD_NAME,METHOD_RETURN_TYPE,OVERRIDDEN_METHOD_BODY,SCRIPT_ENGINE_ATTR,SIMPLE_CLASS_NAME,STRING_OUTPUT_MODE_ATTR,SUPER_METHOD_CALL,copy,manager
+hfds CLASS_NAME,DEFAULT_RETURN_TYPE_VALUE,GENERATED_METHOD_BODY,LAMBDA_BODY,LAMBDA_EXPRESSION,METHOD_NAME,METHOD_RETURN_TYPE,OVERRIDDEN_METHOD_BODY,SCRIPT_ENGINE_ATTR,SIMPLE_CLASS_NAME,STRING_OUTPUT_MODE_ATTR,SUPER_METHOD_CALL,copy,manager
 hcls ClassMemberComparator,FieldRefVisitor,ImportsComparator
 
 CLSS public abstract org.netbeans.api.java.source.JavaParserResultTask<%0 extends org.netbeans.modules.parsing.spi.Parser$Result>
@@ -1209,6 +1216,7 @@ hfds retryGuard
 hcls FinishedFuture,RetryWhenScanFinished,TaskWrapper
 
 CLSS public org.netbeans.api.java.source.SourceUtils
+meth public !varargs static org.openide.filesystems.FileObject getFile(org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,org.netbeans.api.java.source.ClasspathInfo,java.lang.String[])
 meth public static boolean checkTypesAssignable(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.type.TypeMirror,javax.lang.model.type.TypeMirror)
 meth public static boolean isClassFile(org.openide.filesystems.FileObject)
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1217,6 +1225,7 @@ meth public static boolean isMainClass(java.lang.String,org.netbeans.api.java.so
 meth public static boolean isMainMethod(javax.lang.model.element.ExecutableElement)
 meth public static boolean isScanInProgress()
 meth public static java.lang.Object getDiagnosticParam(javax.tools.Diagnostic<?>,int)
+meth public static java.lang.String findSourceFileName(javax.lang.model.element.Element)
 meth public static java.lang.String getModuleName(java.net.URL)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1261,9 +1270,11 @@ meth public static javax.lang.model.type.TypeMirror resolveCapturedType(org.netb
 meth public static javax.lang.model.type.WildcardType resolveCapturedType(javax.lang.model.type.TypeMirror)
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> getJavaTokenSequence(org.netbeans.api.lexer.TokenHierarchy,int)
 meth public static org.openide.filesystems.FileObject getFile(javax.lang.model.element.Element,org.netbeans.api.java.source.ClasspathInfo)
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.filesystems.FileObject getFile(org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,org.netbeans.api.java.source.ClasspathInfo)
 meth public static void forceSource(org.netbeans.api.java.source.CompilationController,org.openide.filesystems.FileObject)
 meth public static void waitScanFinished() throws java.lang.InterruptedException
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds LOG
 hcls CaseInsensitiveMatch,CaseSensitiveMatch,Match
@@ -1377,6 +1388,7 @@ meth public com.sun.source.tree.CompilationUnitTree removePackageAnnotation(com.
 meth public com.sun.source.tree.CompoundAssignmentTree CompoundAssignment(com.sun.source.tree.Tree$Kind,com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree)
 meth public com.sun.source.tree.ConditionalExpressionTree ConditionalExpression(com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree)
 meth public com.sun.source.tree.ContinueTree Continue(java.lang.CharSequence)
+meth public com.sun.source.tree.DeconstructionPatternTree RecordPattern(com.sun.source.tree.ExpressionTree,java.util.List<com.sun.source.tree.PatternTree>,com.sun.source.tree.VariableTree)
 meth public com.sun.source.tree.DoWhileLoopTree DoWhileLoop(com.sun.source.tree.ExpressionTree,com.sun.source.tree.StatementTree)
 meth public com.sun.source.tree.EmptyStatementTree EmptyStatement()
 meth public com.sun.source.tree.EnhancedForLoopTree EnhancedForLoop(com.sun.source.tree.VariableTree,com.sun.source.tree.ExpressionTree,com.sun.source.tree.StatementTree)
@@ -1389,6 +1401,7 @@ meth public com.sun.source.tree.ExpressionTree QualIdent(java.lang.String)
 meth public com.sun.source.tree.ExpressionTree QualIdent(javax.lang.model.element.Element)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public com.sun.source.tree.ExpressionTree createLambdaExpression(com.sun.source.tree.LambdaExpressionTree,java.lang.String)
 meth public com.sun.source.tree.ForLoopTree ForLoop(java.util.List<? extends com.sun.source.tree.StatementTree>,com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.ExpressionStatementTree>,com.sun.source.tree.StatementTree)
 meth public com.sun.source.tree.ForLoopTree addForLoopInitializer(com.sun.source.tree.ForLoopTree,com.sun.source.tree.StatementTree)
 meth public com.sun.source.tree.ForLoopTree addForLoopUpdate(com.sun.source.tree.ForLoopTree,com.sun.source.tree.ExpressionStatementTree)
@@ -1557,6 +1570,7 @@ fld public final static java.util.Set<com.sun.source.tree.Tree$Kind> CLASS_TREE_
 meth public !varargs boolean hasError(com.sun.source.tree.Tree,java.lang.String[])
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public boolean isAccessible(com.sun.source.tree.Scope,javax.lang.model.element.Element,javax.lang.model.type.TypeMirror)
+ anno 0 java.lang.Deprecated()
 meth public boolean isAnnotation(com.sun.source.tree.ClassTree)
  anno 0 java.lang.Deprecated()
 meth public boolean isClass(com.sun.source.tree.ClassTree)
@@ -1717,7 +1731,7 @@ meth public void tag(com.sun.source.tree.Tree,java.lang.Object)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
 supr org.netbeans.api.java.source.CompilationController
-hfds NOT_LINKED,REWRITE_WHOLE_FILE,afterCommit,changes,docChanges,externalChanges,instance,introducedTrees,overlay,rewriteHints,textualChanges,tree2Tag,treeMaker,usedComments,userInfo
+hfds NOT_LINKED,REWRITE_WHOLE_FILE,afterCommit,changes,docChanges,externalChanges,instance,introducedTrees,invalidateSourceAfter,overlay,rewriteHints,textualChanges,tree2Tag,treeMaker,usedComments,userInfo
 hcls CommentReplicator,CopyEntry,Translator,TreeCollector
 
 CLSS public org.netbeans.api.java.source.matching.Matcher

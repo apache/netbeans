@@ -313,7 +313,7 @@ public class SwitcherTable extends JTable {
     /**
      * Overridden to calculate a preferred size based on the current optimal
      * number of columns, and set up the preferred width for each column based
-     * on the maximum width item & icon displayed in it
+     * on the maximum width item &amp; icon displayed in it
      */
     @Override
     public Dimension getPreferredSize() {

@@ -188,6 +188,11 @@ public class ProjectViewTest extends NbTestCase {
         }
 
         @Override
+        public CompletableFuture<String> execInHtmlPage(HtmlPageParams params) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
         public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
             return CompletableFuture.completedFuture(null);
         }
@@ -423,6 +428,8 @@ public class ProjectViewTest extends NbTestCase {
     }
     
     private TreeItem findChild(TreeItem parent, String childLabel) throws Exception {
+        TreeNodeRegistry reg = serverLookup.lookup(TreeNodeRegistry.class);
+        reg.findNode(parent.id).getChildren().getNodes(true);
         for (TreeItem candidate : getChildren(parent)) {
             if (childLabel.equals(candidate.label)) {
                 return candidate;
@@ -571,6 +578,8 @@ public class ProjectViewTest extends NbTestCase {
         
         TreeItem found = findChild(testRoot, "gradle");
         assertNotNull("Test package exists", found);
+        TreeNodeRegistry reg = serverLookup.lookup(TreeNodeRegistry.class);
+        reg.findNode(found.id).getChildren().getNodes(true);
         int[] childIds = server.getTreeViewService().getChildren(new NodeOperationParams(found.id)).get();
         assertEquals("Test package node is not empty", 1, childIds.length);
         

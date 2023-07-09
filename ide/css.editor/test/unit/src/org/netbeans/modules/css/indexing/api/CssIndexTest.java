@@ -127,7 +127,7 @@ public class CssIndexTest extends ProjectTestBase {
             new HashSet<>(asList("dummyId2", "dummyId3", "yetAnotherId")),
             new HashSet<>(idIndex.get(test2Css)));
         assertEquals(
-            new HashSet<>(asList("yetAnotherId")),
+            new HashSet<>(asList("yetAnotherId", "notInCssId")),
             new HashSet<>(idIndex.get(testHtml)));
     }
 

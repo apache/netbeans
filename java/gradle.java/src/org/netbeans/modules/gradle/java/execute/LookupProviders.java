@@ -29,6 +29,7 @@ import org.openide.util.lookup.Lookups;
  * @author lkishalmi
  */
 public class LookupProviders {
+
     @LookupProvider.Registration(projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
     public static LookupProvider createJavaBaseProvider() {
         return new LookupProvider() {
@@ -37,7 +38,6 @@ public class LookupProviders {
                 Project project = baseContext.lookup(Project.class);
                 return Lookups.fixed(
                         new DebugFixHooks(project),
-                        new GradleJavaPlatformProviderImpl(project),
                         new ShowJavadocHook(project)
                 );
             }

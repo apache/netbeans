@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.71
+#Version 1.76
 
 CLSS public abstract interface java.io.Serializable
 
@@ -176,6 +176,20 @@ CLSS public final static org.netbeans.api.autoupdate.OperationSupport$Restarter
  outer org.netbeans.api.autoupdate.OperationSupport
 supr java.lang.Object
 
+CLSS public final org.netbeans.api.autoupdate.PluginInstaller
+cons public init()
+meth public !varargs java.lang.Object install(java.lang.String,java.lang.String,org.openide.util.Lookup,java.lang.Object[])
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+meth public !varargs java.lang.Object install(java.util.Set<java.lang.String>,java.lang.String,org.openide.util.Lookup,java.lang.Object[]) throws org.netbeans.api.autoupdate.OperationException,org.openide.util.UserCancelException
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public java.lang.Object install(java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.api.autoupdate.PluginInstaller getDefault()
+supr java.lang.Object
+hfds INSTANCE,LOG
+
 CLSS public final org.netbeans.api.autoupdate.UpdateElement
 meth public boolean equals(java.lang.Object)
 meth public boolean isEnabled()
@@ -309,6 +323,11 @@ fld public final static org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel 
 meth public static org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel valueOf(java.lang.String)
 meth public static org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel[] values()
 supr java.lang.Enum<org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel>
+
+CLSS public abstract interface org.netbeans.spi.autoupdate.PluginInstallerImplementation
+meth public abstract !varargs java.lang.Object install(java.util.Set<java.lang.String>,java.lang.String,org.openide.util.Lookup,java.lang.Object[]) throws org.netbeans.api.autoupdate.OperationException,org.openide.util.UserCancelException
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public final org.netbeans.spi.autoupdate.UpdateItem
 meth public static org.netbeans.spi.autoupdate.UpdateItem createFeature(java.lang.String,java.lang.String,java.util.Set<java.lang.String>,java.lang.String,java.lang.String,java.lang.String)

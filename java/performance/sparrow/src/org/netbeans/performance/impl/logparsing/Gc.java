@@ -83,7 +83,7 @@ public class Gc extends AbstractLogElement {
         
         seconds = Float.parseFloat(timepart);
         
-        beforePart = beforePart.substring (3, beforePart.length());
+        beforePart = beforePart.substring (3);
         
         initialMemory = Long.parseLong(beforePart);
         resultingMemory = Long.parseLong(afterPart);

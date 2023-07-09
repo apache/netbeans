@@ -227,7 +227,7 @@ public class HtmlLexerTest extends NbTestCase {
         checkTokens("<div {a} align=center>",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}|ARGUMENT",
                 " |WS", "align|ARGUMENT", "=|OPERATOR", "center|VALUE", ">|TAG_CLOSE_SYMBOL");
-        
+
         //in attribute
         checkTokens("<div {a}align=center>",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}align|ARGUMENT",
@@ -236,8 +236,8 @@ public class HtmlLexerTest extends NbTestCase {
         //end line in error
         checkTokens("<div {a}align=center\n <div>",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}align|ARGUMENT",
-                "=|OPERATOR", "center|VALUE", "\n |WS", "<div|ARGUMENT",
-                ">|TAG_CLOSE_SYMBOL");
+                "=|OPERATOR", "center|VALUE", "\n |WS", "<|TAG_OPEN_SYMBOL",
+                "div|TAG_OPEN", ">|TAG_CLOSE_SYMBOL");
         
         // tag close symbol
         checkTokens("<div {a> xxx",
@@ -304,7 +304,7 @@ public class HtmlLexerTest extends NbTestCase {
     public void testIssue213332_2() {
         checkTokens("<div align= </div>",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "align|ARGUMENT", "=|OPERATOR", " |WS", 
-                "<|ARGUMENT", "/|ERROR", "div|ARGUMENT", ">|TAG_CLOSE_SYMBOL");
+                "</|TAG_OPEN_SYMBOL", "div|TAG_CLOSE", ">|TAG_CLOSE_SYMBOL");
     }
 
     //Bug 218629 - Wrong syntax coloring in HTML for non-english text 
@@ -375,52 +375,6 @@ public class HtmlLexerTest extends NbTestCase {
             "=|OPERATOR", "'test'|VALUE", " |WS", "/>|TAG_CLOSE_SYMBOL");
     }
 
-
-    //--------------------------------------------------------------------------
-    
-    public static void checkTokens(String text, String... descriptions) {
-        TokenHierarchy<String> th = TokenHierarchy.create(text, HTMLTokenId.language());
-        TokenSequence<HTMLTokenId> ts = th.tokenSequence(HTMLTokenId.language());
-//        System.out.println(ts);
-        checkTokens(ts, descriptions);
-    }
-
-    public static void checkTokens(TokenSequence<HTMLTokenId> ts, String... descriptions) {
-        ts.moveStart();
-        for(String descr : descriptions) {
-            //parse description
-            int slashIndex = descr.indexOf('|');
-            assert slashIndex >= 0;
-
-            String image = descr.substring(0, slashIndex);
-            String id = descr.substring(slashIndex + 1);
-
-            assertTrue(ts.moveNext());
-            Token t = ts.token();
-            assertNotNull(t);
-
-            if(image.length() > 0) {
-                assertEquals(image, t.text().toString());
-            }
-
-            if(id.length() > 0) {
-                assertEquals(id, t.id().name());
-            }
-        }
-
-        StringBuilder b = new StringBuilder();
-        while(ts.moveNext()) {
-            Token t = ts.token();
-            b.append("\"");
-            b.append(t.text());
-            b.append('|');
-            b.append(t.id().name());
-            b.append("\"");
-            b.append(", ");
-        }
-        assertTrue("There are some tokens left: " + b.toString(), b.length() == 0);
-    }
-
      public void testScriptType_value() {
         TokenHierarchy th = TokenHierarchy.create("<script type=\"text/plain\">plain</script>", HTMLTokenId.language());
         TokenSequence ts = th.tokenSequence();
@@ -473,5 +427,78 @@ public class HtmlLexerTest extends NbTestCase {
         
         assertTrue("Couldn't find any SCRIPT token!", false);
     }
-    
+
+    public void testBrokenCases() {
+        // Two cases that were caught by randomness test and added here as
+        // regression check
+        assertLexesWithoutAssertion("u >z//<=>=>\n"
+                + "= \n"
+                + ">>>/>>//w>\n"
+                + " yl>be<<=k<uA>  F > Y <<<\n"
+                + " >Jj/>k >>  ==a <z<=z  ><=r>>> =N///>>>/><< \n"
+                + "EN>/>r> >p<<<L = > =<g=<C /=/   \n"
+                + " q=R>  >B >=>z= />> J o  </>/>zn/><<>   z/>/>G=>nm< ");
+        assertLexesWithoutAssertion("<Jm/  a=q</>>V  />G>< qw\n"
+                + " ></> /F>=< g>ggh i <>PoU =<  =eB< < / <<= >><==<>/> Q></>N=>/>=<>w/>=p  //>>sNk <<>=</> >\n"
+                + "==  <>Np >= <<</>U  yZT />=<e=<  >");
     }
+
+    //--------------------------------------------------------------------------
+
+    public static void checkTokens(String text, String... descriptions) {
+        TokenHierarchy<String> th = TokenHierarchy.create(text, HTMLTokenId.language());
+        TokenSequence<HTMLTokenId> ts = th.tokenSequence(HTMLTokenId.language());
+//        System.out.println(ts);
+        checkTokens(ts, descriptions);
+    }
+
+    public static void checkTokens(TokenSequence<HTMLTokenId> ts, String... descriptions) {
+        ts.moveStart();
+        for(String descr : descriptions) {
+            //parse description
+            int slashIndex = descr.indexOf('|');
+            assert slashIndex >= 0;
+
+            String image = descr.substring(0, slashIndex);
+            String id = descr.substring(slashIndex + 1);
+
+            assertTrue(ts.moveNext());
+            Token t = ts.token();
+            assertNotNull(t);
+
+            if(image.length() > 0) {
+                assertEquals(image, t.text().toString());
+            }
+
+            if(id.length() > 0) {
+                assertEquals(id, t.id().name());
+            }
+        }
+
+        StringBuilder b = new StringBuilder();
+        while(ts.moveNext()) {
+            Token t = ts.token();
+            b.append("\"");
+            b.append(t.text());
+            b.append('|');
+            b.append(t.id().name());
+            b.append("\"");
+            b.append(", ");
+        }
+        assertTrue("There are some tokens left: " + b.toString(), b.length() == 0);
+    }
+
+    @SuppressWarnings({"AssertWithSideEffects", "NestedAssignment"})
+    public void assertLexesWithoutAssertion(String input) {
+        boolean assertionsEnabled = false;
+        assert assertionsEnabled = true;
+        assertTrue("Test must be run with assertions enabled", assertionsEnabled);
+        TokenHierarchy<String> th = TokenHierarchy.create(input, HTMLTokenId.language());
+        TokenSequence<HTMLTokenId> ts = th.tokenSequence(HTMLTokenId.language());
+        // if there is no token sequence, lexing is obviously broken
+        assertNotNull(ts);
+        // iterate the full token sequence, lexing happens on demand, so the
+        // whole sequence needs to be read
+        while(ts.moveNext()) {};
+    }
+}

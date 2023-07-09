@@ -73,6 +73,7 @@ implements XMLPropertyEditor, ExPropertyEditor  {
     * @return A fragment of Java code representing an initializer for the
     *    current value.
     */
+    @Override
     public String getJavaInitializationString() {
         int[] val = getValues();
         StringBuffer buf = new StringBuffer("new "); // NOI18N
@@ -100,6 +101,7 @@ implements XMLPropertyEditor, ExPropertyEditor  {
     * <p>   If a non-null value is returned, then the PropertyEditor should
     *       be prepared to parse that string back in setAsText().
     */
+    @Override
     public String getAsText() {
         if (getValue() == null)
             return "null"; // NOI18N
@@ -135,6 +137,7 @@ implements XMLPropertyEditor, ExPropertyEditor  {
     * as text.
     * @param text  The string to be parsed.
     */
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
         if ("null".equals(text) || "".equals(text)) { // NOI18N
             setValue(null);
@@ -208,7 +211,7 @@ implements XMLPropertyEditor, ExPropertyEditor  {
     * the value should be available via the getValue method.
     * An IOException should be thrown when the value cannot be restored from the specified XML element
     * @param element the XML DOM element representing a subtree of XML from which the value should be loaded
-    * @exception IOException thrown when the value cannot be restored from the specified XML element
+    * @exception java.io.IOException thrown when the value cannot be restored from the specified XML element
     */
     public void readFromXML (org.w3c.dom.Node element) throws java.io.IOException {
         if (!getXMLValueTag ().equals (element.getNodeName ())) {

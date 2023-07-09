@@ -182,6 +182,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * @param c the component
      * @return the manager that handles opening, closing and selecting a component
      * @deprecated Don't use this. */
+    @Deprecated
     @Override
     protected synchronized WindowManager.Component createTopComponentManager(TopComponent c) {
         warnIfNotInEDT();
@@ -193,6 +194,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * Implements <code>WindowManager</code> abstract method.
      * @return fake implementation of only workspace
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public Workspace createWorkspace(String name, String displayName) {
         warnIfNotInEDT();
@@ -204,6 +206,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
     /** Finds workspace given its name.
      * @return fake implementation of only workspace
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public Workspace findWorkspace(String name) {
         warnIfNotInEDT();
@@ -216,6 +219,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * Implements <code>WindowManager</code> abstract method. 
      * @return array with only one (fake) workspace impl
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public Workspace[] getWorkspaces() {
         warnIfNotInEDT();
@@ -227,6 +231,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * Implements <code>WindowManager</code> abstract method.
      * @param workspaces array of new workspaces
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public void setWorkspaces(Workspace[] workspaces) {
         warnIfNotInEDT();
@@ -236,6 +241,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * Implements <code>WindowManager</code> abstract method.
      * @return fake implementation of only workspace
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public Workspace getCurrentWorkspace() {
         warnIfNotInEDT();
@@ -328,6 +334,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * Implements <code>Workspace</code> interface method.
      * @return the programmatic name of only workspace impl
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public String getName () {
         return "FakeWorkspace"; // NOI18N
@@ -337,6 +344,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * Implements <code>Workspace</code> interface method.
      * @return the diplay name of the workspace
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public String getDisplayName () {
         return NbBundle.getMessage(WindowManagerImpl.class, "LBL_FakeWorkspace");
@@ -362,6 +370,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
 
     /** Activates this workspace to be current one.
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public void activate () {
     }
@@ -624,6 +633,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
     /** Clears this workspace and removes this workspace from window manager.
      * Implements <code>Workspace</code> interface method.
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public void remove () {
     }

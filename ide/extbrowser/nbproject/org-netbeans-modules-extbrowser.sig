@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.69
+#Version 1.73
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1061,7 +1061,7 @@ supr java.lang.Object
 hfds serialVersionUID
 
 CLSS public org.openide.util.MapFormat
-cons public init(java.util.Map)
+cons public init(java.util.Map<java.lang.String,?>)
 meth protected java.lang.Object processKey(java.lang.String)
 meth public boolean isExactMatch()
 meth public boolean willThrowExceptionIfKeyWasNotFound()
@@ -1075,7 +1075,7 @@ meth public java.util.Map getMap()
 meth public static java.lang.String format(java.lang.String,java.util.Map)
 meth public void setExactMatch(boolean)
 meth public void setLeftBrace(java.lang.String)
-meth public void setMap(java.util.Map)
+meth public void setMap(java.util.Map<java.lang.String,?>)
 meth public void setRightBrace(java.lang.String)
 meth public void setThrowExceptionIfKeyWasNotFound(boolean)
 supr java.text.Format

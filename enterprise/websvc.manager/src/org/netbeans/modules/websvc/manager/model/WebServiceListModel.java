@@ -95,7 +95,7 @@ public class WebServiceListModel {
         return partnerServices;
     }
 
-    private static boolean containsKey(List list, String key) {
+    private static boolean containsKey(List<?> list, String key) {
         synchronized (list) {
             for (Object o : list) {
                 if (o instanceof WebServiceData) {

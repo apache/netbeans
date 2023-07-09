@@ -105,10 +105,10 @@ public class SQLHistoryEntry {
             return false;
         }
         final SQLHistoryEntry other = (SQLHistoryEntry) obj;
-        if ((this.url == null) ? (other.url != null) : !this.url.toLowerCase().equals(other.url.toLowerCase())) {
+        if ((this.url == null) ? (other.url != null) : !this.url.equalsIgnoreCase(other.url)) {
             return false;
         }
-        if ((this.sql == null) ? (other.sql != null) : !this.sql.toLowerCase().equals(other.sql.toLowerCase())) {
+        if ((this.sql == null) ? (other.sql != null) : !this.sql.equalsIgnoreCase(other.sql)) {
             return false;
         }
         return true;

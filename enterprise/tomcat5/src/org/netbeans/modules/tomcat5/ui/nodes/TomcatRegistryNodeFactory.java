@@ -40,6 +40,7 @@ public class TomcatRegistryNodeFactory implements RegistryNodeFactory {
       * @param lookup will contain DeploymentFactory, DeploymentManager, Management objects. 
       * @return admin server node.
       */
+    @Override
     public Node getManagerNode(Lookup lookup) {
         TomcatInstanceNode tn = new TomcatInstanceNode (new Children.Map(), lookup);
         return tn;
@@ -50,6 +51,7 @@ public class TomcatRegistryNodeFactory implements RegistryNodeFactory {
       * @param lookup will contain DeploymentFactory, DeploymentManager, Target, Management objects.
       * @return target server node
       */
+    @Override
     public Node getTargetNode(Lookup lookup) {
         return new TomcatTargetNode(lookup);
 

@@ -75,10 +75,10 @@ final class ProfilerFeatures {
         singleFeatured = Boolean.parseBoolean(storage.readFlag(FLAG_SINGLE_FEATURE, SINGLE_FEATURE_DEFAULT.toString()));
         ppoints = Boolean.parseBoolean(storage.readFlag(FLAG_PROFILING_POINTS, PROFILING_POINTS_DEFAULT.toString()));
         
-        features = new TreeSet(FEATURES_COMPARATOR);
-        activated = new TreeSet(FEATURES_COMPARATOR);
+        features = new TreeSet<>(FEATURES_COMPARATOR);
+        activated = new TreeSet<>(FEATURES_COMPARATOR);
         
-        listeners = new HashSet();
+        listeners = new HashSet<>();
         
         // Populates SessionStorage, can be accessed in EDT from now
         for (ProfilerFeature.Provider provider : ProfilerFeature.Registry.getProviders()) {
@@ -102,7 +102,7 @@ final class ProfilerFeatures {
     }
     
     static Set<ProfilerFeature> getCompatible(Set<ProfilerFeature> f, Lookup c) {
-        Set<ProfilerFeature> s = new TreeSet(FEATURES_COMPARATOR);
+        Set<ProfilerFeature> s = new TreeSet<>(FEATURES_COMPARATOR);
         for (ProfilerFeature p : f) if (p.supportsConfiguration(c)) s.add(p);
         return s;
     }
@@ -180,7 +180,7 @@ final class ProfilerFeatures {
     
     private void saveActivatedFeatures() {
         if (loading) return;
-        final Set<ProfilerFeature> _activated = new HashSet(activated);
+        final Set<ProfilerFeature> _activated = new HashSet<>(activated);
         RequestProcessor.getDefault().post(new Runnable() {
             public void run() {
                 SessionStorage storage = session.getStorage();

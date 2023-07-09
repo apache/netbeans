@@ -23,16 +23,16 @@
 <actions>
     <apply-for plugins="java">
         <action name="test.single">
-            <args>cleanTest test --tests "${selectedClass}"</args>
+            <args>"${cleanTestTaskName}" "${testTaskName}" --tests "${selectedClass}"</args>
         </action>
         <action name="run.single.method">
-            <args>cleanTest test --tests "${selectedMethod}"</args>
+            <args>"${cleanTestTaskName}" "${testTaskName}" --tests "${selectedMethod}"</args>
         </action>
         <action name="debug.single.method">
-            <args>cleanTest test --debug-jvm --tests "${selectedMethod}"</args>
+            <args>"${cleanTestTaskName}" "${testTaskName}" --debug-jvm --tests "${selectedMethod}"</args>
         </action>
         <action name="debug.test.single">
-            <args>cleanTest test --debug-jvm --tests "${selectedClass}"</args>
+            <args>"${cleanTestTaskName}" "${testTaskName}" --debug-jvm --tests "${selectedClass}"</args>
         </action>
 
         <action name="javadoc">
@@ -50,11 +50,11 @@
         </action>
 
         <action name="run.single">
-            <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} runSingle --stacktrace ${javaExec.jvmArgs} ${javaExec.args}</args>
+            <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} run --stacktrace ${javaExec.jvmArgs} ${javaExec.args}</args>
         </action>
 
         <action name="debug.single">
-            <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} runSingle --stacktrace --debug-jvm  ${javaExec.jvmArgs} ${javaExec.args}</args>
+            <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} run --stacktrace --debug-jvm  ${javaExec.jvmArgs} ${javaExec.args}</args>
         </action>
     </apply-for>
 
@@ -91,10 +91,10 @@
                         <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} runSingle --continuous ${javaExec.jvmArgs} ${javaExec.args}</args>
                     </action>
                     <action name="test.single">
-                        <args>cleanTest test --tests "${selectedClass}" --continuous</args>
+                        <args>"${cleanTestTaskName}" "${testTaskName}" --tests "${selectedClass}" --continuous</args>
                     </action>
                     <action name="run.single.method">
-                        <args>cleanTest test --tests "${selectedMethod}" --continuous</args>
+                        <args>"${cleanTestTaskName}" "${testTaskName}" --tests "${selectedMethod}" --continuous</args>
                     </action>
                     <action name="debug.single.method">
                         <args></args>

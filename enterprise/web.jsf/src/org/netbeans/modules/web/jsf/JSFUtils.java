@@ -67,6 +67,8 @@ public class JSFUtils {
     public static final String DEFAULT_JSF_1_1_NAME = "jsf1102";  //NOI18N
     public static final String DEFAULT_JSF_1_2_NAME = "jsf12";    //NOI18N
     public static final String DEFAULT_JSF_2_0_NAME = "jsf20";    //NOI18N
+    public static final String DEFAULT_JSF_3_0_NAME = "jsf30";    //NOI18N
+    public static final String DEFAULT_JSF_4_0_NAME = "jsf40";    //NOI18N
 
     // the name of jstl library
     public static final String DEFAULT_JSTL_1_1_NAME = "jstl11";  //NOI18N
@@ -74,19 +76,27 @@ public class JSFUtils {
     // fully qualified name of Java classes from the JavaEE API
     public static final String EJB_STATELESS = "javax.ejb.Stateless"; //NOI18N
     public static final String FACES_EXCEPTION = "javax.faces.FacesException"; //NOI18N
+    public static final String JAKARTAEE_EJB_STATELESS = "jakarta.ejb.Stateless"; //NOI18N
+    public static final String JAKARTAEE_FACES_EXCEPTION = "jakarta.faces.FacesException"; //NOI18N
     public static final String JSF_1_2__API_SPECIFIC_CLASS = "javax.faces.application.StateManagerWrapper"; //NOI18N
     public static final String JSF_2_0__API_SPECIFIC_CLASS = "javax.faces.application.ProjectStage"; //NOI18N
     public static final String JSF_2_1__API_SPECIFIC_CLASS = "javax.faces.component.TransientStateHelper"; //NOI18N
     public static final String JSF_2_2__API_SPECIFIC_CLASS = "javax.faces.flow.Flow"; //NOI18N
     public static final String JSF_2_3__API_SPECIFIC_CLASS = "javax.faces.push.PushContext"; //NOI18N
     public static final String JSF_3_0__API_SPECIFIC_CLASS = "jakarta.faces.push.PushContext"; //NOI18N
+    public static final String JSF_4_0__API_SPECIFIC_CLASS = "jakarta.faces.lifecycle.ClientWindowScoped"; //NOI18N
     public static final String MYFACES_SPECIFIC_CLASS = "org.apache.myfaces.webapp.StartupServletContextListener"; //NOI18N
 
-    //constants for web.xml
+    //constants for web.xml (Java EE)
     protected static final String FACELETS_SKIPCOMMNETS = "javax.faces.FACELETS_SKIP_COMMENTS";
     protected static final String FACELETS_DEVELOPMENT = "facelets.DEVELOPMENT";
     protected static final String FACELETS_DEFAULT_SUFFIX = "javax.faces.DEFAULT_SUFFIX";
     public static final String FACES_PROJECT_STAGE = "javax.faces.PROJECT_STAGE";
+    
+    //constants for web.xml (Jakarta EE)
+    protected static final String FACELETS_SKIPCOMMNETS_JAKARTAEE = "jakarta.faces.FACELETS_SKIP_COMMENTS";
+    protected static final String FACELETS_DEFAULT_SUFFIX_JAKARTAEE = "jakarta.faces.DEFAULT_SUFFIX";
+    public static final String FACES_PROJECT_STAGE_JAKARTAEE = "jakarta.faces.PROJECT_STAGE";
 
     // usages logger
     private static final Logger USG_LOGGER = Logger.getLogger("org.netbeans.ui.metrics.web.jsf"); // NOI18N
@@ -178,7 +188,7 @@ public class JSFUtils {
         }
 
         // create new library and regist in the Library Manager.
-        Map<String, List<URL>> content = new HashMap<String, List<URL>>();
+        Map<String, List<URL>> content = new HashMap<>();
         content.put("classpath", urls); //NOI18N
         LibraryManager.getDefault().createLibrary("j2se", libraryName, libraryName, libraryName, content); //NOI18N
         return true;
@@ -312,6 +322,16 @@ public class JSFUtils {
         if (wm != null) {
             Profile profile = wm.getJ2eeProfile();
             return (profile == Profile.JAVA_EE_5);
+        }
+        return false;
+    }
+    
+    public static boolean isJakartaEE9Plus(TemplateWizard wizard) {
+        Project project = Templates.getProject(wizard);
+        WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
+        if (wm != null) {
+            Profile profile = wm.getJ2eeProfile();
+            return profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
         }
         return false;
     }

@@ -25,6 +25,7 @@ import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.DeprecatedTree;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
+import static com.sun.source.doctree.DocTree.Kind.SUMMARY;
 import com.sun.source.doctree.EndElementTree;
 import com.sun.source.doctree.EntityTree;
 import com.sun.source.doctree.InheritDocTree;
@@ -37,6 +38,8 @@ import com.sun.source.doctree.SeeTree;
 import com.sun.source.doctree.SinceTree;
 import com.sun.source.doctree.SnippetTree;
 import com.sun.source.doctree.StartElementTree;
+import com.sun.source.doctree.SummaryTree;
+import com.sun.source.doctree.SystemPropertyTree;
 import com.sun.source.doctree.TextTree;
 import com.sun.source.doctree.ThrowsTree;
 import com.sun.source.doctree.UnknownBlockTagTree;
@@ -101,7 +104,6 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.preprocessorbridge.api.JavaSourceUtil;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -112,15 +114,17 @@ import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.xml.XMLUtil;
 
-import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
-import javax.tools.ToolProvider;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
-import com.sun.tools.javac.code.ClassFinder;
+import javax.lang.model.element.RecordComponentElement;
+import org.netbeans.api.java.queries.SourceLevelQuery;
+import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
 import org.netbeans.api.java.source.ui.snippet.MarkupTagProcessor;
+import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.openide.filesystems.FileSystem;
 
 /** Utility class for viewing Javadoc comments as HTML.
  *
@@ -391,11 +395,15 @@ public class ElementJavadoc {
     public Action getGotoSourceAction() {
         return goToSource;
     }
-    
+
     private ElementJavadoc(CompilationInfo compilationInfo, Element element, final URL url, final Callable<Boolean> cancel) {
         this.cpInfo = compilationInfo.getClasspathInfo();
         this.fileObject = compilationInfo.getFileObject();
-        this.handle = element == null ? null : ElementHandle.create(element);
+        ElementHandle<Element> eh = null;
+        try {
+            eh = element == null ? null : ElementHandle.create(element);
+        } catch (IllegalArgumentException iae) {}
+        this.handle = eh;
         this.cancel = cancel;
         this.packageName = compilationInfo.getCompilationUnit().getPackageName() != null ? compilationInfo.getCompilationUnit().getPackageName().toString()
                                                                                          : "";
@@ -403,6 +411,10 @@ public class ElementJavadoc {
         this.className = compilationInfo.getCompilationUnit().getSourceFile().getName().replaceFirst("[.][^.]+$", "");
 
         final StringBuilder header = getElementHeader(element, compilationInfo);
+        if (handle == null) {
+            this.content = CompletableFuture.completedFuture(header.toString());
+            return;
+        }
         try {
             //Optimisitic no http
             CharSequence doc = getElementDoc(element, compilationInfo, header, url, true);
@@ -462,21 +474,34 @@ public class ElementJavadoc {
     private StringBuilder getElementHeader(final Element element, final CompilationInfo info) {
         final StringBuilder sb = new StringBuilder();
         if (element != null) {
-            sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
             switch(element.getKind()) {
                 case METHOD:
                 case CONSTRUCTOR:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
                     sb.append(getMethodHeader((ExecutableElement)element));
                     break;
                 case FIELD:
                 case ENUM_CONSTANT:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
                     sb.append(getFieldHeader((VariableElement)element));
+                    break;
+                case RECORD_COMPONENT:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
+                    sb.append(getRecordComponentHeader((RecordComponentElement)element));
                     break;
                 case CLASS:
                 case INTERFACE:
                 case ENUM:
                 case ANNOTATION_TYPE:
+                case RECORD:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
                     sb.append(getClassHeader((TypeElement)element));
+                    break;
+                case LOCAL_VARIABLE:
+                case PARAMETER:
+                case EXCEPTION_PARAMETER:
+                case RESOURCE_VARIABLE:
+                    sb.append(getFieldHeader((VariableElement)element));
                     break;
                 case PACKAGE:
                     sb.append(getPackageHeader((PackageElement)element));
@@ -491,26 +516,25 @@ public class ElementJavadoc {
     
     private StringBuilder getContainingClassOrPackageHeader(Element el, Elements elements, ElementUtilities eu) {
         StringBuilder sb = new StringBuilder();
-        if (el.getKind() != ElementKind.PACKAGE && el.getKind() != ElementKind.MODULE) {
-            TypeElement cls = eu.enclosingTypeElement(el);
-            if (cls != null) {
-                switch(cls.getEnclosingElement().getKind()) {
-                    case ANNOTATION_TYPE:
-                    case CLASS:
-                    case ENUM:
-                    case INTERFACE:
-                    case PACKAGE:
-                        sb.append("<font size='+0'><b>"); //NOI18N
-                        createLink(sb, cls, makeNameLineBreakable(cls.getQualifiedName().toString()));
-                        sb.append("</b></font>"); //NOI18N)
-                }
-            } else {
-                PackageElement pkg = elements.getPackageOf(el);
-                if (pkg != null) {
+        TypeElement cls = eu.enclosingTypeElement(el);
+        if (cls != null) {
+            switch(cls.getKind()) {
+                case ANNOTATION_TYPE:
+                case CLASS:
+                case ENUM:
+                case INTERFACE:
+                case RECORD:
+                case PACKAGE:
                     sb.append("<font size='+0'><b>"); //NOI18N
-                    createLink(sb, pkg, makeNameLineBreakable(pkg.getQualifiedName().toString()));
+                    createLink(sb, cls, makeNameLineBreakable(cls.getQualifiedName().toString()));
                     sb.append("</b></font>"); //NOI18N)
-                }
+            }
+        } else {
+            PackageElement pkg = elements.getPackageOf(el);
+            if (pkg != null && !pkg.isUnnamed()) {
+                sb.append("<font size='+0'><b>"); //NOI18N
+                createLink(sb, pkg, makeNameLineBreakable(pkg.getQualifiedName().toString()));
+                sb.append("</b></font>"); //NOI18N)
             }
         }
         return sb;
@@ -612,6 +636,18 @@ public class ElementJavadoc {
         sb.append("</pre>"); //NOI18N
         return sb;
     }
+
+    private StringBuilder getRecordComponentHeader(RecordComponentElement rcdoc) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<pre>"); //NOI18N
+        rcdoc.getAnnotationMirrors().forEach((annotationDesc) -> {
+            appendAnnotation(sb, annotationDesc, true);
+        });
+        appendType(sb, rcdoc.asType(), false, false, false);
+        sb.append(" <b>").append(rcdoc.getSimpleName()).append("</b>"); //NOI18N
+        sb.append("</pre>"); //NOI18N
+        return sb;
+    }
     
     private StringBuilder getClassHeader(TypeElement cdoc) {
         StringBuilder sb = new StringBuilder();
@@ -623,6 +659,10 @@ public class ElementJavadoc {
             switch(cdoc.getKind()) {
                 case ENUM:
                     if (modifier == Modifier.FINAL)
+                        continue;
+                    break;
+                case RECORD:
+                    if (modifier == Modifier.FINAL || modifier == Modifier.STATIC)
                         continue;
                     break;
                 case INTERFACE:
@@ -643,6 +683,9 @@ public class ElementJavadoc {
             case INTERFACE:
                 sb.append("interface "); //NOI18N
                 break;
+            case RECORD:
+                sb.append("record "); //NOI18N
+                break;
             default:
                 sb.append("class "); //NOI18N            
         }
@@ -659,7 +702,7 @@ public class ElementJavadoc {
             sb.append("&gt;"); //NOI18N
         }
         sb.append("</b>"); //NOi18N
-        if (cdoc.getKind() != ElementKind.ANNOTATION_TYPE) {
+        if (cdoc.getKind() != ElementKind.ANNOTATION_TYPE && cdoc.getKind() != ElementKind.RECORD) {
             TypeMirror supercls = cdoc.getSuperclass();
             if (supercls != null && supercls.getKind() != TypeKind.NONE) {
                 sb.append("<br>extends "); //NOI18N
@@ -686,7 +729,11 @@ public class ElementJavadoc {
         pdoc.getAnnotationMirrors().forEach((annotationDesc) -> {
             appendAnnotation(sb, annotationDesc, true);
         });
-        sb.append("package <b>").append(pdoc.getQualifiedName()).append("</b>"); //NOI18N
+        if (pdoc.isUnnamed()) {
+            sb.append("package <b>&lt;unnamed&gt;</b>"); //NOI18N
+        } else {
+            sb.append("package <b>").append(pdoc.getQualifiedName()).append("</b>"); //NOI18N
+        }
         sb.append("</pre>"); //NOI18N
         return sb;
     }
@@ -1060,8 +1107,8 @@ public class ElementJavadoc {
                                 }
                                 sb.append(inlineTags(unTag.getContent(), path, doc, info.getDocTrees(), null));
                                 break;
-                    }
-                    break;
+                        }
+                        break;
                 }
             }
 
@@ -1325,6 +1372,24 @@ public class ElementJavadoc {
                     snippetCount++;
                     processDocSnippet(sb, (SnippetTree)tag, snippetCount,docPath, doc, trees);
                     break;
+                case SUMMARY:
+                    SummaryTree summaryTag = (SummaryTree)tag;
+                    List<? extends DocTree> summary = summaryTag.getSummary();
+                    sb.append(inlineTags(summary, docPath, doc, trees, null));
+                    break;
+                case SYSTEM_PROPERTY:
+                    SystemPropertyTree systemPropTag = (SystemPropertyTree) tag;
+                    sb.append("<code>"); //NOI18N
+                    sb.append(systemPropTag.getPropertyName());
+                    sb.append("</code>"); //NOI18N
+                    break;
+                default:
+                    sb.append("<code>"); //NOI18N
+                    try {
+                        sb.append(XMLUtil.toElementContent(tag.toString()));
+                    } catch (IOException ioe) {}
+                    sb.append("</code>"); //NOI18N
+                    break;
             }
         }
         return sb;
@@ -1434,8 +1499,8 @@ public class ElementJavadoc {
         String error = null;
         String text = null;
 
-        pckgName = pckgName.replaceAll("\\.", "\\\\");
-        FileObject snippetFile = classPath.findResource(pckgName + "\\snippet-files\\" + fileName);
+        pckgName = pckgName.replaceAll("\\.", "/");
+        FileObject snippetFile = classPath.findResource(pckgName + "/snippet-files/" + fileName);
         if (snippetFile == null || fileName.isEmpty()) {
             error = "error: snippet markup: File invalid";
             errorList.add(error);
@@ -1758,10 +1823,20 @@ public class ElementJavadoc {
 
     private static class JavaDocSnippetLinkTagFileObject extends SimpleJavaFileObject {
 
+        private static final URI fakeFileObjectURI;
+        static {
+            try {
+                FileSystem mfs = FileUtil.createMemoryFileSystem();
+                FileObject fakeFileObject = mfs.getRoot().createData("JavaDocSnippetLinkTagFileObject.java");
+                fakeFileObjectURI = fakeFileObject.toURI();
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
         private String text;
 
         public JavaDocSnippetLinkTagFileObject(String text) {
-            super(URI.create("myfo:/JavaDocSnippetLinkTag.java"), JavaFileObject.Kind.SOURCE); //NOI18N
+            super(fakeFileObjectURI, JavaFileObject.Kind.SOURCE); //NOI18N
             this.text = text;
         }
 
@@ -1772,17 +1847,7 @@ public class ElementJavadoc {
     }
     
     private void createSnippetMarkupLinkTag(StringBuilder sb, JavaDocSnippetLinkTagFileObject fileObject) throws IOException {
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        StringBuilder prjClsPath = new StringBuilder();
-        String prjSrcPath = cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE).toString();
-        prjClsPath.append(prjSrcPath);
-        
-        for(ClassPath.Entry cpe : cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE).entries()){
-            prjClsPath.append(";");
-            prjClsPath.append(cpe.getRoot().getFileSystem().getDisplayName());
-        }
-        List<String> opt = Arrays.asList("-cp",prjClsPath.toString());
-        JavacTask task = (JavacTask) compiler.getTask(null, null, null, opt, null, Arrays.asList(fileObject));
+        JavacTask task = JavacParser.createJavacTask(cpInfo, d -> {}, SourceLevelQuery.getSourceLevel(this.fileObject), Profile.DEFAULT, null, null, null, null, Collections.singletonList(fileObject));
 
         DocTrees docTrees = DocTrees.instance(task);//trees
         
@@ -1798,7 +1863,7 @@ public class ElementJavadoc {
                     for(DocTree dTree: body){
                         if(dTree instanceof LinkTree){
                             LinkTree linkTag = (LinkTree)dTree;
-                            appendReference(sb, linkTag.getReference(), body, path, doc, docTrees);
+                            appendReference(sb, linkTag.getReference(), linkTag.getLabel(), path, doc, docTrees);
                             break main;
                         }
                     }
@@ -2105,12 +2170,14 @@ public class ElementJavadoc {
             if (docURL == null && goToSource == null) {
                 content.insert(0, "<base href=\"" + fo.toURL() + "\"></base>"); //NOI18N
             }
-            goToSource = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    ElementOpen.open(fo, handle);
-                }
-            };
+            if (handle != null) {
+                goToSource = new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        ElementOpen.open(fo, handle);
+                    }
+                };
+            }
         }
         if (url != null) {
             docURL = url;

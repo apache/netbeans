@@ -435,7 +435,7 @@ public class CommentsPanel extends JPanel {
                 StyledDocument doc = pane.getStyledDocument();
                 Element elem = doc.getCharacterElement(pane.viewToModel(clickPoint));
                 Object l = elem.getAttributes().getAttribute(HyperlinkSupport.LINK_ATTRIBUTE);
-                if (l != null && l instanceof AttachmentLink) {
+                if (l instanceof AttachmentLink) {
                     BugzillaIssue.Attachment attachment = ((AttachmentLink) l).attachment;
                     if (attachment != null) {
                         add(new JMenuItem(attachment.getOpenAction()));

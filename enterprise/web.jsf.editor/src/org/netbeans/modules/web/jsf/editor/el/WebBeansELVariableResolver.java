@@ -54,7 +54,7 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
         }
         return null;
     }
-    
+
     @Override
     public String getBeanName(String clazz, FileObject target, ResolverContext context) {
         for (WebBean bean : getWebBeans(target, context)) {
@@ -101,7 +101,11 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
             return Collections.<WebBean>emptyList();
         } else {
             if (context.getContent(CONTENT_NAME) == null) {
-                context.setContent(CONTENT_NAME, getNamedBeans(jsfSupport.getWebBeansModel()));
+                if(jsfSupport.isJsf30Plus()){
+                    context.setContent(CONTENT_NAME, getJakartaNamedBeans(jsfSupport.getJakartaWebBeansModel()));
+                } else {
+                    context.setContent(CONTENT_NAME, getNamedBeans(jsfSupport.getWebBeansModel()));
+                }
             }
             return (List<WebBean>) context.getContent(CONTENT_NAME);
         }
@@ -109,21 +113,40 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
 
     private static List<WebBean> getNamedBeans(MetadataModel<WebBeansModel> webBeansModel) {
         try {
-            return webBeansModel.runReadAction(new MetadataModelAction<WebBeansModel, List<WebBean>>() {
-
-                @Override
-                public List<WebBean> run(WebBeansModel metadata) throws Exception {
-                    List<Element> namedElements = metadata.getNamedElements();
-                    List<WebBean> webBeans = new LinkedList<>();
-                    for (Element e : namedElements) {
-                        //filter out null elements - probably a WebBeansModel bug,
-                        //happens under some circumstances when renaming/deleting beans
-                        if (e != null) {
-                            webBeans.add(new WebBean(e, metadata.getName(e)));
-                        }
+            return webBeansModel.runReadAction((WebBeansModel metadata) -> {
+                List<Element> namedElements = metadata.getNamedElements();
+                List<WebBean> webBeans = new LinkedList<>();
+                for (Element e : namedElements) {
+                    //filter out null elements - probably a WebBeansModel bug,
+                    //happens under some circumstances when renaming/deleting beans
+                    if (e != null) {
+                        webBeans.add(new WebBean(e, metadata.getName(e)));
                     }
-                    return webBeans;
                 }
+                return webBeans;
+            });
+        } catch (MetadataModelException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return Collections.emptyList();
+    }
+
+    private static List<WebBean> getJakartaNamedBeans(MetadataModel<org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel> webBeansModel) {
+        try {
+            return webBeansModel.runReadAction(metadata -> {
+                List<Element> namedElements = metadata.getNamedElements();
+                List<WebBean> webBeans = new LinkedList<>();
+                for (Element e : namedElements) {
+                    //filter out null elements - probably a WebBeansModel bug,
+                    //happens under some circumstances when renaming/deleting beans
+                    if (e != null) {
+                        webBeans.add(new WebBean(e, metadata.getName(e)));
+                    }
+                }
+                return webBeans;
             });
         } catch (MetadataModelException ex) {
             Exceptions.printStackTrace(ex);
@@ -172,5 +195,5 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
             }
         }
     }
-     
+
 }

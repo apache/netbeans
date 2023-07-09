@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
@@ -44,6 +44,8 @@ import org.netbeans.modules.java.JavaDataLoader;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
+import org.netbeans.modules.java.source.parsing.ClassParser;
+import org.netbeans.modules.java.source.parsing.ClassParserFactory;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.JavacParserFactory;
 import org.netbeans.modules.java.source.usages.IndexUtil;
@@ -405,10 +407,14 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     public static final class JavacParserProvider implements MimeDataProvider {
 
         private Lookup javaLookup = Lookups.fixed(new JavacParserFactory(), new JavaCustomIndexer.Factory());
+        private Lookup classLookup = Lookups.fixed(new ClassParserFactory(), new JavaCustomIndexer.Factory());
 
         public Lookup getLookup(MimePath mimePath) {
             if (mimePath.getPath().endsWith(JavacParser.MIME_TYPE)) {
                 return javaLookup;
+            }
+            if (mimePath.getPath().endsWith(ClassParser.MIME_TYPE)) {
+                return classLookup;
             }
 
             return Lookup.EMPTY;
@@ -427,6 +433,9 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
         public String findMIMEType(FileObject fo) {
             if ("java".equals(fo.getExt())) {
                 return JavacParser.MIME_TYPE;
+            }
+            if ("class".equals(fo.getExt())) {
+                return ClassParser.MIME_TYPE;
             }
 
             return null;

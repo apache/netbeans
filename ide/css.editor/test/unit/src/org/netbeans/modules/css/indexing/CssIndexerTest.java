@@ -27,6 +27,10 @@ public class CssIndexerTest extends CssTestBase {
         super(testName);
     }
 
+    public void testIdentifiersWithColons() throws Exception {
+        checkIndexer("identifiers-with-colon.css");
+    }
+
     public void testManyClasses() throws Exception {
         checkIndexer("many-classes.css");
     }

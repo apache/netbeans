@@ -573,7 +573,7 @@ public final class ProfilerIDESettings implements GlobalProfilingSettings {
             return dnsaMap;
         }
 
-        dnsaMap = new HashMap();
+        dnsaMap = new HashMap<>();
 
         String allPairs = getPreferences().get(DNSA_SETTINGS_KEY, null);
 

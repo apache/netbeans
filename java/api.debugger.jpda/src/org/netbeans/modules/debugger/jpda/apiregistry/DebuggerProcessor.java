@@ -164,7 +164,7 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
             case CLASS: {
                 TypeElement te = (TypeElement) e;
                 TypeMirror superType = te.getSuperclass();
-                if (superType.getKind().equals(TypeKind.NONE)) {
+                if (superType.getKind() == TypeKind.NONE) {
                     return false;
                 } else {
                     e = ((DeclaredType) superType).asElement();
@@ -178,7 +178,7 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
             }
             case METHOD: {
                 TypeMirror retType = ((ExecutableElement) e).getReturnType();
-                if (retType.getKind().equals(TypeKind.NONE)) {
+                if (retType.getKind() == TypeKind.NONE) {
                     return false;
                 } else {
                     e = ((DeclaredType) retType).asElement();
@@ -211,7 +211,7 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
             }
             case METHOD: {
                 TypeMirror retType = ((ExecutableElement) e).getReturnType();
-                if (retType.getKind().equals(TypeKind.NONE)) {
+                if (retType.getKind() == TypeKind.NONE) {
                     return false;
                 } else {
                     TypeElement te = (TypeElement) ((DeclaredType) retType).asElement();

@@ -97,7 +97,7 @@ public final class DocumentUtilities {
      * Suitable for document implementations - adds document listener
      * to document with given priority and does not do anything
      * if the given document is not listener priority aware.
-     * <br/>
+     * <br>
      * Using this method in the document impls and defaulting
      * to super.addDocumentListener() in case it returns false
      * will ensure that there won't be an infinite loop in case the super constructors
@@ -141,7 +141,7 @@ public final class DocumentUtilities {
      * Suitable for document implementations - removes document listener
      * from document with given priority and does not do anything
      * if the given document is not listener priority aware.
-     * <br/>
+     * <br>
      * Using this method in the document impls and defaulting
      * to super.removeDocumentListener() in case it returns false
      * will ensure that there won't be an infinite loop in case the super constructors
@@ -209,7 +209,7 @@ public final class DocumentUtilities {
     /**
      * Get total count of document listeners attached to a particular document
      * (useful e.g. for logging).
-     * <br/>
+     * <br>
      * If the document uses priority listening then get the count of listeners
      * at all levels. If the document is not {@link AbstractDocument} the method
      * returns zero.
@@ -231,7 +231,7 @@ public final class DocumentUtilities {
      * by user's typing.
      * It should be used by default-key-typed-action and the actions
      * for backspace and delete keys.
-     * <br/>
+     * <br>
      * The document listeners being fired may
      * query it by using {@link #isTypingModification(Document)}.
      * This method should always be used in the following pattern:
@@ -253,7 +253,7 @@ public final class DocumentUtilities {
     /**
      * This method should be used by document listeners to check whether
      * the just performed document modification was caused by user's typing.
-     * <br/>
+     * <br>
      * Certain functionality such as code completion or code templates
      * may benefit from that information. For example the java code completion
      * should only react to the typed "." but not if the same string was e.g.
@@ -270,6 +270,7 @@ public final class DocumentUtilities {
      * @deprecated
      * @see #isTypingModification(Document)
      */
+    @Deprecated
     public static boolean isTypingModification(DocumentEvent evt) {
         return isTypingModification(evt.getDocument());
     }
@@ -393,7 +394,7 @@ public final class DocumentUtilities {
     
     /**
      * Set a property of a given document event by using the given map entry.
-     * <br/>
+     * <br>
      * The present implementation is able to directly store instances
      * of <code>CompactMap.MapEntry</code>. Other map entry implementations
      * will be delegated to {@link #putEventProperty(DocumentEvent, Object, Object)}.
@@ -440,7 +441,7 @@ public final class DocumentUtilities {
     
     /**
      * Get text of the given document modification.
-     * <br/>
+     * <br>
      * It's implemented as retrieving of a <code>String.class</code>.
      *
      * @param evt document event describing either document insertion or removal
@@ -457,10 +458,10 @@ public final class DocumentUtilities {
      * Check whether the given document is read-locked by at least one thread
      * or whether it was write-locked by the current thread (write-locking
      * grants the read-access automatically).
-     * <br/>
+     * <br>
      * The method currently only works for {@link javax.swing.text.AbstractDocument}
      * based documents and it uses reflection.
-     * <br/>
+     * <br>
      * Unfortunately the AbstractDocument only records number of read-lockers
      * but not the thread references that performed the read-locking. Thus it can't be verified
      * whether current thread has performed read locking or another thread.
@@ -502,7 +503,7 @@ public final class DocumentUtilities {
     
     /**
      * Check whether the given document is write-locked by the current thread.
-     * <br/>
+     * <br>
      * The method currently only works for {@link javax.swing.text.AbstractDocument}
      * based documents and it uses reflection.
      * 
@@ -880,7 +881,7 @@ public final class DocumentUtilities {
      * @param doc The document to get the mime type for.
      * 
      * @return The mime type of the document or <code>null</code>.
-     * @see org.netbeans.modules.editor.NbEditorDocument#MIME_TYPE_PROP
+     * @see <a href="@org-netbeans-modules-editor-lib@/org/netbeans/editor/BaseDocument.html#MIME_TYPE_PROP" >NbEditorDocument#MIME_TYPE_PROP</a>
      * @since 1.23
      */
     public static String getMimeType(Document doc) {

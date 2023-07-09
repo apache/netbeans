@@ -375,6 +375,10 @@
                         <file name="org-netbeans-modules-php-editor-verification-PSR4Hint$NamespaceDeclarationHint.instance"/>
                         <file name="org-netbeans-modules-php-editor-verification-PSR4Hint$TypeDeclarationHint.instance"/>
                     </folder>
+                    <folder name="psr12">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.editor.verification.Bundle"/>
+                        <file name="org-netbeans-modules-php-editor-verification-PSR12FilesHint.instance"/>
+                    </folder>
                     <folder name="superglobals">
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.editor.verification.Bundle"/>
                         <file name="org-netbeans-modules-php-editor-verification-SuperglobalsHint$GetSuperglobalHint.instance"/>
@@ -442,6 +446,7 @@
                     <file name="org-netbeans-modules-php-editor-verification-PHP74UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-PHP80UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-PHP81UnhandledError.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-PHP82UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-ReturnTypeHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-TypeRedeclarationHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-UnusableTypesHintError.instance"/>

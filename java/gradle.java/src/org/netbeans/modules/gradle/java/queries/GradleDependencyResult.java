@@ -20,6 +20,7 @@ package org.netbeans.modules.gradle.java.queries;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,7 +77,8 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
         this.gradleProject = gradleProject;
         this.root = root;
         this.gp = NbGradleProject.get(gradleProject);
-        this.projectFile = FileUtil.toFileObject(gp.getGradleFiles().getBuildScript());
+        File bs = gp.getGradleFiles().getBuildScript();
+        this.projectFile = bs == null ? null : FileUtil.toFileObject(gp.getGradleFiles().getBuildScript());
     }
     
     @Override
@@ -173,18 +175,21 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
         });
         
         String contents = null;
-        EditorCookie cake = projectFile.getLookup().lookup(EditorCookie.class);
-        if (cake != null) {
-            Document doc = cake.getDocument();
-            if (doc != null) {
-                String[] docContent = new String[1];
-                doc.render(() -> {
-                    try {
-                        docContent[0] = doc.getText(0, doc.getLength());
-                    } catch (BadLocationException ex) {
-                        // ignore
-                    }
-                });
+        if (projectFile != null) {
+            EditorCookie cake = null;
+            cake = projectFile.getLookup().lookup(EditorCookie.class);
+            if (cake != null) {
+                Document doc = cake.getDocument();
+                if (doc != null) {
+                    String[] docContent = new String[1];
+                    doc.render(() -> {
+                        try {
+                            docContent[0] = doc.getText(0, doc.getLength());
+                        } catch (BadLocationException ex) {
+                            // ignore
+                        }
+                    });
+                }
             }
         }
         if (contents == null) {
@@ -225,7 +230,11 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
 
     @Override
     public Collection<FileObject> getDependencyFiles() {
-        FileObject fo = FileUtil.toFileObject(gp.getGradleFiles().getBuildScript());
+        File f = gp.getGradleFiles().getBuildScript();
+        if (f == null) {
+            return Collections.emptyList();
+        }
+        FileObject fo = FileUtil.toFileObject(f);
         return fo == null ? Collections.emptyList() : Collections.singletonList(fo);
     }
     

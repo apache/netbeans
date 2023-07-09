@@ -408,7 +408,7 @@ is the proper place.
         <p>
             The present classes were repackaged from org.netbeans.modules.editor.util
             into org.netbeans.lib.editor.util package to fulfil the editor module
-            split proposal <a href="http://www.netbeans.org/issues/show_bug.cgi?id=51486">#51486</a>
+            split proposal <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=51486">#51486</a>
             according to which the editor classes independent of the NB IDE
             should be placed under org.netbeans.lib package.
         </p>

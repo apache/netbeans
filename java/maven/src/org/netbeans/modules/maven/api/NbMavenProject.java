@@ -28,6 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.InvalidArtifactRTException;
@@ -84,7 +86,7 @@ import org.openide.util.Utilities;
  * @author mkleint
  */
 public final class NbMavenProject {
-
+    private static final Logger LOG = Logger.getLogger(NbMavenProject.class.getName());
     /**
      * the only property change fired by the class, means that the pom file
      * has changed.
@@ -375,6 +377,7 @@ public final class NbMavenProject {
         for (PackagingProvider pp : Lookup.getDefault().lookupAll(PackagingProvider.class)) {
             String p = pp.packaging(project);
             if (p != null) {
+                LOG.log(Level.FINE, "Packaging provider {0} returned packacing: {1}", new Object[] { pp, p });
                 return p;
             }
         }
@@ -440,7 +443,7 @@ public final class NbMavenProject {
     }
 
     /**
-     * @deprecated Use {@link #downloadDependencyAndJavadocSource(boolean) with {@code true}.
+     * @deprecated Use {@link #downloadDependencyAndJavadocSource(boolean)} with {@code true}.
      */
     @Deprecated
     public void downloadDependencyAndJavadocSource() {
@@ -609,7 +612,7 @@ public final class NbMavenProject {
     }
 
     public static void addPropertyChangeListener(Project prj, PropertyChangeListener listener) {
-        if (prj != null && prj instanceof NbMavenProjectImpl) {
+        if (prj instanceof NbMavenProjectImpl) {
             // cannot call getLookup() -> stackoverflow when called from NbMavenProjectImpl.createBasicLookup()..
             NbMavenProject watcher = ((NbMavenProjectImpl)prj).getProjectWatcher();
             watcher.addPropertyChangeListener(listener);
@@ -619,7 +622,7 @@ public final class NbMavenProject {
     }
     
     public static void removePropertyChangeListener(Project prj, PropertyChangeListener listener) {
-        if (prj != null && prj instanceof NbMavenProjectImpl) {
+        if (prj instanceof NbMavenProjectImpl) {
             // cannot call getLookup() -> stackoverflow when called from NbMavenProjectImpl.createBasicLookup()..
             NbMavenProject watcher = ((NbMavenProjectImpl)prj).getProjectWatcher();
             watcher.removePropertyChangeListener(listener);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.79.0
+#Version 1.83.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -331,8 +331,10 @@ hfds thc
 
 CLSS public final org.netbeans.spi.lexer.TokenFactory<%0 extends org.netbeans.api.lexer.TokenId>
 fld public final static org.netbeans.api.lexer.Token SKIP_TOKEN
+ anno 0 java.lang.Deprecated()
 meth public boolean isSkipToken(org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.TokenFactory%0}>)
 meth public org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.TokenFactory%0}> createCustomTextToken({org.netbeans.spi.lexer.TokenFactory%0},java.lang.CharSequence,int,org.netbeans.api.lexer.PartType)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.TokenFactory%0}> createPropertyToken({org.netbeans.spi.lexer.TokenFactory%0},int,org.netbeans.spi.lexer.TokenPropertyProvider<{org.netbeans.spi.lexer.TokenFactory%0}>)
 meth public org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.TokenFactory%0}> createPropertyToken({org.netbeans.spi.lexer.TokenFactory%0},int,org.netbeans.spi.lexer.TokenPropertyProvider<{org.netbeans.spi.lexer.TokenFactory%0}>,org.netbeans.api.lexer.PartType)
 meth public org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.TokenFactory%0}> createToken({org.netbeans.spi.lexer.TokenFactory%0})

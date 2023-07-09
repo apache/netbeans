@@ -987,10 +987,10 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
         HintTest.create()
                 .input("package test;" +
                         "public class Test {\n" +
-                        "     private void test(int p) {\n" +
+                        "     private void test(Object p) {\n" +
                         "         String result;\n" +
                         "         switch (p) {\n" +
-                        "            case Integer i && (i > 10): result = \"a\"; break;\n" +
+                        "            case Integer i when (i > 10): result = \"a\"; break;\n" +
                         "            default: System.err.println(\"No.\"); break;\n" +
                         "         }\n" +
                         "     }\n" +
@@ -1003,17 +1003,17 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                 .assertCompilable()
                 .assertVerbatimOutput("package test;" +
                         "public class Test {\n" +
-                        "     private void test(int p) {\n" +
+                        "     private void test(Object p) {\n" +
                         "         String result;\n" +
                         "         switch (p) {\n" +
-                        "            case Integer i && (i > 10) -> result = \"a\";\n" +
+                        "            case Integer i when (i > 10) -> result = \"a\";\n" +
                         "            default -> System.err.println(\"No.\");\n" +
                         "         }\n" +
                         "     }\n" +
                         "}\n");
     }
     
-        public void testSwitchExpressionGuardedPattern() throws Exception {
+    public void testSwitchExpressionGuardedPattern() throws Exception {
         try {
             SourceVersion.valueOf("RELEASE_17"); //NOI18N
         } catch (IllegalArgumentException ex) {
@@ -1025,7 +1025,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                         + "class Test {\n"
                         + "    public String test(Object p, Object o1, Object o2) {\n"
                         + "        switch (p) {\n"
-                        + "            case (Integer i  && (i > 10)):\n"
+                        + "            case Integer i  when (i > 10):\n"
                         + "               return (String) o1;\n"
                         + "            default :\n"
                         + "                return (String) o2;\n"
@@ -1042,7 +1042,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                             + "class Test {\n"
                             + "    public String test(Object p, Object o1, Object o2) {\n"
                             + "        return (String) (switch (p) {\n"
-                            + "            case (Integer i  && (i > 10)) -> o1;\n"
+                            + "            case Integer i  when (i > 10) -> o1;\n"
                             + "            default -> o2;\n"
                             + "        });\n"
                             + "    }\n"

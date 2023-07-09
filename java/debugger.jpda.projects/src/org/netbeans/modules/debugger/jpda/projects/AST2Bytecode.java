@@ -96,8 +96,7 @@ class AST2Bytecode {
             Tree node = treeNodes.get(treeIndex);
             Tree.Kind kind = node.getKind();
             EditorContext.Operation op = null;
-            if (kind.equals(Tree.Kind.METHOD_INVOCATION) ||
-                kind.equals(Tree.Kind.NEW_CLASS)) {
+            if (kind == Tree.Kind.METHOD_INVOCATION || kind == Tree.Kind.NEW_CLASS) {
                 
                 int opcode;
                 do {
@@ -168,7 +167,7 @@ class AST2Bytecode {
                         String methodName;
                         String methodClassType;
                         boolean getStartPosFromMethodLength = false;
-                        if (kind.equals(Tree.Kind.NEW_CLASS)) {
+                        if (kind == Tree.Kind.NEW_CLASS) {
                             identifier = ((NewClassTree) node).getIdentifier();
                             methodName = "<init>";
                             TreePath iPath = TreePath.getPath(cu, identifier);

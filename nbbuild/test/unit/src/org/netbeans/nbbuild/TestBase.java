@@ -160,9 +160,7 @@ abstract class TestBase extends NbTestCase {
             org.apache.tools.ant.Main.main(arr.toArray(new String[0]));
         } catch (MySecExc ex) {
             assertNotNull("The only one to throw security exception is MySecMan and should set exitCode", sec.exitCode);
-            ExecutionError.assertExitCode(
-                    "Execution has to finish without problems",
-                    sec.exitCode.intValue());
+            ExecutionError.assertExitCode("Execution has to finish without problems", sec.exitCode);
         } finally {
             sec.setActive(false);
         }
@@ -202,7 +200,7 @@ abstract class TestBase extends NbTestCase {
         @Override
         public void checkExit(int status) {
             if (active) {
-                exitCode = new Integer(status);
+                exitCode = status;
                 throw new MySecExc();
             }
         }

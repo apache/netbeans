@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.gradle;
 
+import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.beans.PropertyChangeEvent;

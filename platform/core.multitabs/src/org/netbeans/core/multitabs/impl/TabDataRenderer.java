@@ -59,6 +59,7 @@ public class TabDataRenderer implements TableCellRenderer {
     private static final Color inactiveUnderlineColor = UIManager.getColor("nb.multitabs.inactiveUnderlineColor"); // NOI18N
     private static final Color activeBackground = UIManager.getColor("nb.multitabs.activeBackground"); // NOI18N
     private static final Color hoverBackground = UIManager.getColor("nb.multitabs.hoverBackground"); // NOI18N
+    private static final boolean underlineAtTop = UIManager.getBoolean("EditorTab.underlineAtTop");
 
     private final RendererPanel renderer = new RendererPanel();
     private final List<TabDecorator> decorators = getDecorators();
@@ -238,10 +239,18 @@ public class TabDataRenderer implements TableCellRenderer {
                 switch (tabsLocation) {
                     default:
                     case JTabbedPane.TOP:
-                        g.fillRect(0, rect.height - underlineHeight, rect.width, underlineHeight);
+                        if (underlineAtTop) {
+                            g.fillRect(0, 0, rect.width, underlineHeight);
+                        } else {
+                            g.fillRect(0, rect.height - underlineHeight, rect.width, underlineHeight);
+                        }
                         break;
                     case JTabbedPane.BOTTOM:
-                        g.fillRect(0, 0, rect.width, underlineHeight);
+                        if (underlineAtTop) {
+                            g.fillRect(0, rect.height - underlineHeight, rect.width, underlineHeight);
+                        } else {
+                            g.fillRect(0, 0, rect.width, underlineHeight);
+                        }
                         break;
                     case JTabbedPane.LEFT:
                         g.fillRect(rect.width - underlineHeight, 0, underlineHeight, rect.height);

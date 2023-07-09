@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.11
+#Version 2.15
 
 CLSS public java.lang.Object
 cons public init()
@@ -173,6 +173,7 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
 innr public final static PasswordLine
 innr public final static QuickPick

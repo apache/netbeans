@@ -69,21 +69,19 @@ export function launch(
     if (info.verbose) {
         ideArgs.push('-J-Dnetbeans.logger.console=true');
     }
+    ideArgs.push(`-J-Dnetbeans.extra.dirs="${clusterPath}"`)
     if (env['netbeans.extra.options']) {
         ideArgs.push(env['netbeans.extra.options']);
     }
     ideArgs.push(...extraArgs);
     
-    if (env['netbeans.debug'] && extraArgs && extraArgs.find(s => s.includes("--list"))) {
+    if (env['netbeans_debug'] && extraArgs && extraArgs.find(s => s.includes("--list"))) {
         ideArgs.push(...['-J-Xdebug', '-J-Dnetbeans.logger.console=true', '-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000']);
     }
 
     let process: ChildProcessByStdio<any, Readable, Readable> = spawn(nbcodePath, ideArgs, {
         cwd : userDir,
         stdio : ["ignore", "pipe", "pipe"],
-        env : Object.assign({
-            'extra_clusters' : clusterPath
-        }, global.process.env)
     });
     return process;
 }

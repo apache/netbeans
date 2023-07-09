@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.105.0
+#Version 1.109.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -364,6 +364,7 @@ CLSS public abstract interface static !annotation org.netbeans.spi.project.ui.su
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault int position()
+meth public abstract !hasdefault java.lang.String parentPath()
 meth public abstract java.lang.String[] projectType()
 
 CLSS public org.netbeans.spi.project.ui.support.NodeFactorySupport

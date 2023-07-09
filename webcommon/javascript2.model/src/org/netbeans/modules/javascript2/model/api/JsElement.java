@@ -51,7 +51,8 @@ public interface JsElement extends ElementHandle {
         CLASS(17),
         GENERATOR(18),
         CONSTANT(19),
-        BLOCK(20);
+        BLOCK(20),
+        ARROW_FUNCTION(21);
 
         private final int id;
         private static final Map<Integer, Kind> LOOKUP = new HashMap<>();
@@ -77,7 +78,8 @@ public interface JsElement extends ElementHandle {
         public boolean isFunction() {
             return this == FUNCTION || this == METHOD || this == CONSTRUCTOR
                     || this == PROPERTY_GETTER || this == PROPERTY_SETTER
-                    || this == CALLBACK || this == GENERATOR;
+                    || this == CALLBACK || this == GENERATOR
+                    || this == ARROW_FUNCTION;
         }
 
         public boolean isPropertyGetterSetter() {

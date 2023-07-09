@@ -119,14 +119,18 @@ public abstract class PHPFormatterTestBase extends PHPTestBase {
     }
 
     protected void reformatFileContents(String file, Map<String, Object> options, boolean isTemplate) throws Exception {
-        reformatFileContents(file, options, isTemplate, new IndentPrefs(4, 4));
+        reformatFileContents(file, options, isTemplate, false, new IndentPrefs(4, 4));
     }
 
-    private void reformatFileContents(String file, Map<String, Object> options, boolean isTemplate, IndentPrefs indentPrefs) throws Exception {
+    protected void reformatFileContents(String file, Map<String, Object> options, boolean isTemplate, boolean includeTestName) throws Exception {
+        reformatFileContents(file, options, isTemplate, includeTestName, new IndentPrefs(4, 4));
+    }
+
+    private void reformatFileContents(String file, Map<String, Object> options, boolean isTemplate, boolean includeTestName, IndentPrefs indentPrefs) throws Exception {
         FileObject fo = getTestFile(file);
         assertNotNull(fo);
 
-        String text = read(fo);
+        String text = readFile(fo);
 
         int formatStart = 0;
         int formatEnd = text.length();
@@ -194,7 +198,7 @@ public abstract class PHPFormatterTestBase extends PHPTestBase {
 
         format(doc, formatter, formatStart, formatEnd, false);
         String after = doc.getText(0, doc.getLength());
-        assertDescriptionMatches(file, after, false, ".formatted");
+        assertDescriptionMatches(file, after, includeTestName, ".formatted");
         GSFPHPParserTestUtil.setUnitTestCaretPosition(-1);
     }
 }

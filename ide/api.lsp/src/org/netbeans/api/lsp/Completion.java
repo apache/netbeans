@@ -44,9 +44,9 @@ public final class Completion {
         CompletionAccessor.setDefault(new CompletionAccessor() {
             @Override
             public Completion createCompletion(String label, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
-                    boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat, TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits,
-                    List<Character> commitCharacters) {
-                return new Completion(label, kind, tags, detail, documentation, preselect, sortText, filterText, insertText, insertTextFormat, textEdit, additionalTextEdits, commitCharacters);
+                    boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat, TextEdit textEdit, Command command,
+                    CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters) {
+                return new Completion(label, kind, tags, detail, documentation, preselect, sortText, filterText, insertText, insertTextFormat, textEdit, command, additionalTextEdits, commitCharacters);
             }
         });
     }
@@ -62,12 +62,13 @@ public final class Completion {
     private final String insertText;
     private final TextFormat insertTextFormat;
     private final TextEdit textEdit;
+    private final Command command;
     private final CompletableFuture<List<TextEdit>> additionalTextEdits;
     private final List<Character> commitCharacters;
 
     private Completion(String label, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
             boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat,
-            TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters) {
+            TextEdit textEdit, Command command, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters) {
         this.label = label;
         this.kind = kind;
         this.tags = tags;
@@ -79,6 +80,7 @@ public final class Completion {
         this.insertText = insertText;
         this.insertTextFormat = insertTextFormat;
         this.textEdit = textEdit;
+        this.command = command;
         this.additionalTextEdits = additionalTextEdits;
         this.commitCharacters = commitCharacters;
     }
@@ -201,6 +203,16 @@ public final class Completion {
     @CheckForNull
     public TextEdit getTextEdit() {
         return textEdit;
+    }
+
+    /**
+     * An optional command that is executed after inserting this completion.
+     *
+     * @since 1.17
+     */
+    @CheckForNull
+    public Command getCommand() {
+        return command;
     }
 
     /**

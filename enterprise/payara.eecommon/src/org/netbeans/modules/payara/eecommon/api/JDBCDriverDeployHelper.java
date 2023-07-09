@@ -56,7 +56,7 @@ import org.openide.util.NbBundle;
 
 public class JDBCDriverDeployHelper {
 
-    public static ProgressObject getProgressObject(File driverLoc, List listOfURLS) {
+    public static ProgressObject getProgressObject(File driverLoc, List<URL> listOfURLS) {
         return new JDBCDriversProgressObject(driverLoc, listOfURLS);
     }
 
@@ -151,7 +151,7 @@ public class JDBCDriverDeployHelper {
         private final File driverLoc;
         private List<URL> jdbcDriverURLs;
 
-        public JDBCDriversProgressObject(File driverLoc, List jdbcDriverURLs) {
+        public JDBCDriversProgressObject(File driverLoc, List<URL> jdbcDriverURLs) {
             eventSupport = new ProgressEventSupport(this); //JDBCDriverDeployHelper.this);
             String msg = NbBundle.getMessage(JDBCDriverDeployHelper.class, "MSG_CheckMissingDrivers");
             eventSupport.fireHandleProgressEvent(null, ProgressEventSupport.createStatus(ActionType.EXECUTE, CommandType.DISTRIBUTE, msg, StateType.RUNNING));

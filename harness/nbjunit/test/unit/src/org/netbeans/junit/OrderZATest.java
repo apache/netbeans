@@ -19,9 +19,9 @@
 package org.netbeans.junit;
 
 import java.lang.reflect.Method;
-import junit.framework.Assert;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
+import org.junit.Assert;
 import org.junit.Test;
 
 /** Check the z-a behaviour.

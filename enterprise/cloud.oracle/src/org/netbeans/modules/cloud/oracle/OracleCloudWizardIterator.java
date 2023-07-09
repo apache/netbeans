@@ -18,26 +18,22 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Desktop;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import org.openide.WizardDescriptor;
-import org.openide.WizardValidationException;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -51,32 +47,58 @@ import org.openide.util.NbBundle;
     "MSG_TenancyFound=Found a tenancy <br/><b>{0}</b>"
 })
 public class OracleCloudWizardIterator implements WizardDescriptor.AsynchronousInstantiatingIterator {
-
+    private static final RequestProcessor RP = new RequestProcessor(OracleCloudWizardIterator.class);
     private static final String TENANCY = "TENANCY";
     private Panel panel;
 
+    // @GuardedBy(this)
+    private CompletableFuture<List<OCIProfile>> profiles = new CompletableFuture<>();
+    
     public OracleCloudWizardIterator() {
     }
 
     @Override
     public Set instantiate() throws IOException {
+        for (OCIProfile p : panel.ui.getSelectedProfiles()) {
+            OCIManager.getDefault().addConnectedProfile(p);
+        }
         return Collections.emptySet();
     }
 
     @Override
     public void initialize(WizardDescriptor wizard) {
-        wizard.putProperty(TENANCY, 
-                CompletableFuture.supplyAsync(() -> OCIManager.getDefault().getTenancy()));
+        RP.post(() -> {
+            List<OCIProfile> list = new ArrayList<>();
+            try {
+                for (OCIProfile p : OCIManager.getDefault().listProfiles(null)) {
+                    if (p.getTenancy().isPresent()) {
+                        list.add(p);
+                    }
+                }
+            } catch (IOException ex) {
+                profiles.completeExceptionally(ex);
+                return;
+            }
+            list.removeAll(OCIManager.getDefault().getConnectedProfiles());
+            profiles.complete(list);
+        });
     }
 
     @Override
     public void uninitialize(WizardDescriptor wizard) {
     }
-
+    
     @Override
     public WizardDescriptor.Panel current() {
         if (panel == null) {
             panel = new Panel();
+            profiles.thenAccept((l) -> {
+                // doh: no Swing EDT executor available...
+                SwingUtilities.invokeLater(() -> updateProfilesUI(l));
+            }).exceptionally(ex -> {
+                panel.ui.showErrorMessage(ex.getLocalizedMessage());
+                return null;
+            });
         }
         return panel;
     }
@@ -111,97 +133,70 @@ public class OracleCloudWizardIterator implements WizardDescriptor.AsynchronousI
     @Override
     public void removeChangeListener(ChangeListener l) {
     }
-
-    private class Panel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
-
-        private JTextPane text;
-        private boolean valid = false;
-        private final JPanel panel;
-        private final ChangeSupport changeSupport;
-
-        public Panel() {
-            text = new JTextPane();
-            text.setContentType("text/html"); //NOI18N
-            text.setText(Bundle.MSG_CheckingSetup());
-            panel = new JPanel(new BorderLayout());
-            text.setEditable(false);
-            text.addHyperlinkListener(new HyperlinkListener() {
-                @Override
-                public void hyperlinkUpdate(HyperlinkEvent hle) {
-                    if (HyperlinkEvent.EventType.ACTIVATED.equals(hle.getEventType())) {
-                        Desktop desktop = Desktop.getDesktop();
-                        try {
-                            desktop.browse(hle.getURL().toURI());
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                }
-            });
-            panel.add(text, BorderLayout.CENTER);
-            panel.setName(Bundle.LBL_OC());
-            panel.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, new String[]{Bundle.LBL_OC()});
-            panel.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
-            text.setText(Bundle.MSG_CheckingSetup());
-            changeSupport = new ChangeSupport(this);
+    
+    private void updateProfilesUI(List<OCIProfile> profiles) {
+        if (panel == null) {
+            return;
         }
+        if (profiles.isEmpty()) {
+            panel.ui.showErrorMessage(Bundle.MSG_OCI_Setup(Bundle.URL_OCI_Setup()));
+        } else {
+            panel.ui.setProfiles(profiles);
+            // select by default
+            panel.ui.setSelectedProfiles(profiles);
+        }
+    }
 
+    static class Panel implements WizardDescriptor.Panel, PropertyChangeListener {
+        private ChangeSupport changeSupport;
+        private ConnectProfilePanel ui = new ConnectProfilePanel();
+        
         @Override
         public Component getComponent() {
-            return panel;
+            return ui;
         }
 
         @Override
         public HelpCtx getHelp() {
-            return null;
+            return HelpCtx.DEFAULT_HELP;
         }
 
         @Override
-        public void readSettings(WizardDescriptor settings) {
-            Object o = settings.getProperty(TENANCY);
-            if (o == null) {
-                return;
-            }
-            CompletionStage<Optional<OCIItem>> cs = (CompletionStage<Optional<OCIItem>>) o;
-            cs.thenAccept(t -> {
-                if (t.isPresent()) {
-                    if (!valid) {
-                        valid = true;
-                        changeSupport.fireChange();
-                    }
-                    text.setText(Bundle.MSG_TenancyFound(t.get().getName()));
-                } else {
-                    text.setText(Bundle.MSG_OCI_Setup(Bundle.URL_OCI_Setup()));
-                }
-            });
+        public void readSettings(Object settings) {
         }
 
         @Override
-        public void storeSettings(WizardDescriptor settings) {
-        }
-
-        @Override
-        public boolean isValid() {
-            return valid;
+        public void storeSettings(Object settings) {
         }
 
         @Override
         public void addChangeListener(ChangeListener l) {
+            if (changeSupport == null) {
+                changeSupport = new ChangeSupport(this);
+                ui.addPropertyChangeListener(this);
+            }
             changeSupport.addChangeListener(l);
         }
 
         @Override
         public void removeChangeListener(ChangeListener l) {
-            changeSupport.removeChangeListener(l);
+            if (changeSupport != null) {
+                changeSupport.removeChangeListener(l);
+            }
         }
 
         @Override
-        public void prepareValidation() {
+        public boolean isValid() {
+            return ui.isContentValid();
         }
 
         @Override
-        public void validate() throws WizardValidationException {
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("contentValid".equals(evt.getPropertyName())) {
+                if (changeSupport != null) {
+                    changeSupport.fireChange();
+                }
+            }
         }
     }
-
 }

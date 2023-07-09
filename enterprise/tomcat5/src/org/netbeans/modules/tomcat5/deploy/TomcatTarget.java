@@ -39,10 +39,12 @@ public class TomcatTarget implements Target {
         this.uri = uri;
     }
 
+    @Override
     public String getName () {
         return name;
     }
 
+    @Override
     public String getDescription () {
         return desc;
     }
@@ -51,6 +53,7 @@ public class TomcatTarget implements Target {
         return uri;
     }
     
+    @Override
     public String toString () {
         return name;
     }

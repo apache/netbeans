@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.66
+#Version 1.70
 
 CLSS public abstract interface java.io.Serializable
 
@@ -50,7 +50,6 @@ fld public final static javax.swing.KeyStroke NO_KEYSTROKE
 meth public static java.lang.String keyAcceleratorString(javax.swing.KeyStroke)
 meth public static javax.swing.KeyStroke registerAction(java.lang.String,javax.swing.Action,javax.swing.ActionMap,javax.swing.InputMap)
 supr java.lang.Object
-hfds ACC_DELIMITER
 
 CLSS public final org.netbeans.modules.profiler.api.EditorContext
 cons public init(javax.swing.text.JTextComponent,javax.swing.text.Document,org.openide.filesystems.FileObject)

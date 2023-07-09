@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -58,6 +60,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
@@ -68,12 +71,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
+import org.eclipse.lsp4j.DidChangeWorkspaceFoldersParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ShowDocumentParams;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.WorkspaceSymbol;
 import org.eclipse.lsp4j.WorkspaceSymbolLocation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
@@ -99,6 +104,7 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
@@ -107,15 +113,19 @@ import org.netbeans.modules.csl.api.IndexSearcher;
 import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
+import org.netbeans.modules.java.hints.spi.preview.PreviewEnabler;
+import org.netbeans.modules.java.hints.spi.preview.PreviewEnabler.Factory;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
+import org.netbeans.modules.java.lsp.server.project.LspProjectInfo;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.parsing.lucene.support.Queries;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -124,10 +134,12 @@ import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
@@ -139,8 +151,11 @@ import org.openide.util.lookup.Lookups;
  * @author lahvac
  */
 public final class WorkspaceServiceImpl implements WorkspaceService, LanguageClientAware {
+    
+    private static final Logger LOG = Logger.getLogger(WorkspaceServiceImpl.class.getName());
 
     private static final RequestProcessor WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 1, false, false);
+    private static final RequestProcessor PROJECT_WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 5, false, false);
 
     private final Gson gson = new Gson();
     private final LspServerState server;
@@ -315,7 +330,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 if (file == null) {
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
+                long t = System.currentTimeMillis();
                 return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenCompose(testRoots -> {
+                    LOG.log(Level.INFO, "Project {2}: {0} test roots opened in {1}ms", new Object[] { testRoots.size(), (System.currentTimeMillis() - t), file});
                     BiFunction<FileObject, Collection<TestMethodController.TestMethod>, Collection<TestSuiteInfo>> f = (fo, methods) -> {
                         String url = Utils.toUri(fo);
                         Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();
@@ -384,54 +401,53 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return future;
                 });
             }
+            case Server.JAVA_RESOLVE_STACKTRACE_LOCATION: {
+                CompletableFuture<Object> future = new CompletableFuture<>();
+                try {
+                    if (params.getArguments().size() >= 3) {
+                        String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                        String methodName = ((JsonPrimitive) params.getArguments().get(1)).getAsString();
+                        String fileName = ((JsonPrimitive) params.getArguments().get(2)).getAsString();
+                        FileObject fo = Utils.fromUri(uri);
+                        if (fo != null) {
+                            ClassPath classPath = ClassPathSupport.createProxyClassPath(new ClassPath[] {
+                                ClassPath.getClassPath(fo, ClassPath.EXECUTE),
+                                ClassPath.getClassPath(fo, ClassPath.BOOT)
+                            });
+                            String name = fileName.substring(0, fileName.lastIndexOf('.'));
+                            String packageName = methodName.substring(0, methodName.indexOf(name)).replace('.', '/');
+                            String resourceName = packageName + name + ".class";
+                            List<FileObject> resources = classPath.findAllResources(resourceName);
+                            if (resources != null) {
+                                for (FileObject resource : resources) {
+                                    FileObject root = classPath.findOwnerRoot(resource);
+                                    if (root != null) {
+                                        URL url = URLMapper.findURL(root, URLMapper.INTERNAL);
+                                        SourceForBinaryQuery.Result res = SourceForBinaryQuery.findSourceRoots(url);
+                                        FileObject[] rootz = res.getRoots();
+                                        for (int i = 0; i < rootz.length; i++) {
+                                            String path = packageName + fileName;
+                                            FileObject sourceFo = rootz[i].getFileObject(path);
+                                            if (sourceFo != null) {
+                                                future.complete(Utils.toUri(sourceFo));
+                                                return future;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    future.complete(null);
+                } catch (IOException ex) {
+                    future.completeExceptionally(ex);
+                }
+                return future;
+            }
             case Server.JAVA_SUPER_IMPLEMENTATION:
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementations(uri, pos);
-            case Server.JAVA_SOURCE_FOR: {
-                CompletableFuture<Object> result = new CompletableFuture<>();
-                try {
-                    String sourceUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-                    if (sourceUri == null || !sourceUri.startsWith(SOURCE_FOR)) {
-                        throw new IllegalArgumentException("Invalid uri: " + sourceUri);
-                    }
-                    sourceUri = URLDecoder.decode(sourceUri.substring(SOURCE_FOR.length()), StandardCharsets.UTF_8.toString());
-                    int qIdx = sourceUri.lastIndexOf('?');
-                    int hIdx = sourceUri.lastIndexOf('#');
-                    if (qIdx < 0 || hIdx < 0 || hIdx <= qIdx) {
-                        throw new IllegalArgumentException("Invalid uri: " + sourceUri);
-                    }
-                    String rootUri = sourceUri.substring(0, qIdx);
-                    FileObject root = URLMapper.findFileObject(URI.create(rootUri).toURL());
-                    if (root == null) {
-                        throw new IllegalStateException("Unable to find root: " + rootUri);
-                    }
-                    ElementHandle typeHandle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(sourceUri.substring(qIdx + 1, hIdx)), sourceUri.substring(hIdx + 1));
-                    CompletableFuture<ElementOpen.Location> location = ElementOpen.getLocation(ClasspathInfo.create(root), typeHandle, typeHandle.getQualifiedName().replace('.', '/') + ".class");
-                    location.exceptionally(ex -> {
-                        result.completeExceptionally(ex);
-                        return null;
-                    }).thenAccept(loc -> {
-                        if (loc != null) {
-                            ShowDocumentParams sdp = new ShowDocumentParams(Utils.toUri(loc.getFileObject()));
-                            Position position = Utils.createPosition(loc.getFileObject(), loc.getStartOffset());
-                            sdp.setSelection(new Range(position, position));
-                            client.showDocument(sdp).thenAccept(res -> {
-                                if (res.isSuccess()) {
-                                    result.complete(null);
-                                } else {
-                                    result.completeExceptionally(new IllegalStateException("Cannot open source for: " + typeHandle.getQualifiedName()));
-                                }
-                            });
-                        } else if (!result.isCompletedExceptionally()) {
-                            result.completeExceptionally(new IllegalStateException("Cannot find source for: " + typeHandle.getQualifiedName()));
-                        }
-                    });
-                } catch (Throwable t) {
-                    result.completeExceptionally(t);
-                }
-                return result;
-            }
             case Server.JAVA_FIND_PROJECT_CONFIGURATIONS: {
                 String fileUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 
@@ -578,6 +594,79 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
                 return (CompletableFuture<Object>) (CompletableFuture<?>)result;
             }
+            
+            case Server.JAVA_PROJECT_INFO: {
+                final CompletableFuture<Object> result = new CompletableFuture<>();
+                List<Object> arguments = params.getArguments();
+                if (arguments.size() < 1) {
+                    result.completeExceptionally(new IllegalArgumentException("Expecting URL or URL[] as an argument to " + command));
+                    return result;
+                }
+                Object o = arguments.get(0);
+                URL[] locations = null;
+                if (o instanceof JsonArray) {
+                    List<URL> locs = new ArrayList<>();
+                    JsonArray a = (JsonArray)o;
+                    a.forEach((e) -> {
+                        if (e instanceof JsonPrimitive) {
+                            String s = ((JsonPrimitive)e).getAsString();
+                            try {
+                                locs.add(new URL(s));
+                            } catch (MalformedURLException ex) {
+                                throw new IllegalArgumentException("Illegal location: " + s);
+                            }
+                        }
+                    });
+                    locations = locs.toArray(new URL[0]);
+                } else if (o instanceof JsonPrimitive) {
+                    String s = ((JsonPrimitive)o).getAsString();
+                    try {
+                        locations = new URL[] { new URL(s) };
+                    } catch (MalformedURLException ex) {
+                        throw new IllegalArgumentException("Illegal location: " + s);
+                    }
+                }
+                if (locations == null || locations.length == 0) {
+                    result.completeExceptionally(new IllegalArgumentException("Expecting URL or URL[] as an argument to " + command));
+                    return result;
+                }
+                boolean projectStructure = false;
+                boolean actions = false;
+                boolean recursive = false;
+                
+                if (arguments.size() > 1) {
+                    Object a2 = arguments.get(1);
+                    if (a2 instanceof JsonObject) {
+                        JsonObject options = (JsonObject)a2;
+                        projectStructure = getOption(options, "projectStructure", false); // NOI18N
+                        actions = getOption(options, "actions", false); // NOI18N
+                        recursive = getOption(options, "recursive", false); // NOI18N
+                    }
+                }
+                return (CompletableFuture<Object>)(CompletableFuture<?>)new ProjectInfoWorker(locations, projectStructure, recursive, actions).process();
+            }
+            case Server.JAVA_ENABLE_PREVIEW: {
+                String source = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                String newSourceLevel = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsString()
+                                                                         : null;
+                FileObject file;
+                try {
+                    file = URLMapper.findFileObject(new URL(source));
+                    if (file != null) {
+                        for (Factory factory : Lookup.getDefault().lookupAll(Factory.class)) {
+                            PreviewEnabler enabler = factory.enablerFor(file);
+                            if (enabler != null) {
+                                enabler.enablePreview(newSourceLevel);
+                                break;
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                return CompletableFuture.completedFuture(true);
+            }
             default:
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     if (codeActionsProvider.getCommands().contains(command)) {
@@ -586,6 +675,133 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
+    }
+    
+    private class ProjectInfoWorker {
+        final URL[] locations;
+        final boolean projectStructure;
+        final boolean recursive;
+        final boolean actions;
+        
+        Map<FileObject, LspProjectInfo> infos = new HashMap<>();
+        Set<Project> toOpen = new HashSet<>();
+
+        public ProjectInfoWorker(URL[] locations, boolean projectStructure, boolean recursive, boolean actions) {
+            this.locations = locations;
+            this.projectStructure = projectStructure;
+            this.recursive = recursive;
+            this.actions = actions;
+        }
+
+        public CompletableFuture<LspProjectInfo[]> process() {
+            List<FileObject> files = new ArrayList<>();
+            for (URL u : locations) {
+                FileObject f = URLMapper.findFileObject(u);
+                if (f != null) {
+                    files.add(f);
+                }
+            }
+            return server.asyncOpenSelectedProjects(files, false).thenCompose(this::processProjects);
+        }
+        
+        LspProjectInfo fillProjectInfo(Project p) {
+            LspProjectInfo info = infos.get(p.getProjectDirectory());
+            if (info != null) {
+                return info;
+            }
+            info = new LspProjectInfo();
+            
+            ProjectInformation pi = ProjectUtils.getInformation(p);
+            URL projectURL = URLMapper.findURL(p.getProjectDirectory(), URLMapper.EXTERNAL);
+            if (projectURL != null) {
+                try {
+                    info.projectDirectory = projectURL.toURI();
+                } catch (URISyntaxException ex) {
+                    // should not happen
+                }
+            }
+            info.name = pi.getName();
+            info.displayName = pi.getDisplayName();
+            
+            // attempt to determine the project type
+            ProjectManager.Result r = ProjectManager.getDefault().isProject2(p.getProjectDirectory());
+            info.projectType = r.getProjectType();
+            
+            if (actions) {
+                ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
+                if (ap != null) {
+                    info.projectActionNames = ap.getSupportedActions();
+                }
+            }
+
+            if (projectStructure) {
+                Set<Project> children = ProjectUtils.getContainedProjects(p, false);
+                List<URI> subprojectDirs = new ArrayList<>();
+                for (Project c : children) {
+                    try {
+                        subprojectDirs.add(URLMapper.findURL(c.getProjectDirectory(), URLMapper.EXTERNAL).toURI());
+                    } catch (URISyntaxException ex) {
+                        // should not happen
+                    }
+                }
+                info.subprojects = subprojectDirs.toArray(new URI[subprojectDirs.size()]);
+                Project root = ProjectUtils.rootOf(p);
+                if (root != null) {
+                    try {
+                        info.rootProject = URLMapper.findURL(root.getProjectDirectory(), URLMapper.EXTERNAL).toURI();
+                    } catch (URISyntaxException ex) {
+                        // should not happen
+                    }
+                }
+                if (recursive) {
+                    toOpen.addAll(children);
+                }
+            }
+            infos.put(p.getProjectDirectory(), info);
+            return info;
+        }
+        
+        CompletableFuture<LspProjectInfo[]> processProjects(Project[] prjs) {
+            for (Project p : prjs) {
+                fillProjectInfo(p);
+            }
+            if (toOpen.isEmpty()) {
+                return finalizeInfos();
+            }
+            List<FileObject> dirs = new ArrayList<>(toOpen.size());
+            for (Project p : toOpen) {
+                dirs.add(p.getProjectDirectory());
+            }
+            toOpen.clear();
+            return server.asyncOpenSelectedProjects(dirs).thenCompose(this::processProjects);
+        }
+        
+        CompletableFuture<LspProjectInfo[]> finalizeInfos() {
+            List<LspProjectInfo> list = new ArrayList<>();
+            for (URL u : locations) {
+                FileObject f = URLMapper.findFileObject(u);
+                Project owner = FileOwnerQuery.getOwner(f);
+                if (owner != null) {
+                    list.add(infos.remove(owner.getProjectDirectory()));
+                } else {
+                    list.add(null);
+                }
+            }
+            list.addAll(infos.values());
+            LspProjectInfo[] toArray = list.toArray(new LspProjectInfo[list.size()]);
+            return CompletableFuture.completedFuture(toArray);
+        }
+    }
+    
+    private static boolean getOption(JsonObject opts, String member, boolean def) {
+        if (!opts.has(member)) {
+            return def;
+        }
+        Object o = opts.get(member);
+        if (!(o instanceof JsonPrimitive)) {
+            return false;
+        }
+        return ((JsonPrimitive)o).getAsBoolean();
     }
     
     private final AtomicReference<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> testMethodsListener = new AtomicReference<>();
@@ -683,7 +899,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     @Override
     public CompletableFuture<Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>>> symbol(WorkspaceSymbolParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
-        if (server.openedProjects().getNow(null) == null) {
+        final Project[] openedProjects = server.openedProjects().getNow(null);
+        if (openedProjects == null) {
             return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
         }
         String query = params.getQuery();
@@ -710,33 +927,34 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         WORKER.post(() -> {
             try {
                 List<WorkspaceSymbol> symbols = new ArrayList<>();
-                if (client.getNbCodeCapabilities().wantsJavaSupport()) {
-                    SearchType searchType = getSearchType(queryFin, exactFin, false, null, null);
+                SearchType searchType = getSearchType(queryFin, exactFin, false, null, null);
 
-                    // CSL Part
-                    Collection<? extends IndexSearcher> providers = Lookup.getDefault().lookupAll(IndexSearcher.class);
-                    Set<? extends IndexSearcher.Descriptor> descriptors;
+                // CSL Part
+                Collection<? extends IndexSearcher> providers = Lookup.getDefault().lookupAll(IndexSearcher.class);
+                Set<? extends IndexSearcher.Descriptor> descriptors;
+                for (Project project : openedProjects) {
                     if (!providers.isEmpty()) {
                         for (IndexSearcher provider : providers) {
-                            descriptors = provider.getSymbols(null, queryFin, Utils.searchType2QueryKind(searchType), null);
+                            descriptors = provider.getSymbols(project, queryFin, Utils.searchType2QueryKind(searchType), null);
                             for (IndexSearcher.Descriptor desc : descriptors) {
                                 FileObject fo = desc.getFileObject();
                                 org.netbeans.modules.csl.api.ElementHandle element = desc.getElement();
                                 if (fo != null) {
-                                    Position startPos = Utils.createPosition(fo, desc.getOffset());
-                                    Position endPos = Utils.createPosition(fo, desc.getOffset() + desc.getSimpleName().length());
+                                    Position pos = Utils.createPosition(fo, desc.getOffset());
                                     WorkspaceSymbol symbol = new WorkspaceSymbol(
                                             desc.getSimpleName(),
                                             Utils.cslElementKind2SymbolKind(element.getKind()),
-                                            Either.forLeft(new Location(Utils.toUri(fo), new Range(startPos, endPos))),
+                                            Either.forLeft(new Location(Utils.toUri(fo), new Range(pos, pos))),
                                             desc.getContextName());
                                     symbols.add(symbol);
                                 }
                             }
                         }
                     }
+                }
 
-                    // Java part
+                // Java part
+                if (client.getNbCodeCapabilities().wantsJavaSupport()) {
                     JavaSymbolProvider.ResultHandler symbolHandler = new JavaSymbolProvider.ResultHandler() {
                         @Override
                         public void setHighlightText(String text) {
@@ -870,6 +1088,53 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         return result;
     }
 
+    @Override
+    public CompletableFuture<WorkspaceSymbol> resolveWorkspaceSymbol(WorkspaceSymbol workspaceSymbol) {
+        String sourceUri = workspaceSymbol.getLocation().isLeft() ? workspaceSymbol.getLocation().getLeft().getUri() : workspaceSymbol.getLocation().getRight().getUri();
+        if (!sourceUri.startsWith(SOURCE_FOR)) {
+            return CompletableFuture.completedFuture(workspaceSymbol);
+        }
+        CompletableFuture<WorkspaceSymbol> result = new CompletableFuture<>();
+        try {
+            sourceUri = URLDecoder.decode(sourceUri.substring(SOURCE_FOR.length()), StandardCharsets.UTF_8.toString());
+            int qIdx = sourceUri.lastIndexOf('?');
+            int hIdx = sourceUri.lastIndexOf('#');
+            if (qIdx < 0 || hIdx < 0 || hIdx <= qIdx) {
+                throw new IllegalArgumentException("Invalid uri: " + sourceUri);
+            }
+            String rootUri = sourceUri.substring(0, qIdx);
+            FileObject root = URLMapper.findFileObject(URI.create(rootUri).toURL());
+            if (root == null) {
+                throw new IllegalStateException("Unable to find root: " + rootUri);
+            }
+            ElementHandle typeHandle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(sourceUri.substring(qIdx + 1, hIdx)), sourceUri.substring(hIdx + 1));
+            CompletableFuture<ElementOpen.Location> location = ElementOpen.getLocation(ClasspathInfo.create(root), typeHandle, typeHandle.getQualifiedName().replace('.', '/') + ".class");
+            location.exceptionally(ex -> {
+                result.completeExceptionally(ex);
+                return null;
+            }).thenAccept(loc -> {
+                if (loc != null) {
+                    ShowDocumentParams sdp = new ShowDocumentParams(Utils.toUri(loc.getFileObject()));
+                    Position position = Utils.createPosition(loc.getFileObject(), loc.getStartOffset());
+                    sdp.setSelection(new Range(position, position));
+                    client.showDocument(sdp).thenAccept(res -> {
+                        if (res.isSuccess()) {
+                            workspaceSymbol.setLocation(Either.forLeft(new Location(Utils.toUri(loc.getFileObject()), new Range(position, position))));
+                            result.complete(workspaceSymbol);
+                        } else {
+                            result.completeExceptionally(new IllegalStateException("Cannot open source for: " + typeHandle.getQualifiedName()));
+                        }
+                    });
+                } else if (!result.isCompletedExceptionally()) {
+                    result.completeExceptionally(new IllegalStateException("Cannot find source for: " + typeHandle.getQualifiedName()));
+                }
+            });
+        } catch (Throwable t) {
+            result.completeExceptionally(t);
+        }
+        return result;
+    }
+
     private Location tree2Location(CompilationInfo info, TreePath path) {
         return new Location(Utils.toUri(info.getFileObject()),
                             Utils.treeRange(info, path.getLeaf()));
@@ -984,6 +1249,54 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
     }
 
+    @NbBundle.Messages({
+        "# {0} - project name",
+        "MSG_ProjectFolderInitializationComplete=Completed initialization of project {0}",
+        "# {0} - some project name",
+        "# {1} - number of other projects loaded",
+        "MSG_ProjectFolderInitializationComplete2=Completed initialization of {0} and {1} other projectss"
+    })
+    @Override
+    public void didChangeWorkspaceFolders(DidChangeWorkspaceFoldersParams params) {
+        List<FileObject> refreshProjectFolders = new ArrayList<>();
+        for (WorkspaceFolder wkspFolder : params.getEvent().getAdded()) {
+            String uri = wkspFolder.getUri();
+            try {
+                FileObject f = Utils.fromUri(uri);
+                if (f != null) {
+                    refreshProjectFolders.add(f);
+                }
+            } catch (MalformedURLException ex) {
+                // expected, perhaps some client-specific URL scheme ?
+                LOG.fine("Workspace folder URI could not be converted into fileobject: {0}");
+            }
+        }
+        if (!refreshProjectFolders.isEmpty()) {
+            server.asyncOpenSelectedProjects(refreshProjectFolders, true).thenAccept((projects) -> {
+                // report initialization of a project / projects
+                String msg;
+                if (projects.length == 0) {
+                    // this should happen immediately
+                    return;
+                } 
+                ProjectInformation pi = ProjectUtils.getInformation(projects[0]);
+                String n = pi.getDisplayName();
+                if (n == null) {
+                    n = pi.getName();
+                }
+                if (n == null) {
+                    n = projects[0].getProjectDirectory().getName();
+                }
+                if (projects.length == 1) {
+                    msg = Bundle.MSG_ProjectFolderInitializationComplete(n);
+                } else {
+                    msg = Bundle.MSG_ProjectFolderInitializationComplete2(n, projects.length);
+                }
+                StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
+            });
+        }
+    }
+
     @Override
     public void didChangeWatchedFiles(DidChangeWatchedFilesParams arg0) {
         //TODO: not watching files for now
@@ -996,7 +1309,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     private static final class CommandProgress extends ActionProgress {
 
-        private final CompletableFuture<Object> commandFinished = new CompletableFuture<>();;
+        private final CompletableFuture<Object> commandFinished = new CompletableFuture<>();
         private int running;
         private int success;
         private int failure;

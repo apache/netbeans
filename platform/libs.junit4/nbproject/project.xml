@@ -41,6 +41,7 @@
                 <package>org.junit.experimental.theories</package>
                 <package>org.junit.experimental.theories.suppliers</package>
                 <package>org.junit.function</package>
+                <package>org.junit.internal</package>
                 <package>org.junit.matchers</package>
                 <package>org.junit.rules</package>
                 <package>org.junit.runner</package>

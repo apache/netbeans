@@ -101,11 +101,15 @@ public class ConfigurationUtils {
         }
         try {
             WebApp webApp = DDProvider.getDefault().getDDRoot(deploymentDescriptor);
-            
             // Try to find according the servlet class name. The javax.faces.webapp.FacesServlet is final, so
             // it can not be extended.
-            return (Servlet) webApp
+            if (WebApp.VERSION_6_0.equals(webApp.getVersion()) || WebApp.VERSION_5_0.equals(webApp.getVersion())) {
+                return (Servlet) webApp
+                    .findBeanByName("Servlet", "ServletClass", "jakarta.faces.webapp.FacesServlet"); //NOI18N;
+            } else {
+                return (Servlet) webApp
                     .findBeanByName("Servlet", "ServletClass", "javax.faces.webapp.FacesServlet"); //NOI18N;
+            }
         } catch (java.io.IOException e) {
             return null;
         }
@@ -160,7 +164,7 @@ public class ConfigurationUtils {
                     files.add(file);
                 }
             }
-            return files.toArray(new FileObject[files.size()]);
+            return files.toArray(new FileObject[0]);
         }
         return new FileObject [0];
     }

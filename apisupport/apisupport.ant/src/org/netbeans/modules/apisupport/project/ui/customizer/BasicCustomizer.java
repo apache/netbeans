@@ -142,7 +142,7 @@ public abstract class BasicCustomizer implements CustomizerProvider {
     }
     
     private String findLastSelectedCategory() {
-        if (dialog != null && dialog instanceof JDialog) {
+        if (dialog instanceof JDialog) {
             return (String)((JDialog)dialog).getRootPane().getClientProperty(BasicCustomizer.LAST_SELECTED_PANEL);
         }
         return null;

@@ -513,7 +513,7 @@ public final class ServerRegistry implements java.io.Serializable {
             return Collections.<String, String>emptyMap();
         }
 
-        Map<String,String> properties = new HashMap(initialProperties);
+        Map<String,String> properties = new HashMap<>(initialProperties);
         properties.remove(InstanceProperties.URL_ATTR);
         properties.remove(InstanceProperties.USERNAME_ATTR);
         properties.remove(InstanceProperties.PASSWORD_ATTR);
@@ -593,9 +593,9 @@ public final class ServerRegistry implements java.io.Serializable {
             if (configNamesByType != null) {
                 return;
             }
-            configNamesByType = new HashMap();
+            configNamesByType = new HashMap<>();
             for (int i = 0 ; i < ALL_TYPES.length; i++) {
-                Set<String> configNames = new HashSet();
+                Set<String> configNames = new HashSet<>();
                 for (Iterator j=servers.values().iterator(); j.hasNext();) {
                     Server s = (Server) j.next();
                     String[] paths = s.getDeploymentPlanFiles(ALL_TYPES[i]);

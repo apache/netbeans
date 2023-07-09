@@ -38,7 +38,7 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * Common utility methods for massaging and inspecting files from tests.
@@ -128,7 +128,7 @@ public class TestFileUtils {
     /**
      * Create a new ZIP file.
      * @param os a stream to which the ZIP will be written
-     * @param entries entries as maps from filename to binary contents;; parent dirs created automatically
+     * @param entries entries as maps from filename to binary contents; parent dirs created automatically
      * @throws IOException for the usual reasons
      */
     public static void writeZipFile(OutputStream os, Map<String,byte[]> entries) throws IOException {

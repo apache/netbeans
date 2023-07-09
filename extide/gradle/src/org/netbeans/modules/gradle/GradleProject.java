@@ -23,12 +23,13 @@ import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.openide.util.Lookup;
@@ -41,7 +42,6 @@ import org.openide.util.lookup.InstanceContent;
  */
 public final class GradleProject implements Serializable, Lookup.Provider {
 
-    final Set<GradleReport> problems;
     final Quality quality;
     final long evaluationTime = System.currentTimeMillis();
     final Lookup lookup;
@@ -54,14 +54,15 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         for (GradleReport prob : problems) {
             if (prob != null) probs.add(prob);
         }
-        this.problems = probs;
         InstanceContent ic = new InstanceContent();
         for (Object i : infos) {
             ic.add(i);
         }
         lookup = new AbstractLookup(ic);
+
         baseProject = lookup.lookup(GradleBaseProject.class);
         assert baseProject != null : "GradleProject always shall have a GradleBaseProject in it's lookup!";
+        setProblems(baseProject, probs);
     }
 
     private GradleProject(Quality quality, GradleReport[] problems, GradleProject origin) {
@@ -70,10 +71,11 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         for (GradleReport prob : problems) {
             if (prob != null) probs.add(prob);
         }
-        this.problems = probs;
         lookup = origin.lookup;
         baseProject = lookup.lookup(GradleBaseProject.class);
         assert baseProject != null : "GradleProject always shall have a GradleBaseProject in it's lookup!";
+
+        setProblems(baseProject, probs);
     }
 
     @Override
@@ -81,8 +83,8 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         return lookup;
     }
 
-    public Set<GradleReport> getProblems() {
-        return Collections.unmodifiableSet(problems);
+    Set<GradleReport> getProblems() {
+        return baseProject.getProblems();
     }
 
     public Quality getQuality() {
@@ -124,9 +126,20 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         Path scriptPath = gf.getBuildScript() != null ? gf.getBuildScript().toPath() : null;
         List<GradleReport> reports = new ArrayList<>();
         for (String s : reason) {
-            reports.add(GradleReport.simple(scriptPath, s));
+            reports.add(createGradleReport(scriptPath, s));
         }
         return invalidate(reports.toArray(new GradleReport[reports.size()]));
     }
 
+    private static void setProblems(GradleBaseProject baseProject, Set<GradleReport> problems) {
+        NbGradleProjectImpl.ACCESSOR.setProblems(baseProject, problems);
+    }
+
+    public static GradleReport createGradleReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
+        return NbGradleProjectImpl.ACCESSOR.createReport(errorClass, location, line, message, causedBy);
+    }
+
+    public static GradleReport createGradleReport(Path script, String message) {
+        return createGradleReport(null, Objects.toString(script), -1, message, null);
+    }
 }

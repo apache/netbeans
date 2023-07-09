@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -40,11 +41,11 @@ import org.openide.util.NbBundle;
  *
  * <br><br>
  * <b>How to use it:</b>
- * <pre style="background-color: rgb(255, 255, 153);">
+ * <pre style="background-color: rgb(255, 255, 153);"><code>
  *    DebuggerManager.addBreakpoint (MethodBreakpoint.create (
  *        "examples.texteditor.Ted*",
- *        "<init>
- *    ));</pre>
+ *        "&lt;init&gt;
+ *    ));</code></pre>
  * This breakpoint stops when some initializer of class Ted or innercalsses is
  * called.
  *
@@ -134,9 +135,7 @@ public class MethodBreakpoint extends JPDABreakpoint {
         if (mn != null) {
             mn = mn.trim();
         }
-        if ( (mn == methodName) ||
-             ((mn != null) && (methodName != null) && methodName.equals (mn))
-        ) return;
+        if (Objects.equals(mn, methodName)) return;
         String old = methodName;
         methodName = mn;
         firePropertyChange (PROP_METHOD_NAME, old, mn);
@@ -162,9 +161,7 @@ public class MethodBreakpoint extends JPDABreakpoint {
         if (signature != null) {
             signature = signature.trim();
         }
-        if ((signature == methodSignature) ||
-            ((signature != null) && signature.equals (methodSignature))) {
-            
+        if (Objects.equals(signature, methodSignature)) {
             return;
         }
         String old = methodSignature;

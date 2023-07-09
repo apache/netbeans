@@ -2,6 +2,8 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.libs.graalsdk
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/graalsdk/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.18
+OpenIDE-Module-Specification-Version: 1.21
 OpenIDE-Module-Provides: org.netbeans.spi.scripting.EngineProvider
 OpenIDE-Module-Recommends: com.oracle.truffle.polyglot.PolyglotImpl
+OpenIDE-Module-Hide-Classpath-Packages: org.graalvm.collections.**, org.graalvm.home.**, org.graalvm.nativeimage.**,
+    org.graalvm.options.**, org.graalvm.polyglot.**, org.graalvm.word.**

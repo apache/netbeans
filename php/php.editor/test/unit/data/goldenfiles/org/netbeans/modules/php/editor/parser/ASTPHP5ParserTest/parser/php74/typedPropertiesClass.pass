@@ -535,7 +535,9 @@
                     </FieldsDeclaration>
                     <FieldsDeclaration start='980' end='1001' modifier='private'>
                         <FieldType>
-                            <Identifier start='988' end='993' name='array'/>
+                            <NamespaceName start='988' end='993' isCurrent='false' isGlobal='false'>
+                                <Identifier start='988' end='993' name='array'/>
+                            </NamespaceName>
                         </FieldType>
                         <VariableNames>
                             <Variable start='994' end='1000' isDollared='true'>
@@ -709,7 +711,9 @@
                     </FieldsDeclaration>
                     <FieldsDeclaration start='1426' end='1472' modifier='private static'>
                         <FieldType>
-                            <Identifier start='1441' end='1446' name='array'/>
+                            <NamespaceName start='1441' end='1446' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1441' end='1446' name='array'/>
+                            </NamespaceName>
                         </FieldType>
                         <VariableNames>
                             <Variable start='1447' end='1459' isDollared='true'>
@@ -756,9 +760,7 @@
                             </Variable>
                         </VariableNames>
                         <InitialValues>
-                            <NamespaceName start='1516' end='1520' isCurrent='false' isGlobal='false'>
-                                <Identifier start='1516' end='1520' name='null'/>
-                            </NamespaceName>
+                            <Scalar start='1516' end='1520' type='STRING' value='null'/>
                         </InitialValues>
                     </FieldsDeclaration>
                     <FieldsDeclaration start='1526' end='1566' modifier='private static'>

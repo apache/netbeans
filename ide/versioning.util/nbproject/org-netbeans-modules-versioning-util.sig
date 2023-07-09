@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.86.0
+#Version 1.90.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2634,9 +2634,11 @@ meth public static boolean isAncestorOrEqual(java.io.File,java.io.File)
 meth public static boolean isFileContentText(java.io.File)
 meth public static boolean isForbiddenFolder(java.io.File)
 meth public static boolean isForbiddenFolder(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static boolean isForbiddenFolder(org.netbeans.modules.versioning.core.api.VCSFileProxy)
 meth public static boolean isFromMultiFileDataObject(org.netbeans.modules.versioning.spi.VCSContext)
 meth public static boolean isScanForbidden(java.io.File)
+ anno 0 java.lang.Deprecated()
 meth public static boolean shareCommonDataObject(java.io.File[])
 meth public static java.awt.Point getPositionForPopup(javax.swing.JList)
 meth public static java.awt.Point getPositionForPopup(javax.swing.JTable)
@@ -2652,6 +2654,7 @@ meth public static java.io.Reader createReader(java.io.File) throws java.io.File
 meth public static java.io.Reader createReader(org.openide.filesystems.FileObject) throws java.io.FileNotFoundException
 meth public static java.io.Reader getDocumentReader(javax.swing.text.Document)
 meth public static java.lang.Integer getPriority(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String getActionName(java.lang.Class,java.lang.String,org.netbeans.modules.versioning.spi.VCSContext)
 meth public static java.lang.String getContextDisplayName(org.netbeans.modules.versioning.spi.VCSContext)
 meth public static java.lang.String getHash(java.lang.String,byte[]) throws java.security.NoSuchAlgorithmException
@@ -3630,8 +3633,14 @@ innr public final static Name
 innr public static Reflection
 meth public boolean canRead()
 meth public boolean canWrite()
+meth public final org.openide.nodes.PropertySupport<{org.openide.nodes.PropertySupport%0}> withDisplayName(java.lang.String)
+meth public final org.openide.nodes.PropertySupport<{org.openide.nodes.PropertySupport%0}> withShortDescription(java.lang.String)
+meth public static <%0 extends java.lang.Object> org.openide.nodes.PropertySupport<{%%0}> readOnly(java.lang.String,java.lang.Class<{%%0}>,java.util.function.Supplier<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.openide.nodes.PropertySupport<{%%0}> readWrite(java.lang.String,java.lang.Class<{%%0}>,java.util.function.Supplier<{%%0}>,java.util.function.Consumer<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.openide.nodes.PropertySupport<{%%0}> writeOnly(java.lang.String,java.lang.Class<{%%0}>,java.util.function.Consumer<{%%0}>)
 supr org.openide.nodes.Node$Property<{org.openide.nodes.PropertySupport%0}>
 hfds canR,canW
+hcls FunctionalProperty
 
 CLSS public abstract static org.openide.nodes.PropertySupport$ReadOnly<%0 extends java.lang.Object>
  outer org.openide.nodes.PropertySupport

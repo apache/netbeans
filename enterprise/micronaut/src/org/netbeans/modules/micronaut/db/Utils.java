@@ -38,4 +38,16 @@ public class Utils {
         final String notNullAnnotation = "io.micronaut.data.jpa.repository.JpaRepository"; //NOI18N
         return compile.findResource(notNullAnnotation.replace('.', '/') + ".class") != null; //NOI18N
     }
+
+    public static boolean isJakartaSupported(SourceGroup sg) {
+        if (sg == null) {
+            return false;
+        }
+        ClassPath compile = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.COMPILE);
+        if (compile == null) {
+            return false;
+        }
+        final String notNullAnnotation = "jakarta.persistence.Persistence"; //NOI18N
+        return compile.findResource(notNullAnnotation.replace('.', '/') + ".class") != null; //NOI18N
+    }
 }

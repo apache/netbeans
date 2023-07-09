@@ -98,7 +98,7 @@ public class JsfLibrariesSupport {
         Map<String, Collection<String>> ns2prefixes = htmlresult != null
                 ? htmlresult.getSyntaxAnalyzerResult().getAllDeclaredNamespaces()
                 : Collections.<String, Collection<String>>emptyMap();
-        
+
         for (DefaultLibraryInfo libraryInfo : DefaultLibraryInfo.values()) {
             LibraryImport libraryimport = new LibraryImport();
 
@@ -144,6 +144,10 @@ public class JsfLibrariesSupport {
 
     public boolean isJsf22Plus() {
         return jsfs.isJsf22Plus();
+    }
+
+    public boolean isJsf30Plus() {
+        return jsfs.isJsf30Plus();
     }
 
     private static class LibraryImport {

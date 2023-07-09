@@ -34,12 +34,12 @@ import java.lang.annotation.Target;
  * to verify the annotated type is subclass of <code>URLStreamHandler</code> and
  * if so, register it into <code>URLStreamHandler/@protocol</code> where the
  * value of <code>@protocol()</code> is replaced by the value of annotation's
- * <a href="@org-openide-util@/org/openide/util/URLStreamHandlerRegistration.html#protocol()">
+ * <a href="@org-openide-util@/org/openide/util/URLStreamHandlerRegistration.html#protocol--">
  * protocol attribute</a>. The registration can later be found by using
  * {@link Lookups#forPath(java.lang.String) Lookups.forPath("URLStreamHandler/ftp")}
  * (in case the protocol was ftp).
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 8.14
  * @see ServiceProvider#path() 
  */
@@ -49,6 +49,7 @@ public @interface NamedServiceDefinition {
     /** Type, or array of types that the registered type
      * has to implement. The annotated type needs to register at least
      * one of the enumerated classes.
+     * @return set of type
      */
     public Class<?>[] serviceType();
     /** Path to register the annotation to, so it can later be found by
@@ -59,6 +60,7 @@ public @interface NamedServiceDefinition {
      * These attributes must be of type <code>String</code>
      * or array of <code>String</code>s (then one registration is performed
      * per each string in the array).
+     * @return path to register annotation
      */
     public String path();
     /** Name of attribute that specifies position. By default the system tries
@@ -68,8 +70,9 @@ public @interface NamedServiceDefinition {
      * name by specifying non-default here. Should the position be ignored,
      * specify empty string.
      * 
-     * @param name of attribute in the annotated annotation to use for defining
-     *   position of the registration. The attribute should return int value.
+     * name of attribute in the annotated annotation to use for defining
+     * position of the registration. The attribute should return int value.
+     * @return position
      */
     public String position() default "-";
 }

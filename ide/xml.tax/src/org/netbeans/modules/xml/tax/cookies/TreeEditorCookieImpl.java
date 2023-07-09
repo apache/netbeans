@@ -537,7 +537,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
         }
         
         public TreeDocumentRoot getDocumentRoot() {
-            return (TreeDocumentRoot) super.get();
+            return super.get();
         }
         
         public TreeEditorCookieImpl getEditor() {

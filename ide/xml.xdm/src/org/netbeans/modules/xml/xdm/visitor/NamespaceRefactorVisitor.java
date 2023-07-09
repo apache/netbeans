@@ -53,6 +53,7 @@ public class NamespaceRefactorVisitor extends ChildVisitor {
      * @deprecated use constructor with QName-valued attributes map.  Prefix refactoring 
      * should not without complete map.
      */
+    @Deprecated
     public NamespaceRefactorVisitor() {
         this(null);
     }

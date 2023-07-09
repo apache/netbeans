@@ -236,6 +236,14 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/nowdoc_06.php");
     }
 
+    public void testIssueGH4345_01() throws Exception {
+        checkErrors("testfiles/parser/issueGH4345_01.php");
+    }
+
+    public void testIssueGH4345_02() throws Exception {
+        checkErrors("testfiles/parser/issueGH4345_02.php");
+    }
+
     // HEREDOC
     public void testNetBeans1563_01() throws Exception {
         checkErrors("testfiles/parser/netbeans1563_01.php");
@@ -1262,6 +1270,10 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/newInInitializers_01.php");
     }
 
+    public void testNewInInitializers_02() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializers_02.php");
+    }
+
     public void testNewInInitializersWithClassConstantError() throws Exception {
         checkErrors("testfiles/parser/php81/newInInitializersWithClassConstantError.php");
     }
@@ -1305,6 +1317,34 @@ public class PhpParserErrorTest extends PHPTestBase {
 
     public void testFirstClassCallableSyntax_01() throws Exception {
         checkErrors("testfiles/parser/php81/firstClassCallableSyntax_01.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotation_01() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotation_01.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_01() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_01.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_02() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_02.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_03() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_03.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_04() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_04.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_05() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_05.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_06() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_06.php");
     }
 
     public void testTreatNamespacedNamesAsSingleToken_01a() throws Exception {
@@ -1355,4 +1395,47 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_03b.php");
     }
 
+    public void testGH4684() throws Exception {
+        checkErrors("testfiles/parser/gh4684.php");
+    }
+
+    public void testReadonlyClass_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyClass_01.php");
+    }
+
+    public void testFetchPropertiesInConstExpressions_01() throws Exception {
+        checkErrors("testfiles/parser/php82/fetchPropertiesInConstExpressions_01.php");
+    }
+
+    public void testReadonlyTraitError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyTraitError_01.php");
+    }
+
+    public void testReadonlyInterfaceError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyInterfaceError_01.php");
+    }
+
+    public void testReadonlyEnumError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyEnumError_01.php");
+    }
+
+    public void testConstantsInTraits_01() throws Exception {
+        checkErrors("testfiles/parser/php82/constantsInTraits_01.php");
+    }
+
+    public void testDnfTypes_01() throws Exception {
+        checkErrors("testfiles/parser/php82/dnfTypes_01.php");
+    }
+
+    public void testIssueGH5585_01() throws Exception {
+        checkErrors("testfiles/parser/issueGH5585_01.php");
+    }
+
+    public void testIssueGH5585_02() throws Exception {
+        checkErrors("testfiles/parser/issueGH5585_02.php");
+    }
+
+    public void testIssueGH5933_01() throws Exception {
+        checkErrors("testfiles/parser/issueGH5933_01.php");
+    }
 }

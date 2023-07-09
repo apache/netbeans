@@ -615,26 +615,26 @@
         <token id='T_NAMESPACE' start='2023' end='2032'>
             <text>namespace</text>
         </token>
-        <token id='T_STRING' start='2033' end='2043'>
-            <text>ineterface</text>
+        <token id='T_INTERFACE' start='2033' end='2042'>
+            <text>interface</text>
         </token>
-        <token id='T_SEMICOLON' start='2043' end='2044'>
+        <token id='T_SEMICOLON' start='2042' end='2043'>
             <text>;</text>
         </token>
-        <token id='T_NAMESPACE' start='2045' end='2054'>
+        <token id='T_NAMESPACE' start='2044' end='2053'>
             <text>namespace</text>
         </token>
-        <token id='T_STRING' start='2055' end='2059'>
+        <token id='T_STRING' start='2054' end='2058'>
             <text>enum</text>
         </token>
-        <token id='T_SEMICOLON' start='2059' end='2060'>
+        <token id='T_SEMICOLON' start='2058' end='2059'>
             <text>;</text>
         </token>
-        <token id='EOF' start='2061' end='2061'>
+        <token id='EOF' start='2060' end='2060'>
             <text></text>
         </token>
     </scanner>
-    <Program start='0' end='2061'>
+    <Program start='0' end='2060'>
         <Comments>
             <Comment start='6' end='813' commentType='multiLine'/>
             <Comment start='6' end='813' commentType='multiLine'/>
@@ -1117,18 +1117,18 @@
                 <Block start='2022' end='2022' isCurly='true'>
                 </Block>
             </NamespaceDeclaration>
-            <NamespaceDeclaration start='2023' end='2044' isBracketed='false'>
-                <NamespaceName start='2033' end='2043' isCurrent='false' isGlobal='false'>
-                    <Identifier start='2033' end='2043' name='ineterface'/>
+            <NamespaceDeclaration start='2023' end='2043' isBracketed='false'>
+                <NamespaceName start='2033' end='2042' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2033' end='2042' name='interface'/>
                 </NamespaceName>
-                <Block start='2044' end='2044' isCurly='true'>
+                <Block start='2043' end='2043' isCurly='true'>
                 </Block>
             </NamespaceDeclaration>
-            <NamespaceDeclaration start='2045' end='2060' isBracketed='false'>
-                <NamespaceName start='2055' end='2059' isCurrent='false' isGlobal='false'>
-                    <Identifier start='2055' end='2059' name='enum'/>
+            <NamespaceDeclaration start='2044' end='2059' isBracketed='false'>
+                <NamespaceName start='2054' end='2058' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2054' end='2058' name='enum'/>
                 </NamespaceName>
-                <Block start='2060' end='2060' isCurly='true'>
+                <Block start='2059' end='2059' isCurly='true'>
                 </Block>
             </NamespaceDeclaration>
         </Statements>

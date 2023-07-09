@@ -30,7 +30,6 @@ class Connection {
      * comment for field2
      */
     public ?MyClass $field2;
-
 }
 
 ?>

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.128
+#Version 1.132
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -850,8 +850,8 @@ hfds classesListController,heapFragmentWalker,staticFieldsBrowserController
 
 CLSS public static org.netbeans.modules.profiler.heapwalk.ClassesController$Configuration
  outer org.netbeans.modules.profiler.heapwalk.ClassesController
-cons public init(long,java.util.List,javax.swing.tree.TreePath)
-meth public java.util.List getExpandedStaticFields()
+cons public init(long,java.util.List<javax.swing.tree.TreePath>,javax.swing.tree.TreePath)
+meth public java.util.List<javax.swing.tree.TreePath> getExpandedStaticFields()
 meth public javax.swing.tree.TreePath getSelectedStaticField()
 meth public long getJavaClassID()
 supr org.netbeans.modules.profiler.heapwalk.NavigationHistoryManager$Configuration
@@ -892,7 +892,7 @@ innr public abstract interface static Handler
 meth protected javax.swing.AbstractButton createControllerPresenter()
 meth protected javax.swing.JPanel createControllerUI()
 meth public int getRootMode()
-meth public java.util.List getExpandedPaths()
+meth public java.util.List<javax.swing.tree.TreePath> getExpandedPaths()
 meth public javax.swing.tree.TreePath getSelectedRow()
 meth public org.netbeans.modules.profiler.heapwalk.FieldsBrowserController$Handler getInstancesControllerHandler()
 meth public org.netbeans.modules.profiler.heapwalk.model.HeapWalkerNode getFilteredSortedFields(java.lang.String,int,boolean)
@@ -1039,9 +1039,9 @@ hfds classPresenter,fieldsBrowserController,heapFragmentWalker,instancesListCont
 
 CLSS public static org.netbeans.modules.profiler.heapwalk.InstancesController$Configuration
  outer org.netbeans.modules.profiler.heapwalk.InstancesController
-cons public init(long,java.util.List,javax.swing.tree.TreePath,java.util.List,javax.swing.tree.TreePath)
-meth public java.util.List getExpandedFields()
+cons public init(long,java.util.List<javax.swing.tree.TreePath>,javax.swing.tree.TreePath,java.util.List<javax.swing.tree.TreePath>,javax.swing.tree.TreePath)
 meth public java.util.List getExpandedReferences()
+meth public java.util.List<javax.swing.tree.TreePath> getExpandedFields()
 meth public javax.swing.tree.TreePath getSelectedField()
 meth public javax.swing.tree.TreePath getSelectedReference()
 meth public long getInstanceID()
@@ -1340,7 +1340,7 @@ fld public final static org.netbeans.modules.profiler.heapwalk.model.AbstractHea
 innr public abstract interface static Handler
 meth protected javax.swing.AbstractButton createControllerPresenter()
 meth protected javax.swing.JPanel createControllerUI()
-meth public java.util.List getExpandedPaths()
+meth public java.util.List<javax.swing.tree.TreePath> getExpandedPaths()
 meth public javax.swing.tree.TreePath getSelectedRow()
 meth public org.netbeans.modules.profiler.heapwalk.ReferencesBrowserController$Handler getReferencesControllerHandler()
 meth public org.netbeans.modules.profiler.heapwalk.model.HeapWalkerNode getFilteredSortedReferences(java.lang.String,int,boolean)

@@ -410,11 +410,8 @@ public class ExportShortcutsAction {
             XMLStorage.generateFolderStart (sb, "bindings", attribs, "");
             
             Map<String, Set<String>> sortedMap = new TreeMap<String, Set<String>> ();
-            for (ShortcutAction action: actionToShortcuts.keySet ()) {
-                sortedMap.put (
-                    action.getDisplayName (), 
-                    actionToShortcuts.get (action)
-                );
+            for (Map.Entry<ShortcutAction, Set<String>> entry : actionToShortcuts.entrySet()) {
+                sortedMap.put(entry.getKey().getDisplayName(), entry.getValue());
             }
             for (Map.Entry<String, Set<String>> entry: sortedMap.entrySet ()) {
                 String actionName = entry.getKey ();

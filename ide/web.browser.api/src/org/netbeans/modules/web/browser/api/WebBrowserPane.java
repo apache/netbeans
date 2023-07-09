@@ -217,13 +217,13 @@ public final class WebBrowserPane {
     
     public void setProjectContext(Lookup projectContext) {
         lastProjectContext = projectContext;
-        if ( impl != null && impl instanceof EnhancedBrowser ){
+        if ( impl instanceof EnhancedBrowser ){
             ((EnhancedBrowser) impl).setProjectContext(projectContext);
         }
     }
 
     public boolean ignoreChange(FileObject fo) {
-        if (impl != null && impl instanceof EnhancedBrowser) {
+        if (impl instanceof EnhancedBrowser) {
             return ((EnhancedBrowser)impl).ignoreChange(fo);
         }
         return false;

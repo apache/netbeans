@@ -13,7 +13,6 @@ class ClassName {
         else
             2;
     }
-
 }
 
 ?>

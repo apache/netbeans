@@ -85,7 +85,7 @@ public class WLDatasourceManager implements DatasourceManager {
 
             WLDatasource wlDatasource = (WLDatasource) datasource;
             String jndiName = wlDatasource.getJndiName();
-            if (deployed.keySet().contains(jndiName)) { // conflicting ds found
+            if (deployed.containsKey(jndiName)) { // conflicting ds found
                 Datasource deployedDatasource = deployed.get(jndiName);
                 
                 // jndi name is same, but DS differs

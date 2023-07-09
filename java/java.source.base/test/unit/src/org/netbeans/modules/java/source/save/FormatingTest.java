@@ -2853,7 +2853,7 @@ public class FormatingTest extends NbTestCase {
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
                 + "case \n"
-                + "      String       s &&       s.length() == 1\n"
+                + "      String       s when       s.length() == 1\n"
                 + "                    \n"
                 + "                    ->\n"
                 + "                System.out.println(\"case with guarded pattern formatting\");\n"
@@ -2871,7 +2871,7 @@ public class FormatingTest extends NbTestCase {
                 + "    void testSwitchCaseGuardedPattern() {\n"
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
-                + "            case String s && s.length() == 1 ->\n"
+                + "            case String s when s.length() == 1 ->\n"
                 + "                System.out.println(\"case with guarded pattern formatting\");\n"
                 + "            default ->\n"
                 + "                System.out.println(\"default formatting\");\n"
@@ -2903,7 +2903,7 @@ public class FormatingTest extends NbTestCase {
                 + "        switch (str) {\n"
                 + "case            \n"
                 + "                    null,\n"
-                + "      String       s &&       s.length() == 1\n"
+                + "      String       s when       s.length() == 1\n"
                 + "                    \n"
                 + "                    ->\n"
                 + "                System.out.println(\"case with null and guarded pattern formatting\");\n"
@@ -2921,7 +2921,7 @@ public class FormatingTest extends NbTestCase {
                 + "    void testSwitchCaseNullAndGuardedPattern() {\n"
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
-                + "            case null, String s && s.length() == 1 ->\n"
+                + "            case null, String s when s.length() == 1 ->\n"
                 + "                System.out.println(\"case with null and guarded pattern formatting\");\n"
                 + "            default ->\n"
                 + "                System.out.println(\"default formatting\");\n"
@@ -3052,9 +3052,8 @@ public class FormatingTest extends NbTestCase {
                 + "        switch (str) {\n"
                 + "case \n"
                 + "        (String       \n"
-                + "        s       &&\n"
+                + "        s)       when\n"
                 + "        s.length() == 1\n"
-                + "        )\n"
                 + "                    \n"
                 + "                    ->\n"
                 + "                System.out.println(\"case with Parenthesized Guarded Pattern formatting\");default ->\n"
@@ -3071,7 +3070,7 @@ public class FormatingTest extends NbTestCase {
                 + "    void testSwitchCaseParenthesizedGuardedPattern() {\n"
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
-                + "            case (String s && s.length() == 1) ->\n"
+                + "            case (String s) when s.length() == 1 ->\n"
                 + "                System.out.println(\"case with Parenthesized Guarded Pattern formatting\");\n"
                 + "            default ->\n"
                 + "                System.out.println(\"default formatting\");\n"
@@ -3103,9 +3102,9 @@ public class FormatingTest extends NbTestCase {
                 + "        switch (str) {\n"
                 + "case \n"
                 + "        (String       \n"
-                + "        s       &&\n"
+                + "        s)       when\n"
                 + "        s.length() == 1\n"
-                + "        ) , \n"
+                + "        , \n"
                 + "        null\n"
                 + "                    \n"
                 + "                    ->\n"
@@ -3123,7 +3122,7 @@ public class FormatingTest extends NbTestCase {
                 + "    void testSwitchCaseParenthesizedGuardedPatternAndNull() {\n"
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
-                + "            case (String s && s.length() == 1) , null ->\n"
+                + "            case (String s) when s.length() == 1, null ->\n"
                 + "                System.out.println(\"case with Parenthesized Binding Pattern formatting\");\n"
                 + "            default ->\n"
                 + "                System.out.println(\"default formatting\");\n"
@@ -3134,58 +3133,6 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
    
-    public void testSwitchCaseGuardedPatternNestedParenthesizedPatternWithNull() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_17, skip test
-            return;
-        }
-        testFile = new File(getWorkDir(), "Test.java");
-        TestUtilities.copyStringToFile(testFile, "");
-        FileObject testSourceFO = FileUtil.toFileObject(testFile);
-        DataObject testSourceDO = DataObject.find(testSourceFO);
-        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
-        final Document doc = ec.openDocument();
-        doc.putProperty(Language.class, JavaTokenId.language());
-        String content = "package p;"
-                + "public class Test{    \n"
-                + "void testSwitchCaseGuardedPatternNestedParenthesizedPattern() {\n"
-                + "        Object str = \"pattern matching switch\";\n"
-                + "        switch (str) {\n"
-                + "case \n"
-                + "        (String       \n"
-                + "        s )      &&\n"
-                + "        s.length() == 1\n"
-                + "         , \n"
-                + "        null\n"
-                + "                    \n"
-                + "                    ->\n"
-                + "                System.out.println(\"SwitchCaseGuardedPatternNestedParenthesizedPattern\");default ->\n"
-                + "                System.out.println(\"default formatting\");\n"
-                + "        }\n"
-                + "    }"
-                + "}";
-
-        String golden
-                = "package p;\n"
-                + "\n"
-                + "public class Test {\n"
-                + "\n"
-                + "    void testSwitchCaseGuardedPatternNestedParenthesizedPattern() {\n"
-                + "        Object str = \"pattern matching switch\";\n"
-                + "        switch (str) {\n"
-                + "            case (String s) && s.length() == 1 , null ->\n"
-                + "                System.out.println(\"SwitchCaseGuardedPatternNestedParenthesizedPattern\");\n"
-                + "            default ->\n"
-                + "                System.out.println(\"default formatting\");\n"
-                + "        }\n"
-                + "    }\n"
-                + "}\n"
-                + "";
-        reformat(doc, content, golden);
-    }
-    
     public void testSwitchCaseGuardedPatternNestedParenthesizedPattern() throws Exception {
         try {
             SourceVersion.valueOf("RELEASE_17"); //NOI18N
@@ -3206,7 +3153,7 @@ public class FormatingTest extends NbTestCase {
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
                 + "case (  \n"
-                + "                String s) && s.length() >= 2 && \n"
+                + "                String s) when s.length() >= 2 && \n"
                 + "                \n"
                 + "                            (s.contains(\"@\") || s.contains(\"!\")) \n"
                 + "                \n"
@@ -3225,7 +3172,7 @@ public class FormatingTest extends NbTestCase {
                 + "    void testSwitchCaseGuardedPatternNestedParenthesizedPattern() {\n"
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
-                + "            case ( String s) && s.length() >= 2\n"
+                + "            case (String s) when s.length() >= 2\n"
                 + "            && (s.contains(\"@\") || s.contains(\"!\")) ->\n"
                 + "                String.format(\"Valid string value is %s\", s);\n"
                 + "            default ->\n"
@@ -3260,11 +3207,11 @@ public class FormatingTest extends NbTestCase {
                 + "case null ->\n"
                 + "     System.out.println(\"case with null formatting\");\n"
                 + "  case String string\n"
-                + "          && (string.length()==  iso.filter(i -> i / 2 == 0).count() || string.length() == 0)\n"
+                + "          when (string.length()==  iso.filter(i -> i / 2 == 0).count() || string.length() == 0)\n"
                 + "          ->\n"
                 + "      System.out.println(\"case with pattern matching + condition + lambda expression formatting\");\n"
-                + "  case                  String s && s.length() == 1 ->System.out.println(\"case with pattern matching + condition formatting\");\n"
-                + "  case      (String s &&    true )-> \n"
+                + "  case                  String s when s.length() == 1 ->System.out.println(\"case with pattern matching + condition formatting\");\n"
+                + "  case      (String s )-> \n"
                 + "      System.out.println(\"case with pattern matching + condition formatting\");\n"
                 + "  case CharSequence\n"
                 + "          s ->\n"
@@ -3288,11 +3235,11 @@ public class FormatingTest extends NbTestCase {
                 + "        switch (str) {\n"
                 + "            case null ->\n"
                 + "                System.out.println(\"case with null formatting\");\n"
-                + "            case String string && (string.length() == iso.filter(i -> i / 2 == 0).count() || string.length() == 0) ->\n"
+                + "            case String string when (string.length() == iso.filter(i -> i / 2 == 0).count() || string.length() == 0) ->\n"
                 + "                System.out.println(\"case with pattern matching + condition + lambda expression formatting\");\n"
-                + "            case String s && s.length() == 1 ->\n"
+                + "            case String s when s.length() == 1 ->\n"
                 + "                System.out.println(\"case with pattern matching + condition formatting\");\n"
-                + "            case (String s && true) ->\n"
+                + "            case (String s) ->\n"
                 + "                System.out.println(\"case with pattern matching + condition formatting\");\n"
                 + "            case CharSequence s ->\n"
                 + "                System.out.println(\"case with pattern matching formatting\");\n"
@@ -3329,11 +3276,11 @@ public class FormatingTest extends NbTestCase {
                 + "case null ->\n"
                 + "     \"case with null formatting\";\n"
                 + "  case String string\n"
-                + "          && (string.length()==  iso.filter(i -> i / 2 == 0).count() || string.length() == 0)\n"
+                + "          when (string.length()==  iso.filter(i -> i / 2 == 0).count() || string.length() == 0)\n"
                 + "          ->\n"
                 + "      \"case with pattern matching + condition + lambda expression formatting\";\n"
-                + "  case                  String s && s.length() == 1 ->\"case with pattern matching + condition formatting\";\n"
-                + "  case      (String s &&    true )-> \n"
+                + "  case                  String s when s.length() == 1 ->\"case with pattern matching + condition formatting\";\n"
+                + "  case      (String s )-> \n"
                 + "      \"case with pattern matching + condition formatting\";\n"
                 + "  case CharSequence\n"
                 + "          s ->\n"
@@ -3357,11 +3304,11 @@ public class FormatingTest extends NbTestCase {
                 + "        String retVal = switch (str) {\n"
                 + "            case null ->\n"
                 + "                \"case with null formatting\";\n"
-                + "            case String string && (string.length() == iso.filter(i -> i / 2 == 0).count() || string.length() == 0) ->\n"
+                + "            case String string when (string.length() == iso.filter(i -> i / 2 == 0).count() || string.length() == 0) ->\n"
                 + "                \"case with pattern matching + condition + lambda expression formatting\";\n"
-                + "            case String s && s.length() == 1 ->\n"
+                + "            case String s when s.length() == 1 ->\n"
                 + "                \"case with pattern matching + condition formatting\";\n"
-                + "            case (String s && true) ->\n"
+                + "            case (String s) ->\n"
                 + "                \"case with pattern matching + condition formatting\";\n"
                 + "            case CharSequence s ->\n"
                 + "                \"case with pattern matching formatting\";\n"
@@ -3372,6 +3319,220 @@ public class FormatingTest extends NbTestCase {
                 + "    }\n"
                 + "}\n"
                 + "";
+        reformat(doc, content, golden);
+    }
+
+    public void testNormalRecordPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package test;\n"
+                + "record Point(int x, int y){}\n"
+                + "public class Test {\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof Point\n"
+                + "                (int     x, int    \n"
+                + "                y) ) {\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}";
+
+        String golden = "package test;\n"
+                + "\n"
+                + "record Point(int x, int y) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof Point(int x, int y)) {\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}"
+                + "\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testNestedRecordPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_19, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package test;\n"
+                + "\n"
+                + "record Rect(ColoredPoint ul,ColoredPoint lr) {}\n"
+                + "enum Color {RED,GREEN,BLUE}\n"
+                + "record ColoredPoint(Point p, Color c) {}\n"
+                + "record Point(int x, int y) {}\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof\n"
+                + "                Rect\n"
+                + "                (       ColoredPoint      ul,   ColoredPoint\n"
+                + "                        lr)  ) {\n"
+                + "            Point p = ul.p();\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}";
+
+        String golden = "package test;\n"
+                + "\n"
+                + "record Rect(ColoredPoint ul, ColoredPoint lr) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "enum Color {\n"
+                + "    RED, GREEN, BLUE\n"
+                + "}\n"
+                + "\n"
+                + "record ColoredPoint(Point p, Color c) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "record Point(int x, int y) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof Rect(ColoredPoint ul, ColoredPoint lr)) {\n"
+                + "            Point p = ul.p();\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}"
+                + "\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testMultipleNestingRecordPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_19, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package test;\n"
+                + "\n"
+                + "record Rect(ColoredPoint ul,ColoredPoint lr) {}\n"
+                + "enum Color {RED,GREEN,BLUE}\n"
+                + "record ColoredPoint(Point p, Color c) {}\n"
+                + "record Point(int x, int y) {}\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof\n"
+                + "                Rect\n"
+                + "                (       ColoredPoint(Point   \n"
+                + "                        p, Color \n"
+                + "                                c\n"
+                + "                        )      ,   ColoredPoint\n"
+                + "                        lr)    \n"
+                + "                ) {\n"
+                + "            int x = p.x();\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}";
+
+        String golden = "package test;\n"
+                + "\n"
+                + "record Rect(ColoredPoint ul, ColoredPoint lr) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "enum Color {\n"
+                + "    RED, GREEN, BLUE\n"
+                + "}\n"
+                + "\n"
+                + "record ColoredPoint(Point p, Color c) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "record Point(int x, int y) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof Rect(ColoredPoint(Point p, Color c), ColoredPoint lr)) {\n"
+                + "            int x = p.x();\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}"
+                + "\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testAnnotatedRecord() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_19, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getLookup().lookup(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content =
+                  "package test;\n"
+                + "\n"
+                + "/**\n"
+                + " * @author duke\n"
+                + " */\n"
+                + "@Deprecated public record DeprecatedRecord(int a) {}"
+                + "\n";
+
+        String golden =
+                  "package test;\n"
+                + "\n"
+                + "/**\n"
+                + " * @author duke\n"
+                + " */\n"
+                + "@Deprecated\n"
+                + "public record DeprecatedRecord(int a) {\n"
+                + "\n"
+                + "}"
+                + "\n";
         reformat(doc, content, golden);
     }
 
@@ -6152,6 +6313,97 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
+    public void testTryWithResources() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+
+        String content
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (PrintStream out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        } catch (Exception e) {\n"
+                + "            System.out.println(\"CATCH\");\n"
+                + "        } finally {\n"
+                + "            System.out.println(\"FINALLY\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        String golden
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (PrintStream out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        } catch (Exception e) {\n"
+                + "            System.out.println(\"CATCH\");\n"
+                + "        } finally {\n"
+                + "            System.out.println(\"FINALLY\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try ( final   PrintStream  out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (final PrintStream out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try ( var  out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (var out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try ( final  var  out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (final var out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
 
     public void testSynchronizedBlockAfterFor() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");

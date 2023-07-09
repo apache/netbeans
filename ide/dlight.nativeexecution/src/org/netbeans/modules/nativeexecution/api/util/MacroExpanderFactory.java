@@ -277,7 +277,7 @@ public final class MacroExpanderFactory {
             predefinedMacros.put("soext", soext); // NOI18N
             predefinedMacros.put("osname", osname); // NOI18N
             predefinedMacros.put("isa", os.getBitness().toString()); // NOI18N
-            predefinedMacros.put("_isa", os.getBitness() == HostInfo.Bitness._64 ? "_64" : ""); // NOI18N
+            predefinedMacros.put("_isa", os.getBitness() == HostInfo.Bitness._64 && hostInfo.getCpuFamily() != HostInfo.CpuFamily.AARCH64 ? "_64" : ""); // NOI18N
             String platform = hostInfo.getCpuFamily().name().toLowerCase();
 
             if (style == ExpanderStyle.SUNSTUDIO_STYLE) {

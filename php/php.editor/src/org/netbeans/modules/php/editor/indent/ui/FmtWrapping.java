@@ -87,6 +87,8 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
         binaryOpsCombo.addFocusListener(this);
         ternaryOpsCombo.putClientProperty(OPTION_ID, WRAP_TERNARY_OPS);
         ternaryOpsCombo.addFocusListener(this);
+        coalescingOpsCombo.putClientProperty(OPTION_ID, WRAP_COALESCING_OPS);
+        coalescingOpsCombo.addFocusListener(this);
         assignOpsCombo.putClientProperty(OPTION_ID, WRAP_ASSIGN_OPS);
         assignOpsCombo.addFocusListener(this);
         cbOpenCloseBlockBrace.putClientProperty(OPTION_ID, WRAP_BLOCK_BRACES);
@@ -160,6 +162,8 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
         binaryOpsCombo = new JComboBox();
         ternaryOpsLabel = new JLabel();
         ternaryOpsCombo = new JComboBox();
+        coalescingOpsLabel = new JLabel();
+        coalescingOpsCombo = new JComboBox<>();
         assignOpsLabel = new JLabel();
         assignOpsCombo = new JComboBox();
         cbOpenCloseBlockBrace = new JCheckBox();
@@ -361,6 +365,11 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
 
             ternaryOpsCombo.setModel(new DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+            coalescingOpsLabel.setLabelFor(coalescingOpsCombo);
+            Mnemonics.setLocalizedText(coalescingOpsLabel, NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.coalescingOpsLabel.text")); // NOI18N
+
+            coalescingOpsCombo.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
             assignOpsLabel.setLabelFor(assignOpsCombo);
             Mnemonics.setLocalizedText(assignOpsLabel, NbBundle.getMessage(FmtWrapping.class, "LBL_wrp_assignOps")); // NOI18N
 
@@ -424,7 +433,8 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
                                 .addComponent(doWhileStatementCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(binaryOpsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(ternaryOpsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(assignOpsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(assignOpsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(coalescingOpsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                         .addGroup(panel1Layout.createSequentialGroup()
                             .addContainerGap()
                             .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -462,7 +472,8 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
                                         .addComponent(wrapMethodCallArgsRightParenCheckBox)
                                         .addComponent(wrapMethodParamsKeepParenAndBraceOnSameLineCheckBox)
                                         .addComponent(wrapForAfterLeftParenCheckBox)
-                                        .addComponent(wrapForRightParenCheckBox))))))
+                                        .addComponent(wrapForRightParenCheckBox)))
+                                .addComponent(coalescingOpsLabel))))
                     .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             );
             panel1Layout.setVerticalGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -543,6 +554,10 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
                         .addComponent(ternaryOpsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(coalescingOpsLabel)
+                        .addComponent(coalescingOpsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(assignOpsLabel)
                         .addComponent(assignOpsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
@@ -606,6 +621,8 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
             ternaryOpsLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.ternaryOpsLabel.AccessibleContext.accessibleDescription")); // NOI18N
             ternaryOpsCombo.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.ternaryOpsCombo.AccessibleContext.accessibleName")); // NOI18N
             ternaryOpsCombo.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.ternaryOpsCombo.AccessibleContext.accessibleDescription")); // NOI18N
+            coalescingOpsLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.coalescingOpsLabel.AccessibleContext.accessibleName")); // NOI18N
+            coalescingOpsLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.coalescingOpsLabel.AccessibleContext.accessibleDescription")); // NOI18N
             assignOpsLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.assignOpsLabel.AccessibleContext.accessibleName")); // NOI18N
             assignOpsLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.assignOpsLabel.AccessibleContext.accessibleDescription")); // NOI18N
             assignOpsCombo.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.assignOpsCombo.AccessibleContext.accessibleName")); // NOI18N
@@ -642,6 +659,8 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
     private JCheckBox cbStatements;
     private JComboBox chainedMethodCallsCombo;
     private JLabel chainedMethodCallsLabel;
+    private JComboBox<String> coalescingOpsCombo;
+    private JLabel coalescingOpsLabel;
     private JComboBox doWhileStatementCombo;
     private JLabel doWhileStatementLabel;
     private JComboBox extendsImplementsKeywordCombo;

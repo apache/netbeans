@@ -1647,16 +1647,18 @@ public abstract class CslTestBase extends NbTestCase {
 
     protected void checkNoOverlaps(Set<OffsetRange> ranges, Document doc) throws BadLocationException {
         // Make sure there are no overlapping ranges
-        List<OffsetRange> sortedRanges = new ArrayList<OffsetRange>(ranges);
+        List<OffsetRange> sortedRanges = new ArrayList<>(ranges);
         Collections.sort(sortedRanges);
-        OffsetRange prevRange = OffsetRange.NONE;
-        for (OffsetRange range : sortedRanges) {
-            if (range.getStart() < prevRange.getEnd() && range.getEnd() > prevRange.getEnd()) {
-                fail("OffsetRanges should be non-overlapping! " + prevRange +
-                        "(" + doc.getText(prevRange.getStart(), prevRange.getLength()) + ") and " + range +
-                        "(" + doc.getText(range.getStart(), range.getLength()) + ")");
+        for (int i = 0; i < sortedRanges.size(); i++) {
+            OffsetRange prevRange = sortedRanges.get(i);
+            for (int j = i + 1; j < sortedRanges.size(); j++) {
+                OffsetRange targetRange = sortedRanges.get(j);
+                if (prevRange.overlaps(targetRange)) {
+                    fail("OffsetRanges should be non-overlapping! " + prevRange
+                            + "(" + doc.getText(prevRange.getStart(), prevRange.getLength()) + ") and " + targetRange
+                            + "(" + doc.getText(targetRange.getStart(), targetRange.getLength()) + ")");
+                }
             }
-            prevRange = range;
         }
     }
 
@@ -2143,6 +2145,14 @@ public abstract class CslTestBase extends NbTestCase {
 
         ParserManager.parse(Collections.singleton(testSource), new UserTask() {
             public @Override void run(ResultIterator resultIterator) throws Exception {
+
+                // FoldingScanner#folds calls source.getDocument(false) and receive non null values on JDK 8.
+                // On JDK 11+ however the document is null which leads to test failures in FoldingTest#testPHPTags.
+                // This is likely a race condition which is more likely to occur on JDK 11+ since the test can be
+                // brute forced to passing on linux if restarted often enough. 
+                // This fixes it by making sure the document is open before folds are computed
+                assertNotNull(resultIterator.getSnapshot().getSource().getDocument(true));
+                
                 StructureScanner analyzer = getStructureScanner();
                 assertNotNull("getStructureScanner must be implemented", analyzer);
 
@@ -3045,15 +3055,19 @@ public abstract class CslTestBase extends NbTestCase {
                 completionResult.insert(proposal);
                 completionResult.afterInsert(proposal);
 
-                String fileContent = doc.getText(0, doc.getLength());;
+                String fileContent = doc.getText(0, doc.getLength());
                 assertFileContentsMatches(file, fileContent, false, ".ccresult");
             }
         });
     }
 
     public void checkCompletionDocumentation(final String file, final String caretLine, final boolean includeModifiers, final String itemPrefix) throws Exception {
+        checkCompletionDocumentation(file, caretLine, includeModifiers, itemPrefix, QueryType.COMPLETION);
+    }
+
+    public void checkCompletionDocumentation(final String file, final String caretLine, final boolean includeModifiers, final String itemPrefix, QueryType queryType) throws Exception {
         // TODO call TestCompilationInfo.setCaretOffset!
-        final QueryType type = QueryType.COMPLETION;
+        final QueryType type = queryType;
         final boolean caseSensitive = true;
 
         Source testSource = getTestSource(getTestFile(file));

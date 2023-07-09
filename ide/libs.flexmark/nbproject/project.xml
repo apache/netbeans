@@ -30,28 +30,68 @@
                 <subpackages>org.jsoup</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/flexmark-html2md-converter-0.50.36.jar</runtime-relative-path>
-                <binary-origin>external/flexmark-html2md-converter-0.50.36.jar</binary-origin>
+                <runtime-relative-path>ext/flexmark-html2md-converter-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-html2md-converter-0.62.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jsoup-1.11.3.jar</runtime-relative-path>
                 <binary-origin>external/jsoup-1.11.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/flexmark-util-0.50.36.jar</runtime-relative-path>
-                <binary-origin>external/flexmark-util-0.50.36.jar</binary-origin>
+                <runtime-relative-path>ext/flexmark-util-ast-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-util-ast-0.62.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/flexmark-formatter-0.50.36.jar</runtime-relative-path>
-                <binary-origin>external/flexmark-formatter-0.50.36.jar</binary-origin>
+                <runtime-relative-path>ext/flexmark-util-builder-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-util-builder-0.62.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/flexmark-ext-emoji-0.50.36.jar</runtime-relative-path>
-                <binary-origin>external/flexmark-ext-emoji-0.50.36.jar</binary-origin>
+                <runtime-relative-path>ext/flexmark-util-collection-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-util-collection-0.62.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/flexmark-0.50.36.jar</runtime-relative-path>
-                <binary-origin>external/flexmark-0.50.36.jar</binary-origin>
+                <runtime-relative-path>ext/flexmark-util-data-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-util-data-0.62.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-util-dependency-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-util-dependency-0.62.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-util-format-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-util-format-0.62.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-util-html-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-util-html-0.62.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-util-misc-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-util-misc-0.62.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-util-sequence-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-util-sequence-0.62.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-util-visitor-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-util-visitor-0.62.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-ext-emoji-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-ext-emoji-0.62.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-ext-anchorlink-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-ext-anchorlink-0.62.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-ext-tables-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-ext-tables-0.62.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-0.62.2.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-0.62.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

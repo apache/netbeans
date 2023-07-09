@@ -86,11 +86,8 @@ public class LoggerNotStaticFinal {
             TreePath tp = ctx.getPath();
             VariableTree vt = (VariableTree) tp.getLeaf();
             ModifiersTree mt = vt.getModifiers();
-            Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
-
+            Set<Modifier> modifiers = EnumSet.of(Modifier.FINAL, Modifier.STATIC);
             modifiers.addAll(mt.getFlags());
-            modifiers.add(Modifier.FINAL);
-            modifiers.add(Modifier.STATIC);
 
             ModifiersTree newMod = wc.getTreeMaker().Modifiers(modifiers, mt.getAnnotations());
 

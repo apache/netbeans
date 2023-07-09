@@ -185,7 +185,7 @@ public final class JerseyClientWizardIterator implements WizardDescriptor.Instan
     private String[] createSteps() {
         String[] beforeSteps = null;
         Object prop = wizard.getProperty("WizardPanel_contentData");
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
 

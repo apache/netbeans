@@ -20,7 +20,7 @@
 package org.netbeans.modules.apisupport.project;
 
 import java.awt.Dialog;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;

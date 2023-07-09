@@ -97,7 +97,7 @@ public class CatalogPanel extends TopComponent implements ExplorerManager.Provid
         private void invokeInplaceEditing() {
             if (startEditing == null) {
                 Object o = tree.getActionMap().get("startEditing"); // NOI18N
-                if (o != null && o instanceof Action) {
+                if (o instanceof Action) {
                     startEditing = (Action) o;
                 }
             }
@@ -107,6 +107,7 @@ public class CatalogPanel extends TopComponent implements ExplorerManager.Provid
     }
     
     private class SelectionListener implements PropertyChangeListener {
+        @Override
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
                 final Node [] nodes = (Node []) evt.getNewValue();
@@ -144,6 +145,7 @@ public class CatalogPanel extends TopComponent implements ExplorerManager.Provid
     }
     
     private static final class TemplateFilter implements DataFilter {
+        @Override
         public boolean acceptDataObject(DataObject obj) {
             return acceptTemplate(obj);
         }
@@ -210,7 +212,7 @@ public class CatalogPanel extends TopComponent implements ExplorerManager.Provid
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(addButton, gridBagConstraints);
         addButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(CatalogPanel.class, "ACD_CatalogPanel_Add")); // NOI18N
 
@@ -225,7 +227,7 @@ public class CatalogPanel extends TopComponent implements ExplorerManager.Provid
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(addLocalButton, gridBagConstraints);
         addLocalButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(CatalogPanel.class, "ACD_CatalogPanel_AddLocal")); // NOI18N
 
@@ -239,7 +241,7 @@ public class CatalogPanel extends TopComponent implements ExplorerManager.Provid
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 3, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
         buttonsPanel.add(removeButton, gridBagConstraints);
         removeButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(CatalogPanel.class, "ACD_CatalogPanel_Remove")); // NOI18N
 
@@ -260,7 +262,7 @@ public class CatalogPanel extends TopComponent implements ExplorerManager.Provid
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 11, 11, 8);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 11, 5);
         add(buttonsPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     

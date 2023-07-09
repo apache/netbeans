@@ -86,6 +86,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumMap;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -809,7 +810,7 @@ public class Utilities {
     private static final Map<Kind, String> operator2DN;
 
     static {
-        operator2DN = new HashMap<Kind, String>();
+        operator2DN = new EnumMap<>(Kind.class);
 
         operator2DN.put(AND, "&");
         operator2DN.put(XOR, "^");
@@ -1560,6 +1561,7 @@ public class Utilities {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     tpes = ((TypeElement) target).getTypeParameters();
                     break;
                 case METHOD:
@@ -2715,8 +2717,10 @@ public class Utilities {
                         ));
                 
             case BLOCK: {
-                BlockTree bt = (BlockTree)parent.getLeaf();
-                List<? extends StatementTree> stats = getRealStatements(wc, parent);
+                BlockTree originalBlock = (BlockTree)parent.getLeaf();
+                BlockTree bt = (BlockTree) wc.resolveRewriteTarget(originalBlock);
+                List<? extends StatementTree> stats = originalBlock == bt ? getRealStatements(wc, parent)
+                                                                          : bt.getStatements();
                 int index = stats.indexOf(toRemove.getLeaf());
                 if (index == -1) {
                     throw new IllegalArgumentException("Not proper child of the parent path");

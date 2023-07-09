@@ -3499,7 +3499,7 @@ class JavaCodeGenerator extends CodeGenerator {
     }
 
     private void importFQNs(boolean handleInitComponents, boolean handleVariables, String... eventHandlers) {
-        List<int[]> list = new ArrayList();
+        List<int[]> list = new ArrayList<>();
         if (handleInitComponents) {
             SimpleSection initComponentsSection = formEditor.getInitComponentSection();
             int[] span = formEditor.getFormJavaSource().getMethodSpan("initComponents"); // NOI18N

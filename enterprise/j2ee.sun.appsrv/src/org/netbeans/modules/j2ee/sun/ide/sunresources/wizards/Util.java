@@ -75,7 +75,7 @@ public class Util {
         // some locales do not have mnemonics?
         if (i > -1) {
             result = val.substring(0, i);
-            result = result.concat(val.substring(i+1, val.length()));
+            result = result.concat(val.substring(i+1));
         } else {
             result = val;
         }

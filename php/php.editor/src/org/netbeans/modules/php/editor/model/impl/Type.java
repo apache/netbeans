@@ -21,6 +21,7 @@ package org.netbeans.modules.php.editor.model.impl;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.php.api.util.StringUtils;
 
 /**
@@ -30,10 +31,12 @@ import org.netbeans.modules.php.api.util.StringUtils;
 public final class Type {
 
     public enum Kind {
-        NORMAL(""), // NOI18N
-        NULLABLE("?"), // NOI18N
-        UNION(SEPARATOR),
-        INTERSECTION(SEPARATOR_INTERSECTION),
+        NONE(""), // NOI18N
+        NORMAL(""), // NOI18N e.g. MyClass
+        NULLABLE("?"), // NOI18N e.g. ?Nullable
+        UNION(SEPARATOR), // e.g. A|B|C
+        INTERSECTION(SEPARATOR_INTERSECTION), // e.g. A&B&C
+        DNF(""), // NOI18N e.g. (A&B)|(X&Y)|Z
         ;
 
         private final String sign;
@@ -46,9 +49,13 @@ public final class Type {
             return sign;
         }
 
-        public static Kind fromTypes(String types) {
+        public static Kind fromTypes(@NullAllowed String types) {
             Kind kind = NORMAL;
-            if (types.contains(SEPARATOR)) {
+            if (StringUtils.isEmpty(types)) {
+                kind = NONE;
+            } else if (types.contains(SEPARATOR) && types.contains(SEPARATOR_INTERSECTION)) {
+                kind = DNF;
+            } else if (types.contains(SEPARATOR)) {
                 kind = UNION;
             } else if (types.contains(SEPARATOR_INTERSECTION)) {
                 kind = INTERSECTION;
@@ -90,9 +97,9 @@ public final class Type {
     public static final String STATIC = "static"; //NOI18N NETBEANS-4443 PHP 8.0
     public static final String NEVER = "never"; //NOI18N NETBEANS-5599 PHP 8.1
 
-    private static final List<String> TYPES_FOR_EDITOR = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, NULL, FALSE, MIXED);
-    private static final List<String> TYPES_FOR_RETURN_TYPE = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, VOID, OBJECT, NULL, FALSE, MIXED, NEVER);
-    private static final List<String> TYPES_FOR_FIELD_TYPE = Arrays.asList(ARRAY, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, SELF, PARENT, NULL, FALSE, MIXED); // PHP 7.4 Typed Properties 2.0
+    private static final List<String> TYPES_FOR_EDITOR = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, NULL, FALSE, MIXED, TRUE);
+    private static final List<String> TYPES_FOR_RETURN_TYPE = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, VOID, OBJECT, NULL, FALSE, MIXED, NEVER, TRUE);
+    private static final List<String> TYPES_FOR_FIELD_TYPE = Arrays.asList(ARRAY, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, SELF, PARENT, NULL, FALSE, MIXED, TRUE); // PHP 7.4 Typed Properties 2.0
     private static final List<String> SPECIAL_TYPES_FOR_TYPE = Arrays.asList(SELF, PARENT);
     private static final List<String> TYPES_FOR_PHP_DOC = Arrays.asList(STRING, INTEGER, INT, BOOLEAN, BOOL, FLOAT, DOUBLE, OBJECT, MIXED, ARRAY,
             RESOURCE, VOID, NULL, CALLBACK, CALLABLE, ITERABLE, FALSE, TRUE, SELF);
@@ -101,16 +108,25 @@ public final class Type {
 
     public static boolean isPrimitive(String typeName) {
         boolean retval = false;
-        if (BOOL.equals(typeName) || BOOLEAN.equals(typeName) || INT.equals(typeName)
+        if (BOOL.equals(typeName) || INT.equals(typeName)
                 || INTEGER.equals(typeName) || FLOAT.equals(typeName) || REAL.equals(typeName)
                 || ARRAY.equals(typeName) || OBJECT.equals(typeName) || MIXED.equals(typeName)
                 || NUMBER.equals(typeName) || CALLBACK.equals(typeName) || RESOURCE.equals(typeName)
                 || DOUBLE.equals(typeName) || STRING.equals(typeName) || NULL.equals(typeName)
                 || VOID.equals(typeName) || CALLABLE.equals(typeName) || ITERABLE.equals(typeName)
-                || FALSE.equals(typeName) || STATIC.equals(typeName) || NEVER.equals(typeName)) {
+                || FALSE.equals(typeName) || STATIC.equals(typeName) || NEVER.equals(typeName)
+                || TRUE.equals(typeName)) {
             retval = true;
         }
         return retval;
+    }
+    
+    public static boolean isPrimitiveAlias(String typeName) {
+        boolean retval = false;
+        if (BOOLEAN.equals(typeName)) {
+            retval = true;
+        }
+        return retval;        
     }
 
     public static boolean isArray(String typeName) {

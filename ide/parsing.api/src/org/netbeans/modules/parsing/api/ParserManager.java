@@ -304,7 +304,7 @@ public final class ParserManager {
     
     /**
      * Runs given task in parser thread.
-     * @param mimetype      specifying the parser
+     * @param mimeType      specifying the parser
      * @param userTask      a user task
      * @throws ParseException encapsulating the user exception
      */
@@ -325,7 +325,7 @@ public final class ParserManager {
      * scan is running the method behaves exactly like the {#link ParserManager#parse},
      * it performs the given task synchronously (in caller thread). If there is an another {@link UserTask}
      * running this method waits until it's completed.
-     * @param mimetype A mimetype specifying the parser.
+     * @param mimeType A mimetype specifying the parser.
      * @param userTask A task started when parsing is done.
      * @return {@link Future} which can be used to find out the state of the task {@link Future#isDone} or {@link Future#isCancelled}.
      * The caller may cancel the task using {@link Future#cancel} or wait until the task is performed {@link Future#get}.
@@ -388,7 +388,7 @@ public final class ParserManager {
     }
 
     /**
-     * Determines if the MIME type can be parsed. Rejects unknown MIME types (must be amongst {@link #getAllMimeTypes}.
+     * Determines if the MIME type can be parsed. Rejects unknown MIME types (must be amongst <a href="https://github.com/apache/netbeans/tree/master/ide/parsing.indexing/src/org/netbeans/modules/parsing/impl/indexing/Util.java">getAllMimeTypes</a>.
      * Then accepts only text/* MIME type and specific hardcoded application/ MIME types.
      * 
      * @param mimeType the MIME type to check

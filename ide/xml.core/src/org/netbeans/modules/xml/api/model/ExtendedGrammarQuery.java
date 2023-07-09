@@ -32,6 +32,6 @@ import java.util.List;
 public interface ExtendedGrammarQuery extends GrammarQuery {
     
     /** @return a List of resolved entities System id-s names.*/
-    public List/*<String>*/ getResolvedEntities();
+    public List<String> getResolvedEntities();
     
 }

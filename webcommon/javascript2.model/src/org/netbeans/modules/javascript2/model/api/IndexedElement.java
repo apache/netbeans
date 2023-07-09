@@ -322,6 +322,7 @@ public class IndexedElement implements JsElement {
         private static final int CALLBACK = 1 << 22;
         private static final int GENERATOR = 1 << 23;
         private static final int CONSTANT = 1 << 24;
+        private static final int ARROW_FUNCTION = 1 << 25;
 
         private static final int PLATFORM = 1 << 20;
 
@@ -359,6 +360,7 @@ public class IndexedElement implements JsElement {
             if (kind == JsElement.Kind.CALLBACK) value |= CALLBACK;
             if (kind == JsElement.Kind.GENERATOR) value |= GENERATOR;
             if (kind == JsElement.Kind.CONSTANT) value |= CONSTANT;
+            if (kind == JsElement.Kind.ARROW_FUNCTION) value |= ARROW_FUNCTION;
 
             if (object.isPlatform()) value |= PLATFORM;
 
@@ -409,6 +411,7 @@ public class IndexedElement implements JsElement {
             else if ((flag & CALLBACK) != 0) result = JsElement.Kind.CALLBACK;
             else if ((flag & GENERATOR) != 0) result = JsElement.Kind.GENERATOR;
             else if ((flag & CONSTANT) != 0) result = JsElement.Kind.CONSTANT;
+            else if ((flag & ARROW_FUNCTION) != 0) result = JsElement.Kind.ARROW_FUNCTION;
             return result;
         }
     }

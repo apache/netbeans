@@ -145,8 +145,8 @@ public final class RunTargetsAction extends AbstractAction implements ContextAwa
                     allTargets = Collections.emptySet();
                 }
                 String defaultTarget = null;
-                SortedSet<String> describedTargets = new TreeSet(Collator.getInstance());
-                SortedSet<String> otherTargets = new TreeSet(Collator.getInstance());
+                SortedSet<String> describedTargets = new TreeSet<>(Collator.getInstance());
+                SortedSet<String> otherTargets     = new TreeSet<>(Collator.getInstance());
                 for (TargetLister.Target t : allTargets) {
                     if (t.isOverridden()) {
                         // Cannot be called.

@@ -119,7 +119,7 @@ public abstract class Scheduler {
      * Reschedule all tasks registered for <code>this</code> Scheduler (see
      * {@link ParserResultTask#getSchedulerClass()}, and sets new {@link Source}s for them.
      * 
-     * @param sources       A collection of {@link Source}s.
+     * @param source       A {@link Source}.
      */
     //tzezula: really unclear usages of sources field (synchronization, live cycle, may it be called twice with different set of sources?).
     //tzezula: should set CHANGE_EXPECTED flag on the sources.

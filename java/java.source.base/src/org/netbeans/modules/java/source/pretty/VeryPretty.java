@@ -26,6 +26,7 @@ import com.sun.source.tree.LambdaExpressionTree.BodyKind;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModuleTree;
+import com.sun.source.tree.PatternTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import static com.sun.source.tree.Tree.*;
@@ -2061,8 +2062,22 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
-    public void visitDefaultCaseLabel(JCDefaultCaseLabel that) {
+    public void visitDefaultCaseLabel(JCDefaultCaseLabel tree) {
         print("default");
+    }
+
+    @Override
+    public void visitConstantCaseLabel(JCConstantCaseLabel tree) {
+        printExpr(tree.expr);
+    }
+
+    @Override
+    public void visitPatternCaseLabel(JCPatternCaseLabel tree) {
+        print(tree.pat);
+        if (tree.guard != null) {
+            print(" when ");
+            printExpr(tree.guard);
+        }
     }
 
     @Override
@@ -2077,8 +2092,23 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitTree(JCTree tree) {
-	print("(UNKNOWN: " + tree + ")");
-	newline();
+        print("(UNKNOWN: " + tree + ")");
+        newline();
+    }
+    
+    @Override
+    public void visitRecordPattern(JCRecordPattern tree) {
+        print(tree.deconstructor);
+        print("(");
+        Iterator<JCPattern> it = tree.nested.iterator();
+        while (it.hasNext()) {
+            JCPattern pattern = it.next();
+            doAccept(pattern, true);
+            if (it.hasNext()) {
+                print(", ");
+            }
+        }
+        print(")");
     }
 
     /**************************************************************************

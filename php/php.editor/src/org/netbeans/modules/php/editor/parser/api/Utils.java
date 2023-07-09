@@ -29,6 +29,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionName;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
@@ -105,7 +106,8 @@ public final class Utils {
             ASTNode next = nodes.iterator().next();
             if (next instanceof NamespaceName
                     || next instanceof NullableType
-                    || next instanceof UnionType) {
+                    || next instanceof UnionType
+                    || next instanceof IntersectionType) {
                 isFieldDeclaration = true;
             }
         }
@@ -337,7 +339,7 @@ public final class Utils {
     public static List<PHPDocVarTypeTag> getPropertyTags(Program root, ClassDeclaration node) {
         List<PHPDocVarTypeTag> tags = new ArrayList<>();
         Comment comment = Utils.getCommentForNode(root, node);
-        if (comment != null && (comment instanceof PHPDocBlock)) {
+        if (comment instanceof PHPDocBlock) {
             PHPDocBlock phpDoc = (PHPDocBlock) comment;
             for (PHPDocTag tag : phpDoc.getTags()) {
                 if (tag.getKind().equals(PHPDocTag.Type.PROPERTY)

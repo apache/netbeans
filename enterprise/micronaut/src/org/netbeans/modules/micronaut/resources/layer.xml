@@ -45,18 +45,60 @@
         </folder>
     </folder>
     <folder name="Projects">
+        <folder name="org-netbeans-modules-gradle">
+            <folder name="Plugins">
+                <folder name="io.micronaut.application">
+                    <folder name="Lookup">
+                        <file name="micronaut-project-actions.shadow">
+                            <attr name="originalFile" stringvalue="Projects/org-netbeans-modules-gradle/Plugins/org.graalvm.buildtools.native/Lookup/micronaut-project-actions.instance"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="org.graalvm.buildtools.native">
+                    <folder name="Lookup">
+                        <file name="micronaut-project-actions.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider.forProjectLayer"/>
+                            <attr name="service" stringvalue="org.netbeans.modules.gradle.spi.actions.GradleActionsProvider"/>
+                            <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/micronaut-actions-gradle.xml"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
         <folder name="org-netbeans-modules-maven">
             <folder name="io.micronaut.build:micronaut-maven-plugin">
                 <folder name="Lookup">
                     <file name="maven-project-actions.instance">
                         <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
                         <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
-                        <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/micronaut-actions.xml"/>
+                        <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/micronaut-actions-maven.xml"/>
                     </file>
                     <file name="native-image-artifacts.instance">
                         <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
                         <attr name="instanceCreate" methodvalue="org.netbeans.modules.micronaut.maven.MicronautPackagingArtifactsImpl.projectLookup"/>
                     </file>
+                </folder>
+            </folder>
+            <folder name="org.springframework.boot:spring-boot-maven-plugin">
+                <folder name="Lookup">
+                    <file name="maven-project-actions.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
+                        <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/spring-actions-maven.xml"/>
+                    </file>
+                    <file name="native-image-artifacts.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.micronaut.maven.MicronautPackagingArtifactsImpl.projectLookup"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="LifecycleParticipants">
+                <folder name="org.graalvm.buildtools.maven.NativeExtension">
+                    <attr name="ignoreOnModelLoad" boolvalue="true"/>
+                </folder>
+                <folder name="io.micronaut.build.testresources.TestResourcesLifecycleExtension">
+                    <attr name="ignoreOnModelLoad" boolvalue="true"/>
                 </folder>
             </folder>
         </folder>

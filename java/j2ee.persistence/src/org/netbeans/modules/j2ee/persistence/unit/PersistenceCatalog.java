@@ -20,7 +20,6 @@
 
 package org.netbeans.modules.j2ee.persistence.unit;
 
-import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,11 +28,9 @@ import java.util.List;
 import org.netbeans.modules.xml.catalog.spi.CatalogDescriptor2;
 import org.netbeans.modules.xml.catalog.spi.CatalogListener;
 import org.netbeans.modules.xml.catalog.spi.CatalogReader;
-import org.openide.util.ImageUtilities;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 
 /**
  * Catalog for persistence related schemas.
@@ -44,11 +41,13 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
     
     private static final String PERSISTENCE_OLD_NS = "http://java.sun.com/xml/ns/persistence"; // NOI18N
     private static final String PERSISTENCE_NS = "http://xmlns.jcp.org/xml/ns/persistence"; // NOI18N
+    private static final String PERSISTENCE_JAKARTA_NS = "https://jakarta.ee/xml/ns/persistence"; // NOI18N
     private static final String ORM_OLD_NS = PERSISTENCE_OLD_NS +  "/orm"; // NOI18N
     private static final String ORM_NS = PERSISTENCE_NS +  "/orm"; // NOI18N
+    private static final String ORM_JAKARTA_NS = PERSISTENCE_JAKARTA_NS +  "/orm"; // NOI18N
     private static final String RESOURCE_PATH = "nbres:/org/netbeans/modules/j2ee/persistence/dd/resources/"; //NOI18N 
     
-    private List<SchemaInfo> schemas = new ArrayList<SchemaInfo>();
+    private List<SchemaInfo> schemas = new ArrayList<>();
 
     public PersistenceCatalog() {
         initialize();
@@ -59,12 +58,18 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         schemas.add(new SchemaInfo("persistence_1_0.xsd", RESOURCE_PATH, PERSISTENCE_OLD_NS));
         schemas.add(new SchemaInfo("persistence_2_0.xsd", RESOURCE_PATH, PERSISTENCE_OLD_NS));
         schemas.add(new SchemaInfo("persistence_2_1.xsd", RESOURCE_PATH, PERSISTENCE_NS));
+        schemas.add(new SchemaInfo("persistence_2_2.xsd", RESOURCE_PATH, PERSISTENCE_NS));
+        schemas.add(new SchemaInfo("persistence_3_0.xsd", RESOURCE_PATH, PERSISTENCE_JAKARTA_NS));
         // orm
         schemas.add(new SchemaInfo("orm_1_0.xsd", RESOURCE_PATH, ORM_OLD_NS));
         schemas.add(new SchemaInfo("orm_2_0.xsd", RESOURCE_PATH, ORM_OLD_NS));
         schemas.add(new SchemaInfo("orm_2_1.xsd", RESOURCE_PATH, ORM_NS));
+        schemas.add(new SchemaInfo("orm_2_2.xsd", RESOURCE_PATH, ORM_NS));
+        schemas.add(new SchemaInfo("orm_3_0.xsd", RESOURCE_PATH, ORM_JAKARTA_NS));
+        schemas.add(new SchemaInfo("orm_3_1.xsd", RESOURCE_PATH, ORM_JAKARTA_NS));
     }
     
+    @Override
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
         if (systemId == null){
             return null;
@@ -77,17 +82,20 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         return null;
     }
     
+    @Override
     public Iterator getPublicIDs() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (SchemaInfo each : schemas){
             result.add(each.getPublicId());
         }
         return result.iterator();
     }
     
+    @Override
     public void refresh() {
     }
     
+    @Override
     public String getSystemID(String publicId) {
         if (publicId == null){
             return null;
@@ -100,35 +108,44 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         return null;
     }
     
+    @Override
     public String resolveURI(String name) {
         return null;
     }
     
+    @Override
     public String resolvePublic(String publicId) {
         return null;
     }
     
+    @Override
     public void addCatalogListener(CatalogListener l) {
     }
     
+    @Override
     public void removeCatalogListener(CatalogListener l) {
     }
     
+    @Override
     public String getIconResource(int type) {
         return "org/netbeans/modules/j2ee/persistence/dd/resources/persistenceCatalog.gif"; // NOI18N
     }
     
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(PersistenceCatalog.class, "LBL_PersistenceCatalog");
     }
     
+    @Override
     public String getShortDescription() {
         return NbBundle.getMessage(PersistenceCatalog.class, "DESC_PersistenceCatalog");
     }
     
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener l) {
     }
     
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener l) {
     }
 

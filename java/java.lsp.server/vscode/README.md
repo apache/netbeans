@@ -23,7 +23,7 @@
 
 This is a technology preview of [Apache NetBeans](http://netbeans.org)
 based extension for VS Code. Use it to get all the _goodies of NetBeans_
-via the VS Code user interface! Runs on __JDK8__[*] and all newer versions.
+via the VS Code user interface! Runs on __JDK11__ and all newer versions.
 
 Apache NetBeans Language Server brings full featured Java development (edit-compile-debug & test cycle) for Maven and Gradle projects to VSCode. As well as other features.
 ## Getting Started
@@ -35,6 +35,8 @@ Apache NetBeans Language Server brings full featured Java development (edit-comp
     subprojects etc.
 4. Or simply create a new Java class file with `public static void main(String[] args)` method in opened folder and start coding, compiling, debugging. Works on JDK 8 and newer.
 
+## Proxy Issues
+When running this extension on GraalVM, as its runtime JDK, behind proxy it requires GraalVM JavaScript (Graal.JS) component installed to perform automatic proxy resolution. Either install Graal.JS using GraalVM VSCode extension available on Marketplace or invoke `gu install js` for GraalVM used by VSCode.
 
 ## Supported Actions
 * __Java: New Project...__ allows creation of new Maven or Gradle project 
@@ -44,7 +46,7 @@ Apache NetBeans Language Server brings full featured Java development (edit-comp
     * HTML5/JavaScript - Templates for JS, HTML, CSS,... files
     * Other - various templates for JSON, YAML, properties, ... files
 * __Java: Compile Workspace__ - invoke Maven or Gradle build
-* Debugger __Java 8+...__ - start main class or test on JDK8+. More in [Debugger section](#debugger-and-launch-configurations)
+* Debugger __Java+...__ - start main class or test on selected JDK. More in [Debugger section](#debugger-and-launch-configurations)
 * Progress shown for long running operations with cancel support for selected types
 * __Native Image Debugger__ is a new Run configuration added which allows Java style debugging of Ahead of Time compiled native-images, produced by GraalVM. It is experimental feature which works with GDB on Linux. GDB 7.11 or GDB 10.1+ is required due to known issue [#26139](https://sourceware.org/bugzilla/show_bug.cgi?id=26139) in GDB 8 and 9.
   * It is also possible to attach to running native image process using __Attach to Native Image__ launch configuation.
@@ -58,14 +60,14 @@ Project Explorer provides an overview of logical project structure, groups sourc
 ![Project Explorer](images/project-explorer.png)
 
 ## Debugger and Launch Configurations
-Language Server __Java 8+ ...__ launch configuration supports debugging and running Java applications using JDK8 or newer. 
+Language Server __Java+ ...__ launch configuration supports debugging and running Java applications using JDK11 or newer. 
 1. The launch configuration (debugger) is invoked when `Run main | Debug main` code lense is selected in the code.
-2. Or __Java 8+...__ is selected in __Run and Debug__ activity panel.
+2. Or __Java+...__ is selected in __Run and Debug__ activity panel.
 ![Debug configurations](images/debuggers.png)
 ### Launch Configurations
-* __Launch Java 8+ App__ - Debug or Run current Java project
+* __Launch Java App__ - Debug or Run current Java project
 * __Launch Java: Continuous Mode__ - Runs Micronaut project and reloads it when source code has been changed.
-* __Attach to Port__ & __Attach to Process__ - Attach debugger actions. Available when __Java 8+ ...__ at the bottom of drop down list is selected.
+* __Attach to Port__ & __Attach to Process__ - Attach debugger actions. Available when __Java+ ...__ at the bottom of drop down list is selected.
     * Select this configuration, then click the ![Run](images/run.png) 
     * Select either from available process or enter the port to connect to JVM running with JDWP.
     * __Attach to Shared Memory__ is available on Windows in addtion to above mentioned _Attach..._

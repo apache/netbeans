@@ -475,7 +475,6 @@ class Test {
     ): int {
         
     }
-
 }
 
 interface TestInterface {

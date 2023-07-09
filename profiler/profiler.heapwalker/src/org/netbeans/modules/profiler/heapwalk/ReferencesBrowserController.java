@@ -279,7 +279,7 @@ public class ReferencesBrowserController extends AbstractController {
         return ((ReferencesBrowserControllerUI) getPanel()).getPresenter();
     }
     
-    public List getExpandedPaths() {
+    public List<TreePath> getExpandedPaths() {
         return ((ReferencesBrowserControllerUI)getPanel()).getExpandedPaths();
     }
     

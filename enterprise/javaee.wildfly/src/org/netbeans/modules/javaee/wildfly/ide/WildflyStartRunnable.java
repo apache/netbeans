@@ -201,6 +201,12 @@ class WildflyStartRunnable implements Runnable {
             javaOptsBuilder.append(" -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true");
         }
 
+        if(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET) != null ) {
+            int portOffSet = Integer.parseInt(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET));
+            if(portOffSet > 0 ) {
+                javaOptsBuilder.append(" -Djboss.socket.binding.port-offset=").append(portOffSet);
+            }
+        }
         if (ip.getProperty(WildflyPluginProperties.PROPERTY_CONFIG_FILE) != null) {
             File configFile = new File(ip.getProperty(WildflyPluginProperties.PROPERTY_CONFIG_FILE));
             if (configFile.exists() && configFile.getParentFile().exists() && configFile.getParentFile().getParentFile().exists()) {

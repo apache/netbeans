@@ -30,6 +30,7 @@ import org.openide.util.Exceptions;
 */
 public class ContextSystemOptionBeanInfo extends SimpleBeanInfo {
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo () {
         try {
             return new BeanInfo[] { Introspector.getBeanInfo (SystemOption.class) };
@@ -42,6 +43,7 @@ public class ContextSystemOptionBeanInfo extends SimpleBeanInfo {
     /** No properties.
     * @return array of hidden properties
     */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors () {
         try {
             PropertyDescriptor beanContextProxy = new PropertyDescriptor ("beanContextProxy", ContextSystemOption.class, "getBeanContextProxy", null);

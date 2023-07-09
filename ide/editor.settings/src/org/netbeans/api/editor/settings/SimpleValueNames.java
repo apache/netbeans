@@ -78,7 +78,7 @@ public final class SimpleValueNames {
      * </ul>
      * 
      * Values: java.lang.String instances
-     * @see org.netbeans.editor.BaseCaret
+     * @see <a href="@org-netbeans-modules-editor-lib@/org/netbeans/editor/BaseCaret.html">BaseCaret</a>
      */
     public static final String CARET_TYPE_INSERT_MODE = "caret-type-insert-mode"; // NOI18N
 
@@ -92,7 +92,7 @@ public final class SimpleValueNames {
      * </ul>
      * 
      * Values: java.lang.String instances
-     * @see org.netbeans.editor.BaseCaret
+     * @see <a href="@org-netbeans-modules-editor-lib@/org/netbeans/editor/BaseCaret.html">BaseCaret</a>
      */
     public static final String CARET_TYPE_OVERWRITE_MODE = "caret-type-overwrite-mode"; // NOI18N
 

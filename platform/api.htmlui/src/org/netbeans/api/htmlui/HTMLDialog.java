@@ -53,7 +53,7 @@ import org.netbeans.modules.htmlui.HTMLDialogBase;
  * into it. When the page is
  * loaded, it calls back the method {@code AskQuestion.showHelloWorld}
  * and passes it
- * its own arguments. The method is supposed to make the page live, preferrably
+ * its own arguments. The method is supposed to make the page live, preferably
  * by using {@link net.java.html.json.Model} generated class and calling
  * <code>applyBindings()</code> on it. The method is suggested to return
  * an instance of {@link OnSubmit} callback to be notified about user pressing
@@ -83,12 +83,22 @@ public @interface HTMLDialog {
      * Will be resolved by the annotation processor and converted into
      * <code>nbresloc</code> protocol - as such the HTML page can be L10Ned
      * later by adding classical L10N suffixes. E.g. <code>index_cs.html</code>
-     * will take preceedence over <code>index.html</code> if the user is
+     * will take precedence over <code>index.html</code> if the user is
      * running in Czech {@link Locale}.
      *
-     * @return relative path the HTML page
+     * @return relative path to the HTML page
      */
     String url();
+
+    /** List of resources to make available for the {@link #url()} page.
+     * The rendering system shall make sure these resources are available when
+     * the {@link #url() main page} is loaded and are at the same relative
+     * locations like the page.
+     *
+     * @return list of resources
+     * @since 1.25
+     */
+    String[] resources() default {};
 
     /** Name of the file to generate the method that opens the dialog
      * into. Class of such name will be generated into the same
@@ -138,6 +148,7 @@ public @interface HTMLDialog {
      */
     public static final class Builder {
         private final String url;
+        private List<String> resources = new ArrayList<>();
         private List<String> techIds = new ArrayList<>();
         private Runnable onPageLoad;
 
@@ -168,6 +179,20 @@ public @interface HTMLDialog {
             return this;
         }
 
+        /** Registers resources to be available for the {@link #url()} page.
+         * The rendering system shall make sure these resources are available when
+         * the {@link #url() main page} is loaded and are at the same relative
+         * locations like the page.
+         *
+         * @param res list of resources to add to the builder
+         * @return instance of the builder
+         * @since 1.25
+         */
+        public Builder addResources(String... res) {
+            resources.addAll(Arrays.asList(res));
+            return this;
+        }
+
         /** Requests some of provided technologies. The HTML/Java API @ version 1.1
          * supports {@link Id technology ids}. One can specify the preferred ones
          * to use in this NetBeans component by using calling this method.
@@ -188,7 +213,7 @@ public @interface HTMLDialog {
          *   if the dialog was closed without selecting a button
          */
         public String showAndWait() {
-            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, null, techIds.toArray(new String[0]), null);
+            HTMLDialogBase impl = HTMLDialogBase.create(url, resources.toArray(new String[0]), onPageLoad, null, techIds.toArray(new String[0]), null);
             return impl.showAndWait();
         }
 
@@ -199,21 +224,21 @@ public @interface HTMLDialog {
          * @since 1.23
          */
         public void show(OnSubmit s) {
-            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, s, techIds.toArray(new String[0]), null);
+            HTMLDialogBase impl = HTMLDialogBase.create(url, resources.toArray(new String[0]), onPageLoad, s, techIds.toArray(new String[0]), null);
             impl.show(s);
         }
 
         /** Obtains the component from the builder. The parameter
-         * can either be {@link javafx.embed.swing.JFXPanel}.<b>class</b> or
-         * {@link javafx.scene.web.WebView}.<b>class</b>. After calling this
+         * can either be <a href="https://openjfx.io/javadoc/11/javafx.swing/javafx/embed/swing/JFXPanel.html">JFXPanel</a>.<b>class</b> or
+         * <a href="https://openjfx.io/javadoc/11/javafx.web/javafx/scene/web/WebView.html">WebView</a>.<b>class</b>. After calling this
          * method the builder becomes useless.
          *
          * @param <C> requested component type
-         * @param type either {@link javafx.embed.swing.JFXPanel} or {@link javafx.scene.web.WebView} class
+         * @param type either <a href="https://openjfx.io/javadoc/11/javafx.swing/javafx/embed/swing/JFXPanel.html">JFXPanel</a> or <a href="https://openjfx.io/javadoc/11/javafx.web/javafx/scene/web/WebView.html">WebView</a> class
          * @return instance of the requested component
          */
         public <C> C component(Class<C> type) {
-            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, null, techIds.toArray(new String[0]), type);
+            HTMLDialogBase impl = HTMLDialogBase.create(url, resources.toArray(new String[0]), onPageLoad, null, techIds.toArray(new String[0]), type);
             return impl.component(type);
         }
     }

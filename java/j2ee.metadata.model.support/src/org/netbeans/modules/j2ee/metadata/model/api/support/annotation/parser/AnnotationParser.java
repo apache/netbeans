@@ -487,7 +487,7 @@ public final class AnnotationParser {
             Object value = elementValue.getValue();
             if (value instanceof TypeMirror) {
                 TypeMirror type = (TypeMirror)value;
-                if (TypeKind.DECLARED.equals(type.getKind())) {
+                if (TypeKind.DECLARED == type.getKind()) {
                     return ((TypeElement)(((DeclaredType)value).asElement())).getQualifiedName().toString();
                 }
             }
@@ -583,7 +583,7 @@ public final class AnnotationParser {
                     return false;
                 }
                 TypeMirror type = (TypeMirror)value;
-                if (!TypeKind.DECLARED.equals(type.getKind())) {
+                if (TypeKind.DECLARED != type.getKind()) {
                     return false;
                 }
             }

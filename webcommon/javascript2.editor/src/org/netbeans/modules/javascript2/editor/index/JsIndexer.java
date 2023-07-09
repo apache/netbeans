@@ -260,7 +260,7 @@ public class JsIndexer extends EmbeddingIndexer {
             if (parent != null && parent.getJSKind() == JsElement.Kind.FILE) {
                 return false;
             }
-            if (parent != null && parent instanceof JsFunction) {
+            if (parent instanceof JsFunction) {
                 Collection<? extends TypeUsage> returnTypes = ((JsFunction) parent).getReturnTypes();
                 String fqn = object.getFullyQualifiedName();
                 for (TypeUsage returnType : returnTypes) {
@@ -345,7 +345,7 @@ public class JsIndexer extends EmbeddingIndexer {
     public static final class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "js"; // NOI18N
-        public static final int VERSION = 16;
+        public static final int VERSION = 17;
         private static final int PRIORITY = 100;
 
         private static final ThreadLocal<Collection<Runnable>> postScanTasks = new ThreadLocal<>();

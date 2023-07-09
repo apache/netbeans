@@ -21,14 +21,17 @@ package org.netbeans.modules.php.editor.actions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -117,6 +120,8 @@ public class FixUsesPerformer {
     @NbBundle.Messages("FixUsesPerformer.noChanges=Fix imports: No Changes")
     private void processSelections() {
         final List<ImportData.DataItem> dataItems = resolveDuplicateSelections();
+        assert selections.size() <= dataItems.size()
+                : "The selections size must not be larger than the dataItems size. selections size: " + selections.size() + " > dataItems size: " + dataItems.size(); // NOI18N
         NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult, importData.caretPosition);
         assert namespaceScope != null;
         int startOffset = getOffset(baseDocument, namespaceScope, parserResult, importData.caretPosition);
@@ -246,8 +251,8 @@ public class FixUsesPerformer {
 
     private String createInsertString(final List<UsePart> useParts) {
         StringBuilder insertString = new StringBuilder();
-        Collections.sort(useParts);
-        if (useParts.size() > 0) {
+        sort(useParts);
+        if (!useParts.isEmpty()) {
             insertString.append(NEW_LINE);
         }
         String indentString = null;
@@ -268,6 +273,36 @@ public class FixUsesPerformer {
         return insertString.toString();
     }
 
+    private void sort(List<UsePart> useParts) {
+        if (options.putInPSR12Order()) {
+            Collections.sort(useParts, (u1, u2) -> {
+                int result = 0;
+                if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
+                    result = 0;
+                } else if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
+                    result = -1;
+                } else if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
+                    result = -1;
+                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
+                    result = 1;
+                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
+                    result = 0;
+                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
+                    result = 1;
+                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
+                    result = 1;
+                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
+                    result = -1;
+                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
+                    result = 0;
+                }
+                return result == 0 ? u1.getTextPart().compareToIgnoreCase(u2.getTextPart()) : result;
+            });
+        } else {
+            Collections.sort(useParts);
+        }
+    }
+
     private String createStringForGroupUse(List<UsePart> useParts, String indentString) {
         List<UsePart> typeUseParts = new ArrayList<>(useParts.size());
         List<UsePart> constUseParts = new ArrayList<>(useParts.size());
@@ -284,16 +319,15 @@ public class FixUsesPerformer {
                     functionUseParts.add(usePart);
                     break;
                 default:
-                    assert false : "Unknown type: " + usePart.getType();
+                    assert false : "Unknown type: " + usePart.getType(); // NOI18N
             }
         }
         StringBuilder insertString = new StringBuilder();
-        // types
-        createStringForGroupUse(insertString, indentString, USE_PREFIX, typeUseParts);
-        // constants
-        createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, constUseParts);
-        // functions
-        createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, functionUseParts);
+        final Map<String, List<UsePart>> groupUseParts = new HashMap<>();
+        groupUseParts.put(USE_PREFIX, typeUseParts);
+        groupUseParts.put(USE_CONST_PREFIX, constUseParts);
+        groupUseParts.put(USE_FUNCTION_PREFIX, functionUseParts);
+        createStringForGroupUse(insertString, indentString, groupUseParts);
         return insertString.toString();
     }
 
@@ -301,6 +335,46 @@ public class FixUsesPerformer {
         return useParts.stream()
                 .map(part -> part.getTextPart())
                 .collect(Collectors.toList());
+    }
+
+    private void createStringForGroupUse(StringBuilder insertString, String indentString, Map<String, List<UsePart>> useParts) {
+        if (options.putInPSR12Order()) {
+            createStringForGroupUsePSR12(insertString, indentString, useParts);
+        } else {
+            createStringForGroupUseDefault(insertString, indentString, useParts);
+        }
+    }
+
+    private void createStringForGroupUsePSR12(StringBuilder insertString, String indentString, Map<String, List<UsePart>> useParts) {
+        // types
+        createStringForGroupUse(insertString, indentString, USE_PREFIX, useParts.get(USE_PREFIX));
+
+        // functions
+        if (!useParts.get(USE_FUNCTION_PREFIX).isEmpty()) {
+            appendNewLine(insertString);
+        }
+        createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, useParts.get(USE_FUNCTION_PREFIX));
+
+        // constants
+        if (!useParts.get(USE_CONST_PREFIX).isEmpty()) {
+            appendNewLine(insertString);
+        }
+        createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, useParts.get(USE_CONST_PREFIX));
+    }
+
+    private void createStringForGroupUseDefault(StringBuilder insertString, String indentString, Map<String, List<UsePart>> useParts) {
+        // types
+        createStringForGroupUse(insertString, indentString, USE_PREFIX, useParts.get(USE_PREFIX));
+        // constants
+        createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, useParts.get(USE_CONST_PREFIX));
+        // functions
+        createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, useParts.get(USE_FUNCTION_PREFIX));
+    }
+
+    private void appendNewLine(StringBuilder insertString) {
+        if (insertString.length() > 0) {
+            insertString.append(NEW_LINE);
+        }
     }
 
     private void createStringForGroupUse(StringBuilder insertString, String indentString, String usePrefix, List<UsePart> useParts) {
@@ -352,7 +426,7 @@ public class FixUsesPerformer {
         }
         assert groupUsePrefix != null : groupedUseParts;
         String properGroupUsePrefix = modifyUseName(groupUsePrefix);
-        insertString.append(usePrefix).append(properGroupUsePrefix).append(SPACE).append(CURLY_OPEN).append(NEW_LINE);
+        insertString.append(usePrefix).append(properGroupUsePrefix).append(CURLY_OPEN).append(NEW_LINE);
         boolean first = true;
         int prefixLength = properGroupUsePrefix.length();
         for (UsePart groupUsePart : groupedUseParts) {
@@ -405,8 +479,13 @@ public class FixUsesPerformer {
 
     private String createStringForCommonUse(List<UsePart> useParts) {
         StringBuilder result = new StringBuilder();
+        UsePart.Type lastUseType = null;
         for (UsePart usePart : useParts) {
+            if (options.putInPSR12Order() && lastUseType != null && lastUseType != usePart.getType()) {
+                appendNewLine(result);
+            }
             result.append(usePart.getUsePrefix()).append(usePart.getTextPart()).append(SEMICOLON);
+            lastUseType = usePart.getType();
         }
         return result.toString();
     }
@@ -511,8 +590,8 @@ public class FixUsesPerformer {
     //~ inner classes
     private static class CheckVisitor extends DefaultVisitor {
 
-        private List<DeclareStatement> declareStatements = new ArrayList();
-        private List<NamespaceDeclaration> globalNamespaceDeclarations = new ArrayList();
+        private List<DeclareStatement> declareStatements = new ArrayList<>();
+        private List<NamespaceDeclaration> globalNamespaceDeclarations = new ArrayList<>();
 
         public List<DeclareStatement> getDeclareStatements() {
             return Collections.unmodifiableList(declareStatements);

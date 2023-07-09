@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.11
+#Version 2.15
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 
@@ -26,14 +26,16 @@ meth public abstract java.lang.Class<?>[] getParameterTypes()
 meth public abstract java.lang.Object callback(java.lang.Object[])
 
 CLSS public com.sun.jna.CallbackReference
+intf java.io.Closeable
 meth protected void dispose()
-meth protected void finalize()
+ anno 0 java.lang.Deprecated()
 meth public com.sun.jna.Pointer getTrampoline()
 meth public static com.sun.jna.Callback getCallback(java.lang.Class<?>,com.sun.jna.Pointer)
 meth public static com.sun.jna.Pointer getFunctionPointer(com.sun.jna.Callback)
+meth public void close()
 supr java.lang.ref.WeakReference<com.sun.jna.Callback>
-hfds DLL_CALLBACK_CLASS,PROXY_CALLBACK_METHOD,allocatedMemory,allocations,callbackMap,callingConvention,cbstruct,directCallbackMap,initializers,method,pointerCallbackMap,proxy,trampoline
-hcls AttachOptions,DefaultCallbackProxy,NativeFunctionHandler
+hfds DLL_CALLBACK_CLASS,PROXY_CALLBACK_METHOD,allocatedMemory,allocations,callbackMap,callingConvention,cbstruct,cleanable,directCallbackMap,initializers,method,pointerCallbackMap,proxy,trampoline
+hcls AttachOptions,CallbackReferenceDisposer,DefaultCallbackProxy,NativeFunctionHandler
 
 CLSS public com.sun.jna.CallbackResultContext
 meth public java.lang.reflect.Method getMethod()
@@ -193,11 +195,12 @@ CLSS public com.sun.jna.Memory
 cons protected init()
 cons public init(long)
 fld protected long size
+intf java.io.Closeable
 meth protected static long malloc(long)
 meth protected static void free(long)
 meth protected void boundsCheck(long,long)
 meth protected void dispose()
-meth protected void finalize()
+ anno 0 java.lang.Deprecated()
 meth public boolean valid()
 meth public byte getByte(long)
 meth public char getChar(long)
@@ -219,6 +222,7 @@ meth public short getShort(long)
 meth public static void disposeAll()
 meth public static void purge()
 meth public void clear()
+meth public void close()
 meth public void read(long,byte[],int,int)
 meth public void read(long,char[],int,int)
 meth public void read(long,com.sun.jna.Pointer[],int,int)
@@ -246,8 +250,8 @@ meth public void write(long,int[],int,int)
 meth public void write(long,long[],int,int)
 meth public void write(long,short[],int,int)
 supr com.sun.jna.Pointer
-hfds HEAD,QUEUE,buffers,reference
-hcls LinkedReference,SharedMemory
+hfds allocatedMemory,buffers,cleanable
+hcls MemoryDisposer,SharedMemory
 
 CLSS public com.sun.jna.MethodParameterContext
 meth public java.lang.reflect.Method getMethod()
@@ -269,8 +273,8 @@ fld public final static int POINTER_SIZE
 fld public final static int SIZE_T_SIZE
 fld public final static int WCHAR_SIZE
 fld public final static java.lang.String DEFAULT_ENCODING
-fld public final static java.lang.String VERSION = "5.9.0"
-fld public final static java.lang.String VERSION_NATIVE = "6.1.1"
+fld public final static java.lang.String VERSION = "5.12.1"
+fld public final static java.lang.String VERSION_NATIVE = "6.1.4"
 fld public final static java.nio.charset.Charset DEFAULT_CHARSET
 innr public abstract interface static ffi_callback
 meth public static <%0 extends com.sun.jna.Library> {%%0} load(java.lang.Class<{%%0}>)
@@ -335,7 +339,7 @@ meth public static void setProtected(boolean)
 meth public static void unregister()
 meth public static void unregister(java.lang.Class<?>)
 supr java.lang.Object
-hfds CB_HAS_INITIALIZER,CB_OPTION_DIRECT,CB_OPTION_IN_DLL,CVT_ARRAY_BOOLEAN,CVT_ARRAY_BYTE,CVT_ARRAY_CHAR,CVT_ARRAY_DOUBLE,CVT_ARRAY_FLOAT,CVT_ARRAY_INT,CVT_ARRAY_LONG,CVT_ARRAY_SHORT,CVT_BOOLEAN,CVT_BUFFER,CVT_CALLBACK,CVT_DEFAULT,CVT_FLOAT,CVT_INTEGER_TYPE,CVT_JNIENV,CVT_NATIVE_MAPPED,CVT_NATIVE_MAPPED_STRING,CVT_NATIVE_MAPPED_WSTRING,CVT_OBJECT,CVT_POINTER,CVT_POINTER_TYPE,CVT_STRING,CVT_STRUCTURE,CVT_STRUCTURE_BYVAL,CVT_TYPE_MAPPER,CVT_TYPE_MAPPER_STRING,CVT_TYPE_MAPPER_WSTRING,CVT_UNSUPPORTED,CVT_WSTRING,DEBUG_JNA_LOAD_LEVEL,DEFAULT_HANDLER,JNA_TMPLIB_PREFIX,LOG,MAX_ALIGNMENT,MAX_PADDING,TYPE_BOOL,TYPE_LONG,TYPE_LONG_DOUBLE,TYPE_SIZE_T,TYPE_VOIDP,TYPE_WCHAR_T,_OPTION_ENCLOSING_LIBRARY,callbackExceptionHandler,finalizer,jnidispatchPath,libraries,nativeThreadTerminationFlag,nativeThreads,registeredClasses,registeredLibraries,typeOptions
+hfds CB_HAS_INITIALIZER,CB_OPTION_DIRECT,CB_OPTION_IN_DLL,CVT_ARRAY_BOOLEAN,CVT_ARRAY_BYTE,CVT_ARRAY_CHAR,CVT_ARRAY_DOUBLE,CVT_ARRAY_FLOAT,CVT_ARRAY_INT,CVT_ARRAY_LONG,CVT_ARRAY_SHORT,CVT_BOOLEAN,CVT_BUFFER,CVT_BYTE,CVT_CALLBACK,CVT_DEFAULT,CVT_FLOAT,CVT_INTEGER_TYPE,CVT_JNIENV,CVT_NATIVE_MAPPED,CVT_NATIVE_MAPPED_STRING,CVT_NATIVE_MAPPED_WSTRING,CVT_OBJECT,CVT_POINTER,CVT_POINTER_TYPE,CVT_SHORT,CVT_STRING,CVT_STRUCTURE,CVT_STRUCTURE_BYVAL,CVT_TYPE_MAPPER,CVT_TYPE_MAPPER_STRING,CVT_TYPE_MAPPER_WSTRING,CVT_UNSUPPORTED,CVT_WSTRING,DEBUG_JNA_LOAD_LEVEL,DEFAULT_HANDLER,JNA_TMPLIB_PREFIX,LOG,MAX_ALIGNMENT,MAX_PADDING,TYPE_BOOL,TYPE_LONG,TYPE_LONG_DOUBLE,TYPE_SIZE_T,TYPE_VOIDP,TYPE_WCHAR_T,_OPTION_ENCLOSING_LIBRARY,callbackExceptionHandler,finalizer,jnidispatchPath,libraries,nativeThreadTerminationFlag,nativeThreads,registeredClasses,registeredLibraries,typeOptions
 hcls AWT,Buffers
 
 CLSS public abstract interface static com.sun.jna.Native$ffi_callback
@@ -343,7 +347,7 @@ CLSS public abstract interface static com.sun.jna.Native$ffi_callback
 meth public abstract void invoke(long,long,long)
 
 CLSS public com.sun.jna.NativeLibrary
-meth protected void finalize()
+intf java.io.Closeable
 meth public com.sun.jna.Function getFunction(java.lang.String)
 meth public com.sun.jna.Function getFunction(java.lang.String,int)
 meth public com.sun.jna.Function getFunction(java.lang.String,int,java.lang.String)
@@ -358,9 +362,12 @@ meth public java.io.File getFile()
 meth public java.lang.String getName()
 meth public java.lang.String toString()
 meth public java.util.Map<java.lang.String,?> getOptions()
+meth public void close()
 meth public void dispose()
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds DEBUG_LOAD_LEVEL,DEFAULT_OPEN_OPTIONS,LOG,addSuppressedMethod,callFlags,encoding,functions,handle,libraries,libraryName,libraryPath,librarySearchPath,options,searchPaths
+hfds DEBUG_LOAD_LEVEL,DEFAULT_OPEN_OPTIONS,LOG,addSuppressedMethod,callFlags,cleanable,encoding,functions,handle,libraries,libraryName,libraryPath,librarySearchPath,options,searchPaths
+hcls NativeLibraryDisposer
 
 CLSS public com.sun.jna.NativeLong
 cons public init()
@@ -418,6 +425,7 @@ meth public final static boolean isFreeBSD()
 meth public final static boolean isGNU()
 meth public final static boolean isIntel()
 meth public final static boolean isLinux()
+meth public final static boolean isLoongArch()
 meth public final static boolean isMIPS()
 meth public final static boolean isMac()
 meth public final static boolean isNetBSD()
@@ -824,7 +832,14 @@ fld public final static com.sun.jna.TypeMapper DEFAULT
 fld public final static com.sun.jna.TypeMapper UNICODE
 supr com.sun.jna.DefaultTypeMapper
 
+CLSS public abstract interface java.io.Closeable
+intf java.lang.AutoCloseable
+meth public abstract void close() throws java.io.IOException
+
 CLSS public abstract interface java.io.Serializable
+
+CLSS public abstract interface java.lang.AutoCloseable
+meth public abstract void close() throws java.lang.Exception
 
 CLSS public abstract interface java.lang.CharSequence
 meth public abstract char charAt(int)

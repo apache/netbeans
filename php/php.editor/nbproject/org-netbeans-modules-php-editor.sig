@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.14.0
+#Version 2.24.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -482,6 +482,9 @@ supr java.lang.Enum<org.netbeans.modules.php.editor.api.PhpElementKind>
 CLSS public final org.netbeans.modules.php.editor.api.PhpModifiers
 fld public final static int ALL_FLAGS = -1
 fld public final static int NO_FLAGS = 0
+fld public final static java.lang.String ABSTRACT_MODIFIER = "abstract"
+fld public final static java.lang.String FINAL_MODIFIER = "final"
+fld public final static java.lang.String READONLY_MODIFIER = "readonly"
 fld public final static java.lang.String VISIBILITY_PRIVATE = "private"
 fld public final static java.lang.String VISIBILITY_PROTECTED = "protected"
 fld public final static java.lang.String VISIBILITY_PUBLIC = "public"
@@ -593,6 +596,7 @@ intf org.netbeans.modules.php.editor.api.elements.ClassElement
 meth public boolean isAbstract()
 meth public boolean isAnonymous()
 meth public boolean isFinal()
+meth public boolean isReadonly()
 meth public java.util.Collection<org.netbeans.modules.php.editor.api.QualifiedName> getFQMixinClassNames()
 meth public java.util.Collection<org.netbeans.modules.php.editor.api.QualifiedName> getPossibleFQSuperClassNames()
 meth public java.util.Collection<org.netbeans.modules.php.editor.api.QualifiedName> getUsedTraits()
@@ -730,6 +734,7 @@ intf org.netbeans.modules.php.editor.api.elements.TraitedElement
 meth public abstract boolean isAbstract()
 meth public abstract boolean isAnonymous()
 meth public abstract boolean isFinal()
+meth public abstract boolean isReadonly()
 meth public abstract java.util.Collection<org.netbeans.modules.php.editor.api.QualifiedName> getFQMixinClassNames()
 meth public abstract java.util.Collection<org.netbeans.modules.php.editor.api.QualifiedName> getPossibleFQSuperClassNames()
 meth public abstract org.netbeans.modules.php.editor.api.QualifiedName getSuperClassName()
@@ -1085,14 +1090,14 @@ meth public org.netbeans.modules.php.editor.lexer.PHPTokenId nextToken() throws 
 meth public void setState(org.netbeans.modules.php.editor.lexer.PHP5ColoringLexer$LexerState)
 meth public void yypushback(int)
 supr java.lang.Object
-hfds ZZ_ACTION,ZZ_ACTION_PACKED_0,ZZ_ATTRIBUTE,ZZ_ATTRIBUTE_PACKED_0,ZZ_BUFFERSIZE,ZZ_CMAP,ZZ_CMAP_PACKED,ZZ_ERROR_MSG,ZZ_LEXSTATE,ZZ_NO_MATCH,ZZ_PUSHBACK_2BIG,ZZ_ROWMAP,ZZ_ROWMAP_PACKED_0,ZZ_TRANS,ZZ_TRANS_PACKED_0,ZZ_UNKNOWN_ERROR,aspTagsAllowed,bracketBalanceInConst,heredoc,hereocLength,input,isInConst,parenBalanceInConst,parenBalanceInScripting,shortTagsAllowed,stack,yychar,yycolumn,yyline,zzAtBOL,zzAtEOF,zzBuffer,zzCurrentPos,zzEndRead,zzLexicalState,zzMarkedPos,zzPushbackPos,zzReader,zzStartRead,zzState
+hfds ZZ_ACTION,ZZ_ACTION_PACKED_0,ZZ_ATTRIBUTE,ZZ_ATTRIBUTE_PACKED_0,ZZ_BUFFERSIZE,ZZ_CMAP,ZZ_CMAP_PACKED,ZZ_ERROR_MSG,ZZ_LEXSTATE,ZZ_NO_MATCH,ZZ_PUSHBACK_2BIG,ZZ_ROWMAP,ZZ_ROWMAP_PACKED_0,ZZ_TRANS,ZZ_TRANS_PACKED_0,ZZ_UNKNOWN_ERROR,aspTagsAllowed,bracketBalanceInConst,heredoc,heredocStack,input,isInConst,parenBalanceInConst,parenBalanceInScripting,shortTagsAllowed,stack,yychar,yycolumn,yyline,zzAtBOL,zzAtEOF,zzBuffer,zzCurrentPos,zzEndRead,zzLexicalState,zzMarkedPos,zzPushbackPos,zzReader,zzStartRead,zzState
 
 CLSS public final static org.netbeans.modules.php.editor.lexer.PHP5ColoringLexer$LexerState
  outer org.netbeans.modules.php.editor.lexer.PHP5ColoringLexer
 meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 supr java.lang.Object
-hfds heredoc,hereocLength,parenBalanceInScripting,stack,zzLexicalState,zzState
+hfds heredoc,heredocStack,parenBalanceInScripting,stack,zzLexicalState,zzState
 
 CLSS public final org.netbeans.modules.php.editor.lexer.PHPDocCommentLexer
 cons public init(org.netbeans.spi.lexer.LexerRestartInfo<org.netbeans.modules.php.editor.lexer.PHPDocCommentTokenId>)
@@ -1526,7 +1531,6 @@ meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNames
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNamespaceScope(org.netbeans.modules.php.editor.model.ModelElement)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
-meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNamespaceScope(org.netbeans.modules.php.editor.parser.PHPParseResult,int)
 meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNamespaceScope(org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration,org.netbeans.modules.php.editor.model.FileScope)
 meth public static org.netbeans.modules.php.editor.model.TypeScope getTypeScope(org.netbeans.modules.php.editor.model.ModelElement)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
@@ -1804,7 +1808,8 @@ meth public void setState(int)
 meth public void setUseAspTagsAsPhp(boolean)
 meth public void yypushback(int)
 supr java.lang.Object
-hfds ZZ_ACTION,ZZ_ACTION_PACKED_0,ZZ_ATTRIBUTE,ZZ_ATTRIBUTE_PACKED_0,ZZ_BUFFERSIZE,ZZ_CMAP,ZZ_CMAP_PACKED,ZZ_ERROR_MSG,ZZ_LEXSTATE,ZZ_NO_MATCH,ZZ_PUSHBACK_2BIG,ZZ_ROWMAP,ZZ_ROWMAP_PACKED_0,ZZ_TRANS,ZZ_TRANS_PACKED_0,ZZ_UNKNOWN_ERROR,asp_tags,bracket,comment,commentList,docParser,heredoc,heredocBody,heredocBodyLength,heredocBodyStart,isEndedPhp,nowdoc,nowdocBody,nowdocBodyLength,nowdocBodyStart,nowdoc_len,short_tags_allowed,stack,varParser,whitespaceEndPosition,yy_old_buffer,yy_old_pushbackPos,yychar,yycolumn,yyline,zzAtBOL,zzAtEOF,zzBuffer,zzCurrentPos,zzEndRead,zzLexicalState,zzMarkedPos,zzPushbackPos,zzReader,zzStartRead,zzState
+hfds ZZ_ACTION,ZZ_ACTION_PACKED_0,ZZ_ATTRIBUTE,ZZ_ATTRIBUTE_PACKED_0,ZZ_BUFFERSIZE,ZZ_CMAP,ZZ_CMAP_PACKED,ZZ_ERROR_MSG,ZZ_LEXSTATE,ZZ_NO_MATCH,ZZ_PUSHBACK_2BIG,ZZ_ROWMAP,ZZ_ROWMAP_PACKED_0,ZZ_TRANS,ZZ_TRANS_PACKED_0,ZZ_UNKNOWN_ERROR,asp_tags,bracket,comment,commentList,docParser,heredoc,heredocBody,heredocBodyLength,heredocBodyStart,heredocStack,isEndedPhp,nowdoc,nowdocBody,nowdocBodyLength,nowdocBodyStart,short_tags_allowed,stack,varParser,whitespaceEndPosition,yy_old_buffer,yy_old_pushbackPos,yychar,yycolumn,yyline,zzAtBOL,zzAtEOF,zzBuffer,zzCurrentPos,zzEndRead,zzLexicalState,zzMarkedPos,zzPushbackPos,zzReader,zzStartRead,zzState
+hcls HeredocInfo
 
 CLSS public abstract interface org.netbeans.modules.php.editor.parser.ASTPHP5Symbols
 fld public final static int EOF = 0
@@ -1914,6 +1919,9 @@ fld public final static int T_MINUS_EQUAL = 92
 fld public final static int T_MOD_EQUAL = 96
 fld public final static int T_MUL_EQUAL = 93
 fld public final static int T_NAMESPACE = 74
+fld public final static int T_NAME_FULLY_QUALIFIED = 171
+fld public final static int T_NAME_QUALIFIED = 170
+fld public final static int T_NAME_RELATIVE = 169
 fld public final static int T_NEKUDA = 127
 fld public final static int T_NEKUDOTAIM = 152
 fld public final static int T_NEW = 140
@@ -2032,6 +2040,12 @@ meth public java.lang.String getTableData()
 supr java.lang.Object
 
 CLSS public org.netbeans.modules.php.editor.parser.EncodedActionTable18
+cons protected init()
+fld protected final java.lang.StringBuilder sb
+meth public java.lang.String getTableData()
+supr java.lang.Object
+
+CLSS public org.netbeans.modules.php.editor.parser.EncodedActionTable19
 cons protected init()
 fld protected final java.lang.StringBuilder sb
 meth public java.lang.String getTableData()
@@ -2233,6 +2247,7 @@ meth public java.util.List<? extends org.netbeans.modules.csl.api.Error> getDiag
 meth public org.netbeans.modules.csl.api.OffsetRange getErrorRange()
 meth public org.netbeans.modules.php.editor.model.Model getModel()
 meth public org.netbeans.modules.php.editor.model.Model getModel(boolean)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.modules.php.editor.model.Model getModel(org.netbeans.modules.php.editor.model.Model$Type)
 meth public org.netbeans.modules.php.editor.parser.astnodes.Program getProgram()
 meth public void setErrors(java.util.List<org.netbeans.modules.csl.api.Error>)
@@ -2565,21 +2580,25 @@ supr org.netbeans.modules.php.editor.parser.astnodes.Statement
 hfds body,classNames,variable
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration
+cons public init(int,int,java.util.Map<org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier,java.util.Set<org.netbeans.modules.csl.api.OffsetRange>>,org.netbeans.modules.php.editor.parser.astnodes.Identifier,org.netbeans.modules.php.editor.parser.astnodes.Expression,java.util.List<org.netbeans.modules.php.editor.parser.astnodes.Expression>,org.netbeans.modules.php.editor.parser.astnodes.Block)
 cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier,org.netbeans.modules.php.editor.parser.astnodes.Identifier,org.netbeans.modules.php.editor.parser.astnodes.Expression,java.util.List<org.netbeans.modules.php.editor.parser.astnodes.Expression>,org.netbeans.modules.php.editor.parser.astnodes.Block)
 innr public final static !enum Modifier
 meth public java.lang.String toString()
+meth public java.util.Map<org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier,java.util.Set<org.netbeans.modules.csl.api.OffsetRange>> getModifiers()
 meth public org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier getModifier()
 meth public org.netbeans.modules.php.editor.parser.astnodes.Expression getSuperClass()
 meth public static org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration create(org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration,java.util.List<org.netbeans.modules.php.editor.parser.astnodes.Attribute>)
 meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.TypeDeclaration
-hfds modifier,superClass
+hfds modifier,modifiers,superClass
 
 CLSS public final static !enum org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier
  outer org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier ABSTRACT
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier FINAL
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier NONE
+fld public final static org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier READONLY
+meth public java.lang.String toString()
 meth public static org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier valueOf(java.lang.String)
 meth public static org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier[] values()
 supr java.lang.Enum<org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration$Modifier>
@@ -2677,6 +2696,11 @@ meth public static org.netbeans.modules.php.editor.parser.astnodes.ConstantDecla
 meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration
 hfds initializers,isGlobal,names
+
+CLSS public org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable
+cons public init(org.netbeans.modules.php.editor.parser.astnodes.Expression)
+meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
+supr org.netbeans.modules.php.editor.parser.astnodes.Variable
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.ContinueStatement
 cons public init(int,int)
@@ -2807,6 +2831,12 @@ meth public org.netbeans.modules.php.editor.parser.astnodes.Block getBody()
 meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.Statement
 hfds body
+
+CLSS public org.netbeans.modules.php.editor.parser.astnodes.FirstClassCallableArg
+cons public init(int,int)
+meth public java.lang.String toString()
+meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
+supr org.netbeans.modules.php.editor.parser.astnodes.Expression
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.ForEachStatement
 cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.Statement)
@@ -3157,6 +3187,9 @@ meth public boolean isCurrent()
 meth public boolean isGlobal()
 meth public java.lang.String toString()
 meth public java.util.List<org.netbeans.modules.php.editor.parser.astnodes.Identifier> getSegments()
+meth public static org.netbeans.modules.php.editor.parser.astnodes.NamespaceName create(int,int,java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
 meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.Expression
 hfds current,global
@@ -3696,6 +3729,7 @@ meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.Comment)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration)
+meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ContinueStatement)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.DereferencableVariable)
@@ -3709,6 +3743,7 @@ meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.FieldAccess)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.FinallyClause)
+meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.FirstClassCallableArg)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ForEachStatement)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ForStatement)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.FormalParameter)
@@ -3836,6 +3871,7 @@ meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.CloneExpr
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.Comment)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ContinueStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.DoStatement)
@@ -3940,6 +3976,7 @@ meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.CloneExpr
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.Comment)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ContinueStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.DereferencableVariable)
@@ -3953,6 +3990,7 @@ meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.Expressio
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.FieldAccess)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.FinallyClause)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.FirstClassCallableArg)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ForEachStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ForStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.FormalParameter)

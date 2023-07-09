@@ -179,7 +179,7 @@ public class SystemDefaultBrowser extends ExtWebBrowser {
             return;
         }
         final HtmlBrowser.Impl impl = createHtmlBrowserImpl();
-        final ExtBrowserImpl extImpl = impl != null && impl instanceof ExtBrowserImpl ? (ExtBrowserImpl)impl : null;
+        final ExtBrowserImpl extImpl = impl instanceof ExtBrowserImpl ? (ExtBrowserImpl)impl : null;
         if (extImpl != null) {
             RP.post(new Runnable() {
                 @Override

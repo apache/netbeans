@@ -128,11 +128,11 @@ public abstract class BackupFacility {
     /**
      * Handle class representing handle to file(s), which were backuped
      * by
-     * {@link  org.netbeans.modules.refactoring.spi.BackupFacility#backup()}
+     * {@link  org.netbeans.modules.refactoring.spi.BackupFacility#backup(FileObject...)}
      */
     public interface Handle {
         /**
-         * restore file(s), which was stored by  {@link  org.netbeans.modules.refactoring.spi.BackupFacility#backup()}
+         * restore file(s), which was stored by  {@link  org.netbeans.modules.refactoring.spi.BackupFacility#backup(FileObject...)}
          * @throws java.io.IOException if restore failed.
          */
         void restore() throws IOException;

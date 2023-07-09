@@ -35,7 +35,7 @@ import org.netbeans.modules.maven.api.execute.RunConfig;
  *
  * <p>
  * If the project want to use {@link CoSAlternativeExecutorImplementation} it should register
- * it in it's project {@link Lookup}.
+ * it in it's project {@link org.openide.util.Lookup}.
  *
  * <p>
  * This class should not be used directly. Use {@link CoSAlternativeExecutor} API class instead.
@@ -45,7 +45,7 @@ import org.netbeans.modules.maven.api.execute.RunConfig;
  *
  * @see CoSAlternativeExecutor
  *
- * @author Martin Janicek <mjanicek@netbeans.org>
+ * @author Martin Janicek &lt;mjanicek@netbeans.org&gt;
  * @since 2.99
  */
 public interface CoSAlternativeExecutorImplementation {

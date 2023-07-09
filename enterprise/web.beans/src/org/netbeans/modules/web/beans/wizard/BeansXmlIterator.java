@@ -77,7 +77,11 @@ public class BeansXmlIterator implements TemplateWizard.Iterator {
         Profile profile = null;
         if (project != null) {
             J2eeProjectCapabilities cap = J2eeProjectCapabilities.forProject(project);
-            if (cap != null && cap.isCdi20Supported()) {
+            if (cap != null && cap.isCdi40Supported()) {
+                profile = Profile.JAKARTA_EE_10_FULL;
+            } else if (cap != null && cap.isCdi30Supported()) {
+                profile = Profile.JAKARTA_EE_9_FULL;
+            } else if (cap != null && cap.isCdi20Supported()) {
                 profile = Profile.JAVA_EE_8_FULL;
             } else if (cap != null && cap.isCdi11Supported()) {
                 profile = Profile.JAVA_EE_7_FULL;
@@ -135,7 +139,7 @@ public class BeansXmlIterator implements TemplateWizard.Iterator {
         // Creating steps.
         Object prop = wizard.getProperty (WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
         String[] steps = createSteps(beforeSteps, panels);

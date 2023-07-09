@@ -27,8 +27,8 @@ body:
         Latest releases are always available from https://netbeans.apache.org/download/
       multiple: false
       options:
-        - "Apache NetBeans 14"
-        - "Apache NetBeans 15 release candidate"
+        - "Apache NetBeans 18"
+#        - "Apache NetBeans 19 release candidate"
         - "Apache NetBeans latest daily build"
     validations:
       required: true
@@ -64,12 +64,11 @@ body:
       multiple: false
       options:
         - "No / Don't know"
+        - "Apache NetBeans 17"
+        - "Apache NetBeans 16"
+        - "Apache NetBeans 15"
         - "Apache NetBeans 14"
-        - "Apache NetBeans 13"
-        - "Apache NetBeans 12.6"
-        - "Apache NetBeans 12.5"
-        - "Apache NetBeans 12.4"
-        - "Apache NetBeans 12.3 or earlier"
+        - "Apache NetBeans 13 or earlier"
     validations:
       required: true
   - type: input
@@ -92,7 +91,7 @@ body:
       description: >
         Please select the Apache NetBeans package you're using. Provide additional details
         below if necessary.
-      multiple: false
+      multiple: true
       options:
         - "Apache NetBeans provided installer"
         - "Apache NetBeans binary zip"
@@ -123,21 +122,30 @@ body:
         especially if you already have a good understanding of how to implement the fix. <br>
         Apache NetBeans is a community-managed project and we love to bring new contributors in.
       options:
-        - "Yes"
         - "No"
-    validations:
-        required: true
-  - type: dropdown
-    attributes:
-      label: Code of Conduct
-      description: > 
-         The Code of Conduct helps create a safe space for everyone.
-         I agree to follow the Apache Software Foundation's
-         [Code of Conduct](https://www.apache.org/foundation/policies/conduct.html)
-      options:
         - "Yes"
     validations:
         required: true
+#  - type: dropdown
+#    attributes:
+#      label: Code of Conduct
+#      description: > 
+#         The Code of Conduct helps create a safe space for everyone.
+#         I agree to follow the Apache Software Foundation's
+#         [Code of Conduct](https://www.apache.org/foundation/policies/conduct.html)
+#      options:
+#        - "Yes"
+#    validations:
+#        required: true
+#  - type: markdown
+#    attributes:
+#      value: "Thank you for completing our form!"
   - type: markdown
     attributes:
-      value: "Thank you for completing our form!"
+      value: "**By submitting this form you agree to follow the Apache Software Foundation's
+        [Code of Conduct](https://www.apache.org/foundation/policies/conduct.html)**.
+         
+        The Code of Conduct helps create a safe space for everyone.
+        
+        
+        Thank you for completing our form!"

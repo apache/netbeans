@@ -521,7 +521,7 @@ public final class EditorFindSupport {
         incSearchReset();
         props = getValidFindProperties(props);
         boolean back = isBackSearch(props, oppositeDir);
-        if (props.get(FIND_WHAT) == null || !(props.get(FIND_WHAT) instanceof String)) {
+        if (!(props.get(FIND_WHAT) instanceof String)) {
             return null;
         }
         String findWhat = (String) props.get(FIND_WHAT);

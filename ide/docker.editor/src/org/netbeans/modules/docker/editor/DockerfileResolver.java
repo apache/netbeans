@@ -20,6 +20,9 @@ package org.netbeans.modules.docker.editor;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.util.lookup.ServiceProvider;
@@ -28,6 +31,64 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Tomas Zezula
  */
+@ActionReferences({
+    @ActionReference(
+            path = "Loaders/text/x-dockerfile/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
+            position = 100,
+            separatorAfter = 200
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-dockerfile/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
+            position = 300
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-dockerfile/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
+            position = 400
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-dockerfile/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.PasteAction"),
+            position = 500,
+            separatorAfter = 600
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-dockerfile/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
+            position = 700
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-dockerfile/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
+            position = 800,
+            separatorAfter = 900
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-dockerfile/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
+            position = 1000,
+            separatorAfter = 1100
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-dockerfile/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
+            position = 1200,
+            separatorAfter = 1300
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-dockerfile/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-dockerfile/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
+            position = 1500
+    )
+})
+
 @ServiceProvider(service = MIMEResolver.class)
 public final class DockerfileResolver extends MIMEResolver {
 

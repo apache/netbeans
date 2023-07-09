@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.17
+#Version 1.22.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -56,6 +56,7 @@ hfds archives,coverageData,fileToSourceSetCache,mainJar,sourceSets,testClassesRo
 
 CLSS public final org.netbeans.modules.gradle.java.api.GradleJavaSourceSet
 cons public init(java.lang.String)
+fld public final static java.io.File UNKNOWN
 fld public final static java.lang.String MAIN_SOURCESET_NAME = "main"
 fld public final static java.lang.String TEST_SOURCESET_NAME = "test"
 innr public final static !enum ClassPathType
@@ -78,6 +79,7 @@ meth public final java.util.Set<java.io.File> getResourcesDirs()
 meth public final java.util.Set<java.io.File> getScalaDirs()
 meth public int hashCode()
 meth public java.io.File findResource(java.lang.String)
+meth public java.io.File getOutputClassDir(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType)
 meth public java.io.File getOutputResources()
 meth public java.lang.String getAnnotationProcessorConfigurationName()
 meth public java.lang.String getBuildTaskName(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType)
@@ -109,7 +111,7 @@ meth public java.util.Set<org.netbeans.modules.gradle.java.api.GradleJavaSourceS
 meth public java.util.Set<org.netbeans.modules.gradle.java.api.GradleJavaSourceSet> getSourceDependencies()
 meth public org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType getSourceType(java.io.File)
 supr java.lang.Object
-hfds DEFAULT_SOURCE_COMPATIBILITY,annotationProcessorConfigurationName,annotationProcessorPath,compileClassPath,compileConfigurationName,compilerArgs,name,outputClassDirs,outputResources,runtimeClassPath,runtimeConfigurationName,sourceDependencies,sources,sourcesCompatibility,targetCompatibility,testSourceSet,webApp
+hfds DEFAULT_SOURCE_COMPATIBILITY,annotationProcessorConfigurationName,annotationProcessorPath,compileClassPath,compileConfigurationName,compilerArgs,name,outputClassDirs,outputResources,outputs,runtimeClassPath,runtimeConfigurationName,sourceDependencies,sources,sourcesCompatibility,targetCompatibility,testSourceSet,webApp
 
 CLSS public final static !enum org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$ClassPathType
  outer org.netbeans.modules.gradle.java.api.GradleJavaSourceSet

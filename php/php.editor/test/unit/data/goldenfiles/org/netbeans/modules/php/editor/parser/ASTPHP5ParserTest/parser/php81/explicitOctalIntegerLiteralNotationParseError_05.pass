@@ -1,0 +1,28 @@
+<testresult testFile='explicitOctalIntegerLiteralNotationParseError_05.php'>
+    <scanner>
+        <token id='T_LNUMBER' start='815' end='818'>
+            <text>0o1</text>
+        </token>
+        <token id='T_DNUMBER' start='818' end='820'>
+            <text>.6</text>
+        </token>
+        <token id='T_SEMICOLON' start='820' end='821'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='822' end='822'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='822'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='818'/>
+            <ExpressionStatement start='818' end='821'>
+                <Scalar start='818' end='820' type='REAL' value='.6'/>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

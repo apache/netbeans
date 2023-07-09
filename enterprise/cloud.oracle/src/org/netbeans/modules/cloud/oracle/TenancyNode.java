@@ -20,22 +20,50 @@ package org.netbeans.modules.cloud.oracle;
 
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import org.openide.util.NbBundle;
+import org.openide.util.WeakListeners;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyNode extends OCINode {
+public class TenancyNode extends OCINode implements PropertyChangeListener {
     
     private static final String ORCL_ICON = "org/netbeans/modules/cloud/oracle/resources/tenancy.svg"; // NOI18N
     
-    public TenancyNode(OCIItem tenancy) {
-        super(tenancy);
-//        super(Children.create(new TenancyChildFactory(tenancy), true), Lookups.fixed(tenancy));
+    private final OCISessionInitiator session;
+    
+    public TenancyNode(OCIItem tenancy, String disp, OCISessionInitiator session) {
+        super(tenancy, session);
+        this.session = session;
         setName(tenancy.getName()); 
-        setDisplayName(tenancy.getName());
+        setDisplayName(disp);
         setIconBaseWithExtension(ORCL_ICON);
+        // home region will be set as a description
         setShortDescription(tenancy.getDescription());
+        OCIManager.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(this, OCIManager.getDefault()));
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent e) {
+        if (OCIManager.PROP_ACTIVE_PROFILE.equals(e.getPropertyName())) {
+            fireDisplayNameChange(null, null);
+        }
+    }
+
+    @NbBundle.Messages({
+        "HTML_EmphasizeName=<b>{0}</b>"
+    })
+    @Override
+    public String getHtmlDisplayName() {
+        if (OCIManager.getDefault().getActiveProfile() == session) {
+            return Bundle.HTML_EmphasizeName(getDisplayName());
+        } else {
+            return null;
+        }
     }
     
     @Override
@@ -51,5 +79,14 @@ public class TenancyNode extends OCINode {
     private Image badgeIcon(Image origImg) {
         return origImg;
     }
-    
+
+    @Override
+    public boolean canDestroy() {
+        return OCIManager.getDefault().isConfiguredProfile((OCIProfile)session);
+    }
+
+    @Override
+    public void destroy() throws IOException {
+        OCIManager.getDefault().removeConnectedProfile((OCIProfile)session);
+    }
 }

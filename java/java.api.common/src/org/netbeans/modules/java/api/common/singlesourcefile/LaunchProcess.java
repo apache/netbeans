@@ -32,7 +32,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 final class LaunchProcess implements Callable<Process> {
-    private static final Pattern JVM_ARGS_PATTERN = Pattern.compile("(.*) (--source[ ]* [0-9]*)(.*)");  //NOI18N
 
     private final FileObject fileObject;
     private final JPDAStart start;
@@ -76,13 +75,6 @@ final class LaunchProcess implements Callable<Process> {
 
             commandsList.add(javaPath);
             if (!vmOptions.isEmpty()) {
-                //filtering out --source param from VM option
-                Matcher m1 = JVM_ARGS_PATTERN.matcher(vmOptions);
-                while (m1.find()) {
-                    String group1 = m1.group(1);
-                    String group3 = m1.group(3);
-                    vmOptions = group1 + group3;
-                }
                 commandsList.addAll(Arrays.asList(vmOptions.split(" ")));  //NOI18N
             }
             if (port != null) {

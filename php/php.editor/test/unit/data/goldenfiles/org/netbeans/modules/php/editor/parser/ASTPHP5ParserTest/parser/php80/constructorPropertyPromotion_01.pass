@@ -1168,9 +1168,7 @@
                                         </Variable>
                                     </ParametrName>
                                     <DefaultValue>
-                                        <NamespaceName start='1054' end='1058' isCurrent='false' isGlobal='false'>
-                                            <Identifier start='1054' end='1058' name='null'/>
-                                        </NamespaceName>
+                                        <Scalar start='1054' end='1058' type='STRING' value='null'/>
                                     </DefaultValue>
                                 </FormalParameter>
                                 <FormalParameter start='1068' end='1107' modifier='public' isMandatory='false' isVariadic='false'>
@@ -1471,9 +1469,7 @@
                                         </Variable>
                                     </ParametrName>
                                     <DefaultValue>
-                                        <NamespaceName start='1921' end='1925' isCurrent='false' isGlobal='false'>
-                                            <Identifier start='1921' end='1925' name='null'/>
-                                        </NamespaceName>
+                                        <Scalar start='1921' end='1925' type='STRING' value='null'/>
                                     </DefaultValue>
                                 </FormalParameter>
                                 <FormalParameter start='1935' end='1974' modifier='public' isMandatory='false' isVariadic='false'>
@@ -1792,9 +1788,7 @@
                                         </Variable>
                                     </ParametrName>
                                     <DefaultValue>
-                                        <NamespaceName start='2890' end='2894' isCurrent='false' isGlobal='false'>
-                                            <Identifier start='2890' end='2894' name='null'/>
-                                        </NamespaceName>
+                                        <Scalar start='2890' end='2894' type='STRING' value='null'/>
                                     </DefaultValue>
                                 </FormalParameter>
                                 <FormalParameter start='2904' end='2936' isMandatory='false' isVariadic='false'>

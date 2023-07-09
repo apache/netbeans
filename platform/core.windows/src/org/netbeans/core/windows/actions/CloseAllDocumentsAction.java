@@ -69,7 +69,8 @@ public class CloseAllDocumentsAction extends AbstractAction {
 
     /** Overriden to share accelerator with 
      * org.netbeans.core.windows.actions.ActionUtils.CloseAllDocumentsAction
-     */ 
+     */
+    @Override
     public void putValue(String key, Object newValue) {
         if (Action.ACCELERATOR_KEY.equals(key)) {
             ActionUtils.putSharedAccelerator("CloseAllDocuments", newValue);
@@ -80,7 +81,8 @@ public class CloseAllDocumentsAction extends AbstractAction {
     
     /** Overriden to share accelerator with 
      * org.netbeans.core.windows.actions.ActionUtils.CloseAllDocumentsAction
-     */ 
+     */
+    @Override
     public Object getValue(String key) {
         if (Action.ACCELERATOR_KEY.equals(key)) {
             return ActionUtils.getSharedAccelerator("CloseAllDocuments");

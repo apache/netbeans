@@ -24,18 +24,22 @@ import org.netbeans.modules.gradle.api.execute.RunUtils;
 import java.io.File;
 import java.io.Serializable;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleModuleFileCache21;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache.SubProjectInfo;
+import org.openide.util.TopologicalSortException;
+import org.openide.util.Utilities;
 
 /**
  * This object holds the basic information of the Gradle project.
@@ -43,7 +47,7 @@ import org.netbeans.modules.gradle.cache.SubProjectDiskCache.SubProjectInfo;
  * Note: Caching / storing this object inn a member field is discouraged. Use
  * {@link GradleBaseProject#get(Project)} instead.
  * </p>
- * @see @see <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html">org.gradle.api.Project</a>
+ * @see <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html">org.gradle.api.Project</a>
  * @since 1.0
  * @author Laszlo Kishalmi
  */
@@ -76,6 +80,15 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     Set<File> outputPaths = Collections.emptySet();
     Map<String, String> projectIds = Collections.emptyMap();
     GradleDependency projectDependencyNode;
+    Set<GradleReport> problems = Collections.emptySet();
+    Map<String, List<String>> taskDependencies = new HashMap<>();
+    Map<String, Set<String>> taskTypes = new HashMap<>();
+    
+    // @GuardedBy(this)
+    /**
+     * Lazy-computed list of tasks mapped to either tasksByName or created descriptions.
+     */
+    private transient Map<String, List<GradleTask>> taskDeepDependencies = new HashMap<>();
 
     transient Boolean resolved = null;
 
@@ -171,6 +184,19 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     }
 
     /**
+     * Return the list of problems reported by Gradle on
+     * project inspection. In an ideal case that should be an
+     * empty set.
+     *
+     * @return Gradle reported problems during inspection.
+     * 
+     * @since 2.27
+     */
+    public Set<GradleReport> getProblems() {
+        return problems;
+    }
+    
+    /**
      * Returns true if the project directory is the same as the root project's
      * project directory, in short if this project is a root project.
      *
@@ -257,6 +283,113 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     public GradleTask getTaskByName(String name) {
         return tasksByName.get(name);
     }
+    
+    /**
+     * For a given task, lists all predecessors of the task within the current project.
+     * If tasks from other projects are referenced, they are returned as mock objects,
+     * that have no group and no description and no dependencies.
+     * <p>
+     * The result is partially sorted so that dependencies always precede the dependent
+     * task.
+     * 
+     * @param gt gradle task to inspect
+     * @param directs if true, only direct predecessors are returned
+     * @return list of predecessor tasks.
+     * @since 2.28
+     */
+    public List<GradleTask> getTaskPredecessors(GradleTask gt, boolean directs) {
+        // sanity check to rule out tasks from other projects or mocks.
+        if (gt.getName() == null || getTaskByName(gt.getName()) != gt) {
+            return Collections.emptyList();
+        }
+        // do not cache direct dependencies, they're cheap.
+        if (!directs) {
+            synchronized (this) {
+                List<GradleTask> cached = taskDeepDependencies.get(gt.getName());
+                if (cached != null) {
+                    return cached;
+                }
+            }
+        }
+        Set<String> paths = new HashSet<>();
+        Queue<String> toProcess = new ArrayDeque<>();
+        toProcess.add(gt.getPath());
+        
+        String taskPath;
+        Map<String, String> taskNamesAndPaths = new HashMap<>();
+        boolean first = true;
+        Set<String> ownTasks = new HashSet<>();
+        while ((taskPath = toProcess.poll()) != null) {
+            if (taskPath.equals("") || !paths.add(taskPath)) {
+                continue;
+            }
+            int lastColon = taskPath.lastIndexOf(':');
+            // path for the root project (lastColon == 0) is ":". Path for any subproject must not contain a possible colon delimiter between project path and the task.
+            String p = taskPath.substring(0, Math.max(1, lastColon));
+            String n = taskPath.substring(lastColon + 1);
+            taskNamesAndPaths.put(taskPath, n);
+            if (path.equals(p)) {
+                ownTasks.add(taskPath);
+                if (!directs || first){
+                    // if directs, allow just the 1st level to be added to toProcess.
+                    toProcess.addAll(taskDependencies.getOrDefault(n, Collections.emptyList()));
+                }
+            }
+            first = false;
+        }
+        paths.remove(gt.getPath());
+        
+        Map<String, List<String>> edges = new HashMap<>();
+        for (String tn : ownTasks) {
+            String sn = taskNamesAndPaths.get(tn);
+            for (String pred : taskDependencies.getOrDefault(sn, Collections.emptyList())) {
+                if (pred.isEmpty()) {
+                    continue;
+                }
+                edges.computeIfAbsent(pred, (k) -> new ArrayList<>()).add(tn);
+            }
+        }
+        List<String> orderedTasks;
+        
+        try {
+            orderedTasks = Utilities.topologicalSort(paths, edges);
+        } catch (TopologicalSortException ex) {
+            orderedTasks = new ArrayList<>(taskNamesAndPaths.keySet());
+        }
+        List<GradleTask> result = new ArrayList<>();
+        for (String p : orderedTasks) {
+            String n = taskNamesAndPaths.get(p);
+            GradleTask toAdd = null;
+            
+            if (ownTasks.contains(p)) {
+                toAdd = getTaskByName(n);
+            }
+            if (toAdd == null) {
+                toAdd = new GradleTask(p, n);
+            }
+            result.add(toAdd);
+        }
+        if (!directs) {
+            synchronized (this) {
+                taskDeepDependencies.putIfAbsent(gt.getName(), result);
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Determines if a task is a subtype of a certain Gradle type. 
+     * User-defined tasks may define different names, but the can be identified
+     * by the gradle type they extend or implement.
+     * Use fully qualified API class names for {@code gradleFQN} parameter.
+     * @param gradleFQN the fully qualified type name
+     * @return true, if the task type matches.
+     * @since 2.28
+     */
+    public boolean isTaskInstanceOf(String name, String gradleFQN) {
+        Set s = taskTypes.get(name);
+        return s == null ? false : s.contains(gradleFQN);
+    }
 
     public Map<String, GradleConfiguration> getConfigurations() {
         return Collections.unmodifiableMap(configurations);
@@ -331,7 +464,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
                 && rootDir.equals(other.rootDir)
                 && !projectDir.equals(other.projectDir);
     }
-
+    
     GradleConfiguration createConfiguration(String name) {
         GradleConfiguration conf = new GradleConfiguration(name);
         configurations.put(name, conf);

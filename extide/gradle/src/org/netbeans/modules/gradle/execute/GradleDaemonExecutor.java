@@ -56,6 +56,7 @@ import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
+import org.netbeans.modules.gradle.execute.GradleNetworkProxySupport.ProxyResult;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleJavaPlatformProvider;
@@ -79,7 +80,7 @@ import org.openide.windows.InputOutput;
  * @author Laszlo Kishalmi
  */
 public final class GradleDaemonExecutor extends AbstractGradleExecutor {
-
+    private static final boolean DEBUG_GRADLE_BUILD_ACTION = Boolean.getBoolean("netbeans.debug.gradle.build.action"); //NOI18N
     private CancellationTokenSource cancelTokenSource;
     private static final Logger LOGGER = Logger.getLogger(GradleDaemonExecutor.class.getName());
     private static final String JAVA_HOME = "JAVA_HOME";    // NOI18N
@@ -239,6 +240,22 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 }
             }
             GradleExecAccessor.instance().configureGradleHome(buildLauncher);
+            GradleNetworkProxySupport proxySupport = config.getProject().getLookup().lookup(GradleNetworkProxySupport.class);
+            if (proxySupport != null) {
+                try {
+                    ProxyResult result = proxySupport.checkProxySettings().get();
+                    if (result.getStatus() == GradleNetworkProxySupport.Status.ABORT) {
+                        showAbort();
+                        return;
+                    }
+                    buildLauncher = result.configure(buildLauncher);
+                } catch (InterruptedException | ExecutionException ex) {
+                    throw new BuildCancelledException("Interrupted", ex);
+                }
+            }
+            if (DEBUG_GRADLE_BUILD_ACTION) {
+                buildLauncher.addJvmArguments("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5008");
+            }
             buildLauncher.run();
             StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_SUCCESS(getProjectName()));
             gradleTask.finish(0);
@@ -283,7 +300,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         String javaHome = null;
         if (platformProvider != null) {
             try {
-                buildLauncher.setJavaHome(platformProvider.getJavaHome());
                 javaHome = platformProvider.getJavaHome().getCanonicalPath();
             } catch (IOException ex) {
                 io.getErr().println(Bundle.NO_PLATFORM(ex.getMessage()));

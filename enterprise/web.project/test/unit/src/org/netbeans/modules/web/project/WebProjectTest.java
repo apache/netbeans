@@ -20,7 +20,6 @@
 package org.netbeans.modules.web.project;
 
 import java.io.File;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -29,7 +28,6 @@ import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.project.uiapi.ProjectOpenedTrampoline;
 import org.netbeans.modules.web.project.api.WebPropertyEvaluator;
-import org.netbeans.modules.web.project.test.TestUtil;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -113,6 +111,12 @@ public class WebProjectTest extends NbTestCase {
         JavaEEProjectSettings.setProfile(webProject, Profile.JAKARTA_EE_9_WEB);
         Profile obtainedProfileJakartaEE9 = JavaEEProjectSettings.getProfile(webProject);
         assertEquals(Profile.JAKARTA_EE_9_WEB, obtainedProfileJakartaEE9);
+        JavaEEProjectSettings.setProfile(webProject, Profile.JAKARTA_EE_9_1_WEB);
+        Profile obtainedProfileJakartaEE91 = JavaEEProjectSettings.getProfile(webProject);
+        assertEquals(Profile.JAKARTA_EE_9_1_WEB, obtainedProfileJakartaEE91);
+        JavaEEProjectSettings.setProfile(webProject, Profile.JAKARTA_EE_10_WEB);
+        Profile obtainedProfileJakartaEE10 = JavaEEProjectSettings.getProfile(webProject);
+        assertEquals(Profile.JAKARTA_EE_10_WEB, obtainedProfileJakartaEE10);
     }
 
     /**

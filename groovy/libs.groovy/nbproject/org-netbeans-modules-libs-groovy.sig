@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.16
+#Version 2.20
 
 CLSS public abstract interface !annotation groovy.beans.Bindable
  anno 0 java.lang.annotation.Documented()

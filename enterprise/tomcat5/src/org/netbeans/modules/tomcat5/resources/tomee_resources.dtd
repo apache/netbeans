@@ -28,6 +28,9 @@ We didn't find a DTD or xml schema.
 <!ELEMENT Resource (#PCDATA) >
 <!ATTLIST Resource id CDATA #REQUIRED>
 <!ATTLIST Resource type CDATA #REQUIRED>
+<!ATTLIST Resource class-name CDATA #REQUIRED>
+<!ATTLIST Resource constructor CDATA #REQUIRED>
+<!ATTLIST Resource factory-name CDATA #REQUIRED>
 
 <!ELEMENT Container (#PCDATA) >
 <!ATTLIST Container id CDATA #REQUIRED>

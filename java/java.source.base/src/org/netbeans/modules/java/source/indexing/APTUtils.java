@@ -209,9 +209,7 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
     }
 
     public static void sourceRootUnregistered(Iterable<? extends URL> roots) {
-        for (URL root : roots) {
-            knownSourceRootsMap.remove(root);
-        }
+        roots.forEach(knownSourceRootsMap::remove);
         //XXX hack make sure we are not holding APTUtils for any unknown roots
         //just in case something goes wrong:
         for (URL unknown : PathRegistry.getDefault().getUnknownRoots()) {

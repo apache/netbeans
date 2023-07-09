@@ -42,7 +42,7 @@
                     Hover, select, focus flags can be attached even to unregistered objects.
                 </p>
                 <p>
-                    Implemented in <a href="https://github.com/apache/incubator-netbeans/pull/308">PR #308</a>
+                    Implemented in <a href="https://github.com/apache/netbeans/pull/308">PR #308</a>
                 </p>
             </description>
             <class name="ObjectScene" package="org.netbeans.api.visual.model" link="yes"/>

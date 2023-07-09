@@ -509,7 +509,6 @@ public class J2eeUtil {
 
     public static void addServletAnnotation(JavaSource javaSource, final String servletName, final String urlPattern)
         throws IOException {
-        final String[] seiClass = new String[1];
         final CancellableTask<WorkingCopy> modificationTask = new CancellableTask<WorkingCopy>() {
 
             public void cancel() {

@@ -54,14 +54,14 @@ public interface UpdateImplementation {
     /**
      * Creates probably an in memory update of shared configuration data and return it.
      * @return the configuration data that is available.
-     * @see {@link UpdateHelper#getPrimaryConfigurationData(boolean)}
+     * @see UpdateHelper#getPrimaryConfigurationData(boolean)
      */
     Element getUpdatedSharedConfigurationData();
 
     /**
      * Creates probably an in memory update of project properties.
      * @return a set of properties.
-     * @see {@link UpdateHelper#getProperties(String)}
+     * @see UpdateHelper#getProperties(String)
      */
     EditableProperties getUpdatedProjectProperties();
 }

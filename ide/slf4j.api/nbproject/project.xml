@@ -28,7 +28,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>slf4j-api.jar</runtime-relative-path>
-                <binary-origin>external/slf4j-api-1.7.28.jar</binary-origin>
+                <binary-origin>external/slf4j-api-1.7.36.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

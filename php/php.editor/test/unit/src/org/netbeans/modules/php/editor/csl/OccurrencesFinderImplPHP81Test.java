@@ -493,6 +493,34 @@ public class OccurrencesFinderImplPHP81Test extends OccurrencesFinderImplTestBas
         checkOccurrences(getTestPath(), "        static::CONST^ANT2;", true);
     }
 
+    public void testEnumerationsWithInterface_01a() throws Exception {
+        checkOccurrences(getTestPath(), "interface ExampleInter^face1 {}", true);
+    }
+
+    public void testEnumerationsWithInterface_01b() throws Exception {
+        checkOccurrences(getTestPath(), "use Enum1\\ExampleInterf^ace1;", true);
+    }
+
+    public void testEnumerationsWithInterface_01c() throws Exception {
+        checkOccurrences(getTestPath(), "enum EnumImpl1 implements ExampleInterf^ace1 {", true);
+    }
+
+    public void testEnumerationsWithInterface_01d() throws Exception {
+        checkOccurrences(getTestPath(), "enum EnumImpl2 implements ExampleInterfa^ce1, ExampleInterface2 {", true);
+    }
+
+    public void testEnumerationsWithInterface_02a() throws Exception {
+        checkOccurrences(getTestPath(), "interface ExampleInterf^ace2 {}", true);
+    }
+
+    public void testEnumerationsWithInterface_02b() throws Exception {
+        checkOccurrences(getTestPath(), "use Enum1\\ExampleInterfa^ce2;", true);
+    }
+
+    public void testEnumerationsWithInterface_02c() throws Exception {
+        checkOccurrences(getTestPath(), "enum EnumImpl2 implements ExampleInterface1, Exam^pleInterface2 {", true);
+    }
+
     public void testEnumerationsWithBackingType_a01() throws Exception {
         checkOccurrences(getTestPath(), "    case C^ASE1 = 1;", true);
     }

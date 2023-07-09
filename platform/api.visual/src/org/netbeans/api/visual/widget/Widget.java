@@ -254,7 +254,7 @@ public class Widget implements Accessible, Lookup.Provider {
         child.updateResources(this, true);
         child.revalidate ();
         revalidate ();
-        if (accessibleContext != null  &&  accessibleContext instanceof WidgetAccessibleContext)
+        if (accessibleContext instanceof WidgetAccessibleContext)
             ((WidgetAccessibleContext) accessibleContext).notifyChildAdded (this, child);
         scene.dispatchNotifyAdded (child);
     }
@@ -272,7 +272,7 @@ public class Widget implements Accessible, Lookup.Provider {
         child.updateResources(this, false);
         child.revalidate ();
         revalidate ();
-        if (accessibleContext != null  &&  accessibleContext instanceof WidgetAccessibleContext)
+        if (accessibleContext instanceof WidgetAccessibleContext)
             ((WidgetAccessibleContext) accessibleContext).notifyChildRemoved (this, child);
         scene.dispatchNotifyRemoved (child);
     }

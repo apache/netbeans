@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.19
+#Version 3.23
 
 CLSS public java.lang.Object
 cons public init()
@@ -40,6 +40,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface org.netbeans.spi.debugger.jpda.BreakpointStratifier
+meth public abstract void stratify(org.netbeans.api.debugger.jpda.JPDABreakpoint)
 
 CLSS public abstract org.netbeans.spi.debugger.jpda.BreakpointsClassFilter
 cons public init()

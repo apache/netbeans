@@ -174,9 +174,7 @@
                             </Variable>
                         </ParametrName>
                         <DefaultValue>
-                            <NamespaceName start='30' end='34' isCurrent='false' isGlobal='false'>
-                                <Identifier start='30' end='34' name='null'/>
-                            </NamespaceName>
+                            <Scalar start='30' end='34' type='STRING' value='null'/>
                         </DefaultValue>
                     </FormalParameter>
                     <FormalParameter start='36' end='46' isMandatory='false' isVariadic='true'>

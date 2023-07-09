@@ -218,17 +218,21 @@ public class QuickSearchPopup extends javax.swing.JPanel
 
         jList1.setFocusable(false);
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jList1MouseClicked(evt);
             }
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jList1MousePressed(evt);
             }
         });
         jList1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 jList1MouseDragged(evt);
             }
+            @Override
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 jList1MouseMoved(evt);
             }

@@ -129,7 +129,6 @@ public class ImageDetailProvider extends DetailsProvider.Basic {
 
         @Override
         protected void computeView(Instance instance, Heap heap) {
-            FieldAccessor fa = new FieldAccessor(heap, BUILDERS);
             Image image = null;
             JLabel label = null;
             try {

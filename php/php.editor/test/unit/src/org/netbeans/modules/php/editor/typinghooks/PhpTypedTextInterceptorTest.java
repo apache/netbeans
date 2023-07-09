@@ -662,6 +662,42 @@ public class PhpTypedTextInterceptorTest extends PhpTypinghooksTestBase {
         insertChar("'\"(a)\"'^", '[', "[\"(a)\"]^", "'\"(a)\"'");
     }
 
+    public void testIssueGH5707_01() throws Exception {
+        String original = ""
+                + "switch ($variable) {\n"
+                + "    case 1:\n"
+                + "        break;\n"
+                + "    case 2:\n"
+                + "        break;\n"
+                + "    ^\n"
+                + "}";
+        String expected = ""
+                + "switch ($variable) {\n"
+                + "    case 1:\n"
+                + "        break;\n"
+                + "    case 2:\n"
+                + "        break;\n"
+                + "     ^\n"
+                + "}";
+        insertChar(original, ' ', expected);
+    }
+
+    public void testIssueGH5707_02() throws Exception {
+        String original = ""
+                + "enum Enum1 {\n"
+                + "    case A = 'A';\n"
+                + "    case B = 'B';\n"
+                + "    ^\n"
+                + "}";
+        String expected = ""
+                + "enum Enum1 {\n"
+                + "    case A = 'A';\n"
+                + "    case B = 'B';\n"
+                + "     ^\n"
+                + "}";
+        insertChar(original, ' ', expected);
+    }
+
 //    Uncomment when CslTestBase.insertChar() will support ambiguous selection strings
 //
 //    public void testIssue242358() throws Exception {

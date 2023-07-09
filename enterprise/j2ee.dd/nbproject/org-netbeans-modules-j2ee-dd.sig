@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.56.0
+#Version 1.60.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -88,11 +88,13 @@ fld public final static java.lang.String MODULE = "Module"
 fld public final static java.lang.String PROPERTY_STATUS = "dd_status"
 fld public final static java.lang.String PROPERTY_VERSION = "dd_version"
 fld public final static java.lang.String SECURITY_ROLE = "SecurityRole"
+fld public final static java.lang.String VERSION_10 = "10"
 fld public final static java.lang.String VERSION_1_4 = "1.4"
 fld public final static java.lang.String VERSION_5 = "5"
 fld public final static java.lang.String VERSION_6 = "6"
 fld public final static java.lang.String VERSION_7 = "7"
 fld public final static java.lang.String VERSION_8 = "8"
+fld public final static java.lang.String VERSION_9 = "9"
 intf org.netbeans.modules.j2ee.dd.api.common.RootInterface
 meth public abstract int addIcon(org.netbeans.modules.j2ee.dd.api.common.Icon) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException
 meth public abstract int addModule(org.netbeans.modules.j2ee.dd.api.application.Module)
@@ -174,11 +176,13 @@ fld public final static int STATE_INVALID_UNPARSABLE = 2
 fld public final static int STATE_VALID = 0
 fld public final static java.lang.String PROPERTY_STATUS = "dd_status"
 fld public final static java.lang.String PROPERTY_VERSION = "dd_version"
+fld public final static java.lang.String VERSION_10_0 = "10"
 fld public final static java.lang.String VERSION_1_4 = "1.4"
 fld public final static java.lang.String VERSION_5_0 = "5"
 fld public final static java.lang.String VERSION_6_0 = "6"
 fld public final static java.lang.String VERSION_7_0 = "7"
 fld public final static java.lang.String VERSION_8_0 = "8"
+fld public final static java.lang.String VERSION_9_0 = "9"
 intf org.netbeans.modules.j2ee.dd.api.common.RootInterface
 meth public abstract int addEjbRef(org.netbeans.modules.j2ee.dd.api.common.EjbRef)
 meth public abstract int addEnvEntry(org.netbeans.modules.j2ee.dd.api.common.EnvEntry)
@@ -831,7 +835,7 @@ meth public org.netbeans.modules.j2ee.dd.api.ejb.EjbJar getDDRootCopy(org.openid
 meth public org.netbeans.modules.schema2beans.BaseBean getBaseBean(org.netbeans.modules.j2ee.dd.api.common.CommonDDBean)
 meth public static org.netbeans.modules.j2ee.dd.api.ejb.DDProvider getDefault()
 supr java.lang.Object
-hfds EJB_21_DOCTYPE,EJB_30_DOCTYPE,EJB_31_DOCTYPE,EJB_32_DOCTYPE,ddMap,ddProvider
+hfds EJB_21_DOCTYPE,EJB_30_DOCTYPE,EJB_31_DOCTYPE,EJB_32_DOCTYPE,EJB_40_DOCTYPE,ddMap,ddProvider
 hcls DDFileChangeListener,DDResolver,ErrorHandler
 
 CLSS public abstract interface org.netbeans.modules.j2ee.dd.api.ejb.Ejb
@@ -1947,6 +1951,7 @@ fld public final static java.lang.String VERSION_3_0 = "3.0"
 fld public final static java.lang.String VERSION_3_1 = "3.1"
 fld public final static java.lang.String VERSION_4_0 = "4.0"
 fld public final static java.lang.String VERSION_5_0 = "5.0"
+fld public final static java.lang.String VERSION_6_0 = "6.0"
 intf org.netbeans.modules.j2ee.dd.api.common.RootInterface
 meth public abstract boolean isDistributable()
 meth public abstract boolean isMetadataComplete() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException

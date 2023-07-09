@@ -45,6 +45,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.openide.util.Utilities;
 
 
 /**
@@ -102,7 +103,7 @@ public class SnapshotCustomizer extends ValidityAwarePanel implements ActionList
             JFileChooser fileChooser = getFileChooser();
             fileChooser.setCurrentDirectory(new File(saveToFileField.getText()).getParentFile());
 
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showOpenDialog(Utilities.findDialogParent()) == JFileChooser.APPROVE_OPTION) {
                 saveToFileField.setText(fileChooser.getSelectedFile().getAbsolutePath());
             }
         }

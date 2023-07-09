@@ -85,7 +85,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
             if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
                 updateGroups();
             }
-            if (NbGradleProject.PROP_RESOURCES.endsWith(evt.getPropertyName())) {
+            if (NbGradleProject.PROP_RESOURCES.equals(evt.getPropertyName())) {
                 URI uri = (URI) evt.getNewValue();
                 updateResources(uri);
             }

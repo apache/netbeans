@@ -53,7 +53,7 @@
             </fileset>
         </classpath>
         <javadocs>
-            <lookup path="docs/javaee-doc-api.jar"/>
+            <lookup path="docs/jakartaee9-doc-api.jar"/>
         </javadocs>
         <sources>
         </sources>

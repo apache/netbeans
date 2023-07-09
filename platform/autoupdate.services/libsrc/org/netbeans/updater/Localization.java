@@ -329,6 +329,7 @@ class Localization {
             return (current != null);
         }
 
+        @Override
         public void remove () throws UnsupportedOperationException {
             throw new UnsupportedOperationException ();
         }

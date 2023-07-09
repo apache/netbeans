@@ -1687,4 +1687,312 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/blankLines/php81/enumCasesBLBefore_01b.php", options);
     }
 
+    public void testIssueGH4611Methods_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Methods.php", options, false, true);
+    }
+
+    public void testIssueGH4611Methods_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Methods.php", options, false, true);
+    }
+
+    public void testIssueGH4611Methods_01c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Methods.php", options, false, true);
+    }
+
+    public void testIssueGH4611Methods_01d() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Methods.php", options, false, true);
+    }
+
+    public void testIssueGH4611Methods_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Methods.php", options, false, true);
+    }
+
+    public void testIssueGH4611Methods_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Methods.php", options, false, true);
+    }
+
+    public void testIssueGH4611Methods_02c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Methods.php", options, false, true);
+    }
+
+    public void testIssueGH4611Methods_02d() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Methods.php", options, false, true);
+    }
+
+    public void testIssueGH4611Properties_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Properties.php", options, false, true);
+    }
+
+    public void testIssueGH4611Properties_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Properties.php", options, false, true);
+    }
+
+    public void testIssueGH4611Properties_01c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Properties.php", options, false, true);
+    }
+
+    public void testIssueGH4611Properties_01d() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Properties.php", options, false, true);
+    }
+
+    public void testIssueGH4611Properties_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Properties.php", options, false, true);
+    }
+
+    public void testIssueGH4611Properties_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Properties.php", options, false, true);
+    }
+
+    public void testIssueGH4611Properties_02c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Properties.php", options, false, true);
+    }
+
+    public void testIssueGH4611Properties_02d() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611Properties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_01c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_01d() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_01e() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_01f() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_01g() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_01h() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_02c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_02d() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_02e() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_02f() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_02g() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4611BothMethodsAndProperties_02h() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS_END, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4611BothMethodsAndProperties.php", options, false, true);
+    }
+
+    public void testIssueGH4609BetweenUseTypes_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 0);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_01.php", options, false, true);
+    }
+
+    public void testIssueGH4609BetweenUseTypes_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_01.php", options, false, true);
+    }
+
+    public void testIssueGH4609BetweenUseTypes_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 0);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_02.php", options, false, true);
+    }
+
+    public void testIssueGH4609BetweenUseTypes_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_02.php", options, false, true);
+    }
+
+    public void testIssueGH4609BetweenUseTypes_03a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 0);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_03.php", options, false, true);
+    }
+
+    public void testIssueGH4609BetweenUseTypes_03b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_USE_TYPES, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_03.php", options, false, true);
+    }
+
 }

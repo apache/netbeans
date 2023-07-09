@@ -22,13 +22,14 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.text.Document;
 import javax.xml.namespace.QName;
-import static junit.framework.Assert.assertEquals;
 import org.junit.Test;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.xml.lexer.XMLTokenId;
 import org.netbeans.modules.xml.schema.completion.Util;
 import org.netbeans.modules.xml.text.api.dom.XMLSyntaxSupport;
 import org.openide.filesystems.FileObject;
+
+import static org.junit.Assert.assertEquals;
 
 public class CompletionContextImplTest {
     @Test

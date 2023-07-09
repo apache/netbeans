@@ -116,9 +116,7 @@ public class AutomaticRegistration {
 
         File catalinaHome = new File(catalinaHomeValue);
         if (!catalinaHome.exists()) {
-            LOGGER.log(Level.INFO, "Cannot register the default Tomcat server. "
-                    + "The Catalina Home directory " + catalinaHomeValue // NOI18N
-                    + " does not exist."); // NOI18N
+            LOGGER.log(Level.INFO, "Cannot register the default Tomcat server. The Catalina Home directory {0} does not exist.", catalinaHomeValue); // NOI18N
             return 3;
         }
 
@@ -145,8 +143,12 @@ public class AutomaticRegistration {
             urlTmp = new StringBuilder(TomcatFactory.TOMCAT_URI_PREFIX_80);
         } else if (version.startsWith("9.")) { // NOI18N
             urlTmp = new StringBuilder(TomcatFactory.TOMCAT_URI_PREFIX_90);
+        } else if (version.startsWith("10.")) { // NOI18N
+            urlTmp = new StringBuilder(TomcatFactory.TOMCAT_URI_PREFIX_100);
+        } else if (version.startsWith("10.1")) { // NOI18N
+            urlTmp = new StringBuilder(TomcatFactory.TOMCAT_URI_PREFIX_101);
         } else {
-            LOGGER.log(Level.INFO, "Cannot register the default Tomcat server. " + " The version " + version + " is not supported."); // NOI18N
+            LOGGER.log(Level.INFO, "Cannot register the default Tomcat server.  The version {0} is not supported.", version); // NOI18N
             return 5;
         }
         urlTmp.append(TomcatFactory.TOMCAT_URI_HOME_PREFIX);
@@ -194,6 +196,8 @@ public class AutomaticRegistration {
                 + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_70) // NOI18N
                 + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_80) // NOI18N
                 + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_90) // NOI18N
+                + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_100) // NOI18N
+                + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_101) // NOI18N
                 + ")" + Pattern.quote(TomcatFactory.TOMCAT_URI_HOME_PREFIX) // NOI18N
                 + Pattern.quote(catalinaHomeValue)
                 + "(" + Pattern.quote(TomcatFactory.TOMCAT_URI_BASE_PREFIX) + ".+)?$"); // NOI18N
@@ -235,6 +239,8 @@ public class AutomaticRegistration {
                 + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_70)  // NOI18N
                 + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_80)  // NOI18N
                 + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_90)  // NOI18N
+                + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_100)  // NOI18N
+                + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_101)  // NOI18N
                 + ")" + Pattern.quote(TomcatFactory.TOMCAT_URI_HOME_PREFIX)  // NOI18N
                 + "(.+)$"); // NOI18N
 

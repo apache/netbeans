@@ -181,16 +181,16 @@ public class ToolTipSupport {
 
     private static final MouseListener NO_OP_MOUSE_LISTENER = new MouseAdapter() {};
 
-    /** @Since 2.10 */
+    /** @since 2.10 */
     public static final int FLAG_HIDE_ON_MOUSE_MOVE = 1;
-    /** @Since 2.10 */
+    /** @since 2.10 */
     public static final int FLAG_HIDE_ON_TIMER = 2;
-    /** @Since 2.10 */
+    /** @since 2.10 */
     public static final int FLAG_PERMANENT = 4;
 
-    /** @Since 2.10 */
+    /** @since 2.10 */
     public static final int FLAGS_LIGHTWEIGHT_TOOLTIP = FLAG_HIDE_ON_MOUSE_MOVE | FLAG_HIDE_ON_TIMER;
-    /** @Since 2.10 */
+    /** @since 2.10 */
     public static final int FLAGS_HEAVYWEIGHT_TOOLTIP = FLAG_PERMANENT;
 
     private static final String ELIPSIS = "..."; //NOI18N
@@ -297,7 +297,7 @@ public class ToolTipSupport {
     }
     
     /**
-     * @Since 2.10
+     * @since 2.10
      */
     public void setToolTip(
         JComponent toolTip,
@@ -586,7 +586,7 @@ public class ToolTipSupport {
      * tooltips are actively displayed by the code, not initiated by user's mouse hover
      * or gesture. This call should be then followed by a call to {@code setTooltip}
      * to actually set the tooltip's value and position.
-     * <p/>
+     * <p>
      * Use {@link #setToolTipVisible(boolean)} to display a tooltip relevant to the
      * mouse position.
      * 

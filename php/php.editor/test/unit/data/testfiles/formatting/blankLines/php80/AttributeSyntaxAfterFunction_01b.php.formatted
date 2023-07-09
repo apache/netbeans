@@ -78,7 +78,6 @@ class AttributeSyntax {
     public function test8(): void {
         
     }
-
 }
 
 #[A(1)]

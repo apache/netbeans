@@ -51,6 +51,19 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="Completion_getCommand">
+        <api name="LSP_API"/>
+        <summary>Added URL to diagnostic code description</summary>
+        <version major="1" minor="17"/>
+        <date day="23" month="5" year="2023"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getCommand">Completion.getCommand</a> to get an optional command
+            that is executed after inserting the completion.
+        </description>
+        <class package="org.netbeans.api.lsp" name="Completion"/>
+    </change>
     <change id="DiagnosticURL">
         <api name="LSP_API"/>
         <summary>Added URL to diagnostic code description</summary>
@@ -101,7 +114,7 @@
         <author login="sdedic"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
         <description>
-            <a href="@TOP@/org/netbeans/spi/lsp/CallHiearchyProvider.html">CallHierarchyProvider</a> SPI allows to trace incoming and
+            <a href="@TOP@/org/netbeans/spi/lsp/CallHierarchyProvider.html">CallHierarchyProvider</a> SPI allows to trace incoming and
             outgoing calls. <a href="@TOP@/org/netbeans/api/lsp/CallHierarchyEntry.html">CallHierarchyEntry</a> describes a specific call site 
             or target.
         </description>
@@ -133,7 +146,7 @@
             An <code>ErrorProvider.Context.getOffset()</code> method introduced that allows to
             compute hint for a given file offset.
         </description>
-        <class package="org.netbeans.api.lsp" name="ErrorProvider"/>
+        <class package="org.netbeans.spi.lsp" name="ErrorProvider"/>
     </change>
     <change id="ErrorProvider">
         <api name="LSP_API"/>
@@ -146,7 +159,7 @@
             An <code>ErrorProvider</code> interface introduced that allows to
             compute errors/warnings for a given file.
         </description>
-        <class package="org.netbeans.api.lsp" name="ErrorProvider"/>
+        <class package="org.netbeans.spi.lsp" name="ErrorProvider"/>
     </change>
     <change id="HoverProvider">
         <api name="LSP_API"/>

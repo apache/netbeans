@@ -309,7 +309,7 @@ public class ElementNode extends AbstractNode implements Iterable<ElementNode> {
         }
     }
     
-    public Description getDescritption() {
+    public Description getDescription() {
         return description;
     }
 
@@ -673,7 +673,15 @@ public class ElementNode extends AbstractNode implements Iterable<ElementNode> {
                 if (d1.posInKind != d2.posInKind) {
                     return d1.posInKind - d2.posInKind;
                 }
-                return d1.name.compareTo(d2.name);
+                int compareToName = d1.name.compareTo(d2.name);
+                if (compareToName == 0) {
+                    // htmlHeader might stay uninitialized in ElementScanningTask
+                    String htmlHeader1 = d1.htmlHeader != null ? d1.htmlHeader : ""; // NOI18N
+                    String htmlHeader2 = d2.htmlHeader != null ? d2.htmlHeader : ""; // NOI18N
+                    return htmlHeader1.compareTo(htmlHeader2);
+                } else {
+                    return compareToName;
+                }
             }
 
             int k2i( ElementKind kind ) {
@@ -686,6 +694,7 @@ public class ElementNode extends AbstractNode implements Iterable<ElementNode> {
                         return 3;
                     case CLASS:
                     case INTERFACE:
+                    case RECORD:
                     case ENUM:
                     case ANNOTATION_TYPE:
                     case MODULE:

@@ -21,6 +21,7 @@ package org.netbeans.modules.javascript2.editor;
 import com.oracle.js.parser.TokenType;
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.ExportSpecifierNode;
+import com.oracle.js.parser.ir.ForNode;
 import com.oracle.js.parser.ir.FromNode;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.ImportSpecifierNode;
@@ -134,6 +135,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                     case METHOD:
                     case FUNCTION:
                     case GENERATOR:
+                    case ARROW_FUNCTION:
                         if(object.isDeclared() && !object.isAnonymous() && !object.getDeclarationName().getOffsetRange().isEmpty()) {
                             EnumSet<ColoringAttributes> coloring = ColoringAttributes.METHOD_SET;
                             if (object.getModifiers().contains(Modifier.PRIVATE)) {
@@ -247,7 +249,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                                     }
                                 }
                             } else if (object instanceof JsObject && !ModelUtils.ARGUMENTS.equals(object.getName())) {   // NOI18N
-                                if (object.getOccurrences().size() <= ((JsObject)object).getAssignmentCount()) {
+                                if (object.getOccurrences().size() <= object.getAssignmentCount()) {
                                     // probably is used only on the left site => is unused
                                     if (object.getDeclarationName().getOffsetRange().getLength() > 0) {
                                         highlights.put(LexUtilities.getLexerOffsets(result, object.getDeclarationName().getOffsetRange()), ColoringAttributes.UNUSED_SET);
@@ -421,6 +423,24 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                     }
                 }
                 return super.enterUnaryNode(unaryNode);
+            }
+
+            @Override
+            public boolean enterForNode(ForNode forNode) {
+                if (forNode.isForAwaitOf()) {
+                    TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsPositionedSequence(result.getSnapshot(), forNode.getStart());
+                    if (ts != null) {
+                        while(ts.moveNext()) {
+                            Token<? extends JsTokenId> token = ts.token();
+                            if (token != null && token.id() == JsTokenId.RESERVED_AWAIT) {
+                                highlights.put(LexUtilities.getLexerOffsets(result,
+                                        new OffsetRange(ts.offset(), ts.offset() + token.length())), SEMANTIC_KEYWORD);
+                                break;
+                            }
+                        }
+                    }
+                }
+                return super.enterForNode(forNode);
             }
 
             private void handleProperty(PropertyNode p, boolean classElement) {

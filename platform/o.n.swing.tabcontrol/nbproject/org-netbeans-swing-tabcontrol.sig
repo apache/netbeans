@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.72
+#Version 1.77
 
 CLSS public abstract java.awt.AWTEvent
 cons public init(java.awt.Event)
@@ -2132,6 +2132,7 @@ meth protected final boolean isSelected()
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected final void setState(int)
 meth protected int getCaptionYAdjustment()
+meth protected int getCaptionYPosition(java.awt.Graphics)
 meth protected int getIconYAdjustment()
 meth protected int stateChanged(int,int)
 meth protected void paintIconAndText(java.awt.Graphics)
@@ -2455,6 +2456,7 @@ innr protected BasicSelectionListener
 innr protected BasicTabState
 meth protected abstract org.netbeans.swing.tabcontrol.plaf.TabCellRenderer createDefaultRenderer()
 meth protected boolean isAntialiased()
+ anno 0 java.lang.Deprecated()
 meth protected final java.awt.Point getLastKnownMouseLocation()
 meth protected final void cancelRequestAttention(int)
 meth protected final void getTabsVisibleArea(java.awt.Rectangle)
@@ -2555,6 +2557,7 @@ supr org.netbeans.swing.tabcontrol.plaf.BusyTabsSupport
 hfds busyIconDefault,busyIconSelected
 
 CLSS public org.netbeans.swing.tabcontrol.plaf.ChicletWrapper
+ anno 0 java.lang.Deprecated()
 cons public init()
 intf java.lang.Runnable
 meth public java.lang.Long hash()
@@ -2892,6 +2895,7 @@ hfds AQUA_INSTANCE,INSTANCE
 
 CLSS public final static org.netbeans.swing.tabcontrol.plaf.SlidingTabDisplayerButtonUI$Aqua
  outer org.netbeans.swing.tabcontrol.plaf.SlidingTabDisplayerButtonUI
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected void installBorder(javax.swing.AbstractButton)
 meth protected void paintBackground(java.awt.Graphics2D,org.netbeans.swing.tabcontrol.plaf.BasicSlidingTabDisplayerUI$IndexButton)

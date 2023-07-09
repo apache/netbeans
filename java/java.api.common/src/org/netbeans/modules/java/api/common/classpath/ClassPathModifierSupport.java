@@ -113,7 +113,7 @@ public class ClassPathModifierSupport {
      * @param cs the {@link ClassPathSupport}
      * @param eval the {@link PropertyEvaluator}
      * @param refHelper the {@link ReferenceHelper}
-     * @param cpUiSupportCallback the optional {@link ClassPathUiSupport.Callback} doing the {@link ClassPathSupport.Item} initialization.
+     * @param cpUiSupportCallback the optional {@link org.netbeans.modules.java.api.common.project.ui.ClassPathUiSupport.Callback} doing the {@link ClassPathSupport.Item} initialization.
      * @param classPathRoots the jar files or folders to be added (removed)
      * @param classPathProperty the classpath property into (from which) the artifacts should be added (removed).
      * @param projectXMLElementName optional project XML element name
@@ -296,7 +296,7 @@ public class ClassPathModifierSupport {
      * @param cs the {@link ClassPathSupport}
      * @param eval the {@link PropertyEvaluator}
      * @param refHelper the {@link ReferenceHelper}
-     * @param cpUiSupportCallback the optional {@link ClassPathUiSupport.Callback} doing the {@link ClassPathSupport.Item} initialization.
+     * @param cpUiSupportCallback the optional {@link org.netbeans.modules.java.api.common.project.ui.ClassPathUiSupport.Callback} doing the {@link ClassPathSupport.Item} initialization.
      * @param artifacts the artifacts to be added
      * @param artifactElements the corresponding artifacts elements
      * @param classPathProperty the classpath property into (from which) the artifacts should be added (removed).

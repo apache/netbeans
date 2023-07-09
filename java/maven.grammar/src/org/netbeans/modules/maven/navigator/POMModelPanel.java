@@ -656,7 +656,7 @@ public class POMModelPanel extends javax.swing.JPanel implements ExplorerManager
                 for (Node childNode : childs) {
                     POMCutHolder holder = childNode.getLookup().lookup(POMCutHolder.class);
                     Object currentObj = holder.getCutValues()[0];
-                    if (currentObj != null && currentObj instanceof POMComponent) {
+                    if (currentObj instanceof POMComponent) {
                         if (currentObj == currentpc) {
                             treeView.expandNode(currentNode);
                             currentNode = childNode;
@@ -664,7 +664,7 @@ public class POMModelPanel extends javax.swing.JPanel implements ExplorerManager
                             break;
                         }
                     }
-                    if (currentObj != null && currentObj instanceof String) {
+                    if (currentObj instanceof String) {
                         String qnName = getElementNameFromNode(childNode);
 
                         if (qnName == null || (!(currentpc instanceof POMExtensibilityElement))) {

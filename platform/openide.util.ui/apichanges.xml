@@ -27,6 +27,38 @@
     <apidef name="actions">Actions API</apidef>
 </apidefs>
 <changes>
+    <change id="actionsForPathLookup">
+         <api name="util"/>
+         <summary>Added variant Utilities.actionsForPath with Lookup that produces context-aware actions</summary>
+         <version major="9" minor="28"/>
+         <date day="5" month="1" year="2023"/>
+         <author login="sdedic"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+         <description>
+             <p>
+                 Added a variant <a href="@TOP@/org/openide/util/Utilities.html#actionsForPath-java.lang.String-org.openide.util.Lookup-">actionsToPath</a> that instantiates context-bound actions if the registered action(s) implements 
+                 <a href="@TOP@/org/openide/util/ContextAwareAction.html">ContextAwareAction</a>.
+                 Improves consistency with <a href="@TOP@/org/openide/util/Utilities.html#actionsToPopup-javax.swing.Action:A-org.openide.util.Lookup-">actionsToPopup</a> that supports contextual actions. 
+             </p>
+         </description>
+         <class package="org.openide.util" name="Utilities"/>
+    </change>
+    <change id="findDialogParent">
+         <api name="util"/>
+         <summary>static method Utilities.findDialogParent added</summary>
+         <version major="9" minor="26"/>
+         <date day="15" month="10" year="2022"/>
+         <author login="errael"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+         <description>
+             <p>
+                 Added <code>findDialogParent</code> to provide a parent component for standard swing dialog displayers
+                 such as <code>JOptionPane</code> and <code>JFileChooser</code>.
+                 This method first checks <code>KeyboardFocusManager</code>, then uses an active frame.
+             </p>
+         </description>
+         <class package="org.openide.util" name="Utilities"/>
+    </change>
     <change id="propertyURL">
       <api name="util"/>
       <summary>Declaration of long-used URL image property</summary>  
@@ -389,7 +421,7 @@
                 A SPI <a href="@TOP@/org/openide/util/NetworkSettings.ProxyCredentialsProvider.html">
                 NetworkSettings.ProxyCredentialsProvider</a> allows NetBeans Platform
                 users to provide proxy and network credentials separately.
-                See <a href="http://wiki.netbeans.org/Authenticator">http://wiki.netbeans.org/Authenticator</a>
+                See <a href="https://netbeans.apache.org/wiki/Authenticator">https://netbeans.apache.org/wiki/Authenticator</a>
             </p>
         </description>
         <class package="org.openide.util" name="NetworkSettings"/>
@@ -408,7 +440,7 @@
                 user a question about the credentials. 
                 Invoke <a href="@TOP@/org/openide/util/NetworkSettings.html#suppressAuthenticationDialog-java.util.concurrent.Callable-">
                 suppressAuthenticationDialog</a> with a block of code where authentication dialog will be suppressed.                
-                See <a href="http://wiki.netbeans.org/Authenticator">http://wiki.netbeans.org/Authenticator</a>
+                See <a href="https://netbeans.apache.org/wiki/Authenticator">https://netbeans.apache.org/wiki/Authenticator</a>
             </p>
         </description>
         <class package="org.openide.util" name="NetworkSettings"/>
@@ -1031,8 +1063,7 @@
           <br/>
           To migrate your modules you can install Jackpot modules from
           autoupdate (if they are not yet part of your IDE) and apply
-          precreate <a href="http://www.netbeans.org/source/browse/openide/util/Attic/ErrorManagerJackpot.rules">
-          javapot error manager rule</a>.
+          precreate jackpot error manager rule.
           <br/>
           There is one possible incompatibility from end user point of view.
           The way to <em>enable logging</em> for certain components when

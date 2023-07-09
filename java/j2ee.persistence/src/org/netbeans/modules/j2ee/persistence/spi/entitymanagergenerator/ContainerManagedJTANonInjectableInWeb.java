@@ -24,12 +24,10 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import java.text.MessageFormat;
 import java.util.Collections;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import org.netbeans.api.java.source.Comment;
 import org.openide.DialogDisplayer;
@@ -44,9 +42,10 @@ import org.openide.util.NbBundle;
  */
 public final class ContainerManagedJTANonInjectableInWeb extends EntityManagerGenerationStrategySupport {
 
+    @Override
     public ClassTree generate() {
 
-        if(!ElementKind.CLASS.equals(getClassElement().getKind()))
+        if(ElementKind.CLASS != getClassElement().getKind())
         {
             NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(ContainerManagedJTANonInjectableInWeb.class, "LBL_ClassOnly"), NotifyDescriptor.INFORMATION_MESSAGE);
             DialogDisplayer.getDefault().notify(nd);

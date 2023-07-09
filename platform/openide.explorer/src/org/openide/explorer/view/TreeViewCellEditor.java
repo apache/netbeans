@@ -191,7 +191,7 @@ class TreeViewCellEditor extends DefaultTreeCellEditor implements CellEditorList
     */
     @Override
     public boolean isCellEditable(EventObject event) {
-        if ((event != null) && (event instanceof MouseEvent)) {
+        if (event instanceof MouseEvent) {
             if (!SwingUtilities.isLeftMouseButton((MouseEvent) event) || ((MouseEvent) event).isPopupTrigger()) {
                 abortTimer();
                 return false;

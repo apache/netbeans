@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.11
+#Version 2.15
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1230,6 +1230,7 @@ supr org.netbeans.modules.payara.tooling.PayaraIdeException
 hfds INVALID_ADMIN_INTERFACE,INVALID_CONTAINER,SERVER_HOME_NONEXISTENT,SERVER_HOME_NO_VERSION,SERVER_HOME_NULL,SERVER_ROOT_NONEXISTENT,SERVER_ROOT_NULL,SERVER_URL_NULL
 
 CLSS public org.netbeans.modules.payara.tooling.data.IdeContext
+ anno 0 java.lang.Deprecated()
 cons public init()
 supr java.lang.Object
 
@@ -1330,8 +1331,10 @@ intf java.lang.Comparable<org.netbeans.modules.payara.tooling.data.PayaraPlatfor
 intf org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
 meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public boolean isEE10Supported()
 meth public boolean isEE7Supported()
 meth public boolean isEE8Supported()
+meth public boolean isEE9Supported()
 meth public boolean isMinimumSupportedVersion()
 meth public int compareTo(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public java.lang.String getDirectUrl()
@@ -1363,8 +1366,10 @@ fld public final static char SEPARATOR = '.'
 fld public final static java.lang.String SEPARATOR_PATTERN = "\u005c."
 meth public abstract boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public abstract boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public abstract boolean isEE10Supported()
 meth public abstract boolean isEE7Supported()
 meth public abstract boolean isEE8Supported()
+meth public abstract boolean isEE9Supported()
 meth public abstract boolean isMinimumSupportedVersion()
 meth public abstract java.lang.String getDirectUrl()
 meth public abstract java.lang.String getIndirectUrl()
@@ -1509,8 +1514,10 @@ meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatfo
 meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraVersion)
+meth public boolean isEE10Supported()
 meth public boolean isEE7Supported()
 meth public boolean isEE8Supported()
+meth public boolean isEE9Supported()
 meth public boolean isMinimumSupportedVersion()
 meth public java.lang.String getDirectUrl()
 meth public java.lang.String getIndirectUrl()
@@ -1824,7 +1831,7 @@ meth public static java.net.URL getPlatformBuilderConfig(org.netbeans.modules.pa
 meth public static org.netbeans.modules.payara.tooling.server.config.ConfigBuilder getBuilder(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static void destroyBuilder(org.netbeans.modules.payara.tooling.data.PayaraServer)
 supr java.lang.Object
-hfds CONFIG_V4,CONFIG_V5,builders,config
+hfds CONFIG_V4,CONFIG_V5,CONFIG_V6,builders,config
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.ConfigUtils
 cons public init()
@@ -1844,6 +1851,8 @@ hfds filesets,links,lookups,paths
 CLSS public final !enum org.netbeans.modules.payara.tooling.server.config.JavaEEProfile
 fld public final static char TYPE_SEPARATOR = '-'
 fld public final static int length
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v10_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v10_0_0_web
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_2
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_3
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_4
@@ -1856,6 +1865,10 @@ fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEE
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_8_web
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v8_0_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v8_0_0_web
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v9_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v9_0_0_web
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v9_1_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v9_1_0_web
 innr public final static !enum Type
 innr public final static !enum Version
 meth public java.lang.String toString()
@@ -1879,6 +1892,7 @@ hfds name
 
 CLSS public final static !enum org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version
  outer org.netbeans.modules.payara.tooling.server.config.JavaEEProfile
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v10_0_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_2
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_3
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_4
@@ -1887,6 +1901,8 @@ fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEE
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_7
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_8
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v8_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v9_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v9_1_0
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version valueOf(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version[] values()

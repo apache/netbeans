@@ -114,6 +114,14 @@ public class ImportDataCreatorTest extends PHPTestBase {
         performTest("class Test^Class3 {");
     }
 
+    public void testGH4614_01() throws Exception {
+        performTest("public function test1(array $param): F^oo {");
+    }
+
+    public void testGH5330_01() throws Exception {
+        performTest("class Examp^le {");
+    }
+
     private void performTest(String caretLine) throws Exception {
         performTest(caretLine, null);
     }

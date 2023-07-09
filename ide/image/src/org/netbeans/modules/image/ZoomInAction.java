@@ -43,6 +43,7 @@ public class ZoomInAction extends CallableSystemAction {
 
 
     /** Perform action. */
+    @Override
     public void performAction() {
         TopComponent curComponent = TopComponent.getRegistry().getActivated();
         if (curComponent instanceof ImageViewer) {
@@ -51,21 +52,25 @@ public class ZoomInAction extends CallableSystemAction {
     }
     
     /** Gets action name. Implements superclass abstract method. */
+    @Override
     public String getName() {
         return NbBundle.getMessage(ZoomInAction.class, "LBL_ZoomIn");   //NOI18N
     }
     
     /** Gets action help context. Implemenets superclass abstract method.*/
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
     
     /** Overrides superclass method. */
+    @Override
     public boolean isEnabled() {
         return true;
     }
     
     /** Gets icon resource. Overrides superclass method. */
+    @Override
     protected String iconResource() {
         return "org/netbeans/modules/image/zoomIn.gif"; // NOI18N
     }

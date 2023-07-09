@@ -22,15 +22,19 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,11 +80,13 @@ public class UnusedDetector {
     public static class UnusedDescription {
         public final Element unusedElement;
         public final TreePath unusedElementPath;
+        public final boolean packagePrivate;
         public final UnusedReason reason;
 
-        public UnusedDescription(Element unusedElement, TreePath unusedElementPath, UnusedReason reason) {
+        public UnusedDescription(Element unusedElement, TreePath unusedElementPath, boolean packagePrivate, UnusedReason reason) {
             this.unusedElement = unusedElement;
             this.unusedElementPath = unusedElementPath;
+            this.packagePrivate = packagePrivate;
             this.reason = reason;
         }
 
@@ -118,38 +124,39 @@ public class UnusedDetector {
                 boolean isWritten = uses.contains(UseTypes.WRITTEN);
                 boolean isRead = uses.contains(UseTypes.READ);
                 if (!isWritten && !isRead) {
-                    result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_WRITTEN_READ));
+                    result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_WRITTEN_READ));
                 } else if (!isWritten) {
-                    result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_WRITTEN));
+                    result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_WRITTEN));
                 } else if (!isRead) {
-                    result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_READ));
+                    result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_READ));
                 }
             } else if (el.getKind().isField() && (isPrivate || isPkgPrivate)) {
-                if (!isSerialSpecField(info, el)) {
+                if (!isSerialSpecField(info, el) && !lookedUpElement(el, uv.type2LookedUpFields, uv.allStringLiterals)) {
                     boolean isWritten = uses.contains(UseTypes.WRITTEN);
                     boolean isRead = uses.contains(UseTypes.READ);
                     if (!isWritten && !isRead) {
                         if (isPrivate || isUnusedInPkg(info, el, cancel)) {
-                            result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_WRITTEN_READ));
+                            result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_WRITTEN_READ));
                         }
                     } else if (!isWritten) {
-                        result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_WRITTEN));
+                        result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_WRITTEN));
                     } else if (!isRead) {
                         if (isPrivate || isUnusedInPkg(info, el, cancel)) {
-                            result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_READ));
+                            result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_READ));
                         }
                     }
                 }
             } else if ((el.getKind() == ElementKind.CONSTRUCTOR || el.getKind() == ElementKind.METHOD) && (isPrivate || isPkgPrivate)) {
-                if (!isSerializationMethod(info, (ExecutableElement)el) && !uses.contains(UseTypes.USED)) {
+                if (!isSerializationMethod(info, (ExecutableElement)el) && !uses.contains(UseTypes.USED)
+                        && !info.getElementUtilities().overridesMethod((ExecutableElement)el) && !lookedUpElement(el, uv.type2LookedUpMethods, uv.allStringLiterals)) {
                     if (isPrivate || isUnusedInPkg(info, el, cancel)) {
-                        result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_USED));
+                        result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_USED));
                     }
                 }
             } else if ((el.getKind().isClass() || el.getKind().isInterface()) && (isPrivate || isPkgPrivate)) {
                 if (!uses.contains(UseTypes.USED)) {
                     if (isPrivate || isUnusedInPkg(info, el, cancel)) {
-                        result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_USED));
+                        result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_USED));
                     }
                 }
             }
@@ -279,6 +286,17 @@ public class UnusedDetector {
                LOCAL_VARIABLES.contains(el.getKind());
     }
 
+    private static boolean lookedUpElement(Element element, Map<Element, Set<String>> type2LookedUp, Set<String> allStringLiterals) {
+        String name = element.getKind() == ElementKind.CONSTRUCTOR ? "<init>" : element.getSimpleName().toString();
+        return isLookedUp(element.getEnclosingElement(), name, type2LookedUp, allStringLiterals) ||
+               isLookedUp(null, name, type2LookedUp, allStringLiterals);
+    }
+
+    private static boolean isLookedUp(Element owner, String name, Map<Element, Set<String>> type2LookedUp, Set<String> allStringLiterals) {
+        Set<String> lookedUp = type2LookedUp.getOrDefault(owner, Collections.emptySet());
+        return lookedUp.contains(name) || (allStringLiterals.contains(name) && lookedUp.contains(null));
+    }
+
     private static boolean isUnusedInPkg(CompilationInfo info, Element el, Callable<Boolean> cancel) {
         TypeElement typeElement;
         Set<? extends String> packageSet = Collections.singleton(info.getElements().getPackageOf(el).getQualifiedName().toString());
@@ -388,11 +406,16 @@ public class UnusedDetector {
 
         private final Map<Element, Set<UseTypes>> useTypes = new HashMap<>();
         private final Map<Element, TreePath> element2Declaration = new HashMap<>();
+        private final Map<Element, Set<String>> type2LookedUpMethods = new HashMap<>();
+        private final Map<Element, Set<String>> type2LookedUpFields = new HashMap<>();
+        private final Set<String> allStringLiterals = new HashSet<>();
+        private final TypeElement methodHandlesLookup;
         private final CompilationInfo info;
         private ExecutableElement recursionDetector;
 
         public UnusedVisitor(CompilationInfo info) {
             this.info = info;
+            this.methodHandlesLookup = info.getElements().getTypeElement(MethodHandles.Lookup.class.getCanonicalName());
         }
 
         @Override
@@ -596,5 +619,49 @@ public class UnusedDetector {
                 }
             }
         }
+
+        @Override
+        public Void visitLiteral(LiteralTree node, Void p) {
+            if (node.getKind() == Kind.STRING_LITERAL) {
+                allStringLiterals.add((String) ((LiteralTree) node).getValue());
+            }
+            return super.visitLiteral(node, p);
+        }
+
+        @Override
+        public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
+            Element invoked = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getMethodSelect()));
+            if (invoked != null && invoked.getEnclosingElement() == methodHandlesLookup && node.getArguments().size() > 0) {
+                ExpressionTree clazz = node.getArguments().get(0);
+                Element lookupType = null;
+                if (clazz.getKind() == Kind.MEMBER_SELECT) {
+                    MemberSelectTree mst = (MemberSelectTree) clazz;
+                    if (mst.getIdentifier().contentEquals("class")) {
+                        lookupType = info.getTrees().getElement(new TreePath(new TreePath(getCurrentPath(), clazz), mst.getExpression()));
+                    }
+                }
+                String lookupName = null;
+                if (node.getArguments().size() > 1) {
+                    ExpressionTree name  = node.getArguments().get(1);
+                    if (name.getKind() == Kind.STRING_LITERAL) {
+                        lookupName = (String) ((LiteralTree) name).getValue();
+                    }
+                }
+                switch (invoked.getSimpleName().toString()) {
+                    case "findStatic": case "findVirtual": case "findSpecial":
+                        type2LookedUpMethods.computeIfAbsent(lookupType, t -> new HashSet<>()).add(lookupName);
+                        break;
+                    case "findConstructor":
+                        type2LookedUpMethods.computeIfAbsent(lookupType, t -> new HashSet<>()).add("<init>");
+                        break;
+                    case "findGetter": case "findSetter": case "findStaticGetter":
+                    case "findStaticSetter": case "findStaticVarHandle": case "findVarHandle":
+                        type2LookedUpFields.computeIfAbsent(lookupType, t -> new HashSet<>()).add(lookupName);
+                        break;
+                }
+            }
+            return super.visitMethodInvocation(node, p);
+        }
+
     }
 }

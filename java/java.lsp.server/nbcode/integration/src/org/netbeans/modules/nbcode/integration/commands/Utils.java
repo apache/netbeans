@@ -42,7 +42,7 @@ class Utils {
             try {
                 URI uri = new URI(s);
                 f = URLMapper.findFileObject(uri.toURL());
-            } catch (URISyntaxException | MalformedURLException ex) {
+            } catch (URISyntaxException | IllegalArgumentException | MalformedURLException ex) {
                 f = FileUtil.toFileObject(new File(s));
             }
         } else {

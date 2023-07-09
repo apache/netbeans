@@ -5,7 +5,6 @@ class Omg {
     public function method() {
         
     }
-
 }
 $foo = new Omg();
 

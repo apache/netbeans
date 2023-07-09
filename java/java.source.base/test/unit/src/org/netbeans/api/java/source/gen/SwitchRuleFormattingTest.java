@@ -205,46 +205,42 @@ public void testSwitchRuleFormatting2() throws Exception {
                 SwitchTree switchBlock = (SwitchTree) ((BlockTree) method.getBody()).getStatements().get(0);
                 List<? extends CaseTree> cases;
                 List<ExpressionTree> patterns = new ArrayList<>();
-                if(switchBlock!=null){
+                if(switchBlock != null){
                 boolean switchExpressionFlag = switchBlock.getKind() == Kind.SWITCH_EXPRESSION;
-                if (switchExpressionFlag) {
-                    cases = ((SwitchExpressionTree) switchBlock).getCases();
-                } else {
-                    cases = ((SwitchTree) switchBlock).getCases();
-                }
-                for (Iterator<? extends CaseTree> it = cases.iterator(); it.hasNext();) {
-                    CaseTree ct = it.next();
-                    patterns.addAll(ct.getExpressions());
-                    List<StatementTree> statements;
-                    if (ct.getStatements() == null) {
-                        statements = new ArrayList<>(((JCTree.JCCase) ct).stats);
+                    if (switchExpressionFlag) {
+                        cases = ((SwitchExpressionTree) switchBlock).getCases();
                     } else {
-                        statements = new ArrayList<>(ct.getStatements());
-                        if(!statements.isEmpty() && statements.get(statements.size()-1) instanceof JCTree.JCBreak){
-                            statements.remove(statements.size()-1);
-                        }
+                        cases = ((SwitchTree) switchBlock).getCases();
                     }
-                    if (statements.isEmpty()) {
-                        if (it.hasNext()) {
-                            continue;
-                        }
-                    }
-                    Set<Element> seenVariables = new HashSet<>();
-                    int idx = 0;
-                    for (StatementTree statement : new ArrayList<>(statements)) {
-                        Tree body = make.Block(statements, false);
-                        if (statements.size() == 1) {
-                            if (statements.get(0).getKind() == Tree.Kind.EXPRESSION_STATEMENT
-                                    || statements.get(0).getKind() == Tree.Kind.THROW
-                                    || statements.get(0).getKind() == Tree.Kind.BLOCK) {
-                                body = statements.get(0);
+                    for (Iterator<? extends CaseTree> it = cases.iterator(); it.hasNext();) {
+                        CaseTree ct = it.next();
+                        patterns.addAll(ct.getExpressions());
+                        List<StatementTree> statements;
+                        if (ct.getStatements() == null) {
+                            statements = new ArrayList<>(((JCTree.JCCase) ct).stats);
+                        } else {
+                            statements = new ArrayList<>(ct.getStatements());
+                            if(!statements.isEmpty() && statements.get(statements.size()-1) instanceof JCTree.JCBreak){
+                                statements.remove(statements.size()-1);
                             }
                         }
-                        newCases.add(make.Case(patterns, body));
-                        patterns = new ArrayList<>();
+                        if (statements.isEmpty()) {
+                            if (it.hasNext()) {
+                                continue;
+                            }
+                        } else {
+                            Tree body = make.Block(statements, false);
+                            if (statements.size() == 1) {
+                                if (statements.get(0).getKind() == Tree.Kind.EXPRESSION_STATEMENT
+                                        || statements.get(0).getKind() == Tree.Kind.THROW
+                                        || statements.get(0).getKind() == Tree.Kind.BLOCK) {
+                                    body = statements.get(0);
+                                }
+                            }
+                            newCases.add(make.Case(patterns, body));
+                            patterns = new ArrayList<>();
+                        }
                     }
-                }
-                  
                     workingCopy.rewrite((SwitchTree) switchBlock , make.Switch(((SwitchTree) switchBlock).getExpression(), newCases));
                 }
             }

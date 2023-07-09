@@ -388,7 +388,8 @@ implements ElementVisitor<Boolean,Void>, TypeVisitor<Boolean,Void> {
                     Tree t = wc.getTrees().getTree(e);
                     if (TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind())) {
                         ClassTree ct = (ClassTree)t;
-                        Set<Modifier> flags = new HashSet<Modifier>(ct.getModifiers().getFlags());
+                        Set<Modifier> flags = EnumSet.noneOf(Modifier.class);
+                        flags.addAll(ct.getModifiers().getFlags());
                         flags.remove(Modifier.PUBLIC);
                         flags.remove(Modifier.PROTECTED);
                         ModifiersTree mt = wc.getTreeMaker().Modifiers(flags, ct.getModifiers().getAnnotations());
@@ -397,7 +398,8 @@ implements ElementVisitor<Boolean,Void>, TypeVisitor<Boolean,Void> {
                     }
                     if (t.getKind() == Kind.METHOD) {
                         MethodTree mt = (MethodTree)t;
-                        Set<Modifier> flags = new HashSet<Modifier>(mt.getModifiers().getFlags());
+                        Set<Modifier> flags = EnumSet.noneOf(Modifier.class);
+                        flags.addAll(mt.getModifiers().getFlags());
                         flags.remove(Modifier.PUBLIC);
                         flags.remove(Modifier.PROTECTED);
                         ModifiersTree modt = wc.getTreeMaker().Modifiers(flags, mt.getModifiers().getAnnotations());
@@ -406,7 +408,8 @@ implements ElementVisitor<Boolean,Void>, TypeVisitor<Boolean,Void> {
                     }
                     if (t.getKind() == Kind.VARIABLE) {
                         VariableTree vt = (VariableTree)t;
-                        Set<Modifier> flags = new HashSet<Modifier>(vt.getModifiers().getFlags());
+                        Set<Modifier> flags = EnumSet.noneOf(Modifier.class);
+                        flags.addAll(vt.getModifiers().getFlags());
                         flags.remove(Modifier.PUBLIC);
                         flags.remove(Modifier.PROTECTED);
                         ModifiersTree modt = wc.getTreeMaker().Modifiers(flags, vt.getModifiers().getAnnotations());

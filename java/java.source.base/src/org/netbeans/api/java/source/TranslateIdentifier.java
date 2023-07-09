@@ -21,6 +21,7 @@ package org.netbeans.api.java.source;
 
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
@@ -79,7 +80,7 @@ class TranslateIdentifier extends ErrorAwareTreePathScanner<Void, Void>{
                     || (element.getKind().isField() && ((Symbol) element).isStatic())) {
                 Tree parent = path.getParentPath() != null ? path.getParentPath().getLeaf() : null;
                 
-                if (   (parent != null && parent.getKind() == Kind.CASE && ((CaseTree) parent).getExpression() == node && element.getKind() == ElementKind.ENUM_CONSTANT)
+                if (   (parent != null && parent.getKind() == Kind.CONSTANT_CASE_LABEL && ((ConstantCaseLabelTree) parent).getConstantExpression() == node && element.getKind() == ElementKind.ENUM_CONSTANT)
                     || (path.getCompilationUnit() != null && ((Symbol) element).enclClass() != null && path.getCompilationUnit().getSourceFile() == ((Symbol) element).enclClass().sourcefile)) {
                     translateMap.put(node, make.Identifier(element.getSimpleName()));
                 } else {

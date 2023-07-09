@@ -318,16 +318,20 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
  * Visitor methods
  ****************************************************************************/
 
+    @Override
     public Tree visitCompilationUnit(CompilationUnitTree tree, Object p) {
 	CompilationUnitTree result = rewriteChildren(tree);
         return result;
     }
+    @Override
     public Tree visitPackage(PackageTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitImport(ImportTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitClass(ClassTree tree, Object p) {
         Element oldSym = currentSym;
         importAnalysis.classEntered(tree);
@@ -337,6 +341,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         currentSym = oldSym;
         return result;
     }
+    @Override
     public Tree visitMethod(MethodTree tree, Object p) {
         Element oldSym = currentSym;
         currentSym = model.getElement(tree);
@@ -345,6 +350,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         return result;
     }
 	
+    @Override
     public Tree visitVariable(VariableTree tree, Object p) {
         Element oldSym = currentSym;
         currentSym = model.getElement(tree);
@@ -353,105 +359,139 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         return result;
     }
 	
+    @Override
     public Tree visitEmptyStatement(EmptyStatementTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitBlock(BlockTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitUnionType(UnionTypeTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitDoWhileLoop(DoWhileLoopTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitWhileLoop(WhileLoopTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitForLoop(ForLoopTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitEnhancedForLoop(EnhancedForLoopTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitLabeledStatement(LabeledStatementTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitLambdaExpression(LambdaExpressionTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitSwitch(SwitchTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitCase(CaseTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitSynchronized(SynchronizedTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitTry(TryTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitCatch(CatchTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitConditionalExpression(ConditionalExpressionTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitIf(IfTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitExpressionStatement(ExpressionStatementTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitBreak(BreakTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitContinue(ContinueTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitReturn(ReturnTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitThrow(ThrowTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitAssert(AssertTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitMethodInvocation(MethodInvocationTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitNewClass(NewClassTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitNewArray(NewArrayTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitParenthesized(ParenthesizedTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitAssignment(AssignmentTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitCompoundAssignment(CompoundAssignmentTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitUnary(UnaryTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitBinary(BinaryTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitTypeCast(TypeCastTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitInstanceOf(InstanceOfTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitIntersectionType(IntersectionTypeTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitArrayAccess(ArrayAccessTree tree, Object p) {
 	return rewriteChildren(tree);
     }
@@ -459,6 +499,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
     public Tree visitMemberReference(MemberReferenceTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitMemberSelect(MemberSelectTree tree, Object p) {
         if (tree instanceof QualIdentTree) {
             QualIdentTree qit = (QualIdentTree) tree;
@@ -477,75 +518,107 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
             return rewriteChildren(tree);
         }
     }
+    @Override
     public Tree visitIdentifier(IdentifierTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitLiteral(LiteralTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitPrimitiveType(PrimitiveTypeTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitArrayType(ArrayTypeTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitParameterizedType(ParameterizedTypeTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitTypeParameter(TypeParameterTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitWildcard(WildcardTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitAnnotatedType(AnnotatedTypeTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitAnnotation(AnnotationTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitModifiers(ModifiersTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitErroneous(ErroneousTree tree, Object p) {
 	return rewriteChildren(tree);
     }
+    @Override
     public Tree visitModule(ModuleTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitExports(ExportsTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitOpens(OpensTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitProvides(ProvidesTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitRequires(RequiresTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitUses(UsesTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitBindingPattern(BindingPatternTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitDefaultCaseLabel(DefaultCaseLabelTree tree, Object p) {
         return rewriteChildren(tree);
     }
-    public Tree visitGuardedPattern(GuardedPatternTree tree, Object p) {
+    @Override
+    public Tree visitConstantCaseLabel(ConstantCaseLabelTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
+    public Tree visitPatternCaseLabel(PatternCaseLabelTree tree, Object p) {
+        return rewriteChildren(tree);
+    }
+    @Override
+    public Tree visitDeconstructionPattern(DeconstructionPatternTree tree, Object p) {
+        return rewriteChildren(tree);
+    }
+    @Override
     public Tree visitParenthesizedPattern(ParenthesizedPatternTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitSwitchExpression(SwitchExpressionTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitYield(YieldTree tree, Object p) {
         return rewriteChildren(tree);
     }
+    @Override
     public Tree visitOther(Tree tree, Object p) {
 	throw new Error("Tree not overloaded: "+tree);
     }
@@ -1429,15 +1502,39 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         return tree;
     }
 
-    private GuardedPatternTree rewriteChildren(GuardedPatternTree tree) {
-        PatternTree newPattern = (PatternTree) translate(tree.getPattern());
-        ExpressionTree newGuard = (ExpressionTree) translate(tree.getExpression());
-        if (newPattern != tree.getPattern() ||
-            newGuard != tree.getExpression()) {
-            GuardedPatternTree n = make.GuardedPattern(newPattern, newGuard);
+    private ConstantCaseLabelTree rewriteChildren(ConstantCaseLabelTree tree) {
+        ExpressionTree newExpression = (ExpressionTree) translate(tree.getConstantExpression());
+        if (newExpression != tree.getConstantExpression()) {
+            ConstantCaseLabelTree n = make.ConstantCaseLabel(newExpression);
             model.setType(n, model.getType(tree));
-            copyCommentTo(tree,n);
-            copyPosTo(tree,n);
+            copyCommentTo(tree, n);
+            copyPosTo(tree, n);
+            tree = n;
+        }
+        return tree;
+    }
+
+    private PatternCaseLabelTree rewriteChildren(PatternCaseLabelTree tree) {
+        ExpressionTree newGuard = (ExpressionTree) translate(tree.getGuard());
+        PatternTree newPattern = (PatternTree) translate(tree.getPattern());
+        if (newGuard != tree.getGuard() || newPattern != tree.getPattern()) {
+            PatternCaseLabelTree n = make.PatternCaseLabel(newPattern, newGuard);
+            model.setType(n, model.getType(tree));
+            copyCommentTo(tree, n);
+            copyPosTo(tree, n);
+            tree = n;
+        }
+        return tree;
+    }
+
+    private DeconstructionPatternTree rewriteChildren(DeconstructionPatternTree tree) {
+        ExpressionTree newDeconstructor = (ExpressionTree) translate(tree.getDeconstructor());
+        List<? extends PatternTree> newNestedPatterns = translate(tree.getNestedPatterns());
+        if (newDeconstructor != tree.getDeconstructor() || !Objects.equals(newNestedPatterns, tree.getNestedPatterns())) {
+            DeconstructionPatternTree n = make.DeconstructionPattern(newDeconstructor, newNestedPatterns);
+            model.setType(n, model.getType(tree));
+            copyCommentTo(tree, n);
+            copyPosTo(tree, n);
             tree = n;
         }
         return tree;

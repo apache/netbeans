@@ -388,7 +388,7 @@ public class JavacClassInfo extends SourceClassInfo {
         JavaSource jSrc = sourceRef != null ? sourceRef.get() : null;
         if (jSrc == null || (!allowSourceLess && jSrc.getFileObjects().isEmpty())) {
             FileObject f = getFile();
-            if (f.getExt().toLowerCase().equals("java") || f.getExt().toLowerCase().equals("class")) { // NOI18N
+            if (f.getExt().equalsIgnoreCase("java") || f.getExt().equalsIgnoreCase("class")) { // NOI18N
                 jSrc = cpInfo != null ? JavaSource.create(cpInfo, f) : JavaSource.forFileObject(f);
             } else if (cpInfo != null) {
                 jSrc = JavaSource.create(cpInfo);

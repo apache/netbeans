@@ -135,8 +135,8 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
             // Commonly used variables
             Set<String> emptySet = new TreeSet<>();
-            String spaceAtt = "xml:space";  // NOI18N
             Set<String> tmpSet;
+            String spaceAtt = "xml:space";  // NOI18N
 
             ////////////////////////////////////////////////
             // Initialize common sets
@@ -178,39 +178,39 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
             // xsl:import
             elementDecls.put("import", emptySet); // NOI18N
-            attrDecls.put("import", new TreeSet(Arrays.asList(new String[]{"href"}))); // NOI18N
+            attrDecls.put("import", new TreeSet<>(Arrays.asList(new String[]{"href"}))); // NOI18N
 
             // xxsl:include
             elementDecls.put("include", emptySet); // NOI18N
-            attrDecls.put("include", new TreeSet(Arrays.asList(new String[]{"href"}))); // NOI18N
+            attrDecls.put("include", new TreeSet<>(Arrays.asList(new String[]{"href"}))); // NOI18N
 
             // xsl:strip-space
             elementDecls.put("strip-space", emptySet); // NOI18N
-            attrDecls.put("strip-space", new TreeSet(Arrays.asList(new String[]{"elements"}))); // NOI18N
+            attrDecls.put("strip-space", new TreeSet<>(Arrays.asList(new String[]{"elements"}))); // NOI18N
 
             // xsl:preserve-space
             elementDecls.put("preserve-space", emptySet); // NOI18N
-            attrDecls.put("preserve-space", new TreeSet(Arrays.asList(new String[]{"elements"}))); // NOI18N
+            attrDecls.put("preserve-space", new TreeSet<>(Arrays.asList(new String[]{"elements"}))); // NOI18N
 
             // xsl:output
             elementDecls.put("output", emptySet); // NOI18N
-            attrDecls.put("output", new TreeSet(Arrays.asList(new String[]{"method", // NOI18N
+            attrDecls.put("output", new TreeSet<>(Arrays.asList(new String[]{"method", // NOI18N
             "version","encoding","omit-xml-declaration","standalone","doctype-public", // NOI18N
             "doctype-system","cdata-section-elements","indent","media-type"}))); // NOI18N
 
             // xsl:key
             elementDecls.put("key", emptySet); // NOI18N
-            attrDecls.put("key", new TreeSet(Arrays.asList(new String[]{"name","match","use"}))); // NOI18N
+            attrDecls.put("key", new TreeSet<>(Arrays.asList(new String[]{"name","match","use"}))); // NOI18N
 
             // xsl:decimal-format
             elementDecls.put("decimal-format", emptySet); // NOI18N
-            attrDecls.put("decimal-format", new TreeSet(Arrays.asList(new String[]{"name", // NOI18N
+            attrDecls.put("decimal-format", new TreeSet<>(Arrays.asList(new String[]{"name", // NOI18N
             "decimal-separator","grouping-separator","infinity","minus-sign","NaN", // NOI18N
             "percent","per-mille","zero-digit","digit","pattern-separator"}))); // NOI18N
 
             // xsl:namespace-alias
             elementDecls.put("namespace-alias", emptySet); // NOI18N
-            attrDecls.put("namespace-alias", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("namespace-alias", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "stylesheet-prefix","result-prefix"}))); // NOI18N
 
             // xsl:template
@@ -218,28 +218,28 @@ public final class XSLGrammarQuery implements GrammarQuery{
             tmpSet.add(resultElements);
             tmpSet.add("param"); // NOI18N
             elementDecls.put("template", tmpSet); // NOI18N
-            attrDecls.put("template", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("template", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "match","name","priority","mode",spaceAtt}))); // NOI18N
 
             // xsl:value-of
             elementDecls.put("value-of", emptySet); // NOI18N
-            attrDecls.put("value-of", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("value-of", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
             "select","disable-output-escaping"}))); // NOI18N
 
             // xsl:copy-of
             elementDecls.put("copy-of", emptySet); // NOI18N
-            attrDecls.put("copy-of", new TreeSet(Arrays.asList(new String[]{"select"}))); // NOI18N
+            attrDecls.put("copy-of", new TreeSet<>(Arrays.asList(new String[]{"select"}))); // NOI18N
 
             // xsl:number
             elementDecls.put("number", emptySet); // NOI18N
-            attrDecls.put("number", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("number", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "level","count","from","value","format","lang","letter-value", // NOI18N
                 "grouping-separator","grouping-size"}))); // NOI18N
 
             // xsl:apply-templates
-            elementDecls.put("apply-templates", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            elementDecls.put("apply-templates", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "sort","with-param"}))); // NOI18N
-            attrDecls.put("apply-templates", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("apply-templates", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "select","mode"}))); // NOI18N
 
             // xsl:apply-imports
@@ -247,97 +247,97 @@ public final class XSLGrammarQuery implements GrammarQuery{
             attrDecls.put("apply-imports", emptySet); // NOI18N
 
             // xsl:for-each
-            tmpSet = new TreeSet(instructions);
+            tmpSet = new TreeSet<>(instructions);
             tmpSet.add(resultElements);
             tmpSet.add("sort"); // NOI18N
             elementDecls.put("for-each", tmpSet); // NOI18N
-            attrDecls.put("for-each", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("for-each", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
             "select",spaceAtt}))); // NOI18N
 
             // xsl:sort
             elementDecls.put("sort", emptySet); // NOI18N
-            attrDecls.put("sort", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("sort", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "select","lang","data-type","order","case-order"}))); // NOI18N
 
             // xsl:if
             elementDecls.put("if", template); // NOI18N
-            attrDecls.put("if", new TreeSet(Arrays.asList(new String[]{"test",spaceAtt}))); // NOI18N
+            attrDecls.put("if", new TreeSet<>(Arrays.asList(new String[]{"test",spaceAtt}))); // NOI18N
 
             // xsl:choose
-            elementDecls.put("choose", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            elementDecls.put("choose", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "when","otherwise"}))); // NOI18N
-            attrDecls.put("choose", new TreeSet(Arrays.asList(new String[]{spaceAtt}))); // NOI18N
+            attrDecls.put("choose", new TreeSet<>(Arrays.asList(new String[]{spaceAtt}))); // NOI18N
 
             // xsl:when
             elementDecls.put("when", template); // NOI18N
-            attrDecls.put("when", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("when", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "test",spaceAtt}))); // NOI18N
 
             // xsl:otherwise
             elementDecls.put("otherwise", template); // NOI18N
-            attrDecls.put("otherwise", new TreeSet(Arrays.asList(new String[]{spaceAtt}))); // NOI18N
+            attrDecls.put("otherwise", new TreeSet<>(Arrays.asList(new String[]{spaceAtt}))); // NOI18N
 
             // xsl:attribute-set
-            elementDecls.put("sort", new TreeSet(Arrays.asList(new String[]{"attribute"}))); // NOI18N
-            attrDecls.put("attribute-set", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            elementDecls.put("sort", new TreeSet<>(Arrays.asList(new String[]{"attribute"}))); // NOI18N
+            attrDecls.put("attribute-set", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "name","use-attribute-sets"}))); // NOI18N
 
             // xsl:call-template
-            elementDecls.put("call-template", new TreeSet(Arrays.asList(new String[]{"with-param"}))); // NOI18N
-            attrDecls.put("call-template", new TreeSet(Arrays.asList(new String[]{"name"}))); // NOI18N
+            elementDecls.put("call-template", new TreeSet<>(Arrays.asList(new String[]{"with-param"}))); // NOI18N
+            attrDecls.put("call-template", new TreeSet<>(Arrays.asList(new String[]{"name"}))); // NOI18N
 
             // xsl:with-param
             elementDecls.put("with-param", template); // NOI18N
-            attrDecls.put("with-param", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("with-param", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "name","select"}))); // NOI18N
 
             // xsl:variable
             elementDecls.put("variable", template); // NOI18N
-            attrDecls.put("variable", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("variable", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "name","select"}))); // NOI18N
 
             // xsl:param
             elementDecls.put("param", template); // NOI18N
-            attrDecls.put("param", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("param", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "name","select"}))); // NOI18N
 
             // xsl:text
             elementDecls.put("text", emptySet); // NOI18N
-            attrDecls.put("text", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("text", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "disable-output-escaping"}))); // NOI18N
 
             // xsl:processing-instruction
             elementDecls.put("processing-instruction", charTemplate); // NOI18N
-            attrDecls.put("processing-instruction", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("processing-instruction", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "name",spaceAtt}))); // NOI18N
 
             // xsl:element
             elementDecls.put("element", template); // NOI18N
-            attrDecls.put("element", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("element", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "name","namespace","use-attribute-sets",spaceAtt}))); // NOI18N
 
             // xsl:attribute
             elementDecls.put("attribute", charTemplate); // NOI18N
-            attrDecls.put("attribute", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("attribute", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 "name","namespace",spaceAtt}))); // NOI18N
 
             // xsl:comment
             elementDecls.put("comment", charTemplate); // NOI18N
-            attrDecls.put("comment", new TreeSet(Arrays.asList(new String[]{spaceAtt}))); // NOI18N
+            attrDecls.put("comment", new TreeSet<>(Arrays.asList(new String[]{spaceAtt}))); // NOI18N
 
             // xsl:copy
             elementDecls.put("copy", template); // NOI18N
-            attrDecls.put("copy", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("copy", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 spaceAtt,"use-attribute-sets"}))); // NOI18N
 
             // xsl:message
             elementDecls.put("message", template); // NOI18N
-            attrDecls.put("message", new TreeSet(Arrays.asList(new String[]{ // NOI18N
+            attrDecls.put("message", new TreeSet<>(Arrays.asList(new String[]{ // NOI18N
                 spaceAtt,"terminate"}))); // NOI18N
 
             // xsl:fallback
             elementDecls.put("fallback", template); // NOI18N
-            attrDecls.put("fallback", new TreeSet(Arrays.asList(new String[]{spaceAtt}))); // NOI18N
+            attrDecls.put("fallback", new TreeSet<>(Arrays.asList(new String[]{spaceAtt}))); // NOI18N
         }
         return elementDecls;
     }
@@ -502,13 +502,13 @@ public final class XSLGrammarQuery implements GrammarQuery{
             }
         }
 
-        Set possibleAttributes;
+        Set<String> possibleAttributes;
         if (curXslPrefix != null) {
             // Attributes of XSL element
             possibleAttributes = (Set) getAttrDecls().get(el.getTagName().substring(curXslPrefix.length()));
         } else {
             // XSL Attributes of Result element
-            possibleAttributes = new TreeSet();
+            possibleAttributes = new TreeSet<>();
             if (prefixList.size() > 0) {
                 Iterator it = getResultElementAttr().iterator();
                 while ( it.hasNext()) {

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.61
+#Version 7.66
 
 CLSS public abstract interface java.io.Serializable
 
@@ -207,6 +207,7 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
 innr public final static PasswordLine
 innr public final static QuickPick
@@ -241,6 +242,23 @@ meth public void setTitle(java.lang.String)
 meth public void setValue(java.lang.Object)
 supr java.lang.Object
 hfds MAXIMUM_TEXT_WIDTH,SIZE_PREFERRED_HEIGHT,SIZE_PREFERRED_WIDTH,adOptions,changeSupport,defaultValue,errMsg,infoMsg,message,messageType,noDefaultClose,notificationLineSupport,optionType,options,title,valid,value,warnMsg
+
+CLSS public final static org.openide.NotifyDescriptor$ComposedInput
+ outer org.openide.NotifyDescriptor
+cons public init(java.lang.String,int,org.openide.NotifyDescriptor$ComposedInput$Callback)
+fld public final static java.lang.String PROP_ESTIMATED_NUMBER_OF_INPUTS = "estimatedNumberOfInputs"
+innr public abstract interface static Callback
+meth public int getEstimatedNumberOfInputs()
+meth public java.lang.Object getMessage()
+meth public org.openide.NotifyDescriptor createInput(int)
+meth public org.openide.NotifyDescriptor[] getInputs()
+meth public void setEstimatedNumberOfInputs(int)
+supr org.openide.NotifyDescriptor
+hfds callback,estimatedNumberOfInputs,inputs
+
+CLSS public abstract interface static org.openide.NotifyDescriptor$ComposedInput$Callback
+ outer org.openide.NotifyDescriptor$ComposedInput
+meth public abstract org.openide.NotifyDescriptor createInput(org.openide.NotifyDescriptor$ComposedInput,int)
 
 CLSS public static org.openide.NotifyDescriptor$Confirmation
  outer org.openide.NotifyDescriptor
@@ -287,6 +305,7 @@ cons public init(java.lang.String,java.lang.String,java.util.List<org.openide.No
 innr public final static Item
 meth public boolean isMultipleSelection()
 meth public java.lang.Object getMessage()
+meth public java.lang.String getLabel()
 meth public java.util.List<org.openide.NotifyDescriptor$QuickPick$Item> getItems()
 supr org.openide.NotifyDescriptor
 hfds items,multipleSelection,text

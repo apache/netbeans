@@ -20,9 +20,6 @@
 package org.netbeans.modules.bugzilla.autoupdate;
 
 import org.netbeans.modules.bugtracking.commons.AutoupdatePluginUCTestCase;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import junit.framework.Test;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.modules.bugtracking.commons.AutoupdateSupport;

@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
@@ -78,10 +77,10 @@ public class KnowledgeBaseNode extends OCINode {
 //    }
     
 //    @ChildrenProvider.Registration(parentPath = "Oracle/Compartment")
-    public static ChildrenProvider<CompartmentItem, KnowledgeBaseItem> listKnowledgeBases() {
-        return compartment -> {
+    public static ChildrenProvider.SessionAware<CompartmentItem, KnowledgeBaseItem> listKnowledgeBases() {
+        return (compartment, session) -> {
             try ( ApplicationDependencyManagementClient client 
-                    = new ApplicationDependencyManagementClient(OCIManager.getDefault().getConfigProvider())) {
+                    = session.newClient(ApplicationDependencyManagementClient.class)) {
                 
                 ListKnowledgeBasesRequest request = ListKnowledgeBasesRequest.builder()
                         .compartmentId(compartment.getKey().getValue()).build();

@@ -29,7 +29,7 @@ import org.graalvm.polyglot.HostAccess;
  * API and GraalVM; see the {@link org.netbeans.libs.graalsdk tutorial} for more details.
  * <h2>Security</h2>
  * <p>
- * By default all the <a href="http://graalvm.org">GraalVM</a> engines
+ * By default all the <a href="https://graalvm.org">GraalVM</a> engines
  * (named <code>GraalVM:something</code>)
  * run in a very restricted, secure sandbox:
  * </p>

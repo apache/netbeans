@@ -82,7 +82,7 @@ public final class XMLPropertiesConvertor extends Convertor implements PropertyC
         FileObject foEntity = Env.findEntityRegistration(providerFO);
         if (foEntity == null) foEntity = providerFO;
         Object publicId = foEntity.getAttribute(Env.EA_PUBLICID);
-        if (publicId == null || !(publicId instanceof String)) {
+        if (!(publicId instanceof String)) {
             throw new IOException("missing or invalid attribute: " + //NOI18N
                 Env.EA_PUBLICID + ", provider: " + foEntity); //NOI18N
         }
@@ -211,7 +211,7 @@ public final class XMLPropertiesConvertor extends Convertor implements PropertyC
     private Class getInstanceClass() throws IOException, ClassNotFoundException {
         if (instanceClass == null) {
             Object name = providerFO.getAttribute(Env.EA_INSTANCE_CLASS_NAME);
-            if (name == null || !(name instanceof String)) {
+            if (!(name instanceof String)) {
                 throw new IllegalStateException(
                     "missing or invalid ea attribute: " +
                     Env.EA_INSTANCE_CLASS_NAME); //NOI18N

@@ -130,6 +130,13 @@
 
 
  <answer id="exec-property">
+     <api category="devel" group="branding" name="org.netbeans.modules.gradle.api.execute.NetworkProxySettings.allowOverride" type="export">
+         Brand the <code>org.netbeans.modules.gradle.api.execute.NetworkProxySettings.allowOverride</code> key in a 
+         <code>org.netbeans.modules.gradle.api.execute.Bundle</code> file
+         with one of the values <code>true</code> or <code>false</code> to specify whether to offer override of proxies
+         when running Gradle daemon. With <code>false</code>, the user is only given an option to upgrade gradle's configuration files.
+         Since 
+     </api>
      <api category="devel" group="branding" name="org.netbeans.modules.gradle.spi.DEFAULT_REUSE_OUTPUT" type="export">
          Brand the <code>DEFAULT_REUSE_OUTPUT</code> key in a 
          <code>org.netbeans.modules.gradle.spi.Bundle</code> file
@@ -284,7 +291,7 @@ publishPlugins&lt;/args&gt;
          </api>
          <api category="devel" group="java.io.File" name="nb-actions-config.xml" type="export">
              <p>
-                 An extension of <a href="#nb-actions-config.xml">nb-actions.config</a> is a per-Configuration action mapping.
+                 An extension of <a href="#java.io.File-nb-actions-config.xml">nb-actions.config</a> is a per-Configuration action mapping.
                  It can be placed in <b>nb-actions-</b><i>configurationID</i><b>.xml</b> with the same format and will apply only
                  if that specific Project Configuration is in effect.
              </p>

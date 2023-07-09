@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.48.0
+#Version 2.52.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -687,7 +687,7 @@ meth public boolean isTagLibRegistered(java.lang.String)
 meth public boolean isXMLSyntax()
 meth public java.lang.String toString()
 meth public java.util.Map getPrefixMapper()
-meth public void applyParsedData(java.util.Map,java.util.Map,boolean,boolean,boolean)
+meth public void applyParsedData(java.util.Map,java.util.Map<java.lang.String,java.lang.String>,boolean,boolean,boolean)
 meth public void parsingStarted()
 supr java.beans.PropertyChangeSupport
 hfds elIgnored,initialized,prefixMapper,taglibs,xmlSyntax
@@ -1135,6 +1135,7 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
 innr public final static PasswordLine
 innr public final static QuickPick

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.51.0
+#Version 1.55.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1029,8 +1029,10 @@ meth public static org.netbeans.modules.j2ee.sun.dd.api.serverresources.Resource
 meth public static org.openide.filesystems.FileObject getResourceDirectory(org.openide.filesystems.FileObject)
 meth public static org.openide.filesystems.FileObject setUpExists(org.openide.filesystems.FileObject)
 meth public static void createFile(java.io.File,org.netbeans.modules.j2ee.sun.dd.api.serverresources.Resources,java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static void createFile(org.netbeans.modules.j2ee.sun.ide.sunresources.wizards.ResourceConfigData,org.netbeans.modules.j2ee.sun.dd.api.serverresources.Resources,java.lang.String)
 meth public static void createFile(org.openide.filesystems.FileObject,org.netbeans.modules.j2ee.sun.dd.api.serverresources.Resources,java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static void createResource(java.lang.String,java.lang.Object[],org.netbeans.modules.j2ee.sun.api.ServerInterface) throws java.lang.Exception
 meth public static void createSampleDataSource(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider)
 meth public static void migrateResources(java.io.File,java.lang.String)

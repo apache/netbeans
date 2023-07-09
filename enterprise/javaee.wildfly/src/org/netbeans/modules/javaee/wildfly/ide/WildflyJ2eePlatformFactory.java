@@ -110,8 +110,15 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
             WILDFLY_PROFILES.add(Profile.JAVA_EE_7_FULL);
             WILDFLY_PROFILES.add(Profile.JAVA_EE_8_WEB);
             WILDFLY_PROFILES.add(Profile.JAVA_EE_8_FULL);
+            WILDFLY_PROFILES.add(Profile.JAKARTA_EE_8_FULL);
         }
+        private static final Set<Profile> JAKARTAEE_FULL_PROFILES = new HashSet<Profile>();
 
+        static {
+            JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_9_FULL);
+            JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_9_1_FULL);
+            JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_10_FULL);
+        }
         private static final Set<Profile> EAP6_PROFILES = new HashSet<Profile>();
 
         static {
@@ -125,6 +132,18 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
             WILDFLY_WEB_PROFILES.add(Profile.JAVA_EE_6_WEB);
             WILDFLY_WEB_PROFILES.add(Profile.JAVA_EE_7_WEB);
             WILDFLY_WEB_PROFILES.add(Profile.JAVA_EE_8_WEB);
+            WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_8_WEB);
+            WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_9_WEB);
+            WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_9_1_WEB);
+            WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_10_WEB);
+        }
+
+        private static final Set<Profile> JAKARTAEE_WEB_PROFILES = new HashSet<Profile>();
+
+        static {
+            JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_9_WEB);
+            JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_9_1_WEB);
+            JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_10_WEB);
         }
         private LibraryImplementation[] libraries;
 
@@ -137,12 +156,22 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
         @Override
         public Set<org.netbeans.api.j2ee.core.Profile> getSupportedProfiles() {
             if (this.properties.isWildfly()) {
-                if(this.properties.isServletOnly()) {
+                if (this.properties.isServletOnly()) {
+                    if (this.properties.getServerVersion().compareToIgnoreUpdate(WildflyPluginUtils.WILDFLY_27_0_0) >= 0) {
+                        return Collections.unmodifiableSet(JAKARTAEE_WEB_PROFILES);
+                    }
                     return Collections.unmodifiableSet(WILDFLY_WEB_PROFILES);
+                }
+                if (this.properties.getServerVersion().compareToIgnoreUpdate(WildflyPluginUtils.WILDFLY_27_0_0) >= 0) {
+                    Set<org.netbeans.api.j2ee.core.Profile> allJakarta = new HashSet<>(
+                            (int) Math.ceil((JAKARTAEE_FULL_PROFILES.size()+JAKARTAEE_WEB_PROFILES.size()) / 0.75));
+                    allJakarta.addAll(JAKARTAEE_FULL_PROFILES);
+                    allJakarta.addAll(JAKARTAEE_WEB_PROFILES);
+                    return Collections.unmodifiableSet(allJakarta);
                 }
                 return Collections.unmodifiableSet(WILDFLY_PROFILES);
             }
-            if(this.properties.getServerVersion().compareToIgnoreUpdate(WildflyPluginUtils.EAP_7_0) >= 0) {
+            if (this.properties.getServerVersion().compareToIgnoreUpdate(WildflyPluginUtils.EAP_7_0) >= 0) {
                 return Collections.unmodifiableSet(WILDFLY_PROFILES);
             }
             return Collections.unmodifiableSet(EAP6_PROFILES);
@@ -150,10 +179,7 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
 
         @Override
         public Set<org.netbeans.api.j2ee.core.Profile> getSupportedProfiles(Type moduleType) {
-            if (this.properties.isWildfly()) {
-                return Collections.unmodifiableSet(WILDFLY_PROFILES);
-            }
-            return Collections.unmodifiableSet(EAP6_PROFILES);
+            return getSupportedProfiles();
         }
 
         @Override
@@ -169,6 +195,9 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
             versions.add("1.8"); // NOI18N
             versions.add("1.9"); // NOI18N
             versions.add("11"); // NOI18N
+            if (this.properties.getServerVersion().compareToIgnoreUpdate(WildflyPluginUtils.EAP_7_0) >= 0) {
+                versions.add("17"); // NOI18N
+            }
             return versions;
         }
 
@@ -278,6 +307,12 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
                 return true;
             }
             if ("jpa2.1".equals(toolName)) { // NOI18N
+                return this.properties.isWildfly();
+            }
+            if ("jpa3.0".equals(toolName)) { // NOI18N
+                return this.properties.isWildfly();
+            }
+            if ("jpa3.1".equals(toolName)) { // NOI18N
                 return this.properties.isWildfly();
             }
 

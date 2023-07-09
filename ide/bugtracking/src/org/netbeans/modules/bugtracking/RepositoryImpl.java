@@ -130,9 +130,8 @@ public final class RepositoryImpl<R, Q, I> {
                                 toRemove.add(e.getKey());
                             }
                         }
-                        for (Q q : toRemove) {
-                            queryMap.remove(q);
-                        }
+
+                        queryMap.keySet().removeAll(toRemove);
                     }
                     fireQueryListChanged();
                 } else if (RepositoryProvider.EVENT_UNSUBMITTED_ISSUES_CHANGED.equals(evt.getPropertyName())) {

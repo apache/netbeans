@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.61
+#Version 1.65
 
 CLSS public abstract interface java.io.Serializable
 
@@ -263,6 +263,7 @@ meth public java.util.Iterator<org.netbeans.api.editor.fold.Fold> foldIterator()
 meth public java.util.Map<org.netbeans.spi.editor.fold.FoldInfo,org.netbeans.api.editor.fold.Fold> update(java.util.Collection<org.netbeans.spi.editor.fold.FoldInfo>,java.util.Collection<org.netbeans.api.editor.fold.Fold>,java.util.Collection<org.netbeans.spi.editor.fold.FoldInfo>) throws javax.swing.text.BadLocationException
 meth public org.netbeans.api.editor.fold.Fold addToHierarchy(org.netbeans.api.editor.fold.FoldType,int,int,java.lang.Boolean,org.netbeans.api.editor.fold.FoldTemplate,java.lang.String,java.lang.Object,org.netbeans.spi.editor.fold.FoldHierarchyTransaction) throws javax.swing.text.BadLocationException
 meth public org.netbeans.api.editor.fold.Fold addToHierarchy(org.netbeans.api.editor.fold.FoldType,java.lang.String,boolean,int,int,int,int,java.lang.Object,org.netbeans.spi.editor.fold.FoldHierarchyTransaction) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.api.editor.fold.FoldHierarchy getHierarchy()
 meth public org.netbeans.spi.editor.fold.FoldHierarchyTransaction openTransaction()
 meth public static boolean isBoundsValid(int,int,int,int)

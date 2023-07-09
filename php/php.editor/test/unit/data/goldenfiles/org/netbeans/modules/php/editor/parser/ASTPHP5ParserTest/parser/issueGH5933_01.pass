@@ -1,0 +1,682 @@
+<testresult testFile='issueGH5933_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='814' end='819'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='820' end='827'>
+            <text>Example</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='828' end='829'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='829' end='830'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='831' end='836'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='837' end='838'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='839' end='848'>
+            <text>"Example"</text>
+        </token>
+        <token id='T_SEMICOLON' start='848' end='849'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='850' end='852'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='853' end='854'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='855' end='858'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='859' end='866'>
+            <text>Example</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='866' end='867'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='867' end='868'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='868' end='869'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='870' end='877'>
+            <text>$string</text>
+        </token>
+        <token id='T_EQUAL' start='878' end='879'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='880' end='882'>
+            <text>$a</text>
+        </token>
+        <token id='T_INSTANCEOF' start='883' end='893'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='894' end='895'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING_CAST' start='895' end='903'>
+            <text>(string)</text>
+        </token>
+        <token id='T_VARIABLE' start='904' end='909'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='909' end='910'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='910' end='911'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='912' end='919'>
+            <text>$double</text>
+        </token>
+        <token id='T_EQUAL' start='920' end='921'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='922' end='924'>
+            <text>$a</text>
+        </token>
+        <token id='T_INSTANCEOF' start='925' end='935'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='936' end='937'>
+            <text>(</text>
+        </token>
+        <token id='T_DOUBLE_CAST' start='937' end='945'>
+            <text>(double)</text>
+        </token>
+        <token id='T_VARIABLE' start='946' end='951'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='951' end='952'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='952' end='953'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='954' end='958'>
+            <text>$int</text>
+        </token>
+        <token id='T_EQUAL' start='959' end='960'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='961' end='963'>
+            <text>$a</text>
+        </token>
+        <token id='T_INSTANCEOF' start='964' end='974'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='975' end='976'>
+            <text>(</text>
+        </token>
+        <token id='T_INT_CAST' start='976' end='981'>
+            <text>(int)</text>
+        </token>
+        <token id='T_VARIABLE' start='982' end='987'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='987' end='988'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='988' end='989'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='990' end='997'>
+            <text>$object</text>
+        </token>
+        <token id='T_EQUAL' start='998' end='999'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1000' end='1002'>
+            <text>$a</text>
+        </token>
+        <token id='T_INSTANCEOF' start='1003' end='1013'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1014' end='1015'>
+            <text>(</text>
+        </token>
+        <token id='T_OBJECT_CAST' start='1015' end='1023'>
+            <text>(object)</text>
+        </token>
+        <token id='T_VARIABLE' start='1024' end='1029'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1029' end='1030'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1030' end='1031'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1032' end='1038'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='1039' end='1040'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1041' end='1043'>
+            <text>$a</text>
+        </token>
+        <token id='T_INSTANCEOF' start='1044' end='1054'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1055' end='1056'>
+            <text>(</text>
+        </token>
+        <token id='T_ARRAY_CAST' start='1056' end='1063'>
+            <text>(array)</text>
+        </token>
+        <token id='T_VARIABLE' start='1064' end='1069'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1069' end='1070'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1070' end='1071'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1072' end='1077'>
+            <text>$bool</text>
+        </token>
+        <token id='T_EQUAL' start='1078' end='1079'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1080' end='1082'>
+            <text>$a</text>
+        </token>
+        <token id='T_INSTANCEOF' start='1083' end='1093'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1094' end='1095'>
+            <text>(</text>
+        </token>
+        <token id='T_BOOL_CAST' start='1095' end='1101'>
+            <text>(bool)</text>
+        </token>
+        <token id='T_VARIABLE' start='1102' end='1107'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1107' end='1108'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1108' end='1109'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1110' end='1116'>
+            <text>$unset</text>
+        </token>
+        <token id='T_EQUAL' start='1117' end='1118'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1119' end='1121'>
+            <text>$a</text>
+        </token>
+        <token id='T_INSTANCEOF' start='1122' end='1132'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1133' end='1134'>
+            <text>(</text>
+        </token>
+        <token id='T_UNSET_CAST' start='1134' end='1141'>
+            <text>(unset)</text>
+        </token>
+        <token id='T_VARIABLE' start='1142' end='1147'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1147' end='1148'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1148' end='1149'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1150' end='1158'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1158' end='1159'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1159' end='1167'>
+            <text>$boolean</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1167' end='1168'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1168' end='1169'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1171' end='1173'>
+            <text>$b</text>
+        </token>
+        <token id='T_EQUAL' start='1174' end='1175'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1176' end='1177'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='1177' end='1178'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1180' end='1189'>
+            <text>$boolean2</text>
+        </token>
+        <token id='T_EQUAL' start='1190' end='1191'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1192' end='1194'>
+            <text>$b</text>
+        </token>
+        <token id='T_INSTANCEOF' start='1195' end='1205'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1206' end='1207'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING_CAST' start='1207' end='1215'>
+            <text>(string)</text>
+        </token>
+        <token id='T_VARIABLE' start='1216' end='1221'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1221' end='1222'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1222' end='1223'>
+            <text>;</text>
+        </token>
+        <token id='T_FN' start='1225' end='1227'>
+            <text>fn</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1227' end='1228'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1228' end='1233'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1233' end='1234'>
+            <text>)</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1235' end='1237'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='1238' end='1240'>
+            <text>$a</text>
+        </token>
+        <token id='T_INSTANCEOF' start='1241' end='1251'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1252' end='1253'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1253' end='1258'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1258' end='1259'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1259' end='1260'>
+            <text>;</text>
+        </token>
+        <token id='T_FN' start='1262' end='1264'>
+            <text>fn</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1264' end='1265'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1265' end='1270'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1270' end='1271'>
+            <text>)</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1272' end='1274'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='1275' end='1277'>
+            <text>$a</text>
+        </token>
+        <token id='T_INSTANCEOF' start='1278' end='1288'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1289' end='1290'>
+            <text>(</text>
+        </token>
+        <token id='T_INT_CAST' start='1290' end='1295'>
+            <text>(int)</text>
+        </token>
+        <token id='T_VARIABLE' start='1296' end='1301'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1301' end='1302'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1302' end='1303'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1305' end='1313'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1313' end='1314'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1314' end='1322'>
+            <text>$boolean</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1322' end='1323'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1323' end='1324'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1325' end='1325'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1325'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='814' end='830' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='820' end='827' name='Example'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='828' end='830' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='831' end='849'>
+                <Assignment start='831' end='848' operator='EQUAL'>
+                    <Variable start='831' end='836' isDollared='true'>
+                        <Identifier start='832' end='836' name='test'/>
+                    </Variable>
+                    <Scalar start='839' end='848' type='STRING' value='"Example"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='850' end='869'>
+                <Assignment start='850' end='868' operator='EQUAL'>
+                    <Variable start='850' end='852' isDollared='true'>
+                        <Identifier start='851' end='852' name='a'/>
+                    </Variable>
+                    <ClassInstanceCreation start='855' end='868' anonymous='false'>
+                        <ClassName start='859' end='866'>
+                            <NamespaceName start='859' end='866' isCurrent='false' isGlobal='false'>
+                                <Identifier start='859' end='866' name='Example'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='870' end='911'>
+                <Assignment start='870' end='910' operator='EQUAL'>
+                    <Variable start='870' end='877' isDollared='true'>
+                        <Identifier start='871' end='877' name='string'/>
+                    </Variable>
+                    <InstanceOfExpression start='880' end='910'>
+                        <Variable start='880' end='882' isDollared='true'>
+                            <Identifier start='881' end='882' name='a'/>
+                        </Variable>
+                        <ClassName start='894' end='910'>
+                            <ParenthesisExpression start='894' end='910'>
+                                <CastExpression start='895' end='909' castingType='STRING'>
+                                    <Variable start='904' end='909' isDollared='true'>
+                                        <Identifier start='905' end='909' name='test'/>
+                                    </Variable>
+                                </CastExpression>
+                            </ParenthesisExpression>
+                        </ClassName>
+                    </InstanceOfExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='912' end='953'>
+                <Assignment start='912' end='952' operator='EQUAL'>
+                    <Variable start='912' end='919' isDollared='true'>
+                        <Identifier start='913' end='919' name='double'/>
+                    </Variable>
+                    <InstanceOfExpression start='922' end='952'>
+                        <Variable start='922' end='924' isDollared='true'>
+                            <Identifier start='923' end='924' name='a'/>
+                        </Variable>
+                        <ClassName start='936' end='952'>
+                            <ParenthesisExpression start='936' end='952'>
+                                <CastExpression start='937' end='951' castingType='REAL'>
+                                    <Variable start='946' end='951' isDollared='true'>
+                                        <Identifier start='947' end='951' name='test'/>
+                                    </Variable>
+                                </CastExpression>
+                            </ParenthesisExpression>
+                        </ClassName>
+                    </InstanceOfExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='954' end='989'>
+                <Assignment start='954' end='988' operator='EQUAL'>
+                    <Variable start='954' end='958' isDollared='true'>
+                        <Identifier start='955' end='958' name='int'/>
+                    </Variable>
+                    <InstanceOfExpression start='961' end='988'>
+                        <Variable start='961' end='963' isDollared='true'>
+                            <Identifier start='962' end='963' name='a'/>
+                        </Variable>
+                        <ClassName start='975' end='988'>
+                            <ParenthesisExpression start='975' end='988'>
+                                <CastExpression start='976' end='987' castingType='INT'>
+                                    <Variable start='982' end='987' isDollared='true'>
+                                        <Identifier start='983' end='987' name='test'/>
+                                    </Variable>
+                                </CastExpression>
+                            </ParenthesisExpression>
+                        </ClassName>
+                    </InstanceOfExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='990' end='1031'>
+                <Assignment start='990' end='1030' operator='EQUAL'>
+                    <Variable start='990' end='997' isDollared='true'>
+                        <Identifier start='991' end='997' name='object'/>
+                    </Variable>
+                    <InstanceOfExpression start='1000' end='1030'>
+                        <Variable start='1000' end='1002' isDollared='true'>
+                            <Identifier start='1001' end='1002' name='a'/>
+                        </Variable>
+                        <ClassName start='1014' end='1030'>
+                            <ParenthesisExpression start='1014' end='1030'>
+                                <CastExpression start='1015' end='1029' castingType='OBJECT'>
+                                    <Variable start='1024' end='1029' isDollared='true'>
+                                        <Identifier start='1025' end='1029' name='test'/>
+                                    </Variable>
+                                </CastExpression>
+                            </ParenthesisExpression>
+                        </ClassName>
+                    </InstanceOfExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1032' end='1071'>
+                <Assignment start='1032' end='1070' operator='EQUAL'>
+                    <Variable start='1032' end='1038' isDollared='true'>
+                        <Identifier start='1033' end='1038' name='array'/>
+                    </Variable>
+                    <InstanceOfExpression start='1041' end='1070'>
+                        <Variable start='1041' end='1043' isDollared='true'>
+                            <Identifier start='1042' end='1043' name='a'/>
+                        </Variable>
+                        <ClassName start='1055' end='1070'>
+                            <ParenthesisExpression start='1055' end='1070'>
+                                <CastExpression start='1056' end='1069' castingType='ARRAY'>
+                                    <Variable start='1064' end='1069' isDollared='true'>
+                                        <Identifier start='1065' end='1069' name='test'/>
+                                    </Variable>
+                                </CastExpression>
+                            </ParenthesisExpression>
+                        </ClassName>
+                    </InstanceOfExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1072' end='1109'>
+                <Assignment start='1072' end='1108' operator='EQUAL'>
+                    <Variable start='1072' end='1077' isDollared='true'>
+                        <Identifier start='1073' end='1077' name='bool'/>
+                    </Variable>
+                    <InstanceOfExpression start='1080' end='1108'>
+                        <Variable start='1080' end='1082' isDollared='true'>
+                            <Identifier start='1081' end='1082' name='a'/>
+                        </Variable>
+                        <ClassName start='1094' end='1108'>
+                            <ParenthesisExpression start='1094' end='1108'>
+                                <CastExpression start='1095' end='1107' castingType='BOOL'>
+                                    <Variable start='1102' end='1107' isDollared='true'>
+                                        <Identifier start='1103' end='1107' name='test'/>
+                                    </Variable>
+                                </CastExpression>
+                            </ParenthesisExpression>
+                        </ClassName>
+                    </InstanceOfExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1110' end='1149'>
+                <Assignment start='1110' end='1148' operator='EQUAL'>
+                    <Variable start='1110' end='1116' isDollared='true'>
+                        <Identifier start='1111' end='1116' name='unset'/>
+                    </Variable>
+                    <InstanceOfExpression start='1119' end='1148'>
+                        <Variable start='1119' end='1121' isDollared='true'>
+                            <Identifier start='1120' end='1121' name='a'/>
+                        </Variable>
+                        <ClassName start='1133' end='1148'>
+                            <ParenthesisExpression start='1133' end='1148'>
+                                <CastExpression start='1134' end='1147' castingType='UNSET'>
+                                    <Variable start='1142' end='1147' isDollared='true'>
+                                        <Identifier start='1143' end='1147' name='test'/>
+                                    </Variable>
+                                </CastExpression>
+                            </ParenthesisExpression>
+                        </ClassName>
+                    </InstanceOfExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1150' end='1169'>
+                <FunctionInvocation start='1150' end='1168'>
+                    <FucntionName start='1150' end='1158'>
+                        <NamespaceName start='1150' end='1158' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1150' end='1158' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='1159' end='1167' isDollared='true'>
+                            <Identifier start='1160' end='1167' name='boolean'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1171' end='1178'>
+                <Assignment start='1171' end='1177' operator='EQUAL'>
+                    <Variable start='1171' end='1173' isDollared='true'>
+                        <Identifier start='1172' end='1173' name='b'/>
+                    </Variable>
+                    <Scalar start='1176' end='1177' type='INT' value='2'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1180' end='1223'>
+                <Assignment start='1180' end='1222' operator='EQUAL'>
+                    <Variable start='1180' end='1189' isDollared='true'>
+                        <Identifier start='1181' end='1189' name='boolean2'/>
+                    </Variable>
+                    <InstanceOfExpression start='1192' end='1222'>
+                        <Variable start='1192' end='1194' isDollared='true'>
+                            <Identifier start='1193' end='1194' name='b'/>
+                        </Variable>
+                        <ClassName start='1206' end='1222'>
+                            <ParenthesisExpression start='1206' end='1222'>
+                                <CastExpression start='1207' end='1221' castingType='STRING'>
+                                    <Variable start='1216' end='1221' isDollared='true'>
+                                        <Identifier start='1217' end='1221' name='test'/>
+                                    </Variable>
+                                </CastExpression>
+                            </ParenthesisExpression>
+                        </ClassName>
+                    </InstanceOfExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1225' end='1260'>
+                <ArrowFunctionDeclaration start='1225' end='1259' isReference='false' isStatic='false'>
+                    <FormalParameter start='1228' end='1233' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1228' end='1233' isDollared='true'>
+                                <Identifier start='1229' end='1233' name='test'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <InstanceOfExpression start='1238' end='1259'>
+                        <Variable start='1238' end='1240' isDollared='true'>
+                            <Identifier start='1239' end='1240' name='a'/>
+                        </Variable>
+                        <ClassName start='1252' end='1259'>
+                            <DereferencableVariable start='1252' end='1259'>
+                                <Variable start='1253' end='1258' isDollared='true'>
+                                    <Identifier start='1254' end='1258' name='test'/>
+                                </Variable>
+                            </DereferencableVariable>
+                        </ClassName>
+                    </InstanceOfExpression>
+                </ArrowFunctionDeclaration>
+            </ExpressionStatement>
+            <ExpressionStatement start='1262' end='1303'>
+                <ArrowFunctionDeclaration start='1262' end='1302' isReference='false' isStatic='false'>
+                    <FormalParameter start='1265' end='1270' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1265' end='1270' isDollared='true'>
+                                <Identifier start='1266' end='1270' name='test'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <InstanceOfExpression start='1275' end='1302'>
+                        <Variable start='1275' end='1277' isDollared='true'>
+                            <Identifier start='1276' end='1277' name='a'/>
+                        </Variable>
+                        <ClassName start='1289' end='1302'>
+                            <ParenthesisExpression start='1289' end='1302'>
+                                <CastExpression start='1290' end='1301' castingType='INT'>
+                                    <Variable start='1296' end='1301' isDollared='true'>
+                                        <Identifier start='1297' end='1301' name='test'/>
+                                    </Variable>
+                                </CastExpression>
+                            </ParenthesisExpression>
+                        </ClassName>
+                    </InstanceOfExpression>
+                </ArrowFunctionDeclaration>
+            </ExpressionStatement>
+            <ExpressionStatement start='1305' end='1324'>
+                <FunctionInvocation start='1305' end='1323'>
+                    <FucntionName start='1305' end='1313'>
+                        <NamespaceName start='1305' end='1313' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1305' end='1313' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='1314' end='1322' isDollared='true'>
+                            <Identifier start='1315' end='1322' name='boolean'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

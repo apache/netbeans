@@ -690,6 +690,15 @@ public final class CodeUtils {
         return "__construct".equals(extractMethodName(node)); //NOI18N
     }
 
+    public static boolean isDollaredName(ClassName className) {
+        Expression name = className.getName();
+        if (name instanceof Variable) {
+            Variable variable = (Variable) name;
+            return variable.isDollared();
+        }
+        return false;
+    }
+
     /**
      * Finds common namespace prefixes for the given <b>sorted</b> namespaces.
      * <p>

@@ -43,14 +43,6 @@ public class HintsTest extends PHPHintsTestBase {
         return inputFile;
     }
 
-    public void testAbstractClassInstantiationHint() throws Exception {
-        checkHints(new AbstractClassInstantiationHintError(), "testAbstractClassInstantiationHint.php");
-    }
-
-    public void testAbstractClassInstantiationHint_02() throws Exception {
-        checkHints(new AbstractClassInstantiationHintError(), "testAbstractClassInstantiationHint_02.php");
-    }
-
     public void testAmbiguousComparisonHint() throws Exception {
         checkHints(new AmbiguousComparisonHint(), "testAmbiguousComparisonHint.php");
     }

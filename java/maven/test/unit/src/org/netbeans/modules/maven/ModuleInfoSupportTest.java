@@ -21,11 +21,13 @@ package org.netbeans.modules.maven;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.tools.ToolProvider;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
@@ -43,50 +45,68 @@ public class ModuleInfoSupportTest extends NbTestCase {
 
     public void testAddRequires() throws Exception {
         System.setProperty("test.load.sync", "true");
-        FileObject d = FileUtil.toFileObject(getWorkDir());
-        TestFileUtils.writeFile(d, "module-info.java",
-                "module Mavenproject {\n}");
-        FileObject moduleInfo = d.getFileObject("module-info.java");
+        FileObject workDir = FileUtil.toFileObject(getWorkDir());
+        FileObject moduleInfo = TestFileUtils.writeFile(
+                workDir,
+                "module-info.java",
+                "module Mavenproject {\n}"
+        );
         ModuleInfoSupport.addRequires(moduleInfo, List.of("test.dummy"));
         assertEquals("module Mavenproject {\n    requires test.dummy;\n}", moduleInfo.asText());
     }
 
     public void testGetDeclaredModules() throws Exception {
         System.setProperty("test.load.sync", "true");
-        FileObject d = FileUtil.toFileObject(getWorkDir());
-        FileObject dummy = d.createFolder("dummy");
-        FileObject dummy2 = d.createFolder("dummy2");
-        TestFileUtils.writeFile(dummy, "module-info.java", "module test.dummy {}");
-        TestFileUtils.writeFile(dummy2, "module-info.java", "module test.dummy2x {}");
-        TestFileUtils.writeFile(d, "module-info.java",
+        FileObject workDir = FileUtil.toFileObject(getWorkDir());
+        FileObject dummyDir = workDir.createFolder("dummy");
+        FileObject dummy2xDir = workDir.createFolder("dummy2x");
+        FileObject dummyModuleInfo = TestFileUtils.writeFile(
+                dummyDir,
+                "module-info.java",
+                "module test.dummy {}"
+        );
+        FileObject dummy2xModuleInfo = TestFileUtils.writeFile(
+                dummy2xDir,
+                "module-info.java",
+                "module test.dummy2x {}"
+        );
+        FileObject moduleInfo = TestFileUtils.writeFile(workDir, "module-info.java",
                 "module Mavenproject {"
                 + "    requires test.dummy;\n"
                 + "    requires test.dummy2x;\n"
                 + "\n}");
-        FileObject moduleInfo = d.getFileObject("module-info.java");
 
-        javax.tools.ToolProvider.getSystemJavaCompiler().run(
+        ToolProvider.getSystemJavaCompiler().run(
                 System.in,
                 System.out,
                 System.err,
-                "-d", dummy.getPath(),
-                dummy.getFileObject("module-info.java").getPath()
+                "-d", dummyDir.getPath(),
+                dummyModuleInfo.getPath()
         );
 
-        javax.tools.ToolProvider.getSystemJavaCompiler().run(
+        ToolProvider.getSystemJavaCompiler().run(
                 System.in,
                 System.out,
                 System.err,
-                "-d", dummy2.getPath(),
-                dummy2.getFileObject("module-info.java").getPath()
+                "-d", dummy2xDir.getPath(),
+                dummy2xModuleInfo.getPath()
         );
 
-        ClassPath cp = org.netbeans.spi.java.classpath.support.ClassPathSupport.createClassPath(
-                dummy, dummy2
+        // Enforce refresh NB view of filesystem - assumes, that file system for
+        // both dummy modules is identical
+        workDir.getFileSystem().refresh(true);
+
+        ClassPath bootClasspath = JavaPlatformManager
+                .getDefault()
+                .getDefaultPlatform()
+                .getBootstrapLibraries();
+
+        ClassPath modulePath = ClassPathSupport.createClassPath(
+                dummyDir, dummy2xDir
         );
 
-        ClasspathInfo cpi = new ClasspathInfo.Builder(JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries())
-                .setModuleCompilePath(cp)
+        ClasspathInfo cpi = new ClasspathInfo.Builder(bootClasspath)
+                .setModuleCompilePath(modulePath)
                 .build();
 
         JavaSource js = JavaSource.create(cpi, moduleInfo);

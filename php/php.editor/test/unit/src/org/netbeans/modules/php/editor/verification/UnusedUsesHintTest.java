@@ -51,6 +51,10 @@ public class UnusedUsesHintTest extends PHPHintsTestBase {
         checkHints(new UnusedUsesHint(), "testGH6075.php");
     }
 
+    public void testGH6162() throws Exception {
+        checkHints(new UnusedUsesHint(), "testGH6162.php");
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(

@@ -128,6 +128,10 @@ public class UsedNamesCollectorTest extends PHPTestBase {
         performTest("gh6075_02", "function test(): void ^{");
     }
 
+    public void testGH6162_01() throws Exception {
+        performTest("gh6162_01", "class Test ^{}");
+    }
+
     protected void performTest(String fileName, String caretLine) throws Exception {
         String exactFileName = "testfiles/actions/" + fileName + ".php";
         Map<String, List<UsedNamespaceName>> testResult = getTestResult(exactFileName, caretLine);

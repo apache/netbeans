@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.model.ModelUtils;
@@ -202,16 +203,18 @@ public class UsedNamesCollector {
                     && !typeName.contains("<") // NOI18N e.g. array<int, ClassName>
                     && !typeName.contains("{"); // NOI18N e.g. array{'foo': int, "bar": string}
         }
-        
+
         private boolean isValidAliasTypeName(final String typeName) {
             return !SPECIAL_NAMES.contains(typeName) && !Type.isPrimitiveAlias(typeName);
-        }        
+        }
 
         private void processUsedName(final UsedNamespaceName usedName) {
-            List<UsedNamespaceName> usedNames = existingNames.get(usedName.getName());
+            // GH-6075
+            String sanitizedUsedName = CodeUtils.removeNullableTypePrefix(usedName.getName());
+            List<UsedNamespaceName> usedNames = existingNames.get(sanitizedUsedName);
             if (usedNames == null) {
                 usedNames = new LinkedList<>();
-                existingNames.put(usedName.getName(), usedNames);
+                existingNames.put(sanitizedUsedName, usedNames);
             }
             usedNames.add(usedName);
         }

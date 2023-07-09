@@ -76,8 +76,9 @@ public class UnusedUsesCollector extends DefaultVisitor {
             return;
         }
         QualifiedName typeName = QualifiedName.create(node.getValue());
-        if (unusedUsesOffsetRanges.size() > 0 && !typeName.getKind().isFullyQualified()) {
-            String firstSegmentName = typeName.getSegments().getFirst();
+        if (!unusedUsesOffsetRanges.isEmpty() && !typeName.getKind().isFullyQualified()) {
+            // GH-6075
+            String firstSegmentName = CodeUtils.removeNullableTypePrefix(typeName.getSegments().getFirst());
             processFirstSegmentName(firstSegmentName);
         }
     }

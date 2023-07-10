@@ -575,14 +575,31 @@ public class FixUsesPerformer {
                     }
                 }
             }
-            for (DeclareStatement declareStatement : checkVisitor.getDeclareStatements()) {
-                offset = Math.max(offset, declareStatement.getEndOffset());
-            }
+            offset = processDeclareStatementsOffset(namespaceScope, checkVisitor, offset);
             return offset;
         } catch (BadLocationException ex) {
             LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested()); // NOI18N
         }
         return 0;
+    }
+
+    private static int processDeclareStatementsOffset(NamespaceScope namespaceScope, CheckVisitor checkVisitor, int offset) {
+        int result = offset;
+        // e.g. declare statements may be other than behind the namespace name
+        // namespace NS;
+        // function foo() {
+        //     declare(ticks=1) {}
+        // }
+        int maxDeclareOffset = namespaceScope.getElements().isEmpty()
+                ? namespaceScope.getBlockRange().getEnd()
+                : namespaceScope.getElements().get(0).getOffset();
+        for (DeclareStatement declareStatement : checkVisitor.getDeclareStatements()) {
+            if (maxDeclareOffset < declareStatement.getStartOffset()) {
+                break;
+            }
+            result = Math.max(result, declareStatement.getEndOffset());
+        }
+        return result;
     }
 
     @CheckForNull

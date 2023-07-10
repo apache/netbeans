@@ -166,7 +166,7 @@ class WinFlatEditorTabCellRenderer extends AbstractTabCellRenderer {
         public void getCloseButtonRectangle(JComponent jc, Rectangle rect, Rectangle bounds) {
             WinFlatEditorTabCellRenderer ren = (WinFlatEditorTabCellRenderer) jc;
 
-            if (!ren.isShowCloseButton()) {
+            if (!ren.isShowCloseButton() || leftClip || rightClip) {
                 rect.x = -100;
                 rect.y = -100;
                 rect.width = 0;

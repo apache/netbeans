@@ -590,9 +590,7 @@ public class FixUsesPerformer {
         // function foo() {
         //     declare(ticks=1) {}
         // }
-        int maxDeclareOffset = namespaceScope.getElements().isEmpty()
-                ? namespaceScope.getBlockRange().getEnd()
-                : namespaceScope.getElements().get(0).getOffset();
+        int maxDeclareOffset = getMaxDeclareOffset(namespaceScope, checkVisitor);
         for (DeclareStatement declareStatement : checkVisitor.getDeclareStatements()) {
             if (maxDeclareOffset < declareStatement.getStartOffset()) {
                 break;
@@ -600,6 +598,47 @@ public class FixUsesPerformer {
             result = Math.max(result, declareStatement.getEndOffset());
         }
         return result;
+    }
+
+    private static int getMaxDeclareOffset(NamespaceScope namespaceScope, CheckVisitor checkVisitor) {
+        int maxDeclareOffset = namespaceScope.getBlockRange().getEnd();
+        if (!namespaceScope.getElements().isEmpty()) {
+            for (ModelElement element : namespaceScope.getElements()) {
+                if (isInDeclare(element.getOffset(), checkVisitor.getDeclareStatements())) {
+                    maxDeclareOffset = getDeclareEndPosition(element.getOffset(), checkVisitor.getDeclareStatements());
+                    continue;
+                }
+                maxDeclareOffset = element.getOffset();
+                break;
+            }
+        }
+        return maxDeclareOffset;
+    }
+
+    private static boolean isInDeclare(int offset, List<DeclareStatement> declareStatements) {
+        // e.g.
+        // declare(ticks=1) {
+        //     $test = 1; // is this element in declare?
+        // }
+        for (DeclareStatement declareStatement : declareStatements) {
+            if (isInDeclare(offset, declareStatement)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isInDeclare(int offset, DeclareStatement declareStatement) {
+        return declareStatement.getStartOffset() < offset && offset < declareStatement.getEndOffset();
+    }
+
+    private static int getDeclareEndPosition(int offset, List<DeclareStatement> declareStatements) {
+        for (DeclareStatement declareStatement : declareStatements) {
+            if (isInDeclare(offset, declareStatement)) {
+                return declareStatement.getEndOffset();
+            }
+        }
+        return -1;
     }
 
     @CheckForNull

@@ -36,6 +36,8 @@ github:
   protected_branches:
     # no force push to master
     master: {}
+  collaborators:
+    - asbachb
 
 notifications:
     commits:      commits@netbeans.apache.org

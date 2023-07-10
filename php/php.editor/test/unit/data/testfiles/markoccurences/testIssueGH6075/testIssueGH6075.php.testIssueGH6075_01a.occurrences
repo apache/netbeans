@@ -1,0 +1,5 @@
+class |>MARK_OCCURRENCES:Us^er<| {
+/** @var ?|>MARK_OCCURRENCES:User<| $user */
+/* @var $user2 ?|>MARK_OCCURRENCES:User<| */
+/** @var |>MARK_OCCURRENCES:User<||null $user3 */
+/* @var $user4 |>MARK_OCCURRENCES:User<||null */

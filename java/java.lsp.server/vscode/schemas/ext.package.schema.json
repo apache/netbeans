@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "LSP Extension contributions to package.json",
+    "type": "object",
+    "properties": {
+        "contributes": {
+            "type": "object",
+            "properties": {
+                "nbls.documentSelectors" : {
+                    "type" : "array",
+                    "description" : "Document selectors for NB Language Server",
+                    "items": {
+                        "type" : "object",
+                        "properties": {
+                            "language" : {
+                                "type" : "string",
+                                "description": "A language id, like `java`."
+                            },
+                            "scheme" : {
+                                "type" : "array",
+                                "description": "A Uri scheme, like `file` or `untitled`."
+                            },
+                            "pattern" : {
+                                "type" : "string",
+                                "description" : "A glob pattern, like `*.{ts,js}`."
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

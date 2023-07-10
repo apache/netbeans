@@ -19,11 +19,13 @@
 package org.netbeans.modules.php.editor.verification;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.ElementQuery.Index;
 import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
@@ -79,7 +81,7 @@ public class AbstractClassInstantiationHintError extends HintErrorRule {
         }
 
         public List<Hint> getHints() {
-            return hints;
+            return Collections.unmodifiableList(hints);
         }
 
         @Override
@@ -88,7 +90,12 @@ public class AbstractClassInstantiationHintError extends HintErrorRule {
             "AbstractClassInstantiationDesc=Abstract class {0} can not be instantiated"
         })
         public void visit(ClassInstanceCreation node) {
-            if (CancelSupport.getDefault().isCancelled()) {
+            if (CancelSupport.getDefault().isCancelled()
+                    || CodeUtils.isDollaredName(node.getClassName())) {
+                // GH-6119
+                // e.g.
+                // abstract class AbstractClass {}
+                // $a = new $abstractClass();
                 return;
             }
             ASTNodeInfo<ClassInstanceCreation> info = ASTNodeInfo.create(node);
@@ -110,7 +117,6 @@ public class AbstractClassInstantiationHintError extends HintErrorRule {
                 }
             }
         }
-
     }
 
     @Override

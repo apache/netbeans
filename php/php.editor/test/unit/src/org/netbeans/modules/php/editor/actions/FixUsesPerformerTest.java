@@ -599,6 +599,13 @@ public void testGH4609PSR12_GroupUses() throws Exception {
         performTest("class Test ^{}", selections, true, options);
     }
 
+    public void testGH5578_inHtml01() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\HtmlNamespace\\InHtml", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81).build();
+        performTest("        ^$test = new InHtml();", selections, true, options);
+    }
+
     private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final Options options) throws Exception {
         FileObject testFile = getTestFile(fileName);
 

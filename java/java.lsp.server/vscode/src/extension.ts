@@ -1323,7 +1323,7 @@ export function deactivate(): Thenable<void> {
 }
 
 function collectDocumentSelectors(): TextDocumentFilter[] {
-	const selectors = [];
+    const selectors = [];
     for (const extension of vscode.extensions.all) {
         const contributesSection = extension.packageJSON['contributes'];
         if (contributesSection) {
@@ -1333,7 +1333,7 @@ function collectDocumentSelectors(): TextDocumentFilter[] {
             }
         }
     }
-	return selectors;
+    return selectors;
 }
 
 class NetBeansDebugAdapterTrackerFactory implements vscode.DebugAdapterTrackerFactory {

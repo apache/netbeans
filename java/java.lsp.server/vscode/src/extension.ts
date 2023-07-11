@@ -1327,7 +1327,7 @@ function collectDocumentSelectors(): TextDocumentFilter[] {
     for (const extension of vscode.extensions.all) {
         const contributesSection = extension.packageJSON['contributes'];
         if (contributesSection) {
-            const documentSelectors = contributesSection['nbls.documentSelectors'];
+            const documentSelectors = contributesSection['netbeans.documentSelectors'];
             if (Array.isArray(documentSelectors) && documentSelectors.length) {
                 selectors.push(...documentSelectors);
             }

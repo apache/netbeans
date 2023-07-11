@@ -641,6 +641,13 @@ public void testGH4609PSR12_GroupUses() throws Exception {
         performTest("class DeclareTest1 ^{", selections, true, options);
     }
 
+    public void testNoChanges_01() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\TestClass", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81).build();
+        performTest("    class ^Test {", selections, true, options);
+    }
+
     private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final Options options) throws Exception {
         FileObject testFile = getTestFile(fileName);
 

@@ -27,12 +27,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.EditList;
@@ -72,6 +74,7 @@ import org.openide.util.NbBundle;
  */
 public class FixUsesPerformer {
 
+    private static final Logger LOGGER = Logger.getLogger(FixUsesPerformer.class.getName());
     private static final String NEW_LINE = "\n"; //NOI18N
     private static final char SEMICOLON = ';'; //NOI18N
     private static final char SPACE = ' '; //NOI18N
@@ -549,6 +552,14 @@ public class FixUsesPerformer {
             //     }
             // }
             int offset = LineDocumentUtils.getLineEnd(baseDocument, namespaceScope.getOffset());
+            if (namespaceScope.isDefaultNamespace()) {
+                // GH-5578: e.g. namespaceScope offset is 0 when phptag is in HTML
+                // <html>
+                //      <?php
+                //      new InHtml();
+                //      ?>
+                offset = Integer.max(offset, getFirstPhpTagPosition(parserResult, namespaceScope));
+            }
             CheckVisitor checkVisitor = new CheckVisitor();
             parserResult.getProgram().accept(checkVisitor);
             if (namespaceScope.isDefaultNamespace()) {
@@ -564,14 +575,70 @@ public class FixUsesPerformer {
                     }
                 }
             }
-            for (DeclareStatement declareStatement : checkVisitor.getDeclareStatements()) {
-                offset = Math.max(offset, declareStatement.getEndOffset());
-            }
+            offset = processDeclareStatementsOffset(namespaceScope, checkVisitor, offset);
             return offset;
         } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested()); // NOI18N
         }
         return 0;
+    }
+
+    private static int processDeclareStatementsOffset(NamespaceScope namespaceScope, CheckVisitor checkVisitor, int offset) {
+        int result = offset;
+        // e.g. declare statements may be other than behind the namespace name
+        // namespace NS;
+        // function foo() {
+        //     declare(ticks=1) {}
+        // }
+        int maxDeclareOffset = getMaxDeclareOffset(namespaceScope, checkVisitor);
+        for (DeclareStatement declareStatement : checkVisitor.getDeclareStatements()) {
+            if (maxDeclareOffset < declareStatement.getStartOffset()) {
+                break;
+            }
+            result = Math.max(result, declareStatement.getEndOffset());
+        }
+        return result;
+    }
+
+    private static int getMaxDeclareOffset(NamespaceScope namespaceScope, CheckVisitor checkVisitor) {
+        int maxDeclareOffset = namespaceScope.getBlockRange().getEnd();
+        if (!namespaceScope.getElements().isEmpty()) {
+            for (ModelElement element : namespaceScope.getElements()) {
+                if (isInDeclare(element.getOffset(), checkVisitor.getDeclareStatements())) {
+                    maxDeclareOffset = getDeclareEndPosition(element.getOffset(), checkVisitor.getDeclareStatements());
+                    continue;
+                }
+                maxDeclareOffset = element.getOffset();
+                break;
+            }
+        }
+        return maxDeclareOffset;
+    }
+
+    private static boolean isInDeclare(int offset, List<DeclareStatement> declareStatements) {
+        // e.g.
+        // declare(ticks=1) {
+        //     $test = 1; // is this element in declare?
+        // }
+        for (DeclareStatement declareStatement : declareStatements) {
+            if (isInDeclare(offset, declareStatement)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isInDeclare(int offset, DeclareStatement declareStatement) {
+        return declareStatement.getStartOffset() < offset && offset < declareStatement.getEndOffset();
+    }
+
+    private static int getDeclareEndPosition(int offset, List<DeclareStatement> declareStatements) {
+        for (DeclareStatement declareStatement : declareStatements) {
+            if (isInDeclare(offset, declareStatement)) {
+                return declareStatement.getEndOffset();
+            }
+        }
+        return -1;
     }
 
     @CheckForNull
@@ -585,6 +652,25 @@ public class FixUsesPerformer {
             }
         }
         return offsetElement;
+    }
+
+    private static int getFirstPhpTagPosition(PHPParseResult parserResult, NamespaceScope namespaceScope) {
+        final int startOffset = namespaceScope.getOffset();
+        int result = -1;
+        if (namespaceScope.isDefaultNamespace()) {
+            TokenHierarchy<?> tokenHierarchy = parserResult.getSnapshot().getTokenHierarchy();
+            TokenSequence<PHPTokenId> ts = LexUtilities.getPHPTokenSequence(tokenHierarchy, startOffset);
+            if (ts != null) {
+                ts.move(startOffset);
+                while (ts.moveNext()) {
+                    if (ts.token().id() == PHPTokenId.PHP_OPENTAG) {
+                        result = ts.offset() + ts.token().length();
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     //~ inner classes

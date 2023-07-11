@@ -599,6 +599,48 @@ public void testGH4609PSR12_GroupUses() throws Exception {
         performTest("class Test ^{}", selections, true, options);
     }
 
+    public void testGH5578_inHtml01() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\HtmlNamespace\\InHtml", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81).build();
+        performTest("        ^$test = new InHtml();", selections, true, options);
+    }
+
+    public void testGH5578_declare01() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\B", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81).build();
+        performTest("^// test", selections, true, options);
+    }
+
+    public void testGH5578_declare02() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\B", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81).build();
+        performTest("^// test", selections, true, options);
+    }
+
+    public void testGH5578_declare03() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\DeclareTest2", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81).build();
+        performTest("class DeclareTest1 ^{", selections, true, options);
+    }
+
+    public void testGH5578_declare04() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\DeclareTest2", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81).build();
+        performTest("class DeclareTest1 ^{", selections, true, options);
+    }
+
+    public void testGH5578_declare05() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\DeclareTest2", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81).build();
+        performTest("class DeclareTest1 ^{", selections, true, options);
+    }
+
     private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final Options options) throws Exception {
         FileObject testFile = getTestFile(fileName);
 

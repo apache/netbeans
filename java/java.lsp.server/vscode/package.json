@@ -1032,11 +1032,7 @@
 		"jsonValidation": [
 			{
 				"fileMatch": "package.json",
-				"url": "./schemas/ext.package.schema.json"
-			},
-			{
-				"fileMatch": "package.json",
-				"url": "./schemas/irm.package.schema.json"
+				"url": "./schemas/package.schema.json"
 			}
 		]
 	},

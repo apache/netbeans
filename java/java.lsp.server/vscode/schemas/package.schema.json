@@ -1,0 +1,63 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "NBLS specific contributions to package.json",
+    "type": "object",
+    "properties": {
+        "contributes": {
+            "type": "object",
+            "properties": {
+                "netbeans.documentSelectors" : {
+                    "type" : "array",
+                    "description" : "Document selectors for NetBeans Language Server",
+                    "items": {
+                        "type" : "object",
+                        "properties": {
+                            "language" : {
+                                "type" : "string",
+                                "description": "A language id, like `java`."
+                            },
+                            "scheme" : {
+                                "type" : "array",
+                                "description": "A Uri scheme, like `file` or `untitled`."
+                            },
+                            "pattern" : {
+                                "type" : "string",
+                                "description" : "A glob pattern, like `*.{ts,js}`."
+                            }
+                        }
+                    }
+                },
+                "netbeans.iconMapping" : {
+                    "type" : "array",
+                    "description" : "Defines replacements for image URIs for vscode-provided product icons",
+                    "items": {
+                        "type" : "object",
+                        "properties": {
+                            "uriExpression" : {
+                                "type" : "string",
+                                "description": "Regular expression that must fully match the resource URI"
+                            },
+                            "valueMatch" : {
+                                "type" : "array",
+                                "description": "Additional value(s) required for the replacement to match.",
+                                "items": {
+                                    "type" : "string",
+                                    "description": "Regular expression that describes the required value"
+                                }
+                            },
+                            "iconPath" : {
+                                "type" : "string",
+                                "description" : "Path to the replacement icon"
+                            },
+                            "codeicon" : {
+                                "type" : "string",
+                                "description" : "codeicon identifier that will be used instead of the server-provided image"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

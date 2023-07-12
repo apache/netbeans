@@ -585,6 +585,10 @@
 				"category": "Test"
 			},
 			{
+				"command": "nbls.addEventListener",
+				"title": "Add event listener"
+			},
+			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
 				"title": "Add DB Connection"
 			},
@@ -719,6 +723,10 @@
 				},
 				{
 					"command": "java.workspace.configureRunSettings",
+					"when": "false"
+				},
+				{
+					"command": "nbls.addEventListener",
 					"when": "false"
 				}
 			],

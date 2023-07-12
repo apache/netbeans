@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.java.lsp.server.explorer.api;
 
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Set;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 
@@ -27,10 +30,25 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
  * @author sdedic
  */
 public class NodeChangedParams {
+    
+    
     @NonNull
     private int rootId;
     
+    /**
+     * Id of the changed node, {@code null} if the entire tree (root) has changed.
+     */
     private Integer nodeId;
+    
+    /**
+     * Types of change.
+     */
+    private Set<NodeChangeType>   types = EnumSet.noneOf(NodeChangeType.class);
+    
+    /**
+     * Properties changed.
+     */
+    private Set<String> changedProperties;
     
     public NodeChangedParams(int rootId) {
         this.rootId = rootId;
@@ -40,6 +58,16 @@ public class NodeChangedParams {
     public NodeChangedParams(int rootId, int nodeId) {
         this.rootId = rootId;
         this.nodeId = nodeId;
+    }
+    
+    public void addType(NodeChangeType t) {
+        types.add(t);
+    }
+    
+    @Pure
+    @NonNull
+    public Set<NodeChangeType>  getTypes() {
+        return types;
     }
 
     @Pure
@@ -63,5 +91,29 @@ public class NodeChangedParams {
 
     public void setNodeId(Integer nodeId) {
         this.nodeId = nodeId;
+    }
+    
+    public void addChangedProperty(String name) {
+        if (this.changedProperties == null) {
+            this.changedProperties = new HashSet<>();
+        }
+        this.changedProperties.add(name);
+    }
+
+    @Pure
+    public Set<String> getChangedProperties() {
+        return changedProperties;
+    }
+
+    public void setChangedProperties(Set<String> changedProperties) {
+        this.changedProperties = changedProperties;
+    }
+    
+    public NodeChangedParams merge(NodeChangedParams other) {
+        if (other.getNodeId() != getNodeId() || other.getRootId() != getRootId()) {
+            throw new IllegalArgumentException("Incompatible change: " + other);
+        }
+        this.types.addAll(other.getTypes());
+        return this;
     }
 }

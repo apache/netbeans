@@ -207,6 +207,8 @@ export namespace TextEditorDecorationDisposeNotification {
 export interface NodeChangedParams {
     rootId : number;
     nodeId : number | null;
+    types? : NodeChangeType[];
+    properties? : String[];
 }
 
 export interface CreateExplorerParams {
@@ -242,6 +244,20 @@ export interface FindPathParams {
     selectData? : any;
 }
 
+export enum NodeChangeType {
+    SELF = 0,
+    PROPERTY,
+    CHILDEN,
+    DESTROY
+};
+
+export interface NodeChangesParams {
+    rootId: number;
+    nodeId?: number;
+    deactivateListeners?: number[];
+    types?: NodeChangeType[];
+}
+
 export namespace NodeInfoNotification {
     export const type = new ProtocolNotificationType<NodeChangedParams, void>('nodes/nodeChanged');
 }
@@ -254,6 +270,7 @@ export namespace NodeInfoRequest {
     export const collapsed = new ProtocolNotificationType<NodeOperationParams, void>('nodes/collapsed');
     export const getresource = new ProtocolRequestType<GetResourceParams, ResourceData, never, void, void>('nodes/getresource');
     export const findparams = new ProtocolRequestType<FindPathParams, number[], never, void, void>('nodes/findpath');
+    export const changes = new ProtocolRequestType<NodeChangesParams, number, never, void, void>('nodes/changes');
     
     export interface IconDescriptor {
         baseUri : vscode.Uri;

@@ -21,7 +21,12 @@ import * as vscode from 'vscode';
 import { CommandKey, ID, Message, PropertyMessage, Properties, Property, PropertyTypes } from './controlTypes';
 import { assertNever, isObject, isRecord, isString, IsType } from '../typesUtil';
 import { makeHtmlForProperties } from './propertiesHtmlBuilder';
+import { TreeViewService, TreeNodeListener, Visualizer } from '../explorer';
+import { NodeChangeType } from '../protocol';
 
+function isVisualizer(node : any) : node is Visualizer {
+	return node?.id && node?.rootId;
+}
 export class PropertiesView {
 	private static readonly COMMAND_PREFIX = "java.";
 	private static readonly COMMAND_GET_NODE_PROPERTIES = PropertiesView.COMMAND_PREFIX + "node.properties.get";      // NOI18N
@@ -38,12 +43,30 @@ export class PropertiesView {
 
 	private properties?: Properties;
 
-	public static async createOrShow(context: vscode.ExtensionContext, node: any) {
+	public static async createOrShow(context: vscode.ExtensionContext, node: any, treeService? : TreeViewService) {
 		if (!node)
 			return;
-		const id = node.id;
+		if (!isVisualizer(node)) {
+			return;
+		}
+		const id = node.id ? Number(node.id) : 0;
 		// If we already have a panel, show it.
 		const current = PropertiesView.panels[id];
+
+		let view : PropertiesView;
+
+		// the listener will remove/close the properties view, if the associated node gets destroyed.
+		class L implements TreeNodeListener {
+			nodeDestroyed(n : Visualizer) : void {
+				if (view) {
+					/*
+					vscode.window.showInformationMessage(`${node.label} has been removed.`);
+					*/
+					view.dispose();
+				}
+			}
+		}
+
 		try {
 			if (current) {
 				await current.load();
@@ -56,7 +79,11 @@ export class PropertiesView {
 			} else if (PropertiesView.extensionUri !== context.extensionUri)
 				throw new Error("Extension paths differ.");
 			// Otherwise, create a new panel.
-			PropertiesView.panels[id] = new PropertiesView(id, node.tooltip + " " + node.label);
+			PropertiesView.panels[id] = view = new PropertiesView(id, node.tooltip + " " + node.label);
+
+			if (treeService) {
+				treeService.addNodeChangeListener(node, new L(), NodeChangeType.DESTROY);
+			}
 		} catch (e: unknown) {
 			console.log(e);
 		}

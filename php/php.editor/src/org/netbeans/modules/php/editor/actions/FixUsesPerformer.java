@@ -114,7 +114,6 @@ public class FixUsesPerformer {
         if (document instanceof BaseDocument) {
             baseDocument = (BaseDocument) document;
             editList = new EditList(baseDocument);
-            processExistingUses();
             processSelections();
             editList.apply();
         }
@@ -157,10 +156,23 @@ public class FixUsesPerformer {
         }
         replaceUnimportedItems();
         String insertString = createInsertString(useParts);
+        insertUses(startOffset, insertString);
+    }
+
+    private void insertUses(int startOffset, String insertString) {
+        ExistingUseStatementVisitor visitor = new ExistingUseStatementVisitor();
+        Program program = parserResult.getProgram();
+        if (program != null) {
+            program.accept(visitor);
+        }
+        List<OffsetRange> usedRanges = visitor.getUsedRanges();
+        String existingUses = getExistingUses(usedRanges);
         // avoid being recognized as a modified file
-        if (insertString.isEmpty()) {
+        if (insertString.isEmpty()
+                || existingUses.equals(insertString.trim())) {
             StatusDisplayer.getDefault().setStatusText(Bundle.FixUsesPerformer_noChanges());
         } else {
+            processExistingUses(usedRanges);
             editList.replace(startOffset, 0, insertString, false, 0);
         }
     }
@@ -493,13 +505,22 @@ public class FixUsesPerformer {
         return result.toString();
     }
 
-    private void processExistingUses() {
-        ExistingUseStatementVisitor visitor = new ExistingUseStatementVisitor();
-        Program program = parserResult.getProgram();
-        if (program != null) {
-            program.accept(visitor);
+    private String getExistingUses(List<OffsetRange> usedRanges) {
+        String existingUses = EMPTY_STRING;
+        if (!usedRanges.isEmpty()) {
+            int start = usedRanges.get(0).getStart();
+            int end = usedRanges.get(usedRanges.size() - 1).getEnd();
+            try {
+                existingUses = baseDocument.getText(start, end - start);
+            } catch (BadLocationException ex) {
+                LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested()); // NOI18N
+            }
         }
-        for (OffsetRange offsetRange : visitor.getUsedRanges()) {
+        return existingUses;
+    }
+
+    private void processExistingUses(List<OffsetRange> usedRanges) {
+        for (OffsetRange offsetRange : usedRanges) {
             int startOffset = getOffsetWithoutLeadingWhitespaces(offsetRange.getStart());
             editList.replace(startOffset, offsetRange.getEnd() - startOffset, EMPTY_STRING, false, 0);
         }

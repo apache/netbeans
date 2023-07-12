@@ -175,7 +175,7 @@ public class UpdateDependencyHint implements POMErrorFixProvider {
                 return i == 0 || Integer.parseInt(v.substring(0, i)) < 10_000;
             }
         }
-        return Integer.parseInt(v) < 10_000;
+        return v.isEmpty() || Integer.parseInt(v) < 10_000;
     }
 
     // example: in '3.14' -> out '3.'

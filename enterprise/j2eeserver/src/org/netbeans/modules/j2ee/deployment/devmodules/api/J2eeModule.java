@@ -384,6 +384,11 @@ public class J2eeModule {
             }
             return null;
         }
+
+        @Override
+        public String toString() {
+            return jsrType.toString();
+        }
     }
 
 }

@@ -47,6 +47,7 @@ import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
 import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
+import java.util.WeakHashMap;
 import java.util.concurrent.CompletionException;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -172,6 +173,7 @@ public final class Server {
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
         Future<Void> runningServer = serverLauncher.startListening();
+        LSPServerTelemetryFactory.getDefault().connect(server.client, runningServer);
         return new NbLspServer(server, runningServer);
     }
     
@@ -966,7 +968,6 @@ public final class Server {
             ((LanguageClientAware) getTextDocumentService()).connect(client);
             ((LanguageClientAware) getWorkspaceService()).connect(client);
             ((LanguageClientAware) treeService).connect(client);
-            LSPServerTelemetryFactory.getDefault().connect(client);
         }
 
         @Override
@@ -1192,7 +1193,7 @@ public final class Server {
         }
     }
 
-    public static class LSPServerTelemetryFactory extends CustomIndexerFactory implements LanguageClientAware {
+    public static class LSPServerTelemetryFactory extends CustomIndexerFactory {
 
         private static LSPServerTelemetryFactory INSTANCE;
         private final CustomIndexer noOp = new CustomIndexer() {
@@ -1200,7 +1201,7 @@ public final class Server {
             protected void index(Iterable<? extends Indexable> files, Context context) {
             }
         };
-        private LanguageClient client;
+        private WeakHashMap<LanguageClient, Future<Void>> clients = new WeakHashMap<>();
 
         @MimeRegistration(mimeType="", service=CustomIndexerFactory.class)
         public static LSPServerTelemetryFactory getDefault() {
@@ -1213,23 +1214,26 @@ public final class Server {
         private LSPServerTelemetryFactory() {
         }
 
-        @Override
-        public synchronized void connect(LanguageClient client) {
-            this.client = client;
+        public synchronized void connect(LanguageClient client, Future<Void> future) {
+            clients.put(client, future);
         }
 
         @Override
         public synchronized boolean scanStarted(Context context) {
-            if (client != null) {
-                client.telemetryEvent("nbls.scanStarted");
+            for (Map.Entry<LanguageClient, Future<Void>> entry : clients.entrySet()) {
+                if (!entry.getValue().isDone()) {
+                    entry.getKey().telemetryEvent("nbls.scanStarted");
+                }
             }
             return true;
         }
 
         @Override
         public synchronized void scanFinished(Context context) {
-            if (client != null) {
-                client.telemetryEvent("nbls.scanFinished");
+            for (Map.Entry<LanguageClient, Future<Void>> entry : clients.entrySet()) {
+                if (!entry.getValue().isDone()) {
+                    entry.getKey().telemetryEvent("nbls.scanFinished");
+                }
             }
         }
 

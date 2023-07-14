@@ -1196,12 +1196,13 @@ public final class Server {
     public static class LSPServerTelemetryFactory extends CustomIndexerFactory {
 
         private static LSPServerTelemetryFactory INSTANCE;
+
+        private final WeakHashMap<LanguageClient, Future<Void>> clients = new WeakHashMap<>();
         private final CustomIndexer noOp = new CustomIndexer() {
             @Override
             protected void index(Iterable<? extends Indexable> files, Context context) {
             }
         };
-        private WeakHashMap<LanguageClient, Future<Void>> clients = new WeakHashMap<>();
 
         @MimeRegistration(mimeType="", service=CustomIndexerFactory.class)
         public static LSPServerTelemetryFactory getDefault() {
@@ -1220,20 +1221,32 @@ public final class Server {
 
         @Override
         public synchronized boolean scanStarted(Context context) {
+            Set<LanguageClient> toRemove = new HashSet<>();
             for (Map.Entry<LanguageClient, Future<Void>> entry : clients.entrySet()) {
-                if (!entry.getValue().isDone()) {
+                if (entry.getValue().isDone()) {
+                    toRemove.add(entry.getKey());
+                } else {
                     entry.getKey().telemetryEvent("nbls.scanStarted");
                 }
+            }
+            for (LanguageClient lc : toRemove) {
+                clients.remove(lc);
             }
             return true;
         }
 
         @Override
         public synchronized void scanFinished(Context context) {
+            Set<LanguageClient> toRemove = new HashSet<>();
             for (Map.Entry<LanguageClient, Future<Void>> entry : clients.entrySet()) {
-                if (!entry.getValue().isDone()) {
+                if (entry.getValue().isDone()) {
+                    toRemove.add(entry.getKey());
+                } else {
                     entry.getKey().telemetryEvent("nbls.scanFinished");
                 }
+            }
+            for (LanguageClient lc : toRemove) {
+                clients.remove(lc);
             }
         }
 

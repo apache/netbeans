@@ -198,9 +198,9 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
             c = () -> {
                 // double check, the project may be invalidated during the time.
                 MavenProject prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
-                Object wasprocessed2 = updatedPrj.getContextValue(MavenModelProblemsProvider.class.getName());
+                Object wasprocessed2 = prj.getContextValue(MavenModelProblemsProvider.class.getName());
                 synchronized (MavenModelProblemsProvider.this) {
-                    if (o == updatedPrj && wasprocessed2 != null) {
+                    if (wasprocessed2 != null) {
                         Pair<Collection<ProjectProblem>, Boolean> cached = problemsCache;
                         LOG.log(Level.FINER, "getProblems: Project was processed #2, cached is: {0}", cached);
                         if (cached != null) {                            
@@ -210,35 +210,48 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                 }
                 int round = 0;
                 List<ProjectProblem> toRet = null;
-                while (round < 3) {
+                while (round <= 1) {
                     try {
+                        boolean ok = false;
                         synchronized (MavenModelProblemsProvider.this) {
-                            sanityBuildStatus = false;
-                            toRet = new ArrayList<>();
-                            MavenExecutionResult res = MavenProjectCache.getExecutionResult(prj);
-                            if (res != null && res.hasExceptions()) {
-                                toRet.addAll(reportExceptions(res));
+                            try {
+                                sanityBuildStatus = false;
+                                checkMissing = round < 1;
+                                toRet = new ArrayList<>();
+                                MavenExecutionResult res = MavenProjectCache.getExecutionResult(prj);
+                                if (res != null && res.hasExceptions()) {
+                                    toRet.addAll(reportExceptions(res));
+                                }
+                                //#217286 doArtifactChecks can call FileOwnerQuery and attempt to aquire the project mutex.
+                                toRet.addAll(doArtifactChecks(prj));
+                                LOG.log(Level.FINER, "getProblems: Project {1} processing finished, result is: {0}",
+                                        new Object[] { toRet, prj });
+                                ok = true;
+                                break;
+                            } finally {
+                                if (ok || round > 0) {
+                                    //mark the project model as checked once and cached
+                                    prj.setContextValue(MavenModelProblemsProvider.class.getName(), new Object());
+                                    // change globals before exiting synchronized section
+                                    problemsCache = Pair.of(toRet, sanityBuildStatus);
+                                    analysedProject = new WeakReference<>(prj);
+                                }
+                                checkMissing = true;
                             }
-                            //#217286 doArtifactChecks can call FileOwnerQuery and attempt to aquire the project mutex.
-                            toRet.addAll(doArtifactChecks(prj));
-                            //mark the project model as checked once and cached
-                            prj.setContextValue(MavenModelProblemsProvider.class.getName(), new Object());
-                            LOG.log(Level.FINER, "getProblems: Project {1} processing finished, result is: {0}",
-                                    new Object[] { toRet, prj });
-                            problemsCache = Pair.of(toRet, sanityBuildStatus);
-                            analysedProject = new WeakReference<>(prj);
                         }
-                        firePropertyChange();
-                        return Pair.of(toRet, sanityBuildStatus);
                     } catch (ProblemReporterImpl.ArtifactFoundException ex) {
+                        // should never happen with round > 0
+                        assert round < 1;
                         round++;
                         LOG.log(Level.FINER, "getProblems: Project {1} reported missing artifact that actually exists, restarting - {0} round",
                                 new Object[] { round, prj });
                         // force reload, then wait for the reload to complete
                         NbMavenProject.fireMavenProjectReload(project);
                         prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
-                    } 
+                    }
                 }
+                //mark the project model as checked once and cached
+                firePropertyChange();
                 return Pair.of(toRet, sanityBuildStatus);
             };
         }
@@ -258,6 +271,13 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
     
     private void firePropertyChange() {
         support.firePropertyChange(ProjectProblemsProvider.PROP_PROBLEMS, null, null);
+    }
+    
+    // @GuardedBy(this)
+    private boolean checkMissing = true;
+    
+    private void addMissingArtifact(Artifact a) {
+        problemReporter.addMissingArtifact(a, checkMissing);
     }
     
     @NbBundle.Messages({
@@ -295,7 +315,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                     //TODO create a correction action for this.
                     toRet.add(ProjectProblem.createWarning(ERR_SystemScope(), MSG_SystemScope(), new ProblemReporterImpl.MavenProblemResolver(OpenPOMAction.instance().createContextAwareInstance(Lookups.fixed(project)), "SCOPE_DEPENDENCY")));
                 } else {
-                    problemReporter.addMissingArtifact(art);
+                    addMissingArtifact(art);
                     if (file == null) {
                         missingNonSibling = true;
                     } else {
@@ -312,7 +332,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                     missingJars.add(art);
                 }
             } else if (NbArtifactFixer.isFallbackFile(file)) {
-                problemReporter.addMissingArtifact(art);
+                addMissingArtifact(art);
                 missingJars.add(art);
                 missingNonSibling = true;
             }
@@ -351,7 +371,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
             }
             if (NbArtifactFixer.FALLBACK_NAME.equals(m.getName())) {
                 toRet.add(ProjectProblem.createError(ERR_NoParent(), MSG_NoParent(m.getId()), createSanityBuildAction()));
-                problemReporter.addMissingArtifact(EmbedderFactory.getProjectEmbedder().createArtifact(m.getGroupId(), m.getArtifactId(), m.getVersion(), "pom"));
+                addMissingArtifact(EmbedderFactory.getProjectEmbedder().createArtifact(m.getGroupId(), m.getArtifactId(), m.getVersion(), "pom"));
             }
         }
         return toRet;
@@ -393,11 +413,11 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
             LOG.log(Level.FINE, "Error on loading project " + project.getProjectDirectory(), e);
             if (e instanceof ArtifactResolutionException) { // XXX when does this occur?
                 toRet.add(ProjectProblem.createError(TXT_Artifact_Resolution_problem(), getDescriptionText(e)));
-                problemReporter.addMissingArtifact(((ArtifactResolutionException) e).getArtifact());
+                addMissingArtifact(((ArtifactResolutionException) e).getArtifact());
                 
             } else if (e instanceof ArtifactNotFoundException) { // XXX when does this occur?
                 toRet.add(ProjectProblem.createError(TXT_Artifact_Not_Found(), getDescriptionText(e)));
-                problemReporter.addMissingArtifact(((ArtifactNotFoundException) e).getArtifact());
+                addMissingArtifact(((ArtifactNotFoundException) e).getArtifact());
             } else if (e instanceof ProjectBuildingException) {
                 LOG.log(Level.FINE, "Creating sanity build action for {0}", project.getProjectDirectory());
                 toRet.add(ProjectProblem.createError(TXT_Cannot_Load_Project(), getDescriptionText(e), createSanityBuildAction()));
@@ -408,14 +428,14 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                         if (mp.getException() instanceof UnresolvableModelException) {
                             // Probably obsoleted by ProblemReporterImpl.checkParent, but just in case:
                             UnresolvableModelException ume = (UnresolvableModelException) mp.getException();
-                            problemReporter.addMissingArtifact(EmbedderFactory.getProjectEmbedder().createProjectArtifact(ume.getGroupId(), ume.getArtifactId(), ume.getVersion()));
+                            addMissingArtifact(EmbedderFactory.getProjectEmbedder().createProjectArtifact(ume.getGroupId(), ume.getArtifactId(), ume.getVersion()));
                         } else if (mp.getException() instanceof PluginResolutionException) {
                             Plugin plugin = ((PluginResolutionException) mp.getException()).getPlugin();
                             // XXX this is not actually accurate; should rather pick out the ArtifactResolutionException & ArtifactNotFoundException inside
-                            problemReporter.addMissingArtifact(EmbedderFactory.getProjectEmbedder().createArtifact(plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion(), "jar"));
+                            addMissingArtifact(EmbedderFactory.getProjectEmbedder().createArtifact(plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion(), "jar"));
                         } else if (mp.getException() instanceof PluginManagerException) {
                             PluginManagerException ex = (PluginManagerException) mp.getException();                            
-                            problemReporter.addMissingArtifact(EmbedderFactory.getProjectEmbedder().createArtifact(ex.getPluginGroupId(), ex.getPluginArtifactId(), ex.getPluginVersion(), "jar"));
+                            addMissingArtifact(EmbedderFactory.getProjectEmbedder().createArtifact(ex.getPluginGroupId(), ex.getPluginArtifactId(), ex.getPluginVersion(), "jar"));
                         }
                     }
                 }

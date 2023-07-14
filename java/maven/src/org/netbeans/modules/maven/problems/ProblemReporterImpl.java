@@ -42,6 +42,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.plugin.PluginArtifactsCache;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.problem.ProblemReport;
@@ -189,13 +193,23 @@ public final class ProblemReporterImpl implements ProblemReporter, Comparator<Pr
      * and some problems encapsulate several missing artifacts.
      * @param a an artifact (scope permitted but ignored)
      */
-    void addMissingArtifact(Artifact a) {
+    void addMissingArtifact(Artifact a, boolean checkMissing) {
         synchronized (reports) {
             a = EmbedderFactory.getProjectEmbedder().getLocalRepository().find(a);
             //a.getFile should be already normalized but the find() method can pull tricks on us.
             //#225008
             File f = FileUtil.normalizeFile(a.getFile());
-            if (f.exists() && f.canRead()) {
+            if (f.exists() && f.canRead() && checkMissing) {
+                try {
+                    MavenExecutionRequest rq = EmbedderFactory.getProjectEmbedder().createMavenExecutionRequest();
+                    List<ArtifactRepository> repos = nbproject.getOriginalMavenProject().getRemoteArtifactRepositories();
+                    if (repos.isEmpty()) {
+                        repos = rq.getRemoteRepositories();
+                    }
+                    EmbedderFactory.getProjectEmbedder().resolve(a, repos, EmbedderFactory.getProjectEmbedder().getLocalRepository());
+                } catch (ArtifactResolutionException | ArtifactNotFoundException ex) {
+                    return;
+                }
                 throw new ArtifactFoundException(a, f);
             }
             if (missingArtifacts.add(f)) {                

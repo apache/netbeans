@@ -45,6 +45,7 @@ import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
@@ -93,6 +94,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.BaseUtilities;
 import org.eclipse.aether.repository.Authentication;
 import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.internal.impl.EnhancedLocalRepositoryManagerFactory;
 import org.eclipse.aether.internal.impl.SimpleLocalRepositoryManagerFactory;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.NoLocalRepositoryManagerException;
@@ -370,17 +372,13 @@ public final class MavenEmbedder {
      */
     public void resolve(Artifact sources, List<ArtifactRepository> remoteRepositories, ArtifactRepository localRepository) throws ArtifactResolutionException, ArtifactNotFoundException {
         setUpLegacySupport();
-        ArtifactResolutionRequest req = new ArtifactResolutionRequest();
-        req.setLocalRepository(localRepository);
-        req.setRemoteRepositories(remoteRepositories);
-        req.setArtifact(sources);
-        req.setOffline(isOffline());
-        ArtifactResolutionResult result = repositorySystem.resolve(req);
+        
+        // must call internal Resolver API directly, as the RepositorySystem does not report an exception, 
+        // even in ArtifactResolutionResult: resolve(ArtifactResolutionRequest request) catches the exception and
+        // swallows ArtifactNotFoundException.
+        // The existing calling code that handles these exception cannot work, in fact, when using resolve(ArtifactResolutionRequest request) API.
+        lookupComponent(ArtifactResolver.class).resolveAlways(sources, remoteRepositories, localRepository);
         normalizePath(sources);
-        // XXX check result for exceptions and throw them now?
-        for (Exception ex : result.getExceptions()) {
-            LOG.log(Level.FINE, null, ex);
-        }
     }
 
     //TODO possibly rename.. build sounds like something else..
@@ -511,7 +509,7 @@ public final class MavenEmbedder {
 
         return req;
     }
-
+    
     /**
      * Needed to avoid an NPE in {@link org.eclipse.org.eclipse.aether.DefaultArtifactResolver#resolveArtifacts} under some conditions.
      * (Also {@link org.eclipse.org.eclipse.aether.DefaultMetadataResolver#resolve}; wherever a {@link org.eclipse.aether.RepositorySystemSession} is used.)
@@ -524,7 +522,7 @@ public final class MavenEmbedder {
         }
         DefaultRepositorySystemSession session = new DefaultRepositorySystemSession();
         session.setOffline(isOffline());
-        SimpleLocalRepositoryManagerFactory f = new SimpleLocalRepositoryManagerFactory();        
+        EnhancedLocalRepositoryManagerFactory f = lookupComponent(EnhancedLocalRepositoryManagerFactory.class);
         try {
             session.setLocalRepositoryManager(f.newInstance(session, new LocalRepository(getLocalRepository().getBasedir())));
         } catch (NoLocalRepositoryManagerException ex) {

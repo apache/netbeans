@@ -47,6 +47,7 @@ import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
 import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
+import java.util.WeakHashMap;
 import java.util.concurrent.CompletionException;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -99,6 +100,7 @@ import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
@@ -124,6 +126,10 @@ import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
+import org.netbeans.modules.parsing.spi.indexing.Context;
+import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
+import org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory;
+import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -167,6 +173,7 @@ public final class Server {
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
         Future<Void> runningServer = serverLauncher.startListening();
+        LSPServerTelemetryFactory.getDefault().connect(server.client, runningServer);
         return new NbLspServer(server, runningServer);
     }
     
@@ -1183,6 +1190,92 @@ public final class Server {
                 antClassWarningLogged = true;
                 LOG.log(Level.WARNING, "Unable to configure Ant support", ex);
             }
+        }
+    }
+
+    public static class LSPServerTelemetryFactory extends CustomIndexerFactory {
+
+        private static LSPServerTelemetryFactory INSTANCE;
+
+        private final WeakHashMap<LanguageClient, Future<Void>> clients = new WeakHashMap<>();
+        private final CustomIndexer noOp = new CustomIndexer() {
+            @Override
+            protected void index(Iterable<? extends Indexable> files, Context context) {
+            }
+        };
+
+        @MimeRegistration(mimeType="", service=CustomIndexerFactory.class)
+        public static LSPServerTelemetryFactory getDefault() {
+            if (INSTANCE == null) {
+                INSTANCE = new LSPServerTelemetryFactory();
+            }
+            return INSTANCE;
+        }
+
+        private LSPServerTelemetryFactory() {
+        }
+
+        public synchronized void connect(LanguageClient client, Future<Void> future) {
+            clients.put(client, future);
+        }
+
+        @Override
+        public synchronized boolean scanStarted(Context context) {
+            Set<LanguageClient> toRemove = new HashSet<>();
+            for (Map.Entry<LanguageClient, Future<Void>> entry : clients.entrySet()) {
+                if (entry.getValue().isDone()) {
+                    toRemove.add(entry.getKey());
+                } else {
+                    entry.getKey().telemetryEvent("nbls.scanStarted");
+                }
+            }
+            for (LanguageClient lc : toRemove) {
+                clients.remove(lc);
+            }
+            return true;
+        }
+
+        @Override
+        public synchronized void scanFinished(Context context) {
+            Set<LanguageClient> toRemove = new HashSet<>();
+            for (Map.Entry<LanguageClient, Future<Void>> entry : clients.entrySet()) {
+                if (entry.getValue().isDone()) {
+                    toRemove.add(entry.getKey());
+                } else {
+                    entry.getKey().telemetryEvent("nbls.scanFinished");
+                }
+            }
+            for (LanguageClient lc : toRemove) {
+                clients.remove(lc);
+            }
+        }
+
+        @Override
+        public void filesDeleted(Iterable<? extends Indexable> deleted, Context context) {
+        }
+
+        @Override
+        public void filesDirty(Iterable<? extends Indexable> dirty, Context context) {
+        }
+
+        @Override
+        public String getIndexerName() {
+            return "LSPServerTelemetry";
+        }
+
+        @Override
+        public int getIndexVersion() {
+            return 1;
+        }
+
+        @Override
+        public CustomIndexer createIndexer() {
+            return noOp;
+        }
+
+        @Override
+        public boolean supportsEmbeddedIndexers() {
+            return false;
         }
     }
 }

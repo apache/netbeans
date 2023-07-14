@@ -38,7 +38,8 @@ import {
     ErrorHandlerResult,
     CloseHandlerResult,
     SymbolInformation,
-    TextDocumentFilter
+    TextDocumentFilter,
+    TelemetryEventNotification
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -63,6 +64,7 @@ import { PropertiesView } from './propertiesView/propertiesView';
 
 const API_VERSION : string = "1.0";
 const DATABASE: string = 'Database';
+const listeners = new Map<string, string[]>();
 let client: Promise<NbLanguageClient>;
 let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
@@ -638,7 +640,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand('nbls.startup.condition', async () => {
         return client;
     }));
-
+    context.subscriptions.push(commands.registerCommand('nbls.addEventListener', (eventName, listener) => {
+        let ls = listeners.get(eventName);
+        if (!ls) {
+            ls = [];
+            listeners.set(eventName, ls);
+        }
+        ls.push(listener);
+    }));
     context.subscriptions.push(commands.registerCommand('nbls.node.properties.edit',
         async (node) => await PropertiesView.createOrShow(context, node)));
 
@@ -1075,6 +1084,14 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                             map.delete(key);
                         }
                     });
+                }
+            });
+            c.onNotification(TelemetryEventNotification.type, (param) => {
+                const ls = listeners.get(param);
+                if (ls) {
+                    for (const listener of ls) {
+                        commands.executeCommand(listener);
+                    }
                 }
             });
             handleLog(log, 'Language Client: Ready');

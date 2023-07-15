@@ -97,12 +97,19 @@ public class ClassPathProviderImplTest extends NbTestCase {
         FileObject src = BuildUtils.getFileObject(prj, "share/classes");
 
         Project project = FileOwnerQuery.getOwner(src);
+        ((JDKProject) project).moduleRepository.projectOpened(project);
 
-        assertNotNull(project);
+        try {
+            assertNotNull(project);
 
-        String actual = ClassPath.getClassPath(src, ClassPath.COMPILE).toString(PathConversionMode.PRINT).replace(getWorkDirPath(), "${wd}");
+            String actual = ClassPath.getClassPath(src, ClassPath.COMPILE).
+                    toString(PathConversionMode.PRINT).
+                    replace(getWorkDirPath(), "${wd}");
 
-        assertEquals(expected, actual);
+            assertEquals(expected, actual);
+        } finally {
+            ((JDKProject) project).moduleRepository.projectClosed(project);
+        }
     }
 
     private void setupModuleXMLJDK(FileObject jdkRoot) throws IOException {

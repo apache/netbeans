@@ -1311,8 +1311,8 @@ jobs:
       - name: java.navigation
         run: ant $OPTS -f java/java.navigation test
 
-#      - name: java.openjdk.project
-#        run: ant $OPTS -f java/java.openjdk.project test
+      - name: java.openjdk.project
+        run: ant $OPTS -f java/java.openjdk.project test
 
       - name: java.platform
         run: ant $OPTS -f java/java.platform test

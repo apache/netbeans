@@ -2091,7 +2091,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                         if (toAddText.length() > idx + 1) {
                             sb.append(toAddText.substring(idx + 1));
                         }
-                        showTooltip = true;
+                        showTooltip = Utilities.popupPrameterTooltip();
                     }
                 }
             }
@@ -2708,7 +2708,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             if (sb.length() == 0) {
                 return cs;
             }
-            showTooltip = true;
+            showTooltip = Utilities.popupPrameterTooltip();
             return sb;
         }
 
@@ -3001,7 +3001,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 }
             }
             sb.append(toAdd);
-            showTooltip = true;
+            showTooltip = Utilities.popupPrameterTooltip();
             return sb;
         }
 

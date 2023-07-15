@@ -336,7 +336,13 @@ public final class SimpleValueNames {
      * @since 1.18
      */
     public static final String COMPLETION_PAIR_CHARACTERS = "pair-characters-completion"; // NOI18N
-    
+
+    /**
+     * Whether the code completion should include parameter tooltip.
+     * Values: java.lang.Boolean
+     */
+    public static final String COMPLETION_PARAMETER_TOOLTIP = "completion-parameter-tooltip"; // NOI18N
+
     /**
      * Background color of javaDoc popup window 
      *  Values: java.awt.Color

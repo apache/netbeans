@@ -63,6 +63,7 @@ import javax.swing.text.JTextComponent;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyleUtils;
@@ -102,6 +103,7 @@ public final class Utilities {
     private static String javaCompletionSelectors = CodeCompletionPanel.JAVA_COMPLETION_SELECTORS_DEFAULT;
     private static String javadocCompletionAutoPopupTriggers = CodeCompletionPanel.JAVADOC_AUTO_COMPLETION_TRIGGERS_DEFAULT;
     private static String javadocCompletionSelectors = CodeCompletionPanel.JAVADOC_COMPLETION_SELECTORS_DEFAULT;
+    private static boolean popupParameterToolip = true;
     
     private static final AtomicBoolean inited = new AtomicBoolean(false);
     private static Preferences preferences;
@@ -126,6 +128,9 @@ public final class Utilities {
             }
             if (settingName == null || CodeCompletionPanel.JAVADOC_COMPLETION_SELECTORS.equals(settingName)) {
                 javadocCompletionSelectors = preferences.get(CodeCompletionPanel.JAVADOC_COMPLETION_SELECTORS, CodeCompletionPanel.JAVADOC_COMPLETION_SELECTORS_DEFAULT);
+            }
+            if (settingName == null || SimpleValueNames.COMPLETION_PARAMETER_TOOLTIP.equals(settingName)) {
+				popupParameterToolip = preferences.getBoolean(SimpleValueNames.COMPLETION_PARAMETER_TOOLTIP, true);
             }
         }
     };
@@ -158,6 +163,11 @@ public final class Utilities {
     public static String getJavadocCompletionSelectors() {
         lazyInit();
         return javadocCompletionSelectors;
+    }
+
+    public static boolean popupPrameterTooltip() {
+        lazyInit();
+        return popupParameterToolip;
     }
 
     private static void lazyInit() {

@@ -93,6 +93,7 @@
             <file name="Import_hidden"/>
             <folder name="Maven2">
                 <file name="org-netbeans-modules-fish-payara-micro-project-ui-MicroProjectWizardIterator-createWebAppIterator_hidden"/>
+                <file name="org-netbeans-modules-fish-payara-jakarta-transformer-TransformerWizardIterator-createWebAppIterator_hidden"/>
                 <file name="org-netbeans-modules-maven-j2ee-ui-wizard-EAWizardIterator_hidden"/>
                 <file name="org-netbeans-modules-maven-j2ee-ui-wizard-EEWizardIterator-createAppClientIterator_hidden"/>
                 <file name="org-netbeans-modules-maven-j2ee-ui-wizard-EEWizardIterator-createEJBIterator_hidden"/>

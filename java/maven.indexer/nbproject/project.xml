@@ -154,6 +154,7 @@
                 <friend>org.netbeans.modules.maven.search</friend>
                 <friend>ro.emilianbold.modules.maven.search.remote</friend>
                 <friend>org.netbeans.modules.payara.tooling</friend>
+                <friend>org.netbeans.modules.jakarta.transformer</friend>
                 <package>org.apache.lucene</package>
                 <package>org.apache.lucene.analysis</package>
                 <package>org.apache.lucene.analysis.standard</package>

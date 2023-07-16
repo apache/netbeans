@@ -112,3 +112,6 @@ derby.log
 /java/languages.antlr/external/LexerAdaptor.java
 
 /ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/*.java
+
+# idea
+.idea

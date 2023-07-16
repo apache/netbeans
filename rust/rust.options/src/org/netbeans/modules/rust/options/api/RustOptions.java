@@ -19,12 +19,12 @@
 package org.netbeans.modules.rust.options.api;
 
 import java.nio.file.Path;
-import org.netbeans.modules.rust.options.impl.CargoOptionsImpl;
+import org.netbeans.modules.rust.options.impl.RustOptionsImpl;
 
 /**
  * Returns the options for Rust and Cargo.
  */
-public final class CargoOptions {
+public final class RustOptions {
 
     /**
      * Returns the Path where cargo is installed, or null.
@@ -35,14 +35,25 @@ public final class CargoOptions {
      * @return The Path where cargo is installed, or null.
      */
     public static final Path getCargoLocation(boolean verifying) {
-        return CargoOptionsImpl.getCargoLocation(verifying);
+        return RustOptionsImpl.getCargoLocation(verifying);
+    }
+
+    /**
+     * Returns the Path where rustup is installed, or null.
+     * @param verifying If true then the path is checked for validity (the path
+     * exists and is executable) and if it is incorrect then a notification is
+     * shown to the user.
+     * @return The path where rustup is installed, or null.
+     */
+    public static final Path getRustupLocation(boolean verifying) {
+        return RustOptionsImpl.getRustupLocation(verifying);
     }
 
     /**
      * Opens the Cargo options panel.
      */
     public static void showRustCargoOptions() {
-        CargoOptionsImpl.showRustCargoOptions();
+        RustOptionsImpl.shotRustOptions();
     }
 
 }

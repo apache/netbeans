@@ -29,7 +29,7 @@ import javax.swing.ImageIcon;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.cargo.impl.CargoBuildImpl;
-import org.netbeans.modules.rust.options.api.CargoOptions;
+import org.netbeans.modules.rust.options.api.RustOptions;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
@@ -88,7 +88,7 @@ public final class RustConsole {
         }
 
         public void actionPerformed(ActionEvent e) {
-            CargoOptions.showRustCargoOptions();
+            RustOptions.showRustCargoOptions();
         }
 
     }
@@ -125,7 +125,7 @@ public final class RustConsole {
 
         // Print working directory and cargo path
         File workingDirectory = FileUtil.toFile(cargotoml.getFileObject()).getParentFile();
-        Path cargo = CargoOptions.getCargoLocation(false);
+        Path cargo = RustOptions.getCargoLocation(false);
 
         String message = String.format("# %s %s", // NOI18N
                 NbBundle.getMessage(CargoBuildImpl.class, "MSG_WORKING_DIRECTORY"),

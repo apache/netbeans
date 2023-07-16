@@ -43,7 +43,7 @@ import org.netbeans.modules.rust.cargo.api.Cargo;
 import org.netbeans.modules.rust.cargo.api.RustPackage;
 import org.netbeans.modules.rust.cargo.output.RustConsole;
 import org.netbeans.modules.rust.cargo.output.RustErrorHyperlinkConvertorFactory;
-import org.netbeans.modules.rust.options.api.CargoOptions;
+import org.netbeans.modules.rust.options.api.RustOptions;
 import org.openide.LifecycleManager;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -89,7 +89,7 @@ public class CargoBuildImpl implements Cargo {
             File workingDirectory = FileUtil.toFile(cargotoml.getFileObject()).getParentFile();
             pb.setWorkingDirectory(workingDirectory.getAbsolutePath());
             pb.setRedirectErrorStream(false);
-            Path cargo = CargoOptions.getCargoLocation(false);
+            Path cargo = RustOptions.getCargoLocation(false);
             pb.setExecutable(cargo.toString());
             pb.setArguments(arguments);
 
@@ -123,7 +123,7 @@ public class CargoBuildImpl implements Cargo {
 
         @Override
         public Integer call() throws Exception {
-            Path cargo = CargoOptions.getCargoLocation(true);
+            Path cargo = RustOptions.getCargoLocation(true);
             if (cargo == null) {
                 return -1;
             }
@@ -188,7 +188,7 @@ public class CargoBuildImpl implements Cargo {
         if (commands.length == 0) {
             return;
         }
-        Path cargo = CargoOptions.getCargoLocation(true);
+        Path cargo = RustOptions.getCargoLocation(true);
         if (cargo == null) {
             return;
         }
@@ -212,7 +212,7 @@ public class CargoBuildImpl implements Cargo {
 
         @Override
         public List<RustPackage> call() throws Exception {
-            Path cargo = CargoOptions.getCargoLocation(true);
+            Path cargo = RustOptions.getCargoLocation(true);
             if (cargo == null) {
                 return Collections.emptyList();
             }

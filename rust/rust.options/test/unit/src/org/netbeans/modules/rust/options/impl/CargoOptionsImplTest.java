@@ -24,14 +24,14 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Tests the CargoOptionsImpl.
+ * Tests the RustOptionsImpl.
  */
 public class CargoOptionsImplTest {
 
     @Test
     public void testShouldNullPathDeleteCargoLocation() {
         System.out.println("testShouldNullPathDeleteCargoLocation");
-        CargoOptionsImpl.setCargoLocation(null);
+        RustOptionsImpl.setCargoLocation(null);
     }
 
     @Test
@@ -39,10 +39,10 @@ public class CargoOptionsImplTest {
         System.out.println("testShouldAutomaticallySetPathWhenAlreadyInstalled");
 
         // Given that we're deleting the cargo path from preferences.
-        CargoOptionsImpl.deleteCargoLocation();
+        RustOptionsImpl.deleteCargoLocation();
 
         // When we get it again, probably from the default $HOME/.cargo/bin/cargo path
-        Path cargo = CargoOptionsImpl.getCargoLocation(true);
+        Path cargo = RustOptionsImpl.getCargoLocation(true);
 
         // Then if cargo is not null
         if (cargo != null) {
@@ -56,10 +56,10 @@ public class CargoOptionsImplTest {
         System.out.println("testShouldFindCargoConsistently");
 
         // Given a cargo found with verification
-        Path cargo = CargoOptionsImpl.getCargoLocation(true);
+        Path cargo = RustOptionsImpl.getCargoLocation(true);
 
         // When we get cargo without verification
-        Path cargo2 = CargoOptionsImpl.getCargoLocation(false);
+        Path cargo2 = RustOptionsImpl.getCargoLocation(false);
 
         // Then these must be equal
         assertTrue(Objects.equals(cargo, cargo2));

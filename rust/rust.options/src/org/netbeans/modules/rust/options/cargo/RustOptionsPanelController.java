@@ -30,13 +30,13 @@ import org.openide.util.Lookup;
         location = "Rust",
         displayName = "#AdvancedOption_DisplayName_Cargo",
         keywords = "#AdvancedOption_Keywords_Cargo",
-        keywordsCategory = "Rust/Cargo",
+        keywordsCategory = "Rust/Paths",
         position = 1000
 )
-@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_Cargo=Cargo", "AdvancedOption_Keywords_Cargo=rust cargo"})
-public final class CargoOptionsPanelController extends OptionsPanelController {
+@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_Cargo=Paths", "AdvancedOption_Keywords_Cargo=rust paths"})
+public final class RustOptionsPanelController extends OptionsPanelController {
 
-    private CargoPanel panel;
+    private RustOptionsPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
 
@@ -83,9 +83,9 @@ public final class CargoOptionsPanelController extends OptionsPanelController {
         pcs.removePropertyChangeListener(l);
     }
 
-    private CargoPanel getPanel() {
+    private RustOptionsPanel getPanel() {
         if (panel == null) {
-            panel = new CargoPanel(this);
+            panel = new RustOptionsPanel(this);
         }
         return panel;
     }

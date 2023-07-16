@@ -105,7 +105,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                 .sourceLevel("17")
                 .options("--enable-preview")
                 .run(ConvertToSwitchPatternInstanceOf.class)
-                .assertNotContainsWarnings("3:8-3:10:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf());
+                .assertNotContainsWarnings(Bundle.ERR_ConvertToSwitchPatternInstanceOf());
     }
     
     @Test
@@ -184,7 +184,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
                 .run(ConvertToSwitchPatternInstanceOf.class)
-                .assertNotContainsWarnings("4:8-4:10:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf());
+                .assertNotContainsWarnings(Bundle.ERR_ConvertToSwitchPatternInstanceOf());
     }
 
     @Test
@@ -278,7 +278,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
                 .run(ConvertToSwitchPatternInstanceOf.class)
-                .assertNotContainsWarnings("4:8-4:24:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf());
+                .assertNotContainsWarnings(Bundle.ERR_ConvertToSwitchPatternInstanceOf());
     }
 
     @Test

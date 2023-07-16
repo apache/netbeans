@@ -266,6 +266,7 @@
                 <friend>org.netbeans.modules.groovy.support</friend>
                 <friend>org.netbeans.modules.hudson.ui</friend>
                 <friend>org.netbeans.modules.java.lsp.server</friend>
+                <friend>org.netbeans.modules.java.openjdk.project</friend>
                 <friend>org.netbeans.modules.java.testrunner.ui</friend>
                 <friend>org.netbeans.modules.javascript.jstestdriver</friend>
                 <friend>org.netbeans.modules.javascript.karma</friend>

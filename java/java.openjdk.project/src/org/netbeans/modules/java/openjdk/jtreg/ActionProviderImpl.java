@@ -64,6 +64,7 @@ import org.netbeans.modules.java.openjdk.project.Settings;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.SingleMethod;
 import org.netbeans.spi.project.ui.CustomizerProvider2;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -97,7 +98,7 @@ import org.openide.windows.OutputListener;
  *
  * @author lahvac
  */
-@ServiceProvider(service=ActionProvider.class)
+@ServiceProvider(service=ActionProvider.class, position=1_000_000)
 public class ActionProviderImpl implements ActionProvider {
 
     private static final Logger LOG = Logger.getLogger(ActionProviderImpl.class.getName());
@@ -107,6 +108,8 @@ public class ActionProviderImpl implements ActionProvider {
         COMMAND_TEST_SINGLE,
         COMMAND_DEBUG_TEST_SINGLE,
         COMMAND_PROFILE_TEST_SINGLE,
+        SingleMethod.COMMAND_RUN_SINGLE_METHOD,
+        SingleMethod.COMMAND_DEBUG_SINGLE_METHOD
     };
 
     @Override
@@ -129,9 +132,29 @@ public class ActionProviderImpl implements ActionProvider {
                "DN_Running=Running ({0})",
                "LBL_IncorrectVersionSelectJTReg=Location of JTReg:",
                "TITLE_IncorrectVersionSelectJTReg=Version of JTReg appears to be incorrect, please select a correct version"})
-    public static ExecutorTask createAndRunTest(Lookup context, String command) {
-        final FileObject file = context.lookup(FileObject.class);
+    public static ExecutorTask createAndRunTest(Lookup context, String inputCommand) {
+        FileObject file;
+        String query;
+        String command;
+
+        if (SingleMethod.COMMAND_RUN_SINGLE_METHOD.equals(inputCommand) ||
+            SingleMethod.COMMAND_DEBUG_SINGLE_METHOD.equals(inputCommand)) {
+            SingleMethod singleMethod = context.lookup(SingleMethod.class);
+
+            assert singleMethod != null;
+
+            file = singleMethod.getFile();
+            query = singleMethod.getMethodName();
+            command = SingleMethod.COMMAND_RUN_SINGLE_METHOD.equals(inputCommand) ? COMMAND_TEST_SINGLE
+                                                                                  : COMMAND_DEBUG_TEST_SINGLE;
+        } else {
+            file = context.lookup(FileObject.class);
+            query = null;
+            command = inputCommand;
+        }
+
         ensureProjectsRegistered(file);
+
         String ioName = COMMAND_DEBUG_TEST_SINGLE.equals(command) ? Bundle.DN_Debugging(file.getName()) : Bundle.DN_Running(file.getName());
         StopAction newStop = new StopAction();
         ReRunAction newReRun = new ReRunAction(COMMAND_TEST_SINGLE);
@@ -305,7 +328,11 @@ public class ActionProviderImpl implements ActionProvider {
                             }
                             break;
                     }
-                    options.add(FileUtil.toFile(file).getAbsolutePath());
+                    String testPath = FileUtil.toFile(file).getAbsolutePath();
+                    if (query != null) {
+                        testPath += "?" + query;
+                    }
+                    options.add(testPath);
                     try {
                         stop.started();
                         Process jtregProcess = new ProcessBuilder(options).start();
@@ -701,6 +728,12 @@ public class ActionProviderImpl implements ActionProvider {
     @Override
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
         FileObject file = context.lookup(FileObject.class);
+
+        if (file == null) {
+            SingleMethod singleMethod = context.lookup(SingleMethod.class);
+
+            file = singleMethod != null ? singleMethod.getFile() : null;
+        }
 
         if (file == null)
             return false;

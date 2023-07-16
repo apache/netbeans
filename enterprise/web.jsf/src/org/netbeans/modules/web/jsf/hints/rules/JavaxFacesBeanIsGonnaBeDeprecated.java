@@ -40,9 +40,9 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import org.netbeans.modules.web.jsf.hints.JsfHintsContext;
 import org.netbeans.modules.web.jsf.hints.JsfHintsUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.Severity;
@@ -91,7 +91,7 @@ public class JavaxFacesBeanIsGonnaBeDeprecated {
         List<ErrorDescription> problems = new ArrayList<>();
         final JsfHintsContext ctx = JsfHintsUtils.getOrCacheContext(hintContext);
 
-        if (ctx.getJsfVersion() == null || !ctx.getJsfVersion().isAtLeast(JSFVersion.JSF_2_2)) {
+        if (ctx.getJsfVersion() == null || !ctx.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2)) {
             return problems;
         }
 

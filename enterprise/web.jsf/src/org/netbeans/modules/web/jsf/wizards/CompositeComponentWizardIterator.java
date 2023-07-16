@@ -30,7 +30,8 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.api.webmodule.WebProjectConstants;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.wizards.Utilities;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -70,10 +71,10 @@ public final class CompositeComponentWizardIterator implements TemplateWizard.It
         Project project = Templates.getProject(wizard);
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
-            JSFVersion version = JSFVersion.forWebModule(webModule);
-            if (version != null && version.isAtLeast(JSFVersion.JSF_3_0)) {
+            JsfVersion version = JsfVersionUtils.forWebModule(webModule);
+            if (version != null && version.isAtLeast(JsfVersion.JSF_3_0)) {
                 templateProperties.put("isJSF30", Boolean.TRUE); //NOI18N
-            } else if (version != null && version.isAtLeast(JSFVersion.JSF_2_2)) {
+            } else if (version != null && version.isAtLeast(JsfVersion.JSF_2_2)) {
                 templateProperties.put("isJSF22", Boolean.TRUE); //NOI18N
             }
         }

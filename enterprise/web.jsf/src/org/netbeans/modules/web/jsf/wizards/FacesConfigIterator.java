@@ -46,14 +46,17 @@ import org.netbeans.modules.web.api.webmodule.WebProjectConstants;
 import org.netbeans.modules.web.jsf.JSFCatalog;
 import org.netbeans.modules.web.jsf.JSFConfigUtilities;
 import org.netbeans.modules.web.jsf.JSFUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_1_0;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_1_1;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_1_2;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_0;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_1;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_2;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_3_0;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_1_0;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_1_1;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_1_2;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_2_0;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_2_1;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_2_2;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_2_3;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_3_0;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_4_0;
 import org.netbeans.modules.web.wizards.Utilities;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.project.ui.templates.support.Templates;
@@ -183,7 +186,7 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
     }
 
     private static String findFacesConfigTemplate(WebModule wm) {
-        JSFVersion jsfVersion = JSFVersion.get(wm, false);
+        JsfVersion jsfVersion = JsfVersionUtils.get(wm, false);
         // not found on project classpath (case of Maven project with JSF in deps)
         if (jsfVersion == null) {
             Profile profile = wm.getJ2eeProfile();
@@ -209,8 +212,8 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
                     for (ClassPath.Entry entry : compileClasspath.entries()) {
                         cpUrls.add(entry.getURL());
                     }
-                    jsfVersion = JSFVersion.forClasspath(cpUrls);
-                    jsfVersion = jsfVersion == null ? JSFVersion.JSF_2_3 : jsfVersion;
+                    jsfVersion = JsfVersionUtils.forClasspath(cpUrls);
+                    jsfVersion = jsfVersion == null ? JsfVersion.JSF_2_3 : jsfVersion;
                     return facesConfigForVersion(jsfVersion);
                 }
             }
@@ -219,7 +222,7 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
         return facesConfigForVersion(jsfVersion);
     }
 
-    private static String facesConfigForVersion(JSFVersion jsfVersion) {
+    private static String facesConfigForVersion(JsfVersion jsfVersion) {
         switch (jsfVersion) {
             case JSF_4_0:
                 return JSFCatalog.RES_FACES_CONFIG_4_0;

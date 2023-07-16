@@ -34,13 +34,13 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.api.webmodule.WebProjectConstants;
 import org.netbeans.modules.web.jsf.JSFFrameworkProvider;
 import org.netbeans.modules.web.jsf.JSFUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
 import org.netbeans.modules.web.jsf.wizards.TemplateClientPanel.TemplateEntry;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -92,8 +92,8 @@ public class TemplateClientIterator implements TemplateWizard.Iterator {
                         ((content.indexOf("<html") == -1)?1:3));    //NOI18N
 
                 Project project = Templates.getProject(wiz);
-                final JSFVersion jsfVersion = JSFVersion.forProject(project);
-                String namespaceLocation = (jsfVersion != null && jsfVersion.isAtLeast(JSFVersion.JSF_2_2))
+                final JsfVersion jsfVersion = JsfVersionUtils.forProject(project);
+                String namespaceLocation = (jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_2_2))
                         ? NamespaceUtils.JCP_ORG_LOCATION : NamespaceUtils.SUN_COM_LOCATION;
                 HashMap args = new HashMap();
                 args.put("TEMPLATE", relativePath); //NOI18N

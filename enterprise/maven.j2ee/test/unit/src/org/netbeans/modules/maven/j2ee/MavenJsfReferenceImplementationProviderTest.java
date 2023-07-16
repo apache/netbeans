@@ -16,23 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.maven.j2ee;
 
-package org.netbeans.modules.web.jsf.api.facesmodel;
-
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import org.junit.Test;
 import org.netbeans.modules.web.jsfapi.api.JsfVersion;
-import org.netbeans.modules.xml.xam.dom.DocumentModel;
 
 /**
  *
- * @author Petr Pisl
+ * @author Benjamin Asbach
  */
-public interface JSFConfigModel extends DocumentModel <JSFConfigComponent>{
-    
-    
-    FacesConfig getRootComponent();
-    
-    JSFConfigComponentFactory getFactory();
-    
-    JsfVersion getVersion();
-    
+public class MavenJsfReferenceImplementationProviderTest {
+
+    @Test
+    public void testAllJsfVersionsAreMapped() {
+        for (JsfVersion jsfVersion : JsfVersion.values()) {
+            assertTrue(MavenJsfReferenceImplementationProvider.JSF_VERSION_MAVEN_COORDINATES_MAPPING.containsKey(jsfVersion));
+        }
+    }
+
+    @Test
+    public void testAllMavenCoordinatesAreWellFormatted() {
+        for (String mavenCoordinates : MavenJsfReferenceImplementationProvider.JSF_VERSION_MAVEN_COORDINATES_MAPPING.values()) {
+            assertEquals(3, mavenCoordinates.split(":").length);
+        }
+    }
 }

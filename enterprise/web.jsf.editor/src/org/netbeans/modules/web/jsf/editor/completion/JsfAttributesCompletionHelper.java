@@ -31,7 +31,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import static java.util.function.Predicate.not;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
@@ -74,10 +77,12 @@ import org.netbeans.modules.web.jsf.editor.JsfSupportImpl;
 import org.netbeans.modules.web.jsf.editor.JsfUtils;
 import org.netbeans.modules.web.jsf.editor.facelets.CompositeComponentLibrary;
 import org.netbeans.modules.web.jsf.editor.facelets.FaceletsLibraryMetadata;
+import org.netbeans.modules.web.jsf.editor.facelets.JsfNamespaceComparator;
 import org.netbeans.modules.web.jsf.editor.index.CompositeComponentModel;
 import org.netbeans.modules.web.jsf.editor.index.JsfPageModelFactory;
 import org.netbeans.modules.web.jsfapi.api.Attribute;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.jsfapi.api.JsfSupport;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.LibraryComponent;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
@@ -306,12 +311,11 @@ public class JsfAttributesCompletionHelper {
     }
 
     private static String getPrefixForFaceletsNs(HtmlParserResult result) {
-        String prefix = result.getNamespaces().get(DefaultLibraryInfo.FACELETS.getNamespace());
-        if (prefix != null) {
-            return prefix;
-        }
-
-        return result.getNamespaces().get(DefaultLibraryInfo.FACELETS.getLegacyNamespace());
+        return DefaultLibraryInfo.FACELETS.getValidNamespaces().stream()
+                .map(result.getNamespaces()::get)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
     }
 
     private static List<OpenTag> findValue(Collection<OpenTag> nodes, String tagName, List<OpenTag> foundNodes) {
@@ -372,7 +376,11 @@ public class JsfAttributesCompletionHelper {
     //</cc:implementation>
     //offsers facet declarations only from within this document
     public static void completeFacetsInCCImpl(CompletionContext context, List<CompletionItem> items, String ns, OpenTag openTag, JsfSupportImpl jsfs) {
-        if ("http://java.sun.com/jsf/composite".equalsIgnoreCase(ns) || "http://xmlns.jcp.org/jsf/composite".equalsIgnoreCase(ns)) {
+        if (ns == null) {
+            return;
+        }
+
+        if (DefaultLibraryInfo.COMPOSITE.getValidNamespaces().contains(ns.toLowerCase())) {
             String tagName = openTag.unqualifiedName().toString();
             if ("renderFacet".equalsIgnoreCase(tagName) || "insertFacet".equalsIgnoreCase(tagName)) { //NOI18N
                 if ("name".equalsIgnoreCase(context.getAttributeName())) { //NOI18N
@@ -391,7 +399,11 @@ public class JsfAttributesCompletionHelper {
     //2.<f:facet name="|">
     //offsers all facetes
     public static void completeFacets(CompletionContext context, List<CompletionItem> items, String ns, OpenTag openTag, JsfSupportImpl jsfs) {
-        if ("http://java.sun.com/jsf/core".equalsIgnoreCase(ns) || "http://xmlns.jcp.org/jsf/core".equalsIgnoreCase(ns)) {
+        if (ns == null) {
+            return;
+        }
+
+        if (DefaultLibraryInfo.COMPOSITE.getValidNamespaces().contains(ns.toLowerCase())) {
             String tagName = openTag.unqualifiedName().toString();
             if ("facet".equalsIgnoreCase(tagName)) { //NOI18N
                 if ("name".equalsIgnoreCase(context.getAttributeName())) { //NOI18N
@@ -458,18 +470,39 @@ public class JsfAttributesCompletionHelper {
         }
     }
 
-    public static void completeXMLNSAttribute(CompletionContext context, List<CompletionItem> items, JsfSupportImpl jsfs) {
-        if (context.getAttributeName().toLowerCase(Locale.ENGLISH).startsWith("xmlns")) { //NOI18N
-            //xml namespace completion for facelets namespaces
-            Set<String> nss = NamespaceUtils.getAvailableNss(jsfs.getLibraries(), jsfs.isJsf22Plus());
+    public static void completeXMLNSAttribute(CompletionContext context, List<CompletionItem> items, JsfSupport jsfs) {
+        String xmlns = context.getAttributeName().toLowerCase(Locale.ENGLISH);
 
-            //add also xhtml ns to the completion
-            nss.add(LibraryUtils.XHTML_NS);
-            for (String namespace : nss) {
-                if (namespace.startsWith(context.getPrefix())) {
-                    items.add(HtmlCompletionItem.createAttributeValue(namespace, context.getCCItemStartOffset(), !context.isValueQuoted()));
+        if (xmlns.startsWith("xmlns:")) { //NOI18N
+            Set<String> preferredNamespaces = Collections.emptySet();
+
+            int preferredNamespaceSortPriority = 10;
+
+            String xmlnsPrefix = xmlns.substring(6);
+            if (!"".equals(xmlnsPrefix)) {
+                Optional<? extends Library> preferedLibrary = jsfs.getLibraries().values().stream().filter(lib -> lib.getDefaultPrefix().equals(xmlnsPrefix)).findFirst();
+                if (preferedLibrary.isPresent()) {
+                    preferredNamespaces = preferedLibrary.get().getValidNamespaces();
+                    for (String preferredNamespace : preferredNamespaces) {
+                        items.add(HtmlCompletionItem.createAttributeValue(preferredNamespace, context.getCCItemStartOffset(), !context.isValueQuoted(), preferredNamespaceSortPriority++));
+                    }
                 }
             }
+
+            //xml namespace completion for facelets namespaces
+            List<String> otherNamespaces = new ArrayList<>(jsfs.getLibraries().keySet());
+            Collections.sort(otherNamespaces, JsfNamespaceComparator.getInstance());
+
+            int otherNamespaceSortPriority = 20;
+            for (String namespace : otherNamespaces) {
+                if (preferredNamespaces.contains(namespace)) {
+                    continue;
+                }
+
+                items.add(HtmlCompletionItem.createAttributeValue(namespace, context.getCCItemStartOffset(), !context.isValueQuoted(), otherNamespaceSortPriority++));
+            }
+        } else if (xmlns.startsWith("xmlns")) { //NOI18N
+            items.add(HtmlCompletionItem.createAttributeValue(LibraryUtils.XHTML_NS, context.getCCItemStartOffset(), !context.isValueQuoted()));
         }
     }
 

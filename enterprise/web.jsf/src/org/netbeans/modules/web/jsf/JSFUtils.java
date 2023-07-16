@@ -40,9 +40,10 @@ import org.netbeans.modules.j2ee.dd.api.web.WebApp;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.metamodel.JsfModel;
 import org.netbeans.modules.web.jsf.api.metamodel.JsfModelProvider;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.ErrorManager;
@@ -247,7 +248,7 @@ public class JSFUtils {
     }
 
     /**
-     * Use {@link JSFVersion#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
+     * Use {@link JsfVersionUtils#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
      */
     @Deprecated
     public static boolean isJSF12Plus(WebModule webModule, boolean includingPlatformCP) {
@@ -255,7 +256,7 @@ public class JSFUtils {
     }
 
     /**
-     * Use {@link JSFVersion#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
+     * Use {@link JsfVersionUtils#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
      */
     @Deprecated
     public static boolean isJSF20Plus(WebModule webModule, boolean includingPlatformCP) {
@@ -263,7 +264,7 @@ public class JSFUtils {
     }
 
     /**
-     * Use {@link JSFVersion#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
+     * Use {@link JsfVersionUtils#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
      */
     @Deprecated
     public static boolean isJSF21Plus(WebModule webModule, boolean includingPlatformCP) {
@@ -271,7 +272,7 @@ public class JSFUtils {
     }
 
     /**
-     * Use {@link JSFVersion#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
+     * Use {@link JsfVersionUtils#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
      */
     @Deprecated
     public static boolean isJSF22Plus(WebModule webModule, boolean includingPlatformCP) {
@@ -279,7 +280,7 @@ public class JSFUtils {
     }
 
     /**
-     * Use {@link JSFVersion#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
+     * Use {@link JsfVersionUtils#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
      */
     @Deprecated
     private static boolean isJSFPlus(WebModule webModule, boolean includingPlatformCP, String versionSpecificClass) {
@@ -429,9 +430,9 @@ public class JSFUtils {
      *         {@link NamespaceUtils#JCP_ORG_LOCATION} otherwise
      */
     public static String getNamespaceDomain(WebModule webModule) {
-        JSFVersion version = webModule != null ? JSFVersion.forWebModule(webModule) : null;
+        JsfVersion version = webModule != null ? JsfVersionUtils.forWebModule(webModule) : null;
         String nsLocation = NamespaceUtils.SUN_COM_LOCATION;
-        if (version != null && version.isAtLeast(JSFVersion.JSF_2_2)) {
+        if (version != null && version.isAtLeast(JsfVersion.JSF_2_2)) {
             nsLocation = NamespaceUtils.JCP_ORG_LOCATION;
         }
         return nsLocation;

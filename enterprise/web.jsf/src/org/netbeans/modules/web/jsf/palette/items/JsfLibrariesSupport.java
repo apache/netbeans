@@ -23,7 +23,9 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.modules.csl.api.DataLoadersBridge;
@@ -37,6 +39,7 @@ import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.web.common.api.WebUtils;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
 import org.netbeans.modules.web.jsfapi.api.JsfSupport;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.spi.JsfSupportProvider;
 import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
@@ -105,14 +108,13 @@ public class JsfLibrariesSupport {
             Library lib = jsfs.getLibrary(libraryInfo.getNamespace());
             libraryimport.lib = lib;
 
-            Collection<String> prefixes = ns2prefixes.get(libraryInfo.getNamespace());
-            if (prefixes == null && libraryInfo.getLegacyNamespace() != null) {
-                prefixes = ns2prefixes.get(libraryInfo.getLegacyNamespace());
-            }
-            if (libraryInfo.getLegacyNamespace() != null && ns2prefixes.get(libraryInfo.getLegacyNamespace()) != null) {
-                prefixes.addAll(ns2prefixes.get(libraryInfo.getLegacyNamespace()));
-            }
-            libraryimport.declaredPrefix = prefixes != null && !prefixes.isEmpty() ? prefixes.iterator().next() : null;
+            libraryimport.declaredPrefix = libraryInfo.getValidNamespaces().stream()
+                    .map(ns2prefixes::get)
+                    .filter(Objects::nonNull)
+                    .filter(not(Collection::isEmpty))
+                    .map(c -> c.iterator().next())
+                    .findFirst()
+                    .orElse(null);
 
             map.put(libraryInfo, libraryimport);
         }
@@ -121,7 +123,7 @@ public class JsfLibrariesSupport {
     }
 
     public void importLibraries(DefaultLibraryInfo... linfos) {
-        Map<Library, String> toimport = new HashMap<Library, String>();
+        Map<Library, String> toimport = new HashMap<>();
         for (DefaultLibraryInfo li : linfos) {
             LibraryImport limport = map.get(li);
             assert limport != null;
@@ -130,7 +132,7 @@ public class JsfLibrariesSupport {
                 toimport.put(limport.lib, null); //lets use the default prefix
             }
         }
-        LibraryUtils.importLibrary(tc.getDocument(), toimport, jsfs.isJsf22Plus());
+        LibraryUtils.importLibrary(tc.getDocument(), toimport);
     }
 
     /** @return the library default prefix in the case it hasn't been declared yet or the declared prefix */
@@ -142,12 +144,8 @@ public class JsfLibrariesSupport {
         return limport.declaredPrefix != null ? limport.declaredPrefix : limport.lib.getDefaultPrefix();
     }
 
-    public boolean isJsf22Plus() {
-        return jsfs.isJsf22Plus();
-    }
-
-    public boolean isJsf30Plus() {
-        return jsfs.isJsf30Plus();
+    public JsfVersion getJsfVersion() {
+        return jsfs.getJsfVersion();
     }
 
     private static class LibraryImport {
@@ -155,4 +153,13 @@ public class JsfLibrariesSupport {
         public String declaredPrefix;
     }
 
+    /**
+     * Can be removed when switching enterprise module to Java 11.
+     * @param <T>
+     * @param t
+     * @return 
+     */
+    private static <T> Predicate<T> not(Predicate<T> t) {
+        return t.negate();
+    }
 }

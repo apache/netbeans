@@ -103,7 +103,7 @@ public final class EEWizardIterator extends BaseWizardIterator {
         ArchetypeWizards.logUsage(archetype.getGroupId(), archetype.getArtifactId(), archetype.getVersion());
 
         File rootFile = FileUtil.normalizeFile((File) wiz.getProperty("projdir")); // NOI18N
-        ArchetypeWizards.createFromArchetype(rootFile, vi, archetype, null, true);
+        ArchetypeWizards.createFromArchetype(rootFile, vi, archetype, archetype.getProperties(), true);
 
         Set<FileObject> projects = ArchetypeWizards.openProjects(rootFile, rootFile);
         for (FileObject projectFile : projects) {

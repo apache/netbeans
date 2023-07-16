@@ -34,12 +34,12 @@
             <description>
                 <p>
                     Internal helper method added to open refactoring UI with selected hints. 
-                    <a href="@TOP@/org/netbeans/modules/java/hints/spiimpl/HintsRefactoringFactory.html">Added SPI</a> that 
+                    Added SPI that 
                     can be implemented by UI module(s) to actually provide the UI implementation.
                 </p>
             </description>
-            <class package="org.netbeans.modules.java.hints.spiimpl" name="HintsRefactoringFactory"/>
-            <class package="org.netbeans.modules.java.hints.spiimpl" name="Utilities"/>
+            <class package="org.netbeans.modules.java.hints.spiimpl" name="HintsRefactoringFactory" link="no" />
+            <class package="org.netbeans.modules.java.hints.spiimpl" name="Utilities" link="no"/>
         </change>
         <change id="JavaFixUtilities.isPrimary">
             <api name="JavaHintsSPI"/>

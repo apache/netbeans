@@ -1988,6 +1988,9 @@ jobs:
       - name: enterprise/javaee.wildfly
         run: .github/retry.sh ant $OPTS -f enterprise/javaee.wildfly test
 
+      - name: enterprise/maven.j2ee
+        run: ant $OPTS -f enterprise/maven.j2ee test
+
       - name: enterprise/micronaut
         run: .github/retry.sh ant $OPTS -f enterprise/micronaut test
 
@@ -1996,6 +1999,12 @@ jobs:
 
       - name: tomcat5
         run: ant $OPTS -f enterprise/tomcat5 test
+
+      - name: enterprise/web.jsf
+        run: .github/retry.sh ant $OPTS -f enterprise/web.jsf test
+
+      - name: enterprise/web.jsfapi
+        run: ant $OPTS -f enterprise/web.jsfapi test
 
       - name: websvc.editor.hints
         run: ant $OPTS -f enterprise/websvc.editor.hints test

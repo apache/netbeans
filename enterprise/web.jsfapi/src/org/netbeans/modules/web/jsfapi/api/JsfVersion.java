@@ -16,35 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.web.jsfapi.api;
 
-import java.util.Map;
-import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.project.Project;
-import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.openide.util.Lookup;
+import org.netbeans.api.annotations.common.NonNull;
 
 /**
  *
- * @author marekfukala
+ * @author Benjamin Asbach
  */
-public interface JsfSupport {
+public enum JsfVersion {
+    
+    JSF_1_0("1.0"),
+    JSF_1_1("1.1"),
+    JSF_1_2("1.2"),
+    JSF_2_0("2.0"),
+    JSF_2_1("2.1"),
+    JSF_2_2("2.2"),
+    JSF_2_3("2.3"),
+    JSF_3_0("3.0"),
+    JSF_4_0("4.0");
 
-    public Project getProject();
+    private final String version;
 
-    public ClassPath getClassPath();
+    private JsfVersion(String version) {
+        this.version = version;
+    }
 
-    public WebModule getWebModule();
+    public String getShortName() {
+        return "JSF " + version;
+    }
 
-    public Library getLibrary(String namespace);
+    public boolean isAtLeast(@NonNull JsfVersion jsfVersion) {
+        return this.ordinal() >= jsfVersion.ordinal();
+    }
 
-    /**
-     * @return Library namespace to Library instance map
-     */
-    public Map<String, ? extends Library> getLibraries();
-
-    public Lookup getLookup();
-
-    public JsfVersion getJsfVersion();
+    public static JsfVersion latest() {
+        return values()[values().length - 1];
+    }
 }

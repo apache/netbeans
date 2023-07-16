@@ -63,8 +63,9 @@ import org.netbeans.modules.web.jsf.JsfTemplateUtils;
 import org.netbeans.modules.web.jsf.JsfTemplateUtils.OpenTemplateAction;
 import org.netbeans.modules.web.jsf.JsfTemplateUtils.TemplateType;
 import org.netbeans.modules.web.jsf.api.editor.JSFBeanCache;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.metamodel.FacesManagedBean;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.DialogDescriptor;
 import org.openide.filesystems.FileObject;
@@ -113,8 +114,8 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
             }
         });
         this.project = project;
-        JSFVersion projectJsfVersion = JSFVersion.forProject(project);
-        if(projectJsfVersion != null && projectJsfVersion.isAtLeast(JSFVersion.JSF_4_0)){
+        JsfVersion projectJsfVersion = JsfVersionUtils.forProject(project);
+        if(projectJsfVersion != null && projectJsfVersion.isAtLeast(JsfVersion.JSF_4_0)){
             this.jakartaMetaModelSupport = new org.netbeans.modules.jakarta.web.beans.MetaModelSupport(project);
         } else {
             this.metaModelSupport = new org.netbeans.modules.web.beans.MetaModelSupport(project);
@@ -373,7 +374,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
         }
         try {
             //check web beans
-            if(JSFVersion.forProject(project) == JSFVersion.JSF_4_0){
+            if(JsfVersionUtils.forProject(project) == JsfVersion.JSF_4_0){
                jakartaMetaModelSupport.getMetaModel().runReadAction(new MetadataModelAction<org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel, Void>() {
                 @Override
                 public Void run(org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel metadata) throws Exception {

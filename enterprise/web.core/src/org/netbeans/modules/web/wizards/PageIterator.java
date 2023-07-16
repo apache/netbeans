@@ -198,6 +198,11 @@ public class PageIterator implements TemplateWizard.Iterator {
         return classpath != null && classpath.findResource("jakarta/faces/flow/Flow.class") != null; //NOI18N
     }
 
+    private static boolean isJSF40(WebModule wm) {
+        ClassPath classpath = ClassPath.getClassPath(wm.getDocumentBase(), ClassPath.COMPILE);
+        return classpath != null && classpath.findResource("jakarta/faces/lifecycle/ClientWindowScoped.class") != null; //NOI18N
+    }
+
     public Set<DataObject> instantiate(TemplateWizard wiz) throws IOException {
         // Here is the default plain behavior. Simply takes the selected
         // template (you need to have included the standard second panel
@@ -231,7 +236,9 @@ public class PageIterator implements TemplateWizard.Iterator {
                     template = templateParent.getFileObject("JSP", "xhtml"); //NOI18N
                     WebModule wm = WebModule.getWebModule(df.getPrimaryFile());
                     if (wm != null) {
-                        if (isJSF30(wm)) {
+                        if (isJSF40(wm)) {
+                            wizardProps.put("isJSF40", Boolean.TRUE);
+                        } else if (isJSF30(wm)) {
                             wizardProps.put("isJSF30", Boolean.TRUE);
                         } else if (isJSF22(wm)) {
                             wizardProps.put("isJSF22", Boolean.TRUE);

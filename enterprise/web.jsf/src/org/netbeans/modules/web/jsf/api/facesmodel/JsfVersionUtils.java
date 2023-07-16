@@ -46,6 +46,7 @@ import org.netbeans.modules.j2ee.deployment.common.api.Version;
 import org.netbeans.modules.j2ee.deployment.plugins.api.ServerLibrary;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsf.JSFUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -58,47 +59,29 @@ import org.openide.util.WeakListeners;
  *
  * @author Petr Pisl, ads, Martin Fousek
  */
-public enum JSFVersion {
-    JSF_1_0("JSF 1.0"),
-    JSF_1_1("JSF 1.1"),
-    JSF_1_2("JSF 1.2"),
-    JSF_2_0("JSF 2.0"),
-    JSF_2_1("JSF 2.1"),
-    JSF_2_2("JSF 2.2"),
-    JSF_2_3("JSF 2.3"),
-    JSF_3_0("JSF 3.0"),
-    JSF_4_0("JSF 4.0");
+public final class JsfVersionUtils {
 
-    private static final LinkedHashMap<JSFVersion, String> SPECIFIC_CLASS_NAMES = new LinkedHashMap<>();
+    private static final LinkedHashMap<JsfVersion, String> SPECIFIC_CLASS_NAMES = new LinkedHashMap<>();
 
     static {
-        SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_4_0, JSFUtils.JSF_4_0__API_SPECIFIC_CLASS);
-        SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_3_0, JSFUtils.JSF_3_0__API_SPECIFIC_CLASS);
-        SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_2_3, JSFUtils.JSF_2_3__API_SPECIFIC_CLASS);
-        SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_2_2, JSFUtils.JSF_2_2__API_SPECIFIC_CLASS);
-        SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_2_1, JSFUtils.JSF_2_1__API_SPECIFIC_CLASS);
-        SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_2_0, JSFUtils.JSF_2_0__API_SPECIFIC_CLASS);
-        SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_1_2, JSFUtils.JSF_1_2__API_SPECIFIC_CLASS);
-        SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_1_1, JSFUtils.FACES_EXCEPTION);
+        SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_4_0, JSFUtils.JSF_4_0__API_SPECIFIC_CLASS);
+        SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_3_0, JSFUtils.JSF_3_0__API_SPECIFIC_CLASS);
+        SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_2_3, JSFUtils.JSF_2_3__API_SPECIFIC_CLASS);
+        SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_2_2, JSFUtils.JSF_2_2__API_SPECIFIC_CLASS);
+        SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_2_1, JSFUtils.JSF_2_1__API_SPECIFIC_CLASS);
+        SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_2_0, JSFUtils.JSF_2_0__API_SPECIFIC_CLASS);
+        SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_1_2, JSFUtils.JSF_1_2__API_SPECIFIC_CLASS);
+        SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_1_1, JSFUtils.FACES_EXCEPTION);
     }
 
-    private final String shortName;
-
-
-    private JSFVersion(String shortName) {
-        this.shortName = shortName;
-    }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    private static final RequestProcessor RP = new RequestProcessor(JSFVersion.class);
-    private static final Logger LOG = Logger.getLogger(JSFVersion.class.getName());
+    private static final Logger LOG = Logger.getLogger(JsfVersion.class.getName());
 
     // caches for holding JSF version and the project CP listeners
-    private static final Map<WebModule, JSFVersion> projectVersionCache = new WeakHashMap<>();
+    private static final Map<WebModule, JsfVersion> projectVersionCache = new WeakHashMap<>();
     private static final Map<WebModule, PropertyChangeListener> projectListenerCache = new WeakHashMap<>();
+
+    private JsfVersionUtils() {
+    }
 
     /**
      * Gets the JSF version supported by the WebModule. It seeks for the JSF only on the classpath including the
@@ -108,9 +91,9 @@ public enum JSFVersion {
      * @return JSF version if any found on the WebModule compile classpath, {@code null} otherwise
      */
     @CheckForNull
-    public static synchronized JSFVersion forWebModule(@NonNull final WebModule webModule) {
+    public static synchronized JsfVersion forWebModule(@NonNull final WebModule webModule) {
         Parameters.notNull("webModule", webModule); //NOI18N
-        JSFVersion version = projectVersionCache.get(webModule);
+        JsfVersion version = projectVersionCache.get(webModule);
         if (version == null) {
             version = get(webModule, true);
             ClassPath compileCP = getCompileClasspath(webModule);
@@ -140,7 +123,7 @@ public enum JSFVersion {
      * @since 1.65
      */
     @CheckForNull
-    public static synchronized JSFVersion forProject(@NonNull final Project project) {
+    public static synchronized JsfVersion forProject(@NonNull final Project project) {
         Parameters.notNull("project", project); //NOI18N
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
@@ -158,7 +141,7 @@ public enum JSFVersion {
                 for (ClassPath.Entry entry : compileClasspath.entries()) {
                     cpUrls.add(entry.getURL());
                 }
-                return JSFVersion.forClasspath(cpUrls);
+                return forClasspath(cpUrls);
             } else {
                 return null;
             }
@@ -174,7 +157,7 @@ public enum JSFVersion {
      * @since 1.46
      */
     @CheckForNull
-    public static synchronized JSFVersion forClasspath(@NonNull Collection<File> classpath) {
+    public static synchronized JsfVersion forClasspath(@NonNull Collection<File> classpath) {
         Parameters.notNull("classpath", classpath); //NOI18N
         try {
             return ClasspathUtil.containsClass(classpath, SPECIFIC_CLASS_NAMES);
@@ -193,7 +176,7 @@ public enum JSFVersion {
      * @since 1.46
      */
     @CheckForNull
-    public static JSFVersion forClasspath(@NonNull List<URL> classpath) {
+    public static JsfVersion forClasspath(@NonNull List<URL> classpath) {
         Parameters.notNull("classpath", classpath); //NOI18N
         try {
             return ClasspathUtil.containsClass(classpath, SPECIFIC_CLASS_NAMES);
@@ -211,46 +194,30 @@ public enum JSFVersion {
      * @since 1.46
      */
     @CheckForNull
-    public static JSFVersion forServerLibrary(@NonNull ServerLibrary lib) {
+    public static JsfVersion forServerLibrary(@NonNull ServerLibrary lib) {
         Parameters.notNull("serverLibrary", lib); //NOI18N
         if ("JavaServer Faces".equals(lib.getSpecificationTitle())) { // NOI18N
             if (Version.fromJsr277NotationWithFallback("4.0").equals(lib.getSpecificationVersion())) { //NOI18N
-                return JSFVersion.JSF_4_0;
+                return JsfVersion.JSF_4_0;
             } else if (Version.fromJsr277NotationWithFallback("3.0").equals(lib.getSpecificationVersion())) { //NOI18N
-                return JSFVersion.JSF_3_0;
+                return JsfVersion.JSF_3_0;
             } else if (Version.fromJsr277NotationWithFallback("2.3").equals(lib.getSpecificationVersion())) { //NOI18N
-                return JSFVersion.JSF_2_3;
+                return JsfVersion.JSF_2_3;
             } else if (Version.fromJsr277NotationWithFallback("2.2").equals(lib.getSpecificationVersion())) { //NOI18N
-                return JSFVersion.JSF_2_2;
+                return JsfVersion.JSF_2_2;
             } else if (Version.fromJsr277NotationWithFallback("2.1").equals(lib.getSpecificationVersion())) { //NOI18N
-                return JSFVersion.JSF_2_1;
+                return JsfVersion.JSF_2_1;
             } else if (Version.fromJsr277NotationWithFallback("2.0").equals(lib.getSpecificationVersion())) { // NOI18N
-                return JSFVersion.JSF_2_0;
+                return JsfVersion.JSF_2_0;
             } else if (Version.fromJsr277NotationWithFallback("1.2").equals(lib.getSpecificationVersion())) { // NOI18N
-                return JSFVersion.JSF_1_2;
+                return JsfVersion.JSF_1_2;
             } else if (Version.fromJsr277NotationWithFallback("1.1").equals(lib.getSpecificationVersion())) { // NOI18N
-                return JSFVersion.JSF_1_1;
+                return JsfVersion.JSF_1_1;
             } else {
                 LOG.log(Level.INFO, "Unknown JSF version {0}", lib.getSpecificationVersion());
             }
         }
         return null;
-    }
-
-    /**
-     * Says whether the current instance is at least of the same JSF version.
-     *
-     * @param version version to compare
-     * @return {@code true} if the current instance is at least of the given version, {@code false} otherwise
-     */
-    public boolean isAtLeast(@NonNull JSFVersion version) {
-        Parameters.notNull("version", version); //NOI18N
-        int thisMajorVersion = Integer.parseInt(this.name().substring(4, 5));
-        int thisMinorVersion = Integer.parseInt(this.name().substring(6, 7));
-        int compMajorVersion = Integer.parseInt(version.name().substring(4, 5));
-        int compMinorVersion = Integer.parseInt(version.name().substring(6, 7));
-        return thisMajorVersion > compMajorVersion
-                || thisMajorVersion == compMajorVersion && thisMinorVersion >= compMinorVersion;
     }
 
     /**
@@ -263,7 +230,7 @@ public enum JSFVersion {
      * @return JSF version
      */
     @CheckForNull
-    public static JSFVersion get(@NonNull WebModule webModule, boolean includingPlatformCP) {
+    public static JsfVersion get(@NonNull WebModule webModule, boolean includingPlatformCP) {
         Parameters.notNull("webModule", webModule); //NOI18N
         if (webModule.getDocumentBase() == null) {
             return null;
@@ -275,7 +242,7 @@ public enum JSFVersion {
         }
 
         if (includingPlatformCP) {
-            for (Map.Entry<JSFVersion, String> entry : SPECIFIC_CLASS_NAMES.entrySet()) {
+            for (Map.Entry<JsfVersion, String> entry : SPECIFIC_CLASS_NAMES.entrySet()) {
                 String className = entry.getValue();
                 if (compileCP.findResource(className.replace('.', '/') + ".class") != null) { //NOI18N
                     return entry.getKey();

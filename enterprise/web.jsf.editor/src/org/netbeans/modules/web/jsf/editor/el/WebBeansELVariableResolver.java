@@ -33,6 +33,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 import org.netbeans.modules.web.el.spi.ELVariableResolver;
 import org.netbeans.modules.web.el.spi.ResolverContext;
 import org.netbeans.modules.web.jsf.editor.JsfSupportImpl;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
@@ -101,7 +102,7 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
             return Collections.<WebBean>emptyList();
         } else {
             if (context.getContent(CONTENT_NAME) == null) {
-                if(jsfSupport.isJsf30Plus()){
+                if(jsfSupport.getJsfVersion().isAtLeast(JsfVersion.JSF_3_0)){
                     context.setContent(CONTENT_NAME, getJakartaNamedBeans(jsfSupport.getJakartaWebBeansModel()));
                 } else {
                     context.setContent(CONTENT_NAME, getNamedBeans(jsfSupport.getWebBeansModel()));

@@ -36,10 +36,11 @@ import org.netbeans.api.project.Sources;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.editor.facelets.FaceletsLibrarySupport;
 import org.netbeans.modules.web.jsf.editor.index.JsfIndex;
 import org.netbeans.modules.web.jsfapi.api.JsfSupport;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 import org.netbeans.modules.web.jsfapi.spi.JsfSupportProvider;
@@ -171,22 +172,20 @@ public class JsfSupportImpl implements JsfSupport {
             }
         });
 
-        if(isJsf30Plus()){
+        JsfVersion jsfVersion = getJsfVersion();
+        
+        //TODO do it lazy so it creates the web beans model lazily once looked up
+        InstanceContent ic = new InstanceContent();
+        if(jsfVersion.isAtLeast(JsfVersion.JSF_3_0)){
             webBeansModelJakarta = new org.netbeans.modules.jakarta.web.beans.MetaModelSupport(project).getMetaModel();
+            ic.add(webBeansModelJakarta);
         } else {
             webBeansModel = new org.netbeans.modules.web.beans.MetaModelSupport(project).getMetaModel();
+            ic.add(webBeansModel);
         }
         
         //init lookup
-        //TODO do it lazy so it creates the web beans model lazily once looked up
-        InstanceContent ic = new InstanceContent();
-        if(isJsf30Plus()){
-            ic.add(webBeansModelJakarta);
-        } else {
-            ic.add(webBeansModel);
-        }
         this.lookup = new AbstractLookup(ic);
-
     }
 
     @Override
@@ -222,7 +221,7 @@ public class JsfSupportImpl implements JsfSupport {
 
     @Override
     public Library getLibrary(String namespace) {
-        return NamespaceUtils.getForNs(faceletsLibrarySupport.getLibraries(), namespace);
+        return NamespaceUtils.getForNs(faceletsLibrarySupport.getNamespaceLibraryMapping(), namespace);
     }
 
     /** Library's uri to library map
@@ -231,7 +230,7 @@ public class JsfSupportImpl implements JsfSupport {
      */
     @Override
     public Map<String, Library> getLibraries() {
-        return faceletsLibrarySupport.getLibraries();
+        return faceletsLibrarySupport.getNamespaceLibraryMapping();
     }
 
     public boolean isFileOnClasspath(FileObject file) {
@@ -268,25 +267,15 @@ public class JsfSupportImpl implements JsfSupport {
     }
 
     @Override
-    public boolean isJsf22Plus() {
+    public JsfVersion getJsfVersion() {
         if (wm != null) {
-            JSFVersion version = JSFVersion.forWebModule(wm);
-            // caching is done inside the method
-            return version != null && version.isAtLeast(JSFVersion.JSF_2_2);
+            JsfVersion jsfVersion = JsfVersionUtils.forWebModule(wm);
+            if (jsfVersion != null) {
+                return jsfVersion;
+            }
         }
-        // return the latest supported one until somebody will complain about that
-        return true;
-    }
 
-		@Override
-    public boolean isJsf30Plus() {
-        if (wm != null) {
-            JSFVersion version = JSFVersion.forWebModule(wm);
-            // caching is done inside the method
-            return version != null && version.isAtLeast(JSFVersion.JSF_3_0);
-        }
-        // return the latest supported one until somebody will complain about that
-        return true;
+        return JsfVersion.latest();
     }
 
     @Override

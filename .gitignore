@@ -94,6 +94,7 @@ derby.log
 ##################################
 /extide/gradle/netbeans-gradle-tooling/.gradle/
 /extide/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
+/extide/gradle/netbeans-gradle-tooling/bin/
 /extide/gradle/release/modules/gradle/daemon-loader/.gradle/
 /nbbuild/misc/prepare-bundles/target/
 

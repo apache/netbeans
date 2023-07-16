@@ -127,7 +127,7 @@ public class JsfNavigationHelper {
                             Parser.Result result = resultIterator.getParserResult(caretOffset);
                             if (result instanceof HtmlParserResult) {
                                 HtmlParserResult hresult = (HtmlParserResult) result;
-                                Element root = hresult.root(LibraryUtils.COMPOSITE_LIBRARY_NS);
+                                Element root = hresult.root(LibraryUtils.COMPOSITE_LIBRARY_JCP_NS);
                                 ElementUtils.visitChildren(root, new ElementVisitor() {
                                     @Override
                                     public void visit(Element node) {

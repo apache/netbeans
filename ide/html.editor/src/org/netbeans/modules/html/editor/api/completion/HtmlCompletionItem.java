@@ -93,6 +93,10 @@ public class HtmlCompletionItem implements CompletionItem {
         return new AttributeValue(name, substitutionOffset, addQuotation);
     }
 
+    public static HtmlCompletionItem createAttributeValue(String name, int substitutionOffset, boolean addQuotation, int sortPrioritiy) {
+        return new AttributeValue(name, substitutionOffset, addQuotation, sortPrioritiy);
+    }
+
     public static HtmlCompletionItem createAttributeValue(String name, int substitutionOffset) {
         return createAttributeValue(name, substitutionOffset, false);
     }
@@ -654,11 +658,23 @@ public class HtmlCompletionItem implements CompletionItem {
      */
     public static class AttributeValue extends HtmlCompletionItem {
 
-        private boolean addQuotation;
+        private final boolean addQuotation;
+        
+        private final int sortPriority;
 
-        public AttributeValue(String value, int offset, boolean addQuotation) {
+        public AttributeValue(String value, int offset, boolean addQuotation, int sortPriority) {
             super(value, offset);
             this.addQuotation = addQuotation;
+            this.sortPriority = sortPriority;
+        }
+
+        public AttributeValue(String value, int offset, boolean addQuotation) {
+            this(value, offset, addQuotation, DEFAULT_SORT_PRIORITY);
+        }
+
+        @Override
+        public int getSortPriority() {
+            return sortPriority;
         }
 
         @Override

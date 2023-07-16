@@ -16,35 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.web.jsfapi.spi;
 
-package org.netbeans.modules.web.jsfapi.api;
-
-import java.util.Map;
-import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.project.Project;
-import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.openide.util.Lookup;
+import java.nio.file.Path;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 
 /**
  *
- * @author marekfukala
+ * @author Benjamin Asbach
  */
-public interface JsfSupport {
-
-    public Project getProject();
-
-    public ClassPath getClassPath();
-
-    public WebModule getWebModule();
-
-    public Library getLibrary(String namespace);
+public interface JsfReferenceImplementationProvider {
 
     /**
-     * @return Library namespace to Library instance map
+     * Determine the path to the JSF reference implementation JAR.
+     *
+     * @param jsfVersion
+     * @return path to the JAR or {@code null} if not found
      */
-    public Map<String, ? extends Library> getLibraries();
-
-    public Lookup getLookup();
-
-    public JsfVersion getJsfVersion();
+    Path artifactPathFor(JsfVersion jsfVersion);
 }

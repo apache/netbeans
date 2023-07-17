@@ -50,6 +50,7 @@ import org.netbeans.api.lsp.CodeAction;
 import org.netbeans.api.lsp.Command;
 import org.netbeans.api.lsp.Diagnostic;
 import org.netbeans.api.lsp.Diagnostic.Builder;
+import org.netbeans.api.lsp.LazyCodeAction;
 import org.netbeans.api.lsp.ResourceOperation;
 import org.netbeans.api.lsp.ResourceOperation.CreateFile;
 import org.netbeans.api.lsp.TextDocumentEdit;
@@ -229,66 +230,69 @@ public class JavaErrorProvider implements ErrorProvider {
                 }.toEditorFix();
             }
             if (f instanceof JavaFixImpl) {
-                try {
-                    JavaFix jf = ((JavaFixImpl) f).jf;
-                    List<TextEdit> edits = modify2TextEdits(js, wc -> {
-                        wc.toPhase(JavaSource.Phase.RESOLVED);
-                        Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
-                        JavaFixImpl.Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
-                    });
-                    TextDocumentEdit te = new TextDocumentEdit(file.toURI().toString(),
-                                                               edits);
-                    CodeAction action = new CodeAction(f.getText(), new WorkspaceEdit(Collections.singletonList(Union2.createFirst(te))));
-                    result.add(action);
-                } catch (IOException ex) {
-                    //TODO: include stack trace:
-                    errorReporter.accept(ex);
-                }
+                JavaFix jf = ((JavaFixImpl) f).jf;
+                CodeAction action = new LazyCodeAction(f.getText(), () -> {
+                    try {
+                        List<TextEdit> edits = modify2TextEdits(js, wc -> {
+                            wc.toPhase(JavaSource.Phase.RESOLVED);
+                            Map<FileObject, byte[]> resourceContentChanges = new HashMap<>();
+                            JavaFixImpl.Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
+                        });
+                        TextDocumentEdit te = new TextDocumentEdit(file.toURI().toString(), edits);
+                        return new WorkspaceEdit(Collections.singletonList(Union2.createFirst(te)));
+                    } catch (IOException ex) {
+                        //TODO: include stack trace:
+                        errorReporter.accept(ex);
+                        return null;
+                    }
+                });
+                result.add(action);
             }
             if (f instanceof ModificationResultBasedFix) {
-                try {
-                    ModificationResultBasedFix cf = (ModificationResultBasedFix) f;
-                    List<Union2<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                    for (ModificationResult changes : cf.getModificationResults()) {
-                        Set<File> newFiles = changes.getNewFiles();
-                        if (newFiles.size() > 1) {
-                            throw new IllegalStateException();
-                        }
-                        String newFilePath = null;
-                        for (File newFile : newFiles) {
-                            newFilePath = newFile.toURI().toString();
-                            documentChanges.add(Union2.createSecond(new CreateFile(newFilePath)));
-                        }
-                        outer: for (FileObject fileObject : changes.getModifiedFileObjects()) {
-                            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
-                            if (diffs != null) {
-                                List<TextEdit> edits = new ArrayList<>();
-                                for (ModificationResult.Difference diff : diffs) {
-                                    String newText = diff.getNewText();
-                                    if (diff.getKind() == ModificationResult.Difference.Kind.CREATE) {
-                                        if (newFilePath != null) {
-                                            documentChanges.add(Union2.createFirst(new TextDocumentEdit(newFilePath,
-                                                    Collections.singletonList(new TextEdit(0, 0,
-                                                            newText != null ? newText : "")))));
+                ModificationResultBasedFix cf = (ModificationResultBasedFix) f;
+                CodeAction codeAction = new LazyCodeAction(f.getText(), () -> {
+                    try {
+                        List<Union2<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                        for (ModificationResult changes : cf.getModificationResults()) {
+                            Set<File> newFiles = changes.getNewFiles();
+                            if (newFiles.size() > 1) {
+                                throw new IllegalStateException();
+                            }
+                            String newFilePath = null;
+                            for (File newFile : newFiles) {
+                                newFilePath = newFile.toURI().toString();
+                                documentChanges.add(Union2.createSecond(new CreateFile(newFilePath)));
+                            }
+                            outer: for (FileObject fileObject : changes.getModifiedFileObjects()) {
+                                List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
+                                if (diffs != null) {
+                                    List<TextEdit> edits = new ArrayList<>();
+                                    for (ModificationResult.Difference diff : diffs) {
+                                        String newText = diff.getNewText();
+                                        if (diff.getKind() == ModificationResult.Difference.Kind.CREATE) {
+                                            if (newFilePath != null) {
+                                                documentChanges.add(Union2.createFirst(new TextDocumentEdit(newFilePath,
+                                                        Collections.singletonList(new TextEdit(0, 0,
+                                                                newText != null ? newText : "")))));
+                                            }
+                                            continue outer;
+                                        } else {
+                                            edits.add(new TextEdit(diff.getStartPosition().getOffset(),
+                                                                   diff.getEndPosition().getOffset(),
+                                                                   newText != null ? newText : ""));
                                         }
-                                        continue outer;
-                                    } else {
-                                        edits.add(new TextEdit(diff.getStartPosition().getOffset(),
-                                                               diff.getEndPosition().getOffset(),
-                                                               newText != null ? newText : ""));
                                     }
+                                    documentChanges.add(Union2.createFirst(new TextDocumentEdit(fileObject.toURI().toString(), edits))); //XXX: toURI
                                 }
-                                documentChanges.add(Union2.createFirst(new TextDocumentEdit(fileObject.toURI().toString(), edits))); //XXX: toURI
                             }
                         }
+                        return new WorkspaceEdit(documentChanges);
+                    } catch (IOException ex) {
+                        errorReporter.accept(ex);
+                        return null;
                     }
-                    if (!documentChanges.isEmpty()) {
-                        CodeAction codeAction = new CodeAction(f.getText(), new WorkspaceEdit(documentChanges));
-                        result.add(codeAction);
-                    }
-                } catch (IOException ex) {
-                    errorReporter.accept(ex);
-                }
+                });
+                result.add(codeAction);
             }
         }
 

@@ -51,6 +51,18 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="LazyCodeAction">
+        <api name="LSP_API"/>
+        <summary>Added CodeAction with lazy edit computation</summary>
+        <version major="1" minor="18"/>
+        <date day="17" month="7" year="2023"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/api/lsp/LazyCodeAction.html">LazyCodeAction</a> allows for lazy edit computation.
+        </description>
+        <class package="org.netbeans.api.lsp" name="LazyCodeAction"/>
+    </change>
     <change id="Completion_getCommand">
         <api name="LSP_API"/>
         <summary>Added URL to diagnostic code description</summary>

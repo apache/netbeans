@@ -34,17 +34,17 @@ import org.netbeans.modules.welcome.content.WebLink;
  *
  * @author S. Aubrecht
  */
-class Blogs extends RSSFeedReaderPanel {
+final class Releases extends RSSFeedReaderPanel {
 
-    public Blogs() {
-        super( "Blogs", false ); // NOI18N
+    public Releases() {
+        super( "Releases", false ); // NOI18N
 
         add( buildBottomContent(), BorderLayout.SOUTH );
     }
 
     protected JComponent buildBottomContent() {
-        WebLink allBlogs = new WebLink( "AllBlogs", true ); // NOI18N
-        BundleSupport.setAccessibilityProperties( allBlogs, "AllBlogs" ); //NOI18N
+        WebLink allBlogs = new WebLink( "AllReleases", true ); // NOI18N
+        BundleSupport.setAccessibilityProperties( allBlogs, "AllReleases" ); //NOI18N
 
         JPanel panel = new JPanel( new GridBagLayout() );
         panel.setOpaque(false);

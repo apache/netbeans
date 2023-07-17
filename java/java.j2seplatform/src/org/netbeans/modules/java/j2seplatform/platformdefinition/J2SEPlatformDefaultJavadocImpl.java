@@ -67,11 +67,24 @@ public final class J2SEPlatformDefaultJavadocImpl implements J2SEPlatformDefault
 
         if (now.isAfter(jdk9)) { // time traveler -> only java 8 doc for you
             int jdk = 9;
-            for (LocalDate t = jdk9; t.isBefore(now); t = t.plusMonths(6)) {
+            LocalDate jdkEarly = jdk9;
+            for (LocalDate t = jdk9 ; t.isBefore(now); t = t.plusMonths(6)) {
                 OFFICIAL_JAVADOC.put(String.valueOf(jdk), "https://docs.oracle.com/en/java/javase/" + jdk + "/docs/api/"); // NOI18N
+                jdkEarly = t;
                 jdk++;
             }
-            OFFICIAL_JAVADOC.put(String.valueOf(jdk), "https://download.java.net/java/early_access/jdk" + jdk + "/docs/api/"); // NOI18N Early access
+            
+            jdkEarly = jdkEarly.minusDays(12);
+            
+            if (now.isAfter(jdkEarly)) {
+                OFFICIAL_JAVADOC.put(String.valueOf(jdk), "https://download.java.net/java/early_access/jdk" + jdk + "/docs/api/"); // NOI18N Early access
+                jdkEarly = jdkEarly.plusMonths(3);
+                jdk++;
+            }
+            // there is a 2nd jdk early release after 3 months
+            if (now.isAfter(jdkEarly)) {
+                OFFICIAL_JAVADOC.put(String.valueOf(jdk), "https://download.java.net/java/early_access/jdk" + jdk + "/docs/api/"); // NOI18N Early access
+            }
         }
     }
 

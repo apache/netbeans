@@ -407,7 +407,7 @@ public class PersistenceClientEntitySelectionVisual extends JPanel {
         SourceGroup[] groups = SourceGroups.getJavaSourceGroups(project);
         if (groups.length > 0) {
             ClassPath compileCP = ClassPath.getClassPath(groups[0].getRootFolder(), ClassPath.COMPILE);
-            if (compileCP==null || compileCP.findResource("javax/persistence/Entity.class") == null) { // NOI18N
+            if (compileCP==null || (compileCP.findResource("jakarta/persistence/Entity.class") == null && compileCP.findResource("javax/persistence/Entity.class") == null)) { // NOI18N
                 wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientEntitySelectionVisual.class, "ERR_NoPersistenceProvider"));
                 return false;
             }

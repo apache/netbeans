@@ -54,6 +54,7 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -87,6 +88,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.TemplateWizard;
+import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 
 /**
@@ -106,7 +108,10 @@ public class MicronautEntity extends RelatedCMPWizard {
         "MSG_NoProject=No project found for {0}",
         "MSG_NoSourceGroup=No source group found for {0}",
         "MSG_SelectTables=Select Database Tables",
-        "MSG_NoDbTables=No database table found for {0}"
+        "MSG_NoDbTables=No database table found for {0}",
+        "MSG_CreatingEntities=Entity Classes from Database",
+        "MSG_ReadingTables=Reading Table Definitions",
+        "MSG_CreatingClasses=Creating Classes"
     })
     public static CreateFromTemplateHandler handler() {
         return new CreateFromTemplateHandler() {
@@ -117,7 +122,10 @@ public class MicronautEntity extends RelatedCMPWizard {
 
             @Override
             protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+                ProgressHandle handle = ProgressHandle.createHandle(Bundle.MSG_CreatingEntities());
+                handle.start();
                 try {
+                    handle.progress(Bundle.MSG_ReadingTables());
                     FileObject folder = desc.getTarget();
                     Project project = FileOwnerQuery.getOwner(folder);
                     if (project == null) {
@@ -148,6 +156,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                     NotifyDescriptor.QuickPick qp = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectTables(), Bundle.MSG_SelectTables(), dbItems, true);
                     if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(qp)) {
                         List<String> selectedItems = qp.getItems().stream().filter(item -> item.isSelected()).map(item -> item.getLabel()).collect(Collectors.toList());
+                        handle.progress(Bundle.MSG_CreatingClasses());
                         EntitiesFromDBGenerator generator = new EntitiesFromDBGenerator(selectedItems, false, false, false,
                                 EntityRelation.FetchType.DEFAULT, EntityRelation.CollectionType.COLLECTION,
                                 SourceGroups.getPackageForFolder(sourceGroup, folder), sourceGroup, connection, project, null, new Generator());
@@ -162,6 +171,8 @@ public class MicronautEntity extends RelatedCMPWizard {
                     }
                 } catch (IOException | SQLException | DatabaseException ex) {
                     DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
+                } finally {
+                    handle.finish();
                 }
                 return Collections.emptyList();
             }
@@ -175,9 +186,9 @@ public class MicronautEntity extends RelatedCMPWizard {
     @Override
     public Set<DataObject> instantiate(TemplateWizard wiz) throws IOException {
         String wizardTitle = NbBundle.getMessage(MicronautEntity.class, "Templates/Micronaut/Entity");
-        wiz.putProperty("NewFileWizard_Title", wizardTitle); // NOI18N
-        return super.instantiate(wiz);
-    }
+            wiz.putProperty("NewFileWizard_Title", wizardTitle); // NOI18N
+            return super.instantiate(wiz);
+        }
 
     @org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.j2ee.persistence.wizard.fromdb.PersistenceGeneratorProvider.class)
     public static class GeneratorProvider implements PersistenceGeneratorProvider {

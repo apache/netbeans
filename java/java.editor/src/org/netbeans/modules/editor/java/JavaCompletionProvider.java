@@ -38,6 +38,7 @@ import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.editor.ext.ToolTipSupport;
+import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.completion.JavaDocumentationTask;
 import org.netbeans.modules.java.completion.JavaTooltipTask;
@@ -72,6 +73,9 @@ public class JavaCompletionProvider implements CompletionProvider {
     @Override
     public CompletionTask createTask(int type, JTextComponent component) {
         if ((type & COMPLETION_QUERY_TYPE) != 0 || type == TOOLTIP_QUERY_TYPE || type == DOCUMENTATION_QUERY_TYPE) {
+            if (SourceUtils.hasRemoteEditorPlatform(NbEditorUtilities.getFileObject(component.getDocument()))) {
+                return null;
+            }
             return new AsyncCompletionTask(new JavaCompletionQuery(type, component.getSelectionStart()), component);
         }
         return null;

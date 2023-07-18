@@ -196,6 +196,10 @@ public class Utils {
             case INSTANCE_INIT:
             case OTHER:
             default:
+                switch (kind.name()) {
+                    case "RECORD": return SymbolKind.Class;
+                    case "RECORD_COMPONENT": return SymbolKind.Field;
+                }
                 return SymbolKind.File; //XXX: what here?
         }
     }

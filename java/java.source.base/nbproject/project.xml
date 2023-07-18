@@ -437,11 +437,10 @@
                 </test-type>
             </test-dependencies>
             <public-packages>
-                <package>org.netbeans.api.java.loaders</package>
                 <package>org.netbeans.api.java.source</package>
                 <package>org.netbeans.api.java.source.matching</package>
                 <package>org.netbeans.api.java.source.support</package>
-                <package>org.netbeans.spi.java.loaders</package>
+                <package>org.netbeans.spi.java.source</package>
             </public-packages>
         </data>
     </configuration>

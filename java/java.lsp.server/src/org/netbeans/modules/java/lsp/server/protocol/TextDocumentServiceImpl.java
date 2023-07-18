@@ -344,7 +344,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             conf.setScopeUri(uri);
             conf.setSection(NETBEANS_JAVADOC_LOAD_TIMEOUT);
             return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
-                if (c != null && !c.isEmpty()) {
+                if (c != null && !c.isEmpty() && c.get(0) instanceof JsonPrimitive) {
                     javadocTimeout.set(((JsonPrimitive)c.get(0)).getAsInt());
                 }
                 final int caret = Utils.getOffset(doc, params.getPosition());

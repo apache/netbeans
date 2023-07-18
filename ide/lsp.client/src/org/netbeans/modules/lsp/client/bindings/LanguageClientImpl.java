@@ -35,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.swing.Icon;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
@@ -77,10 +78,14 @@ import org.netbeans.spi.editor.hints.Severity;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.NotifyDescriptor.QuickPick.Item;
+import org.openide.awt.NotificationDisplayer;
+import org.openide.awt.NotificationDisplayer.Category;
+import org.openide.awt.NotificationDisplayer.Priority;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -190,28 +195,27 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
 
     @Override
     public void showMessage(MessageParams arg0) {
-        int messageType;
+        Icon icon;
+        Category category;
 
         switch (Optional.ofNullable(arg0.getType()).orElse(MessageType.Log)) {
             default:
             case Log:
             case Info:
-                messageType = NotifyDescriptor.INFORMATION_MESSAGE;
+                icon = Priority.LOW.getIcon();
+                category = Category.INFO;
                 break;
             case Warning:
-                messageType = NotifyDescriptor.WARNING_MESSAGE;
+                icon = ImageUtilities.image2Icon(ImageUtilities.loadImage("org/netbeans/modules/lsp/client/resources/warning.png"));
+                category = Category.WARNING;
                 break;
             case Error:
-                messageType = NotifyDescriptor.ERROR_MESSAGE;
+                icon = ImageUtilities.image2Icon(ImageUtilities.loadImage("org/netbeans/modules/lsp/client/resources/error_16.png"));
+                category = Category.ERROR;
                 break;
         }
 
-        NotifyDescriptor nd = new NotifyDescriptor.Message(
-                arg0.getMessage(),
-                messageType
-        );
-
-        DialogDisplayer.getDefault().notifyLater(nd);
+        NotificationDisplayer.getDefault().notify(arg0.getMessage(), icon, arg0.getMessage(), null, Priority.NORMAL, category);
     }
 
     @Override

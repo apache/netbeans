@@ -40,6 +40,7 @@ import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.fold.Fold;
 import org.netbeans.api.editor.fold.FoldType;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor;
 import org.netbeans.modules.java.editor.semantic.ScanningCancellableTask;
 import org.netbeans.spi.editor.fold.FoldHierarchyTransaction;
@@ -250,6 +251,10 @@ public class JavaElementFoldManager implements FoldManager {
         }
         
         public void run(final CompilationInfo info) {
+            if (SourceUtils.hasRemoteEditorPlatform(info.getFileObject())) {
+                return;
+            }
+
             resume();
             
             final Object mgrs = findLiveManagers();            

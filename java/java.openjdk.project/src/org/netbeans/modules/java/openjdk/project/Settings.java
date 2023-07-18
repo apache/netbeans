@@ -32,6 +32,7 @@ import org.openide.util.Exceptions;
 public class Settings {
 
     private static final String KEY_BUILD_BEFORE_TESTS = "build-before-test";
+    private static final String KEY_USE_REMOTE_PLATFORM = "use-remote-platform";
     private static final String KEY_JTREG_LOCATION = "jtreg-location";
     private static final String KEY_USE_ANT_BUILD = "use-langtools-ant-build";
     private static final String KEY_ANT_BUILD_LOCATION = "langtools-ant-build-location";
@@ -58,6 +59,18 @@ public class Settings {
 
     public void setRunBuildSetting(RunBuild value) {
         getPrivatePreferences().put(KEY_BUILD_BEFORE_TESTS, value.name());
+    }
+
+    public UseRemotePlatform getUseRemotePlatform() {
+        try {
+            return UseRemotePlatform.valueOf(getPrivatePreferences().get(KEY_USE_REMOTE_PLATFORM, UseRemotePlatform.JAVA_COMPILER.name()));
+        } catch (IllegalArgumentException ex) {
+            return UseRemotePlatform.JAVA_COMPILER;
+        }
+    }
+
+    public void setUseRemotePlatform(UseRemotePlatform value) {
+        getPrivatePreferences().put(KEY_USE_REMOTE_PLATFORM, value.name());
     }
 
     public String getJTregLocation() {
@@ -98,4 +111,9 @@ public class Settings {
         NEVER;
     }
 
+    public enum UseRemotePlatform {
+        NEVER,
+        JAVA_COMPILER,
+        ALWAYS;
+    }
 }

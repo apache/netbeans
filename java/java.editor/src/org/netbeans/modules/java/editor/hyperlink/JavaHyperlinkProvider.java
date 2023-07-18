@@ -25,12 +25,15 @@ import java.util.concurrent.CompletableFuture;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
+import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.java.editor.overridden.GoToImplementation;
+import org.openide.filesystems.FileObject;
 import org.netbeans.spi.lsp.HyperlinkLocationProvider;
 import org.netbeans.spi.lsp.HyperlinkTypeDefLocationProvider;
 
@@ -55,6 +58,10 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
 
     @Override
     public boolean isHyperlinkPoint(Document doc, int offset, HyperlinkType type) {
+        FileObject file = NbEditorUtilities.getFileObject(doc);
+        if (file != null && SourceUtils.hasRemoteEditorPlatform(file)) {
+            return false;
+        }
         return getHyperlinkSpan(doc, offset, type) != null;
     }
 

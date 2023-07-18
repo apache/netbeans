@@ -178,7 +178,7 @@ public final class TreeUtilities {
     
     /**
      * Checks whether given expression represents an expression statement.
-     * @since 2.56
+     * @since 2.62
      */
     public boolean isExpressionStatement(ExpressionTree tree) {
         return TreeInfo.isExpressionStatement((JCTree.JCExpression)tree);

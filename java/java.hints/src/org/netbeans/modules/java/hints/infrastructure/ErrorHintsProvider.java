@@ -712,6 +712,10 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             return ;
         }
 
+        if (SourceUtils.hasRemoteEditorPlatform(info.getFileObject())) {
+            return ;
+        }
+
         Document doc = result.getSnapshot().getSource().getDocument(false);
         
         if (doc == null) {

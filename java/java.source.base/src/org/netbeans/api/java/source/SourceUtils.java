@@ -108,6 +108,7 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.source.RemoteEditorPlatform.Provider;
 
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -117,6 +118,7 @@ import org.openide.util.Lookup;
 import org.openide.util.Pair;
 import org.openide.util.Parameters;
 import org.openide.util.BaseUtilities;
+import org.netbeans.spi.java.source.RemoteEditorPlatform;
 
 /**
  *
@@ -1415,4 +1417,25 @@ public class SourceUtils {
         }
         cc.addForceSource(file);
     }
+
+    /**
+     * Is remote platform enabled for the given source?
+     *
+     * @param source to test
+     * @return true iff the remote platform is enabled for the given source
+     * @since 2.62
+     */
+    public static boolean hasRemoteEditorPlatform(FileObject source) {
+        if (!RemoteEditorPlatform.isRemoteEditorPlatformSupported()) {
+            return false;
+        }
+
+        for (Provider p : Lookup.getDefault().lookupAll(Provider.class)) {
+            RemoteEditorPlatform rp = p.findPlatform(source);
+            if (rp != null) return rp.isEnabled();
+        }
+
+        return false;
+    }
+
 }

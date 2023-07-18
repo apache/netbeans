@@ -97,7 +97,14 @@ public class DialogDisplayerImpl extends DialogDisplayer {
         return Mutex.EVENT.readAccess (new Mutex.Action<Dialog> () {
             public Dialog run () {
                 Window w = preferredParent;
-                if( null == w ) {
+                if (w != null) {
+                    // Verify the preferred parent
+                    Component p = Utilities.findDialogParent(w);
+                    if (p != w) {
+                        w = null;
+                    }
+                }
+                if (w == null) {
                     w = findDialogParent();
                     if (!(w instanceof NbPresenter) || !w.isVisible()) {
                         // undocked window is not instanceof NbPresenter although it's NetBeans's native window
@@ -122,7 +129,7 @@ public class DialogDisplayerImpl extends DialogDisplayer {
     }
     
     private Window findDialogParent() {
-        Component parentComponent = Utilities.findDialogParent(null, WindowManager.getDefault()::getMainWindow);
+        Component parentComponent = Utilities.findDialogParent(null);
         if (parentComponent instanceof Window) {
             return (Window) parentComponent;
         }

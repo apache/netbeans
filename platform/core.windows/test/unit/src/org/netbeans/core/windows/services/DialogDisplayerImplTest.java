@@ -365,6 +365,7 @@ public class DialogDisplayerImplTest extends NbTestCase {
         assertShowing("Child is invisible", true, child);
         Window w = SwingUtilities.windowForComponent(child);
         assertSame("Window parent is not owner", owner, w.getParent());
+        postInAwtAndWaitOutsideAwt(() -> owner.setVisible(false));
     }
 
     static void postInAwtAndWaitOutsideAwt (final Runnable run) throws Exception {

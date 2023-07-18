@@ -66,10 +66,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.WeakHashMap;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -1357,15 +1359,49 @@ public final class Utilities {
      */
     // PR4739
     public static Component findDialogParent() {
-        Component parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        return findDialogParent(null, Utilities::findMainWindow);
+    }
+
+    /**
+     * Finds an appropriate component to use for a modal dialog's parent. Similar to {@link #findDialogParent()}
+     * with the ability to specify a suggested parent component and fallback.
+     *
+     * @param suggestedParent
+     *            the component to return if non-null and valid
+     * @param fallback
+     *            a supplier for the parent if no other suitable candidate exists
+     * @return the suggested parent if there is either no active modal dialog or it is contained
+     *         within that dialog, otherwise the active modal dialog or the fallback.
+     * @since 9.30
+     */
+    public static Component findDialogParent(Component suggestedParent, Supplier<Component> fallback) {
+        Component parent = suggestedParent;
         if (parent == null) {
-            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        }
+        Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        if (parent == null) {
+            parent = active;
+        } else if (active instanceof Dialog && ((Dialog) active).isModal()) {
+            Window suggested = parent instanceof Window ? (Window) parent : SwingUtilities.windowForComponent(parent);
+            if (suggested != active) {
+                return active;
+            }
         }
         if (parent == null) {
-            // PR#5280
-            parent = findMainWindow();
+            return fallback.get();
         }
         return parent;
+    }
+
+    /**
+     * Gets whether a modal dialog is open.
+     * @return true if a modal dialog is open, false otherwise
+     * @since 9.30
+     */
+    public static boolean isModalDialogOpen() {
+        Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        return active instanceof Dialog && ((Dialog) active).isModal();
     }
 
     /** @return size of the screen. The size is modified for Windows OS

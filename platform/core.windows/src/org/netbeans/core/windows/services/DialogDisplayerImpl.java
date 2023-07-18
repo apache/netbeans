@@ -42,6 +42,7 @@ import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import org.netbeans.core.windows.view.ui.DefaultSeparateContainer;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -95,53 +96,46 @@ public class DialogDisplayerImpl extends DialogDisplayer {
         }
         return Mutex.EVENT.readAccess (new Mutex.Action<Dialog> () {
             public Dialog run () {
-                // if a modal dialog active use it as parent
-                // otherwise use the main window
-                if (NbPresenter.currentModalDialog != null) {
-                    NbDialog dlg;
-                    if (NbPresenter.currentModalDialog.isLeaf ()) {
-                        dlg = new NbDialog(d, WindowManager.getDefault ().getMainWindow ());
-                    } else {
-                        dlg = new NbDialog(d, NbPresenter.currentModalDialog);
-                    }
-                    customizeDlg(dlg);
-                    return dlg;
-                }
-                else {
-                    Window w = preferredParent;
-                    if( null == w ) {
-                        w = KeyboardFocusManager.getCurrentKeyboardFocusManager ().getActiveWindow ();
-                        if (!(w instanceof NbPresenter) || !w.isVisible()) {
-                            // undocked window is not instanceof NbPresenter although it's NetBeans's native window
-                            // all docked windows implements ModeUIBase interface
-                            if (! (w instanceof DefaultSeparateContainer.ModeUIBase)) {
-                                Container cont = SwingUtilities.getAncestorOfClass(Window.class, w);
-                                if (cont instanceof DefaultSeparateContainer.ModeUIBase) {
-                                    w = (Window) cont;
-                                } else {
-                                    // don't set non-ide window as parent
-                                    w = WindowManager.getDefault ().getMainWindow ();
-                                }
+                Window w = preferredParent;
+                if( null == w ) {
+                    w = findDialogParent();
+                    if (!(w instanceof NbPresenter) || !w.isVisible()) {
+                        // undocked window is not instanceof NbPresenter although it's NetBeans's native window
+                        // all docked windows implements ModeUIBase interface
+                        if (! (w instanceof DefaultSeparateContainer.ModeUIBase)) {
+                            Container cont = SwingUtilities.getAncestorOfClass(Window.class, w);
+                            if (cont instanceof DefaultSeparateContainer.ModeUIBase) {
+                                w = (Window) cont;
+                            } else {
+                                // don't set non-ide window as parent
+                                w = WindowManager.getDefault ().getMainWindow ();
                             }
-                        } else if (w instanceof NbPresenter && ((NbPresenter) w).isLeaf ()) {
-                            w = WindowManager.getDefault ().getMainWindow ();
                         }
                     }
-                    NbDialog dlg;
-                    if (w instanceof Dialog) {
-                        dlg = new NbDialog(d, (Dialog) w);
-                    } else {
-                        Frame f = w instanceof Frame ? (Frame) w : WindowManager.getDefault ().getMainWindow ();
-                        dlg = new NbDialog(d, f);
-                    }
-                    customizeDlg(dlg);
-                    dlg.requestFocusInWindow ();
-                    return dlg;
                 }
+                NbDialog dlg = new NbDialog(d, w);
+                customizeDlg(dlg);
+                dlg.requestFocusInWindow ();
+                return dlg;
             }
         });
     }
     
+    private Window findDialogParent() {
+        Component parentComponent = Utilities.findDialogParent(null, WindowManager.getDefault()::getMainWindow);
+        if (parentComponent instanceof Window) {
+            return (Window) parentComponent;
+        }
+        Window parent = null;
+        if (parentComponent != null) {
+            parent = SwingUtilities.windowForComponent(parentComponent);
+        }
+        if (parent == null || parent instanceof NbPresenter && ((NbPresenter) parent).isLeaf ()) {
+            return WindowManager.getDefault().getMainWindow();
+        }
+        return parent;
+    }
+
     /** Notifies user by a dialog.
      * @param descriptor description that contains needed informations
      * @return the option that has been choosen in the notification.
@@ -222,43 +216,13 @@ public class DialogDisplayerImpl extends DialogDisplayer {
             while ((win != null) && (!(win instanceof Window))) win = win.getParent ();
             if (win != null) focusOwner = ((Window)win).getFocusOwner ();
 
-            // if a modal dialog is active use it as parent
-            // otherwise use the main window
-
             NbPresenter presenter;
+            Window parent = noParent ? null : findDialogParent();
+
             if (descriptor instanceof DialogDescriptor) {
-                if (NbPresenter.currentModalDialog != null) {
-                    if (NbPresenter.currentModalDialog.isLeaf ()) {
-                        presenter = new NbDialog((DialogDescriptor) descriptor, WindowManager.getDefault ().getMainWindow ());
-                    } else {
-                        presenter = new NbDialog((DialogDescriptor) descriptor, NbPresenter.currentModalDialog);
-                    }
-                } else {
-                    Window w = KeyboardFocusManager.getCurrentKeyboardFocusManager ().getActiveWindow ();
-                    if (w instanceof NbPresenter && ((NbPresenter) w).isLeaf ()) {
-                        w = WindowManager.getDefault ().getMainWindow ();
-                    }
-                    Frame f = w instanceof Frame ? (Frame) w : WindowManager.getDefault().getMainWindow();
-                    if (noParent) {
-                        f = null;
-                    }
-                    presenter = new NbDialog((DialogDescriptor) descriptor, f);
-                }
+                presenter = new NbDialog((DialogDescriptor) descriptor, parent);
             } else {
-                if (NbPresenter.currentModalDialog != null) {
-                    if (NbPresenter.currentModalDialog.isLeaf()) {
-                        presenter = new NbPresenter(descriptor, WindowManager.getDefault().getMainWindow(), true);
-                    } else {
-                        presenter = new NbPresenter(descriptor, NbPresenter.currentModalDialog, true);
-                    }
-                } else {
-                    Window w = KeyboardFocusManager.getCurrentKeyboardFocusManager ().getActiveWindow ();
-                    Frame f = w instanceof Frame ? (Frame) w : WindowManager.getDefault().getMainWindow();
-                    if (noParent) {
-                        f = null;
-                    }
-                    presenter = new NbPresenter(descriptor, f, true);
-                }
+                presenter = new NbPresenter(descriptor, parent, Dialog.DEFAULT_MODALITY_TYPE);
             }
             
             synchronized (this) {

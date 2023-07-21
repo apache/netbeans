@@ -1982,17 +1982,111 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
-      - name: enterprise/j2ee.core
+      - name: api.web.webmodule
+        run: ant $OPTS -f enterprise/api.web.webmodule test
+
+      - name: cloud.amazon
+        run: ant $OPTS -f enterprise/cloud.amazon test
+
+      - name: cloud.oracle
+        run: ant $OPTS -f enterprise/cloud.oracle test
+
+      - name: el.lexer
+        run: ant $OPTS -f enterprise/el.lexer test
+
+      - name: glassfish.common
+        run: ant $OPTS -f enterprise/glassfish.common test
+
+# Fails
+#      - name: glassfish.javaee
+#        run: ant $OPTS -f enterprise/glassfish.javaee test
+
+# Fails
+#      - name: glassfish.tooling
+#        run: ant $OPTS -f enterprise/glassfish.tooling test
+
+      - name: j2ee.api.ejbmodule
+        run: ant $OPTS -f enterprise/j2ee.api.ejbmodule test
+
+      - name: j2ee.clientproject
+        run: ant $OPTS -f enterprise/j2ee.clientproject test
+
+      - name: j2ee.common
+        run: ant $OPTS -f enterprise/j2ee.common test
+
+      - name: j2ee.core
         run: ant $OPTS -f enterprise/j2ee.core test
 
-      - name: enterprise/javaee.wildfly
+# Fails
+#      - name: j2ee.dd
+#        run: ant $OPTS -f enterprise/j2ee.dd test
+
+      - name: j2ee.ddloaders
+        run: ant $OPTS -f enterprise/j2ee.ddloaders test
+
+      - name: j2ee.dd.webservice
+        run: ant $OPTS -f enterprise/j2ee.dd.webservice test
+
+# Fails + Slow
+#      - name: j2ee.ejbjarproject
+#        run: ant $OPTS -f enterprise/j2ee.ejbjarproject test
+
+# Fails
+#      - name: j2ee.ejbverification
+#        run: ant $OPTS -f enterprise/j2ee.ejbverification test
+
+# Fails
+#      - name: j2eeserver
+#        run: ant $OPTS -f enterprise/j2eeserver test
+
+      - name: j2ee.sun.appsrv
+        run: ant $OPTS -f enterprise/j2ee.sun.appsrv test
+
+      - name: j2ee.sun.dd
+        run: ant $OPTS -f enterprise/j2ee.sun.dd test
+
+# Fails
+#      - name: j2ee.sun.ddui
+#        run: ant $OPTS -f enterprise/j2ee.sun.ddui test
+
+# Fails + Slow
+#      - name: jakarta.web.beans
+#        run: ant $OPTS -f enterprise/jakarta.web.beans test
+
+      - name: javaee.wildfly
         run: .github/retry.sh ant $OPTS -f enterprise/javaee.wildfly test
 
-      - name: enterprise/maven.j2ee
+# Fails + Slow
+#      - name: jellytools.enterprise
+#        run: ant $OPTS -f enterprise/jellytools.enterprise test
+
+      - name: jsp.lexer
+        run: ant $OPTS -f enterprise/jsp.lexer test
+
+      - name: maven.j2ee
         run: ant $OPTS -f enterprise/maven.j2ee test
 
-      - name: enterprise/micronaut
+      - name: micronaut
         run: .github/retry.sh ant $OPTS -f enterprise/micronaut test
+
+# Fails
+#      - name: enterpirse/payara.common
+#        run: ant $OPTS -f enterprise/payara.common test
+
+# Fails
+#      - name: enterpirse/payara.eecommon
+#        run: ant $OPTS -f enterprise/payara.eecommon test
+
+# Fails
+#      - name: enterpirse/payara.jakartaee
+#        run: ant $OPTS -f enterprise/payara.jakartaee test
+
+# Fails
+#      - name: enterpirse/payara.tooling
+#        run: ant $OPTS -f enterprise/payara.tooling test
+
+      - name: profiler.j2ee
+        run: ant $OPTS -f enterprise/profiler.j2ee test
 
       - name: spring.webmvc
         run: ant $OPTS -f enterprise/spring.webmvc test
@@ -2000,14 +2094,95 @@ jobs:
       - name: tomcat5
         run: ant $OPTS -f enterprise/tomcat5 test
 
-      - name: enterprise/web.jsf
-        run: .github/retry.sh ant $OPTS -f enterprise/web.jsf test
+# Fails
+#      - name: web.beans
+#        run: ant $OPTS -f enterprise/web.beans test
 
-      - name: enterprise/web.jsfapi
+# Fails + Slow
+#      - name: web.core.syntax
+#        run: ant $OPTS -f enterprise/web.core.syntax test
+
+# Fails + Slow
+#      - name: web.debug
+#        run: ant $OPTS -f enterprise/web.debug test
+
+# Fails
+#      - name: web.el
+#        run: ant $OPTS -f enterprise/web.el test
+
+# Fails
+#      - name: web.freeform
+#        run: ant $OPTS -f enterprise/web.freeform test
+
+# Fails
+#      - name: web.jsf.editor
+#        run: ant $OPTS -f enterprise/web.jsf.editor test
+
+# Fails
+#      - name: web.jsf.navigation
+#        run: ant $OPTS -f enterprise/web.jsf.navigation test
+
+      - name: web.jsf
+        run: ant $OPTS -f enterprise/web.jsf test
+
+      - name: web.jsfapi
         run: ant $OPTS -f enterprise/web.jsfapi test
 
-      - name: websvc.editor.hints
-        run: ant $OPTS -f enterprise/websvc.editor.hints test
+# Fails
+#      - name: web.jspparser
+#        run: ant $OPTS -f enterprise/web.jspparser test
+
+# Fails
+#      - name: web.project
+#        run: ant $OPTS -f enterprise/web.project test
+
+# Fails
+#      - name: web.struts
+#        run: ant $OPTS -f enterprise/web.struts test
+
+      - name: websvc.clientapi
+        run: ant $OPTS -f enterprise/websvc.clientapi test
+
+# Fails
+#      - name: websvc.customization
+#        run: ant $OPTS -f enterprise/websvc.customization test
+
+# Fails
+#      - name: websvc.design
+#        run: ant $OPTS -f enterprise/websvc.design test
+
+# Fails
+#      - name: websvc.editor.hints
+#        run: ant $OPTS -f enterprise/websvc.editor.hints test
+
+      - name: websvc.jaxwsapi
+        run: ant $OPTS -f enterprise/websvc.jaxwsapi test
+
+# Fails
+#      - name: websvc.jaxwsmodel
+#        run: ant $OPTS -f enterprise/websvc.jaxwsmodel test
+
+# Fails + Slow
+#      - name: websvc.kit
+#        run: ant $OPTS -f enterprise/websvc.kit test
+
+# Fails
+#      - name: websvc.manager
+#        run: ant $OPTS -f enterprise/websvc.manager test
+
+      - name: websvc.projectapi
+        run: ant $OPTS -f enterprise/websvc.projectapi test
+
+      - name: websvc.rest
+        run: ant $OPTS -f enterprise/websvc.rest test
+
+# Fails + Slow
+#      - name: websvc.restkit
+#        run: ant $OPTS -f enterprise/websvc.restkit test
+
+# Fails
+#      - name: websvc.utilities
+#        run: ant $OPTS -f enterprise/websvc.utilities test
 
       - name: websvc.websvcapi
         run: ant $OPTS -f enterprise/websvc.websvcapi test

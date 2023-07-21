@@ -89,6 +89,7 @@ public class FixUsesPerformer {
     private static final char COMMA = ','; //NOI18N
     private static final char CURLY_OPEN = '{'; //NOI18N
     private static final char CURLY_CLOSE = '}'; //NOI18N
+    private static final Map<UsePart.Type, Integer> PSR12_TYPE_PRIORITIES = new HashMap<>();
     private final PHPParseResult parserResult;
     private final ImportData importData;
     private final List<ItemVariant> selections;
@@ -96,6 +97,12 @@ public class FixUsesPerformer {
     private final Options options;
     private EditList editList;
     private BaseDocument baseDocument;
+
+    static {
+        PSR12_TYPE_PRIORITIES.put(UsePart.Type.TYPE, 0);
+        PSR12_TYPE_PRIORITIES.put(UsePart.Type.FUNCTION, 1);
+        PSR12_TYPE_PRIORITIES.put(UsePart.Type.CONST, 2);
+    }
 
     public FixUsesPerformer(
             final PHPParseResult parserResult,
@@ -291,32 +298,22 @@ public class FixUsesPerformer {
 
     private void sort(List<UsePart> useParts) {
         if (options.putInPSR12Order()) {
-            Collections.sort(useParts, (u1, u2) -> {
-                int result = 0;
-                if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
-                    result = 0;
-                } else if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
-                    result = -1;
-                } else if (UsePart.Type.TYPE.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
-                    result = -1;
-                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
-                    result = 1;
-                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
-                    result = 0;
-                } else if (UsePart.Type.CONST.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
-                    result = 1;
-                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.TYPE.equals(u2.getType())) {
-                    result = 1;
-                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.CONST.equals(u2.getType())) {
-                    result = -1;
-                } else if (UsePart.Type.FUNCTION.equals(u1.getType()) && UsePart.Type.FUNCTION.equals(u2.getType())) {
-                    result = 0;
-                }
-                return result == 0 ? u1.getTextPart().compareToIgnoreCase(u2.getTextPart()) : result;
-            });
+            sort(useParts, PSR12_TYPE_PRIORITIES);
         } else {
             Collections.sort(useParts);
         }
+    }
+
+    private void sort(List<UsePart> useParts, final Map<UsePart.Type, Integer> typePriorities) {
+        Collections.sort(useParts, (u1, u2) -> {
+            int result = 0;
+            Integer p1 = typePriorities.get(u1.getType());
+            Integer p2 = typePriorities.get(u2.getType());
+            if (p1 != null && p2 != null) {
+                result = Integer.compare(p1, p2);
+            }
+            return result == 0 ? u1.getTextPart().compareToIgnoreCase(u2.getTextPart()) : result;
+        });
     }
 
     private String createStringForGroupUse(List<UsePart> useParts, String indentString) {

@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.editor.actions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -65,8 +66,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.awt.StatusDisplayer;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.Pair;
 
 /**
  *
@@ -361,29 +362,37 @@ public class FixUsesPerformer {
     }
 
     private void createStringForGroupUsePSR12(StringBuilder insertString, String indentString, Map<String, List<UsePart>> useParts) {
-        // types
-        createStringForGroupUse(insertString, indentString, USE_PREFIX, useParts.get(USE_PREFIX));
-
-        // functions
-        if (!useParts.get(USE_FUNCTION_PREFIX).isEmpty()) {
-            appendNewLine(insertString);
-        }
-        createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, useParts.get(USE_FUNCTION_PREFIX));
-
-        // constants
-        if (!useParts.get(USE_CONST_PREFIX).isEmpty()) {
-            appendNewLine(insertString);
-        }
-        createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, useParts.get(USE_CONST_PREFIX));
+        // use Type;
+        // use function func;
+        // use const CONSTANT;
+        createStringForGroupUse(Arrays.asList(USE_PREFIX, USE_FUNCTION_PREFIX, USE_CONST_PREFIX), useParts, insertString, indentString);
     }
 
     private void createStringForGroupUseDefault(StringBuilder insertString, String indentString, Map<String, List<UsePart>> useParts) {
-        // types
-        createStringForGroupUse(insertString, indentString, USE_PREFIX, useParts.get(USE_PREFIX));
-        // constants
-        createStringForGroupUse(insertString, indentString, USE_CONST_PREFIX, useParts.get(USE_CONST_PREFIX));
-        // functions
-        createStringForGroupUse(insertString, indentString, USE_FUNCTION_PREFIX, useParts.get(USE_FUNCTION_PREFIX));
+        // use Type;
+        // use const CONSTANT;
+        // use function func;
+        createStringForGroupUse(Arrays.asList(USE_PREFIX, USE_CONST_PREFIX, USE_FUNCTION_PREFIX), useParts, insertString, indentString);
+    }
+
+    private void createStringForGroupUse(List<String> useTypes, Map<String, List<UsePart>> useParts, StringBuilder insertString, String indentString) {
+        for (String useType : useTypes) {
+            createStringForGroupUse(Pair.of(useType, useParts), insertString, indentString);
+        }
+    }
+
+    private void createStringForGroupUse(Pair<String, Map<String, List<UsePart>>> useParts, StringBuilder insertString, String indentString) {
+        String useType = useParts.first();
+        if (!useParts.second().get(useType).isEmpty()) {
+            appendNewLineBetweenUseTypes(insertString);
+        }
+        createStringForGroupUse(insertString, indentString, useType, useParts.second().get(useType));
+    }
+
+    private void appendNewLineBetweenUseTypes(StringBuilder insertString) {
+        for (int i = 0; i < options.getBlankLinesBetweenUseTypes(); i++) {
+            appendNewLine(insertString);
+        }
     }
 
     private void appendNewLine(StringBuilder insertString) {
@@ -466,6 +475,7 @@ public class FixUsesPerformer {
                     insertString.append(COMMA).append(NEW_LINE).append(indentString);
                 } else {
                     insertString.append(SEMICOLON);
+                    appendNewLineBetweenUseTypes(insertString);
                 }
             }
             if (lastUsePartType != usePart.getType()) {
@@ -496,8 +506,8 @@ public class FixUsesPerformer {
         StringBuilder result = new StringBuilder();
         UsePart.Type lastUseType = null;
         for (UsePart usePart : useParts) {
-            if (options.putInPSR12Order() && lastUseType != null && lastUseType != usePart.getType()) {
-                appendNewLine(result);
+            if (lastUseType != null && lastUseType != usePart.getType()) {
+                appendNewLineBetweenUseTypes(result);
             }
             result.append(usePart.getUsePrefix()).append(usePart.getTextPart()).append(SEMICOLON);
             lastUseType = usePart.getType();

@@ -766,4 +766,12 @@ public class JsStructureScannerTest extends JsTestBase {
     public void testObjectNameMatchingNestedFunction() throws Exception {
         checkStructure("testfiles/structure/objectNameMatchingNestedFunction.js");
     }
+
+    public void testClassInAnonymousFunction() throws Exception {
+        checkStructure("testfiles/structure/classInAnonymousFunction.js");
+    }
+
+    public void testClassInAnonymousFunction2() throws Exception {
+        checkStructure("testfiles/structure/classInAnonymousFunction2.js");
+    }
 }

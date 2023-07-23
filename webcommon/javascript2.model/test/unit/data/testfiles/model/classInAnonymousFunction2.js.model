@@ -1,0 +1,37 @@
+FUNCTION classInAnonymousFunction2 [ANONYMOUS: false, DECLARED: true - classInAnonymousFunction2, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+classInAnonymousFunction2L#20 : FUNCTION classInAnonymousFunction2L#20 [ANONYMOUS: true, DECLARED: true - classInAnonymousFunction2L#20, MODIFIERS: PUBLIC, FUNCTION]
+                              # RETURN TYPES
+                              undefined, RESOLVED: true
+                              # PROPERTIES
+                              Directory   : OBJECT Directory [ANONYMOUS: false, DECLARED: true - Directory, MODIFIERS: PUBLIC, CLASS]
+                                          # PROPERTIES
+                                          constructor : FUNCTION constructor [ANONYMOUS: false, DECLARED: true - constructor, MODIFIERS: PUBLIC, CONSTRUCTOR]
+                                                      # RETURN TYPES
+                                                      classInAnonymousFunction2L#20.Directory, RESOLVED: true
+                                                      # PARAMETERS
+                                                      OBJECT displayName [ANONYMOUS: false, DECLARED: true - displayName, MODIFIERS: PUBLIC, PARAMETER]
+                                                      # PROPERTIES
+                                                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                          displayName : OBJECT displayName [ANONYMOUS: false, DECLARED: true - displayName, MODIFIERS: PUBLIC, PROPERTY]
+                              ImageFile   : OBJECT ImageFile [ANONYMOUS: false, DECLARED: true - ImageFile, MODIFIERS: PUBLIC, CLASS]
+                                          # PROPERTIES
+                                          constructor : FUNCTION constructor [ANONYMOUS: false, DECLARED: true - constructor, MODIFIERS: PUBLIC, CONSTRUCTOR]
+                                                      # RETURN TYPES
+                                                      classInAnonymousFunction2L#20.ImageFile, RESOLVED: true
+                                                      # PARAMETERS
+                                                      OBJECT displayName [ANONYMOUS: false, DECLARED: true - displayName, MODIFIERS: PUBLIC, PARAMETER]
+                                                      # PROPERTIES
+                                                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                          displayName : OBJECT displayName [ANONYMOUS: false, DECLARED: true - displayName, MODIFIERS: PUBLIC, PROPERTY]
+                              arguments   : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                              getJsonData : FUNCTION getJsonData [ANONYMOUS: false, DECLARED: true - getJsonData, MODIFIERS: PRIVATE, METHOD]
+                                          # RETURN TYPES
+                                          undefined, RESOLVED: true
+                                          # PARAMETERS
+                                          OBJECT folderURL [ANONYMOUS: false, DECLARED: true - folderURL, MODIFIERS: PUBLIC, PARAMETER]
+                                          # PROPERTIES
+                                          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                          body      : OBJECT body [ANONYMOUS: false, DECLARED: true - body, MODIFIERS: PRIVATE, CONSTANT]

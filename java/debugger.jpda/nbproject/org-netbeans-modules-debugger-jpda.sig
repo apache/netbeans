@@ -1,9 +1,10 @@
 #Signature file v4.1
-#Version 1.129.0
+#Version 1.130.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotation(com.sun.source.tree.AnnotationTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnyPattern(com.sun.source.tree.AnyPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitArrayAccess(com.sun.source.tree.ArrayAccessTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitArrayType(com.sun.source.tree.ArrayTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.tree.TreeVisitor%1})
@@ -50,12 +51,12 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitOther(com.sun.sour
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPackage(com.sun.source.tree.PackageTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.tree.TreeVisitor%1})
-meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPatternCaseLabel(com.sun.source.tree.PatternCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitStringTemplate(com.sun.source.tree.StringTemplateTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.tree.TreeVisitor%1})
@@ -87,6 +88,7 @@ meth public {com.sun.source.util.TreeScanner%0} scan(com.sun.source.tree.Tree,{c
 meth public {com.sun.source.util.TreeScanner%0} scan(java.lang.Iterable<? extends com.sun.source.tree.Tree>,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAnnotation(com.sun.source.tree.AnnotationTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitAnyPattern(com.sun.source.tree.AnyPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitArrayAccess(com.sun.source.tree.ArrayAccessTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitArrayType(com.sun.source.tree.ArrayTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.util.TreeScanner%1})
@@ -133,12 +135,12 @@ meth public {com.sun.source.util.TreeScanner%0} visitOther(com.sun.source.tree.T
 meth public {com.sun.source.util.TreeScanner%0} visitPackage(com.sun.source.tree.PackageTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.util.TreeScanner%1})
-meth public {com.sun.source.util.TreeScanner%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitPatternCaseLabel(com.sun.source.tree.PatternCaseLabelTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitStringTemplate(com.sun.source.tree.StringTemplateTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.util.TreeScanner%1})

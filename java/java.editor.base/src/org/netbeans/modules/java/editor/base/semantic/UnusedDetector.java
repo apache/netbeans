@@ -62,6 +62,7 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -147,8 +148,10 @@ public class UnusedDetector {
                     }
                 }
             } else if ((el.getKind() == ElementKind.CONSTRUCTOR || el.getKind() == ElementKind.METHOD) && (isPrivate || isPkgPrivate)) {
-                if (!isSerializationMethod(info, (ExecutableElement)el) && !uses.contains(UseTypes.USED)
-                        && !info.getElementUtilities().overridesMethod((ExecutableElement)el) && !lookedUpElement(el, uv.type2LookedUpMethods, uv.allStringLiterals)) {
+                ExecutableElement method = (ExecutableElement)el;
+                if (!isSerializationMethod(info, method) && !uses.contains(UseTypes.USED)
+                        && !info.getElementUtilities().overridesMethod(method) && !lookedUpElement(el, uv.type2LookedUpMethods, uv.allStringLiterals)
+                        && !SourceUtils.isMainMethod(method)) {
                     if (isPrivate || isUnusedInPkg(info, el, cancel)) {
                         result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_USED));
                     }

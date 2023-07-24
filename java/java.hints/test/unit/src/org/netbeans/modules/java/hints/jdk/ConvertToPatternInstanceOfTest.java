@@ -44,8 +44,7 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                        "        return -1;\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("17")
                 .run(ConvertToPatternInstanceOf.class)
                 .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
                 .applyFix()
@@ -74,8 +73,7 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                        "        }\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("17")
                 .run(ConvertToPatternInstanceOf.class)
                 .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
                 .applyFix()
@@ -103,8 +101,7 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                        "        return -1;\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("17")
                 .run(ConvertToPatternInstanceOf.class)
                 .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
                 .applyFix()
@@ -131,8 +128,7 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                        "        return -1;\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("17")
                 .run(ConvertToPatternInstanceOf.class)
                 .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
                 .applyFix()

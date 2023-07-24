@@ -22,7 +22,6 @@ import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.ParenthesizedPatternTree;
 import com.sun.source.tree.PatternTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
@@ -165,9 +164,6 @@ public class ConvertToNestedRecordPattern {
                     findNested(new TreePath(patternPath, p), nestedBindingPatterns);
                 }
                 return nestedBindingPatterns;
-            case PARENTHESIZED_PATTERN:
-                ParenthesizedPatternTree parenthTree = (ParenthesizedPatternTree) patternPath.getLeaf();
-                return findNested(new TreePath(patternPath, parenthTree.getPattern()), nestedBindingPatterns);
             default:
                 return nestedBindingPatterns;
         }
@@ -286,9 +282,6 @@ public class ConvertToNestedRecordPattern {
                     list.add(val);
                 }
                 return (DeconstructionPatternTree) wc.getTreeMaker().RecordPattern(bTree.getDeconstructor(), list, null);
-            case PARENTHESIZED_PATTERN:
-                ParenthesizedPatternTree parenthTree = (ParenthesizedPatternTree) pTree;
-                return createNestedPattern(parenthTree.getPattern(), wc, map);
             default:
                 return pTree;
         }

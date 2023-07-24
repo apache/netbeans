@@ -2185,7 +2185,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
     }
 
     public void testPatternSwitch() throws Exception {
-        setSourceLevel(SourceVersion.latest().name().substring("RELEASE_".length()));
+        setSourceLevel("20");
 
         Map<String, String> file2Fixed = new HashMap<>();
         VanillaCompileWorker.fixedListener = (file, cut) -> {
@@ -2235,7 +2235,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    }\n" +
                 "    \n" +
                 "    public void test1(Object o) {\n" +
-                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.preview.feature.disabled.plural\");\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.feature.not.supported.in.source.plural\");\n" +
                 "    }\n" +
                 "    \n" +
                 "    public void test2(Object o) {\n" +

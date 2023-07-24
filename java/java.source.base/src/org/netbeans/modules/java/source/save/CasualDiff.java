@@ -947,8 +947,9 @@ public class CasualDiff {
         int insertHint = localPointer;
         List<JCTree> filteredOldTDefs = filterHidden(oldT.defs);
         List<JCTree> filteredNewTDefs = filterHidden(newT.defs);
-        // skip the section when printing anonymous class
-        if (anonClass == false) {
+        boolean unnamed = (oldT.mods.flags & Flags.UNNAMED_CLASS) != 0;
+        // skip the section when printing anonymous or unnamed class
+        if (anonClass == false && !unnamed) {
         tokenSequence.move(oldT.pos);
         tokenSequence.moveNext(); // First skip as move() does not position to token directly
         tokenSequence.moveNext();
@@ -1067,7 +1068,7 @@ public class CasualDiff {
         tokenSequence.move(insertHint);
         tokenSequence.moveNext();
         insertHint = moveBackToToken(tokenSequence, insertHint, JavaTokenId.LBRACE) + 1;
-        } else {
+        } else if (!unnamed) {
             insertHint = moveFwdToToken(tokenSequence, oldT.getKind() == Kind.ENUM ? localPointer : getOldPos(oldT), JavaTokenId.LBRACE);
             tokenSequence.moveNext();
             insertHint = tokenSequence.offset();
@@ -1879,9 +1880,9 @@ public class CasualDiff {
     protected int diffForeachLoop(JCEnhancedForLoop oldT, JCEnhancedForLoop newT, int[] bounds) {
         int localPointer = bounds[0];
         // variable
-        int[] varBounds = getBounds(oldT.varOrRecordPattern);
+        int[] varBounds = getBounds(oldT.var);
         copyTo(localPointer, varBounds[0]);
-        localPointer = diffTree(oldT.varOrRecordPattern, newT.varOrRecordPattern, varBounds);
+        localPointer = diffTree(oldT.var, newT.var, varBounds);
         // expression
         int[] exprBounds = getBounds(oldT.expr);
         copyTo(localPointer, exprBounds[0]);
@@ -2017,6 +2018,15 @@ public class CasualDiff {
         copyTo(localPointer, copyTo);
         localPointer = diffList2(oldPatterns, newPatterns, posHint, patternEst);
         tokenSequence.move(endpos);
+        if (oldT.guard != null && newT.guard != null) {
+            int[] guardBounds = getBounds(oldT.guard);
+            copyTo(localPointer, guardBounds[0]);
+            diffTree(oldT.guard, newT.guard, guardBounds);
+        } else if (oldT.guard != null && newT.guard == null) {
+            //TODO:
+        } else if (oldT.guard == null && newT.guard != null) {
+            //TODO:
+        }
         do { } while (tokenSequence.moveNext() && JavaTokenId.COLON != tokenSequence.token().id() && JavaTokenId.ARROW != tokenSequence.token().id());
         boolean reindentStatements = false;
         if (Objects.equals(oldT.getCaseKind(), newT.getCaseKind())) {
@@ -5856,7 +5866,7 @@ public class CasualDiff {
     }
 
     private boolean matchForeachLoop(JCEnhancedForLoop t1, JCEnhancedForLoop t2) {
-        return treesMatch(t1.varOrRecordPattern, t2.varOrRecordPattern) &&
+        return treesMatch(t1.var, t2.var) &&
                treesMatch(t1.expr, t2.expr) &&
                treesMatch(t1.body, t2.body);
     }

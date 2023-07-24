@@ -417,10 +417,10 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
         private Type delegate = null;
         
         public PlaceholderType() {
-            this(TypeMetadata.EMPTY);
+            this(com.sun.tools.javac.util.List.nil());
         }       
 
-        public PlaceholderType(TypeMetadata md) {
+        public PlaceholderType(com.sun.tools.javac.util.List<TypeMetadata> md) {
             super(null, md);
         }       
 
@@ -430,7 +430,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
         }
 
         @Override
-        public Type cloneWithMetadata(TypeMetadata md) {
+        public Type cloneWithMetadata(com.sun.tools.javac.util.List<TypeMetadata> md) {
             PlaceholderType out = new PlaceholderType(md);
             out.delegate = delegate;
             return out;

@@ -91,7 +91,8 @@ public class ComputeImportsTest extends NbTestCase {
         "sunw.io.Serializable",
         "sun.rmi.transport.Target",
         "com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Element",
-        "com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections"
+        "com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections",
+        "com.azul.crs.client.service.JarLoadMonitor.ProcessedJarFiles.LRU.Element"
     }));
     
     private static final List<Pattern> IGNORE_PATTERNS = Collections.unmodifiableList(Arrays.asList(

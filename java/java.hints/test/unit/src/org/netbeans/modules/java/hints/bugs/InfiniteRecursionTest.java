@@ -662,8 +662,7 @@ public class InfiniteRecursionTest extends NbTestCase {
                 + "}\n"
                 + ""
                 )
-                .sourceLevel("19")
-                .options("--enable-preview")
+                .sourceLevel("21")
                 .run(InfiniteRecursion.class)
                 .assertWarnings("6:28-6:38:verifier:The method recurse will recurse infinitely");
     }
@@ -692,8 +691,7 @@ public class InfiniteRecursionTest extends NbTestCase {
                 + "}\n"
                 + "", false
                 )
-                .sourceLevel("19")
-                .options("--enable-preview")
+                .sourceLevel("21")
                 .run(InfiniteRecursion.class)
                 .assertWarnings(); //erroneous code, OK to not produce warnings
     }

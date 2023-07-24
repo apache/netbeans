@@ -18,6 +18,8 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
+import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.Lexer;
 import com.sun.tools.javac.parser.ParserFactory;
@@ -25,6 +27,7 @@ import com.sun.tools.javac.parser.ScannerFactory;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
@@ -79,6 +82,20 @@ public class NBParserFactory extends ParserFactory {
             super(fac, S, keepDocComments, keepLineMap, keepEndPos, parseModuleInfo);
             this.names = fac.names;
             this.cancelService = cancelService;
+        }
+
+        @Override
+        public JCCompilationUnit parseCompilationUnit() {
+            JCCompilationUnit unit = super.parseCompilationUnit();
+            if (!unit.getTypeDecls().isEmpty() && unit.getTypeDecls().get(0).getKind() == Kind.CLASS) {
+                //workaround for JDK-8310326:
+                JCClassDecl firstClass = (JCClassDecl) unit.getTypeDecls().get(0);
+                if ((firstClass.mods.flags & Flags.UNNAMED_CLASS) != 0) {
+                    firstClass.pos = getStartPos(firstClass.defs.head);
+                    firstClass.mods.pos = Position.NOPOS;
+                }
+            }
+            return unit;
         }
 
         @Override
@@ -139,8 +156,8 @@ public class NBParserFactory extends ParserFactory {
             //no end position. Inject the end position for the variable:
             if (result instanceof JCEnhancedForLoop) {
                 JCEnhancedForLoop tree = (JCEnhancedForLoop) result;
-                if (getEndPos(tree.varOrRecordPattern) == Position.NOPOS) {
-                    endPosTable.storeEnd(tree.varOrRecordPattern, getEndPos(((JCVariableDecl) tree.varOrRecordPattern).vartype));
+                if (getEndPos(tree.var) == Position.NOPOS) {
+                    endPosTable.storeEnd(tree.var, getEndPos(((JCVariableDecl) tree.var).vartype));
                 }
             }
             return result;

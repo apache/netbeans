@@ -22,7 +22,9 @@ import java.awt.Image;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Set;
 import java.util.concurrent.CompletionStage;
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangeType;
 import org.netbeans.modules.java.lsp.server.explorer.api.ResourceData;
 import org.openide.nodes.Node;
 
@@ -42,6 +44,8 @@ public interface TreeNodeRegistry {
     ResourceData imageContents(URI imageUri);
     
     CompletionStage<TreeViewProvider> createProvider(String id);
+    long addNodeChangesListener(int id, Set<NodeChangeType> types);
+    void removeNodeChangesListener(long listenerId, Set<NodeChangeType> types);
     
     public class ImageDataOrIndex {
         /**

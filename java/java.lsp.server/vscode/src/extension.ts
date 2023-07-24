@@ -649,7 +649,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         ls.push(listener);
     }));
     context.subscriptions.push(commands.registerCommand('nbls.node.properties.edit',
-        async (node) => await PropertiesView.createOrShow(context, node)));
+        async (node) => await PropertiesView.createOrShow(context, node, (await client).findTreeViewService())));
 
     launchConfigurations.updateLaunchConfig();
 

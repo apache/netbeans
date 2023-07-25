@@ -52,6 +52,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
@@ -154,7 +155,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         return ret.get();
     }
 
-    public static final Set<String> SUPPORTED_ELEMENT_KINDS = new HashSet<>(Arrays.asList("PACKAGE", "CLASS", "INTERFACE", "ENUM", "ANNOTATION_TYPE", "METHOD", "CONSTRUCTOR", "INSTANCE_INIT", "STATIC_INIT", "FIELD", "ENUM_CONSTANT", "TYPE_PARAMETER", "MODULE"));
+    public static final Set<String> SUPPORTED_ELEMENT_KINDS = new HashSet<>(Arrays.asList("PACKAGE", "CLASS", "INTERFACE", "ENUM", "ANNOTATION_TYPE", "RECORD", "METHOD", "CONSTRUCTOR", "INSTANCE_INIT", "STATIC_INIT", "FIELD", "ENUM_CONSTANT", "TYPE_PARAMETER", "MODULE"));
 
     public static Supplier<String> getDocumentation(Document doc, int offset, ElementHandle handle) {
         return () -> {
@@ -189,6 +190,8 @@ public class JavaCompletionCollector implements CompletionCollector {
                 return Completion.Kind.Enum;
             case CLASS:
                 return Completion.Kind.Class;
+            case RECORD:
+                return Completion.Kind.Struct;
             case ANNOTATION_TYPE:
                 return Completion.Kind.Interface;
             case INTERFACE:
@@ -294,7 +297,8 @@ public class JavaCompletionCollector implements CompletionCollector {
     }
 
     private static class ItemFactoryImpl implements JavaCompletionTask.TypeCastableItemFactory<Completion>,
-            JavaCompletionTask.LambdaItemFactory<Completion>, JavaCompletionTask.ModuleItemFactory<Completion> {
+            JavaCompletionTask.LambdaItemFactory<Completion>, JavaCompletionTask.ModuleItemFactory<Completion>,
+            JavaCompletionTask.RecordPatternItemFactory<Completion> {
 
         private static final String EMPTY = "";
         private static final String ERROR = "<error>";
@@ -928,6 +932,41 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .insertText(insertText.toString())
                     .insertTextFormat(Completion.TextFormat.Snippet)
                     .sortText(String.format("%04d#%02d#%s", 50, cnt, sortText.toString()))
+                    .build();
+        }
+
+
+        @Override
+        public Completion createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars) {
+            String simpleName = elem.getSimpleName().toString();
+            Iterator<? extends RecordComponentElement> it = elem.getRecordComponents().iterator();
+            StringBuilder label = new StringBuilder(elem.getSimpleName());
+            StringBuilder insertText = new StringBuilder(elem.getSimpleName());
+            RecordComponentElement recordComponent;
+            int cnt = 1;
+            label.append("(");
+            insertText.append("(");
+            while (it.hasNext()) {
+                recordComponent = it.next();
+                CharSequence typeName = Utilities.getTypeName(info, recordComponent.getAccessor().getReturnType(), false);
+                label.append(typeName);
+                insertText.append("${").append(cnt++).append(":").append(typeName).append("}");
+                label.append(" ");
+                insertText.append(" ");
+                label.append(recordComponent.getSimpleName());
+                insertText.append("${").append(cnt++).append(":").append(recordComponent.getSimpleName()).append("}");
+                if (it.hasNext()) {
+                    label.append(", ");
+                    insertText.append(", ");
+                }
+            }
+            label.append(")");
+            insertText.append(")");
+            return CompletionCollector.newBuilder(label.toString())
+                    .kind(Completion.Kind.Struct)
+                    .insertText(insertText.toString())
+                    .insertTextFormat(Completion.TextFormat.Snippet)
+                    .sortText(String.format("%04d%s#", 650, simpleName))
                     .build();
         }
 

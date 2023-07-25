@@ -46,6 +46,7 @@ import org.netbeans.modules.web.jsf.api.metamodel.SystemEventListener;
  * @author ads
  *
  */
+// @todo: Support JakartaEE
 class ObjectProviders {
     
     /**

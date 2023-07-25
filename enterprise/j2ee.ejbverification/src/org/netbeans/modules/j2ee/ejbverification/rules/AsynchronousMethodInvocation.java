@@ -53,6 +53,7 @@ import org.openide.util.NbBundle.Messages;
     "AsynchronousMethodInvocation.description=Checks usage of @Asynchronous. Tests whether it's used within supported project and interface type.",
     "AsynchronousMethodInvocation.err.asynchronous.in.ejb31=Asynchronous method invocation is not allowed in project targeting JavaEE 6 Lite profile"
 })
+// @todo: Support JakartaEE
 public final class AsynchronousMethodInvocation {
 
     private AsynchronousMethodInvocation() { }

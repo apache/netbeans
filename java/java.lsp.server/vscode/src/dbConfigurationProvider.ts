@@ -35,7 +35,7 @@ export async function initializeRunConfiguration(): Promise<boolean> {
 	return false;
 }
 
-export class DBConfigurationProvider implements vscode.DebugConfigurationProvider {
+class DBConfigurationProvider implements vscode.DebugConfigurationProvider {
 	resolveDebugConfiguration(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
 		return new Promise<vscode.DebugConfiguration>(resolve => {
 			resolve(config);
@@ -59,3 +59,5 @@ export class DBConfigurationProvider implements vscode.DebugConfigurationProvide
 		});
 	}
 }
+
+export const dBConfigurationProvider = new DBConfigurationProvider();

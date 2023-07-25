@@ -1,10 +1,10 @@
 Name: Javac Compiler Implementation
 Description: Javac Compiler Implementation
-Version: jdk-20+34
-Files: nb-javac-jdk-20+34-api.jar nb-javac-jdk-20+34.jar
+Version: jdk-21+26
+Files: nb-javac-jdk-21+26-api.jar nb-javac-jdk-21+26.jar
 License: GPL-2-CP
-Origin: OpenJDK (https://github.com/openjdk/jdk20)
-Source: https://github.com/openjdk/jdk20
+Origin: OpenJDK (https://github.com/openjdk/jdk21)
+Source: https://github.com/openjdk/jdk21
 Type: optional,reviewed
 Comment: The binary has been reviewed to be under the Classpath Exception as a whole. Optional at runtime, but used by default.
 

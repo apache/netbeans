@@ -2817,10 +2817,6 @@ public class Reformatter implements ReformatTask {
         @Override
         public Boolean visitPatternCaseLabel(PatternCaseLabelTree node, Void p) {
             scan(node.getPattern(), p);
-            space();
-            accept(IDENTIFIER);
-            space();
-            scan(node.getGuard(), p);
             return true;
         }
 
@@ -2831,16 +2827,6 @@ public class Reformatter implements ReformatTask {
             accept(LPAREN);
             spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
             wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, node.getNestedPatterns());
-            accept(RPAREN);
-            return true;
-        }
-
-        @Override
-        public Boolean visitParenthesizedPattern(ParenthesizedPatternTree node, Void p) {
-            accept(LPAREN);
-            spaces(0);
-            scan(node.getPattern(), p);
-            spaces(0);
             accept(RPAREN);
             return true;
         }
@@ -2974,6 +2960,12 @@ public class Reformatter implements ReformatTask {
                             accept(COMMA);
                             space();
                         }
+                    }
+                    if (node.getGuard() != null) {
+                        space();
+                        accept(IDENTIFIER);
+                        space();
+                        scan(node.getGuard(), p);
                     }
                 }
             } else if (!node.getExpressions().isEmpty()) {

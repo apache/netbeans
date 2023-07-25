@@ -20,6 +20,7 @@ package org.netbeans.modules.java.hints.suggestions;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AnyPatternTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssertTree;
@@ -65,7 +66,6 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
-import com.sun.source.tree.ParenthesizedPatternTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
@@ -73,6 +73,7 @@ import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Scope;
+import com.sun.source.tree.StringTemplateTree;
 import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
@@ -1432,7 +1433,14 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
     }
 
     @Override
-    public List<? extends TypeMirror> visitParenthesizedPattern(ParenthesizedPatternTree node, Object p) {
+    public List<? extends TypeMirror> visitStringTemplate(StringTemplateTree stt, Object p) {
+        //TODO:
         return null;
     }
+
+    @Override
+    public List<? extends TypeMirror> visitAnyPattern(AnyPatternTree apt, Object p) {
+        return null;
+    }
+
 }

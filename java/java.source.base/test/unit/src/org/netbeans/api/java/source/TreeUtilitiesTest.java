@@ -63,7 +63,9 @@ import org.openide.filesystems.FileUtil;
  * @author Jan Lahoda
  */
 public class TreeUtilitiesTest extends NbTestCase {
-    
+
+    private String sourceLevel;
+
     public TreeUtilitiesTest(String testName) {
         super(testName);
     }
@@ -100,6 +102,8 @@ public class TreeUtilitiesTest extends NbTestCase {
         
         TestUtilities.copyStringToFile(FileUtil.toFile(testSource), code);
         
+        SourceUtilsTestUtil.setSourceLevel(testSource, sourceLevel);
+
         JavaSource js = JavaSource.forFileObject(testSource);
         
         assertNotNull(js);
@@ -794,5 +798,21 @@ public class TreeUtilitiesTest extends NbTestCase {
             }.scan(info.getCompilationUnit(), null);
             assertEquals(expectedNames, actualNames);
         }
+    }
+
+    public void testPathForInUnnamedClass() throws Exception {
+        this.sourceLevel = "21";
+
+        String code = "void main() {\n" +
+                      "    Sys|tem.err.println();\n" +
+                      "}\n";
+
+        prepareTest("Test", code.replace("|", ""));
+
+        int pos = code.indexOf("|");
+        TreePath tp = info.getTreeUtilities().pathFor(pos);
+        IdentifierTree it = (IdentifierTree) tp.getLeaf();
+
+        assertEquals("System", it.getName().toString());
     }
 }

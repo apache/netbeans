@@ -18,15 +18,7 @@
  */
 package org.netbeans.modules.java.completion;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.lang.model.SourceVersion;
-import javax.swing.event.ChangeListener;
-import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.source.parsing.JavacParser;
-import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
-import org.openide.filesystems.FileObject;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -38,75 +30,32 @@ public class JavaCompletionTask119FeaturesTest extends CompletionTestBase {
         super(testName);
     }
 
-    public static NbTestSuite suite() {
-        NbTestSuite suite = new NbTestSuite();
-        try {
-            SourceVersion.valueOf("RELEASE_19"); //NOI18N
-            suite.addTestSuite(JavaCompletionTask119FeaturesTest.class);
-
-        } catch (IllegalArgumentException ex) {
-            suite.addTest(new JavaCompletionTask119FeaturesTest("noop")); //NOI18N
-        }
-        return suite;
-    }
-
     public void testRecordPatternCompletion_1() throws Exception {
-        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
-        performTest("RecordPattern", 930, null, "AutoCompletion_RecordPattern_1.pass", getLatestSource());
+        performTest("RecordPattern", 930, null, "AutoCompletion_RecordPattern_1.pass", "21");
     }
 
     public void testRecordPatternCompletion_2() throws Exception {
-        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
-        performTest("RecordPattern", 1013, null, "AutoCompletion_RecordPattern_2.pass", getLatestSource());
+        performTest("RecordPattern", 1013, null, "AutoCompletion_RecordPattern_2.pass", "21");
     }
 
     public void testRecordPatternCompletion_3() throws Exception {
-        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
-        performTest("RecordPattern", 1107, null, "AutoCompletion_RecordPattern_3.pass", getLatestSource());
-    }
-
-    private String getLatestSource() {
-        return SourceVersion.latest().name().substring(SourceVersion.latest().name().indexOf("_") + 1);
+        performTest("RecordPattern", 1107, null, "AutoCompletion_RecordPattern_3.pass", "21");
     }
 
     public void testCasePatternGuard_1() throws Exception {
-        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
-        performTest("SwitchPatternMatching", 1080, null, "AutoCompletion_Guard_PatternMatchingSwitch.pass", getLatestSource());
+        performTest("SwitchPatternMatching", 1080, null, "AutoCompletion_Guard_PatternMatchingSwitch.pass", "21");
     }
 
     public void testCasePatternGuard_2() throws Exception {
-        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
-        performTest("SwitchPatternMatching", 1194, null, "AutoCompletion_Guard_PatternMatchingSwitch.pass", getLatestSource());
+        performTest("SwitchPatternMatching", 1193, null, "AutoCompletion_Guard_PatternMatchingSwitch.pass", "21");
     }
 
-    public void noop() {
+    public void TODOtestNoCrash() throws Exception {
+        performTest("SwitchPatternMatching", 1275, "case R(var s,", "AutoCompletion_Guard_PatternMatchingSwitch.pass", "21");
     }
 
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }
 
-    @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
-    public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
-
-        private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
-
-        @Override
-        public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
-            return new CompilerOptionsQueryImplementation.Result() {
-                @Override
-                public List<? extends String> getArguments() {
-                    return EXTRA_OPTIONS;
-                }
-
-                @Override
-                public void addChangeListener(ChangeListener listener) {
-                }
-
-                @Override
-                public void removeChangeListener(ChangeListener listener) {
-                }
-            };
-        }
-    }
 }

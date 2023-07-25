@@ -30,7 +30,7 @@ public class Test{
                 "null & String";
             case CharSequence s when s. && obj. && IntStream.of(1).max().->
                 "CharSequence";
-            case (java.util.List list when list. && new StringBuilder().ERROR. && java.util.ArrayList<String>.)->"list";
+            case java.util.List list when list. && new StringBuilder().ERROR. && java.util.ArrayList<String>.->"list";
             default ->
                 "default";
         };

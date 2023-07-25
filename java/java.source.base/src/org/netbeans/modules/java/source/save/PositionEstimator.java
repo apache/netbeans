@@ -18,10 +18,12 @@
  */
 package org.netbeans.modules.java.source.save;
 
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.tools.javac.code.Flags;
@@ -1515,7 +1517,18 @@ public abstract class PositionEstimator {
             for (Tree item : oldL) {
                 int treeStart = (int) positions.getStartPosition(compilationUnit, item);
                 int treeEnd = (int) positions.getEndPosition(compilationUnit, item);
-                
+
+                if (treeEnd == (-1) && item.getKind() == Kind.CLASS) {
+                    //unnamed class, use last member, or start pos:
+                    ClassTree clazz = (ClassTree) item;
+                    Tree lastMember = clazz.getMembers().get(clazz.getMembers().size() - 1);
+                    treeEnd = (int) positions.getEndPosition(compilationUnit, lastMember);
+                    if (treeEnd == (-1)) {
+                        //TODO: test
+                        treeEnd = treeStart;
+                    }
+                }
+
                 seq.move(treeStart);
                 seq.moveNext();
                 if (null != moveToSrcRelevant(seq, Direction.BACKWARD)) {

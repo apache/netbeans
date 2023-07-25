@@ -92,6 +92,7 @@ public class NBClassWriterTest extends NbTestCase {
 
         NBClassReader.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());
+        NBNames.preRegister(ct.getContext());
 
         ct.enter();
 
@@ -160,6 +161,7 @@ public class NBClassWriterTest extends NbTestCase {
 
         NBClassReader.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());
+        NBNames.preRegister(ct.getContext());
 
         assertTrue(ct.call());
     }
@@ -179,6 +181,7 @@ public class NBClassWriterTest extends NbTestCase {
 
         NBClassReader.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());
+        NBNames.preRegister(ct.getContext());
         
         PackageElement pack = ct.getElements().getPackageElement(packageName);
         Set<String> actualClassNames = new HashSet<String>();

@@ -500,9 +500,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
             case DECONSTRUCTION_PATTERN:
                 insideDeconstructionRecordPattern(env);
                 break;
-            case PARENTHESIZED_PATTERN:
-                insideParenthesizedPattern(env);
-                break;
         }
     }
 
@@ -3264,18 +3261,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TypeElement e = (TypeElement) ((DeclaredType) tm).asElement();
         if (e.getSimpleName().toString().contentEquals(env.getPrefix()) && (e.getKind() == ElementKind.RECORD)) {
             results.add(((RecordPatternItemFactory<T>) itemFactory).createRecordPatternItem(env.getController(), e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass()));
-        }
-    }
-
-    private void insideParenthesizedPattern(Env env) {
-        final int offset = env.getOffset();
-        final CompilationController controller = env.getController();
-        final SourcePositions sp = controller.getTrees().getSourcePositions();
-        final TreePath path = env.getPath();
-        PatternTree pt = ((ParenthesizedPatternTree) path.getLeaf()).getPattern();
-        if (pt.getKind() == Tree.Kind.BINDING_PATTERN && env.getController().getSourceVersion().compareTo(RELEASE_19) >= 0
-                && sp.getEndPosition(path.getCompilationUnit(), pt) < offset) {
-            addKeyword(env, WHEN_KEYWORD, SPACE, false);
         }
     }
 

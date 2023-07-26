@@ -421,7 +421,7 @@ public final class FmtOptions {
             {PREFER_GROUP_USES, FALSE},
             {START_USE_WITH_NAMESPACE_SEPARATOR, FALSE},
             {ALIASES_CAPITALS_OF_NAMESPACES, FALSE},
-            {PUT_IN_PSR12_ORDER, TRUE}
+            {PUT_IN_PSR12_ORDER, FALSE}
         };
 
         defaults = new HashMap<>();

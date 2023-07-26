@@ -263,6 +263,7 @@ public class PHPDocCommentParser {
         List<PHPDocTypeNode> result = new ArrayList<>();
         for (String stype : getTypes(description, isReturnTag)) {
             stype = removeHTMLTags(stype);
+            stype = sanitizeShapes(stype);
             int startDocNode = findStartOfDocNode(originalComment, originalCommentStart, stype, startDescription);
             if (startDocNode == -1) {
                 continue;
@@ -377,15 +378,31 @@ public class PHPDocCommentParser {
 
     private String removeHTMLTags(String text) {
         String value = text;
-        int index = value.indexOf('>');
-        if (index > -1) {
-            value = value.substring(index + 1);
-            index = value.indexOf('<');
-            if (index > -1) {
-                value = value.substring(0, index);
-            }
+        int startTagIndex = value.indexOf('<');
+        if (startTagIndex > -1) {
+            value = value.substring(0, startTagIndex).trim();
         }
         return value;
+    }
+
+    /**
+     * Remove `{'key': type}`.
+     *
+     * e.g. {@code array{'foo': int}}, {@code object{'foo': int, "bar": string}}
+     *
+     * @see https://phpstan.org/writing-php-code/phpdoc-types#array-shapes
+     * @see https://phpstan.org/writing-php-code/phpdoc-types#object-shapes
+     *
+     * @param type the type
+     * @return the sanitized type
+     */
+    private String sanitizeShapes(String type) {
+        String sanitizedType = type;
+        int startIndex = sanitizedType.indexOf("{"); // NOI18N
+        if (startIndex > -1) {
+            sanitizedType = sanitizedType.substring(0, startIndex).trim();
+        }
+        return sanitizedType;
     }
 
     /**

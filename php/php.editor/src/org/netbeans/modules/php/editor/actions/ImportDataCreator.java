@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import org.netbeans.modules.php.api.PhpVersion;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.actions.FixUsesAction.Options;
 import org.netbeans.modules.php.editor.actions.ImportData.DataItem;
@@ -87,6 +88,10 @@ public class ImportDataCreator {
     }
 
     private void processFQElementName(final String fqElementName) {
+        // GH-6039: avoid getting all types
+        if (!StringUtils.hasText(fqElementName)) {
+            return;
+        }
         // GH-6075
         String fqeName = CodeUtils.removeNullableTypePrefix(fqElementName);
         Collection<FullyQualifiedElement> possibleFQElements = fetchPossibleFQElements(fqeName);

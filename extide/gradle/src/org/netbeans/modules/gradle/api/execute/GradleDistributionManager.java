@@ -99,7 +99,7 @@ public final class GradleDistributionManager {
         GradleVersion.version("7.3"), // JDK-17
         GradleVersion.version("7.5"), // JDK-18
         GradleVersion.version("7.6"), // JDK-19
-        GradleVersion.version("8.1"), // JDK-20
+        GradleVersion.version("8.3"), // JDK-20
     };
 
     final File gradleUserHome;

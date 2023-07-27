@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.logging.Level;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.codehaus.plexus.util.FileUtils;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
@@ -61,11 +60,7 @@ public class AbstractProjectClassPathImplTest extends NbTestCase {
         File downloaded = new File(repo, "nbtest/grp/art/1.10-SNAPSHOT/art-1.10-20210520.222429-1.jar");
         Artifact a = EmbedderFactory.getProjectEmbedder().createArtifact("nbtest.grp", "art", "1.10-20210520.222429-1", "jar");
         assertNull(AbstractProjectClassPathImpl.getFile(a));
-        try {
-            EmbedderFactory.getProjectEmbedder().resolve(a, Collections.emptyList(), EmbedderFactory.getProjectEmbedder().getLocalRepository());
-        } catch (ArtifactNotFoundException ex) {
-            // the downloaded artifact was not found, expected as only -SNAPSHOT is installed.
-        }
+        EmbedderFactory.getProjectEmbedder().resolve(a, Collections.emptyList(), EmbedderFactory.getProjectEmbedder().getLocalRepository());
         assertEquals(installed, a.getFile());
         assertEquals(installed, AbstractProjectClassPathImpl.getFile(a));
         FileUtils.mkdir(downloaded.getParent());

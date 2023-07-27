@@ -746,23 +746,24 @@ public final class OptionsExportModel {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry zipEntry = entries.nextElement();
-                if (!zipEntry.isDirectory() && !checkIntegrity(zipEntry)) {
+                if (!zipEntry.isDirectory() && checkIntegrity(zipEntry)) {
                     copyFile(zipEntry.getName());
                 }
             }
         }
     }
 
+    // true if ok
     private boolean checkIntegrity(ZipEntry entry) throws IOException {
         if (entry.getName().endsWith(".properties")) {
             try (ZipFile zip = new ZipFile(source);
                  BufferedReader reader = new BufferedReader(new InputStreamReader(zip.getInputStream(entry), StandardCharsets.UTF_8))) {
                 // invalid code point check JDK-8075156
-                boolean corrupted = reader.lines().anyMatch(l -> l.indexOf('\u0000') != -1);
-                if (corrupted) {
+                boolean ok = reader.lines().noneMatch(l -> l.indexOf('\u0000') != -1);
+                if (!ok) {
                     LOGGER.log(Level.WARNING, "ignoring corrupted properties file at {0}", entry.getName());
                 }
-                return corrupted;
+                return ok;
             }
         }
         return true;

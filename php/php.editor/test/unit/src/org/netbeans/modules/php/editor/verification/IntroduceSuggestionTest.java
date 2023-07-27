@@ -18,98 +18,309 @@
  */
 package org.netbeans.modules.php.editor.verification;
 
+import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+
 public class IntroduceSuggestionTest extends PHPHintsTestBase {
+
+    private static final List<String> USING_FIX_CONTENT_METHOD_TEST_NAMES = Arrays.asList(
+            "testIntroduceSuggestion_01"
+    );
 
     public IntroduceSuggestionTest(String testName) {
         super(testName);
     }
 
     @Override
+    protected File getDataFile(String relFilePath) {
+        if (USING_FIX_CONTENT_METHOD_TEST_NAMES.contains(getName())) {
+            // Overriden because CslTestBase loads file from different location.
+            // only when fixContent() method is used
+            File inputFile = new File(getDataDir(), relFilePath);
+            return inputFile;
+        }
+        return super.getDataFile(relFilePath);
+    }
+
+    @Override
     protected String getTestDirectory() {
-        return TEST_DIRECTORY + "IntroduceSuggestion/";
+        return TEST_DIRECTORY + "IntroduceSuggestion/" + getTestName() + "/";
+    }
+
+    private String getTestFileName() {
+        return getTestName() + ".php";
+    }
+
+    private String getTestName() {
+        String name = getName();
+        int indexOf = name.indexOf("_");
+        if (indexOf != -1) {
+            name = name.substring(0, indexOf);
+        }
+        return name;
+    }
+
+    public void testIntroduceSuggestion_01() throws Exception {
+        // Needs to replace directory separators in expected result.
+        fixContent(new File(getDataDir(), getTestDirectory() + "testIntroduceSuggestion.php.testIntroduceSuggestion_01.hints"));
+        checkHints("new MyClass();^");
+    }
+
+    public void testIntroduceSuggestion_02() throws Exception {
+        checkHints("$foo->bar;^");
+    }
+
+    public void testIntroduceSuggestion_03() throws Exception {
+        checkHints("$foo->method();^");
+    }
+
+    public void testIntroduceSuggestion_04() throws Exception {
+        checkHints("Omg::CON;^");
+    }
+
+    public void testIntroduceSuggestion_05() throws Exception {
+        checkHints("Omg::stMeth();^");
+    }
+
+    public void testIntroduceSuggestion_06() throws Exception {
+        checkHints("Omg::$stFld;^");
+    }
+
+    public void testIntroduceSuggestion_07() throws Exception {
+        checkHints("new class {};^");
+    }
+
+    // #257264
+    public void testIntroduceSuggestion_Fix01() throws Exception {
+        // in case of class, a new file is created
+        // applyHint("new MyClass();^", "Create Class");
+    }
+
+    public void testIntroduceSuggestion_Fix02() throws Exception {
+        applyHint("$foo->bar;^", "Create Field");
+    }
+
+    public void testIntroduceSuggestion_Fix03() throws Exception {
+        applyHint("$foo->method();^", "Create Method");
+    }
+
+    public void testIntroduceSuggestion_Fix04() throws Exception {
+        applyHint("Omg::CON;^", "Create Constant");
+    }
+
+    public void testIntroduceSuggestion_Fix05() throws Exception {
+        applyHint("Omg::stMeth();^", "Create Method");
+    }
+
+    public void testIntroduceSuggestion_Fix06() throws Exception {
+        applyHint("Omg::$stFld;^", "Create Field");
+    }
+
+    public void testSpecialTypes_01() throws Exception {
+        checkHints("        return new static;^");
+    }
+
+    public void testSpecialTypes_02() throws Exception {
+        checkHints("        return new self;^");
+    }
+
+    public void testSpecialTypes_03() throws Exception {
+        checkHints("        return new parent;^");
+    }
+
+    // #257296
+    public void testTrait_Field() throws Exception {
+        checkHints("$this->field;^");
+    }
+
+    public void testTrait_StaticField_01() throws Exception {
+        checkHints("self::$staticField1;^");
+    }
+
+    public void testTrait_StaticField_02() throws Exception {
+        checkHints("TraitA::$staticField2;^");
+    }
+
+    public void testTrait_Method() throws Exception {
+        checkHints("$this->method();^");
+    }
+
+    public void testTrait_Constant() throws Exception {
+        // don't show the hint because a trait can't have constants
+        checkHints("TraitA::CONSTANT^");
+    }
+
+    public void testTrait_StaticMethod_01() throws Exception {
+        checkHints("self::staticMethod1();^");
+    }
+
+    public void testTrait_StaticMethod_02() throws Exception {
+        checkHints("TraitA::staticMethod2();^");
+    }
+
+    public void testTrait_FixField() throws Exception {
+        applyHint("$this->field;^", "Create Field");
+    }
+
+    public void testTrait_FixStaticField_01() throws Exception {
+        applyHint("self::$staticField1;^", "Create Field");
+    }
+
+    public void testTrait_FixStaticField_02() throws Exception {
+        applyHint("TraitA::$staticField2;^", "Create Field");
+    }
+
+    public void testTrait_FixStaticField_03() throws Exception {
+        applyHint("TraitB::$staticTraitBField;^", "Create Field");
+    }
+
+    public void testTrait_FixStaticField_04() throws Exception {
+        applyHint("TraitC::$staticTraitCField;^", "Create Field");
+    }
+
+    public void testTrait_FixMethod() throws Exception {
+        applyHint("$this->method();^", "Create Method");
+    }
+
+    public void testTrait_FixStaticMethod_01() throws Exception {
+        applyHint("self::staticMethod1();^", "Create Method");
+    }
+
+    public void testTrait_FixStaticMethod_02() throws Exception {
+        applyHint("TraitA::staticMethod2();^", "Create Method");
+    }
+
+    public void testTrait_FixStaticMethod_03() throws Exception {
+        applyHint("TraitB::staticTraitBMethod();^", "Create Method");
+    }
+
+    public void testTrait_FixStaticMethod_04() throws Exception {
+        applyHint("TraitC::staticTraitCMethod();^", "Create Method");
+    }
+
+    public void testIssue223842() throws Exception {
+        checkHints("Foo::{\"\"}();^");
+    }
+
+    public void testIssue239277_01() throws Exception {
+        checkHints("Foo::ahoj(^);");
+    }
+
+    public void testIssue239277_02() throws Exception {
+        checkHints("Bat::$bar^z;");
+    }
+
+    public void testIssue241824_01() throws Exception {
+        checkHints("(new \\MyFoo(\"Whatever can be here\"))->myFnc()^;");
+    }
+
+    public void testIssue241824_02() throws Exception {
+        checkHints("(new \\MyFoo(\"Whatever can be here\"))->notMyFnc()^;");
     }
 
     public void testEnumCase_01() throws Exception {
-        checkHints(new IntroduceSuggestion(), "testEnumCase.php", "ExampleEnum::Ca^se3;");
+        checkHints("ExampleEnum::Ca^se3;");
     }
 
     public void testEnumCase_02() throws Exception {
-        checkHints(new IntroduceSuggestion(), "testEnumCase.php", "BackedEnumInt::Case^3;");
+        checkHints("BackedEnumInt::Case^3;");
     }
 
     public void testEnumCase_03() throws Exception {
-        checkHints(new IntroduceSuggestion(), "testEnumCase.php", "BackedEnumString::C^ase3;");
+        checkHints("BackedEnumString::C^ase3;");
     }
 
-    public void testEnumCaseFix_01a() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumCase.php", "ExampleEnum::Ca^se3;", "Create Enum Case");
+    public void testEnumCase_Fix01a() throws Exception {
+        applyHint("ExampleEnum::Ca^se3;", "Create Enum Case");
     }
 
-    public void testEnumCaseFix_01b() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumCase.php", "ExampleEnum::Ca^se3;", "Create Constant");
+    public void testEnumCase_Fix01b() throws Exception {
+        applyHint("ExampleEnum::Ca^se3;", "Create Constant");
     }
 
-    public void testEnumCaseFix_02a() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumCase.php", "BackedEnumInt::Case^3;", "Create Enum Case");
+    public void testEnumCase_Fix02a() throws Exception {
+        applyHint("BackedEnumInt::Case^3;", "Create Enum Case");
     }
 
-    public void testEnumCaseFix_02b() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumCase.php", "BackedEnumInt::Case^3;", "Create Constant");
+    public void testEnumCase_Fix02b() throws Exception {
+        applyHint("BackedEnumInt::Case^3;", "Create Constant");
     }
 
-    public void testEnumCaseFix_03a() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumCase.php", "BackedEnumString::C^ase3;", "Create Enum Case");
+    public void testEnumCase_Fix03a() throws Exception {
+        applyHint("BackedEnumString::C^ase3;", "Create Enum Case");
     }
 
-    public void testEnumCaseFix_03b() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumCase.php", "BackedEnumString::C^ase3;", "Create Constant");
+    public void testEnumCase_Fix03b() throws Exception {
+        applyHint("BackedEnumString::C^ase3;", "Create Constant");
     }
 
     public void testEnumMethods_01() throws Exception {
-        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "ExampleEnum::introduceStat^icMethod();");
+        checkHints("ExampleEnum::introduceStat^icMethod();");
     }
 
     public void testEnumMethods_02() throws Exception {
-        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "        $this->introduceMeth^od();");
+        checkHints("        $this->introduceMeth^od();");
     }
 
     public void testEnumMethods_03() throws Exception {
-        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "        self::introduceStaticMet^hod();");
+        checkHints("        self::introduceStaticMet^hod();");
     }
 
     public void testEnumMethods_04() throws Exception {
-        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "        static::introduceStaticMeth^od();");
+        checkHints("        static::introduceStaticMeth^od();");
     }
 
     public void testEnumMethods_05() throws Exception {
-        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "BackedEnumInt::Case1->introduceMet^hod();");
+        checkHints("BackedEnumInt::Case1->introduceMet^hod();");
     }
 
     public void testEnumMethods_06() throws Exception {
-        checkHints(new IntroduceSuggestion(), "testEnumMethods.php", "BackedEnumString::Case2::introdu^ceStaticMethod();");
+        checkHints("BackedEnumString::Case2::introdu^ceStaticMethod();");
     }
 
-    public void testEnumMethodsFix_01() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "ExampleEnum::introduceStat^icMethod();", "Create Method");
+    public void testEnumMethods_Fix01() throws Exception {
+        applyHint("ExampleEnum::introduceStat^icMethod();", "Create Method");
     }
 
-    public void testEnumMethodsFix_02() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "        $this->introduceMeth^od();", "Create Method");
+    public void testEnumMethods_Fix02() throws Exception {
+        applyHint("        $this->introduceMeth^od();", "Create Method");
     }
 
-    public void testEnumMethodsFix_03() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "        self::introduceStaticMet^hod();", "Create Method");
+    public void testEnumMethods_Fix03() throws Exception {
+        applyHint("        self::introduceStaticMet^hod();", "Create Method");
     }
 
-    public void testEnumMethodsFix_04() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "        static::introduceStaticMeth^od();", "Create Method");
+    public void testEnumMethods_Fix04() throws Exception {
+        applyHint("        static::introduceStaticMeth^od();", "Create Method");
     }
 
-    public void testEnumMethodsFix_05() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "BackedEnumInt::Case1->introduceMet^hod();", "Create Method");
+    public void testEnumMethods_Fix05() throws Exception {
+        applyHint("BackedEnumInt::Case1->introduceMet^hod();", "Create Method");
     }
 
-    public void testEnumMethodsFix_06() throws Exception {
-        applyHint(new IntroduceSuggestion(), "testEnumMethods.php", "BackedEnumString::Case2::introdu^ceStaticMethod();", "Create Method");
+    public void testEnumMethods_Fix06() throws Exception {
+        applyHint("BackedEnumString::Case2::introdu^ceStaticMethod();", "Create Method");
     }
+
+    private void checkHints(String caretLine) throws Exception {
+        checkHints(new IntroduceSuggestion(), getTestFileName(), caretLine);
+    }
+
+    private void applyHint(String caretLine, String fixDesc) throws Exception {
+        applyHint(new IntroduceSuggestion(), getTestFileName(), caretLine, fixDesc);
+    }
+
+    private void fixContent(File file) throws Exception {
+        Path path = file.toPath();
+        Charset charset = StandardCharsets.UTF_8;
+        String content = new String(Files.readAllBytes(path), charset);
+        content = content.replace("%SEP%", File.separator);
+        Files.write(path, content.getBytes(charset));
+    }
+
 }

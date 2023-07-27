@@ -17,25 +17,10 @@
  * under the License.
  */
 
-package test;
-
-import java.util.stream.IntStream;
-
-public class Test {
-
-     public void op(Object obj) {
-        String result = switch (obj) {
-            case null ->
-                "null";
-            case CharSequence s when s. && obj. ->
-                "CharSequence";
-            case Point(var v, Integer j) when v. ->
-                "Point";
-            default ->
-                "default";
-        };
+public class InstanceofPattern {  
+    public void op(Object o) {
+        if (o instanceof String s) {
+            s.
+        }
     }
 }
-
-record Point(Number x, Number y) {}
-enum Color {RED, GREEN, BLUE}

@@ -307,12 +307,40 @@ public class IntroduceSuggestionTest extends PHPHintsTestBase {
         applyHint("BackedEnumString::Case2::introdu^ceStaticMethod();", "Create Method");
     }
 
+    public void testGH6258_01() throws Exception {
+        checkHints("testGH6258_01.php", "TestClass::generatedMeth^od();");
+    }
+
+    public void testGH6258_01Fix() throws Exception {
+        // no changes because the method is created into the TestClass
+        // check that NPE doesn't occur
+        applyHint("testGH6258_01.php", "TestClass::generatedMeth^od();", "Create Method");
+    }
+
+    public void testGH6258_02() throws Exception {
+        checkHints("testGH6258_02.php", "$test->generatedMet^hod();");
+    }
+
+    public void testGH6258_02Fix() throws Exception {
+        // no changes because the method is created into the TestClass
+        // check that NPE doesn't occur
+        applyHint("testGH6258_02.php", "$test->generatedMetho^d();", "Create Method");
+    }
+
     private void checkHints(String caretLine) throws Exception {
         checkHints(new IntroduceSuggestion(), getTestFileName(), caretLine);
     }
 
+    private void checkHints(String fileName, String caretLine) throws Exception {
+        checkHints(new IntroduceSuggestion(), fileName, caretLine);
+    }
+
     private void applyHint(String caretLine, String fixDesc) throws Exception {
         applyHint(new IntroduceSuggestion(), getTestFileName(), caretLine, fixDesc);
+    }
+
+    private void applyHint(String fileName, String caretLine, String fixDesc) throws Exception {
+        applyHint(new IntroduceSuggestion(), fileName, caretLine, fixDesc);
     }
 
     private void fixContent(File file) throws Exception {

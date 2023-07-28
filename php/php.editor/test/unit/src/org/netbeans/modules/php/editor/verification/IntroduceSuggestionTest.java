@@ -327,6 +327,36 @@ public class IntroduceSuggestionTest extends PHPHintsTestBase {
         applyHint("testGH6258_02.php", "$test->generatedMetho^d();", "Create Method");
     }
 
+    public void testGH6266_Const() throws Exception {
+        checkHints("TestClass::CONSTA^NT;");
+    }
+
+    public void testGH6266_ConstFix() throws Exception {
+        // no changes because the const is created into the TestClass
+        // check that NPE doesn't occur
+        applyHint("TestClass::CONSTAN^T;", "Create Constant");
+    }
+
+    public void testGH6266_StaticField() throws Exception {
+        checkHints("TestClass::$staticFiel^d;");
+    }
+
+    public void testGH6266_StaticFieldFix() throws Exception {
+        // no changes because the field is created into the TestClass
+        // check that NPE doesn't occur
+        applyHint("TestClass::$staticFiel^d;", "Create Field");
+    }
+
+    public void testGH6266_Field() throws Exception {
+        checkHints("$test->fie^ld;");
+    }
+
+    public void testGH6266_FieldFix() throws Exception {
+        // no changes because the field is created into the TestClass
+        // check that NPE doesn't occur
+        applyHint("$test->fiel^d;", "Create Field");
+    }
+
     private void checkHints(String caretLine) throws Exception {
         checkHints(new IntroduceSuggestion(), getTestFileName(), caretLine);
     }

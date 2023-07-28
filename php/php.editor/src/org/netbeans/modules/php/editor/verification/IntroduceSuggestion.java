@@ -273,7 +273,7 @@ public class IntroduceSuggestion extends SuggestionRule {
                         if (allFields.isEmpty()) {
                             assert type != null;
                             FileObject fileObject = type.getFileObject();
-                            BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, false) : null;
+                            BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, true) : null;
                             if (document != null && fileObject.canWrite()) {
                                 if (type instanceof ClassScope || type instanceof TraitScope) {
                                     fixes.add(new IntroduceFieldFix(document, fieldAccess, type));
@@ -353,7 +353,7 @@ public class IntroduceSuggestion extends SuggestionRule {
                             if (allConstants.isEmpty() && allEnumCases.isEmpty()) {
                                 assert type != null;
                                 FileObject fileObject = type.getFileObject();
-                                BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, false) : null;
+                                BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, true) : null;
                                 // if fileObject is null, document is null
                                 if (document != null && fileObject.canWrite()) {
                                     fixes.add(new IntroduceClassConstantFix(document, staticConstantAccess, type));

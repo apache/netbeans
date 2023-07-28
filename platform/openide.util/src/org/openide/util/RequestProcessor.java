@@ -21,18 +21,19 @@ package org.openide.util;
 
 import java.lang.reflect.Method;
 import java.security.PrivilegedAction;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.Stack;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
@@ -183,8 +184,8 @@ public final class RequestProcessor implements ScheduledExecutorService {
         boolean slow = false;
         assert slow = true;
         SLOW = slow;
-        // 50: a conservative value, just for case of misuse
-        UNLIMITED = new RequestProcessor("Default RequestProcessor", 50, false, SLOW, SLOW ? 3 : 0); // NOI18N
+        // 55: a conservative value, just for case of misuse
+        UNLIMITED = new RequestProcessor("Default RequestProcessor", 55, false, SLOW, SLOW ? 3 : 0); // NOI18N
     }
 
     /** The name of the RequestProcessor instance */
@@ -1863,7 +1864,7 @@ outer:  do {
      */
     private static class Processor extends Thread {
         /** A stack containing all the inactive Processors */
-        private static final Stack<Processor> pool = new Stack<Processor>();
+        private static final Deque<Processor> POOL = new ArrayDeque<>();
 
         /* One minute of inactivity and the Thread will die if not assigned */
         private static final int INACTIVE_TIMEOUT = Integer.getInteger("org.openide.util.RequestProcessor.inactiveTime", 60000); // NOI18N
@@ -1886,7 +1887,7 @@ outer:  do {
         public Processor() {
             super(TOP_GROUP.getTopLevelThreadGroup(), "Inactive RequestProcessor thread"); // NOI18N
             setDaemon(true);
-            assert !Thread.holdsLock(pool); // new Thread may lead to huge classloading
+            assert !Thread.holdsLock(POOL); // new Thread may lead to huge classloading
         }
 
         /** Provide an inactive Processor instance. It will return either
@@ -1898,8 +1899,8 @@ outer:  do {
         static Processor get() {
             Processor newP = null;
             for (;;) {
-                synchronized (pool) {
-                    if (pool.isEmpty()) {
+                synchronized (POOL) {
+                    if (POOL.isEmpty()) {
                         if (newP != null) {
                             Processor proc = newP;
                             proc.idle = false;
@@ -1909,7 +1910,7 @@ outer:  do {
                         }
                     } else {
                         assert checkAccess(TOP_GROUP.getTopLevelThreadGroup());
-                        Processor proc = pool.pop();
+                        Processor proc = POOL.pop();
                         proc.idle = false;
 
                         return proc;
@@ -1929,10 +1930,10 @@ outer:  do {
          * @param last the debugging string identifying the last client.
          */
         static void put(Processor proc, String last) {
-            synchronized (pool) {
+            synchronized (POOL) {
                 proc.setName("Inactive RequestProcessor thread [Was:" + proc.getName() + "/" + last + "]"); // NOI18N
                 proc.idle = true;
-                pool.push(proc);
+                POOL.push(proc);
             }
         }
 
@@ -1986,9 +1987,9 @@ outer:  do {
 
                     if (current == null) { // We've timeouted
 
-                        synchronized (pool) {
+                        synchronized (POOL) {
                             if (idle) { // and we're idle
-                                pool.remove(this);
+                                POOL.remove(this);
 
                                 break; // exit the thread
                             } else { // this will happen if we've been just

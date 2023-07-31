@@ -504,9 +504,8 @@
             </test-dependencies>
             <public-packages>
                 <package>org.netbeans.spi.java.hints</package>
-                <package>org.netbeans.spi.java.hints.annotations</package>
-                <package>org.netbeans.spi.java.hints.matching</package>
                 <package>org.netbeans.spi.java.hints.support</package>
+                <package>org.netbeans.spi.java.hints.unused</package>
             </public-packages>
         </data>
     </configuration>

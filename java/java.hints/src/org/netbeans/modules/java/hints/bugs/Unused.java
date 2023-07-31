@@ -21,7 +21,6 @@ package org.netbeans.modules.java.hints.bugs;
 import com.sun.source.tree.Tree.Kind;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
 import org.netbeans.modules.java.editor.base.semantic.UnusedDetector;
 import org.netbeans.modules.java.editor.base.semantic.UnusedDetector.UnusedDescription;

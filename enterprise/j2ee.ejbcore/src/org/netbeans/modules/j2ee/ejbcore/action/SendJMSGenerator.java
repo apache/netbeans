@@ -79,6 +79,7 @@ import org.openide.util.Exceptions;
  *
  * @author Martin Adamek
  */
+// @todo: Support JakartaEE
 public final class SendJMSGenerator {
 
     private static final Logger LOG = Logger.getLogger(SendJMSGenerator.class.getName());

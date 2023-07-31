@@ -64,6 +64,7 @@ import org.openide.util.NbBundle;
  * This class contains only static methods.
  * @author Tomas Mysik
  */
+// @todo: Support JakartaEE
 public abstract class MessageDestinationUiSupport {
 
     /**

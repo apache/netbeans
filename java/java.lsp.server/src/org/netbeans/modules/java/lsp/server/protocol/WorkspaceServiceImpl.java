@@ -120,6 +120,7 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
 import org.netbeans.modules.java.lsp.server.project.LspProjectInfo;
+import org.netbeans.modules.java.lsp.server.singlesourcefile.CompilerOptionsQueryImpl;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
@@ -1216,6 +1217,18 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 updateJavaImportPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject("netbeans").getAsJsonObject("java").getAsJsonObject("imports"));
             }
         });
+        boolean modified = false;
+        String newVMOptions = "";
+        JsonObject javaPlus = ((JsonObject) params.getSettings()).getAsJsonObject("java+");
+        if (javaPlus != null) {
+            newVMOptions = javaPlus.getAsJsonObject("runConfig").getAsJsonPrimitive("vmOptions").getAsString();
+        }
+        for (CompilerOptionsQueryImpl query : Lookup.getDefault().lookupAll(CompilerOptionsQueryImpl.class)) {
+            modified |= query.setConfiguration(client, newVMOptions);
+        }
+        if (modified) {
+            ((TextDocumentServiceImpl)server.getTextDocumentService()).reRunDiagnostics();
+        }
     }
 
     void updateJavaFormatPreferences(FileObject fo, JsonObject configuration) {

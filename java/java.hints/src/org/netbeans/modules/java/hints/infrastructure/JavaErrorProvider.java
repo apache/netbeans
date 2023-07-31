@@ -194,14 +194,14 @@ public class JavaErrorProvider implements ErrorProvider {
         for (Fix f : fixes) {
             if (f instanceof IncompleteClassPath.ResolveFix) {
                 // We know that this is a project problem and that the problems reported by ProjectProblemsProvider should be resolved
-                CodeAction action = new CodeAction(f.getText(), new Command(f.getText(), "nbls.java.project.resolveProjectProblems"));
+                CodeAction action = new CodeAction(f.getText(), new Command(f.getText(), "java.project.resolveProjectProblems"));
                 result.add(action);
             }
             if (f instanceof org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix) {
                 org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix rf = (org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix) f;
                 List<Object> params = rf.getNewSourceLevel() != null ? Arrays.asList(rf.getNewSourceLevel())
                                                                      : Collections.emptyList();
-                CodeAction action = new CodeAction(f.getText(), new Command(f.getText(), "nbls.java.project.enable.preview", params));
+                CodeAction action = new CodeAction(f.getText(), new Command(f.getText(), "java.project.enable.preview", params));
                 result.add(action);
             }
             if (f instanceof ImportClass.FixImport) {

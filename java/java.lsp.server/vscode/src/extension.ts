@@ -942,7 +942,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             synchronize: {
                 configurationSection: [
                     'netbeans.format',
-                    'netbeans.java.imports'
+                    'netbeans.java.imports',
+                    'java+.runConfig.vmOptions'
                 ],
                 fileEvents: [
                     workspace.createFileSystemWatcher('**/*.java')

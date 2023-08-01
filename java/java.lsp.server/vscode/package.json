@@ -491,10 +491,14 @@
 				"title": "Delete"
 			},
 			{
-				"command": "db.add.connection",
+				"command": "db.add.all.connection",
 				"title": "Add Database Connection",
 				"category": "Database",
 				"icon": "$(add)"
+			},
+			{
+				"command": "db.add.connection",
+				"title": "Add JDBC Database Connection"
 			},
 			{
 				"command": "nbls:Database:netbeans.db.explorer.action.Connect",
@@ -726,6 +730,10 @@
 					"when": "false"
 				},
 				{
+					"command": "db.add.all.connection",
+					"when": "false"
+				},
+				{
 					"command": "nbls.addEventListener",
 					"when": "false"
 				}
@@ -757,7 +765,7 @@
 					"when": "nbJavaLSReady && view == foundProjects && config.netbeans.javaSupport.enabled"
 				},
 				{
-					"command": "db.add.connection",
+					"command": "db.add.all.connection",
 					"when": "view == database.connections",
 					"group": "navigation@3"
 				}

@@ -538,6 +538,16 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             await commands.executeCommand(selected.userData.command.command, ...(selected.userData.command.arguments || []));
         }
     }));
+    context.subscriptions.push(commands.registerCommand('db.add.all.connection', async () => {
+        const ADD_JDBC = 'Add Database Connection';
+        const ADD_ADB = 'Add Oracle Autonomous DB';
+        const selected: any = await window.showQuickPick([ADD_JDBC, ADD_ADB], { placeHolder: 'Select type...' });
+        if (selected == ADD_JDBC) {
+            await commands.executeCommand('db.add.connection');
+        } else if (selected == ADD_ADB) {
+            await commands.executeCommand('nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction');
+        }
+    }));
     const mergeWithLaunchConfig = (dconfig : vscode.DebugConfiguration) => {
         const folder = vscode.workspace.workspaceFolders?.[0];
         const uri = folder?.uri;

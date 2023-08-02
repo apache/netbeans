@@ -96,9 +96,6 @@ public class NodeActionsProvider extends CodeActionsProvider {
     
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (!command.startsWith(NBLS_ACTION_PREFIX)) {
-            return CompletableFuture.completedFuture(false);
-        }
         JsonElement el = null;
         if (arguments.size() > 0) {
             JsonObject item = gson.fromJson(gson.toJson(arguments.get(0)), JsonObject.class);

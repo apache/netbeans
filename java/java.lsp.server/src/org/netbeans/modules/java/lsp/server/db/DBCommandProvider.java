@@ -57,9 +57,6 @@ public class DBCommandProvider extends CodeActionsProvider {
 
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (!COMMAND_GET_PREFERRED_CONNECTION.equals(command)) {
-            return null;
-        }
         TreeNodeRegistry r = Lookup.getDefault().lookup(TreeNodeRegistry.class);
         DatabaseConnection conn = ConnectionManager.getDefault().getPreferredConnection(true);
         if (conn == null || r == null) {

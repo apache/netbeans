@@ -96,9 +96,6 @@ public class DBAddConnection extends CodeActionsProvider {
 
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (!DB_ADD_CONNECTION.equals(command)) {
-            return null;
-        }
         InputService.Registry inputServiceRegistry = Lookup.getDefault().lookup(InputService.Registry.class);
         if (inputServiceRegistry == null) {
             return null;

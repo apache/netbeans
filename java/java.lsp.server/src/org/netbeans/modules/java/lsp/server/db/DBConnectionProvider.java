@@ -55,9 +55,6 @@ public class DBConnectionProvider extends CodeActionsProvider{
     
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (!GET_DB_CONNECTION.equals(command)) {
-            return null;
-        }
         Map<String, String> result = new HashMap<> ();
         DatabaseConnection conn = ConnectionManager.getDefault().getPreferredConnection(true);
 

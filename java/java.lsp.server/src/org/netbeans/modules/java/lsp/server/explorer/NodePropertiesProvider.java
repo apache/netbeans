@@ -82,9 +82,6 @@ public class NodePropertiesProvider extends CodeActionsProvider {
 
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (!COMMANDS.contains(command)) {
-            return CompletableFuture.completedFuture(null);
-        }
         if (arguments == null || arguments.isEmpty()) {
             return CompletableFuture.completedFuture(null);
         }

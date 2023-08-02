@@ -155,7 +155,7 @@ public class DownloadWalletAction extends AbstractAction implements ContextAware
                             drivers[0], 
                             dbUrl, 
                             p.getDbUser(), 
-                            p.getDbUser(), 
+                            p.getDbUser().toUpperCase(), 
                             new String(p.getDbPassword()), 
                             true, 
                             context.getName(),

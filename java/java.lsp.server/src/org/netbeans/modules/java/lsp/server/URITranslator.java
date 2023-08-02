@@ -19,19 +19,17 @@
 package org.netbeans.modules.java.lsp.server;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -69,60 +67,10 @@ public final class URITranslator {
                 if (file == null) {
                     return uri;
                 }
-                File cacheDir = getCacheDir();
-                cacheDir.mkdirs();
-                File segments = new File(cacheDir, "segments"); // NOI18N
-                Properties props = new Properties();
-
-                try (InputStream in = new FileInputStream(segments)) {
-                    props.load(in);
-                } catch (IOException ex) {
-                    //OK, may not exist yet
-                }
-                FileObject archive = FileUtil.getArchiveFile(file);
-                String archiveString = archive.toURL().toString();
-                File foundSegment = null;
-                for (String segment : props.stringPropertyNames()) {
-                    if (archiveString.equals(props.getProperty(segment))) {
-                        foundSegment = new File(cacheDir, segment);
-                        break;
-                    }
-                }
-                if (foundSegment == null) {
-                    int i = 0;
-                    while (props.getProperty("s" + i) != null) {    // NOI18N
-                        i++;
-                    }
-                    foundSegment = new File(cacheDir, "s" + i);     // NOI18N
-                    props.put("s" + i, archiveString);              // NOI18N
-                    try (OutputStream in = new FileOutputStream(segments)) {
-                        props.store(in, "");
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-                File cache = new File(foundSegment, FileUtil.getRelativePath(FileUtil.getArchiveRoot(archive), file));
-                cache.getParentFile().mkdirs();
-                if (file.isFolder()) {
-                    if (cache.exists() && cache.isFile()) {
-                        if (!cache.delete()) {
-                            return uri;
-                        }
-                    }
-                    cache.mkdir();
-                    return cache.toURI().toString();
-                } else if (file.isData()) {
-                    try {
-                        if (cache.exists() && cache.isDirectory()) {
-                            FileUtil.toFileObject(cache).delete();
-                        }
-                        try (OutputStream out = new FileOutputStream(cache)) {
-                            out.write(file.asBytes());
-                            return cache.toURI().toString();
-                        }
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                try {
+                    return URLMapper.findURL(file, URLMapper.EXTERNAL).toURI().toString();
+                } catch (URISyntaxException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
             if (uriUri.getScheme().equals("nbfs")) {            // NOI18N
@@ -150,30 +98,9 @@ public final class URITranslator {
 
     public synchronized String uriFromLSP(String nbUri) {
         return uriToCacheMap.computeIfAbsent(nbUri, uri -> {
-            URI uriUri = URI.create(uri);
-            File cacheDir = getCacheDir();
-            URI relative = cacheDir.toURI().relativize(uriUri);
-            if (relative != null && new File(cacheDir, relative.toString()).canRead()) {
-                String segmentAndPath = relative.toString();
-                int slash = segmentAndPath.indexOf('/');
-                String segment = segmentAndPath.substring(0, slash);
-                String path = segmentAndPath.substring(slash + 1);
-                File segments = new File(cacheDir, "segments");     // NOI18N
-                Properties props = new Properties();
-
-                try (InputStream in = new FileInputStream(segments)) {
-                    props.load(in);
-                    String archiveUri = props.getProperty(segment);
-                    FileObject archive = URLMapper.findFileObject(URI.create(archiveUri).toURL());
-                    archive = archive != null ? FileUtil.getArchiveRoot(archive) : null;
-                    FileObject file = archive != null ? archive.getFileObject(path) : null;
-                    if (file != null) {
-                        return file.toURI().toString();
-                    }
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
+            try {
+                return URLDecoder.decode(nbUri, StandardCharsets.UTF_8.name());
+            } catch (UnsupportedEncodingException ex) {}
             return uri;
         });
     }

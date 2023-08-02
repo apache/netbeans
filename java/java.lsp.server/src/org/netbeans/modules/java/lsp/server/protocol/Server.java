@@ -792,6 +792,7 @@ public final class Server {
                 Set<String> commands = new LinkedHashSet<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
                         NBLS_BUILD_WORKSPACE,
                         NBLS_CLEAN_WORKSPACE,
+                        NBLS_GET_ARCHIVE_FILE_CONTENT,
                         JAVA_RUN_PROJECT_ACTION,
                         JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
                         JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
@@ -989,6 +990,7 @@ public final class Server {
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
     public static final String JAVA_RUN_PROJECT_ACTION = "java.project.run.action";
+    public static final String NBLS_GET_ARCHIVE_FILE_CONTENT = "nbls.get.archive.file.content";
 
     /**
      * Enumerates project configurations.

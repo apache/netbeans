@@ -36,6 +36,8 @@ import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -1069,8 +1071,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     }
                 });
             } catch (ParseException ex) {
-                //TODO: include stack trace:
-                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                StringWriter w = new StringWriter();
+                try (PrintWriter pw = new PrintWriter(w)) {
+                  ex.printStackTrace(pw);
+                }
+                client.logMessage(new MessageParams(MessageType.Error, w.toString()));
             } finally {
                 resultFuture.complete(result);
             }

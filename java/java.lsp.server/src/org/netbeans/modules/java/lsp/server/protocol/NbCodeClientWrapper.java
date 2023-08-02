@@ -21,6 +21,7 @@ package org.netbeans.modules.java.lsp.server.protocol;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.ConfigurationParams;
@@ -37,6 +38,7 @@ import org.eclipse.lsp4j.UnregistrationParams;
 import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
@@ -86,7 +88,16 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
 
     @Override
     public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-        return remote.showQuickPick(params);
+        // vscode from version 1.80.2 displays control characters in quickpicks. Let's strip them:
+        ShowQuickPickParams copy = new ShowQuickPickParams(
+                params.getTitle(), params.getPlaceHolder(), params.getCanPickMany(),
+                params.getItems().stream().map(
+                        i -> new QuickPickItem(
+                                i.getLabel(), Utils.html2plain(i.getDescription(), true), Utils.html2plain(i.getDetail(), true), 
+                                i.isPicked(), i.getUserData())
+                        ).collect(Collectors.toList())
+        );
+        return remote.showQuickPick(copy);
     }
 
     @Override

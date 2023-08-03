@@ -57,19 +57,14 @@ public class NbPresenterTest extends NbTestCase {
     }
 
     public void testOwnerIsWindow() {
-        Window owner = new Frame();
-        NbPresenter p = new NbPresenter(DESCRIPTOR, owner, Dialog.ModalityType.APPLICATION_MODAL);
+        Frame owner = new Frame();
+        NbPresenter p = new NbPresenter(DESCRIPTOR, owner, true);
         assertSame(owner, p.getOwner());
     }
 
     public void testTitleIsFromDescriptor() {
-        NbPresenter p = new NbPresenter(DESCRIPTOR, null, Dialog.ModalityType.APPLICATION_MODAL);
+        NbPresenter p = new NbPresenter(DESCRIPTOR, (Frame) null, true);
         assertEquals(TITLE, p.getTitle());
-    }
-
-    public void testModalityIsSet() {
-        NbPresenter p = new NbPresenter(DESCRIPTOR, null, Dialog.ModalityType.APPLICATION_MODAL);
-        assertEquals(Dialog.ModalityType.APPLICATION_MODAL, p.getModalityType());
     }
 
     public void testDialogsOptionsOnDefaultSystem () {

@@ -66,12 +66,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.WeakHashMap;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -1345,66 +1343,29 @@ public final class Utilities {
     }
 
     /**
-     * Finds an appropriate component to use for a dialog's parent. This is for
-     * use in situations where a standard swing API, such as
-     * {@linkplain javax.swing.JOptionPane}.show* or
-     * {@linkplain javax.swing.JFileChooser}.show*, is used to display a dialog.
-     * {@code null} should never be used as a dialog's parent because it
+     * This is for use in situations where a standard swing API,
+     * such as {@linkplain javax.swing.JOptionPane}.show* or {@linkplain javax.swing.JFileChooser}.show*,
+     * is used to display a dialog. {@code null} should never be used
+     * as a dialog's parent because it
      * frequently does the wrong thing in a multi-screen setup.
      * <p>
      * The use of the NetBeans API
      * <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault--">DialogDisplayer.getDefault*</a>
-     * is encouraged to display a dialog.
-     *
-     * @return A suitable parent component for swing dialogs
+     * is encouraged to display a dialog, but stuff happens.
+     * @return A suitable parent component for swing dialog displayers.
      * @since 9.26
      */
     // PR4739
     public static Component findDialogParent() {
-        return findDialogParent(null);
-    }
-
-    /**
-     * Finds an appropriate component to use for a dialog's parent. Similar to
-     * {@link #findDialogParent()} with the ability to specify a suggested
-     * parent component. The suggested parent will be returned if it is
-     * non-null, and either there is no active modal dialog or it is contained
-     * within that dialog.
-     *
-     * @param suggestedParent the component to return if non-null and valid
-     * @return the suggested parent if suitable, otherwise another suitable
-     * parent component for swing dialogs
-     * @since 9.30
-     */
-    public static Component findDialogParent(Component suggestedParent) {
-        Component parent = suggestedParent;
+        Component parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         if (parent == null) {
-            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        }
-        Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-        if (parent == null) {
-            parent = active;
-        } else if (active instanceof Dialog && ((Dialog) active).isModal()) {
-            Window suggested = parent instanceof Window ? (Window) parent : SwingUtilities.windowForComponent(parent);
-            if (suggested != active) {
-                return active;
-            }
+            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
         }
         if (parent == null) {
+            // PR#5280
             parent = findMainWindow();
         }
         return parent;
-    }
-
-    /**
-     * Check whether a modal dialog is open.
-     *
-     * @return true if a modal dialog is open, false otherwise
-     * @since 9.30
-     */
-    public static boolean isModalDialogOpen() {
-        Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-        return active instanceof Dialog && ((Dialog) active).isModal();
     }
 
     /** @return size of the screen. The size is modified for Windows OS

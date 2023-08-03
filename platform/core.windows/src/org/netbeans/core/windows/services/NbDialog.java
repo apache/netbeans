@@ -50,15 +50,7 @@ final class NbDialog extends NbPresenter {
         super (d, owner, d.isModal ());
     }
 
-    /** Creates a new Dialog from specified DialogDescriptor
-    * @param d The DialogDescriptor to create the dialog from
-    * @param owner Owner of this dialog.
-    */
-    public NbDialog(DialogDescriptor d, Window owner) {
-        super(d, owner, d.isModal() ? Dialog.DEFAULT_MODALITY_TYPE : ModalityType.MODELESS);
-    }
-
-    /** Getter for help.
+    /** Geter for help.
     */
     @Override
     protected HelpCtx getHelpCtx () {

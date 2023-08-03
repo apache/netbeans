@@ -23,7 +23,6 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.awt.Frame;
-import java.awt.KeyboardFocusManager;
 import java.awt.Window;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -82,13 +81,10 @@ public class DialogDisplayerImplTest extends NbTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        while (true) {
-            Window w = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-            if (w == null) {
-                break;
-            }
-            w.setVisible(false);
-            w.dispose();
+        if (NbPresenter.currentModalDialog != null) {
+            NbPresenter.currentModalDialog.setVisible(false);
+            NbPresenter.currentModalDialog.dispose();
+            NbPresenter.currentModalDialog = null;
         }
         super.tearDown();
     }
@@ -351,23 +347,6 @@ public class DialogDisplayerImplTest extends NbTestCase {
         assertEquals(frame, dlg.getOwner());
     }
     
-    @RandomlyFails
-    public void testNestedDialogParent() throws Exception {
-        Frame f = null;
-        Dialog owner = new Dialog(f, true);
-        postInAwtAndWaitOutsideAwt(() -> owner.setVisible(true));
-        assertShowing("Owner is invisible", true, owner);
-
-        child = new JButton();
-        final NotifyDescriptor nd = new NotifyDescriptor.Message(child);
-        postInAwtAndWaitOutsideAwt(() -> DialogDisplayer.getDefault().notify(nd));
-
-        assertShowing("Child is invisible", true, child);
-        Window w = SwingUtilities.windowForComponent(child);
-        assertSame("Window parent is not owner", owner, w.getParent());
-        postInAwtAndWaitOutsideAwt(() -> owner.setVisible(false));
-    }
-
     static void postInAwtAndWaitOutsideAwt (final Runnable run) throws Exception {
         // pendig to better implementation
         SwingUtilities.invokeLater (run);
@@ -465,7 +444,7 @@ public class DialogDisplayerImplTest extends NbTestCase {
             thenApply((x) -> x);
         
         // wait for the dialog to be displayed
-        assertTrue(panel.displayed.await(10, TimeUnit.SECONDS));
+        panel.displayed.await(10, TimeUnit.SECONDS);
         
         cf.cancel(true);
         

@@ -51,7 +51,6 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.UserCancelException;
-import org.openide.util.Utilities;
 import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.Mode;
@@ -351,7 +350,12 @@ public final class NodeOperationImpl extends NodeOperation {
 //        Mutex.EVENT.readAccess (new Runnable () { // PENDING
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
                 public void run () {
-                    boolean modal = Utilities.isModalDialogOpen();
+                    boolean modal;
+                    if(NbPresenter.currentModalDialog == null) {
+                        modal = false;
+                    } else {
+                        modal = true;
+                    }
                     
                     Dialog dlg = org.openide.DialogDisplayer.getDefault().createDialog(new DialogDescriptor (
                         sheet,

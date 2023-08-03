@@ -1954,13 +1954,13 @@ jobs:
 
 
   enterprise-test:
-    name: Enterprise on Linux/JDK ${{ matrix.java }}
+    name: Enterprise on Linux/JDK ${{ matrix.java }} (some on 8)
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '11' ]
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -2023,9 +2023,6 @@ jobs:
 
       - name: j2ee.ddloaders
         run: ant $OPTS -f enterprise/j2ee.ddloaders test
-
-      - name: j2ee.dd.webservice
-        run: ant $OPTS -f enterprise/j2ee.dd.webservice test
 
 # Fails + Slow
 #      - name: j2ee.ejbjarproject
@@ -2151,10 +2148,6 @@ jobs:
 #      - name: websvc.design
 #        run: ant $OPTS -f enterprise/websvc.design test
 
-# Fails
-#      - name: websvc.editor.hints
-#        run: ant $OPTS -f enterprise/websvc.editor.hints test
-
       - name: websvc.jaxwsapi
         run: ant $OPTS -f enterprise/websvc.jaxwsapi test
 
@@ -2189,6 +2182,18 @@ jobs:
 
       - name: websvc.wsstackapi
         run: ant $OPTS -f enterprise/websvc.wsstackapi test
+
+      - name: Set up JDK 8 for incompatible tests
+        uses: actions/setup-java@v3
+        with:
+          java-version: 8
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: websvc.editor.hints
+        run: ant $OPTS -f enterprise/websvc.editor.hints test
+
+      - name: j2ee.dd.webservice
+        run: ant $OPTS -f enterprise/j2ee.dd.webservice test
 
       - name: Create Test Summary
         uses: test-summary/action@v2

@@ -652,6 +652,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand('nbls.node.properties.edit',
         async (node) => await PropertiesView.createOrShow(context, node, (await client).findTreeViewService())));
 
+    const archiveFileProvider = <vscode.TextDocumentContentProvider> {
+        provideTextDocumentContent: async (uri: vscode.Uri, token: vscode.CancellationToken): Promise<string> => {
+            return await commands.executeCommand('nbls.get.archive.file.content', uri.toString());
+        }
+    };
+    context.subscriptions.push(workspace.registerTextDocumentContentProvider('jar', archiveFileProvider));
+    context.subscriptions.push(workspace.registerTextDocumentContentProvider('nbjrt', archiveFileProvider));
+
     launchConfigurations.updateLaunchConfig();
 
     // register completions:

@@ -272,6 +272,20 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 progressOfCompilation.checkStatus();
                 return progressOfCompilation.getFinishFuture();
             }
+            case Server.NBLS_GET_ARCHIVE_FILE_CONTENT: {
+                CompletableFuture<Object> future = new CompletableFuture<>();
+                try {
+                    String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                    FileObject file = Utils.fromUri(uri);
+                    if (file != null) {
+                        future.complete(file.asText("UTF-8"));
+                    }
+                    future.complete(null);
+                } catch (IOException ioe) {
+                    future.completeExceptionally(ioe);
+                }
+                return future;
+            }
             case Server.JAVA_GET_PROJECT_SOURCE_ROOTS: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 String type = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsString() : JavaProjectConstants.SOURCES_TYPE_JAVA;

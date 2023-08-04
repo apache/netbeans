@@ -44,6 +44,7 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.Annotatio
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.ObjectProvider;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.PersistentObjectManager;
 
+// @todo: Support JakartaEE
 public class EnterpriseBeansImpl implements EnterpriseBeans {
 
     private final AnnotationModelHelper helper;

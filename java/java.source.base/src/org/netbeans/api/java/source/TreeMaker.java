@@ -3535,6 +3535,17 @@ public final class TreeMaker {
     }
 
     /**Creates a new javadoc comment.
+     *
+     * @param fullBody the entire body of the comment
+     * @param tags the block tags of the comment (after the main body)
+     * @return newly created DocCommentTree
+     * @since 2.62
+     */
+    public DocCommentTree DocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
+        return delegate.DocComment(fullBody, tags);
+    }
+
+    /**Creates a new javadoc comment.
      * 
      * @param firstSentence the javadoc comment's first sentence
      * @param body the main body of the comment

@@ -381,8 +381,9 @@ public final class EjbFacadeVisualPanel2 extends JPanel implements DocumentListe
     // End of variables declaration//GEN-END:variables
 
     private void updateCheckboxes() {
+        J2eeProjectCapabilities projectCap = J2eeProjectCapabilities.forProject(project);
         //by default for ejb 3.1 no interfaces will be created
-        localCheckBox.setSelected(!J2eeProjectCapabilities.forProject(project).isEjb31LiteSupported());
+        localCheckBox.setSelected(!(projectCap.isEjb31LiteSupported() || projectCap.isEjb40LiteSupported()));
         changeSupport.fireChange();
     }
     

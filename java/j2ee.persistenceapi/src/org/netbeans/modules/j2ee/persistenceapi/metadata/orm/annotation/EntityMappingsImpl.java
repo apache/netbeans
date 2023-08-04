@@ -33,6 +33,7 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.ObjectPro
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.PersistentObjectManager;
 import org.netbeans.modules.j2ee.persistence.api.metadata.orm.*;
 
+// @todo: Support JakartaEE
 public class EntityMappingsImpl implements EntityMappings {
 
     private final AnnotationModelHelper helper;

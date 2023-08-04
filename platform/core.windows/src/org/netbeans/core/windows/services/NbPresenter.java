@@ -184,21 +184,6 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         initialize(d);
     }
 
-    /**
-     * Creates a new Dialog from the specified NotifyDescriptor and owner.
-     *
-     * @param d the non-null descriptor from which to initialize the dialog
-     * @param owner the owner of the dialog, must be a {@code Dialog} or
-     *      {@code Frame} instance or {@code null} (not recommended)
-     * @param modality specifies whether dialog blocks input to other windows
-     *      when shown. {@code null} value and unsupported modality types are
-     *      equivalent to {@code MODELESS}
-     */
-    public NbPresenter(NotifyDescriptor d, Window owner, ModalityType modality) {
-        super(owner, d.getTitle(), modality);
-        initialize(d);
-    }
-
     boolean isLeaf () {
         return leaf;
     }
@@ -1599,7 +1584,10 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                 }
             }
         }
-        while( null != w && !w.isShowing() ) {
+        while( null != w ) {
+            if ((w instanceof Frame || w instanceof Dialog) && w.isShowing()) {
+                break;
+            }
             w = w.getOwner();
         }
         return w;

@@ -41,7 +41,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
@@ -399,24 +398,34 @@ public class Utils {
 
     /**
      * Simple conversion from HTML to plaintext. Removes all html tags incl. attributes,
-     * replaces BR, P and HR tags with newlines.
+     * replaces BR, P and HR tags with newlines. The method optionally collapses whitespaces:
+     * all whitespace characters are replaced by spaces, adjacent spaces collapsed to single one, leading
+     * and trailing spaces removed.
      * @param s html text
+     * @param collapseWhitespaces to collapse 
      * @return plaintext
      */
-    public static String html2plain(String s) {
+    public static String html2plain(String s, boolean collapseWhitespaces) {
+        if (s == null) {
+            return null;
+        }
         boolean inTag = false;
+        boolean whitespace = false;
+
         int tagStart = -1;
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
-            if (inTag) {
+            T: if (inTag) {
                 boolean alpha = Character.isAlphabetic(ch);
                 if (tagStart > 0 && !alpha) {
                     String t = s.substring(tagStart, i).toLowerCase(Locale.ENGLISH);
                     switch (t) {
                         case "br": case "p": case "hr": // NOI1N
-                            sb.append("\n");
-                            break;
+                            ch ='\n'; // NOI18N
+                            // continues to process 'ch' as if it came from the string, but `inTag` remains
+                            // the same.
+                            break T;
                     }
                     // prevent entering tagstart state again
                     tagStart = -2;
@@ -426,16 +435,40 @@ public class Utils {
                 } else if (tagStart == -1 && alpha) {
                     tagStart = i;
                 }
+                continue;
             } else {
                 if (ch == '<') { // NOI18N
                     tagStart = -1;
                     inTag = true;
                     continue;
                 }
-                sb.append(ch);
             }
+            if (collapseWhitespaces) {
+                if (ch == '\n') {
+                    ch = ' ';
+                }
+                if (Character.isWhitespace(ch)) {
+                    if (whitespace) {
+                        continue;
+                    }
+                    ch = ' '; // NOI18N
+                    whitespace = true;
+                } else {
+                    whitespace = false;
+                }
+            }
+            sb.append(ch);
         }
-        return sb.toString();
+        return collapseWhitespaces ? sb.toString().trim() : sb.toString();
     }
 
+    /**
+     * Simple conversion from HTML to plaintext. Removes all html tags incl. attributes,
+     * replaces BR, P and HR tags with newlines.
+     * @param s html text
+     * @return plaintext
+     */
+    public static String html2plain(String s) {
+        return html2plain(s, false);
+    }
 }

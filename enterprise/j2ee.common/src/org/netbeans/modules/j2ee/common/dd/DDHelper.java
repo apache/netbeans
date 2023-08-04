@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.function.Consumer;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.api.ejbjar.Ear;
@@ -40,7 +41,11 @@ import org.openide.filesystems.FileUtil;
  */
 public class DDHelper {
 
-    private static final String RESOURCE_FOLDER = "/org/netbeans/modules/j2ee/common/dd/resources/"; //NOI18N
+    static final String RESOURCE_FOLDER = "/org/netbeans/modules/j2ee/common/dd/resources/"; //NOI18N
+
+    static Consumer<MakeFileCopy> atomicActionRunner = FileUtil::runAtomicAction;
+
+    static MakeFileCopyFactory makeFileCopyFactory = MakeFileCopy::new;
 
     private DDHelper() {
     }
@@ -88,8 +93,8 @@ public class DDHelper {
         if (template == null)
             return null;
 
-        MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, "web.xml");
-        FileUtil.runAtomicAction(action);
+        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, "web.xml");
+        atomicActionRunner.accept(action);
         if (action.getException() != null)
             throw action.getException();
         else
@@ -121,8 +126,8 @@ public class DDHelper {
         if (template == null)
             return null;
 
-        MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, "web-fragment.xml");
-        FileUtil.runAtomicAction(action);
+        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, "web-fragment.xml");
+        atomicActionRunner.accept(action);
         if (action.getException() != null)
             throw action.getException();
         else
@@ -169,8 +174,8 @@ public class DDHelper {
         if (template == null)
             return null;
 
-        MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, name+".xml");
-        FileUtil.runAtomicAction(action);
+        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, name+".xml");
+        atomicActionRunner.accept(action);
         if (action.getException() != null)
             throw action.getException();
         else
@@ -215,8 +220,8 @@ public class DDHelper {
         if (template == null)
             return null;
 
-        MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, name+".xml");
-        FileUtil.runAtomicAction(action);
+        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, name+".xml");
+        atomicActionRunner.accept(action);
         if (action.getException() != null)
             throw action.getException();
         else
@@ -261,8 +266,8 @@ public class DDHelper {
         if (template == null)
             return null;
 
-        MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, name+".xml");
-        FileUtil.runAtomicAction(action);
+        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, name+".xml");
+        atomicActionRunner.accept(action);
         if (action.getException() != null)
             throw action.getException();
         else
@@ -305,8 +310,8 @@ public class DDHelper {
             return null;
         }
 
-        MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, "application.xml");
-        FileUtil.runAtomicAction(action);
+        MakeFileCopy action = makeFileCopyFactory.build(RESOURCE_FOLDER + template, dir, "application.xml");
+        atomicActionRunner.accept(action);
         if (action.getException() != null) {
             throw action.getException();
         } else {
@@ -332,8 +337,14 @@ public class DDHelper {
         return ear != null && Profile.J2EE_14.equals(ear.getJ2eeProfile());
     }
 
+    @FunctionalInterface
+    static interface MakeFileCopyFactory {
+
+        MakeFileCopy build(String resource, FileObject toDir, String toFile);
+    }
+
     // -------------------------------------------------------------------------
-    private static class MakeFileCopy implements Runnable {
+    static class MakeFileCopy implements Runnable {
         private String fromFile;
         private FileObject toDir;
         private String toFile;

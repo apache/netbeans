@@ -201,7 +201,7 @@ public class JDBCProcedure extends ProcedureImplementation {
     }
 
     private Value initReturnValue() {
-        if (returnValue != null) {
+        if (parameters != null) {
             return returnValue;
         }
         createProcedureInfo();

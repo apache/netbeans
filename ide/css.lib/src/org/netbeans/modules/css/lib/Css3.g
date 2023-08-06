@@ -285,6 +285,7 @@ styleSheet
     :
     	ws?
     	( charSet ws? )?
+        ( layerStatement ws? )?
         imports?
         namespaces?
         body?
@@ -329,12 +330,17 @@ imports
 
 importItem
     :
-        IMPORT_SYM ws? resourceIdentifier ((ws? mediaQueryList)=>ws? mediaQueryList)?
+        IMPORT_SYM ws? resourceIdentifier ws? importLayer? ((ws? mediaQueryList)=>ws? mediaQueryList)?
         |
         //multiple imports in one directive
-        {isScssSource()}? IMPORT_SYM ws? resourceIdentifier (ws? COMMA ws? resourceIdentifier)* ((ws? mediaQueryList)=>ws? mediaQueryList)?
+        {isScssSource()}? IMPORT_SYM ws? resourceIdentifier (ws? COMMA ws? resourceIdentifier)* ws? importLayer? ((ws? mediaQueryList)=>ws? mediaQueryList)?
         |
-        {isLessSource()}? IMPORT_SYM ws? (LPAREN less_import_types RPAREN ws?)? resourceIdentifier ((ws? mediaQueryList)=>ws? mediaQueryList)?
+        {isLessSource()}? IMPORT_SYM ws? (LPAREN less_import_types RPAREN ws?)? resourceIdentifier ws? importLayer? ((ws? mediaQueryList)=>ws? mediaQueryList)?
+    ;
+
+importLayer
+    :
+    {tokenNameEquals("layer")}? IDENT (LPAREN ws? layerName ws? RPAREN)?
     ;
 
 sass_use
@@ -538,6 +544,33 @@ supportsDecl
 	declaration
 	;
 
+layerAtRule
+        :
+        layerBlock
+        |
+        layerStatement
+        ;
+
+layerBlock
+        :
+        (LAYER_SYM ws layerName? ws? layerBody)
+        ;
+
+layerStatement
+        :
+        (LAYER_SYM ws layerName ( ws? COMMA ws? layerName)* SEMI)
+        ;
+
+layerName
+        :
+        IDENT (DOT IDENT)*
+        ;
+
+layerBody
+        :
+        LBRACE ws? body? ws? RBRACE
+        ;
+
 at_rule
     :
     media
@@ -546,6 +579,7 @@ at_rule
     | fontFace
     | supportsAtRule
     | vendorAtRule
+    | layerAtRule
     ;
 
 vendorAtRule
@@ -1840,6 +1874,7 @@ CHARSET_SYM         : '@CHARSET';
 COUNTER_STYLE_SYM   : '@COUNTER-STYLE';
 FONT_FACE_SYM       : '@FONT-FACE';
 SUPPORTS_SYM        : '@SUPPORTS';
+LAYER_SYM           : '@LAYER';
 
 TOPLEFTCORNER_SYM     :'@TOP-LEFT-CORNER';
 TOPLEFT_SYM           :'@TOP-LEFT';

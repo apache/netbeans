@@ -490,5 +490,12 @@ public enum NodeType {
     , parenBlock
     , componentValue
     , componentValueOuter
+    // @layer rule
+    , layerAtRule
+    , importLayer
+    , layerName
+    , layerBody
+    , layerStatement
+    , layerBlock
     ;
 }

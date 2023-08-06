@@ -65,7 +65,7 @@ public class SimpleApplicationProjectWizard extends BaseGradleWizardIterator {
         final File loc = (File) params.get(CommonProjectActions.PROJECT_PARENT_FOLDER);
         final File root = new File(loc, name);
 
-        ops.createGradleInit(root, type).basePackage(packageBase).projectName(name).add(); // NOI18N
+        ops.createGradleInit(root, type).basePackage(packageBase).projectName(name).dsl("groovy").add(); // NOI18N
         ops.addProjectPreload(root);
         ops.addProjectPreload(new File(root, subFolder));
 

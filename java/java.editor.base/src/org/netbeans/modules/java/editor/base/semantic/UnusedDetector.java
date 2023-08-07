@@ -48,6 +48,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiFunction;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -69,8 +71,10 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.hints.unused.UsedDetector;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -114,6 +118,18 @@ public class UnusedDetector {
 
         UnusedVisitor uv = new UnusedVisitor(info);
         uv.scan(info.getCompilationUnit(), null);
+        AtomicReference<List<UsedDetector>> usedDetectors = new AtomicReference<>();
+        BiFunction<Element, TreePath, Boolean> markedAsUsed = (el, path) -> {
+            if (usedDetectors.get() == null) {
+                usedDetectors.set(collectUsedDetectors(info));
+            }
+            for (UsedDetector detector : usedDetectors.get()) {
+                if (detector.isUsed(el, path)) {
+                    return true;
+                }
+            }
+            return false;
+        };
         List<UnusedDescription> result = new ArrayList<>();
         for (Entry<Element, TreePath> e : uv.element2Declaration.entrySet()) {
             Element el = e.getKey();
@@ -124,11 +140,11 @@ public class UnusedDetector {
             if (isLocalVariableClosure(el)) {
                 boolean isWritten = uses.contains(UseTypes.WRITTEN);
                 boolean isRead = uses.contains(UseTypes.READ);
-                if (!isWritten && !isRead) {
+                if (!isWritten && !isRead && !markedAsUsed.apply(el, declaration)) {
                     result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_WRITTEN_READ));
-                } else if (!isWritten) {
+                } else if (!isWritten && !markedAsUsed.apply(el, declaration)) {
                     result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_WRITTEN));
-                } else if (!isRead) {
+                } else if (!isRead && !markedAsUsed.apply(el, declaration)) {
                     result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_READ));
                 }
             } else if (el.getKind().isField() && (isPrivate || isPkgPrivate)) {
@@ -136,13 +152,13 @@ public class UnusedDetector {
                     boolean isWritten = uses.contains(UseTypes.WRITTEN);
                     boolean isRead = uses.contains(UseTypes.READ);
                     if (!isWritten && !isRead) {
-                        if (isPrivate || isUnusedInPkg(info, el, cancel)) {
+                        if ((isPrivate || isUnusedInPkg(info, el, cancel)) && !markedAsUsed.apply(el, declaration)) {
                             result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_WRITTEN_READ));
                         }
-                    } else if (!isWritten) {
+                    } else if (!isWritten && !markedAsUsed.apply(el, declaration)) {
                         result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_WRITTEN));
                     } else if (!isRead) {
-                        if (isPrivate || isUnusedInPkg(info, el, cancel)) {
+                        if ((isPrivate || isUnusedInPkg(info, el, cancel)) && !markedAsUsed.apply(el, declaration)) {
                             result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_READ));
                         }
                     }
@@ -152,13 +168,13 @@ public class UnusedDetector {
                 if (!isSerializationMethod(info, method) && !uses.contains(UseTypes.USED)
                         && !info.getElementUtilities().overridesMethod(method) && !lookedUpElement(el, uv.type2LookedUpMethods, uv.allStringLiterals)
                         && !SourceUtils.isMainMethod(method)) {
-                    if (isPrivate || isUnusedInPkg(info, el, cancel)) {
+                    if ((isPrivate || isUnusedInPkg(info, el, cancel)) && !markedAsUsed.apply(el, declaration)) {
                         result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_USED));
                     }
                 }
             } else if ((el.getKind().isClass() || el.getKind().isInterface()) && (isPrivate || isPkgPrivate)) {
                 if (!uses.contains(UseTypes.USED)) {
-                    if (isPrivate || isUnusedInPkg(info, el, cancel)) {
+                    if ((isPrivate || isUnusedInPkg(info, el, cancel)) && !markedAsUsed.apply(el, declaration)) {
                         result.add(new UnusedDescription(el, declaration, isPkgPrivate, UnusedReason.NOT_USED));
                     }
                 }
@@ -399,6 +415,17 @@ public class UnusedDetector {
             return true;
         }
         return false;
+    }
+
+    private static List<UsedDetector> collectUsedDetectors(CompilationInfo info) {
+        List<UsedDetector> detectors = new ArrayList<>();
+        for (UsedDetector.Factory factory : Lookup.getDefault().lookupAll(UsedDetector.Factory.class)) {
+            UsedDetector detector = factory.create(info);
+            if (detector != null) {
+                detectors.add(detector);
+            }
+        }
+        return detectors;
     }
 
     private enum UseTypes {

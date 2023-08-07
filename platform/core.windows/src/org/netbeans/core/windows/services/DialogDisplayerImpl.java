@@ -26,7 +26,6 @@ import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
-import java.awt.KeyboardFocusManager;
 import java.awt.Window;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -38,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import org.netbeans.core.windows.view.ui.DefaultSeparateContainer;
@@ -120,7 +120,14 @@ public class DialogDisplayerImpl extends DialogDisplayer {
                         }
                     }
                 }
-                NbDialog dlg = new NbDialog(d, w);
+                NbDialog dlg;
+                if (w instanceof Frame) {
+                    dlg = new NbDialog(d, (Frame) w);
+                } else if (w instanceof Dialog) {
+                    dlg = new NbDialog(d, (Dialog) w);
+                } else {
+                    dlg = new NbDialog(d, WindowManager.getDefault().getMainWindow());
+                }
                 customizeDlg(dlg);
                 dlg.requestFocusInWindow ();
                 return dlg;
@@ -130,17 +137,22 @@ public class DialogDisplayerImpl extends DialogDisplayer {
     
     private Window findDialogParent() {
         Component parentComponent = Utilities.findDialogParent(null);
-        if (parentComponent instanceof Window) {
-            return (Window) parentComponent;
-        }
-        Window parent = null;
-        if (parentComponent != null) {
-            parent = SwingUtilities.windowForComponent(parentComponent);
-        }
-        if (parent == null || parent instanceof NbPresenter && ((NbPresenter) parent).isLeaf ()) {
+        Window parent = findDialogParent(parentComponent);
+        if (parent == null || parent == JOptionPane.getRootFrame()
+                || parent instanceof NbPresenter && ((NbPresenter) parent).isLeaf()) {
             return WindowManager.getDefault().getMainWindow();
         }
         return parent;
+    }
+
+    private Window findDialogParent(Component component) {
+        if (component == null) {
+            return null;
+        }
+        if (component instanceof Frame || component instanceof Dialog) {
+            return (Window) component;
+        }
+        return findDialogParent(component.getParent());
     }
 
     /** Notifies user by a dialog.
@@ -227,9 +239,21 @@ public class DialogDisplayerImpl extends DialogDisplayer {
             Window parent = noParent ? null : findDialogParent();
 
             if (descriptor instanceof DialogDescriptor) {
-                presenter = new NbDialog((DialogDescriptor) descriptor, parent);
+                if (parent instanceof Dialog) {
+                    presenter = new NbDialog((DialogDescriptor) descriptor, (Dialog) parent);
+                } else if (parent instanceof Frame) {
+                    presenter = new NbDialog((DialogDescriptor) descriptor, (Frame) parent);
+                } else {
+                    presenter = new NbDialog((DialogDescriptor) descriptor, (Frame) null);
+                }
             } else {
-                presenter = new NbPresenter(descriptor, parent, Dialog.DEFAULT_MODALITY_TYPE);
+                if (parent instanceof Dialog) {
+                    presenter = new NbPresenter(descriptor, (Dialog) parent, true);
+                } else if (parent instanceof Frame) {
+                    presenter = new NbPresenter(descriptor, (Frame) parent, true);
+                } else {
+                    presenter = new NbPresenter(descriptor, (Frame) null, true);
+                }
             }
             
             synchronized (this) {

@@ -45,6 +45,7 @@ import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.input.InputBoxStep;
 import org.netbeans.modules.java.lsp.server.input.InputCallbackParams;
 import org.netbeans.modules.java.lsp.server.input.InputService;
@@ -372,7 +373,7 @@ class NotifyDescriptorAdapter {
             List<QuickPickItem> items = new ArrayList<>(qpItems.size());
             for (int i = 0; i < qpItems.size(); i++) {
                 NotifyDescriptor.QuickPick.Item item = qpItems.get(i);
-                items.add(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), Integer.toString(i)));
+                items.add(new QuickPickItem(item.getLabel(), Utils.html2plain(item.getDescription(), true), null, item.isSelected(), Integer.toString(i)));
             }
             ShowQuickPickParams params = new ShowQuickPickParams(qp.getLabel(), qp.getTitle(), qp.isMultipleSelection(), items);
             CompletableFuture<List<QuickPickItem>> qpF = client.showQuickPick(params);
@@ -431,7 +432,8 @@ class NotifyDescriptorAdapter {
                                 List<QuickPickItem> items = new ArrayList<>();
                                 for (int i = 0; i < qpItems.size(); i++) {
                                     NotifyDescriptor.QuickPick.Item item = qpItems.get(i);
-                                    items.add(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), Integer.toString(i)));
+                                    items.add(new QuickPickItem(item.getLabel(), 
+                                            Utils.html2plain(item.getDescription(), true), null, item.isSelected(), Integer.toString(i)));
                                 }
                                 QuickPickStep step = new QuickPickStep(ci.getEstimatedNumberOfInputs(), stepId,
                                         null, input.getTitle(), ((NotifyDescriptor.QuickPick) input).isMultipleSelection(),

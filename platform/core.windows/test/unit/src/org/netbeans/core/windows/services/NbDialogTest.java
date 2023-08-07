@@ -19,9 +19,8 @@
 package org.netbeans.core.windows.services;
 
 import java.awt.Dialog;
+import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
-import java.awt.Window;
-import javax.swing.JLabel;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.junit.NbTestCase;
@@ -42,12 +41,12 @@ public class NbDialogTest extends NbTestCase {
     }
 
     public void testModalityIsDefaultWhenModal() {
-        NbDialog d = new NbDialog(new DialogDescriptor(null, null, true, null), (Window) null);
+        NbDialog d = new NbDialog(new DialogDescriptor(null, null, true, null), (Frame) null);
         assertEquals(Dialog.DEFAULT_MODALITY_TYPE, d.getModalityType());
     }
 
     public void testModalityIsModelessWhenNotModal() {
-        NbDialog d = new NbDialog(new DialogDescriptor(null, null, false, null), (Window) null);
+        NbDialog d = new NbDialog(new DialogDescriptor(null, null, false, null), (Frame) null);
         assertEquals(Dialog.ModalityType.MODELESS, d.getModalityType());
     }
 }

@@ -20,6 +20,17 @@
     under the License.
 
 -->
+## Version 19.0.0
+* Performance improvements in Maven projects loading and priming build
+* Navigation for Micronaut URI and Beans in Find Symbol
+* Allow for lazy computation of CodeActions 
+* Database support improvements:
+  * Generating Entity classes from database improved
+  * JDBC properties editing
+  * Display database schema tree improvements
+  * Adding OCI Autonomous database simplified
+  * Allow to reenter DB username and password
+
 ## Version 18.0.0
 * Java 8+ launch config renamed to Java+
 

@@ -33,6 +33,7 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.Persisten
 /**
  * @author Petr Slechta
  */
+// @todo: Support JakartaEE
 public class AnnotationHelpers {
 
     private AnnotationModelHelper helper;

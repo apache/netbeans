@@ -27,35 +27,15 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
-/**
- *
- * @author Ondrej Brejla <obrejla@netbeans.org>
- */
-public class NavigatorDeprecatedTest extends PhpNavigatorTestBase {
+public class DeprecatedTypedFieldsSemanticAnalysisTest extends DeprecatedSemanticAnalysisTestBase {
 
-    public NavigatorDeprecatedTest(String testName) {
+    public DeprecatedTypedFieldsSemanticAnalysisTest(String testName) {
         super(testName);
     }
 
-    public void testDeprecatedDeclarations() throws Exception {
-        performTest("structure/deprecatedDeclarations");
-    }
-
-    public void testDeprecatedTypes() throws Exception {
-        performTest("structure/deprecatedTypes");
-    }
-
-    public void testDeprecatedTypesForNullableTypes_01() throws Exception {
-        performTest("structure/deprecatedTypesForNullableTypes_01");
-    }
-
-    public void testDeprecatedTypesForNullableTypes_02() throws Exception {
-        performTest("structure/deprecatedTypesForNullableTypes_02");
-    }
-
-    public void testDeprecatedTypedFields() throws Exception {
+    public void testDeprecatedFieldsDeclarations() throws Exception {
         // GH-6310
-        performTest("structure/deprecatedTypedFields");
+        checkSemantic("testfiles/semantic/deprecatedTypedFields/deprecatedTypedFields.php");
     }
 
     @Override
@@ -63,7 +43,7 @@ public class NavigatorDeprecatedTest extends PhpNavigatorTestBase {
         return Collections.singletonMap(
             PhpSourcePath.SOURCE_CP,
             ClassPathSupport.createClassPath(new FileObject[] {
-                FileUtil.toFileObject(new File(getDataDir(), "/testfiles/structure"))
+                FileUtil.toFileObject(new File(getDataDir(), "/testfiles/semantic/deprecatedTypedFields"))
             })
         );
     }

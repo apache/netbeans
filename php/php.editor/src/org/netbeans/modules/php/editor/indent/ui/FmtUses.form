@@ -52,6 +52,7 @@
                   <Component id="aliasesCapitalsOfNamespacesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="preferGroupUsesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="putInPSR12OrderCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="keepExistingUseTypeOrderCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -72,7 +73,9 @@
               <Component id="aliasesCapitalsOfNamespacesCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="putInPSR12OrderCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="12" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="keepExistingUseTypeOrderCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -121,6 +124,13 @@
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/netbeans/modules/php/editor/indent/ui/Bundle.properties" key="FmtUses.putInPSR12OrderCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="keepExistingUseTypeOrderCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/indent/ui/Bundle.properties" key="FmtUses.keepExistingUseTypeOrderCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

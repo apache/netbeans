@@ -1134,6 +1134,800 @@ public class FixUsesPerformerTest extends PHPTestBase {
         performTest("    class ^Test {", selections, true, options);
     }
 
+    public void testKeepExistingUseTypeOrder_Single01a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Single01b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Single02a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Single02b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Single03a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Single03b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Single04a() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Single04b() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Single05a() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Single05b() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_SinglePSR01a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_SinglePSR01b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_SinglePSR02a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_SinglePSR02b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_SinglePSR03a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_SinglePSR03b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_SinglePSR04a() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_SinglePSR04b() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_SinglePSR05a() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_SinglePSR05b() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Group01a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function2", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Group01b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function2", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Group02a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Group02b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Group03a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Group03b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Group04a() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Group04b() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Group05a() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Group05b() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_GroupPSR01a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function2", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_GroupPSR01b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function2", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_GroupPSR02a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_GroupPSR02b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_GroupPSR03a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_GroupPSR03b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_GroupPSR04a() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_GroupPSR04b() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_GroupPSR05a() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_GroupPSR05b() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferGroupUses(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Multiple01a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function2", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Multiple01b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function2", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Multiple02a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Multiple02b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Multiple03a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Multiple03b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Multiple04a() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Multiple04b() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Multiple05a() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_Multiple05b() throws Exception {
+        // default order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_MultiplePSR01a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function2", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_MultiplePSR01b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS1\\NS1Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS1\\NS1Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS1\\NS1Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS1\\NS1Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        selections.add(new Selection("\\NS2\\NS2Enum", ItemVariant.Type.ENUM));
+        selections.add(new Selection("\\NS2\\NS2Interface", ItemVariant.Type.INTERFACE));
+        selections.add(new Selection("\\NS2\\NS2Trait", ItemVariant.Type.TRAIT));
+        selections.add(new Selection("\\NS1\\ns1Function", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS2\\ns2Function2", ItemVariant.Type.FUNCTION));
+        selections.add(new Selection("\\NS1\\NS1_CONSTANT", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT1", ItemVariant.Type.CONST));
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("NS1\\ns1Functi^on();", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_MultiplePSR02a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_MultiplePSR02b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2_CONSTANT2", ItemVariant.Type.CONST));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_MultiplePSR03a() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_MultiplePSR03b() throws Exception {
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("NS2\\ns2Function1", ItemVariant.Type.FUNCTION));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_MultiplePSR04a() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_MultiplePSR04b() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_MultiplePSR05a() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(true)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
+    public void testKeepExistingUseTypeOrder_MultiplePSR05b() throws Exception {
+        // PSR-12 order is used
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection("\\NS2\\NS2Class", ItemVariant.Type.CLASS));
+        Options options = new Options.Builder(PhpVersion.PHP_81)
+                .preferMultipleUseStatementsCombined(true)
+                .putInPSR12Order(true)
+                .keepExistingUseTypeOrder(false)
+                .build();
+        performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
+    }
+
     private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final Options options) throws Exception {
         FileObject testFile = getTestFile(fileName);
 

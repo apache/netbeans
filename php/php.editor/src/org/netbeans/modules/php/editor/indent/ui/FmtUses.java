@@ -49,6 +49,7 @@ public class FmtUses extends JPanel {
         startUseWithNamespaceSeparatorCheckBox.putClientProperty(OPTION_ID, FmtOptions.START_USE_WITH_NAMESPACE_SEPARATOR);
         aliasesCapitalsOfNamespacesCheckBox.putClientProperty(OPTION_ID, FmtOptions.ALIASES_CAPITALS_OF_NAMESPACES);
         putInPSR12OrderCheckBox.putClientProperty(OPTION_ID, FmtOptions.PUT_IN_PSR12_ORDER);
+        keepExistingUseTypeOrderCheckBox.putClientProperty(OPTION_ID, FmtOptions.USES_KEEP_EXISTING_TYPE_ORDER);
     }
 
     public static PreferencesCustomizer.Factory getController() {
@@ -76,6 +77,7 @@ public class FmtUses extends JPanel {
         startUseWithNamespaceSeparatorCheckBox = new JCheckBox();
         aliasesCapitalsOfNamespacesCheckBox = new JCheckBox();
         putInPSR12OrderCheckBox = new JCheckBox();
+        keepExistingUseTypeOrderCheckBox = new JCheckBox();
 
         setName(NbBundle.getMessage(FmtUses.class, "LBL_Uses")); // NOI18N
         setOpaque(false);
@@ -96,6 +98,8 @@ public class FmtUses extends JPanel {
 
         Mnemonics.setLocalizedText(putInPSR12OrderCheckBox, NbBundle.getMessage(FmtUses.class, "FmtUses.putInPSR12OrderCheckBox.text")); // NOI18N
 
+        Mnemonics.setLocalizedText(keepExistingUseTypeOrderCheckBox, NbBundle.getMessage(FmtUses.class, "FmtUses.keepExistingUseTypeOrderCheckBox.text")); // NOI18N
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -107,7 +111,8 @@ public class FmtUses extends JPanel {
                     .addComponent(startUseWithNamespaceSeparatorCheckBox)
                     .addComponent(aliasesCapitalsOfNamespacesCheckBox)
                     .addComponent(preferGroupUsesCheckBox)
-                    .addComponent(putInPSR12OrderCheckBox))
+                    .addComponent(putInPSR12OrderCheckBox)
+                    .addComponent(keepExistingUseTypeOrderCheckBox))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -124,11 +129,14 @@ public class FmtUses extends JPanel {
                 .addComponent(aliasesCapitalsOfNamespacesCheckBox)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(putInPSR12OrderCheckBox)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(keepExistingUseTypeOrderCheckBox)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JCheckBox aliasesCapitalsOfNamespacesCheckBox;
+    private JCheckBox keepExistingUseTypeOrderCheckBox;
     private JCheckBox preferFullyQualifiedNamesCheckBox;
     private JCheckBox preferGroupUsesCheckBox;
     private JCheckBox preferMultipleUseStatementsCombinedCheckBox;

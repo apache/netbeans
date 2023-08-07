@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -33,6 +32,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import org.netbeans.api.sendopts.CommandException;
+import org.netbeans.modules.java.lsp.server.Pipe.Connection;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -47,29 +47,35 @@ import org.openide.util.Pair;
 final class ConnectionSpec implements Closeable {
     private final Boolean listen;
     private final int port;
+    private final String pipe;
     // @GuardedBy (this)
-    private final List<Closeable> close = new ArrayList<>();
+    private final List<AutoCloseable> close = new ArrayList<>();
     // @GuardedBy (this)
-    private final List<Closeable> closed = new ArrayList<>();
+    private final List<AutoCloseable> closed = new ArrayList<>();
 
-    private ConnectionSpec(Boolean listen, int port) {
+    private ConnectionSpec(Boolean listen, int port, String pipe) {
         this.listen = listen;
         this.port = port;
+        this.pipe = pipe;
     }
 
     public static ConnectionSpec parse(String spec) throws CommandException {
         if (spec == null || spec.isEmpty() || spec.equals("stdio")) { // NOI18N
-            return new ConnectionSpec(null, -1);
+            return new ConnectionSpec(null, -1, null);
         }
         final String listenPrefix = "listen:"; // NOI18N
         if (spec.startsWith(listenPrefix)) {
             int port = parsePort(spec.substring(listenPrefix.length()), spec);
-            return new ConnectionSpec(true, port);
+            return new ConnectionSpec(true, port, null);
+        }
+        final String listenPipePrefix = "listen-pipe"; // NOI18N
+        if (spec.equals(listenPipePrefix)) {
+            return new ConnectionSpec(true, -1, null);
         }
         final String connectPrefix = "connect:"; // NOI18N
         if (spec.startsWith(connectPrefix)) {
             int port = parsePort(spec.substring(connectPrefix.length()), spec);
-            return new ConnectionSpec(false, port);
+            return new ConnectionSpec(false, port, null);
 
         }
         throw new CommandException(555, Bundle.MSG_ConnectionSpecError(spec));
@@ -106,31 +112,59 @@ final class ConnectionSpec implements Closeable {
                 serverSetter.accept(session, null);
             }
         } else if (listen) {
-            // listen on TCP
-            ServerSocket server = new ServerSocket(port, 1, Inet4Address.getLoopbackAddress());
-            close.add(server);
-            int localPort = server.getLocalPort();
-            Thread listeningThread = new Thread(prefix + " listening at port " + localPort) {
-                @Override
-                public void run() {
-                    while (true) {
-                        Socket socket = null;
-                        try {
-                            socket = server.accept();
-                            close.add(socket);
-                            connectToSocket(socket, prefix, session, serverSetter, launcher);
-                        } catch (IOException ex) {
-                            if (isClosed(server)) {
-                                break;
+            if (port != (-1)) {
+                // listen on TCP
+                ServerSocket server = new ServerSocket(port, 1, Inet4Address.getLoopbackAddress());
+                close.add(server);
+                int localPort = server.getLocalPort();
+                Thread listeningThread = new Thread(prefix + " listening at port " + localPort) {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            Socket socket = null;
+                            try {
+                                socket = server.accept();
+                                close.add(socket);
+                                connectToSocket(socket, prefix, session, serverSetter, launcher);
+                            } catch (IOException ex) {
+                                if (isClosed(server)) {
+                                    break;
+                                }
+                                Exceptions.printStackTrace(ex);
                             }
-                            Exceptions.printStackTrace(ex);
                         }
                     }
-                }
-            };
-            listeningThread.start();
-            out.write((prefix + " listening at port " + localPort).getBytes());
-            out.flush();
+                };
+                listeningThread.start();
+                out.write((prefix + " listening at port " + localPort).getBytes());
+                out.flush();
+            } else {
+                // listen on named pipe/UNIX Domain Socket:
+                Pipe pipe = Pipe.createListeningPipe(prefix);
+                //TODO: multitenancy?
+                close.add(pipe);
+                Thread listeningThread = new Thread(prefix + " listening at pipe " + pipe.getName()) {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            Connection connection = null;
+                            try {
+                                connection = pipe.connect();
+                                close.add(connection);
+                                connectToSocket(connection, pipe.getName(), prefix, session, serverSetter, launcher);
+                            } catch (IOException ex) {
+                                if (isClosed(connection)) {
+                                    break;
+                                }
+                                Exceptions.printStackTrace(ex);
+                            }
+                        }
+                    }
+                };
+                listeningThread.start();
+                out.write((prefix + " listening at pipe " + pipe.getName()).getBytes());
+                out.flush();
+            } 
         } else {
             // connect to TCP
             final Socket socket = new Socket(Inet4Address.getLoopbackAddress(), port);
@@ -163,7 +197,31 @@ final class ConnectionSpec implements Closeable {
         connectedThread.start();
     }
     
-    private boolean isClosed(Closeable c) {
+    private <ServerType extends LspSession.ScheduledServer> void connectToSocket(
+            final Connection connection, String name, String prefix, LspSession session,
+            BiConsumer<LspSession, ServerType> serverSetter,
+            BiFunction<Pair<InputStream, OutputStream>, LspSession, ServerType> launcher) {
+
+        Thread connectedThread = new Thread(prefix + " connected to " + name) {
+            @Override
+            public void run() {
+                try {
+                    ServerType connectionObject = launcher.apply(Pair.of(connection.getIn(), connection.getOut()), session);
+                    serverSetter.accept(session, connectionObject);
+                    connectionObject.getRunningFuture().get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    if (!isClosed(connection)) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                } finally {
+                    serverSetter.accept(session, null);
+                }
+            }
+        };
+        connectedThread.start();
+    }
+    
+    private boolean isClosed(AutoCloseable c) {
         synchronized (this) {
             return closed.contains(c);
         }
@@ -172,11 +230,11 @@ final class ConnectionSpec implements Closeable {
     @Override
     public void close() throws IOException {
         synchronized (this) {
-            for (Closeable c : close) {
+            for (AutoCloseable c : close) {
                 try {
                     c.close();
                     closed.add(c);
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }

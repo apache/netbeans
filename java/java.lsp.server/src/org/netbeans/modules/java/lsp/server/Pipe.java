@@ -35,6 +35,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.net.ProtocolFamily;
+import java.net.SocketAddress;
 import java.net.StandardProtocolFamily;
 import java.nio.channels.Channels;
 import java.nio.channels.ServerSocketChannel;
@@ -58,7 +61,7 @@ public abstract class Pipe implements AutoCloseable {
         if (Utilities.isWindows()) {
             return windowsPipe(prefix);
         } else {
-            return unixPipe();
+            return unixPipe(prefix);
         }
     }
 
@@ -93,9 +96,8 @@ public abstract class Pipe implements AutoCloseable {
         return new Pipe(name) {
             @Override
             public Connection connect() throws IOException {
-//                System.err.println("going to connect:");
-
                 WinNT.HANDLE handle = Kernel32.INSTANCE.CreateNamedPipe(name, Kernel32.PIPE_ACCESS_DUPLEX | Kernel32.FILE_FLAG_OVERLAPPED, Kernel32.PIPE_TYPE_BYTE | Kernel32.PIPE_WAIT | Kernel32.PIPE_REJECT_REMOTE_CLIENTS, Kernel32.PIPE_UNLIMITED_INSTANCES, 8192, 8192, 0, null);
+
                 if (handle == Kernel32.INVALID_HANDLE_VALUE) {
                     throwIOException();
                 }
@@ -107,9 +109,10 @@ public abstract class Pipe implements AutoCloseable {
                         throwIOException();
                     }
                 }
-//                System.err.println("connected");
+
                 InputStream in = new HandleInputStream(handle);
                 OutputStream out = new HandleOutputStream(handle);
+
                 return new Connection(in, out) {
                     @Override
                     public void close() throws Exception {
@@ -249,36 +252,48 @@ public abstract class Pipe implements AutoCloseable {
     }
 //</editor-fold>
 
-    private static Pipe unixPipe() throws IOException {
-        throw new UnsupportedOperationException();
+    private static Pipe unixPipe(String prefix) throws IOException {
+        try {
+            Path name = Places.getCacheSubfile("socket/server/" + shorten(prefix)).toPath();
+            Files.deleteIfExists(name);
+            Class<?> unixAddress = Class.forName("java.net.UnixDomainSocketAddress");
+            Method unixAddressOf = unixAddress.getDeclaredMethod("of", Path.class);
+            Method open = ServerSocketChannel.class.getMethod("open", ProtocolFamily.class);
+            ServerSocketChannel server = (ServerSocketChannel) open.invoke(null, StandardProtocolFamily.valueOf("UNIX"));
+
+            server.bind((SocketAddress) unixAddressOf.invoke(null, name));
+
+            return new Pipe(name.toString()) {
+                @Override
+                public Connection connect() throws IOException {
+                    SocketChannel socket = server.accept();
+
+                    return new Connection(Channels.newInputStream(socket), Channels.newOutputStream(socket)) {
+                        public void close() throws IOException {
+                            socket.close();
+                        }
+                    };
+                }
+
+                @Override
+                public void close() throws Exception {
+                    server.close();
+                }
+            };
+        } catch (ReflectiveOperationException ex) {
+            throw new IOException(ex);
+        }
     }
-//        Path name = Places.getCacheSubfile("socket/server/debugger").toPath();
-//        Files.deleteIfExists(name);
-//        UnixDomainSocketAddress socketAddress = UnixDomainSocketAddress.of(name);
-//        ServerSocketChannel server = ServerSocketChannel.open(StandardProtocolFamily.UNIX);
-//
-//        server.bind(socketAddress);
-//        Thread listeningThread = new Thread(prefix + " listening at pipe " + name) {
-//            @Override
-//            public void run() {
-//                while (true) {
-//                    SocketChannel socket = null;
-//                    try {
-//                        socket = server.accept();
-//                        close.add(socket);
-//                        connectToSocket(socket, name.toString(), prefix, session, serverSetter, launcher);
-//                    } catch (IOException ex) {
-//                        if (isClosed(server)) {
-//                            break;
-//                        }
-//                        Exceptions.printStackTrace(ex);
-//                    }
-//                }
-//            }
-//        };
-//        listeningThread.start();
-//        out.write((prefix + " listening at pipe " + name.toString()).getBytes());
-//        out.flush();
-//
-//Pair.of(Channels.newInputStream(socket), Channels.newOutputStream(socket)), session);    }
+
+    private static String shorten(String str) {
+        StringBuilder sb = new StringBuilder();
+
+        for (char c : str.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                sb.append(c);
+            }
+        }
+
+        return sb.toString();
+    }
 }

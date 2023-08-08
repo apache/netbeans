@@ -47,7 +47,6 @@ import org.openide.util.Pair;
 final class ConnectionSpec implements Closeable {
     private final Boolean listen;
     private final int port;
-    private final String pipe;
     // @GuardedBy (this)
     private final List<AutoCloseable> close = new ArrayList<>();
     // @GuardedBy (this)
@@ -56,7 +55,6 @@ final class ConnectionSpec implements Closeable {
     private ConnectionSpec(Boolean listen, int port, String pipe) {
         this.listen = listen;
         this.port = port;
-        this.pipe = pipe;
     }
 
     public static ConnectionSpec parse(String spec) throws CommandException {
@@ -136,7 +134,7 @@ final class ConnectionSpec implements Closeable {
                     }
                 };
                 listeningThread.start();
-                out.write((prefix + " listening at port " + localPort).getBytes());
+                out.write((prefix + " listening at port " + localPort + "\n").getBytes());
                 out.flush();
             } else {
                 // listen on named pipe/UNIX Domain Socket:
@@ -162,7 +160,7 @@ final class ConnectionSpec implements Closeable {
                     }
                 };
                 listeningThread.start();
-                out.write((prefix + " listening at pipe " + pipe.getName()).getBytes());
+                out.write((prefix + " listening at pipe " + pipe.getName() + "\n").getBytes());
                 out.flush();
             } 
         } else {

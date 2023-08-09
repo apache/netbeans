@@ -248,11 +248,8 @@ public class ServerTest extends NbTestCase {
 
         @Override
         public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-            if (COMMAND_EXTRACT_LOOKUP.equals(command)) {
-                commandLookup = Lookup.getDefault();
-                return CompletableFuture.completedFuture(true);
-            }
-            return null;
+            commandLookup = Lookup.getDefault();
+            return CompletableFuture.completedFuture(true);
         }
     }
     @Override
@@ -5429,10 +5426,6 @@ public class ServerTest extends NbTestCase {
         
         @Override
         public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-            if (!command.equals("_progressCommand")) {
-                return null;
-            }
-
             return CompletableFuture.<Object>supplyAsync(() -> {
                 ProgressHandle h = ProgressHandle.createHandle("Test Command", this::cancel);
                 try {

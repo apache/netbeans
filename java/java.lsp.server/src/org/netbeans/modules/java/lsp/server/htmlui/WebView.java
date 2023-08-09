@@ -380,7 +380,7 @@ public class WebView implements Closeable {
 
         @Override
         public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-            if (PROCESS_COMMAND.equals(command) && arguments != null && !arguments.isEmpty()) {
+            if (arguments != null && !arguments.isEmpty()) {
                 final Map m = gson.fromJson((JsonObject) arguments.get(0), Map.class);
                 final String id = (String) m.get(ID);
                 if (id != null) {

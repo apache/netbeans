@@ -1373,6 +1373,9 @@ jobs:
       - name: lib.nbjavac
         run: ant $OPTS -f java/lib.nbjavac test
 
+      - name: libs.nbjavacapi
+        run: ant $OPTS -f java/libs.nbjavacapi test
+
 #      - name: performance
 #        run: ant $OPTS -f java/performance test
 

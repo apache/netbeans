@@ -863,7 +863,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return resultFuture;
     }
 
-    private static DocumentSymbol structureElement2DocumentSymbol (StyledDocument doc, StructureElement el) {
+    static DocumentSymbol structureElement2DocumentSymbol (StyledDocument doc, StructureElement el) {
         Position selectionStartPos = Utils.createPosition(doc, el.getSelectionStartOffset());
         Position selectionEndPos = Utils.createPosition(doc, el.getSelectionEndOffset());
         Range selectionRange = new Range(selectionStartPos, selectionEndPos);

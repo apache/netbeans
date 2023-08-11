@@ -120,7 +120,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
         return ret;
     }
 
-    private List<SymbolLocation> scan(CompilationController cc) {
+    public static List<SymbolLocation> scan(CompilationController cc) {
         final List<SymbolLocation> ret = new ArrayList<>();
         TreePathScanner<Void, String> scanner = new TreePathScanner<Void, String>() {
             @Override
@@ -279,7 +279,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
         }
     }
 
-    private static class SymbolLocation {
+    public static class SymbolLocation {
         private String name;
         private int start;
         private int end;
@@ -288,6 +288,18 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
             this.name = name;
             this.start = start;
             this.end = end;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getStart() {
+            return start;
+        }
+
+        public int getEnd() {
+            return end;
         }
     }
 

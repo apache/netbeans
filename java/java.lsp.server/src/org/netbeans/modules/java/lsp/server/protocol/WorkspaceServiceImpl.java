@@ -67,11 +67,14 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.DidChangeWorkspaceFoldersParams;
+import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
@@ -90,6 +93,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
@@ -102,6 +106,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ui.ElementOpen;
+import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -109,6 +114,7 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.csl.api.IndexSearcher;
 import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
@@ -132,6 +138,7 @@ import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.jumpto.type.SearchType;
+import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -685,6 +692,38 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
                 return CompletableFuture.completedFuture(true);
+            }
+            case Server.NBLS_DOCUMENT_SYMBOLS: {
+                List<DocumentSymbol> result = new ArrayList<>();
+                try {
+                    List<Object> arguments = params.getArguments();
+                    String source = ((JsonPrimitive) arguments.get(0)).getAsString();
+                    String query = arguments.size() > 1 ? ((JsonPrimitive)arguments.get(1)).getAsString() : "";
+                    FileObject file = Utils.fromUri(source);
+                    Document rawDoc = server.getOpenedDocuments().getDocument(source);
+                    if (file != null && rawDoc instanceof StyledDocument) {
+                        StyledDocument doc = (StyledDocument)rawDoc;
+                        for (StructureProvider structureProvider : MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookupAll(StructureProvider.class)) {
+                            if (structureProvider != null) {
+                                List<StructureElement> structureElements = structureProvider.getStructure(doc);
+                                if (!structureElements.isEmpty()) {
+                                    for (StructureElement structureElement : structureElements) {
+                                        if (structureElement.getName().startsWith(query)) {
+                                            DocumentSymbol ds = TextDocumentServiceImpl.structureElement2DocumentSymbol(doc, structureElement);
+                                            if (ds != null) {
+                                                result.add(ds);
+                                            }
+                                        }
+                                    }
+                                };
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                return CompletableFuture.completedFuture(result);
             }
             default:
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {

@@ -810,7 +810,8 @@ public final class Server {
                         JAVA_CLEAR_PROJECT_CACHES,
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH,
                         JAVA_PROJECT_INFO,
-                        JAVA_ENABLE_PREVIEW
+                        JAVA_ENABLE_PREVIEW,
+                        NBLS_DOCUMENT_SYMBOLS
                 ));
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
@@ -1034,6 +1035,11 @@ public final class Server {
      * Provides enable preview for given project
      */
     public static final String JAVA_ENABLE_PREVIEW = "java.project.enable.preview";
+
+    /**
+     * Provides symbols for the given document
+     */
+    public static final String NBLS_DOCUMENT_SYMBOLS =  "nbls.document.symbols";
 
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";

@@ -30,7 +30,7 @@ import java.util.prefs.NodeChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.NonNull;
-import org.openide.util.BaseUtilities;
+import org.newsclub.net.unix.AFUNIXSocket;
 import org.openide.util.ChangeSupport;
 import org.openide.util.NbPreferences;
 import org.openide.util.Parameters;
@@ -128,12 +128,7 @@ public final class DockerSupport {
     }
 
     public boolean isSocketSupported() {
-        if (BaseUtilities.getOperatingSystem() != BaseUtilities.OS_LINUX
-                && BaseUtilities.getOperatingSystem() != BaseUtilities.OS_MAC) {
-            return false;
-        }
-        String arch = System.getProperty("os.arch"); // NOI18N
-        return arch != null && (arch.contains("x86") || arch.contains("amd64")); // NOI18N
+        return AFUNIXSocket.isSupported();
     }
 
     private boolean isInitialized() {

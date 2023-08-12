@@ -77,7 +77,7 @@ public final class GradleJavaCompatProblemsProvider implements ProjectProblemsPr
         "# {1} - Supported Java Version",
         "# {2} - Required Gradle Version",
         "# {3} - Forced Gradle Version",
-        "TXT_JavaVersionMismatch=<html>The Java version: {0}, that is seletced for the project "
+        "TXT_JavaVersionMismatch=<html>The Java version: {0}, that is selected for the project "
                 + "is not supported by Gradle {2}."
                 + "The IDE will attempt to use Gradle {3} to gather the project information.<p>"
                 + "Possible solutions:"

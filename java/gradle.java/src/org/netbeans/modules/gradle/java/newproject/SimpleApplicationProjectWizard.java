@@ -71,7 +71,10 @@ public class SimpleApplicationProjectWizard extends BaseGradleWizardIterator {
 
         Boolean initWrapper = (Boolean) params.get(PROP_INIT_WRAPPER);
         if (initWrapper == null || initWrapper) {
-            ops.addWrapperInit(root);
+            // @TODO allow configuration of wrapper version
+            ops.addWrapperInit(root, "latest"); // NOI18N
+        } else {
+            // @TODO delete wrapper added by init?
         }
     }
 

@@ -83,6 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradle-wrapper-version">
+            <api name="general"/>
+            <summary>Method to set the Gradle version when initalizing the wrapper</summary>
+            <version major="2" minor="34"/>
+            <date day="14" month="8" year="2023"/>
+            <author login="neilcsmith"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                Added additional <a href="@TOP@/org/netbeans/modules/gradle/spi/newproject/TemplateOperation.html#addWrapperInit-java.io.File-java.lang.String-">addWrapperInit</a>
+                method allowing to request a specific version or version label when initializing the Gradle wrapper.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.spi.newproject" name="TemplateOperation"/>
+        </change>
         <change id="java-runtime-manager">
             <api name="general"/>
             <summary>Adding JavaRuntimeManager abstracting the Gradle Runtime from Java Platform</summary>

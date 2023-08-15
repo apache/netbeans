@@ -74,7 +74,6 @@ public final class PushDownRefactoring extends CodeRefactoring {
     private static final String PUSH_DOWN_REFACTORING_KIND = "refactor.push.down";
     private static final String PUSH_DOWN_REFACTORING_COMMAND =  "java.refactor.push.down";
 
-    private final Set<String> commands = Collections.singleton(PUSH_DOWN_REFACTORING_COMMAND);
     private final Gson gson = new Gson();
 
     @Override
@@ -142,7 +141,7 @@ public final class PushDownRefactoring extends CodeRefactoring {
 
     @Override
     public Set<String> getCommands() {
-        return commands;
+        return Collections.singleton(PUSH_DOWN_REFACTORING_COMMAND);
     }
 
     @Override

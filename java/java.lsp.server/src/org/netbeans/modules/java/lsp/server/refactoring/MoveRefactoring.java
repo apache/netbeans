@@ -102,7 +102,6 @@ public final class MoveRefactoring extends CodeRefactoring {
     private static final String MOVE_REFACTORING_COMMAND =  "java.refactor.move";
     private static final ClassPath EMPTY_PATH = ClassPathSupport.createClassPath(new URL[0]);
 
-    private final Set<String> commands = Collections.singleton(MOVE_REFACTORING_COMMAND);
     private final Gson gson = new Gson();
 
     @Override
@@ -136,7 +135,7 @@ public final class MoveRefactoring extends CodeRefactoring {
 
     @Override
     public Set<String> getCommands() {
-        return commands;
+        return Collections.singleton(MOVE_REFACTORING_COMMAND);
     }
 
     @Override

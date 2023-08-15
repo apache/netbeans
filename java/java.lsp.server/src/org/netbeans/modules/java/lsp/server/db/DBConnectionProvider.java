@@ -18,10 +18,8 @@
  */
 package org.netbeans.modules.java.lsp.server.db;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,11 +40,6 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class)
 public class DBConnectionProvider extends CodeActionsProvider{
     private static final String  GET_DB_CONNECTION = "java.db.connection"; //NOI18N
-    
-    private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
-        GET_DB_CONNECTION
-    ));
-    
 
     @Override
     public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
@@ -74,6 +67,6 @@ public class DBConnectionProvider extends CodeActionsProvider{
     
     @Override
     public Set<String> getCommands() {
-        return COMMANDS;
+        return Collections.singleton(GET_DB_CONNECTION);
     }
 }

@@ -77,10 +77,9 @@ public class MavenJsfReferenceImplementationProvider implements JsfReferenceImpl
         Artifact jsfRIArtifact = mavenEmbedder.createArtifact(groupId, artifactId, version, "jar");
 
         try {
-            mavenEmbedder.resolve(jsfRIArtifact, Collections.singletonList(remoteRepository), localRepository);
+            mavenEmbedder.resolveArtifact(jsfRIArtifact, Collections.singletonList(remoteRepository), localRepository);
         } catch (ArtifactResolutionException | ArtifactNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
-
+            // throws exception on unresolvable artifact, return no path as it is unresolvable
             return null;
         }
 

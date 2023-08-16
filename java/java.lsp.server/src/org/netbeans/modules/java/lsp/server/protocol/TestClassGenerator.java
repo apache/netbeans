@@ -77,8 +77,6 @@ public final class TestClassGenerator extends CodeActionsProvider {
 
     private static final String GENERATE_TEST_CLASS_COMMAND = "java.generate.testClass";
 
-    private final Set<String> commands = Collections.singleton(GENERATE_TEST_CLASS_COMMAND);
-
     @Override
     @NbBundle.Messages({
         "# {0} - the testing framework to be used, e.g. JUnit, TestNG,...",
@@ -133,7 +131,7 @@ public final class TestClassGenerator extends CodeActionsProvider {
 
     @Override
     public Set<String> getCommands() {
-        return commands;
+        return Collections.singleton(GENERATE_TEST_CLASS_COMMAND);
     }
 
     @Override

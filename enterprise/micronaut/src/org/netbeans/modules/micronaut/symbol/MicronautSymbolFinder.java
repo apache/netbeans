@@ -20,6 +20,8 @@ package org.netbeans.modules.micronaut.symbol;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.util.SourcePositions;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -122,10 +124,12 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
 
     public static List<SymbolLocation> scan(CompilationController cc) {
         final List<SymbolLocation> ret = new ArrayList<>();
+        SourcePositions sp = cc.getTrees().getSourcePositions();
         TreePathScanner<Void, String> scanner = new TreePathScanner<Void, String>() {
             @Override
             public Void visitClass(ClassTree node, String path) {
-                Element cls = cc.getTrees().getElement(this.getCurrentPath());
+                TreePath treePath = this.getCurrentPath();
+                Element cls = cc.getTrees().getElement(treePath);
                 if (cls != null) {
                     Pair<AnnotationMirror, AnnotationMirror> metaAnnotated = isMetaAnnotated(cls);
                     if (metaAnnotated != null) {
@@ -141,7 +145,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
                                 + (metaAnnotated.second() != null ? " <: @" + metaAnnotated.second().getAnnotationType().asElement().getSimpleName() : "")
                                 + ") " + node.getSimpleName();
                         int[] span = cc.getTreeUtilities().findNameSpan(node);
-                        ret.add(new SymbolLocation(name, span[0], span[1]));
+                        ret.add(new SymbolLocation(name, (int) sp.getStartPosition(treePath.getCompilationUnit(), node), (int) sp.getEndPosition(treePath.getCompilationUnit(), node), span[0], span[1]));
                     }
                 }
                 return super.visitClass(node, path);
@@ -149,7 +153,8 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
 
             @Override
             public Void visitMethod(MethodTree node, String path) {
-                MthIterator it = new MthIterator(cc.getTrees().getElement(this.getCurrentPath()), cc.getElements(), cc.getTypes());
+                TreePath treePath = this.getCurrentPath();
+                MthIterator it = new MthIterator(cc.getTrees().getElement(treePath), cc.getElements(), cc.getTypes());
                 while (it.hasNext()) {
                     for (AnnotationMirror ann : it.next().getAnnotationMirrors()) {
                         String method = getEndpointMethod((TypeElement) ann.getAnnotationType().asElement());
@@ -158,7 +163,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
                                 if ("value".contentEquals(entry.getKey().getSimpleName()) || "uri".contentEquals(entry.getKey().getSimpleName())) {
                                     String name = '@' + (path != null ? path : "") + entry.getValue().getValue() + " -- " + method;
                                     int[] span = cc.getTreeUtilities().findNameSpan(node);
-                                    ret.add(new SymbolLocation(name, span[0], span[1]));
+                                    ret.add(new SymbolLocation(name, (int) sp.getStartPosition(treePath.getCompilationUnit(), node), (int) sp.getEndPosition(treePath.getCompilationUnit(), node), span[0], span[1]));
                                     return null;
                                 }
                             }
@@ -280,14 +285,18 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
     }
 
     public static class SymbolLocation {
-        private String name;
-        private int start;
-        private int end;
+        private final String name;
+        private final int start;
+        private final int end;
+        private final int selectionStart;
+        private final int selectionEnd;
 
-        private SymbolLocation(String name, int start, int end) {
+        private SymbolLocation(String name, int start, int end, int selectionStart, int selectionEnd) {
             this.name = name;
             this.start = start;
             this.end = end;
+            this.selectionStart = selectionStart;
+            this.selectionEnd = selectionEnd;
         }
 
         public String getName() {
@@ -300,6 +309,14 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
 
         public int getEnd() {
             return end;
+        }
+
+        public int getSelectionStart() {
+            return selectionStart;
+        }
+
+        public int getSelectionEnd() {
+            return selectionEnd;
         }
     }
 

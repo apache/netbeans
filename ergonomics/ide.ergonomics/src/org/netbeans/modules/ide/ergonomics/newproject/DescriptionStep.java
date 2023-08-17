@@ -90,7 +90,6 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
                 }
             });
             panel = new ContentPanel (getBundle ("DescriptionPanel_Name"));
-            panel.addPropertyChangeListener (findModules);
         }
         return panel;
     }
@@ -134,9 +133,6 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
         
         @Override
         public void propertyChange (PropertyChangeEvent evt) {
-            if (ContentPanel.FINDING_MODULES.equals (evt.getPropertyName ())) {
-                schedule();
-            }
         }
         void reset() {
             synchronized (this) {
@@ -145,9 +141,10 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
         }
         public synchronized void schedule() {
             if (findComponents == null) {
+                panel.replaceComponents(new JLabel(getBundle("DescriptionStep_Prepare", info.getClusterName())));
                 findComponents = new FindComponentModules(info);
+                findComponents.onFinished(this);
             }
-            findComponents.onFinished(this);
         }
         @Override
         public void taskFinished(Task task) {

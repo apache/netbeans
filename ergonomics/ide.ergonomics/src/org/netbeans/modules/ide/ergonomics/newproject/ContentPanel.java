@@ -25,10 +25,8 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
-import org.netbeans.modules.ide.ergonomics.fod.FeatureManager;
 
 public final class ContentPanel extends JPanel {
-    static String FINDING_MODULES = "finding-modules";
     private String name = null;
 
     /** Creates new form InstallMissingModulesWizardVisualPanel1 */
@@ -41,16 +39,6 @@ public final class ContentPanel extends JPanel {
 
     public @Override String getName() {
         return name;
-    }
-
-    @Override
-    public void addNotify () {
-        super.addNotify ();
-        FeatureManager.getInstance().create(new Runnable () {
-            public void run () {
-                firePropertyChange (FINDING_MODULES, null, Boolean.TRUE);
-            }
-        }).schedule(200);
     }
 
     private void doReplaceComponents (JComponent... comps) {

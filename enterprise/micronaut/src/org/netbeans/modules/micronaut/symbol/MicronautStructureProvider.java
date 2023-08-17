@@ -53,8 +53,8 @@ public class MicronautStructureProvider implements StructureProvider {
                                     .file(cc.getFileObject())
                                     .expandedStartOffset(symbolLocation.getStart())
                                     .expandedEndOffset(symbolLocation.getEnd())
-                                    .selectionStartOffset(symbolLocation.getStart())
-                                    .selectionEndOffset(symbolLocation.getEnd())
+                                    .selectionStartOffset(symbolLocation.getSelectionStart())
+                                    .selectionEndOffset(symbolLocation.getSelectionEnd())
                                     .build());
                         }
                     }, true);

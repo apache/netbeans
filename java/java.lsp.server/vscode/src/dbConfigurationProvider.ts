@@ -60,4 +60,14 @@ class DBConfigurationProvider implements vscode.DebugConfigurationProvider {
 	}
 }
 
+export function onDidTerminateSession(session: vscode.DebugSession): any {
+    const config = session.configuration;
+    if (config.env) {
+        const file = config.env["MICRONAUT_CONFIG_FILES"];
+        if (file) {
+            vscode.workspace.fs.delete(vscode.Uri.file(file));
+        }
+    }
+}
+
 export const dBConfigurationProvider = new DBConfigurationProvider();

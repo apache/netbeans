@@ -56,7 +56,7 @@ import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickReque
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
 import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings, runConfigurationUpdateAll } from './runConfiguration';
-import { dBConfigurationProvider } from './dbConfigurationProvider';
+import { dBConfigurationProvider, onDidTerminateSession } from './dbConfigurationProvider';
 import { TLSSocket } from 'tls';
 import { InputStep, MultiStepInput } from './utils';
 import { env } from 'process';
@@ -419,6 +419,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java+', configResolver));
     let configNativeResolver = new NetBeansConfigurationNativeResolver();
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('nativeimage', configNativeResolver));
+    context.subscriptions.push(vscode.debug.onDidTerminateDebugSession(((session) => onDidTerminateSession(session))));
 
     let debugDescriptionFactory = new NetBeansDebugAdapterDescriptionFactory();
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java+', debugDescriptionFactory));

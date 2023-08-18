@@ -24,6 +24,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,6 +35,7 @@ import static java.util.Objects.nonNull;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -68,6 +70,8 @@ import org.openide.util.Lookup;
 public class ConfigurationPanel extends JPanel {
 
     private static final long serialVersionUID = 27938464212508L;
+    
+    private static final Logger LOG = Logger.getLogger(ConfigurationPanel.class.getName());
 
     private final ActivationProgressMonitor progressMonitor = new ActivationProgressMonitor();
     private FeatureInfo featureInfo;
@@ -230,12 +234,18 @@ public class ConfigurationPanel extends JPanel {
     }
 
     public void setUpdateErrors(Collection<IOException> errors) {
-        if (errors.isEmpty()) {
+        Collection<IOException> exceptions = new ArrayList<>(errors);
+        exceptions.removeIf(e -> 
+            // user might be offline, ignore, exception is already logged in FindComponentModules#findComponentModules
+            // regular cluster activation does not require downloads anyway
+            e instanceof UnknownHostException || e.getCause() instanceof UnknownHostException
+        );
+        if (exceptions.isEmpty()) {
             return;
         }
         StringBuilder sb = new StringBuilder();
         sb.append("<html>"); // NOI18N
-        for (IOException ex : errors) {
+        for (IOException ex : exceptions) {
             sb.append("<br/>"); // NOI18N
             sb.append(ex.getLocalizedMessage());
         }
@@ -254,6 +264,9 @@ public class ConfigurationPanel extends JPanel {
     void setError(String msg) {
         assert SwingUtilities.isEventDispatchThread();
         errorLabel.setText(msg);
+        if (msg != null && !msg.trim().isEmpty()) {
+            errorLabel.setFocusable(true);
+        }
     }
 
     /**
@@ -273,6 +286,8 @@ public class ConfigurationPanel extends JPanel {
         downloadButton = new JButton();
         selectionsPanel = new JPanel();
 
+        errorLabel.setFocusable(false);
+
         Mnemonics.setLocalizedText(infoLabel, "dummy"); // NOI18N
 
         Mnemonics.setLocalizedText(activateButton, "dummy"); // NOI18N
@@ -282,6 +297,7 @@ public class ConfigurationPanel extends JPanel {
             }
         });
 
+        progressPanel.setMinimumSize(new Dimension(0, 35));
         progressPanel.setLayout(new BoxLayout(progressPanel, BoxLayout.PAGE_AXIS));
 
         Mnemonics.setLocalizedText(downloadLabel, NbBundle.getMessage(ConfigurationPanel.class, "ConfigurationPanel.downloadLabel.text")); // NOI18N
@@ -329,8 +345,7 @@ public class ConfigurationPanel extends JPanel {
                     .addComponent(activateButton)
                     .addComponent(downloadButton))
                 .addGap(19, 19, 19)
-                .addComponent(progressPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(progressPanel, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

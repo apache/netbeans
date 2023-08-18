@@ -125,8 +125,8 @@ final class ConnectionSpec implements Closeable {
                 hashContent = new char[hashBytes.length * 2];
                 int idx = 0;
                 for (byte b : hashBytes) {
-                    hashContent[idx + 0] = Integer.toHexString((b >> 4) & 0xFF).charAt(0);
-                    hashContent[idx + 1] = Integer.toHexString((b >> 0) & 0xFF).charAt(0);
+                    hashContent[idx + 0] = Integer.toHexString((b >> 4) & 0x0F).charAt(0);
+                    hashContent[idx + 1] = Integer.toHexString((b >> 0) & 0x0F).charAt(0);
                     idx += 2;
                 }
             } else {
@@ -188,7 +188,13 @@ final class ConnectionSpec implements Closeable {
                             byte b = (byte) in.read();
 
                             if (b != c) {
-                                throw new IOException("Hash validation failed!");
+                                IOException toThrow = new IOException("Hash validation failed!");
+                                try {
+                                    in.close();
+                                } catch (IOException ex) {
+                                    toThrow.addSuppressed(ex);
+                                }
+                                throw toThrow;
                             }
                         }
                     }

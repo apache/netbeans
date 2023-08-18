@@ -125,8 +125,7 @@ public class JPDAStart implements Runnable {
                     }
                 });
             } catch (java.io.IOException ioex) {
-                out.println("IO Error:"); //NOI18N
-//                org.openide.ErrorManager.getDefault().notify(ioex);
+                out.println("IO Error:" + ioex.getMessage()); //NOI18N
                 lock[1] = ioex;
             } catch (com.sun.jdi.connect.IllegalConnectorArgumentsException icaex) {
                 out.println("Illegal Connector"); //NOI18N

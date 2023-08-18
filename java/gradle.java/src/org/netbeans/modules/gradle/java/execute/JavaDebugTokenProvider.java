@@ -49,7 +49,7 @@ public class JavaDebugTokenProvider implements ReplaceTokenProvider {
     /**
      * Replaceable token for debugging port.
      */
-    public static String TOKEN_JAVAEXEC_DEBUG_PORT = "javaExec.debug.port"; // NOI18N
+    public static String TOKEN_JAVAEXEC_DEBUG_PORT = "javaExec.debug.connectPort"; // NOI18N
 
     private static final Set<String> TOKENS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             TOKEN_JAVAEXEC_DEBUG_PORT
@@ -74,7 +74,7 @@ public class JavaDebugTokenProvider implements ReplaceTokenProvider {
 
     private boolean isEnabled() {
         Set<String> plugins = GradleBaseProject.get(project).getPlugins();
-        return plugins.contains("java"); // NOI18N
+        return plugins.contains("java-base"); // NOI18N
     }
 
     @Override
@@ -94,12 +94,21 @@ public class JavaDebugTokenProvider implements ReplaceTokenProvider {
         try {
             result.put(TOKEN_JAVAEXEC_DEBUG_PORT, "" + new JPDAStart(output.out, project).execute());
         } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+            ex.printStackTrace(output.out);
         }
 
         return result;
     }
 
+    /*
+     * An instance of this class will be injected into the Lookup in
+     * the BeforeBuildActionHook below, and used by the JavaDebugTokenProvider
+     * for two purposes:
+     * a) to provide an output where to print errors is setting up debugger fails.
+     * b) to not do anything if this is not a real action invocation. The ReplaceTokenProviders
+     *    are also called for isEnabled in some cases, and invocation without OutputHolder
+     *    will be ignored.
+     */
     private static final class OutputHolder {
         private final PrintWriter out;
 

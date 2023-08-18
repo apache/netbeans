@@ -19,7 +19,9 @@
 
 package org.netbeans.modules.gradle.tooling;
 
+import java.util.Arrays;
 import static java.util.Arrays.asList;
+import java.util.HashSet;
 import java.util.Set;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.logging.Logger;
@@ -48,10 +50,16 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
     private static final String RUN_JVM_DEBUG_ARGS = "runJvmDebugArgs";
     private static final String RUN_CWD = "runWorkingDir";
 
+    private static final Set<String> KNOWN_PROPERTIES = new HashSet<>(Arrays.asList(
+        RUN_SINGLE_MAIN, RUN_ARGS, RUN_JVM_ARGS, RUN_JVM_DEBUG_ARGS,
+        RUN_CWD
+    ));
+
     @Override
     public void apply(Project project) {
         project.afterEvaluate(p -> {
-            if (project.getPlugins().hasPlugin("java")) {
+            if (project.getPlugins().hasPlugin("java") &&
+                KNOWN_PROPERTIES.stream().anyMatch(project::hasProperty)) {
                 String mainClass = project.hasProperty(RUN_SINGLE_MAIN) ? project.property(RUN_SINGLE_MAIN).toString()
                                                                         : null;
                 p.getTasks().withType(JavaExec.class).configureEach(je -> {

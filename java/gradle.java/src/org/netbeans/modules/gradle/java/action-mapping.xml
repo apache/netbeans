@@ -29,10 +29,10 @@
             <args>"${cleanTestTaskName}" "${testTaskName}" --tests "${selectedMethod}"</args>
         </action>
         <action name="debug.single.method">
-            <args>"${cleanTestTaskName}" "${testTaskName}" -PrunJvmDebugArgs=-agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=${javaExec.debug.port} --tests "${selectedMethod}"</args>
+            <args>"${cleanTestTaskName}" "${testTaskName}" -PrunJvmDebugArgs=-agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=${javaExec.debug.connectPort} --tests "${selectedMethod}"</args>
         </action>
         <action name="debug.test.single">
-            <args>"${cleanTestTaskName}" "${testTaskName}" -PrunJvmDebugArgs=-agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=${javaExec.debug.port} --tests "${selectedClass}"</args>
+            <args>"${cleanTestTaskName}" "${testTaskName}" -PrunJvmDebugArgs=-agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=${javaExec.debug.connectPort} --tests "${selectedClass}"</args>
         </action>
 
         <action name="javadoc">
@@ -54,7 +54,7 @@
         </action>
 
         <action name="debug.single">
-            <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} run --stacktrace -PrunJvmDebugArgs=-agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=${javaExec.debug.port} ${javaExec.jvmArgs} ${javaExec.args}</args>
+            <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} run --stacktrace -PrunJvmDebugArgs=-agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=${javaExec.debug.connectPort} ${javaExec.jvmArgs} ${javaExec.args}</args>
         </action>
     </apply-for>
 
@@ -64,7 +64,7 @@
         </action>
 
         <action name="debug">
-            <args>${javaExec.workingDir} ${javaExec.environment} run -PrunJvmDebugArgs=-agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=${javaExec.debug.port} ${javaExec.jvmArgs} ${javaExec.args}</args>
+            <args>${javaExec.workingDir} ${javaExec.environment} run -PrunJvmDebugArgs=-agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=${javaExec.debug.connectPort} ${javaExec.jvmArgs} ${javaExec.args}</args>
         </action>
     </apply-for>
 

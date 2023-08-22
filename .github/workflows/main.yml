@@ -2525,7 +2525,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        graal: [ '20.3.0', '21.1.0' ]
+        graal: [ '22.3.1' ]
       fail-fast: false
 
     steps:
@@ -2544,16 +2544,13 @@ jobs:
 
       - name: Setup GraalVM
         run: |
-          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java8-linux-amd64-${{ matrix.graal }}.tar.gz
+          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java11-linux-amd64-${{ matrix.graal }}.tar.gz
           curl -L $URL | tar -xz
-          GRAALVM=`pwd`/graalvm-ce-java8-${{ matrix.graal }}
+          GRAALVM=`pwd`/graalvm-ce-java11-${{ matrix.graal }}
           echo "JAVA_HOME=$GRAALVM" >> $GITHUB_ENV
 
       - name: Setup GraalVM Languages
-        run: |
-          $JAVA_HOME/bin/gu install python
-          $JAVA_HOME/bin/gu install R
-          $JAVA_HOME/bin/gu install ruby
+        run: $JAVA_HOME/bin/gu install --no-progress python R ruby js
 
       - name: platform/core.network
         run: ant $OPTS -f platform/core.network test
@@ -2574,7 +2571,7 @@ jobs:
         run: ant $OPTS -f java/nashorn.execution test
 
       - name: java/debugger.jpda.truffle
-        run: .github/retry.sh ant $OPTS -f java/debugger.jpda.truffle test
+        run: ant $OPTS -f java/debugger.jpda.truffle test
 
       - name: Create Test Summary
         uses: test-summary/action@v2

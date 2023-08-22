@@ -34,6 +34,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -64,14 +66,13 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
  */
 public final class JPDASupport implements DebuggerManagerListener {
 
-    private static final boolean    verbose = false;
-    private static DebuggerManager  dm = DebuggerManager.getDebuggerManager ();
+    private static final DebuggerManager dm = DebuggerManager.getDebuggerManager ();
 
     private JPDADebugger            jpdaDebugger;
     private DebuggerEngine          debuggerEngine;
     private final ProcessIO         processIO;
     
-    private Object                  STATE_LOCK = new Object ();
+    private final Object            STATE_LOCK = new Object ();
     
     private JPDASupport (JPDADebugger jpdaDebugger, ProcessIO pio) {
         this.jpdaDebugger = jpdaDebugger;
@@ -210,8 +211,7 @@ public final class JPDASupport implements DebuggerManagerListener {
 
     public static JPDASupport attachScript(String launcher, String path) throws IOException, DebuggerStartException {
         String [] cmdArray = new String [] {
-            System.getProperty ("java.home") + File.separatorChar +
-                "bin" + File.separatorChar + launcher,
+            launcherPath(launcher),
             "--jvm",
             "--vm.agentlib:jdwp=transport=dt_socket,suspend=y,server=y",
             path
@@ -245,6 +245,13 @@ public final class JPDASupport implements DebuggerManagerListener {
         return new JPDASupport(jpdaDebugger, pio);
     }
 
+    private static String launcherPath(String launcher) {
+        return System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + launcher;
+    }
+
+    public static boolean isLauncherAvailable(String launcher) {
+        return Files.exists(Paths.get(launcherPath(launcher)));
+    }
 
     // public interface ........................................................
     
@@ -405,8 +412,7 @@ public final class JPDASupport implements DebuggerManagerListener {
 
         List<String> cmdArgs = new ArrayList<>();
 
-        cmdArgs.add(System.getProperty ("java.home") + File.separatorChar +
-                "bin" + File.separatorChar + "java");
+        cmdArgs.add(launcherPath("java"));
         cmdArgs.add("-agentlib:jdwp=transport=" + "dt_socket" + ",address=" +
                 connectorAddress + ",suspend=y,server=" + 
                 (server ? "y" : "n"));

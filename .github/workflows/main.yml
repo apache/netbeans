@@ -84,6 +84,9 @@ env:
   # see https://github.com/actions/setup-java#supported-distributions
   default_java_distribution: 'zulu'
 
+  # graalvm, graalvm-community, or mandrel
+  # see https://github.com/graalvm/setup-graalvm#options
+  default_graalvm_distribution: 'graalvm-community'
 
 jobs:
 
@@ -2525,7 +2528,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        graal: [ '20.3.0', '21.1.0' ]
+        graal: [ '11', '17.0.8' ]
       fail-fast: false
 
     steps:
@@ -2542,18 +2545,24 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
-      - name: Setup GraalVM
-        run: |
-          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java8-linux-amd64-${{ matrix.graal }}.tar.gz
-          curl -L $URL | tar -xz
-          GRAALVM=`pwd`/graalvm-ce-java8-${{ matrix.graal }}
-          echo "JAVA_HOME=$GRAALVM" >> $GITHUB_ENV
+      - name: Set up GraalVM ${{ matrix.graal }}
+        uses: graalvm/setup-graalvm@v1
+        if: ${{ matrix.graal != '11' }}
+        with:
+          # in contrast to the setup-java action, this needs full version strings
+          java-version: ${{ matrix.graal }}
+          distribution: ${{ env.default_graalvm_distribution }}
+          components: 'python, ruby, js'
 
-      - name: Setup GraalVM Languages
-        run: |
-          $JAVA_HOME/bin/gu install python
-          $JAVA_HOME/bin/gu install R
-          $JAVA_HOME/bin/gu install ruby
+      # for older graal versions, remove section and if-condition once min version is at 17+
+      - name: Set up GraalVM ${{ matrix.graal }}
+        uses: graalvm/setup-graalvm@v1
+        if: ${{ matrix.graal == '11' }}
+        with:
+          version: '22.3.3'
+          java-version: 11
+          distribution: ${{ env.default_graalvm_distribution }}
+          components: 'python, ruby, js'
 
       - name: platform/core.network
         run: ant $OPTS -f platform/core.network test

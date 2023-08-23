@@ -278,7 +278,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                     for (String s : info.getProblems()) {
                         reps.add(GradleProject.createGradleReport(f == null ? null : f.toPath(), s));
                     }
-                    return ctx.previous.invalidate(info.getProblems().toArray(new GradleReport[0]));
+                    return ctx.previous.invalidate(reps.toArray(new GradleReport[0]));
                 }
             }
         } catch (GradleConnectionException | IllegalStateException ex) {

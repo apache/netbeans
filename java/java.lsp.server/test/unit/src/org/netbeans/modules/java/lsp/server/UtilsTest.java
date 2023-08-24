@@ -82,4 +82,26 @@ public class UtilsTest {
         String result = Utils.html2plain(s, true);
         assertEquals(expResult, result);
     }
+    
+    /**
+     * LI is replaced by "* ".
+     */
+    @Test
+    public void testReplaceLiByAsterisk() {
+        String s = "<ul><li>First option<li>Next option</ul>";
+        String expResult = "* First option * Next option";
+        String result = Utils.html2plain(s, true);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * "P" properly appends following text, it used to strip until the next tag.
+     */
+    @Test
+    public void testDontStripContentAfterTags() {
+        String s = "<html>The Java version: 19, that is selected for the project is not supported <p>Possible solutions:<ul>List content </ul>Epilog";
+        String expResult = "The Java version: 19, that is selected for the project is not supported Possible solutions:List content Epilog";
+        String result = Utils.html2plain(s, true);
+        assertEquals(expResult, result);
+    }
 }

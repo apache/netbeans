@@ -30,7 +30,8 @@ import org.netbeans.modules.html.editor.api.Utils;
  *
  * @author Christian Lenz
  */
-public class HtmlTagContextUtils {
+public final class HtmlTagContextUtils {
+
     private HtmlTagContextUtils() {
     }
 
@@ -60,6 +61,11 @@ public class HtmlTagContextUtils {
             int adjustedTo = -1;
             while (ts.moveNext()) {
                 Token<HTMLTokenId> t = ts.token();
+
+                if (t == null) {
+                    return;
+                }
+
                 if (t.id() == HTMLTokenId.TAG_CLOSE_SYMBOL) {
                     adjustedTo = beforeClosingToken ? ts.offset() : ts.offset() + t.length();
 

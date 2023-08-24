@@ -201,7 +201,7 @@ public class CreateLibraryAction extends AbstractAction implements LookupListene
                 //XXX project.getRemoteArtifactRepositories() might not be entirely reliable, we might want to use
                 //XXX     RepositoryPreferences.getInstance().getRepositoryInfos() as well..
                 try {
-                    online.resolve(a, project.getRemoteArtifactRepositories(), online.getLocalRepository());
+                    online.resolveArtifact(a, project.getRemoteArtifactRepositories(), online.getLocalRepository());
                     AtomicBoolean cancel = ProgressTransferListener.activeListener().cancel;
                     if (cancel != null && cancel.get()) {
                         return null;
@@ -220,7 +220,7 @@ public class CreateLibraryAction extends AbstractAction implements LookupListene
                                     a.getVersion(),
                                     a.getType(),
                                     "javadoc"); //NOI18N
-                            online.resolve(javadoc, project.getRemoteArtifactRepositories(), online.getLocalRepository());
+                            online.resolveArtifact(javadoc, project.getRemoteArtifactRepositories(), online.getLocalRepository());
                             cancel = ProgressTransferListener.activeListener().cancel;
                             if (cancel != null && cancel.get()) {
                                 return null;
@@ -237,7 +237,7 @@ public class CreateLibraryAction extends AbstractAction implements LookupListene
                                     a.getVersion(),
                                     a.getType(),
                                     "sources"); //NOI18N
-                            online.resolve(sources, project.getRemoteArtifactRepositories(), online.getLocalRepository());
+                            online.resolveArtifact(sources, project.getRemoteArtifactRepositories(), online.getLocalRepository());
                             cancel = ProgressTransferListener.activeListener().cancel;
                             if (cancel != null && cancel.get()) {
                                 return null;

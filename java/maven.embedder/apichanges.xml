@@ -83,6 +83,20 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="artifact-resolution">
+            <api name="general"/>
+            <summary>Multiple scopes allowed for dependency tree query</summary>
+            <version major="2" minor="77"/>
+            <date day="16" month="8" year="2023"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" modification="yes" semantic="compatible" deprecation="yes"/>
+            <description>
+                The API used to resolve artifact (<a href="@TOP@/org/netbeans/modules/maven/embedder/MavenEmbedder.html#resolve-org.apache.maven.artifact.Artifact-java.util.List-org.apache.maven.artifact.repository.ArtifactRepository-">MavenEmbedder.resolve()</a>
+                swallows artifact not found condition in some cases. A new 
+                <a href="@TOP@/org/netbeans/modules/maven/embedder/MavenEmbedder.html#resolveArtifact-org.apache.maven.artifact.Artifact-java.util.List-org.apache.maven.artifact.repository.ArtifactRepository-">MavenEmbedder.resolveArtifact</a> should be used instead.
+            </description>
+            <class package="org.netbeans.modules.maven.embedder" name="MavenEmbedder"/>
+        </change>
         <change id="dependency-multiple-scopes">
             <api name="general"/>
             <summary>Multiple scopes allowed for dependency tree query</summary>

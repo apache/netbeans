@@ -528,7 +528,7 @@ public final class NbMavenProject {
                     art.getType(),
                     "javadoc"); //NOI18N
                 progress.progress(MSG_Checking_Javadoc(art.getId()), 1);
-                online.resolve(javadoc, project.getOriginalMavenProject().getRemoteArtifactRepositories(), project.getEmbedder().getLocalRepository());
+                online.resolveArtifact(javadoc, project.getOriginalMavenProject().getRemoteArtifactRepositories(), project.getEmbedder().getLocalRepository());
             } else {
                 Artifact sources = project.getEmbedder().createArtifactWithClassifier(
                     art.getGroupId(),
@@ -537,7 +537,7 @@ public final class NbMavenProject {
                     art.getType(),
                     "sources"); //NOI18N
                 progress.progress(MSG_Checking_Sources(art.getId()), 1);
-                online.resolve(sources, project.getOriginalMavenProject().getRemoteArtifactRepositories(), project.getEmbedder().getLocalRepository());
+                online.resolveArtifact(sources, project.getOriginalMavenProject().getRemoteArtifactRepositories(), project.getEmbedder().getLocalRepository());
             }
         } catch (ThreadDeath td) {
         } catch (IllegalStateException ise) { //download interrupted in dependent thread. #213812

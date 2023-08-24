@@ -414,21 +414,29 @@ public class Utils {
 
         int tagStart = -1;
         StringBuilder sb = new StringBuilder();
+        String additional = null;
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
             T: if (inTag) {
                 boolean alpha = Character.isAlphabetic(ch);
                 if (tagStart > 0 && !alpha) {
                     String t = s.substring(tagStart, i).toLowerCase(Locale.ENGLISH);
+                    // prevent entering tagstart state again
+                    tagStart = -2;
+                    if (ch == '>') { // NOI18N
+                        inTag = false;
+                    }
                     switch (t) {
                         case "br": case "p": case "hr": // NOI1N
                             ch ='\n'; // NOI18N
                             // continues to process 'ch' as if it came from the string, but `inTag` remains
                             // the same.
                             break T;
+                        case "li":
+                            ch = '\n';
+                            additional = "* ";
+                            break T;
                     }
-                    // prevent entering tagstart state again
-                    tagStart = -2;
                 }
                 if (ch == '>') { // NOI18N
                     inTag = false;
@@ -441,6 +449,11 @@ public class Utils {
                     tagStart = -1;
                     inTag = true;
                     continue;
+                } else if (ch == '&') {
+                    if ("&nbsp;".contentEquals(s.subSequence(i, Math.min(s.length(), i + 6)))) {
+                        i += 5;
+                        ch = ' ';  // NOI18N
+                    }
                 }
             }
             if (collapseWhitespaces) {
@@ -458,6 +471,10 @@ public class Utils {
                 }
             }
             sb.append(ch);
+            if (additional != null) {
+                sb.append(additional);
+                additional = null;
+            }
         }
         return collapseWhitespaces ? sb.toString().trim() : sb.toString();
     }

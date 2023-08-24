@@ -20,16 +20,15 @@ package org.netbeans.modules.html.editor.hints.other;
 
 import java.awt.EventQueue;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.csl.api.Rule;
-import org.netbeans.modules.csl.api.RuleContext;
 import org.netbeans.modules.html.editor.hints.HtmlRuleContext;
 import org.netbeans.modules.html.editor.utils.HtmlTagContextUtils;
 import org.netbeans.modules.parsing.api.Source;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -47,6 +46,8 @@ public class AddMissingAltAttributeHint extends Hint {
     }
 
     private static class AddMissingAltAttributeHintFix implements HintFix {
+
+        private static final Logger LOGGER = Logger.getLogger(AddMissingAltAttributeHintFix.class.getSimpleName());
 
         HtmlRuleContext context;
         OffsetRange range;
@@ -68,9 +69,9 @@ public class AddMissingAltAttributeHint extends Hint {
                     Source source = Source.create(context.getFile());
                     OffsetRange adjustContextRange = HtmlTagContextUtils.adjustContextRange(source.getDocument(false), range.getStart(), range.getEnd(), true);
 
-                    source.getDocument(false).insertString(adjustContextRange.getEnd(), " alt=\"\"", null);
+                    source.getDocument(false).insertString(adjustContextRange.getEnd(), " alt=\"\"", null); // NOI18N
                 } catch (BadLocationException ex) {
-                    Exceptions.printStackTrace(ex);
+                    LOGGER.log(Level.SEVERE, ex.getMessage());
                 }
             });
 

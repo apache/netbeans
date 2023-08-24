@@ -21,11 +21,13 @@ package org.netbeans.modules.html.editor.hints.other;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Pattern;
 import javax.swing.text.Document;
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Rule;
@@ -40,7 +42,8 @@ import org.netbeans.modules.parsing.api.Source;
  * @author Christian Lenz
  */
 public class AltAttributeVisitor implements ElementVisitor {
-    private static final String ALT_ATTR = "alt";
+
+    private static final CharSequence ALT_ATTR = "alt"; // NOI18N
 
     private final HtmlRuleContext context;
     private final List<Hint> hints;
@@ -70,15 +73,20 @@ public class AltAttributeVisitor implements ElementVisitor {
             }
 
             OffsetRange range;
-            String tag = null;
-            String attr = null;
+            CharSequence tag = null;
+            CharSequence attr = null;
             int startTagOffset = 0;
             int endTagOffset = 0;
 
             do {
                 Token<HTMLTokenId> t = ts.token();
+
+                if (t == null) {
+                    return;
+                }
+
                 if (t.id() == HTMLTokenId.TAG_OPEN) {
-                    tag = t.text().toString();
+                    tag = t.text();
                     attr = null;
 
                     startTagOffset = ts.offset();
@@ -87,15 +95,15 @@ public class AltAttributeVisitor implements ElementVisitor {
 
                     range = new OffsetRange(startTagOffset, endTagOffset);
                     //closing tag, produce the info
-                    if (tag != null && tag.matches(tagToFindRegEx) && attr == null) {
+                    if (tag != null && Pattern.matches(tagToFindRegEx, tag) && attr == null) {
                         //alt attribute found
                         hints.add(new AddMissingAltAttributeHint(context, range));
 
                         tag = attr = null;
                     }
                 } else if (t.id() == HTMLTokenId.ARGUMENT) {
-                    if (t.text().toString().equals(ALT_ATTR)) {
-                        attr = t.text().toString();
+                    if (TokenUtilities.textEquals(t.text(), ALT_ATTR)) {
+                        attr = t.text();
                         range = null;
                     }
                 }

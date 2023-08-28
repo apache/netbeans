@@ -152,7 +152,6 @@ public class ProjectViewTest extends NbTestCase {
         
         @Override
         public void telemetryEvent(Object arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override

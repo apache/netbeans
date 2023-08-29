@@ -118,7 +118,7 @@ public class ConnectionSpecTest {
             ByteArrayInputStream in = new ByteArrayInputStream(bytes);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             conn.prepare("Pipe server", in, os, new LspSession(), ConnectionSpecTest::setCopy, ConnectionSpecTest::copy);
-            String reply = os.toString("UTF-8");
+            String reply = os.toString("UTF-8").replaceAll("\n$", "");
             String exp = "Pipe server listening at port ";
             assertTrue(reply, reply.startsWith(exp));
             int port = Integer.parseInt(reply.substring(exp.length()));

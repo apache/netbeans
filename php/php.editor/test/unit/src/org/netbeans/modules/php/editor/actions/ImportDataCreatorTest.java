@@ -130,6 +130,10 @@ public class ImportDataCreatorTest extends PHPTestBase {
         performTest("    public function gh6039_01(): ^array {");
     }
 
+    public void testGH6247_01() throws Exception {
+        performTest("public function test(): st^atic {");
+    }
+
     private void performTest(String caretLine) throws Exception {
         performTest(caretLine, null);
     }

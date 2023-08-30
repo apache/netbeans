@@ -1,4 +1,0 @@
-        $this->field;^
-        ------------
-HINT:Introduce Hint
-FIX:Create Field "private $field;" in Trait "TraitA" (testIntroduceSuggestionTrait.php)

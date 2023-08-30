@@ -1,4 +1,0 @@
-TraitA::staticMethod2();^
------------------------
-HINT:Introduce Hint
-FIX:Create Method " staticMethod2()" in Trait "TraitA" (testIntroduceSuggestionTrait.php)

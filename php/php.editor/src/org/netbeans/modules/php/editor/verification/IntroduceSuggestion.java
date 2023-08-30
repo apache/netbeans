@@ -273,7 +273,7 @@ public class IntroduceSuggestion extends SuggestionRule {
                         if (allFields.isEmpty()) {
                             assert type != null;
                             FileObject fileObject = type.getFileObject();
-                            BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, false) : null;
+                            BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, true) : null;
                             if (document != null && fileObject.canWrite()) {
                                 if (type instanceof ClassScope || type instanceof TraitScope) {
                                     fixes.add(new IntroduceFieldFix(document, fieldAccess, type));
@@ -353,7 +353,7 @@ public class IntroduceSuggestion extends SuggestionRule {
                             if (allConstants.isEmpty() && allEnumCases.isEmpty()) {
                                 assert type != null;
                                 FileObject fileObject = type.getFileObject();
-                                BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, false) : null;
+                                BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, true) : null;
                                 // if fileObject is null, document is null
                                 if (document != null && fileObject.canWrite()) {
                                     fixes.add(new IntroduceClassConstantFix(document, staticConstantAccess, type));
@@ -991,8 +991,12 @@ public class IntroduceSuggestion extends SuggestionRule {
      * @return The offset after the last use trait statement if traits are used,
      * otherwise the offset after the open curly for the type
      */
-    private static int getOffsetAfterUseTrait(BaseDocument document, TypeScope typeScope) {
+    private static int getOffsetAfterUseTrait(BaseDocument document, TypeScope typeScope) throws BadLocationException {
         OffsetRange blockRange = typeScope.getBlockRange();
+        if (blockRange == null) {
+            // GH-6258 Block range of ClassScope created from ClassElement is null
+            return getOffsetAfterClassOpenCurly(document, typeScope.getOffset());
+        }
         int offset = blockRange.getEnd() - 1; // before close curly "}"
         Collection<ModelElement> elements = new HashSet<>();
         elements.addAll(typeScope.getDeclaredMethods());

@@ -753,6 +753,10 @@ public final class CodeStyle {
         return preferences.getBoolean(PUT_IN_PSR12_ORDER, getDefaultAsBoolean(PUT_IN_PSR12_ORDER));
     }
 
+    public boolean usesKeepExistingTypeOrder() {
+        return preferences.getBoolean(USES_KEEP_EXISTING_TYPE_ORDER, getDefaultAsBoolean(USES_KEEP_EXISTING_TYPE_ORDER));
+    }
+
     private static class Producer implements FmtOptions.CodeStyleProducer {
 
         @Override

@@ -440,6 +440,112 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/nullConstant.php", "$b = TestConst::TEST_CLASS_CON^ST;", false, "");
     }
 
+    public void testDeprecatedTypedFields_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->typedFiel^d;", false, "");
+    }
+
+    public void testDeprecatedTypedFields_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->multiField1^;", false, "");
+    }
+
+    public void testDeprecatedTypedFields_03() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->multiField2^;", false, "");
+    }
+
+    public void testDeprecatedTypedFields_04() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->nullableTypeFi^eld;", false, "");
+    }
+
+    public void testDeprecatedTypedFields_05() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->unionType^Field;", false, "");
+    }
+
+    public void testDeprecatedTypedFields_06() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->intersectionType^Field;", false, "");
+    }
+
+    // TODO: dnf types are not fixed yet
+//    public void testDeprecatedTypedFields_07() throws Exception {
+//        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->dnfTypeFi^eld;", false, "");
+//    }
+
+    public void testDeprecatedStaticTypedFields_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$typedStaticFiel^d;", false, "");
+    }
+
+    public void testDeprecatedStaticTypedFields_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$multiStaticField1^;", false, "");
+    }
+
+    public void testDeprecatedStaticTypedFields_03() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$multiStaticField2^;", false, "");
+    }
+
+    public void testDeprecatedStaticTypedFields_04() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$nullableTypeStatic^Field;", false, "");
+    }
+
+    public void testDeprecatedStaticTypedFields_05() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$unionTypeStaticFiel^d;", false, "");
+    }
+
+    public void testDeprecatedStaticTypedFields_06() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$intersectionTypeStat^icField;", false, "");
+    }
+
+    // TODO: dnf types are not fixed yet
+//    public void testDeprecatedStaticTypedFields_07() throws Exception {
+//        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$dnfTypeStaticFi^eld;", false, "");
+//    }
+
+    public void testDeprecatedTypedTraitFields_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->typedFiel^d; // trait", false, "");
+    }
+
+    public void testDeprecatedTypedTraitFields_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->multiField1^; // trait", false, "");
+    }
+
+    public void testDeprecatedTypedTraitFields_03() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->multiField2^; // trait", false, "");
+    }
+
+    public void testDeprecatedTypedTraitFields_04() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->nullableTypeFi^eld; // trait", false, "");
+    }
+
+    public void testDeprecatedTypedTraitFields_05() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->unionType^Field; // trait", false, "");
+    }
+
+    public void testDeprecatedTypedTraitFields_06() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "$this->intersectionType^Field; // trait", false, "");
+    }
+
+    public void testDeprecatedStaticTypedTraitFields_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$typedStaticFiel^d; // trait", false, "");
+    }
+
+    public void testDeprecatedStaticTypedTraitFields_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$multiStaticField1^; // trait", false, "");
+    }
+
+    public void testDeprecatedStaticTypedTraitFields_03() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$multiStaticField2^; // trait", false, "");
+    }
+
+    public void testDeprecatedStaticTypedTraitFields_04() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$nullableTypeStatic^Field; // trait", false, "");
+    }
+
+    public void testDeprecatedStaticTypedTraitFields_05() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$unionTypeStaticFiel^d; // trait", false, "");
+    }
+
+    public void testDeprecatedStaticTypedTraitFields_06() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$intersectionTypeStat^icField; // trait", false, "");
+    }
+
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");

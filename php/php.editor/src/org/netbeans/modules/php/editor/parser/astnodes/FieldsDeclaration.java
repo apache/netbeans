@@ -183,7 +183,7 @@ public class FieldsDeclaration extends BodyDeclaration {
             modifierString += " "; // NOI18N
         }
         return sbAttributes.toString()
-                + modifierString
+                + modifierString + " " // NOI18N
                 + sb.toString();
     }
 

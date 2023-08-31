@@ -281,7 +281,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 try {
                     String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                     FileObject file = Utils.fromUri(uri);
-                    if (file != null) {
+                    if (file != null && file.isData() && file.canRead()) {
                         future.complete(file.asText("UTF-8"));
                     }
                     future.complete(null);
@@ -1174,8 +1174,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         sdp.setSelection(new Range(position, position));
                         client.showDocument(sdp).thenAccept(res -> {
                             if (res.isSuccess()) {
-                                workspaceSymbol.setLocation(Either.forLeft(new Location(Utils.toUri(loc.getFileObject()), new Range(position, position))));
-                                result.complete(workspaceSymbol);
+                                result.complete(null);
                             } else {
                                 result.completeExceptionally(new IllegalStateException("Cannot open source for: " + typeHandle.getQualifiedName()));
                             }

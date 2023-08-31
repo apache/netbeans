@@ -1851,10 +1851,11 @@ public class ServerTest extends NbTestCase {
         indexingComplete.await();
         Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
         List<String> actual = symbols.getRight().stream().map(symbol -> {
-            WorkspaceSymbol ws;
+            WorkspaceSymbol ws = null;
             try {
                 ws = server.getWorkspaceService().resolveWorkspaceSymbol(symbol).get();
-            } catch (Exception ex) {
+            } catch (Exception ex) {}
+            if (ws == null) {
                 ws = symbol;
             }
             return ws.getKind() + ":" + ws.getName() + ":" + ws.getContainerName() + ":" + (ws.getLocation().isLeft() ? toString(ws.getLocation().getLeft()) : toString(ws.getLocation().getRight()));
@@ -1862,8 +1863,8 @@ public class ServerTest extends NbTestCase {
         assertEquals(Arrays.asList("Constructor:Test():Test:Test.java:0:7-0:7",
                                    "Method:testMethod():Test:Test.java:2:4-2:38",
                                    "Constructor:TestNested():Test.TestNested:Test.java:1:18-1:18",
-                                   "Class:Test:null:Test.java:0:13-0:13",
-                                   "Class:TestNested:Test:Test.java:1:24-1:24"),
+                                   "Class:Test:null:?CLASS#Test",
+                                   "Class:TestNested:Test:?CLASS#Test$TestNested"),
                      actual);
     }
 

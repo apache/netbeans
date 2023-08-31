@@ -33,7 +33,7 @@ public class BrkpntSetCommand extends DbgpCommand {
     private static final String STATE_ARG = "-s "; // NOI18N
     private static final String TEMP_ARG = "-r "; // NOI18N
     private static final String FUNC_ARG = "-m "; // NOI18N
-    private static final String EXCEPTION_ARG = "-x"; // NOI18N
+    private static final String EXCEPTION_ARG = "-x "; // NOI18N
     private String myFunction;
     private Types myType;
     private String myFile;

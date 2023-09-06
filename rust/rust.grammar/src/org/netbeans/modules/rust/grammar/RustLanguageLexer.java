@@ -28,7 +28,6 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.modules.rust.grammar.antlr4.RustLexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
@@ -41,35 +40,55 @@ public class RustLanguageLexer extends AbstractAntlrLexerBridge<RustLexer, RustT
 
     private static final Logger LOG = Logger.getLogger(RustLanguageLexer.class.getName());
 
-    private static String formatMessage(String kind, Recognizer<?, ?> recognizer, Object o, int line, int charPositionInLine, String message, RecognitionException ex) {
-        return String.format("%s @%3d:%-3d %s", kind, line, charPositionInLine, message);
-    }
-
+    /**
+     * A BaseErrorListener that listens for errors in the lexer. We avoid
+     * throuing exceptions, since AbstractAntlrLexerBridge doesn't know how to
+     * handle them and this may interfere with the EDT. We enable logginf of
+     * errors instead, for debugging and enhancement purposes.
+     */
     private static final class RustLanguageLexerErrorListener extends BaseErrorListener {
+
+        private static final Level LEVEL = Level.FINE;
+
+        private static String formatMessage(String kind, Recognizer<?, ?> recognizer, Object o, int line, int charPositionInLine, String message, RecognitionException ex) {
+            return String.format("%s @%3d:%-3d %s", kind, line, charPositionInLine, message);
+        }
 
         @Override
         public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-            String errorMessage = formatMessage("RUST: Syntax error: ", recognizer, offendingSymbol, line, charPositionInLine, msg, e);
-            LOG.log(Level.SEVERE, errorMessage);
-            throw new ParseCancellationException(e);
+            if (LOG.isLoggable(LEVEL)) {
+                String errorMessage = formatMessage("RUST: Syntax error: ", recognizer, offendingSymbol, line, charPositionInLine, msg, e);
+                LOG.log(LEVEL, errorMessage);
+            }
         }
 
         @Override
         public void reportAmbiguity(Parser parser, DFA dfa, int line, int charPositionInLine, boolean bln, BitSet bitset, ATNConfigSet atncs) {
-            String errorMessage = formatMessage("RUST: Ambiguity: ", null, null, line, charPositionInLine, "Ambiguity error", null);
-            LOG.log(Level.WARNING, errorMessage);
+            if (LOG.isLoggable(LEVEL)) {
+                String errorMessage = formatMessage("RUST: Ambiguity: ", null, null, line, charPositionInLine, "Ambiguity error", null);
+                LOG.log(LEVEL, errorMessage);
+            }
         }
 
         @Override
-        public void reportAttemptingFullContext(Parser parser, DFA dfa, int line, int charPositionInLine, BitSet bitset, ATNConfigSet atncs) {
-            String errorMessage = formatMessage("RUST: AttemptingFullContext: ", null, null, line, charPositionInLine, "Ambiguity error", null);
-            LOG.log(Level.WARNING, errorMessage);
+        public void reportAttemptingFullContext(Parser parser, DFA dfa,
+                int line, int charPositionInLine, BitSet bitset,
+                ATNConfigSet atncs
+        ) {
+            if (LOG.isLoggable(LEVEL)) {
+                String errorMessage = formatMessage("RUST: AttemptingFullContext: ", null, null, line, charPositionInLine, "Ambiguity error", null);
+                LOG.log(LEVEL, errorMessage);
+            }
         }
 
         @Override
-        public void reportContextSensitivity(Parser parser, DFA dfa, int line, int charPositionInLine, int line2, ATNConfigSet atncs) {
-            String errorMessage = formatMessage("RUST: ContextSensitivity", null, null, line, charPositionInLine, "Ambiguity error", null);
-            LOG.log(Level.WARNING, errorMessage);
+        public void reportContextSensitivity(Parser parser, DFA dfa,
+                int line, int charPositionInLine, int line2, ATNConfigSet atncs
+        ) {
+            if (LOG.isLoggable(LEVEL)) {
+                String errorMessage = formatMessage("RUST: ContextSensitivity", null, null, line, charPositionInLine, "Ambiguity error", null);
+                LOG.log(LEVEL, errorMessage);
+            }
         }
 
     }
@@ -96,6 +115,7 @@ public class RustLanguageLexer extends AbstractAntlrLexerBridge<RustLexer, RustT
     }
 
     private static final class LexerState extends AbstractAntlrLexerBridge.LexerState<RustLexer> {
+
         final Integer lt1;
         final Integer lt2;
 

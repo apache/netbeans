@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.rust.grammar.antlr4;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.Token;
 import org.junit.Assert;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;

@@ -238,7 +238,6 @@ public class MicronautEntity extends RelatedCMPWizard {
             }
 
             final boolean jpaSupported = Utils.isJPASupported(helper.getLocation());
-            final boolean jakartaSupported = Utils.isJakartaSupported(helper.getLocation());
             final boolean beanValidationSupported = isBeanValidationSupported(helper.getLocation());
 
             EntityClass[] entityClasses = helper.getBeans();
@@ -251,9 +250,6 @@ public class MicronautEntity extends RelatedCMPWizard {
 
             for (int i = 0; i < entityClasses.length; i++) {
                 final EntityClass entityClass = entityClasses[i];
-                if (entityClass.isForTable() && !entityClass.isUsePkField() && !jpaSupported && !jakartaSupported) {
-                    throw new IOException("Cannot generate " + entityClass.getClassName() + " class unless 'jakarta.persistence' or 'javax.persistence' is on the project classpath. Update the classpath and invoke again.");
-                }
                 String entityClassName = entityClass.getClassName();
                 FileObject packageFileObject = entityClass.getPackageFileObject();
                 beanMap.put(entityClassName, entityClass);
@@ -365,10 +361,10 @@ public class MicronautEntity extends RelatedCMPWizard {
                             : JavaSource.create(cpHelper.createClasspathInfo(), entityClassFO);
                     javaSource.runModificationTask(copy -> {
                         if (copy.getFileObject().equals(entityClassFO)) {
-                            new EntityClassGenerator(copy, entityClass, jpaSupported, jakartaSupported, beanValidationSupported).run();
+                            new EntityClassGenerator(copy, entityClass, jpaSupported, beanValidationSupported).run();
                         } else {
                             if (entityClass.getUpdateType() != UpdateType.UPDATE) {
-                                new PKClassGenerator(copy, entityClass, jpaSupported, jakartaSupported, beanValidationSupported).run();
+                                new PKClassGenerator(copy, entityClass, jpaSupported, beanValidationSupported).run();
                             } else {
                                 Logger.getLogger(Generator.class.getName()).log(Level.INFO, "PK Class update isn't supported"); //NOI18N
                             }
@@ -463,10 +459,9 @@ public class MicronautEntity extends RelatedCMPWizard {
             protected ModuleElement moduleElement;
 
             protected final boolean generateJPA;
-            protected final boolean jakartaSupported;
             protected final boolean generateValidationConstraints;
 
-            private ClassGenerator(WorkingCopy copy, EntityClass entityClass, boolean jpaSupported, boolean jakartaSupported, boolean beanValidationSupported) throws IOException {
+            private ClassGenerator(WorkingCopy copy, EntityClass entityClass, boolean jpaSupported, boolean beanValidationSupported) throws IOException {
                 copy.toPhase(JavaSource.Phase.RESOLVED);
                 this.copy = copy;
                 this.entityClass = entityClass;
@@ -486,7 +481,6 @@ public class MicronautEntity extends RelatedCMPWizard {
                 newClassTree = originalClassTree;
                 genUtils = GenerationUtils.newInstance(copy);
                 generateJPA = jpaSupported;
-                this.jakartaSupported = jakartaSupported;
                 generateValidationConstraints = beanValidationSupported;
             }
 
@@ -539,7 +533,7 @@ public class MicronautEntity extends RelatedCMPWizard {
 
                 String columnName = dbMappings.getCMPFieldMapping().get(memberName);
                 if (!memberName.equalsIgnoreCase(columnName)){
-                    columnAnnArguments.add(genUtils.createAnnotationArgument("name", columnName)); //NOI18N
+                    columnAnnArguments.add(genUtils.createAnnotationArgument(generateJPA ? "name" : null, columnName)); //NOI18N
                 }
 
                 Integer length = m.getLength();
@@ -557,9 +551,8 @@ public class MicronautEntity extends RelatedCMPWizard {
                 if (!columnAnnArguments.isEmpty()) {
                     if (generateJPA) {
                         annotations.add(genUtils.createAnnotation("javax.persistence.Column", columnAnnArguments)); //NOI18N
-                    }
-                    if (isPKMember && needsPKClass && jakartaSupported) {
-                        annotations.add(genUtils.createAnnotation("jakarta.persistence.Column", columnAnnArguments)); //NOI18N
+                    } else if (isPKMember && needsPKClass) {
+                        annotations.add(genUtils.createAnnotation("io.micronaut.data.annotation.MappedProperty", columnAnnArguments)); //NOI18N
                     }
                 }
 
@@ -723,8 +716,8 @@ public class MicronautEntity extends RelatedCMPWizard {
             private Property pkProperty;
             private boolean pkGenerated;
 
-            public EntityClassGenerator(WorkingCopy copy, EntityClass entityClass, boolean jpaSupported, boolean jakartaSupported, boolean beanValidationSupported) throws IOException {
-                super(copy, entityClass, jpaSupported, jakartaSupported, beanValidationSupported);
+            public EntityClassGenerator(WorkingCopy copy, EntityClass entityClass, boolean jpaSupported, boolean beanValidationSupported) throws IOException {
+                super(copy, entityClass, jpaSupported, beanValidationSupported);
                 entityClassName = getClassName(entityClass);
                 assert typeElement.getSimpleName().contentEquals(entityClassName);
             }
@@ -965,8 +958,8 @@ public class MicronautEntity extends RelatedCMPWizard {
 
         private final class PKClassGenerator extends ClassGenerator {
 
-            public PKClassGenerator(WorkingCopy copy, EntityClass entityClass, boolean jpaSupported, boolean jakartaSupported, boolean beanValidationSupported) throws IOException {
-                super(copy, entityClass, jpaSupported, jakartaSupported, beanValidationSupported);
+            public PKClassGenerator(WorkingCopy copy, EntityClass entityClass, boolean jpaSupported, boolean beanValidationSupported) throws IOException {
+                super(copy, entityClass, jpaSupported, beanValidationSupported);
             }
 
             @Override

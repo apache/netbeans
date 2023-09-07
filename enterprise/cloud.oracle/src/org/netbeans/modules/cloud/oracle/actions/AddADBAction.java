@@ -90,6 +90,7 @@ public class AddADBAction implements ActionListener {
     private static final String DB = "db"; //NOI18N
     private static final String USERNAME = "username"; //NOI18N
     private static final String PASSWORD = "password"; //NOI18N
+    private static final int NUMBER_OF_INPUTS = 4;
 
     @NbBundle.Messages({
         "MSG_CollectingProfiles=Searching for OCI Profiles",
@@ -101,7 +102,7 @@ public class AddADBAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Map<String, Object> result = new HashMap<> ();
         
-        NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADB(), 3, new Callback() {
+        NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADB(), NUMBER_OF_INPUTS, new Callback() {
             Map<Integer, Map> values = new HashMap<> ();
 
             @Override
@@ -145,6 +146,7 @@ public class AddADBAction implements ActionListener {
                             items.add(new Item(p.getId(), Bundle.SelectProfile_Description(t.getName(), t.getHomeRegionKey())));
                         }
                         values.put(1, tenancyItems);
+                        input.setEstimatedNumberOfInputs(NUMBER_OF_INPUTS + 1);
                         return new NotifyDescriptor.QuickPick(title, title, items, false);
                     }
                 } else {
@@ -177,7 +179,6 @@ public class AddADBAction implements ActionListener {
                                 values.put(number, dbs);
                                 title = dbs.isEmpty() ? Bundle.NoDatabase() : Bundle.SelectDatabase();
                             }
-                            input.setEstimatedNumberOfInputs(input.getEstimatedNumberOfInputs() + 1);
                             return createQuickPick(values.get(number), title);
                         } finally {
                             h.finish();

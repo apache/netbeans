@@ -19,11 +19,7 @@
     under the License.
 
 -->
-<licenseinfo>
-    <fileset>
-        <file>extras/libs.kotlin.lsp/release/kotlin-lsp/server-1.3.3.zip.external</file>
-        <file>src/org/netbeans/modules/updatecenters/resources/updateAction.gif</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-</licenseinfo>
+<project basedir="." default="netbeans" name="extra/libs.kotlin.lsp">
+    <description>Builds, tests, and runs the project org.netbeans.libs.kotlin.lsp</description>
+    <import file="nbproject/build-impl.xml"/>
+</project>

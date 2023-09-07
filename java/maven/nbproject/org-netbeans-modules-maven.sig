@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.158.0
+#Version 2.159.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2410,8 +2410,8 @@ fld public final static java.lang.String BUNDLED_RUNTIME_VERSION
 meth public void applyValues()
 meth public void setValues()
 supr javax.swing.JPanel
-hfds AVAILABLE_OPTIONS,RP,SEPARATOR,btnDirectory,btnGoals,btnIndex,btnOptions,buttonGroup1,cbAlternateLocation,cbAlwaysShow,cbCollapseSuccessFolds,cbEnableIndexDownload,cbEnableIndexing,cbNetworkProxy,cbOutputTabShowConfig,cbPreferWrapper,cbProjectNodeNameMode,cbReuse,cbShowInfoLevel,cbSkipTests,cbUseBestMaven,changed,comBinaries,comIndex,comJavadoc,comJdkHome,comManageJdks,comMavenHome,comSource,completer,controller,jLabel3,jLabel4,jScrollPane1,jdkHomeDataModel,lastSelected,lbNetworkSettings,lblBinaries,lblCategory,lblCommandLine,lblDirectory,lblExternalVersion,lblHint,lblIndex,lblJavadoc,lblJdkHome,lblOptions,lblOutputTab,lblSource,listItemChangedListener,listener,lstCategory,mavenHomeDataModel,mavenRuntimeHome,plnExperimental,pnlAppearance,pnlCards,pnlDependencies,pnlExecution,pnlIndex,predefinedRuntimes,rbOutputTabId,rbOutputTabName,txtDirectory,txtOptions,txtProjectNodeNameCustomPattern,userDefinedMavenRuntimes,userDefinedMavenRuntimesStored,valid
-hcls ActionListenerImpl,ComboBoxRenderer,DocumentListenerImpl
+hfds AVAILABLE_OPTIONS,RP,SEPARATOR,bgIndexFilter,btnDirectory,btnGoals,btnIndex,btnOptions,buttonGroup1,cbAlternateLocation,cbAlwaysShow,cbCollapseSuccessFolds,cbEnableIndexDownload,cbEnableIndexing,cbEnableMultiThreading,cbNetworkProxy,cbOutputTabShowConfig,cbPreferWrapper,cbProjectNodeNameMode,cbReuse,cbShowInfoLevel,cbSkipTests,cbUseBestMaven,changed,comBinaries,comIndex,comJavadoc,comJdkHome,comManageJdks,comMavenHome,comSource,completer,controller,jLabel3,jLabel4,jScrollPane1,jdkHomeDataModel,lastSelected,lbNetworkSettings,lblBinaries,lblCategory,lblCommandLine,lblDirectory,lblExternalVersion,lblHint,lblIndex,lblIndexFilter,lblJavadoc,lblJdkHome,lblOptions,lblOutputTab,lblSource,listItemChangedListener,listener,lstCategory,mavenHomeDataModel,mavenRuntimeHome,permissionsTable,plnExperimental,pnlAppearance,pnlCards,pnlDependencies,pnlExecution,pnlIndex,predefinedRuntimes,rb2Years,rb5Years,rbFullIndex,rbOutputTabId,rbOutputTabName,txtDirectory,txtOptions,txtProjectNodeNameCustomPattern,userDefinedMavenRuntimes,userDefinedMavenRuntimesStored,valid
+hcls ActionListenerImpl,ComboBoxRenderer,DocumentListenerImpl,IndexDownloadPermissionTableModel
 
 CLSS public org.netbeans.modules.maven.options.UnsetProxyChecker
 cons public init()

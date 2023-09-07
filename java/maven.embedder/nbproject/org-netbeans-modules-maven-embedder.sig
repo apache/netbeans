@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.74
+#Version 2.75
 
 CLSS public abstract interface !annotation com.google.common.annotations.Beta
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -169,11 +169,28 @@ fld public final static java.nio.charset.Charset UTF_16LE
 fld public final static java.nio.charset.Charset UTF_8
 supr java.lang.Object
 
-CLSS public abstract com.google.common.base.Converter
-intf com.google.common.base.Function
+CLSS public abstract com.google.common.base.Converter<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
+cons protected init()
+intf com.google.common.base.Function<{com.google.common.base.Converter%0},{com.google.common.base.Converter%1}>
+meth protected abstract {com.google.common.base.Converter%0} doBackward({com.google.common.base.Converter%1})
+meth protected abstract {com.google.common.base.Converter%1} doForward({com.google.common.base.Converter%0})
+meth public boolean equals(java.lang.Object)
+meth public com.google.common.base.Converter<{com.google.common.base.Converter%1},{com.google.common.base.Converter%0}> reverse()
+meth public final <%0 extends java.lang.Object> com.google.common.base.Converter<{com.google.common.base.Converter%0},{%%0}> andThen(com.google.common.base.Converter<{com.google.common.base.Converter%1},{%%0}>)
+meth public final {com.google.common.base.Converter%1} apply({com.google.common.base.Converter%0})
+ anno 0 java.lang.Deprecated()
+meth public final {com.google.common.base.Converter%1} convert({com.google.common.base.Converter%0})
+meth public java.lang.Iterable<{com.google.common.base.Converter%1}> convertAll(java.lang.Iterable<? extends {com.google.common.base.Converter%0}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.google.common.base.Converter<{%%0},{%%1}> from(com.google.common.base.Function<? super {%%0},? extends {%%1}>,com.google.common.base.Function<? super {%%1},? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> com.google.common.base.Converter<{%%0},{%%0}> identity()
 supr java.lang.Object
+hfds handleNullAutomatically,reverse
+hcls ConverterComposition,FunctionBasedConverter,IdentityConverter,ReverseConverter
 
 CLSS public final com.google.common.base.Defaults
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+meth public static <%0 extends java.lang.Object> {%%0} defaultValue(java.lang.Class<{%%0}>)
 supr java.lang.Object
 hfds DOUBLE_DEFAULT,FLOAT_DEFAULT
 
@@ -193,7 +210,12 @@ supr java.lang.Object
 
 CLSS public final com.google.common.base.Equivalence$Wrapper
 intf java.io.Serializable
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.Object get()
+meth public java.lang.String toString()
 supr java.lang.Object
+hfds equivalence,reference,serialVersionUID
 
 CLSS public abstract com.google.common.base.FinalizablePhantomReference<%0 extends java.lang.Object>
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
@@ -228,6 +250,8 @@ supr java.lang.ref.WeakReference<{com.google.common.base.FinalizableWeakReferenc
 
 CLSS public abstract interface com.google.common.base.Function
 intf java.util.function.Function
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract java.lang.Object apply(java.lang.Object)
 
 CLSS public final com.google.common.base.Functions
 supr java.lang.Object
@@ -258,17 +282,62 @@ supr java.lang.Object
 hfds joiner,keyValueSeparator
 
 CLSS public final com.google.common.base.MoreObjects
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
+innr public final static ToStringHelper
+meth public static <%0 extends java.lang.Object> {%%0} firstNonNull({%%0},{%%0})
+meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.Class<?>)
+meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.Object)
+meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.String)
 supr java.lang.Object
 
-CLSS public final com.google.common.base.MoreObjects$ToStringHelper
+CLSS public final static com.google.common.base.MoreObjects$ToStringHelper
+ outer com.google.common.base.MoreObjects
+meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,boolean)
+meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,char)
+meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,double)
+meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,float)
+meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,int)
+meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,java.lang.Object)
+meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,long)
+meth public com.google.common.base.MoreObjects$ToStringHelper addValue(boolean)
+meth public com.google.common.base.MoreObjects$ToStringHelper addValue(char)
+meth public com.google.common.base.MoreObjects$ToStringHelper addValue(double)
+meth public com.google.common.base.MoreObjects$ToStringHelper addValue(float)
+meth public com.google.common.base.MoreObjects$ToStringHelper addValue(int)
+meth public com.google.common.base.MoreObjects$ToStringHelper addValue(java.lang.Object)
+meth public com.google.common.base.MoreObjects$ToStringHelper addValue(long)
+meth public com.google.common.base.MoreObjects$ToStringHelper omitNullValues()
+meth public java.lang.String toString()
 supr java.lang.Object
-hfds className,holderHead,holderTail,omitNullValues,performedJava8CompatibilityCheck
+hfds className,holderHead,holderTail,omitEmptyValues,omitNullValues
+hcls UnconditionalValueHolder,ValueHolder
 
 CLSS public final com.google.common.base.Objects
 supr java.lang.Object
 
-CLSS public abstract com.google.common.base.Optional
+CLSS public abstract com.google.common.base.Optional<%0 extends java.lang.Object>
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=true)
 intf java.io.Serializable
+meth public abstract <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> transform(com.google.common.base.Function<? super {com.google.common.base.Optional%0},{%%0}>)
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract boolean isPresent()
+meth public abstract com.google.common.base.Optional<{com.google.common.base.Optional%0}> or(com.google.common.base.Optional<? extends {com.google.common.base.Optional%0}>)
+meth public abstract int hashCode()
+meth public abstract java.lang.String toString()
+meth public abstract java.util.Set<{com.google.common.base.Optional%0}> asSet()
+meth public abstract {com.google.common.base.Optional%0} get()
+meth public abstract {com.google.common.base.Optional%0} or(com.google.common.base.Supplier<? extends {com.google.common.base.Optional%0}>)
+ anno 0 com.google.common.annotations.Beta()
+meth public abstract {com.google.common.base.Optional%0} or({com.google.common.base.Optional%0})
+meth public abstract {com.google.common.base.Optional%0} orNull()
+meth public java.util.Optional<{com.google.common.base.Optional%0}> toJavaUtil()
+meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> absent()
+meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> fromJavaUtil(java.util.Optional<{%%0}>)
+meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> fromNullable({%%0})
+meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> of({%%0})
+meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> presentInstances(java.lang.Iterable<? extends com.google.common.base.Optional<? extends {%%0}>>)
+ anno 0 com.google.common.annotations.Beta()
+meth public static <%0 extends java.lang.Object> java.util.Optional<{%%0}> toJavaUtil(com.google.common.base.Optional<{%%0}>)
 supr java.lang.Object
 hfds serialVersionUID
 
@@ -277,6 +346,9 @@ supr java.lang.Object
 
 CLSS public abstract interface com.google.common.base.Predicate
 intf java.util.function.Predicate
+meth public abstract boolean apply(java.lang.Object)
+meth public abstract boolean equals(java.lang.Object)
+meth public boolean test(java.lang.Object)
 
 CLSS public final com.google.common.base.Predicates
 supr java.lang.Object
@@ -318,6 +390,7 @@ supr java.lang.Object
 hfds INVALID_ENTRY_MESSAGE,entrySplitter,outerSplitter
 
 CLSS public final !enum com.google.common.base.StandardSystemProperty
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 fld public final static com.google.common.base.StandardSystemProperty FILE_SEPARATOR
 fld public final static com.google.common.base.StandardSystemProperty JAVA_CLASS_PATH
 fld public final static com.google.common.base.StandardSystemProperty JAVA_CLASS_VERSION
@@ -347,7 +420,12 @@ fld public final static com.google.common.base.StandardSystemProperty PATH_SEPAR
 fld public final static com.google.common.base.StandardSystemProperty USER_DIR
 fld public final static com.google.common.base.StandardSystemProperty USER_HOME
 fld public final static com.google.common.base.StandardSystemProperty USER_NAME
-supr java.lang.Enum
+meth public java.lang.String key()
+meth public java.lang.String toString()
+meth public java.lang.String value()
+meth public static com.google.common.base.StandardSystemProperty valueOf(java.lang.String)
+meth public static com.google.common.base.StandardSystemProperty[] values()
+supr java.lang.Enum<com.google.common.base.StandardSystemProperty>
 hfds key
 
 CLSS public final com.google.common.base.Stopwatch
@@ -370,17 +448,45 @@ hfds elapsedNanos,isRunning,startTick,ticker
 CLSS public final com.google.common.base.Strings
 supr java.lang.Object
 
-CLSS public abstract interface com.google.common.base.Supplier<%0 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
- anno 0 java.lang.FunctionalInterface()
-intf java.util.function.Supplier<{com.google.common.base.Supplier%0}>
-meth public abstract {com.google.common.base.Supplier%0} get()
+CLSS public abstract interface com.google.common.base.Supplier
+intf java.util.function.Supplier
+meth public abstract java.lang.Object get()
 
 CLSS public final com.google.common.base.Suppliers
 supr java.lang.Object
 
 CLSS public final com.google.common.base.Throwables
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
+meth public static <%0 extends java.lang.Throwable, %1 extends java.lang.Throwable> void propagateIfPossible(java.lang.Throwable,java.lang.Class<{%%0}>,java.lang.Class<{%%1}>) throws {%%0},{%%1}
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+meth public static <%0 extends java.lang.Throwable> void propagateIfInstanceOf(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+ anno 0 java.lang.Deprecated()
+meth public static <%0 extends java.lang.Throwable> void propagateIfPossible(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+meth public static <%0 extends java.lang.Throwable> void throwIfInstanceOf(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+meth public static <%0 extends java.lang.Throwable> {%%0} getCauseAs(java.lang.Throwable,java.lang.Class<{%%0}>)
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+meth public static boolean lazyStackTraceIsLazy()
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+ anno 0 java.lang.Deprecated()
+meth public static java.lang.RuntimeException propagate(java.lang.Throwable)
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+ anno 0 java.lang.Deprecated()
+meth public static java.lang.String getStackTraceAsString(java.lang.Throwable)
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+meth public static java.lang.Throwable getRootCause(java.lang.Throwable)
+meth public static java.util.List<java.lang.StackTraceElement> lazyStackTrace(java.lang.Throwable)
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+ anno 0 java.lang.Deprecated()
+meth public static java.util.List<java.lang.Throwable> getCausalChain(java.lang.Throwable)
+meth public static void propagateIfPossible(java.lang.Throwable)
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+ anno 0 java.lang.Deprecated()
+meth public static void throwIfUnchecked(java.lang.Throwable)
 supr java.lang.Object
+hfds JAVA_LANG_ACCESS_CLASSNAME,SHARED_SECRETS_CLASSNAME,getStackTraceDepthMethod,getStackTraceElementMethod,jla
 
 CLSS public abstract com.google.common.base.Ticker
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -402,6 +508,11 @@ CLSS public final com.google.common.base.Verify
 supr java.lang.Object
 
 CLSS public com.google.common.base.VerifyException
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
 supr java.lang.RuntimeException
 
 CLSS abstract interface com.google.common.base.package-info
@@ -1257,6 +1368,10 @@ meth public static <%0 extends java.lang.Object> java.util.function.Predicate<{%
 CLSS public abstract interface java.util.function.Supplier<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
 meth public abstract {java.util.function.Supplier%0} get()
+
+CLSS public abstract interface !annotation javax.annotation.Nonnull
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.annotation.meta.When when()
 
 CLSS public abstract interface !annotation javax.inject.Inject
  anno 0 java.lang.annotation.Documented()
@@ -2306,6 +2421,7 @@ meth public org.apache.maven.artifact.repository.metadata.Metadata read(java.io.
 meth public org.apache.maven.artifact.repository.metadata.Metadata read(java.io.InputStream,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public org.apache.maven.artifact.repository.metadata.Metadata read(java.io.Reader) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public org.apache.maven.artifact.repository.metadata.Metadata read(java.io.Reader,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
+meth public org.apache.maven.artifact.repository.metadata.Metadata read(org.codehaus.plexus.util.xml.pull.XmlPullParser,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public void setAddDefaultEntities(boolean)
 supr java.lang.Object
 hfds addDefaultEntities
@@ -2949,7 +3065,7 @@ meth public org.apache.maven.execution.MavenExecutionRequest getRequest()
 meth public org.codehaus.plexus.classworlds.ClassWorld getClassWorld()
 meth public void setUserProperties(java.util.Properties)
 supr java.lang.Object
-hfds args,classWorld,commandLine,debug,multiModuleProjectDirectory,quiet,request,showErrors,systemProperties,userProperties,workingDirectory
+hfds args,classWorld,commandLine,debug,multiModuleProjectDirectory,quiet,request,rootDirectory,showErrors,systemProperties,topDirectory,userProperties,workingDirectory
 
 CLSS public org.apache.maven.cli.MavenCli
 cons public init()
@@ -2961,6 +3077,9 @@ fld public final static java.lang.String LOCAL_REPO_PROPERTY = "maven.repo.local
 fld public final static java.lang.String MULTIMODULE_PROJECT_DIRECTORY = "maven.multiModuleProjectDirectory"
 fld public final static java.lang.String STYLE_COLOR_PROPERTY = "style.color"
 fld public final static java.lang.String USER_HOME
+meth protected !varargs static org.codehaus.plexus.interpolation.StringSearchInterpolator createInterpolator(org.apache.maven.cli.CliRequest,java.util.Properties[])
+meth protected boolean isAcceptableRootDirectory(java.nio.file.Path)
+meth protected java.nio.file.Path searchAcceptableRootDirectory(java.nio.file.Path)
 meth protected org.apache.maven.model.building.ModelProcessor createModelProcessor(org.codehaus.plexus.PlexusContainer) throws org.codehaus.plexus.component.repository.exception.ComponentLookupException
 meth protected org.eclipse.aether.transfer.TransferListener getBatchTransferListener()
 meth protected org.eclipse.aether.transfer.TransferListener getConsoleTransferListener(boolean)
@@ -2971,8 +3090,8 @@ meth public static int doMain(java.lang.String[],org.codehaus.plexus.classworlds
 meth public static int main(java.lang.String[],org.codehaus.plexus.classworlds.ClassWorld)
 meth public static void main(java.lang.String[])
 supr java.lang.Object
-hfds ANSI_RESET,EXTENSIONS_FILENAME,EXT_CLASS_PATH,LAST_ANSI_SEQUENCE,MVN_MAVEN_CONFIG,NEXT_LINE,classWorld,cliManager,configurationProcessors,dispatcher,eventSpyDispatcher,executionRequestPopulator,maven,modelProcessor,plexusLoggerManager,slf4jLogger,slf4jLoggerFactory,toolchainsBuilder
-hcls ExitException
+hfds ANSI_RESET,DOT_MVN,EXTENSIONS_FILENAME,EXT_CLASS_PATH,LAST_ANSI_SEQUENCE,MVN_MAVEN_CONFIG,NEXT_LINE,UNABLE_TO_FIND_ROOT_PROJECT_MESSAGE,classWorld,cliManager,configurationProcessors,dispatcher,eventSpyDispatcher,executionRequestPopulator,maven,modelProcessor,plexusLoggerManager,slf4jLogger,slf4jLoggerFactory,toolchainsBuilder
+hcls ExitException,IllegalUseOfUndefinedProperty
 
 CLSS public org.apache.maven.cli.ResolveFile
 cons public init()
@@ -5061,6 +5180,7 @@ meth public org.apache.maven.model.Model read(java.io.InputStream) throws java.i
 meth public org.apache.maven.model.Model read(java.io.InputStream,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public org.apache.maven.model.Model read(java.io.Reader) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public org.apache.maven.model.Model read(java.io.Reader,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
+meth public org.apache.maven.model.Model read(org.codehaus.plexus.util.xml.pull.XmlPullParser,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public void setAddDefaultEntities(boolean)
 supr java.lang.Object
 hfds addDefaultEntities
@@ -5077,6 +5197,7 @@ innr public abstract interface static ContentTransformer
 meth public boolean getAddDefaultEntities()
 meth public org.apache.maven.model.Model read(java.io.InputStream,boolean,org.apache.maven.model.InputSource) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public org.apache.maven.model.Model read(java.io.Reader,boolean,org.apache.maven.model.InputSource) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
+meth public org.apache.maven.model.Model read(org.codehaus.plexus.util.xml.pull.XmlPullParser,boolean,org.apache.maven.model.InputSource) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public void setAddDefaultEntities(boolean)
 supr java.lang.Object
 hfds addDefaultEntities
@@ -5609,6 +5730,20 @@ meth public org.apache.maven.model.Plugin getPlugin()
 supr java.lang.Exception
 hfds plugin
 
+CLSS public abstract interface org.apache.maven.plugin.PluginValidationManager
+innr public final static !enum IssueLocality
+meth public abstract void reportPluginMojoValidationIssue(org.apache.maven.plugin.PluginValidationManager$IssueLocality,org.apache.maven.execution.MavenSession,org.apache.maven.plugin.descriptor.MojoDescriptor,java.lang.Class<?>,java.lang.String)
+meth public abstract void reportPluginValidationIssue(org.apache.maven.plugin.PluginValidationManager$IssueLocality,org.apache.maven.execution.MavenSession,org.apache.maven.plugin.descriptor.MojoDescriptor,java.lang.String)
+meth public abstract void reportPluginValidationIssue(org.apache.maven.plugin.PluginValidationManager$IssueLocality,org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.artifact.Artifact,java.lang.String)
+
+CLSS public final static !enum org.apache.maven.plugin.PluginValidationManager$IssueLocality
+ outer org.apache.maven.plugin.PluginValidationManager
+fld public final static org.apache.maven.plugin.PluginValidationManager$IssueLocality EXTERNAL
+fld public final static org.apache.maven.plugin.PluginValidationManager$IssueLocality INTERNAL
+meth public static org.apache.maven.plugin.PluginValidationManager$IssueLocality valueOf(java.lang.String)
+meth public static org.apache.maven.plugin.PluginValidationManager$IssueLocality[] values()
+supr java.lang.Enum<org.apache.maven.plugin.PluginValidationManager$IssueLocality>
+
 CLSS public org.apache.maven.profiles.Activation
 cons public init()
 intf java.io.Serializable
@@ -5800,6 +5935,7 @@ meth public org.apache.maven.profiles.ProfilesRoot read(java.io.InputStream) thr
 meth public org.apache.maven.profiles.ProfilesRoot read(java.io.InputStream,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public org.apache.maven.profiles.ProfilesRoot read(java.io.Reader) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public org.apache.maven.profiles.ProfilesRoot read(java.io.Reader,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
+meth public org.apache.maven.profiles.ProfilesRoot read(org.codehaus.plexus.util.xml.pull.XmlPullParser,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public void setAddDefaultEntities(boolean)
 supr java.lang.Object
 hfds addDefaultEntities
@@ -7434,6 +7570,7 @@ meth public org.apache.maven.settings.Settings read(java.io.InputStream) throws 
 meth public org.apache.maven.settings.Settings read(java.io.InputStream,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public org.apache.maven.settings.Settings read(java.io.Reader) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public org.apache.maven.settings.Settings read(java.io.Reader,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
+meth public org.apache.maven.settings.Settings read(org.codehaus.plexus.util.xml.pull.XmlPullParser,boolean) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 meth public void setAddDefaultEntities(boolean)
 supr java.lang.Object
 hfds addDefaultEntities
@@ -8531,12 +8668,15 @@ hcls Lazy
 CLSS public org.codehaus.plexus.classworlds.ClassWorld
 cons public init()
 cons public init(java.lang.String,java.lang.ClassLoader)
+intf java.io.Closeable
 meth public java.util.Collection<org.codehaus.plexus.classworlds.realm.ClassRealm> getRealms()
 meth public org.codehaus.plexus.classworlds.realm.ClassRealm getClassRealm(java.lang.String)
 meth public org.codehaus.plexus.classworlds.realm.ClassRealm getRealm(java.lang.String) throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException
 meth public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm(java.lang.String) throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException
 meth public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm(java.lang.String,java.lang.ClassLoader) throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException
+meth public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm(java.lang.String,java.lang.ClassLoader,java.util.function.Predicate<java.lang.String>) throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException
 meth public void addListener(org.codehaus.plexus.classworlds.ClassWorldListener)
+meth public void close() throws java.io.IOException
 meth public void disposeRealm(java.lang.String) throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException
 meth public void removeListener(org.codehaus.plexus.classworlds.ClassWorldListener)
 supr java.lang.Object
@@ -8563,6 +8703,7 @@ CLSS public org.codehaus.plexus.classworlds.realm.ClassRealm
 cons public init(org.codehaus.plexus.classworlds.ClassWorld,java.lang.String,java.lang.ClassLoader)
 meth protected java.lang.Class<?> findClass(java.lang.String) throws java.lang.ClassNotFoundException
 meth protected java.lang.Class<?> findClass(java.lang.String,java.lang.String)
+meth protected java.lang.Class<?> findClassInternal(java.lang.String) throws java.lang.ClassNotFoundException
 meth protected java.lang.Class<?> loadClass(java.lang.String,boolean) throws java.lang.ClassNotFoundException
 meth protected java.lang.Object getClassLoadingLock(java.lang.String)
 meth public java.lang.Class<?> loadClass(java.lang.String) throws java.lang.ClassNotFoundException
@@ -8604,6 +8745,14 @@ cons public init(org.codehaus.plexus.classworlds.ClassWorld,java.lang.String)
 meth public java.lang.String getId()
 supr org.codehaus.plexus.classworlds.ClassWorldException
 hfds id
+
+CLSS public org.codehaus.plexus.classworlds.realm.FilteredClassRealm
+cons public init(java.util.function.Predicate<java.lang.String>,org.codehaus.plexus.classworlds.ClassWorld,java.lang.String,java.lang.ClassLoader)
+meth protected java.lang.Class<?> findClassInternal(java.lang.String) throws java.lang.ClassNotFoundException
+meth public java.net.URL findResource(java.lang.String)
+meth public java.util.Enumeration<java.net.URL> findResources(java.lang.String) throws java.io.IOException
+supr org.codehaus.plexus.classworlds.realm.ClassRealm
+hfds filter
 
 CLSS public org.codehaus.plexus.classworlds.realm.NoSuchRealmException
 cons public init(org.codehaus.plexus.classworlds.ClassWorld,java.lang.String)
@@ -10463,10 +10612,13 @@ supr java.lang.Object
 
 CLSS public final org.eclipse.aether.ConfigurationProperties
 fld public final static boolean DEFAULT_HTTP_PREEMPTIVE_AUTH = false
+fld public final static boolean DEFAULT_HTTP_REUSE_CONNECTIONS = true
 fld public final static boolean DEFAULT_IMPLICIT_PRIORITIES = false
 fld public final static boolean DEFAULT_INTERACTIVE = false
 fld public final static boolean DEFAULT_PERSISTED_CHECKSUMS = true
 fld public final static int DEFAULT_CONNECT_TIMEOUT = 10000
+fld public final static int DEFAULT_HTTP_CONNECTION_MAX_TTL = 600
+fld public final static int DEFAULT_HTTP_MAX_CONNECTIONS_PER_ROUTE = 50
 fld public final static int DEFAULT_HTTP_RETRY_HANDLER_COUNT = 3
 fld public final static int DEFAULT_REQUEST_TIMEOUT = 1800000
 fld public final static java.lang.String CONNECT_TIMEOUT = "aether.connector.connectTimeout"
@@ -10475,10 +10627,13 @@ fld public final static java.lang.String DEFAULT_USER_AGENT = "Aether"
 fld public final static java.lang.String HTTPS_SECURITY_MODE = "aether.connector.https.securityMode"
 fld public final static java.lang.String HTTPS_SECURITY_MODE_DEFAULT = "default"
 fld public final static java.lang.String HTTPS_SECURITY_MODE_INSECURE = "insecure"
+fld public final static java.lang.String HTTP_CONNECTION_MAX_TTL = "aether.connector.http.connectionMaxTtl"
 fld public final static java.lang.String HTTP_CREDENTIAL_ENCODING = "aether.connector.http.credentialEncoding"
 fld public final static java.lang.String HTTP_HEADERS = "aether.connector.http.headers"
+fld public final static java.lang.String HTTP_MAX_CONNECTIONS_PER_ROUTE = "aether.connector.http.maxConnectionsPerRoute"
 fld public final static java.lang.String HTTP_PREEMPTIVE_AUTH = "aether.connector.http.preemptiveAuth"
 fld public final static java.lang.String HTTP_RETRY_HANDLER_COUNT = "aether.connector.http.retryHandler.count"
+fld public final static java.lang.String HTTP_REUSE_CONNECTIONS = "aether.connector.http.reuseConnections"
 fld public final static java.lang.String IMPLICIT_PRIORITIES = "aether.priority.implicit"
 fld public final static java.lang.String INTERACTIVE = "aether.interactive"
 fld public final static java.lang.String PERSISTED_CHECKSUMS = "aether.connector.persistedChecksums"
@@ -11382,6 +11537,7 @@ hfds digest
 CLSS public final org.eclipse.aether.util.StringUtils
  anno 0 java.lang.Deprecated()
 meth public static boolean isEmpty(java.lang.String)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 
 CLSS abstract interface org.eclipse.aether.util.package-info

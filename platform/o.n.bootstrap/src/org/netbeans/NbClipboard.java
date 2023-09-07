@@ -63,6 +63,7 @@ implements LookupListener, FlavorListener, AWTEventListener
     private volatile Task setContentsTask = Task.EMPTY;
     private volatile Task getContentsTask = Task.EMPTY;
     private boolean anyWindowIsActivated = true;
+    private int syncWaitTime;
 
     public NbClipboard() {
         //for unit testing
@@ -80,7 +81,7 @@ implements LookupListener, FlavorListener, AWTEventListener
 
         resultChanged(null);
 
-        if (System.getProperty("netbeans.slow.system.clipboard.hack") != null) {
+        if (System.getProperty("netbeans.slow.system.clipboard.hack") != null) {  //NOI18N
             slowSystemClipboard = Boolean.getBoolean("netbeans.slow.system.clipboard.hack"); // NOI18N
         } else if (Utilities.isMac()) {
             slowSystemClipboard = false;
@@ -89,7 +90,9 @@ implements LookupListener, FlavorListener, AWTEventListener
             slowSystemClipboard = true;
         }
 
-
+        if (System.getProperty("netbeans.slow.system.clipboard.syncwait") != null) {  //NOI18N
+            syncWaitTime = Integer.getInteger("netbeans.slow.system.clipboard.syncwait", 0); //NOI18N
+        }
 
 
         if (System.getProperty("sun.awt.datatransfer.timeout") == null) { // NOI18N
@@ -98,6 +101,14 @@ implements LookupListener, FlavorListener, AWTEventListener
         if (slowSystemClipboard) {
             Toolkit.getDefaultToolkit().addAWTEventListener(
                 this, AWTEvent.WINDOW_EVENT_MASK);
+        }
+    }
+    
+    private void syncWait() {
+        if (syncWaitTime > 0) {
+            try {
+                Thread.sleep(syncWaitTime);
+            } catch (InterruptedException ex) {}
         }
     }
     
@@ -144,11 +155,13 @@ implements LookupListener, FlavorListener, AWTEventListener
                 log.log (Level.FINER, "setContents called with: "); // NOI18N
                 logFlavors (contents, Level.FINER, log.isLoggable(Level.FINEST));
             }
+            syncWait();
             contents = convert(contents);
             if (log.isLoggable (Level.FINER)) {
                 log.log (Level.FINER, "After conversion:"); // NOI18N
                 logFlavors (contents, Level.FINER, log.isLoggable(Level.FINEST));
             }
+            syncWait();
 
             if (slowSystemClipboard) {
                 if (this.contents != null) {
@@ -185,6 +198,7 @@ implements LookupListener, FlavorListener, AWTEventListener
 
         try {
             log.log(Level.FINE, "getContents, slowSystemClipboard: {0}", slowSystemClipboard); // NOI18N
+            syncWait();
             if (slowSystemClipboard && !RP.isRequestProcessorThread()) {
                 // The purpose of lastWindowActivated+100 is to ignore calls
                 // which immediatelly follow WINDOW_ACTIVATED event.
@@ -202,6 +216,7 @@ implements LookupListener, FlavorListener, AWTEventListener
                 setContentsTask.waitFinished();
                 getContentsTask.waitFinished();
                 log.log(Level.FINE, "after syncTask clipboard wait"); // NOI18N
+                syncWait();
                 try {
                     prev = systemClipboard.getContents (requestor);
                 } catch( ThreadDeath td ) {
@@ -217,6 +232,7 @@ implements LookupListener, FlavorListener, AWTEventListener
                     log.log (Level.FINE, "getContents by {0}", requestor); // NOI18N
                     logFlavors (prev, Level.FINE, log.isLoggable(Level.FINEST));
                 }
+                syncWait();
                 if (prev == null) {
                     // if system clipboard has no contents
                     return null;
@@ -229,6 +245,7 @@ implements LookupListener, FlavorListener, AWTEventListener
 
                     res = new LoggableTransferable (res);
                 }
+                syncWait();
                 return res;
             }
         } catch (ThreadDeath ex) {
@@ -288,8 +305,8 @@ implements LookupListener, FlavorListener, AWTEventListener
     private void logFlavors (Transferable trans, Level level, boolean content) {
         if (trans == null) {
             log.log (level, "  no clipboard contents");
-        }
-        else {
+            syncWait();
+        } else {
             if (content) {
                 java.awt.datatransfer.DataFlavor[] arr = trans.getTransferDataFlavors();
                 StringBuilder sb = new StringBuilder();
@@ -305,8 +322,10 @@ implements LookupListener, FlavorListener, AWTEventListener
                     sb.append("\n");
                 }
                 log.log (level, sb.toString());
+                syncWait();
             } else {
                 log.log (level, " clipboard contains data");
+                syncWait();
             }
         }
     }
@@ -396,8 +415,10 @@ implements LookupListener, FlavorListener, AWTEventListener
         }
         public Object getTransferData (DataFlavor flavor) throws UnsupportedFlavorException, java.io.IOException {
             log.log (Level.FINE, "Request for flavor: " + flavor); // NOI18N
+            syncWait();
             Object res = delegate.getTransferData (flavor);
             log.log (Level.FINE, "Returning value: " + res); // NOI18N
+            syncWait();
             return res;
         }
         
@@ -408,6 +429,7 @@ implements LookupListener, FlavorListener, AWTEventListener
         public boolean isDataFlavorSupported (DataFlavor flavor) {
             boolean res = delegate.isDataFlavorSupported (flavor);
             log.log (Level.FINE, "isDataFlavorSupported: " + flavor + " result: " + res); // NOI18N
+            syncWait();
             return res;
         }
         
@@ -423,6 +445,7 @@ implements LookupListener, FlavorListener, AWTEventListener
         @Override
         public void run() {
             log.fine("Running update");
+            syncWait();
             try {
                 Transferable transferable = systemClipboard.getContents(this);
                 superSetContents(transferable, null);
@@ -430,6 +453,7 @@ implements LookupListener, FlavorListener, AWTEventListener
                     log.log (Level.FINE, "internal clipboard updated:"); // NOI18N
                     logFlavors (transferable, Level.FINE, log.isLoggable(Level.FINEST));
                 }
+                syncWait();
                 if (notify) {
                     fireChange();
                 }
@@ -458,11 +482,13 @@ implements LookupListener, FlavorListener, AWTEventListener
             } catch (IllegalStateException e) {
                 //#139616
                 log.log(Level.FINE, "systemClipboard not available", e); // NOI18N
+                syncWait();
                 scheduleSetContents(cnts, ownr, 100);
                 return;
             }
             if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "systemClipboard updated:"); // NOI18N
+                syncWait();
                 logFlavors(cnts, Level.FINE, log.isLoggable(Level.FINEST));
             }
         }

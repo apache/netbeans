@@ -422,9 +422,31 @@ implements LookupListener, FlavorListener, AWTEventListener
         
         @Override
         public void run() {
-            log.fine("Running update");
+            log.fine("Running update"); // NOI18N
             try {
-                Transferable transferable = systemClipboard.getContents(this);
+                Transferable transferable = null;
+                // There can be a race between multiple applications accessing
+                // the clipboard. If access can't be optained directly, retry
+                // for a maximum of 1s. This is called from the requestprocessor
+                // that is used because accessing the clipboard can block
+                // indefinitely. Running the access loop here is deemed similar
+                // in nature.
+                final int MAX_TRIES = 50;
+                final long start = System.currentTimeMillis();
+                for (int i = 0; i < MAX_TRIES; i++) {
+                    try {
+                        transferable = systemClipboard.getContents(this);
+                        break;
+                    } catch (IllegalStateException ex) {
+                        // Throw exception if retries failed
+                        if (i == (MAX_TRIES - 1) || (System.currentTimeMillis() - start) > 980L) {
+                            throw ex;
+                        } else {
+                            log.log(Level.INFO, "systemClipboard#getContents threw IllegalStateException (try: {0})", i + 1); // NOI18N
+                        }
+                        Thread.sleep(20); // Give system time to settle
+                    }
+                }
                 superSetContents(transferable, null);
                 if (log.isLoggable (Level.FINE)) {
                     log.log (Level.FINE, "internal clipboard updated:"); // NOI18N
@@ -437,7 +459,8 @@ implements LookupListener, FlavorListener, AWTEventListener
             catch (ThreadDeath ex) {
                 throw ex;
             }
-            catch (Throwable ignore) {
+            catch (InterruptedException | RuntimeException ex) {
+                log.log(Level.INFO, "systemClipboard not available", ex); // NOI18N
             }
         }
     }
@@ -457,7 +480,11 @@ implements LookupListener, FlavorListener, AWTEventListener
                 systemClipboard.setContents(cnts, ownr);
             } catch (IllegalStateException e) {
                 //#139616
-                log.log(Level.FINE, "systemClipboard not available", e); // NOI18N
+                if(log.isLoggable(Level.FINE)) {
+                    log.log(Level.FINE, "systemClipboard not available", e); // NOI18N
+                } else {
+                    log.log(Level.INFO, "systemClipboard#setContents threw IllegalStateException"); // NOI18N
+                }
                 scheduleSetContents(cnts, ownr, 100);
                 return;
             }

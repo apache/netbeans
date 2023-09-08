@@ -100,6 +100,10 @@
                 <folder name="io.micronaut.build.testresources.TestResourcesLifecycleExtension">
                     <attr name="ignoreOnModelLoad" boolvalue="true"/>
                 </folder>
+                <!-- For micronaut 4.x -->
+                <folder name="io.micronaut.maven.testresources.TestResourcesLifecycleExtension">
+                    <attr name="ignoreOnModelLoad" boolvalue="true"/>
+                </folder>
             </folder>
         </folder>
     </folder>

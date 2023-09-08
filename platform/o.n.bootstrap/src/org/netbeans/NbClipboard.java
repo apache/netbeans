@@ -437,7 +437,8 @@ implements LookupListener, FlavorListener, AWTEventListener
             catch (ThreadDeath ex) {
                 throw ex;
             }
-            catch (Throwable ignore) {
+            catch (Throwable ex) {
+                log.log(Level.INFO, "systemClipboard not available (2)", ex); // NOI18N
             }
         }
     }

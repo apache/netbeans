@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: com.example
+testFramework: junit
+sourceLanguage: java
+buildTool: maven
+features: [app-name, http-client-test, java, java-application, junit, logback, maven, maven-enforcer-plugin, micronaut-aot, netty-server, properties, readme, serialization-jackson, shade]

@@ -56,7 +56,7 @@ public class NBClassFinderTest extends NbTestCase {
         List<String> actualErrors;
         actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-source", "8", "-XDide", "-Xlint:-options");
         assertEquals(expectedErrors, actualErrors);
-        actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-XDide");
+        actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-XDide", "-Xlint:-options");
         assertEquals(expectedErrors, actualErrors);
         expectedErrors =
                 Arrays.asList(
@@ -65,7 +65,7 @@ public class NBClassFinderTest extends NbTestCase {
                 );
         actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-source", "8", "-XDide", "-XDbackgroundCompilation", "-Xlint:-options");
         assertEquals(expectedErrors, actualErrors);
-        actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-XDide", "-XDbackgroundCompilation");
+        actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-XDide", "-XDbackgroundCompilation", "-Xlint:-options");
         assertEquals(expectedErrors, actualErrors);
     }
 

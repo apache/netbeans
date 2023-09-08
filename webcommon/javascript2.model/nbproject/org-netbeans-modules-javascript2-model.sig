@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.25
+#Version 1.27
 
 CLSS public abstract com.oracle.js.parser.ir.visitor.NodeVisitor<%0 extends com.oracle.js.parser.ir.LexicalContext>
 cons public init({com.oracle.js.parser.ir.visitor.NodeVisitor%0})
@@ -250,7 +250,7 @@ meth public static int getFlag(org.netbeans.modules.javascript2.model.api.JsObje
 meth public static java.util.Set<org.netbeans.modules.csl.api.Modifier> getModifiers(int)
 meth public static org.netbeans.modules.javascript2.model.api.JsElement$Kind getJsKind(int)
 supr java.lang.Object
-hfds ANONYMOUS,ANONYMOUS_OBJECT,CALLBACK,CONSTANT,CONSTRUCTOR,DECLARED,DEPRICATED,FIELD,FILE,FUNCTION,GENERATOR,GLOBAL,METHOD,OBJECT,OBJECT_LITERAL,PARAMETER,PLATFORM,PRIVATE,PRIVILAGE,PROPERTY,PROPERTY_GETTER,PROPERTY_SETTER,PUBLIC,STATIC,VARIABLE
+hfds ANONYMOUS,ANONYMOUS_OBJECT,ARROW_FUNCTION,CALLBACK,CONSTANT,CONSTRUCTOR,DECLARED,DEPRICATED,FIELD,FILE,FUNCTION,GENERATOR,GLOBAL,METHOD,OBJECT,OBJECT_LITERAL,PARAMETER,PLATFORM,PRIVATE,PRIVILAGE,PROPERTY,PROPERTY_GETTER,PROPERTY_SETTER,PUBLIC,STATIC,VARIABLE
 
 CLSS public static org.netbeans.modules.javascript2.model.api.IndexedElement$FunctionIndexedElement
  outer org.netbeans.modules.javascript2.model.api.IndexedElement
@@ -277,6 +277,7 @@ meth public abstract org.netbeans.modules.javascript2.model.api.JsElement$Kind g
 CLSS public final static !enum org.netbeans.modules.javascript2.model.api.JsElement$Kind
  outer org.netbeans.modules.javascript2.model.api.JsElement
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind ANONYMOUS_OBJECT
+fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind ARROW_FUNCTION
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind BLOCK
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind CALLBACK
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind CATCH_BLOCK

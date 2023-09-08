@@ -1295,6 +1295,7 @@ meth public com.sun.source.doctree.AttributeTree Attribute(java.lang.CharSequenc
 meth public com.sun.source.doctree.AuthorTree Author(java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public com.sun.source.doctree.CommentTree Comment(java.lang.String)
 meth public com.sun.source.doctree.DeprecatedTree Deprecated(java.util.List<? extends com.sun.source.doctree.DocTree>)
+meth public com.sun.source.doctree.DocCommentTree DocComment(java.util.List<? extends com.sun.source.doctree.DocTree>,java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public com.sun.source.doctree.DocCommentTree DocComment(java.util.List<? extends com.sun.source.doctree.DocTree>,java.util.List<? extends com.sun.source.doctree.DocTree>,java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public com.sun.source.doctree.DocRootTree DocRoot()
 meth public com.sun.source.doctree.EndElementTree EndElement(java.lang.CharSequence)

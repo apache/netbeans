@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.13.0
+#Version 1.16.0
 
 CLSS public java.awt.Color
 cons public init(float,float,float)
@@ -2035,6 +2035,11 @@ meth public javax.swing.text.Element getDefaultRootElement()
 meth public javax.swing.text.Element getParagraphElement(int)
 meth public void insertString(int,java.lang.String,javax.swing.text.AttributeSet) throws javax.swing.text.BadLocationException
 supr javax.swing.text.AbstractDocument
+
+CLSS public abstract interface javax.xml.namespace.NamespaceContext
+meth public abstract java.lang.String getNamespaceURI(java.lang.String)
+meth public abstract java.lang.String getPrefix(java.lang.String)
+meth public abstract java.util.Iterator getPrefixes(java.lang.String)
 
 CLSS public abstract interface javax.xml.transform.Source
 meth public abstract java.lang.String getSystemId()
@@ -10994,10 +10999,9 @@ supr org.apache.batik.bridge.AbstractGraphicsNodeBridge
 CLSS public org.apache.batik.bridge.svg12.XPathPatternContentSelector
 cons public init(org.apache.batik.bridge.svg12.ContentManager,org.apache.batik.anim.dom.XBLOMContentElement,org.w3c.dom.Element,java.lang.String)
 fld protected java.lang.String expression
+fld protected javax.xml.xpath.XPathExpression xpath
 fld protected org.apache.batik.bridge.svg12.XPathPatternContentSelector$NSPrefixResolver prefixResolver
 fld protected org.apache.batik.bridge.svg12.XPathPatternContentSelector$SelectedNodes selectedContent
-fld protected org.apache.xpath.XPath xpath
-fld protected org.apache.xpath.XPathContext context
 innr protected NSPrefixResolver
 innr protected SelectedNodes
 meth protected void parse()
@@ -11006,6 +11010,12 @@ supr org.apache.batik.bridge.svg12.AbstractContentSelector
 
 CLSS protected org.apache.batik.bridge.svg12.XPathPatternContentSelector$NSPrefixResolver
  outer org.apache.batik.bridge.svg12.XPathPatternContentSelector
+cons protected init(org.apache.batik.bridge.svg12.XPathPatternContentSelector)
+intf javax.xml.namespace.NamespaceContext
+meth public java.lang.String getNamespaceURI(java.lang.String)
+meth public java.lang.String getPrefix(java.lang.String)
+meth public java.util.Iterator getPrefixes(java.lang.String)
+supr java.lang.Object
 
 CLSS protected org.apache.batik.bridge.svg12.XPathPatternContentSelector$SelectedNodes
  outer org.apache.batik.bridge.svg12.XPathPatternContentSelector
@@ -15037,23 +15047,23 @@ hfds id,list
 CLSS protected org.apache.batik.dom.AbstractDocument$XPathExpr
  outer org.apache.batik.dom.AbstractDocument
 cons public init(org.apache.batik.dom.AbstractDocument,java.lang.String,org.w3c.dom.xpath.XPathNSResolver)
+fld protected javax.xml.xpath.XPathExpression xpath
 fld protected org.apache.batik.dom.AbstractDocument$XPathExpr$NSPrefixResolver prefixResolver
-fld protected org.apache.xpath.XPath xpath
-fld protected org.apache.xpath.XPathContext context
 fld protected org.w3c.dom.xpath.XPathNSResolver resolver
 innr protected NSPrefixResolver
 innr public Result
 intf org.w3c.dom.xpath.XPathExpression
-meth protected org.apache.batik.dom.AbstractDocument$XPathExpr$Result convertBoolean(org.apache.xpath.objects.XObject) throws javax.xml.transform.TransformerException
-meth protected org.apache.batik.dom.AbstractDocument$XPathExpr$Result convertNodeIterator(org.apache.xpath.objects.XObject,short) throws javax.xml.transform.TransformerException
-meth protected org.apache.batik.dom.AbstractDocument$XPathExpr$Result convertNumber(org.apache.xpath.objects.XObject) throws javax.xml.transform.TransformerException
-meth protected org.apache.batik.dom.AbstractDocument$XPathExpr$Result convertSingleNode(org.apache.xpath.objects.XObject,short) throws javax.xml.transform.TransformerException
-meth protected org.apache.batik.dom.AbstractDocument$XPathExpr$Result convertString(org.apache.xpath.objects.XObject)
 meth public java.lang.Object evaluate(org.w3c.dom.Node,short,java.lang.Object)
 supr java.lang.Object
 
 CLSS protected org.apache.batik.dom.AbstractDocument$XPathExpr$NSPrefixResolver
  outer org.apache.batik.dom.AbstractDocument$XPathExpr
+cons protected init(org.apache.batik.dom.AbstractDocument$XPathExpr)
+intf javax.xml.namespace.NamespaceContext
+meth public java.lang.String getNamespaceURI(java.lang.String)
+meth public java.lang.String getPrefix(java.lang.String)
+meth public java.util.Iterator getPrefixes(java.lang.String)
+supr java.lang.Object
 
 CLSS public org.apache.batik.dom.AbstractDocument$XPathExpr$Result
  outer org.apache.batik.dom.AbstractDocument$XPathExpr
@@ -22865,6 +22875,7 @@ supr java.lang.Object
 CLSS public org.apache.batik.script.rhino.RhinoClassLoader
 
 CLSS public org.apache.batik.script.rhino.RhinoClassShutter
+hfds WHITELIST
 
 CLSS public abstract org.apache.batik.util.AbstractParsedURLProtocolHandler
 cons public init(java.lang.String)
@@ -25858,6 +25869,7 @@ fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_EMF
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_EPS
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_JPEG
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_LZW
+fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_PDF
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_PNG
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_TIFF
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RENDERED_IMAGE

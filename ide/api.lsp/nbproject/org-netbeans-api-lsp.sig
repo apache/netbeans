@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.15
+#Version 1.18
 
 CLSS public abstract interface java.io.Serializable
 
@@ -134,6 +134,8 @@ meth public java.util.concurrent.CompletableFuture<java.lang.String> getDocument
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public java.util.concurrent.CompletableFuture<java.util.List<org.netbeans.api.lsp.TextEdit>> getAdditionalTextEdits()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public org.netbeans.api.lsp.Command getCommand()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public org.netbeans.api.lsp.Completion$Kind getKind()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public org.netbeans.api.lsp.Completion$TextFormat getInsertTextFormat()
@@ -145,7 +147,7 @@ meth public static boolean collect(javax.swing.text.Document,int,org.netbeans.ap
  anno 3 org.netbeans.api.annotations.common.NullAllowed()
  anno 4 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds additionalTextEdits,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,preselect,sortText,tags,textEdit
+hfds additionalTextEdits,command,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,preselect,sortText,tags,textEdit
 
 CLSS public final static org.netbeans.api.lsp.Completion$Context
  outer org.netbeans.api.lsp.Completion
@@ -284,6 +286,14 @@ meth public static java.util.concurrent.CompletableFuture<java.util.List<org.net
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
 hfds endOffset,fileObject,startOffset
+
+CLSS public final org.netbeans.api.lsp.LazyCodeAction
+cons public init(java.lang.String,java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit>)
+cons public init(java.lang.String,org.netbeans.api.lsp.Command,java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit>)
+meth public java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit> getLazyEdit()
+meth public org.netbeans.api.lsp.WorkspaceEdit getEdit()
+supr org.netbeans.api.lsp.CodeAction
+hfds lazyEdit
 
 CLSS public abstract interface org.netbeans.api.lsp.Position
 meth public abstract int getOffset()
@@ -438,6 +448,9 @@ meth public org.netbeans.spi.lsp.CompletionCollector$Builder additionalTextEdits
 meth public org.netbeans.spi.lsp.CompletionCollector$Builder additionalTextEdits(java.util.function.Supplier<java.util.List<org.netbeans.api.lsp.TextEdit>>)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.CompletionCollector$Builder command(org.netbeans.api.lsp.Command)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.spi.lsp.CompletionCollector$Builder detail(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -474,7 +487,7 @@ meth public org.netbeans.spi.lsp.CompletionCollector$Builder textEdit(org.netbea
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds additionalTextEdits,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,preselect,sortText,tags,textEdit
+hfds additionalTextEdits,command,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,preselect,sortText,tags,textEdit
 hcls LazyCompletableFuture
 
 CLSS public abstract interface org.netbeans.spi.lsp.DiagnosticReporter

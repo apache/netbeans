@@ -2384,7 +2384,9 @@ public class BaseKit extends DefaultEditorKit {
                             }
                         }
                     }
+                    LOG.info("BEGIN target#copy");
                     target.copy();
+                    LOG.info("END target#copy");
                     if (emptySelection && !disableNoSelectionCopy) {
                         target.setCaretPosition(caretPosition);
                     }

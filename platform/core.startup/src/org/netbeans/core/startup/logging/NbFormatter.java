@@ -21,6 +21,7 @@ package org.netbeans.core.startup.logging;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -54,6 +55,11 @@ public final class NbFormatter extends java.util.logging.Formatter {
     }
 
     private void print(StringBuilder sb, LogRecord record, Set<Throwable> beenThere) {
+        sb.append("[");
+        sb.append(new Date(record.getMillis()).toString());
+        sb.append("] [");
+        sb.append(record.getThreadID());
+        sb.append("] ");
         String message = formatMessage(record);
         if (message != null && message.indexOf('\n') != -1 && record.getThrown() == null) {
             // multi line messages print witout any wrappings

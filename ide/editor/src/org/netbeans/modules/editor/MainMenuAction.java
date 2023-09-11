@@ -136,8 +136,15 @@ public abstract class MainMenuAction implements Presenter.Menu, ChangeListener, 
             KeyStroke itemAccelerator = item.getAccelerator();
             
             if (keys != null && keys.length > 0) {
-                if (itemAccelerator==null || !itemAccelerator.equals(keys[0])){
-                    item.setAccelerator(keys[0]);
+                for (KeyStroke key : keys) {
+                    // filter out synthetic mouse keycodes
+                    if (key.getKeyCode() >= 0x290 && key.getKeyCode() <= 0x29F) {
+                        continue;
+                    }
+                    if (itemAccelerator==null || !itemAccelerator.equals(key)){
+                        item.setAccelerator(key);
+                        break;
+                    }
                 }
             }else{
                 if (itemAccelerator!=null && kitAction!=null){

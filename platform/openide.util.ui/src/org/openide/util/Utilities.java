@@ -790,6 +790,13 @@ public final class Utilities {
         values.put(0x290,"MOUSE_WHEEL_UP");
         values.put(0x291,"MOUSE_WHEEL_DOWN");
 
+        for (int button = 4; button < 10; button++) {
+            String name = "MOUSE_BUTTON" + button; // NOI18N
+            int code = 0x292 + (button - 1);
+            names.put(name, code);
+            values.put(code, name);
+        }
+
         NamesAndValues nav = new NamesAndValues(values, names);
         namesAndValues = new SoftReference<NamesAndValues>(nav);
         return nav;

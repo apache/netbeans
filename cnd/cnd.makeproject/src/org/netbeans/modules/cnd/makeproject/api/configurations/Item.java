@@ -819,25 +819,18 @@ public class Item implements NativeFileItem, PropertyChangeListener {
         if (res.isEmpty()) {
             // important flags were lost or user set language standard
             // try to restore right important flag by standard
-            LanguageFlavor languageFlavor = getLanguageFlavor();
-            switch(languageFlavor) {
-                case C11:
-                    // see also org.netbeans.modules.cnd.discovery.api.DriverFactory.DriverImpl.C11
-                    res = "-std=c11"; //NOI18N
-                    break;
-                case CPP11:
-                    // see also org.netbeans.modules.cnd.discovery.api.DriverFactory.DriverImpl.CPP11
-                    res = "-std=c++11"; //NOI18N
-                    break;
-                case CPP14:
-                    // see also org.netbeans.modules.cnd.discovery.api.DriverFactory.DriverImpl.CPP14
-                    res = "-std=c++14"; //NOI18N
-                    break;
-                case CPP17:
-                    // see also org.netbeans.modules.cnd.discovery.api.DriverFactory.DriverImpl.CPP14
-                    res = "-std=c++17"; //NOI18N
-                    break;
-                default:
+            switch (getLanguageFlavor()) {
+                case C89:   return "-std=c89"; //NOI18N
+                case C99:   return "-std=c99"; //NOI18N
+                case C11:   return "-std=c11"; //NOI18N
+                case C17:   return "-std=c17"; //NOI18N
+                case C23:   return "-std=c2x"; //NOI18N
+                case CPP98: return "-std=c++98"; //NOI18N
+                case CPP11: return "-std=c++11"; //NOI18N
+                case CPP14: return "-std=c++14"; //NOI18N
+                case CPP17: return "-std=c++17"; //NOI18N
+                case CPP20: return "-std=c++20"; //NOI18N
+                case CPP23: return "-std=c++23"; //NOI18N
             }
         } 
         return res;
@@ -979,15 +972,29 @@ public class Item implements NativeFileItem, PropertyChangeListener {
              if (flavor == LanguageFlavor.UNKNOWN) {
                 if (itemConfiguration.getTool() == PredefinedToolKind.CCompiler) {
                     switch (itemConfiguration.getCCompilerConfiguration().getInheritedCStandard()) {
+                        case CCompilerConfiguration.STANDARD_C89:
+                            return LanguageFlavor.C89;
                         case CCompilerConfiguration.STANDARD_C99:
                             return LanguageFlavor.C99;
                         case CCompilerConfiguration.STANDARD_C11:
                             return LanguageFlavor.C11;
-                        case CCompilerConfiguration.STANDARD_C89:
-                            return LanguageFlavor.C89;
+                        case CCompilerConfiguration.STANDARD_C17:
+                            return LanguageFlavor.C17;
+                        case CCompilerConfiguration.STANDARD_C23:
+                            return LanguageFlavor.C23;
                         case CCompilerConfiguration.STANDARD_DEFAULT:
                             for(String macro : getCompilerPreprocessorSymbols()) {
-                                if (macro.startsWith("_STDC_C99=")) { //NOI18N
+                                if (macro.startsWith("__STDC_VERSION__")) {  //NOI18N
+                                    if (macro.endsWith("201710L")) {
+                                        return LanguageFlavor.C17;
+                                    } else if (macro.endsWith("201112L")) {
+                                        return LanguageFlavor.C11;
+                                    } else if (macro.endsWith("199901L")) {
+                                        return LanguageFlavor.C99;
+                                    } else if (macro.endsWith("199409L")) {
+                                        return LanguageFlavor.C89;
+                                    }
+                                } else if (macro.startsWith("_STDC_C99=")) { //NOI18N
                                     return LanguageFlavor.C99;
                                 } else if (macro.startsWith("_STDC_C11=")) { //NOI18N
                                     return LanguageFlavor.C11;
@@ -997,29 +1004,32 @@ public class Item implements NativeFileItem, PropertyChangeListener {
                     }
                 } else if (itemConfiguration.getTool() == PredefinedToolKind.CCCompiler) {
                     switch (itemConfiguration.getCCCompilerConfiguration().getInheritedCppStandard()) {
+                        case CCCompilerConfiguration.STANDARD_CPP98:
+                            return LanguageFlavor.CPP98;
                         case CCCompilerConfiguration.STANDARD_CPP11:
                             return LanguageFlavor.CPP11;
                         case CCCompilerConfiguration.STANDARD_CPP14:
                             return LanguageFlavor.CPP14;
                         case CCCompilerConfiguration.STANDARD_CPP17:
                             return LanguageFlavor.CPP17;
-                        case CCCompilerConfiguration.STANDARD_CPP98:
-                            return LanguageFlavor.CPP98;
+                        case CCCompilerConfiguration.STANDARD_CPP20:
+                            return LanguageFlavor.CPP20;
+                        case CCCompilerConfiguration.STANDARD_CPP23:
+                            return LanguageFlavor.CPP23;
                         case CCCompilerConfiguration.STANDARD_DEFAULT:
                             for(String macro : getCompilerPreprocessorSymbols()) {
                                 if (macro.startsWith("__cplusplus=")) { //NOI18N
-                                    String year = macro.substring(12);
-                                    if (year.compareTo("2010") > 0) { //NOI18N
-                                        if (year.compareTo("2013") > 0) { //NOI18N
-                                            if (year.compareTo("2016") > 0) { //NOI18N
-                                                return LanguageFlavor.CPP17;
-                                            } else {
-                                                return LanguageFlavor.CPP14;
-                                            }
-                                        } else {
-                                            return LanguageFlavor.CPP11;
-                                        }
-                                    } else {
+                                    if (macro.endsWith("202302L")) {
+                                        return LanguageFlavor.CPP23;
+                                    } else if (macro.endsWith("202002L")) {
+                                        return LanguageFlavor.CPP20;
+                                    } else if (macro.endsWith("201703L")) {
+                                        return LanguageFlavor.CPP17;
+                                    } else if (macro.endsWith("201402L")) {
+                                        return LanguageFlavor.CPP14;
+                                    } else if (macro.endsWith("201103L")) {
+                                        return LanguageFlavor.CPP11;
+                                    } else if (macro.endsWith("199711L")) {
                                         return LanguageFlavor.CPP98;
                                     }
                                 }
@@ -1035,12 +1045,18 @@ public class Item implements NativeFileItem, PropertyChangeListener {
                 CCCompilerConfiguration ccCompilerConfiguration = makeConfiguration.getCCCompilerConfiguration();
                 if(ccCompilerConfiguration != null) {
                     switch (ccCompilerConfiguration.getInheritedCppStandard()) {
+                        case CCCompilerConfiguration.STANDARD_CPP98:
+                            return LanguageFlavor.CPP98;
                         case CCCompilerConfiguration.STANDARD_CPP11:
                             return LanguageFlavor.CPP11;
                         case CCCompilerConfiguration.STANDARD_CPP14:
                             return LanguageFlavor.CPP14;
                         case CCCompilerConfiguration.STANDARD_CPP17:
                             return LanguageFlavor.CPP17;
+                        case CCCompilerConfiguration.STANDARD_CPP20:
+                            return LanguageFlavor.CPP20;
+                        case CCCompilerConfiguration.STANDARD_CPP23:
+                            return LanguageFlavor.CPP23;
                     }
                 }
             }

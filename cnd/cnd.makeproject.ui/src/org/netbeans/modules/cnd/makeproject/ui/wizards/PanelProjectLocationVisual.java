@@ -87,12 +87,16 @@ public class PanelProjectLocationVisual extends SettingsPanel implements HelpCtx
                                 CndLanguageStandards.CndLanguageStandard.CPP98.toString(),
                                 CndLanguageStandards.CndLanguageStandard.CPP11.toString(),
                                 CndLanguageStandards.CndLanguageStandard.CPP14.toString(),
-                                CndLanguageStandards.CndLanguageStandard.CPP17.toString()
+                                CndLanguageStandards.CndLanguageStandard.CPP17.toString(),
+                                CndLanguageStandards.CndLanguageStandard.CPP20.toString(),
+                                CndLanguageStandards.CndLanguageStandard.CPP23.toString(),
                                 };
     static final String[] C = new String[]{"C", // NOI18N
                                 CndLanguageStandards.CndLanguageStandard.C89.toString(),
                                 CndLanguageStandards.CndLanguageStandard.C99.toString(),
-                                CndLanguageStandards.CndLanguageStandard.C11.toString()
+                                CndLanguageStandards.CndLanguageStandard.C11.toString(),
+                                CndLanguageStandards.CndLanguageStandard.C17.toString(),
+                                CndLanguageStandards.CndLanguageStandard.C23.toString(),
                                 };
     static final String[] FORTRAN = new String[]{"Fortran90 Fixed", // NOI18N
                                                  "Fortran90 Free", // NOI18N

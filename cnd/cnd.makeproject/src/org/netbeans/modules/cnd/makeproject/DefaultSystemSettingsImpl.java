@@ -84,20 +84,18 @@ public class DefaultSystemSettingsImpl extends DefaultSystemSettings implements 
 
     static String getStdFlagsForFlavor(NativeFileItem.LanguageFlavor languageFlavor) {
         switch(languageFlavor) {
-            case C11:
-                // see also org.netbeans.modules.cnd.discovery.api.DriverFactory.DriverImpl.C11
-                return "-std=c11"; //NOI18N
-            case CPP11:
-                // see also org.netbeans.modules.cnd.discovery.api.DriverFactory.DriverImpl.CPP11
-                return "-std=c++11"; //NOI18N
-            case CPP14:
-                // see also org.netbeans.modules.cnd.discovery.api.DriverFactory.DriverImpl.CPP14
-                return "-std=c++14"; //NOI18N
-            case CPP17:
-                // see also org.netbeans.modules.cnd.discovery.api.DriverFactory.DriverImpl.CPP17
-                return "-std=c++17"; //NOI18N
-            default:
-                return ""; // NOI18N
+            case C89:   return "-std=c89"; //NOI18N
+            case C99:   return "-std=c99"; //NOI18N
+            case C11:   return "-std=c11"; //NOI18N
+            case C17:   return "-std=c17"; //NOI18N
+            case C23:   return "-std=c2x"; //NOI18N
+            case CPP98: return "-std=c++98"; //NOI18N
+            case CPP11: return "-std=c++11"; //NOI18N
+            case CPP14: return "-std=c++14"; //NOI18N
+            case CPP17: return "-std=c++17"; //NOI18N
+            case CPP20: return "-std=c++20"; //NOI18N
+            case CPP23: return "-std=c++23"; //NOI18N
+            default:    return ""; // NOI18N
         }
     }
 

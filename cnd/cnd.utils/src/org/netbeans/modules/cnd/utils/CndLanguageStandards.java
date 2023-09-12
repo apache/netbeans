@@ -30,10 +30,14 @@ public final class CndLanguageStandards {
         C89("C89"), //NOI18N
         C99("C99"), //NOI18N
         C11("C11"), //NOI18N
+        C17("C17"), //NOI18N
+        C23("C23"), //NOI18N
         CPP98("C++98"), //NOI18N
         CPP11("C++11"), //NOI18N
         CPP14("C++14"), //NOI18N
         CPP17("C++17"), //NOI18N
+        CPP20("C++20"), //NOI18N
+        CPP23("C++23"), //NOI18N
         UNKNOWN("Unknown"); // NOI18N
         
         private final String id;
@@ -62,12 +66,12 @@ public final class CndLanguageStandards {
 
     public static Collection<CndLanguageStandard> getSupported(String mime) {
         if (MIMENames.CPLUSPLUS_MIME_TYPE.equals(mime)) {
-            return Arrays.asList(CndLanguageStandard.CPP98, CndLanguageStandard.CPP11, CndLanguageStandard.CPP14, CndLanguageStandard.CPP17);
+            return Arrays.asList(CndLanguageStandard.CPP98, CndLanguageStandard.CPP11, CndLanguageStandard.CPP14, CndLanguageStandard.CPP17, CndLanguageStandard.CPP20, CndLanguageStandard.CPP23);
         } else if (MIMENames.C_MIME_TYPE.equals(mime)) {
-            return Arrays.asList(CndLanguageStandard.C89, CndLanguageStandard.C99, CndLanguageStandard.C11);
+            return Arrays.asList(CndLanguageStandard.C89, CndLanguageStandard.C99, CndLanguageStandard.C11, CndLanguageStandard.C17, CndLanguageStandard.C23);
         } if (MIMENames.HEADER_MIME_TYPE.equals(mime)) {
-            return Arrays.asList(CndLanguageStandard.C89, CndLanguageStandard.C99, CndLanguageStandard.C11,
-                    CndLanguageStandard.CPP98, CndLanguageStandard.CPP11, CndLanguageStandard.CPP14, CndLanguageStandard.CPP17);
+            return Arrays.asList(CndLanguageStandard.C89, CndLanguageStandard.C99, CndLanguageStandard.C11, CndLanguageStandard.C17, CndLanguageStandard.C23,
+                    CndLanguageStandard.CPP98, CndLanguageStandard.CPP11, CndLanguageStandard.CPP14, CndLanguageStandard.CPP17, CndLanguageStandard.CPP20, CndLanguageStandard.CPP23);
         } 
         return Collections.<CndLanguageStandard>emptyList();
     }

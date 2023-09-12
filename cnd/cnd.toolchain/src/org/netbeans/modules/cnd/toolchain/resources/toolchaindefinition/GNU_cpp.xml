@@ -59,6 +59,8 @@
             <cpp11 flags="-std=c++11"/>
             <cpp14 flags="-std=c++14"/>
             <cpp17 flags="-std=c++17"/>
+            <cpp20 flags="-std=c++20"/>
+            <cpp23 flags="-std=c++23"/>
         </cpp_standard>
         <output_object_file flags="-o " />
         <dependency_generation flags="-MMD -MP -MF &quot;$@.d&quot;" />

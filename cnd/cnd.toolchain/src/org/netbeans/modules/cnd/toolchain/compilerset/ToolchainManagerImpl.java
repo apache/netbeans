@@ -808,7 +808,7 @@ public final class ToolchainManagerImpl {
         Element e = doc.createElement("cpp_standard"); // NOI18N
         element.appendChild(e);
         Element c;
-        String[] names = new String[]{"default", "cpp98", "cpp11", "cpp14", "cpp17"}; // NOI18N
+        String[] names = new String[]{"default", "cpp98", "cpp11", "cpp14", "cpp17", "cpp20", "cpp23"}; // NOI18N
         for (int i = 0; i < flags.length; i++) {
             c = doc.createElement(names[i]);
             c.setAttribute("flags", flags[i]); // NOI18N
@@ -831,7 +831,7 @@ public final class ToolchainManagerImpl {
         Element e = doc.createElement("c_standard"); // NOI18N
         element.appendChild(e);
         Element c;
-        String[] names = new String[]{"default", "c89", "c99", "c11"}; // NOI18N
+        String[] names = new String[]{"default", "c89", "c99", "c11", "c17", "c23"}; // NOI18N
         for (int i = 0; i < flags.length; i++) {
             c = doc.createElement(names[i]);
             c.setAttribute("flags", flags[i]); // NOI18N
@@ -1420,14 +1420,20 @@ public final class ToolchainManagerImpl {
         String cpp11;
         String cpp14;
         String cpp17;
+        String cpp20;
+        String cpp23;
         int default_selection = 0;
 
         public boolean isValid() {
-            return cppDefault != null && cpp98 != null && cpp11 != null && cpp14 != null && cpp17 != null;
+            return cppDefault != null && cpp98 != null && cpp11 != null && cpp14 != null && cpp17 != null && cpp20 != null && cpp23 != null;
         }
 
         public String[] values() {
             if (isValid()) {
+                return new String[]{cppDefault, cpp98, cpp11, cpp14, cpp17, cpp20, cpp23};
+            } else if (cppDefault != null && cpp98 != null && cpp11 != null && cpp14 != null && cpp17 != null && cpp20 != null) {
+                return new String[]{cppDefault, cpp98, cpp11, cpp14, cpp17, cpp20};
+            } else if (cppDefault != null && cpp98 != null && cpp11 != null && cpp14 != null && cpp17 != null) {
                 return new String[]{cppDefault, cpp98, cpp11, cpp14, cpp17};
             } else if (cppDefault != null && cpp98 != null && cpp11 != null && cpp14 != null) {
                 return new String[]{cppDefault, cpp98, cpp11, cpp14};
@@ -1447,14 +1453,20 @@ public final class ToolchainManagerImpl {
         String c89;
         String c99;
         String c11;
+        String c17;
+        String c23;
         int default_selection = 0;
 
         public boolean isValid() {
-            return cDefault != null && c89 != null && c99 != null && c11 != null;
+            return cDefault != null && c89 != null && c99 != null && c11 != null && c17 != null && c23 != null;
         }
 
         public String[] values() {
             if (isValid()) {
+                return new String[]{cDefault, c89, c99, c11, c17, c23};
+            } else if (cDefault != null && c89 != null && c99 != null && c11 != null && c17 != null) {
+                return new String[]{cDefault, c89, c99, c11, c17};
+            } else if (cDefault != null && c89 != null && c99 != null && c11 != null) {
                 return new String[]{cDefault, c89, c99, c11};
             } else if (cDefault != null && c89 != null && c99 != null) {
                 return new String[]{cDefault, c89, c99};
@@ -1961,7 +1973,17 @@ public final class ToolchainManagerImpl {
                 } else if (path.endsWith(".cpp17")) { // NOI18N
                     st.cpp17 = flags;
                     if (isDefault) {
-                        st.default_selection = 3;
+                        st.default_selection = 4;
+                    }
+                } else if (path.endsWith(".cpp20")) { // NOI18N
+                    st.cpp20 = flags;
+                    if (isDefault) {
+                        st.default_selection = 5;
+                    }
+                } else if (path.endsWith(".cpp23")) { // NOI18N
+                    st.cpp23 = flags;
+                    if (isDefault) {
+                        st.default_selection = 6;
                     }
                 }
             } else if (path.indexOf(".c_standard.") > 0) { // NOI18N
@@ -1985,6 +2007,16 @@ public final class ToolchainManagerImpl {
                     st.c11 = flags;
                     if (isDefault) {
                         st.default_selection = 3;
+                    }
+                } else if (path.endsWith(".c17")) { // NOI18N
+                    st.c17 = flags;
+                    if (isDefault) {
+                        st.default_selection = 4;
+                    }
+                } else if (path.endsWith(".c23")) { // NOI18N
+                    st.c23 = flags;
+                    if (isDefault) {
+                        st.default_selection = 5;
                     }
                 }
             } else if (path.endsWith(".strip")) { // NOI18N

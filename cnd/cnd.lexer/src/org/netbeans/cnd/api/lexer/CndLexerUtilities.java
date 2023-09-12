@@ -448,12 +448,16 @@ public final class CndLexerUtilities {
                     case C89:
                     case C99:
                     case C11:
+                    case C17:
+                    case C23:
                         return CndLexerUtilities.getHeaderC11Filter();
                     case CPP98:
                         return CndLexerUtilities.getHeaderCppFilter();
                     case CPP11:
                     case CPP14:
                     case CPP17:
+                    case CPP20:
+                    case CPP23:
                         return CndLexerUtilities.getHeaderCpp11Filter();
                     default:
                         throw new AssertionError(preferred.name());
@@ -466,6 +470,8 @@ public final class CndLexerUtilities {
                     case C89:
                     case C99:
                     case C11:
+                    case C17:
+                    case C23:
                         CndUtils.assertTrue(false, "Unexpected flavor " + preferred + " for C++ Language"); // NOI18N
                         break;
                     case CPP98:
@@ -473,6 +479,8 @@ public final class CndLexerUtilities {
                     case CPP11:
                     case CPP14:
                     case CPP17:
+                    case CPP20:
+                    case CPP23:
                         return CndLexerUtilities.getGccCpp11Filter();
                     default:
                         throw new AssertionError(preferred.name());
@@ -485,11 +493,15 @@ public final class CndLexerUtilities {
                     case C89:
                     case C99:
                     case C11:
+                    case C17:
+                    case C23:
                         return CndLexerUtilities.getGccC11Filter();
                     case CPP98:
                     case CPP11:
                     case CPP14:
                     case CPP17:
+                    case CPP20:
+                    case CPP23:
                         CndUtils.assertTrue(false, "Unexpected flavor " + preferred + " for C Language"); // NOI18N
                         break;
                     default:

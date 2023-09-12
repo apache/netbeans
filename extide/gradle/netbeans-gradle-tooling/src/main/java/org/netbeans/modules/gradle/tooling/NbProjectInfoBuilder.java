@@ -81,6 +81,7 @@ import org.gradle.api.artifacts.result.ResolvedDependencyResult;
 import org.gradle.api.artifacts.result.UnresolvedDependencyResult;
 import org.gradle.api.attributes.Attribute;
 import org.gradle.api.attributes.AttributeContainer;
+import org.gradle.api.attributes.Category;
 import org.gradle.api.distribution.DistributionContainer;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.DirectoryProperty;
@@ -1337,6 +1338,12 @@ class NbProjectInfoBuilder {
         }
         
         public void walkResolutionResult(ResolvedDependencyResult node, Set<String> stack) {
+            String c = node.getResolvedVariant().getAttributes().getAttribute(Attribute.of("org.gradle.category", String.class)); 
+            if (c != null && (Category.REGULAR_PLATFORM.equals(c) || Category.ENFORCED_PLATFORM.equals(c))) {
+                // TEMPORARY FIX: do not walk children of BOMs, as they are not real dependencies, just version constraints.
+                // better project dependency API needed to handle this.
+                return;
+            }
             depth++;
             ResolvedComponentResult rcr = node.getSelected();
             String id = findNodeIdentifier(rcr.getId());

@@ -29,6 +29,7 @@
 <bindings>
     <bind actionName="complete-line" key="D-SEMICOLON"/>
     <bind actionName="complete-line-newline" key="DS-SEMICOLON"/>
+    <bind actionName="cpp-switch-header-source" key="DS-A"/>
     <!--
         the next line is to prevent user from confusing.
         otherwise goto-super-implementation which is disabled for

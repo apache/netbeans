@@ -260,6 +260,13 @@
                     <folder name="goto">
                         <attr name="position" intvalue="100"/>
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.editor.resources.Bundle"/>
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="200"/>
+                        </file>
+                        <file name="SeparatorBeforeInspect.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="1000"/>
+                        </file>
                     </folder>
                     <file name="SeparatorBeforeFormat.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
@@ -292,11 +299,21 @@
                         <file name="uncomment">
                             <attr name="position" intvalue="19300"/>
                         </file>
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="19400"/>
+                        </file>
                     </folder>
                 </folder>
                 <folder name="BracesMatchers">
                     <file name="org-netbeans-modules-cnd-editor-cplusplus-CppBracesMatcher.instance">
                         <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
+                <folder name="Actions">
+                    <file name="org-netbeans-modules-cnd-editor-cplusplus-CppSwitchAction.instance">
+                        <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.editor.cplusplus.CppSwitchAction"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.editor.cplusplus.CppSwitchAction.getInstance"/>
                     </file>
                 </folder>
                 <file name="Reformatter.instance">
@@ -396,6 +413,13 @@
                     <folder name="goto">
                         <attr name="position" intvalue="100"/>
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.editor.resources.Bundle"/>
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="200"/>
+                        </file>
+                        <file name="SeparatorBeforeInspect.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="1000"/>
+                        </file>
                     </folder>
                     <file name="SeparatorBeforeFormat.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
@@ -428,11 +452,21 @@
                         <file name="uncomment">
                             <attr name="position" intvalue="19300"/>
                         </file>
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="19400"/>
+                        </file>
                     </folder>
                 </folder>
                 <folder name="BracesMatchers">
                     <file name="org-netbeans-modules-cnd-editor-cplusplus-CppBracesMatcher.instance">
                         <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
+                <folder name="Actions">
+                    <file name="org-netbeans-modules-cnd-editor-cplusplus-CppSwitchAction.instance">
+                        <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.editor.cplusplus.CppSwitchAction"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.editor.cplusplus.CppSwitchAction.getInstance"/>
                     </file>
                 </folder>
                 <file name="Reformatter.instance">
@@ -533,6 +567,13 @@
                     <folder name="goto">
                         <attr name="position" intvalue="100"/>
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.editor.resources.Bundle"/>
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="200"/>
+                        </file>
+                        <file name="SeparatorBeforeInspect.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="1000"/>
+                        </file>
                     </folder>
 
                     <file name="SeparatorBeforeFormat.instance">
@@ -566,11 +607,21 @@
                         <file name="uncomment">
                             <attr name="position" intvalue="19300"/>
                         </file>
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="19400"/>
+                        </file>
                     </folder>
                 </folder>
                 <folder name="BracesMatchers">
                     <file name="org-netbeans-modules-cnd-editor-cplusplus-CppBracesMatcher.instance">
                         <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
+                <folder name="Actions">
+                    <file name="org-netbeans-modules-cnd-editor-cplusplus-CppSwitchAction.instance">
+                        <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.editor.cplusplus.CppSwitchAction"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.editor.cplusplus.CppSwitchAction.getInstance"/>
                     </file>
                 </folder>
                 <file name="Reformatter.instance">
